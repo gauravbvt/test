@@ -600,8 +600,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
                     "mapLink",
                     new Model<String>( geoLocation.toString() ),
-                    geoLocation,
-                    getQueryService() );
+                    geoLocation, getQueryService().getPlan() );
             add( geomapLink );
         }
 

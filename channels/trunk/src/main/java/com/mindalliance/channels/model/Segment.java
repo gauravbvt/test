@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -86,9 +85,7 @@ public class Segment extends ModelObject {
         this.context = context;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getKindLabel() {
         return "Plan segment";
     }
@@ -116,9 +113,9 @@ public class Segment extends ModelObject {
      */
     @SuppressWarnings( "unchecked" )
     public List<Goal> getRisks() {
-        return (List<Goal>) CollectionUtils.select(
-                getGoals(),
+        return (List<Goal>) CollectionUtils.select( goals,
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         Goal goal = (Goal) object;
                         return goal.isRiskMitigation();
@@ -168,9 +165,7 @@ public class Segment extends ModelObject {
     public Iterator<Node> nodes() {
         List<Node> nodes = new ArrayList<Node>( nodeIndex.values() );
         Collections.sort( nodes, new Comparator<Node>() {
-            /**
-             * {@inheritDoc}
-             */
+            @Override
             public int compare( Node o1, Node o2 ) {
                 Collator collator = Collator.getInstance();
                 return collator.compare(
@@ -186,36 +181,6 @@ public class Segment extends ModelObject {
      */
     public int getNodeCount() {
         return nodeIndex.size();
-    }
-
-    /**
-     * Convenience accessor for tests.
-     *
-     * @param queryService the underlying store
-     * @param actor        the actor for the new part
-     * @param task         the task of the new part
-     * @return the new part
-     */
-    public Part createPart( QueryService queryService, Actor actor, String task ) {
-        Part result = queryService.createPart( this );
-        result.setActor( actor );
-        result.setTask( task );
-        return addNode( result );
-    }
-
-    /**
-     * Convenience accessor for tests.
-     *
-     * @param queryService the underlying store
-     * @param role         the role for the new part
-     * @param task         the task of the new part
-     * @return the new part
-     */
-    public Part createPart( QueryService queryService, Role role, String task ) {
-        Part result = queryService.createPart( this );
-        result.setRole( role );
-        result.setTask( task );
-        return addNode( result );
     }
 
     /**
@@ -267,6 +232,7 @@ public class Segment extends ModelObject {
     @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> inputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
+            @Override
             public boolean evaluate( Object object ) {
                 Node n = (Node) object;
                 return n.isConnector() && n.sends().hasNext();
@@ -282,6 +248,7 @@ public class Segment extends ModelObject {
     @SuppressWarnings( {"unchecked"} )
     public Iterator<Part> parts() {
         return (Iterator<Part>) new FilterIterator( nodes(), new Predicate() {
+            @Override
             public boolean evaluate( Object object ) {
                 Node n = (Node) object;
                 return n.isPart();
@@ -297,6 +264,7 @@ public class Segment extends ModelObject {
     @SuppressWarnings( {"unchecked"} )
     public Iterator<Connector> outputs() {
         return (Iterator<Connector>) new FilterIterator( nodes(), new Predicate() {
+            @Override
             public boolean evaluate( Object object ) {
                 Node n = (Node) object;
                 return n.isConnector() && n.receives().hasNext();
@@ -406,6 +374,7 @@ public class Segment extends ModelObject {
 
         List<Role> list = new ArrayList<Role>( roles );
         Collections.sort( list, new Comparator<Role>() {
+            @Override
             public int compare( Role o1, Role o2 ) {
                 return Collator.getInstance().compare( o1.getName(), o2.getName() );
             }
@@ -447,15 +416,6 @@ public class Segment extends ModelObject {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void beforeRemove( QueryService queryService ) {
-        super.beforeRemove( queryService );
-        queryService.getPlan().removeSegment( this );
-    }
-
-    /**
      * Get goal given category, positiveness and name of organization.
      *
      * @param category a goal category
@@ -467,6 +427,7 @@ public class Segment extends ModelObject {
             final Goal.Category category, final boolean positive, final String orgName ) {
 
         return (Goal) CollectionUtils.find( goals, new Predicate() {
+            @Override
             public boolean evaluate( Object object ) {
                 Goal goal = (Goal) object;
                 return goal.getCategory() == category
@@ -522,10 +483,10 @@ public class Segment extends ModelObject {
     public String getPhaseEventTitle() {
         StringBuilder sb = new StringBuilder();
         sb.append( eventPhase.toString() );
-        if ( !getContext().isEmpty() ) {
+        if ( !context.isEmpty() ) {
             sb.append( ", " );
         }
-        Iterator<EventTiming> eventTimings = getContext().iterator();
+        Iterator<EventTiming> eventTimings = context.iterator();
         while ( eventTimings.hasNext() ) {
             sb.append( eventTimings.next() );
             if ( eventTimings.hasNext() ) {
@@ -617,6 +578,7 @@ public class Segment extends ModelObject {
         return (List<Connector>) CollectionUtils.select(
                 (List<Node>) IteratorUtils.toList( nodes() ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (Node) object ).isConnector();
                     }
@@ -686,9 +648,9 @@ public class Segment extends ModelObject {
      */
     @SuppressWarnings( "unchecked" )
     public List<Goal>  getTerminatingRisks() {
-        return (List<Goal>)CollectionUtils.select(
-                getGoals(),
+        return (List<Goal>)CollectionUtils.select( goals,
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         Goal goal = (Goal) object;
                         return goal.isRiskMitigation() && goal.isEndsWithSegment();
@@ -732,7 +694,7 @@ public class Segment extends ModelObject {
     }
 
     public boolean impliesEventPhaseAndContextOf( Segment other, Place locale ) {
-        return getEventPhase().narrowsOrEquals( other.getEventPhase(), locale )
+        return eventPhase.narrowsOrEquals( other.getEventPhase(), locale )
                 && impliesContext( other.getContext(), locale );
     }
 
@@ -760,8 +722,8 @@ public class Segment extends ModelObject {
     }
 
     public boolean sameAs( Segment other ) {
-        return getEventPhase().equals( other.getEventPhase() ) &&
-                CollectionUtils.isEqualCollection( getContext(), other.getContext() );
+        return eventPhase.equals( other.getEventPhase() ) &&
+                CollectionUtils.isEqualCollection( context, other.getContext() );
     }
 
 
@@ -805,12 +767,14 @@ public class Segment extends ModelObject {
             reqIterator = (Iterator<Flow>) new FilterIterator(
                     node.receives(),
                     new Predicate() {
+                        @Override
                         public boolean evaluate( Object object ) {
                             return !( (Flow) object ).isInternal();
                         }
                     } );
         }
 
+        @Override
         public boolean hasNext() {
             while ( !sendIterator.hasNext() && !reqIterator.hasNext() && nodeIterator.hasNext() )
                 setIterators( nodeIterator.next() );
@@ -818,6 +782,7 @@ public class Segment extends ModelObject {
             return sendIterator.hasNext() || reqIterator.hasNext();
         }
 
+        @Override
         public Flow next() {
             if ( !hasNext() )
                 throw new NoSuchElementException();
@@ -825,6 +790,7 @@ public class Segment extends ModelObject {
                     sendIterator.next() : reqIterator.next();
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }
@@ -846,15 +812,13 @@ public class Segment extends ModelObject {
         eventPhase.setPhase( phase );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean references( final ModelObject mo ) {
         return eventPhase.references( mo )
                 || CollectionUtils.exists(
                 goals,
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (Goal) object ).references( mo );
                     }
@@ -862,6 +826,7 @@ public class Segment extends ModelObject {
                 || CollectionUtils.exists(
                 context,
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return ( (EventTiming) object ).references( mo );
                     }

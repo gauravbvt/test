@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,15 +67,15 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
     }
 
     @Override
-    public String getGeoMarkerLabel( QueryService queryService ) {
+    public String getGeoMarkerLabel() {
         return employment.toString() + ", and is assigned to task \"" + part.getTask() + '\"';
     }
 
     @Override
-    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
+    public List<? extends GeoLocatable> getImpliedGeoLocatables() {
         List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
-        geoLocatables.addAll( employment.getImpliedGeoLocatables( queryService ) );
-        geoLocatables.addAll( part.getImpliedGeoLocatables( queryService ) );
+        geoLocatables.addAll( employment.getImpliedGeoLocatables() );
+        geoLocatables.addAll( part.getImpliedGeoLocatables() );
         return geoLocatables;
     }
 
@@ -152,7 +150,7 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
      * @return a place
      */
     public Place getLocation() {
-        return getPart().getLocation();
+        return part.getLocation();
     }
 
     public Specable getSpecableActor() {

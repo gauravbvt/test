@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.command.Change;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
@@ -64,8 +65,8 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
     }
 
     private String getCssClasses() {
-        String priority = getPart().getPriorityCssClass( getQueryService() );
-        return "summary " + priority;
+        Level priority = getQueryService().computePartPriority( getPart() );
+        return "summary " + priority.getNegativeLabel().toLowerCase();
     }
 
     private void addDescriptionLabel() {

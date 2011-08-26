@@ -1,6 +1,6 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
+import com.mindalliance.channels.model.Attachment.Type;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -63,9 +63,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         super( name );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getKindLabel() {
         return "agent";
     }
@@ -109,6 +107,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         this.placeHolderSingular = placeHolderSingular;
     }
 
+    @Override
     public Availability getAvailability() {
         return availability;
     }
@@ -150,7 +149,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
     public String getNormalizedName() {
         String name = getName().trim();
         if ( this == UNKNOWN || name.indexOf( ',' ) >= 0 ) return name;
-        else if ( isType() || isArchetype() || isSystem() || isPlaceHolder() ) return name;
+        else if ( isType() || archetype || system || placeHolder ) return name;
         else {
             int index = name.lastIndexOf( ' ' );
             if ( index >= 0 ) {
@@ -158,20 +157,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
                 return name.substring( index + 1 ) + ", " + s;
             } else
                 return name;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void beforeRemove( QueryService queryService ) {
-        super.beforeRemove( queryService );
-        for ( Job job : queryService.findAllConfirmedJobs( this ) ) {
-            job.setActor( null );
-        }
-        for ( Part part : queryService.findAllParts( null, this, true ) ) {
-            part.setActor( null );
         }
     }
 
@@ -193,32 +178,26 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * @return a boolean
      */
     public boolean isPerson() {
-        return !isSystem();
+        return !system;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Attachment.Type> getAttachmentTypes() {
-        List<Attachment.Type> types = new ArrayList<Attachment.Type>();
+    @Override
+    public List<Type> getAttachmentTypes() {
+        List<Type> types = new ArrayList<Type>();
         if ( !hasImage() )
-            types.add( Attachment.Type.Image );
+            types.add( Type.Image );
         types.addAll( super.getAttachmentTypes() );
         return types;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isIconized() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Classification> getClassifications() {
-        return getClearances();
+        return clearances;
     }
 
     /**
@@ -233,6 +212,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         return !CollectionUtils.exists(
                 flow.getEois(),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object obj ) {
                         ElementOfInformation eoi = (ElementOfInformation) obj;
                         return !Classification.encompass(
@@ -243,18 +223,22 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         );
     }
 
+    @Override
     public Actor getActor() {
         return this;
     }
 
+    @Override
     public Role getRole() {
         return null;
     }
 
+    @Override
     public Organization getOrganization() {
         return null;
     }
 
+    @Override
     public Place getJurisdiction() {
         return null;
     }
@@ -265,6 +249,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * @return a boolean
      */
     public boolean isSingular() {
-        return !isArchetype() && ( !isPlaceHolder() || isPlaceHolderSingular() );
+        return !archetype && ( !placeHolder || placeHolderSingular );
     }
 }

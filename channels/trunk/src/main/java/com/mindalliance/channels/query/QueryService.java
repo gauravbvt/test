@@ -17,6 +17,16 @@ import java.util.Map;
 public interface QueryService {
 
     /**
+     * Whether the flow could be essential to risk mitigation.
+     *
+     * @param flow the flow
+     * @param assumeFails  whether alternate flows are assumed
+     * @param queryService a query service
+     * @return a boolean
+     */
+    boolean isEssential( Flow flow, boolean assumeFails );
+
+    /**
      * Get the persistence store accessor.
      *
      * @return the dao
@@ -1401,4 +1411,32 @@ public interface QueryService {
      * @return a list of participations
      */
     List<Participation> findAllParticipationsFor( Actor actor );
+
+    /**
+     * Whether this is a sharing flow where source actor is target actor.
+     *
+     *
+     * @param flow@return a boolean
+     */
+    boolean isSharingWithSelf( Flow flow );
+
+    /**
+     * Get user's full name.
+     *
+     *
+     * @param participation@return a string
+     */
+    String getUserFullName( Participation participation );
+
+    Actor getKnownActualActor( Part part );
+
+    /**
+     * Get extended title for the part.
+     *
+     *
+     * @param sep separator string
+     * @param part
+     * @return a string
+     */
+    String getFullTitle( String sep, Part part );
 }

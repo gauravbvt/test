@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -301,17 +300,13 @@ public class Organization extends AbstractUnicastChannelable
     }
 
     @Override
-    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
-        List<Organization> geoLocatables = new ArrayList<Organization>();
-        for ( Organization organization : queryService.listEntitiesNarrowingOrEqualTo( this ) )
-            if ( organization.isActual() && organization.getPlaceBasis() != null )
-                geoLocatables.add( organization );
-        return geoLocatables;
+    public List<? extends GeoLocatable> getImpliedGeoLocatables() {
+        return new ArrayList<Organization>();
     }
 
     @Override
-    public String getGeoMarkerLabel( QueryService queryService ) {
-        return location != null ? location.getGeoMarkerLabel( queryService ) : "";
+    public String getGeoMarkerLabel() {
+        return location != null ? location.getGeoMarkerLabel() : "";
     }
 
     @Override

@@ -215,7 +215,7 @@ abstract public class AbstractParticipantPage  extends AbstractChannelsWebPage {
             organization = employment.getOrganization();
             participation = findParticipation( service, actor, null );
             actorName = participation != null ?
-                    participation.getUserFullName( service ) :
+                    service.getUserFullName( participation ) :
                     actor == null ? "" : actor.getName();
 
             Actor sup = employment.getSupervisor();
@@ -245,7 +245,7 @@ abstract public class AbstractParticipantPage  extends AbstractChannelsWebPage {
             }
 
             actorName = participation != null ?
-                    participation.getUserFullName( service ) :
+                    service.getUserFullName( participation ) :
                     actor == null ? "" : actor.getName();
         }
 

@@ -1,7 +1,6 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.model.Attachment.Type;
-import com.mindalliance.channels.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +54,12 @@ public class Event extends ModelEntity implements GeoLocatable {
     }
 
     @Override
-    public String getGeoMarkerLabel( QueryService queryService ) {
-        return scope == null ? "" : getName() + " in " + scope.getGeoMarkerLabel( queryService );
+    public String getGeoMarkerLabel() {
+        return scope == null ? "" : getName() + " in " + scope.getGeoMarkerLabel();
     }
 
     @Override
-    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
+    public List<? extends GeoLocatable> getImpliedGeoLocatables() {
         List<Event> geoLocatables = new ArrayList<Event>();
         geoLocatables.add( this );
         return geoLocatables;

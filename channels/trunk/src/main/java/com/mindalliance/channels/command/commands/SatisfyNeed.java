@@ -6,6 +6,8 @@ import com.mindalliance.channels.command.Command;
 import com.mindalliance.channels.command.CommandException;
 import com.mindalliance.channels.command.Commander;
 import com.mindalliance.channels.command.MultiCommand;
+import com.mindalliance.channels.model.Channel;
+import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Node;
 import com.mindalliance.channels.model.NotFoundException;
@@ -57,16 +59,12 @@ public class SatisfyNeed extends AbstractCommand {
         this( need, capability, false, false );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "satisfy info need";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         Flow newFlow;
         QueryService queryService = commander.getQueryService();
@@ -95,7 +93,7 @@ public class SatisfyNeed extends AbstractCommand {
             String name = need.getName().isEmpty() ? capability.getName() : need.getName();
             newFlow = queryService.connect( fromNode, toNode, name, priorId );
             if ( !newFlow.isExternal() )  // TODO: don't want to change the capability!
-                newFlow.initSharingFrom( capability, need, queryService );
+                initNewFlow( newFlow, queryService, need, capability );
             set( "satisfy", newFlow.getId() );
             set( "context", newFlow.getSegment().getId() );
             MultiCommand multi = (MultiCommand) get( "subCommands" );
@@ -118,16 +116,25 @@ public class SatisfyNeed extends AbstractCommand {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    private static void initNewFlow( Flow newFlow, QueryService queryService, Flow need, Flow capability ) {
+        newFlow.setEois( queryService.findCommonEOIs( capability, need ) );
+        newFlow.setSignificanceToSource( capability.getSignificanceToSource() );
+        newFlow.setSignificanceToTarget( need.getSignificanceToTarget() );
+        newFlow.setChannels( Channel.intersect( capability.getChannels(),
+                                                need.getChannels(),
+                                                queryService.getPlan().getLocale() ) );
+        newFlow.setMaxDelay( Delay.min( capability.getMaxDelay(), need.getMaxDelay() ) );
+        newFlow.setIntent( capability.getIntent() != null ? capability.getIntent() : need.getIntent() );
+        newFlow.setRestriction( Flow.Restriction.resolve( need.getRestriction(), capability.getRestriction() ) );
+        newFlow.setIfTaskFails( capability.isIfTaskFails() );
+    }
+
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         try {

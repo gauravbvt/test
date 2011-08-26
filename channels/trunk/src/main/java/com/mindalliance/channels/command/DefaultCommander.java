@@ -20,6 +20,7 @@ import com.mindalliance.channels.model.Event;
 import com.mindalliance.channels.model.Flow;
 import com.mindalliance.channels.model.Goal;
 import com.mindalliance.channels.model.Identifiable;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.NotFoundException;
@@ -132,6 +133,29 @@ public class DefaultCommander implements Commander {
 
     //===============================================
     public DefaultCommander() {
+    }
+
+    /**
+     * Create goal from mapped state.
+     *
+     * @param map          a map
+     * @param queryService a query service
+     * @return a goal
+     */
+    private static Goal fromMap( Map<String, Object> map, QueryService queryService ) {
+        Goal goal = new Goal();
+        goal.setCategory( Goal.Category.valueOf( (String) map.get( "category" ) ) );
+        goal.setDescription( (String) map.get( "description" ) );
+        goal.setLevel( Level.valueOf( (String) map.get( "level" ) ) );
+        goal.setPositive( (Boolean) map.get( "positive" ) );
+        goal.setEndsWithSegment( (Boolean) map.get( "ends" ) );
+        List orgSpec = (List) map.get( "organization" );
+        boolean isType = (Boolean) orgSpec.get( 1 );
+        Organization org = isType
+                ? queryService.findOrCreateType( Organization.class, (String) orgSpec.get( 0 ) )
+                : queryService.findOrCreate( Organization.class, (String) orgSpec.get( 0 ) );
+        goal.setOrganization( org );
+        return goal;
     }
 
     public void setPresenceListeners( List<PresenceListener> presenceListeners ) {
@@ -744,36 +768,35 @@ public class DefaultCommander implements Commander {
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );
         part.setAttachments( new ArrayList<Attachment>( (List<Attachment>) state.get( "attachments" ) ) );
         List<Map<String, Object>> goalStates = (List<Map<String, Object>>) state.get( "goals" );
+        QueryService queryService = getQueryService();
         for ( Map<String, Object> goalMap : goalStates ) {
-            Goal goal = Goal.fromMap( goalMap, getQueryService() );
+            Goal goal = fromMap( goalMap, queryService );
             part.addGoal( goal );
         }
 //        part.setGoals( new ArrayList<Goal>( (List<Goal>) state.get( "goals" ) ) );
         if ( state.get( "initiatedEvent" ) != null )
-            part.setInitiatedEvent( getQueryService().findOrCreateType(
-                    Event.class,
-                    (String) state.get( "initiatedEvent" ) ) );
+            part.setInitiatedEvent( queryService.findOrCreateType( Event.class,
+                                                                    (String) state.get( "initiatedEvent" ) ) );
         else
             part.setInitiatedEvent( null );
         if ( state.get( "actor" ) != null )
-            part.setActor( getQueryService().retrieveEntity( Actor.class, state, "actor" ) );
+            part.setActor( queryService.retrieveEntity( Actor.class, state, "actor" ) );
         else
             part.setActor( null );
         if ( state.get( "role" ) != null )
-            part.setRole( getQueryService().retrieveEntity( Role.class, state, "role" ) );
+            part.setRole( queryService.retrieveEntity( Role.class, state, "role" ) );
         else
             part.setRole( null );
         if ( state.get( "organization" ) != null )
-            part.setOrganization( getQueryService().retrieveEntity(
-                    Organization.class, state, "organization" ) );
+            part.setOrganization( queryService.retrieveEntity( Organization.class, state, "organization" ) );
         else
             part.setOrganization( null );
         if ( state.get( "jurisdiction" ) != null )
-            part.setJurisdiction( getQueryService().retrieveEntity( Place.class, state, "jurisdiction" ) );
+            part.setJurisdiction( queryService.retrieveEntity( Place.class, state, "jurisdiction" ) );
         else
             part.setJurisdiction( null );
         if ( state.get( "location" ) != null )
-            part.setLocation( getQueryService().retrieveEntity( Place.class, state, "location" ) );
+            part.setLocation( queryService.retrieveEntity( Place.class, state, "location" ) );
         else
             part.setLocation( null );
     }

@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -234,17 +232,14 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     }
 
     @Override
-    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
-        List<Place> geoLocatables = new ArrayList<Place>();
-        if ( jurisdiction != null )
-            geoLocatables.addAll( queryService.listEntitiesNarrowingOrEqualTo( jurisdiction ) );
-        return geoLocatables;
+    public List<? extends GeoLocatable> getImpliedGeoLocatables() {
+        return new ArrayList<Place>();
     }
 
     @Override
-    public String getGeoMarkerLabel( QueryService queryService ) {
+    public String getGeoMarkerLabel() {
         return jurisdiction == null ? ""
-                : jurisdiction.getGeoMarkerLabel( queryService );
+                : jurisdiction.getGeoMarkerLabel();
     }
 
     /**

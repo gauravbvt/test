@@ -5,6 +5,7 @@ import com.mindalliance.channels.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Delay;
 import com.mindalliance.channels.model.Event;
+import com.mindalliance.channels.model.Level;
 import com.mindalliance.channels.model.ModelEntity;
 import com.mindalliance.channels.model.ModelObject;
 import com.mindalliance.channels.model.Organization;
@@ -343,10 +344,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     }
 
-
     private String getCssClasses() {
-        String priority = getPart().getPriorityCssClass( getQueryService() );
-        return "summary " + priority;
+        Level priority = getQueryService().computePartPriority( getPart() );
+        return "summary " + priority.getNegativeLabel().toLowerCase();
     }
 
     private void addPartDescription() {

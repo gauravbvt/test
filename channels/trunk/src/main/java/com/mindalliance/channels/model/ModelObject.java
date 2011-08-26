@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -280,15 +279,6 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
                 || equals( Role.UNKNOWN )
                 || equals( Phase.UNKNOWN )
                 || equals( TransmissionMedium.UNKNOWN );
-    }
-
-    /**
-     * Clean up before removal.
-     *
-     * @param queryService a query service
-     */
-    public void beforeRemove( QueryService queryService ) {
-        // DO nothing
     }
 
     /**

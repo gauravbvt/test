@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,20 +28,6 @@ public class Role extends ModelEntity implements Specable {
      */
     public Role( String name ) {
         super( name );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void beforeRemove( QueryService queryService ) {
-        super.beforeRemove( queryService );
-        for ( Job job : queryService.findAllConfirmedJobs( this ) ) {
-            job.setRole( null );
-        }
-        for ( Part part : queryService.findAllParts( null, this, true ) ) {
-            part.setRole( null );
-        }
     }
 
     /**

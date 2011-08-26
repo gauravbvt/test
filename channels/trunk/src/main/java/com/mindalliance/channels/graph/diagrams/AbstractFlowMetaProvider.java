@@ -167,7 +167,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     protected String getNodeLabel( Node node ) {
         if ( node.isPart() ) {
             Part part = (Part) node;
-            return part.getFullTitle( "|", getAnalyst().getQueryService() );
+            return getAnalyst().getQueryService().getFullTitle( "|", part );
         } else {
             return "c";
         }

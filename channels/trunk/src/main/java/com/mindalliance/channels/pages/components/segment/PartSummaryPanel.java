@@ -44,7 +44,7 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
         if ( part.getActor() != null ) {
             sb.append( part.getActor().getName() );
             if ( part.getActor().isType() ) {
-                Actor impliedActor = part.getKnownActualActor( getQueryService() );
+                Actor impliedActor = getQueryService().getKnownActualActor( part );
                 if ( impliedActor != null ) {
                     sb.append( " " );
                     sb.append( impliedActor.getName() );
@@ -54,14 +54,14 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
         if ( part.getRole() != null ) {
             if ( !sb.toString().isEmpty() ) sb.append( ' ' );
             if ( part.getActor() == null ) {
-                Actor impliedActor = part.getKnownActualActor( getQueryService() );
+                Actor impliedActor = getQueryService().getKnownActualActor( part );
                 if ( impliedActor != null ) {
                     sb.append( impliedActor.getName() );
                 } else {
                     sb.append( "Any " );
                 }
             }
-            if ( part.getKnownActualActor( getQueryService() ) != null ) {
+            if ( getQueryService().getKnownActualActor( part ) != null ) {
                 if ( part.getActor() != null ) {
                     sb.append( " as " );
                 } else {

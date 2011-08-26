@@ -41,14 +41,15 @@ public class EntityShowMenuPanel extends MenuPanel {
     /**
      * Find all implied geolocations for a geolocatable.
      *
-     * @param geoLocatable a geolocatable
      * @param queryService a query service
+     * @param geoLocatable a geolocatable
      * @return a list of geolocations
      */
-    public List<GeoLocation> getImpliedGeoLocations( GeoLocatable geoLocatable, QueryService queryService ) {
+    private static List<GeoLocation> getImpliedGeoLocations( QueryService queryService, GeoLocatable geoLocatable ) {
+
         List<GeoLocation> geoLocations = new ArrayList<GeoLocation>();
 
-        for ( GeoLocatable geo : geoLocatable.getImpliedGeoLocatables( queryService ) ) {
+        for ( GeoLocatable geo : GeoMapPage.getImpliedGeoLocatables( geoLocatable, queryService ) ) {
             Place placeBasis = geo.getPlaceBasis();
             if ( placeBasis != null ) {
                 GeoLocation geoLocation = placeBasis.getGeoLocation();
@@ -84,8 +85,7 @@ public class EntityShowMenuPanel extends MenuPanel {
                     getQueryService() );
 
                 geomapLink.setEnabled(
-                    !getImpliedGeoLocations(
-                        geo, getQueryService() ).isEmpty() );
+                    !getImpliedGeoLocations( getQueryService(), geo ).isEmpty() );
 
                 menuItems.add(
                     new LinkMenuItem(

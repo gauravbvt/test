@@ -54,6 +54,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
+import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.TransformerUtils;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.lang.StringUtils;
@@ -117,6 +118,20 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * Required for CGLIB proxies...
      */
     DefaultQueryService() {
+    }
+
+    /**
+     * Whether the flow could be essential to risk mitigation.
+     *
+     * @param flow the flow
+     * @param assumeFails  whether alternate flows are assumed
+     * @return a boolean
+     */
+    @Override
+    public boolean isEssential( Flow flow, boolean assumeFails ) {
+        return flow.isImportant()
+                && ( assumeFails || getAlternates( flow ).isEmpty() )
+                && !isSharingWithSelf( flow );
     }
 
     @Override
@@ -431,8 +446,49 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     public void remove( ModelObject object ) {
-        object.beforeRemove( this );
+        beforeRemove( object );
         getDao().remove( object );
+    }
+
+    private void beforeRemove( Segment segment ) {
+        getPlan().removeSegment( segment );
+    }
+
+    private void beforeRemove( Role role ) {
+        for ( Job job : findAllConfirmedJobs( role ) )
+            job.setRole( null );
+        for ( Part part : findAllParts( null, role, true ) )
+            part.setRole( null );
+    }
+
+    private void beforeRemove( Actor actor ) {
+        for ( Job job : findAllConfirmedJobs( actor ) )
+            job.setActor( null );
+        for ( Part part : findAllParts( null, actor, true ) )
+            part.setActor( null );
+    }
+
+    private void beforeRemove( Place place ) {
+        for ( Job job : findAllConfirmedJobs( place ) )
+            job.setJurisdiction( null );
+        for ( Part part : findAllParts( null, place, true ) )
+            part.setJurisdiction( null );
+        for ( Part part : findAllPartsWithExactLocation( place ) )
+            part.setLocation( null );
+        for ( Place p : list( Place.class ) )
+            if ( equals( p.getWithin() ) )
+                p.setWithin( null );
+    }
+
+    private void beforeRemove( ModelObject object ) {
+        if ( Actor.class.isAssignableFrom( object.getClass() ) )
+            beforeRemove( (Actor) object );
+        else if ( Place.class.isAssignableFrom( object.getClass() ) )
+            beforeRemove( (Place) object );
+        else if ( Role.class.isAssignableFrom( object.getClass() ) )
+            beforeRemove( (Role) object );
+        else if ( Segment.class.isAssignableFrom( object.getClass() ) )
+            beforeRemove( (Segment) object );
     }
 
     @Override
@@ -586,7 +642,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public Boolean isReferenced( final ModelObject mo ) {
         if ( mo instanceof Participation ) {
             // Participations are not referenced per se but are not obsolete if they name a registered user.
-            return ( (Participation) mo ).hasUser( this );
+            return hasUser( (Participation) mo );
         } else {
             boolean hasReference = false;
             Iterator classes = ModelObject.referencingClasses().iterator();
@@ -613,7 +669,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Set<ModelObject> referencers = new HashSet<ModelObject>();
         if ( mo instanceof Participation ) {
             // Participations are not referenced per se but are not obsolete if they name a registered user.
-            if ( ( (Participation) mo ).hasUser( this ) ) referencers.add( mo );
+            if ( hasUser( (Participation) mo ) ) referencers.add( mo );
         } else {
             boolean hasReference = false;
             Iterator classes = ModelObject.referencingClasses().iterator();
@@ -1732,10 +1788,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public Level computeSharingPriority( Flow flow ) {
         assert flow.isSharing();
-        if ( flow.isEssential( false, this ) )
+        if ( isEssential( flow, false ) ) {
             return computePartPriority( (Part) flow.getTarget() );
-        else
+        } else {
             return Level.Low;
+        }
     }
 
     @Override
@@ -2082,6 +2139,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Commitment>( commitments );
     }
 
+    @Override
     public List<Commitment> findAllCommitmentsOf(
             Specable specable,
             Assignments assignments,
@@ -2109,6 +2167,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return new ArrayList<Commitment>( commitments );
     }
 
+    @Override
     public List<Commitment> findAllCommitmentsTo(
             Specable specable,
             Assignments assignments,
@@ -2304,7 +2363,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     public List<Part> findFailureImpacts( SegmentObject segmentObject, Boolean assumeFails ) {
         if ( segmentObject instanceof Flow ) {
             Flow flow = (Flow) segmentObject;
-            if ( ( (Flow) segmentObject ).isEssential( assumeFails, this ) ) {
+            if ( isEssential( flow, assumeFails ) ) {
                 Part target = (Part) flow.getTarget();
                 List<Part> impacted = findPartFailureImpacts( target, assumeFails );
                 if ( target.isUseful() && !impacted.contains( target ) ) {
@@ -2427,6 +2486,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return CollectionUtils.exists(
                 commitment.getCommitter().getOrganization().getAgreements(),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return covers( ( (Agreement) object ),
                                 commitment );
@@ -3137,6 +3197,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         return matchingParts;
     }
 
+    @Override
     public boolean allowsCommitment(
             Assignment committer, Assignment beneficiary, Place locale, Flow flow ) {
 
@@ -3290,6 +3351,114 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     }
                 }
         );
+    }
+
+    /**
+     * Whether a flow is a sharing flow where source actor is target actor.
+     *
+     * @param flow a flow
+     * @return a boolean
+     */
+    @Override
+    public boolean isSharingWithSelf( Flow flow ) {
+        boolean sharingWithSelf = false;
+        if ( flow.isSharing() ) {
+            Actor onlySource = getKnownActualActor( (Part) flow.getSource() );
+            if ( onlySource != null ) {
+                Actor onlyTarget = getKnownActualActor( (Part) flow.getTarget() );
+                if ( onlyTarget != null ) {
+                    sharingWithSelf = onlySource.equals( onlyTarget );
+                }
+            }
+        }
+        return sharingWithSelf;
+    }
+
+    /**
+     * Get user's full name.
+     *
+     *
+     * @param participation@return a string
+     */
+    @Override
+    public String getUserFullName( Participation participation ) {
+        return findUserFullName( participation.getUsername() );
+    }
+
+    /**
+     * Whether this participation's username corresponds to a registered user.
+     *
+     *
+     * @param participation@return a boolean
+     */
+    private boolean hasUser( Participation participation ) {
+        return findUserRole( participation.getUsername() ) != null;
+    }
+
+    @Override
+    public Actor getKnownActualActor( Part part ) {
+        List<Actor> knownActors = (List<Actor>) CollectionUtils.collect( findAllAssignments( part, false ),
+                                                                         new Transformer() {
+                                                                             @Override
+                                                                             public Object transform( Object input ) {
+                                                                                 Assignment assignment = (Assignment) input;
+                                                                                 return assignment.getActor();
+                                                                             }
+                                                                         } );
+
+        return knownActors.size() == 1 ? knownActors.get( 0 ) : null;
+    }
+
+    /**
+     * Get extended title for the part.
+     *
+     *
+     * @param sep separator string
+     * @param part
+     * @return a string
+     */
+    public String getFullTitle( String sep, Part part ) {
+        String label = "";
+        if ( part.getActor() != null ) {
+            label += part.getActor().getName();
+            if ( part.getActor().isType() ) {
+                Actor impliedActor = getKnownActualActor( part );
+                if ( impliedActor != null && !impliedActor.isArchetype() ) {
+                    label += " (" + impliedActor.getName() + ")";
+                }
+            }
+        }
+        if ( part.getRole() != null ) {
+            if ( !label.isEmpty() )
+                label += sep;
+            if ( part.getActor() == null ) {
+                Actor impliedActor = getKnownActualActor( part );
+                if ( impliedActor != null && !impliedActor.isArchetype() ) {
+                    label += impliedActor.getName();
+                    label += " ";
+                }
+            }
+            if ( !label.isEmpty() )
+                label += "as ";
+            label += part.getRole().getName();
+        }
+        if ( part.getJurisdiction() != null ) {
+            if ( !label.isEmpty() )
+                label += ( sep + "for " );
+            label += part.getJurisdiction().getName();
+        }
+        if ( part.getOrganization() != null ) {
+            if ( !label.isEmpty() )
+                label += ( sep + "at " );
+            label += part.getOrganization().getName();
+        }
+        if ( !label.isEmpty() )
+            label += sep;
+        label += part.getTask();
+        if ( part.isRepeating() ) {
+            label += " (every " + part.getRepeatsEvery() + ")";
+        }
+        return label;
     }
 }
 

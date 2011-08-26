@@ -40,7 +40,7 @@ public class ActorWithNonMatchingParticipation extends AbstractIssueDetector {
                 }
             }
             if ( participation != null ) {
-                String userFullName = participation.getUserFullName( queryService );
+                String userFullName = queryService.getUserFullName( participation );
                 if ( !Matcher.getInstance().same( actor.getName(), userFullName ) ) {
                     Issue issue = makeIssue( Issue.VALIDITY, actor );
                     issue.setDescription( "Agent \"" + actor.getName() + "\" is not a placeholder nor an archetype "

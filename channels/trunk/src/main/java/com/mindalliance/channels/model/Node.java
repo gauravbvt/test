@@ -1,7 +1,6 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.nlp.Matcher;
-import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.iterators.IteratorChain;
 
 import java.text.Collator;
@@ -214,11 +213,6 @@ public abstract class Node extends ModelObject implements SegmentObject {
     @Override
     public Segment getSegment() {
         return segment;
-    }
-
-    @Override
-    public List<Flow> getEssentialFlows( boolean assumeFails, QueryService queryService ) {
-        return new ArrayList<Flow>();
     }
 
     public void setSegment( Segment segment ) {

@@ -1,11 +1,9 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.nlp.Matcher;
-import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
@@ -53,36 +51,42 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      * Whether the part's task completes on its own after some time.
      */
     private boolean selfTerminating;
+
     /**
-     * Usual time for the task to complete on its own.
-     * If null, the task must be terminated.
+     * Usual time for the task to complete on its own. If null, the task must be terminated.
      */
     private Delay completionTime = new Delay();
+
     /**
      * Whether the part's task repeats (at fixed intervals).
      */
     private boolean repeating;
+
     /**
-     * How long before the task is repeated.
-     * Not repeated if null.
+     * How long before the task is repeated. Not repeated if null.
      */
     private Delay repeatsEvery = new Delay();
+
     /**
      * Whether this part is started by the onset of the segment.
      */
     private boolean startsWithSegment;
+
     /**
      * Whether the part can terminate the event phase the segment is about.
      */
     private boolean terminatesEventPhase;
+
     /**
      * Event this part initiates.
      */
     private Event initiatedEvent;
+
     /**
      * Segment goals achieved - risks mitigated or gains made.
      */
     private List<Goal> goals = new ArrayList<Goal>();
+
     /**
      * Whether the assignees execute the task as a team vs individually.
      */
@@ -97,10 +101,12 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      * Whether a task is operational (i.e. non-conceptual).
      */
     private boolean operational = true;
+
     /**
      * Whether the part is prohibited.
      */
     private boolean prohibited = false;
+
     /**
      * The reason this part was declared conceptual.
      */
@@ -135,8 +141,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     }
 
     public void setTask( String task ) {
-        this.task = task == null || task.length() == 0 ? DEFAULT_TASK
-                : task;
+        this.task = task == null || task.length() == 0 ? DEFAULT_TASK : task;
     }
 
     private void adjustName() {
@@ -286,7 +291,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      * Test whether the resource spec of the part intersects a given resource spec
      *
      * @param resourceSpec a resource
-     * @param locale       the default location
+     * @param locale the default location
      * @return a boolean
      */
     public boolean isImpliedBy( ResourceSpec resourceSpec, Place locale ) {
@@ -377,14 +382,12 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      */
     @SuppressWarnings( "unchecked" )
     public List<Goal> getMitigations() {
-        return (List<Goal>) CollectionUtils.select( goals,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Goal) object ).isRiskMitigation();
-                    }
-                }
-        );
+        return (List<Goal>) CollectionUtils.select( goals, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ( (Goal) object ).isRiskMitigation();
+            }
+        } );
     }
 
     public List<Goal> getGoals() {
@@ -420,9 +423,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     }
 
     public void setConceptualReason( String conceptualReason ) {
-        this.conceptualReason = conceptualReason == null
-                ? ""
-                : conceptualReason;
+        this.conceptualReason = conceptualReason == null ? "" : conceptualReason;
     }
 
     public boolean isProhibited() {
@@ -436,7 +437,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     /**
      * Test if this part is considered belonging to an organization.
      *
-     * @param o      the organization
+     * @param o the organization
      * @param locale the default location
      * @return true if belonging
      */
@@ -447,7 +448,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     /**
      * Test if this part is considered belonging to an organization.
      *
-     * @param j      the jurisdiction
+     * @param j the jurisdiction
      * @param locale the default location
      * @return true if belonging
      */
@@ -501,8 +502,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
 
     @Override
     public boolean isUndefined() {
-        return super.isUndefined()
-                && isEmpty();
+        return super.isUndefined() && isEmpty();
     }
 
     @Override
@@ -512,8 +512,8 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
 
     @Override
     public String displayString( int maxItemLength ) {
-        return resourceSpec().displayString( maxItemLength )
-                + " (" + StringUtils.abbreviate( task, maxItemLength ) + ")";
+        return resourceSpec().displayString( maxItemLength ) + " (" + StringUtils.abbreviate( task, maxItemLength )
+               + ")";
     }
 
     @Override
@@ -609,33 +609,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      * @return the significance
      */
     public Flow.Significance getSignificance( Flow flow ) {
-        return equals( flow.getSource() ) ?
-                flow.getSignificanceToSource() : flow.getSignificanceToTarget();
-    }
-
-    /**
-     * Find explicit or implicit, single, actual actor, if any.
-     *
-     * @param queryService a query service
-     * @return an actor or null
-     */
-    public Actor getKnownActor( QueryService queryService ) {
-        return getActor() == null ? getKnownActualActor( queryService ) : getActor();
-    }
-
-    @SuppressWarnings( "unchecked" )
-    public Actor getKnownActualActor( QueryService queryService ) {
-        List<Actor> knownActors = (List<Actor>)CollectionUtils.collect(
-                queryService.findAllAssignments( this, false ),
-                new Transformer() {
-                    @Override
-                    public Object transform( Object input ) {
-                        Assignment assignment = (Assignment)input;
-                        return assignment.getActor();
-                    }
-                }
-        );
-        return knownActors.size() == 1 ? knownActors.get( 0 ) : null;
+        return equals( flow.getSource() ) ? flow.getSignificanceToSource() : flow.getSignificanceToTarget();
     }
 
     /**
@@ -674,72 +648,25 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         return spec.isAnyJurisdiction() ? Place.UNKNOWN : getJurisdiction();
     }
 
-    /**
-     * Get extended title for the part.
-     *
-     * @param sep          separator string
-     * @param queryService a query service
-     * @return a string
-     */
-    public String getFullTitle( String sep, QueryService queryService ) {
-        String label = "";
-        if ( getActor() != null ) {
-            label += getActor().getName();
-            if ( getActor().isType() ) {
-                Actor impliedActor = getKnownActualActor( queryService );
-                if ( impliedActor != null && !impliedActor.isArchetype() ) {
-                    label += " (" + impliedActor.getName() + ")";
-                }
-            }
-        }
-        if ( getRole() != null ) {
-            if ( !label.isEmpty() ) label += sep;
-            if ( getActor() == null ) {
-                Actor impliedActor = getKnownActualActor( queryService );
-                if ( impliedActor != null && !impliedActor.isArchetype() ) {
-                    label += impliedActor.getName();
-                    label += " ";
-                }
-            }
-            if ( !label.isEmpty() ) label += "as ";
-            label += getRole().getName();
-        }
-        if ( getJurisdiction() != null ) {
-            if ( !label.isEmpty() ) label += ( sep + "for " );
-            label += getJurisdiction().getName();
-        }
-        if ( getOrganization() != null ) {
-            if ( !label.isEmpty() ) label += ( sep + "at " );
-            label += getOrganization().getName();
-        }
-        if ( !label.isEmpty() ) label += sep;
-        label += task;
-        if ( repeating ) {
-            label += " (every " + repeatsEvery.toString() + ")";
-        }
-        return label;
-    }
-
     @Override
     public Place getPlaceBasis() {
-        return location == null ? null
-                : location.getPlaceBasis();
+        return location == null ? null : location.getPlaceBasis();
     }
 
     @Override
-    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
+    public List<? extends GeoLocatable> getImpliedGeoLocatables() {
         List<Part> geoLocatables = new ArrayList<Part>();
         geoLocatables.add( this );
         return geoLocatables;
     }
 
     @Override
-    public String getGeoMarkerLabel( QueryService queryService ) {
+    public String getGeoMarkerLabel() {
         StringBuilder sb = new StringBuilder();
-        sb.append( getFullTitle( " ", queryService ) );
-        if ( location != null ) {
+        sb.append( getTitle() );
+        if ( getLocation() != null ) {
             sb.append( " at " );
-            sb.append( location.getName() );
+            sb.append( getLocation().getName() );
         }
         return sb.toString();
     }
@@ -760,20 +687,15 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
 
     @Override
     public boolean references( final ModelObject mo ) {
-        return ModelObject.areIdentical( getActor(), mo )
-                || ModelObject.areIdentical( getRole(), mo )
-                || ModelObject.areIdentical( getJurisdiction(), mo )
-                || ModelObject.areIdentical( getOrganization(), mo )
-                || ModelObject.areIdentical( location, mo )
-                || ModelObject.areIdentical( initiatedEvent, mo )
-                || CollectionUtils.exists(
-                goals,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Goal) object ).references( mo );
-                    }
-                } );
+        return ModelObject.areIdentical( getActor(), mo ) || ModelObject.areIdentical( getRole(), mo )
+               || ModelObject.areIdentical( getJurisdiction(), mo ) || ModelObject.areIdentical( getOrganization(), mo )
+               || ModelObject.areIdentical( location, mo ) || ModelObject.areIdentical( initiatedEvent, mo )
+               || CollectionUtils.exists( goals, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ( (Goal) object ).references( mo );
+            }
+        } );
     }
 
     /**
@@ -801,15 +723,12 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      */
     @SuppressWarnings( "unchecked" )
     public List<Flow> getNeeds() {
-        return (List<Flow>) CollectionUtils.select(
-                IteratorUtils.toList( receives() ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object obj ) {
-                        return ( (Flow) obj ).isNeed();
-                    }
-                }
-        );
+        return (List<Flow>) CollectionUtils.select( IteratorUtils.toList( receives() ), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ( (Flow) object ).isNeed();
+            }
+        } );
     }
 
     /**
@@ -819,31 +738,22 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      */
     @SuppressWarnings( "unchecked" )
     public List<Flow> getCapabilities() {
-        return (List<Flow>) CollectionUtils.select(
-                IteratorUtils.toList( sends() ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object obj ) {
-                        return ( (Flow) obj ).isCapability();
-                    }
-                }
-        );
-    }
-
-    @Override
-    public List<Flow> getEssentialFlows( boolean assumeFails, QueryService queryService ) {
-        return queryService.findEssentialFlowsFrom( this, assumeFails );
+        return (List<Flow>) CollectionUtils.select( IteratorUtils.toList( sends() ), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ( (Flow) object ).isCapability();
+            }
+        } );
     }
 
     /**
-     * A part is useful if it mitigates risks
-     * or it terminates its segment and at least one of the risks terminates with it.
+     * A part is useful if it mitigates risks or it terminates its segment and at least one of the risks terminates with
+     * it.
      *
      * @return a boolean
      */
     public boolean isUseful() {
-        return !goals.isEmpty()
-                || terminatesEventPhase && getSegment().hasTerminatingRisks();
+        return !goals.isEmpty() || terminatesEventPhase && getSegment().hasTerminatingRisks();
     }
 
     /**
@@ -897,8 +807,8 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         if ( !goals.isEmpty() ) {
             Collections.sort( goals, new Comparator<Goal>() {
                 @Override
-                public int compare( Goal r1, Goal r2 ) {
-                    return r1.getLevel().compareTo( r2.getLevel() ) * -1;
+                public int compare( Goal o1, Goal o2 ) {
+                    return o1.getLevel().compareTo( o2.getLevel() ) * -1;
                 }
             } );
             maxSeverity = goals.get( 0 ).getLevel();
@@ -912,16 +822,12 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      * @return a boolean
      */
     public boolean isImportant() {
-        return isUseful() ||
-                CollectionUtils.exists(
-                        IteratorUtils.toList( sends() ),
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return ( (Flow) object ).isImportant();
-                            }
-                        }
-                );
+        return isUseful() || CollectionUtils.exists( IteratorUtils.toList( sends() ), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ( (Flow) object ).isImportant();
+            }
+        } );
     }
 
     /**
@@ -948,7 +854,8 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         Iterator<Flow> candidates = receivesNamed( info );
         while ( candidates.hasNext() ) {
             Flow candidate = candidates.next();
-            if ( candidate.isNeed() ) return candidate;
+            if ( candidate.isNeed() )
+                return candidate;
         }
         return null;
     }
@@ -963,20 +870,10 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         Iterator<Flow> candidates = sendsNamed( info );
         while ( candidates.hasNext() ) {
             Flow candidate = candidates.next();
-            if ( candidate.isCapability() ) return candidate;
+            if ( candidate.isCapability() )
+                return candidate;
         }
         return null;
-    }
-
-    /**
-     * Get CSS class for part priority.
-     *
-     * @param queryService a query service
-     * @return a string
-     */
-    public String getPriorityCssClass( QueryService queryService ) {
-        Level priority = queryService.computePartPriority( this );
-        return priority.getNegativeLabel().toLowerCase();
     }
 
     @Override
@@ -986,7 +883,6 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         types.add( Attachment.Type.PolicyCant );
         return types;
     }
-
 
     /**
      * Serialize the state of the part, minus its flows
@@ -1011,29 +907,18 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         }
         state.put( "goals", goalMaps );
         if ( initiatedEvent != null )
-            state.put(
-                    "initiatedEvent", initiatedEvent.getName() );
+            state.put( "initiatedEvent", initiatedEvent.getName() );
         if ( getActor() != null )
-            state.put(
-                    "actor",
-                    Arrays.asList( getActor().getName(), getActor().isType() ) );
+            state.put( "actor", Arrays.asList( getActor().getName(), getActor().isType() ) );
         if ( getRole() != null )
-            state.put( "role",
-                    Arrays.asList( getRole().getName(), getRole().isType() ) );
+            state.put( "role", Arrays.asList( getRole().getName(), getRole().isType() ) );
         if ( getOrganization() != null )
-            state.put(
-                    "organization",
-                    Arrays.asList( getOrganization().getName(), getOrganization().isType() ) );
+            state.put( "organization", Arrays.asList( getOrganization().getName(), getOrganization().isType() ) );
         if ( getJurisdiction() != null )
-            state.put(
-                    "jurisdiction",
-                    Arrays.asList( getJurisdiction().getName(), getJurisdiction().isType() ) );
+            state.put( "jurisdiction", Arrays.asList( getJurisdiction().getName(), getJurisdiction().isType() ) );
         if ( location != null )
-            state.put(
-                    "location",
-                    Arrays.asList( location.getName(), location.isType() ) );
+            state.put( "location", Arrays.asList( location.getName(), location.isType() ) );
         return state;
-
     }
 
     /**
@@ -1058,7 +943,8 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     public boolean isSend( Flow flow ) {
         Iterator<Flow> sends = sends();
         while ( sends.hasNext() ) {
-            if ( sends.next().equals( flow ) ) return true;
+            if ( sends.next().equals( flow ) )
+                return true;
         }
         return false;
     }
@@ -1106,7 +992,6 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         return results;
     }
 
-
     public String getOperationalLabel() {
         return isEffectivelyOperational() ? "Yes" : "No";
     }
@@ -1118,57 +1003,48 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
      * @return a flow or null
      */
     public Flow findNeedFor( final Subject subject ) {
-        return (Flow) CollectionUtils.find(
-                getNeeds(),
-                new Predicate() {
+        return (Flow) CollectionUtils.find( getNeeds(), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                Flow need = (Flow) object;
+                return Matcher.getInstance().same( subject.getInfo(), need.getName() )
+                       && CollectionUtils.exists( need.getEois(), new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        Flow need = (Flow) object;
-                        return Matcher.getInstance().same(
-                                subject.getInfo(),
-                                need.getName() )
-                                && CollectionUtils.exists(
-                                    need.getEois(),
-                                    new Predicate() {
-                                        @Override
-                                        public boolean evaluate( Object object ) {
-                                            return Matcher.getInstance().same(
-                                                    ( (ElementOfInformation) object ).getContent(),
-                                                    subject.getContent() );
-                                        }
-                                    }
-                        );
+                        return Matcher.getInstance().same( ( (ElementOfInformation) object ).getContent(),
+                                                           subject.getContent() );
                     }
                 } );
+            }
+        } );
     }
 
     public boolean matchesTaskOf( Part other, Place locale ) {
         return Matcher.getInstance().same( task, other.getTask() )
-                && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale );
+               && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale );
     }
 
     /**
      * Whether this overrides another part.
+     *
      * @param other a part
      * @param locale a place
      * @return a boolean
      */
     public boolean overrides( Part other, Place locale ) {
-        return !equals( other )
-                && !resourceSpec().equals( other.resourceSpec() )
-                && matchesTaskOf( other, locale )
-                && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale );
+        return !equals( other ) && !resourceSpec().equals( other.resourceSpec() ) && matchesTaskOf( other, locale )
+               && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale );
     }
 
     /**
      * Whether this equals or overrides another part.
+     *
      * @param other a part
      * @param locale a place
      * @return a boolean
      */
     public boolean overridesOrEquals( Part other, Place locale ) {
-        return matchesTaskOf( other, locale )
-                && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale );
+        return matchesTaskOf( other, locale ) && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale );
     }
 
     public boolean hasActualOrganization() {
@@ -1270,11 +1146,11 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
 
         public static Category valueOfLabel( String label ) {
             for ( Category category : Category.values() ) {
-                if ( category.getLabel().equals( label ) ) return category;
+                if ( category.getLabel().equals( label ) )
+                    return category;
             }
             return null;
         }
-
 
     }
 }

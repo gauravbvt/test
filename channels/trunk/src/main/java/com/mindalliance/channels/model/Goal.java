@@ -1,6 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -313,29 +312,6 @@ public class Goal implements Serializable, Mappable {
         map.put( "ends", isEndsWithSegment() );
         map.put( "organization", Arrays.asList( getOrganization().getName(), getOrganization().isType() ) );
         return map;
-    }
-
-    /**
-     * Create goal from mapped state.
-     *
-     * @param map          a map
-     * @param queryService a query service
-     * @return a goal
-     */
-    public static Goal fromMap( Map<String, Object> map, QueryService queryService ) {
-        Goal goal = new Goal();
-        goal.setCategory( Goal.Category.valueOf( (String) map.get( "category" ) ) );
-        goal.setDescription( (String) map.get( "description" ) );
-        goal.setLevel( Level.valueOf( (String) map.get( "level" ) ) );
-        goal.setPositive( (Boolean) map.get( "positive" ) );
-        goal.setEndsWithSegment( (Boolean) map.get( "ends" ) );
-        List orgSpec = (List) map.get( "organization" );
-        boolean isType = (Boolean) orgSpec.get( 1 );
-        Organization org = isType
-                ? queryService.findOrCreateType( Organization.class, (String) orgSpec.get( 0 ) )
-                : queryService.findOrCreate( Organization.class, (String) orgSpec.get( 0 ) );
-        goal.setOrganization( org );
-        return goal;
     }
 
     /**

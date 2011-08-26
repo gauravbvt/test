@@ -1,7 +1,6 @@
 package com.mindalliance.channels.model;
 
 import com.mindalliance.channels.model.Attachment.Type;
-import com.mindalliance.channels.query.QueryService;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -308,12 +307,8 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     }
 
     @Override
-    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
-        List<Place> geoLocatables = new ArrayList<Place>();
-        for ( Place place : queryService.listEntitiesNarrowingOrEqualTo( this ) )
-            if ( place.isActual() && place.getPlaceBasis() != null )
-                geoLocatables.add( place );
-        return geoLocatables;
+    public List<? extends GeoLocatable> getImpliedGeoLocatables() {
+        return new ArrayList<Place>();
     }
 
     /**
@@ -371,7 +366,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     }
 
     @Override
-    public String getGeoMarkerLabel( QueryService queryService ) {
+    public String getGeoMarkerLabel() {
         StringBuilder sb = new StringBuilder();
         sb.append( toString() );
         String fullAddress = getFullAddress();
@@ -445,20 +440,6 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      */
     public List<GeoLocation> getGeoLocations() {
         return geoLocations;
-    }
-
-    @Override
-    public void beforeRemove( QueryService queryService ) {
-        super.beforeRemove( queryService );
-        for ( Job job : queryService.findAllConfirmedJobs( this ) )
-            job.setJurisdiction( null );
-        for ( Part part : queryService.findAllParts( null, this, true ) )
-            part.setJurisdiction( null );
-        for ( Part part : queryService.findAllPartsWithExactLocation( this ) )
-            part.setLocation( null );
-        for ( Place place : queryService.list( Place.class ) )
-            if ( equals( place.getWithin() ) )
-                place.setWithin( null );
     }
 
     /**

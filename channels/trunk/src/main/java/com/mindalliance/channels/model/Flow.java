@@ -93,9 +93,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     protected Flow() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String getKindLabel() {
         return "Flow";
     }
@@ -168,9 +165,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return getEffectiveChannels();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void addChannel( Channel channel ) {
         addChannelIfUnique( channel );
     }
@@ -189,16 +183,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         if ( !getEffectiveChannels().contains( channel ) ) getEffectiveChannels().add( channel );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void removeChannel( Channel channel ) {
         getEffectiveChannels().remove( channel );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String getChannelsString() {
         return Channel.toString( getEffectiveChannels() );
     }
@@ -321,9 +309,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.referencesEventPhase = referencesEventPhase;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean isEffectivelyOperational() {
         return isOperational()
                 &&
@@ -480,9 +465,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return ( isProhibited() ? "Prohibited: " : "" ) + title;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return getTitle();
@@ -561,28 +543,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     public abstract void initFrom( Flow flow );
 
     /**
-     * Initialize relevant properties as a capability satisfying a need.
-     *
-     * @param capability   a flow
-     * @param need         a flow
-     * @param queryService a query service
-     */
-    public void initSharingFrom( Flow capability, Flow need, QueryService queryService ) {
-        setEois( queryService.findCommonEOIs( capability, need ) );
-        setSignificanceToSource( capability.getSignificanceToSource() );
-        setSignificanceToTarget( need.getSignificanceToTarget() );
-        setChannels( Channel.intersect(
-                capability.getChannels(),
-                need.getChannels(), queryService.getPlan().getLocale() ) );
-        setMaxDelay( Delay.min( capability.getMaxDelay(), need.getMaxDelay() ) );
-        setIntent( capability.getIntent() != null ? capability.getIntent() : need.getIntent() );
-        setRestriction( Flow.Restriction.resolve(
-                need.getRestriction(),
-                capability.getRestriction() ) );
-        setIfTaskFails( capability.isIfTaskFails() );
-    }
-
-    /**
      * Test if a node is at either end of this flow.
      *
      * @param isSend true for checking target, false for source
@@ -594,9 +554,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 || !isSend && getSource().equals( node );
     }
 
-    /**
-     * {@inheritDoc }
-     */
     public List<Channel> allChannels() {
         return getEffectiveChannels();
     }
@@ -805,9 +762,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return channelsCopy;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean canBeUnicast() {
         Node node = isAskedFor() ? getSource() : getTarget();
         if ( node.isPart() ) {
@@ -819,9 +773,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
     }
 
-    /**
-     * {@inheritDoc }
-     */
     public String validate( Channel channel ) {
         TransmissionMedium medium = channel.getMedium();
         if ( medium == null || medium.isUnknown() ) {
@@ -871,9 +822,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean isUndefined() {
         return super.isUndefined()
                 && channels.isEmpty()
@@ -948,9 +896,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return isInternal() && getTarget().isConnector();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public List<Attachment.Type> getAttachmentTypes() {
         List<Attachment.Type> types = super.getAttachmentTypes();
         if ( !hasImage() )
@@ -960,9 +905,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return types;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String getTypeName() {
         return "flow";
     }
@@ -1087,9 +1029,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean references( final ModelObject mo ) {
         return CollectionUtils.exists(
                 channels,
@@ -1098,17 +1037,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                         return ( (Channel) obj ).references( mo );
                     }
                 } );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Flow> getEssentialFlows( boolean assumeFails, QueryService queryService ) {
-        if ( isEssential( assumeFails, queryService ) ) {
-            return new ArrayList<Flow>( getTarget().getEssentialFlows( assumeFails, queryService ) );
-        } else {
-            return new ArrayList<Flow>();
-        }
     }
 
     /**
@@ -1124,62 +1052,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
-     * Whether the flow could be essential to risk mitigation.
-     *
-     * @param assumeFails  whether alternate flows are assumed
-     * @param queryService a query service
-     * @return a boolean
-     */
-    public boolean isEssential( boolean assumeFails, QueryService queryService ) {
-        return isImportant()
-                && ( assumeFails || queryService.getAlternates( this ).isEmpty() )
-                && !isSharingWithSelf( queryService );
-    }
-
-    /**
-     * Whether this is a sharing flow where source actor is target actor.
-     *
-     * @param queryService a query service
-     * @return a boolean
-     */
-    public boolean isSharingWithSelf( QueryService queryService ) {
-        boolean sharingWithSelf = false;
-        if ( isSharing() ) {
-            Part sourcePart = (Part) getSource();
-            Part targetPart = (Part) getTarget();
-            Actor onlySource = sourcePart.getKnownActualActor( queryService );
-            if ( onlySource != null ) {
-                Actor onlyTarget = targetPart.getKnownActualActor( queryService );
-                if ( onlyTarget != null ) {
-                    sharingWithSelf = onlySource.equals( onlyTarget );
-                }
-            }
-        }
-        return sharingWithSelf;
-    }
-
-    /**
      * Flow has part as source or target.
      *
      * @param part a part
      * @return a boolean
      */
     public abstract boolean hasPart( Part part );
-
-    /**
-     * Get CSS class for flow priority.
-     *
-     * @param queryService a query service
-     * @return a string
-     */
-    public String getPriorityCssClass( QueryService queryService ) {
-        if ( isSharing() ) {
-            Level priority = queryService.computeSharingPriority( this );
-            return priority.getNegativeLabel().toLowerCase();
-        } else {
-            return "none";
-        }
-    }
 
     /**
      * Get a copy of the elements of information in a flow.
@@ -1345,7 +1223,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         );
     }
 
-
     /**
      * The significance of a flow.
      */
@@ -1392,9 +1269,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             return Arrays.asList( values() );
         }
 
-        /**
-         * {@inheritDoc}
-         */
         public String toString() {
             return name();
         }

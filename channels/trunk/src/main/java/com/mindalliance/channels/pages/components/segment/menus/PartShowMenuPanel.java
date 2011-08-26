@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.segment.menus;
 
 import com.mindalliance.channels.command.Change;
+import com.mindalliance.channels.model.Actor;
 import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
@@ -27,6 +28,18 @@ public class PartShowMenuPanel extends MenuPanel {
 
     public PartShowMenuPanel( String s, IModel<? extends Part> model, Set<Long> expansions ) {
         super( s, "Show", model, expansions );
+    }
+
+    /**
+     * Find explicit or implicit, single, actual actor, if any.
+     *
+     * @param part a part
+     * @param queryService a query service
+     * @return an actor or null
+     */
+    private static Actor getKnownActor( Part part, QueryService queryService ) {
+        Actor actor = part.getActor();
+        return actor == null ? queryService.getKnownActualActor( part ) : actor;
     }
 
     /**
@@ -110,8 +123,8 @@ public class PartShowMenuPanel extends MenuPanel {
         List<ModelObjectWrapper> modelObjects = new ArrayList<ModelObjectWrapper>();
         Part part = getPart();
         QueryService queryService = getQueryService();
-        if ( part.getKnownActor( queryService ) != null )
-            modelObjects.add( new ModelObjectWrapper( "About agent", part.getKnownActor( queryService ) ) );
+        if ( getKnownActor( part, queryService ) != null )
+            modelObjects.add( new ModelObjectWrapper( "About agent", getKnownActor( part, queryService ) ) );
         if ( part.getRole() != null )
             modelObjects.add( new ModelObjectWrapper( "About role", part.getRole() ) );
         if ( part.getOrganization() != null )

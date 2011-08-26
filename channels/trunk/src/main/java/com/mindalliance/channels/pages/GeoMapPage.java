@@ -3,7 +3,11 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.geo.GeoService;
 import com.mindalliance.channels.model.GeoLocatable;
 import com.mindalliance.channels.model.GeoLocation;
+import com.mindalliance.channels.model.Job;
+import com.mindalliance.channels.model.Organization;
+import com.mindalliance.channels.model.Part;
 import com.mindalliance.channels.model.Place;
+import com.mindalliance.channels.model.Plan;
 import com.mindalliance.channels.query.QueryService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
@@ -32,13 +36,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Page showing geo map.
- * Note: can't use an Ajax-generated panel with GMap2
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jun 18, 2009
- * Time: 12:47:45 PM
+ * Page showing geo map. Note: can't use an Ajax-generated panel with GMap2 Copyright (C) 2008 Mind-Alliance Systems.
+ * All Rights Reserved. Proprietary and Confidential. User: jf Date: Jun 18, 2009 Time: 12:47:45 PM
  */
 public class GeoMapPage extends AbstractChannelsWebPage {
 
@@ -50,7 +49,9 @@ public class GeoMapPage extends AbstractChannelsWebPage {
 
     private static final String TITLE_PARAM = "t";
 
-    /** The geo service */
+    /**
+     * The geo service.
+     */
     @SpringBean
     private GeoService geoService;
 
@@ -63,13 +64,10 @@ public class GeoMapPage extends AbstractChannelsWebPage {
         String title = pageParameters.getString( TITLE_PARAM );
 
         boolean hideMap = !geoService.isConfigured() || geoMarkers.isEmpty();
-        add(
-            new Label( "title", title ),
-            new Label( "caption", title ),
-            new WebMarkupContainer( "nothing" ).setVisible( hideMap ),
+        add( new Label( "title", title ), new Label( "caption", title ), new WebMarkupContainer( "nothing" ).setVisible(
+                hideMap ),
 
-            hideMap ? new Label( "map", "" ).setVisible( false )
-                    : createGmap() );
+             hideMap ? new Label( "map", "" ).setVisible( false ) : createGmap() );
     }
 
     private static List<GeoMarker> getGeoMarkers( PageParameters params ) {
@@ -77,7 +75,7 @@ public class GeoMapPage extends AbstractChannelsWebPage {
         String[] values = params.getStringArray( MARKER_PARAM );
         if ( values != null )
             for ( String value : values )
-                    markers.add( new GeoMarker( value ) );
+                markers.add( new GeoMarker( value ) );
 
         return markers;
     }
@@ -105,36 +103,53 @@ public class GeoMapPage extends AbstractChannelsWebPage {
     }
 
     public static BookmarkablePageLink<GeoMapPage> makeLink(
-        String id,
-        IModel<String> titleModel,
-        GeoLocatable geo,
-        QueryService queryService ) {
+            String id, IModel<String> titleModel, GeoLocatable geo, QueryService queryService ) {
+
         List<GeoLocatable> geos = new ArrayList<GeoLocatable>();
-        geos.addAll( geo.getImpliedGeoLocatables( queryService ) );
+        geos.addAll( getImpliedGeoLocatables( geo, queryService ) );
         return makeLink( id, titleModel, geos, queryService );
     }
 
+    public static List<? extends GeoLocatable> getImpliedGeoLocatables( GeoLocatable geo, QueryService queryService ) {
+        if ( geo instanceof Job ) {
+            Place jurisdiction = ( (Job) geo ).getJurisdiction();
+            return jurisdiction == null ? new ArrayList<Place>()
+                                        : queryService.listEntitiesNarrowingOrEqualTo( jurisdiction );
+        } else if ( geo instanceof Organization ) {
+            List<Organization> result = new ArrayList<Organization>();
+            for ( Organization org : queryService.listEntitiesNarrowingOrEqualTo( (Organization) geo ) )
+                if ( org.isActual() && org.getPlaceBasis() != null )
+                    result.add( org );
+
+            return result;
+        } else if ( geo instanceof Place ) {
+            List<Place> result = new ArrayList<Place>();
+            for ( Place place : queryService.listEntitiesNarrowingOrEqualTo( (Place) geo ) )
+                if ( place.isActual() && place.getPlaceBasis() != null )
+                    result.add( place );
+
+            return result;
+        }
+
+        return geo.getImpliedGeoLocatables();
+    }
+
+
     public static BookmarkablePageLink<GeoMapPage> makeLink(
-        String id,
-        IModel<String> titleModel,
-        List<? extends GeoLocatable> geos,
-        QueryService queryService) {
-        PageParameters params = makeGeoMapParameters( titleModel, geos );
+            String id, IModel<String> titleModel, List<? extends GeoLocatable> geos, QueryService queryService ) {
+
+        PageParameters params = makeGeoMapParameters( titleModel, geos, queryService );
         BookmarkablePageLink<GeoMapPage> link = makeLink( id, params );
         addPlanParameters( link, queryService.getPlan() );
         return link;
     }
 
     public static BookmarkablePageLink<GeoMapPage> makeLink(
-        String id,
-        IModel<String> titleModel,
-        GeoLocation geoLocation,
-        QueryService queryService ) {
-        PageParameters params = makeGeoMapParameters(
-                titleModel,
-                geoLocation );
+            String id, IModel<String> titleModel, GeoLocation geoLocation, Plan plan ) {
+
+        PageParameters params = makeGeoMapParameters( titleModel, geoLocation );
         BookmarkablePageLink<GeoMapPage> link = makeLink( id, params );
-        addPlanParameters( link, queryService.getPlan() );
+        addPlanParameters( link, plan );
         return link;
     }
 
@@ -144,16 +159,12 @@ public class GeoMapPage extends AbstractChannelsWebPage {
         popupSettings.setWidth( 620 );
         popupSettings.setTop( 100 );
         popupSettings.setLeft( 100 );
-        BookmarkablePageLink<GeoMapPage> geomapLink = new BookmarkablePageLink<GeoMapPage>(
-            id, GeoMapPage.class, params );
-        geomapLink.add(
-            new AttributeModifier(
-                "target", true, new Model<String>( "geomap" ) ) );
+        BookmarkablePageLink<GeoMapPage> geomapLink = new BookmarkablePageLink<GeoMapPage>( id, GeoMapPage.class, params );
+        geomapLink.add( new AttributeModifier( "target", true, new Model<String>( "geomap" ) ) );
         return geomapLink;
     }
 
-    private static PageParameters makeGeoMapParameters(
-        IModel<String> titleModel, GeoLocation geoLocation ) {
+    private static PageParameters makeGeoMapParameters( IModel<String> titleModel, GeoLocation geoLocation ) {
         PageParameters params = new PageParameters();
         params.put( TITLE_PARAM, titleModel.getObject() );
         String value = makeMarkerParam( geoLocation.toString(), geoLocation );
@@ -162,7 +173,7 @@ public class GeoMapPage extends AbstractChannelsWebPage {
     }
 
     private static PageParameters makeGeoMapParameters(
-        IModel<String> titleModel, List<? extends GeoLocatable> geos ) {
+            IModel<String> titleModel, List<? extends GeoLocatable> geos, QueryService queryService ) {
 
         Map<GeoLocation, List<GeoLocatable>> locatedGeos = new HashMap<GeoLocation, List<GeoLocatable>>();
         for ( GeoLocatable geo : new HashSet<GeoLocatable>( geos ) ) {
@@ -186,22 +197,22 @@ public class GeoMapPage extends AbstractChannelsWebPage {
         Iterator<GeoLocation> iter = locatedGeos.keySet().iterator();
         while ( iter.hasNext() && querySize < MAX_QUERY_SIZE ) {
             GeoLocation geoLocation = iter.next();
-            Iterator<GeoLocatable> locs = locatedGeos.get( geoLocation ).iterator();
             StringBuilder sb = new StringBuilder();
             Set<String> labels = new HashSet<String>();
-            while ( locs.hasNext() ) {
-                GeoLocatable geo = locs.next();
-                String label = geo.getGeoMarkerLabel( Channels.instance().getQueryService() );
+
+            for ( GeoLocatable geo : locatedGeos.get( geoLocation ) ) {
+                String label = getGeoMarkerLabel( queryService, geo );
                 if ( !labels.contains( label ) ) {
-                    if ( !sb.toString().isEmpty() && !sb.toString().endsWith( " - " ) ) {
+                    if ( !sb.toString().isEmpty() && !sb.toString().endsWith( " - " ) )
                         sb.append( " - " );
-                    }
+
                     labels.add( label );
                     sb.append( labels.size() );
                     sb.append( ". " );
                     sb.append( label );
                 }
             }
+
             String label = sb.toString();
             String value = makeMarkerParam( label, geoLocation );
             querySize += GeoMapPage.MARKER_PARAM.length() + value.length() + 1;
@@ -209,6 +220,22 @@ public class GeoMapPage extends AbstractChannelsWebPage {
                 params.add( MARKER_PARAM, value );
         }
         return params;
+    }
+
+    private static String getGeoMarkerLabel( QueryService queryService, GeoLocatable geo ) {
+        if ( geo instanceof Part ) {
+            Part part = (Part) geo;
+            StringBuilder sb = new StringBuilder();
+            sb.append( queryService.getFullTitle( " ", part ) );
+            Place location = part.getLocation();
+            if ( location != null ) {
+                sb.append( " at " );
+                sb.append( location.getName() );
+            }
+            return sb.toString();
+        }
+        else
+            return geo.getGeoMarkerLabel();
     }
 
     private static String makeMarkerParam( String label, GeoLocation geoLocation ) {
@@ -221,7 +248,7 @@ public class GeoMapPage extends AbstractChannelsWebPage {
         return sb.toString();
     }
 
-    private static class GeoMarker implements Serializable {
+    private static final class GeoMarker implements Serializable {
 
         private final String label;
 
@@ -232,9 +259,9 @@ public class GeoMapPage extends AbstractChannelsWebPage {
         private GeoMarker( String param ) {
             String[] vals = StringUtils.split( param, MARKER_SEP );
             assert vals.length == 3;
-            label = vals[ 0 ];
-            latitude = Double.valueOf( vals[ 1 ] );
-            longitude = Double.valueOf( vals[ 2 ] );
+            label = vals[0];
+            latitude = Double.valueOf( vals[1] );
+            longitude = Double.valueOf( vals[2] );
         }
 
         public String getLabel() {

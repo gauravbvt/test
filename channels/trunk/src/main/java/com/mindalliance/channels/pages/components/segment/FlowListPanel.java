@@ -70,11 +70,27 @@ public class FlowListPanel extends AbstractCommandablePanel {
         init();
     }
 
+    /**
+     * Get CSS class for flow priority.
+     *
+     *
+     * @param flow the flow
+     * @return a string
+     */
+    private String getPriorityCssClass( Flow flow ) {
+        if ( flow.isSharing() ) {
+            Level priority = queryService.computeSharingPriority( flow );
+            return priority.getNegativeLabel().toLowerCase();
+        } else
+            return "none";
+    }
+
     private void init() {
         setSends( sends );
         setDefaultModel( new CompoundPropertyModel( this ) );
         add( new Label( "title" ) );                                                      // NON-NLS
         AjaxFallbackLink newLink = new AjaxFallbackLink( "new" ) {
+            @Override
             public void onClick( AjaxRequestTarget target ) {
                 Part n = (Part) getNode();
                 Command command = isSends()
@@ -100,6 +116,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
 
     private ListView<Flow> createFlowPanels( final boolean areSends ) {
         return new ListView<Flow>( "flows", new PropertyModel<List<Flow>>( this, "flows" ) ) {
+            @Override
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();
                 long flowId = flow.getId();
@@ -137,7 +154,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     String getCssClasses( ListItem<Flow> item ) {
         Flow flow = item.getModelObject();
         String evenOdd = ( item.getIndex() % 2 == 0 ? "even" : "odd" );
-        String priority = flow.getPriorityCssClass( queryService );
+        String priority = getPriorityCssClass( flow );
         return evenOdd + " " + priority;
     }
 
@@ -152,6 +169,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
         Iterator<Flow> iterator = sends ? getNode().sends() : getNode().receives();
         while ( iterator.hasNext() ) flows.add( iterator.next() );
         Collections.sort( flows, new Comparator<Flow>() {
+            @Override
             public int compare( Flow flow, Flow other ) {
 //                if ( expansions.contains( flow.getId() ) ) return -1;
                 if ( flow.isSharing() && !other.isSharing() ) return -1;
@@ -194,10 +212,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
-
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         target.appendJavascript( PlanPage.IE7CompatibilityScript );
         if ( change.isDisplay() || change.isAdded() ) {

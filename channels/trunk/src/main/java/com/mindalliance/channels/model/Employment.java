@@ -1,7 +1,5 @@
 package com.mindalliance.channels.model;
 
-import com.mindalliance.channels.query.QueryService;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,15 +166,15 @@ public class Employment implements GeoLocatable, Specable {
     }
 
     @Override
-    public List<? extends GeoLocatable> getImpliedGeoLocatables( QueryService queryService ) {
+    public List<? extends GeoLocatable> getImpliedGeoLocatables() {
         List<Employment> geoLocatables = new ArrayList<Employment>();
         geoLocatables.add( this );
         return geoLocatables;
     }
 
     @Override
-    public String getGeoMarkerLabel( QueryService queryService ) {
-        return getOrganization().getGeoMarkerLabel( queryService );
+    public String getGeoMarkerLabel() {
+        return getOrganization().getGeoMarkerLabel();
     }
 
     public boolean equals( Object obj ) {
