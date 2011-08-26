@@ -6,7 +6,7 @@ import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.commands.AttachDocument;
 import com.mindalliance.channels.engine.command.commands.CopyAttachment;
 import com.mindalliance.channels.engine.command.commands.DetachDocument;
-import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Attachable;
 import com.mindalliance.channels.core.model.Attachment;
 import com.mindalliance.channels.core.model.Attachment.Type;

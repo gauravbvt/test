@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.procedures;
 
 import com.mindalliance.channels.core.attachments.AttachmentManager;
-import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Organization;

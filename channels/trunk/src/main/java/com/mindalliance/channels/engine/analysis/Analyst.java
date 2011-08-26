@@ -2,7 +2,7 @@ package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
-import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;

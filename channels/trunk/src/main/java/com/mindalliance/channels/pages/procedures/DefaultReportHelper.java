@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.procedures;
 
 import com.mindalliance.channels.core.attachments.AttachmentManager;
 import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.imaging.ImagingService;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;

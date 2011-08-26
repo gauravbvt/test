@@ -1,4 +1,4 @@
-package com.mindalliance.channels.imaging;
+package com.mindalliance.channels.engine.imaging;
 
 import com.mindalliance.channels.core.attachments.AttachmentManager;
 import com.mindalliance.channels.core.dao.User;

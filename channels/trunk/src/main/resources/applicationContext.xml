@@ -94,7 +94,7 @@ CONFIGURATION NOTES:
     <bean id="analyst" class="com.mindalliance.channels.engine.analysis.DefaultAnalyst" init-method="start"
           destroy-method="stop"/>
 
-    <bean id="imagingService" class="com.mindalliance.channels.imaging.DefaultImagingService">
+    <bean id="imagingService" class="com.mindalliance.channels.engine.imaging.DefaultImagingService">
         <property name="iconDirectory" value="${channels.home}${file.separator}icons"/>
         <property name="imageDirectory" value="WEB-INF/images"/>
         <property name="iconPath" value="icons/"/>
