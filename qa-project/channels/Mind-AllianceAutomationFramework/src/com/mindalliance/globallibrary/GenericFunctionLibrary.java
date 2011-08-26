@@ -265,7 +265,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathTaskAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathTaskAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathTaskIssueMenu",oXmlElePlanPage.getElementsByTagName("xPathTaskIssueMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathTaskIssueAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathTaskIssueAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
-			GlobalVariables.plan.put("sXpathPhaseCreatedAssertion",oXmlElePlanPage.getElementsByTagName("xPathPhaseCreatedAssertion").item(0).getChildNodes().item(0).getNodeValue());
+		
 			GlobalVariables.plan.put("sXpathEventTagsLink",oXmlElePlanPage.getElementsByTagName("xPathEventTagsLink").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathViewAllTypesOfAddInfoSendNewMedium",oXmlElePlanPage.getElementsByTagName("xPathViewAllTypesOfAddInfoSendNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathSendsAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathSendsAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
@@ -274,6 +274,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathAddInfoSendNewMedium",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathTaskCausesEvent",oXmlElePlanPage.getElementsByTagName("xPathTaskCausesEvent").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathDeletePlacesAttachment",oXmlElePlanPage.getElementsByTagName("xPathDeletePlacesAttachment").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathCrossOnAttachmentCopiedMessage",oXmlElePlanPage.getElementsByTagName("xPathCrossOnAttachmentCopiedMessage").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathDeletePlaceAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathDeletePlaceAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathPlacesAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathPlacesAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
@@ -288,7 +289,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathPhaseCreatedAssertion", oXmlElePlanPage.getElementsByTagName("xPathPhaseCreatedAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathMediumDeleteAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathMediumDeleteAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathDeleteEventAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathDeleteEventAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
-			GlobalVariables.assertion.put("sXathCopyAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathCopyAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.assertion.put("sXpathCopyAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathCopyAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathEventUrlAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathEventUrlAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionPhaseDetails", oXmlElePlanPage.getElementsByTagName("xPathAssertionPhaseDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionDetails",oXmlElePlanPage.getElementsByTagName("xPathAssertionDetails").item(0).getChildNodes().item(0).getNodeValue());
@@ -450,6 +451,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("disintermediate",oXmlEleViewElements.getElementsByTagName("disintermediate").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("undoDisintermediate",oXmlEleViewElements.getElementsByTagName("undoDisintermediate").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("reference",oXmlEleViewElements.getElementsByTagName("reference").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("picture",oXmlEleViewElements.getElementsByTagName("picture").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("policy",oXmlEleViewElements.getElementsByTagName("policy").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("pasteAttachment",oXmlEleViewElements.getElementsByTagName("pasteAttachment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("undoPasteAttachment",oXmlEleViewElements.getElementsByTagName("undoPasteAttachment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("redoPasteAttachment",oXmlEleViewElements.getElementsByTagName("redoPasteAttachment").item(0).getChildNodes().item(0).getNodeValue());
@@ -708,6 +711,10 @@ public class GenericFunctionLibrary {
 		// Webdriver close
 		GlobalStatic.oDriver.close();*/
 		GlobalVariables.sEndDateTime = LogFunctions.getDateTime();
+//		Runtime r = Runtime.getRuntime();
+//		r.gc();
+//		System.runFinalization();
+//		System.gc();
 		System.out.println("TestData cleanup completed");
 	}
 }
