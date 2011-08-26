@@ -17,7 +17,7 @@ public class TE143_OrganizationAttachmentAsReference
 {
 	public TE143_OrganizationAttachmentAsReference() {
 		try {
-			GlobalVariables.sTestCaseId = "TE142_OrganizationAttachmentAsPicture";
+			GlobalVariables.sTestCaseId = "TE143_OrganizationAttachmentAsReference";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);

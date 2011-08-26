@@ -117,6 +117,15 @@ public class TE148_AttachFileToOrganization
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					// Delete Attachment
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhaseAttachment"))).click();
 					// WebElement Synchronization
@@ -128,19 +137,10 @@ public class TE148_AttachFileToOrganization
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					
-					// Click on 'done' button
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Done";
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
-					
+					Thread.sleep(1000);
 					// Click on Organization
 					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
 					// WebElement Synchronization
@@ -148,6 +148,10 @@ public class TE148_AttachFileToOrganization
 					Thread.sleep(3000);
 					// Remove Organization
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

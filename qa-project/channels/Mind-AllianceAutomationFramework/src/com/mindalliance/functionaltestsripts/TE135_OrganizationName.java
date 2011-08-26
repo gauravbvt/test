@@ -110,8 +110,7 @@ public class TE135_OrganizationName
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
-					
+					Thread.sleep(3000);					
 					// Click on Organization
 					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Organization"))).click();
 					// WebElement Synchronization
@@ -119,7 +118,10 @@ public class TE135_OrganizationName
 					Thread.sleep(3000);
 					// Remove Organization
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

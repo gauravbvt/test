@@ -187,10 +187,38 @@ public class TE163_JobsCreated
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
+					// Clear details
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					// Check box
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed")).click();
+					 // WebElement Synchronization
+				    Thread.currentThread();
+				    Thread.sleep(3000);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(1000);					
+					// Click on Organization
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					// Remove Organization
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;

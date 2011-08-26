@@ -119,31 +119,26 @@ public class TE115_PhaseCategories
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					// Delete Categories
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhaseCategories"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);		
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);	
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);	
+					// Delete an Phase
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// And acknowledge the alert (equivalent to clicking "OK")
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					
-					// Click on Done
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Done";
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);			
-					// Delete an Phase
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
-					alert = GlobalVariables.oDriver.switchTo().alert();
-					// And acknowledge the alert (equivalent to clicking "OK")
-					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

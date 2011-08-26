@@ -34,35 +34,6 @@ public class TE108_CreatPhaseWithSpecialCharacters
 					Thread.currentThread();
 					Thread.sleep(10000);
 				    
-					// Click on 'Add new segment' option under 'Actions' pop up menu
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Segment Added";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);	
-					
-					// Details of Segment
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Details of Segment enetered";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
-					for (int i = 0; i <= 8; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Create New Phase With Special Characters"));
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);	
-					
 					//Click on 'About Plan' under show pop-up menu
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="About plan";
@@ -82,6 +53,9 @@ public class TE108_CreatPhaseWithSpecialCharacters
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
 					GlobalVariables.oElement.sendKeys(phase);
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
 //					// Assertion: Verify that Phase has been created
 //					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseCreatedAssertion")));
 //					if(GlobalVariables.oElement.getText().equalsIgnoreCase(phase)){
@@ -96,10 +70,10 @@ public class TE108_CreatPhaseWithSpecialCharacters
 //						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 //								GlobalVariables.sBlank, GlobalVariables.sBlank);
 //					}
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					//delete an phase
+//					// WebElement Synchronization
+//					Thread.currentThread();
+//					Thread.sleep(1000);
+					// Delete an phase
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// And acknowledge the alert (equivalent to clicking "OK")

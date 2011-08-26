@@ -88,8 +88,7 @@ public class TE149_AttachOrganizationURL
 					// Click on 'URL' radio button
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="URL radio button clicked";			
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:radios")).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:radios"));
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentsURLRadioButton"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -101,22 +100,13 @@ public class TE149_AttachOrganizationURL
 					//Attach Attachment as a URL
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Attachment attached as a URL";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathURL"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
 					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
-					if (GlobalVariables.sBrowser.equals("Internet Explorer")) {
-						GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("controls"));
-						GlobalVariables.oElement.click();
-							GlobalVariables.oElement.sendKeys(Keys.ARROW_UP);
-						}
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(5000);
 					//Assertion : Verify that URL gets Attached
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathEventUrlAttachmentAssertion")));
 					if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))){
@@ -132,8 +122,20 @@ public class TE149_AttachOrganizationURL
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				    }
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					// Delete Attachment
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteEventAttachment"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhaseAttachment"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
@@ -143,19 +145,10 @@ public class TE149_AttachOrganizationURL
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					
-					// Click on 'done' button
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Done";
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
-					
+					Thread.sleep(1000);
 					// Click on Organization
 					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
 					// WebElement Synchronization
@@ -163,6 +156,10 @@ public class TE149_AttachOrganizationURL
 					Thread.sleep(3000);
 					// Remove Organization
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

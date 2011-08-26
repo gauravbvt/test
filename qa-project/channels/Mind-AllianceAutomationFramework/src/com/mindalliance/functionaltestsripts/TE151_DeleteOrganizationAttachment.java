@@ -102,8 +102,16 @@ public class TE151_DeleteOrganizationAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
+					Thread.sleep(3000);					
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
 					Thread.sleep(3000);
-					
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					// Delete Attachment
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Delete Organization Attachment";
@@ -147,18 +155,21 @@ public class TE151_DeleteOrganizationAttachment
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					
 					// Click on Organization
 					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(3000);					
 					// Remove Organization
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);					
+
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Logout is successful";
