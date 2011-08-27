@@ -1,8 +1,8 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.model.Attachment.Type;
 import com.mindalliance.channels.core.model.Phase.Timing;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -350,12 +350,11 @@ public class Plan extends ModelObject {
     }
 
     public InfoStandard getInfoStandard( final String name ) {
-        final Matcher matcher = Matcher.getInstance();
         return (InfoStandard) CollectionUtils.find( getTags(), new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
                 Tag tag = (Tag) object;
-                return tag.isInfoStandard() && matcher.same( tag.getName(), name );
+                return tag.isInfoStandard() && Matcher.same( tag.getName(), name );
             }
         } );
     }

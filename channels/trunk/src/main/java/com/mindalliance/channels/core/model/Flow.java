@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.engine.nlp.Matcher;
+import com.mindalliance.channels.core.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -1001,7 +1001,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         assert isNeed();
         for ( Iterator<Flow> it = getTarget().receives(); it.hasNext(); ) {
             Flow flow = it.next();
-            if ( flow.isSharing() && Matcher.getInstance().same( getName(), flow.getName() ) )
+            if ( flow.isSharing() && Matcher.same( getName(), flow.getName() ) )
                 return true;
         }
         return false;
@@ -1021,7 +1021,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                         new Predicate() {
                             public boolean evaluate( Object obj ) {
                                 Flow flow = (Flow) obj;
-                                return flow.isSharing() && Matcher.getInstance().same( getName(),
+                                return flow.isSharing() && Matcher.same( getName(),
                                         flow.getName() );
                             }
                         }
@@ -1090,7 +1090,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 getEois(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
-                        return Matcher.getInstance().same(
+                        return Matcher.same(
                                 ( (ElementOfInformation) object ).getContent(),
                                 content );
                     }
@@ -1164,7 +1164,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public boolean matchesInfoOf( Flow other, Place locale ) {
         return Restriction.implies( getRestriction(), other.getRestriction() )
-                && Matcher.getInstance().same( getName(), other.getName() )
+                && Matcher.same( getName(), other.getName() )
                 && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale );
     }
 
@@ -1216,7 +1216,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     @Override
                     public boolean evaluate( Object object ) {
                         ElementOfInformation eoi = (ElementOfInformation) object;
-                        return eoi.isTimeSensitive() && Matcher.getInstance().same( eoi.getContent(), eoiContent );
+                        return eoi.isTimeSensitive() && Matcher.same( eoi.getContent(), eoiContent );
                     }
                 }
         );

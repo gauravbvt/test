@@ -1,5 +1,6 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.ElementOfInformation;
@@ -8,7 +9,6 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -38,7 +38,6 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow need = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        final Matcher matcher = Matcher.getInstance();
         if ( !need.getName().isEmpty()
                 && need.isNeed() ) {
             // if empty, then need = "give me anything you've got"
@@ -73,9 +72,7 @@ public class UnsatisfiedNeed extends AbstractIssueDetector {
                                             new Predicate() {
                                                 public boolean evaluate( Object o ) {
                                                     String sharedEOI = ( (ElementOfInformation) o ).getContent();
-                                                    return matcher.same(
-                                                            neededEOI,
-                                                            sharedEOI );
+                                                    return Matcher.same( neededEOI, sharedEOI );
                                                 }
                                             }
                                     );

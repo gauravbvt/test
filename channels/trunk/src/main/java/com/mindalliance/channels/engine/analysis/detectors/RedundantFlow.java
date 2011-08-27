@@ -1,12 +1,12 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.engine.nlp.Matcher;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -92,7 +92,7 @@ public class RedundantFlow extends AbstractIssueDetector {
 
     private boolean equivalent( Flow flow, Flow otherFlow ) {
         if ( flowKind( flow ).equals( flowKind( otherFlow ) ) ) {
-            if ( Matcher.getInstance().same( flow.getName(), otherFlow.getName() ) ) {
+            if ( Matcher.same( flow.getName(), otherFlow.getName() ) ) {
                 if ( flow.isNeed() && otherFlow.isNeed() ) return true;
                 if ( flow.isCapability() && otherFlow.isCapability() ) return true;
                 if ( flow.getTarget().equals( otherFlow.getTarget() )

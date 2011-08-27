@@ -6,7 +6,6 @@ import com.mindalliance.channels.engine.command.Command;
 import com.mindalliance.channels.engine.command.CommandException;
 import com.mindalliance.channels.engine.command.Commander;
 import com.mindalliance.channels.core.model.Attachment;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,26 +24,34 @@ public class CopyAttachment extends AbstractCommand {
     }
 
     public CopyAttachment( Attachment attachment ) {
-        setArguments( ChannelsUtils.getAttachmentState( attachment ) );
+        setArguments( getAttachmentState( attachment ) );
     }
 
     /**
-     * {@inheritDoc}
+     * Capture the state of an attachment.
+     *
+     * @param attachment an attachment
+     * @return a map of attribute names and values
      */
+    private static Map<String, Object> getAttachmentState( Attachment attachment ) {
+        Map<String, Object> state = new HashMap<String, Object>();
+        state.put( "type", attachment.getType().name() );
+        state.put( "url", attachment.getUrl() );
+        state.put( "name", attachment.getName() );
+        return state;
+    }
+
+    @Override
     public boolean isMemorable() {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "copy document";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         Map<String, Object> copy = new HashMap<String, Object>();
         copy.putAll( getArguments() );
@@ -54,16 +61,12 @@ public class CopyAttachment extends AbstractCommand {
         return change;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         return null;
     }

@@ -31,6 +31,7 @@ public class PropertyComparator<T> implements Comparator<T> {
      * @throws ClassCastException if the arguments' types prevent them from
      *                            being compared by this comparator.
      */
+    @Override
     public int compare( T object, T other ) {
         int comp;
         String sortProperty = sortParam.getProperty();

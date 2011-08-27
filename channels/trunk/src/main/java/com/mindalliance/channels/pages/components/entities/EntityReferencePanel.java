@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.engine.command.commands.UpdateSegmentObject;
@@ -10,7 +11,6 @@ import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -220,7 +220,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
         if ( entityClass.isAssignableFrom( Role.class ) || getEntityKind().equals( ModelEntity.Kind.Type ) ) {
             return getQueryService().likelyRelated( text, otherText );
         } else {
-            return Matcher.getInstance().matches( text, otherText );
+            return Matcher.matches( text, otherText );
         }
     }
 

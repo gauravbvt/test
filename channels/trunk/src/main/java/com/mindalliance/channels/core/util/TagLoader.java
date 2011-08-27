@@ -21,6 +21,7 @@ public class TagLoader implements Loader {
         this.taggable = taggable;
     }
 
+    @Override
     public void load( BufferedReader reader ) throws IOException {
         String inputLine;
         while ( ( inputLine = reader.readLine() ) != null ) {

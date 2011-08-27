@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.engine.nlp.Matcher;
+import com.mindalliance.channels.core.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -478,7 +478,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
             @Override
             public boolean evaluate( Object object ) {
                 Flow flow = (Flow) object;
-                return Matcher.getInstance().same( flow.getName(), name );
+                return Matcher.same( flow.getName(), name );
             }
         } );
     }
@@ -495,7 +495,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
             @Override
             public boolean evaluate( Object object ) {
                 Flow flow = (Flow) object;
-                return Matcher.getInstance().same( flow.getName(), name );
+                return Matcher.same( flow.getName(), name );
             }
         } );
     }
@@ -1007,11 +1007,11 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
             @Override
             public boolean evaluate( Object object ) {
                 Flow need = (Flow) object;
-                return Matcher.getInstance().same( subject.getInfo(), need.getName() )
+                return Matcher.same( subject.getInfo(), need.getName() )
                        && CollectionUtils.exists( need.getEois(), new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return Matcher.getInstance().same( ( (ElementOfInformation) object ).getContent(),
+                        return Matcher.same( ( (ElementOfInformation) object ).getContent(),
                                                            subject.getContent() );
                     }
                 } );
@@ -1020,7 +1020,7 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     }
 
     public boolean matchesTaskOf( Part other, Place locale ) {
-        return Matcher.getInstance().same( task, other.getTask() )
+        return Matcher.same( task, other.getTask() )
                && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale );
     }
 

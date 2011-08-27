@@ -12,7 +12,6 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import org.apache.wicket.model.IModel;
 
@@ -63,10 +62,9 @@ public class TagIndexPanel extends AbstractIndexPanel {
 
     private <T extends Taggable> List<T> selectTagged( List<T> taggables ) {
         List<T> tagged = new ArrayList<T>();
-        Matcher instance = Matcher.getInstance();
         if ( getTag() != null ) {
             for ( T taggable : taggables ) {
-                if ( isTaggedWith( instance, taggable, getTag() ) ) {
+                if ( isTaggedWith( taggable, getTag() ) ) {
                     tagged.add( taggable );
                 }
             }

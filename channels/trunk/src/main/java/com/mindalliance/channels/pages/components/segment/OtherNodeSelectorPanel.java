@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.segment;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.commands.AddPart;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -201,7 +201,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
             protected Iterator<String> getChoices( String nodeString ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.getInstance().matches( nodeString, choice ) )
+                    if ( Matcher.matches( nodeString, choice ) )
                         candidates.add( choice );
                 }
                 return candidates.iterator();
@@ -260,8 +260,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
                     getSecondChoices(),
                     new Predicate() {
                         public boolean evaluate( Object object ) {
-                            return Matcher.getInstance().same( displayString( (Node) object ),
-                                    nodeName );
+                            return Matcher.same( displayString( (Node) object ), nodeName );
                         }
                     }
             );

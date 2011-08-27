@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.reports.infoNeeds;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -11,7 +12,6 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.ReportSegment;
@@ -183,7 +183,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         };
     }
 
-    private Component newEoiSources( String id, List<EoiSource> eoiSources ) {
+    private static Component newEoiSources( String id, List<EoiSource> eoiSources ) {
         return new ListView<EoiSource>( id, eoiSources ) {
             @Override
             protected void populateItem( ListItem<EoiSource> item ) {
@@ -323,7 +323,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             Set<String> eoiContents = new HashSet<String>();
             List<Flow> incomingFlows = new ArrayList<Flow>();
             for ( Flow incoming : part.getAllSharingReceives() ) {
-                if ( Matcher.getInstance().same( incoming.getName(), info ) ) {
+                if ( Matcher.same( incoming.getName(), info ) ) {
                     incomingFlows.add( incoming );
                     for ( ElementOfInformation eoi : incoming.getEois() ) {
                         eoiContents.add( eoi.getContent() );
@@ -332,7 +332,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             }
             List<Flow> needs = new ArrayList<Flow>();
             for ( Flow need : part.getNeeds() ) {
-                if ( Matcher.getInstance().same( need.getName(), info ) ) {
+                if ( Matcher.same( need.getName(), info ) ) {
                     needs.add( need );
                     for ( ElementOfInformation eoi : need.getEois() ) {
                         eoiContents.add( eoi.getContent() );
@@ -353,9 +353,8 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                                         new Predicate() {
                                             @Override
                                             public boolean evaluate( Object object ) {
-                                                return Matcher.getInstance().same(
-                                                        ( (ElementOfInformation) object ).getContent(),
-                                                        content );
+                                                return Matcher.same( ( (ElementOfInformation) object ).getContent(),
+                                                                     content );
                                             }
                                         } );
                             }
@@ -371,9 +370,8 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                                         new Predicate() {
                                             @Override
                                             public boolean evaluate( Object object ) {
-                                                return Matcher.getInstance().same(
-                                                        ( (ElementOfInformation) object ).getContent(),
-                                                        content );
+                                                return Matcher.same( ( (ElementOfInformation) object ).getContent(),
+                                                                     content );
                                             }
                                         } );
                             }
@@ -393,9 +391,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         }
 
         private EoiNeed makeEoiNeed(
-                String content,
-                List<Flow> incomingWithEoi,
-                List<Flow> needsForEoi,
+                String content, List<Flow> incomingWithEoi, List<Flow> needsForEoi,
                 Commitments commitmentsToTaskInfoEoi ) {
             EoiNeed eoiNeed = new EoiNeed( content );
             for ( EoiSource eoiSource : findEoiSources( commitmentsToTaskInfoEoi ) ) {
@@ -406,37 +402,25 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             }
             Flow combinedNeed = findCombinedNeed( needsForEoi );
             if ( combinedNeed != null ) {
-                eoiNeed.addRequiredEoiSource(
-                        new EoiSource(
-                                null,
-                                combinedNeed.getRestriction(),
-                                combinedNeed.getMaxDelay(),
-                                !combinedNeed.isAskedFor(),
-                                combinedNeed.isRequired(),
-                                true) );
+                eoiNeed.addRequiredEoiSource( new EoiSource( null, combinedNeed.getRestriction(),
+                                                             combinedNeed.getMaxDelay(), !combinedNeed.isAskedFor(),
+                                                             combinedNeed.isRequired(), true ) );
                 eoiNeed.setNeed( combinedNeed );
             }
             return eoiNeed;
         }
 
-        private List<EoiSource> findEoiSources( Commitments commitmentsToTaskInfoEoi ) {
+        private static List<EoiSource> findEoiSources( Commitments commitmentsToTaskInfoEoi ) {
             List<EoiSource> eoiSources = new ArrayList<EoiSource>();
             for ( Commitment commitment : commitmentsToTaskInfoEoi ) {
-                ResourceSpec committer = commitment.getCommitter().getResourceSpec();
-                Delay maxDelay = commitment.getSharing().getMaxDelay();
-                boolean notified = !commitment.getSharing().isAskedFor();
-                eoiSources.add( new EoiSource(
-                        committer,
-                        null,
-                        maxDelay,
-                        notified,
-                        commitment.getSharing().isRequired(),
-                        false) );
+                Flow sharing = commitment.getSharing();
+                eoiSources.add( new EoiSource( commitment.getCommitter().getResourceSpec(), null, sharing.getMaxDelay(),
+                                               !sharing.isAskedFor(), sharing.isRequired(), false ) );
             }
             return eoiSources;
         }
 
-        private List<EoiSource> findRequiredEoiSources( List<Flow> incomingWithEoi ) {
+        private static List<EoiSource> findRequiredEoiSources( List<Flow> incomingWithEoi ) {
             List<EoiSource> requiredEoiSources = new ArrayList<EoiSource>();
             for ( Flow incoming : incomingWithEoi ) {
                 ResourceSpec resourceSpec = ( (Part) incoming.getSource() ).resourceSpec();
@@ -457,7 +441,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             return requiredEoiSources;
         }
 
-        private Flow findCombinedNeed( List<Flow> needsForEoi ) {
+        private static Flow findCombinedNeed( List<Flow> needsForEoi ) {
             return needsForEoi.size() > 0 ? needsForEoi.get( 0 ) : null;
             // TODO merge the attributes of multiple synonymous needs
         }

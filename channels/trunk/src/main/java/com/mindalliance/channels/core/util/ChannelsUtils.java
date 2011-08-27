@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.util;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.model.Attachment;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Connector;
@@ -13,7 +14,6 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Tag;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -172,8 +172,9 @@ public final class ChannelsUtils {
             ElementOfInformation synonymous = (ElementOfInformation) CollectionUtils.find(
                     eois,
                     new Predicate() {
+                        @Override
                         public boolean evaluate( Object object ) {
-                            return Matcher.getInstance().same(
+                            return Matcher.same(
                                     eoi.getContent(),
                                     ( (ElementOfInformation) object ).getContent() );
                         }
@@ -198,6 +199,7 @@ public final class ChannelsUtils {
             Channel synonymous = (Channel) CollectionUtils.find(
                     channels,
                     new Predicate() {
+                        @Override
                         public boolean evaluate( Object object ) {
                             return channel.getMedium().equals(
                                     ( (Channel) object ).getMedium() );
@@ -223,6 +225,7 @@ public final class ChannelsUtils {
             Attachment synonymous = (Attachment) CollectionUtils.find(
                     attachments,
                     new Predicate() {
+                        @Override
                         public boolean evaluate( Object object ) {
                             return attachment.getUrl().equals(
                                     ( (Attachment) object ).getUrl() );
@@ -342,20 +345,6 @@ public final class ChannelsUtils {
             state.put(
                     "location",
                     Arrays.asList( part.getLocation().getName(), part.getLocation().isType() ) );
-        return state;
-    }
-
-    /**
-     * Capture the state of an attachment.
-     *
-     * @param attachment an attachment
-     * @return a map of attribute names and values
-     */
-    public static Map<String, Object> getAttachmentState( Attachment attachment ) {
-        Map<String, Object> state = new HashMap<String, Object>();
-        state.put( "type", attachment.getType().name() );
-        state.put( "url", attachment.getUrl() );
-        state.put( "name", attachment.getName() );
         return state;
     }
 
@@ -511,11 +500,12 @@ public final class ChannelsUtils {
         Map<String, Object> synonymousState = (Map<String, Object>) CollectionUtils.find(
                 flowStates,
                 new Predicate() {
+                    @Override
                     @SuppressWarnings( "unchecked" )
                     public boolean evaluate( Object object ) {
                         String name = (String) ( (Map<String, Object>) object ).get( "name" );
                         String otherName = (String) flowState.get( "name" );
-                        return Matcher.getInstance().same( name, otherName );
+                        return Matcher.same( name, otherName );
                     }
                 } );
         if ( synonymousState == null ) {
@@ -606,16 +596,6 @@ public final class ChannelsUtils {
 
     }
 
-    /**
-     * Remove all extra blanks from a string.
-     *
-     * @param s a string
-     * @return a string
-     */
-    public static String stripExtraBlanks( String s ) {
-        return s.trim().replaceAll( "\\s+", " " );
-    }
-
     public static String lcFirst( String phrase ) {
         if ( phrase.length() < 2 )
             return phrase;
@@ -636,8 +616,9 @@ public final class ChannelsUtils {
     }
 
     public static String ensurePeriod( String sentence ) {
-        return sentence == null || sentence.isEmpty() || sentence.endsWith( "." )
-                || sentence.endsWith( ";" ) ?
+        return sentence == null || sentence.isEmpty() || sentence.length() > 0 && sentence.charAt(
+                sentence.length() - 1 ) == '.'
+                || sentence.length() > 0 && sentence.charAt( sentence.length() - 1 ) == ';' ?
                 sentence :
                 sentence + '.';
     }

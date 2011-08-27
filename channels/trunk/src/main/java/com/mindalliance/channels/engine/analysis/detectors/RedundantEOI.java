@@ -1,12 +1,12 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -32,7 +32,6 @@ public class RedundantEOI extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        final Matcher matcher = Matcher.getInstance();
         for ( final ElementOfInformation eoi : flow.getEois() ) {
             boolean redundant = CollectionUtils.exists(
                     flow.getEois(),
@@ -40,7 +39,7 @@ public class RedundantEOI extends AbstractIssueDetector {
                         public boolean evaluate( Object object ) {
                             ElementOfInformation other = (ElementOfInformation) object;
                             return other != eoi
-                                    && matcher.same( eoi.getContent(), other.getContent() );
+                                    && Matcher.same( eoi.getContent(), other.getContent() );
                         }
                     }
             );

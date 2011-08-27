@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -274,17 +274,12 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
 
     @SuppressWarnings( "unchecked" )
     private List<Issue> filterByKind( List<Issue> issues ) {
-        final Matcher matcher = Matcher.getInstance();
-        return (List<Issue>) CollectionUtils.select(
-                issues,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return kindHints == null || kindHints.isEmpty()
-                                ||
-                                matcher.matchesAll( ( (Issue) obj ).getDetectorLabel(), kindHints );
-                    }
-                }
-        );
+        return (List<Issue>) CollectionUtils.select( issues, new Predicate() {
+            public boolean evaluate( Object obj ) {
+                return kindHints == null || kindHints.isEmpty() || Matcher.matchesAll(
+                        ( (Issue) obj ).getDetectorLabel(), kindHints );
+            }
+        } );
     }
 
 }

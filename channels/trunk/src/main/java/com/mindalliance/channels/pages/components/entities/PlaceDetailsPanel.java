@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.engine.geo.GeoService;
@@ -8,7 +9,6 @@ import com.mindalliance.channels.core.model.GeoLocation;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
@@ -154,7 +154,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.getInstance().matches( input, choice ) ) candidates.add( choice );
+                    if ( Matcher.matches( input, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }
@@ -277,7 +277,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.getInstance().matches( input, choice ) ) candidates.add( choice );
+                    if ( Matcher.matches( input, choice ) ) candidates.add( choice );
                 }
                 return candidates.iterator();
             }

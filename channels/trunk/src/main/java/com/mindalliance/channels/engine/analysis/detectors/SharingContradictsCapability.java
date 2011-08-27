@@ -1,5 +1,6 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
@@ -10,7 +11,6 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -35,14 +35,13 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.isSharing() ) {
-            Matcher matcher = Matcher.getInstance();
             Node source = flow.getSource();
             Iterator<Flow> sends = source.sends();
             while ( sends.hasNext() ) {
                 Flow send = sends.next();
-                if ( send.isCapability() && matcher.same( send.getName(), flow.getName() ) ) {
+                if ( send.isCapability() && Matcher.same( send.getName(), flow.getName() ) ) {
                     List<String> mismatches = new ArrayList<String>();
-                    findEOIMismatch( flow, send, mismatches, matcher );
+                    findEOIMismatch( flow, send, mismatches );
                     findIntentMismatch( flow, send, mismatches );
                     findChannelsMismatch( flow, send, mismatches );
                     findDelayMismatch( flow, send, mismatches );
@@ -68,12 +67,12 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
         }
     }
 
-    private void findEOIMismatch( Flow sharing, Flow capability, List<String> mismatches, Matcher matcher ) {
+    private void findEOIMismatch( Flow sharing, Flow capability, List<String> mismatches ) {
         Plan plan = getPlan();
         for ( ElementOfInformation sharedEoi : sharing.getEois() ) {
             boolean matched = false;
             for ( ElementOfInformation offeredEoi : capability.getEois() ) {
-                if ( matcher.same( sharedEoi.getContent(), offeredEoi.getContent() ) ) {
+                if ( Matcher.same( sharedEoi.getContent(), offeredEoi.getContent() ) ) {
                     matched = true;
                     if ( Classification.hasHigherClassification(
                             offeredEoi.getClassifications(),

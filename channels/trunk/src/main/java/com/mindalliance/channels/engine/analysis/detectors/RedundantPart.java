@@ -1,5 +1,6 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Issue;
@@ -8,7 +9,6 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.engine.nlp.Matcher;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -90,7 +90,7 @@ public class RedundantPart extends AbstractIssueDetector {
     // One narrows or equals the other
     private boolean isEquivalent( Part part, Part otherPart ) {
         Place locale = getPlan().getLocale();
-        return Matcher.getInstance().same( part.getTask(), otherPart.getTask() )
+        return Matcher.same( part.getTask(), otherPart.getTask() )
 
             && ( part.resourceSpec().narrowsOrEquals( otherPart.resourceSpec(), locale )
                  || otherPart.resourceSpec().narrowsOrEquals( part.resourceSpec(), locale ) )

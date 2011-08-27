@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.commands.UpdateObject;
 import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import org.apache.commons.collections.CollectionUtils;
@@ -71,6 +71,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 "classifications",
                 new PropertyModel<List<Classification>>( this, "classifications" )
         ) {
+            @Override
             protected void populateItem( ListItem<Classification> item ) {
                 final Classification classification = item.getModelObject();
                 // name
@@ -78,6 +79,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 item.add( nameLabel );
                 // move to top
                 AjaxFallbackLink moveLink = new AjaxFallbackLink( "move-to-top" ) {
+                    @Override
                     public void onClick( AjaxRequestTarget target ) {
                         moveToTop( classification );
                         addClassificationsList();
@@ -89,6 +91,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 item.add( moveLink );
                 // more
                 AjaxFallbackLink moreLink = new AjaxFallbackLink( "more" ) {
+                    @Override
                     public void onClick( AjaxRequestTarget target ) {
                         selectedClassification = classification;
                         addClassificationIndex();
@@ -99,6 +102,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 item.add( moreLink );
                 // delete
                 AjaxFallbackLink deleteLink = new AjaxFallbackLink( "delete" ) {
+                    @Override
                     public void onClick( AjaxRequestTarget target ) {
                         delete( classification );
                         addClassificationsList();
@@ -175,6 +179,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 new PropertyModel<String>( this, "newClassificationName" ) );
         newClassificationField.setOutputMarkupId( true );
         newClassificationField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 Classification classification = addClassification();
                 if ( classification != null ) {
@@ -192,17 +197,16 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
     }
 
     private boolean isNewClassificationNamed() {
-        return !( newClassificationName == null || newClassificationName.isEmpty() )
-                && !CollectionUtils.exists(
-                getPlan().classificationsFor( classificationSystem ),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return Matcher.getInstance().same(
-                                ( (Classification) object ).getName(),
-                                newClassificationName );
-                    }
-                }
-        );
+        return newClassificationName != null
+             && !newClassificationName.isEmpty()
+             && !CollectionUtils.exists( getPlan().classificationsFor( classificationSystem ),
+                                         new Predicate() {
+                                             @Override
+                                             public boolean evaluate( Object object ) {
+                                                 return Matcher.same( ( (Classification) object ).getName(),
+                                                                      newClassificationName );
+                                             }
+                                         } );
     }
 
     private Classification addClassification() {
@@ -273,11 +277,13 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
             return (Classification) getModel().getObject();
         }
 
+        @Override
         @SuppressWarnings( "unchecked" )
         protected List<Actor> findIndexedActors() {
             return (List<Actor>) CollectionUtils.select(
                     getQueryService().listActualEntities( Actor.class ),
                     new Predicate() {
+                        @Override
                         public boolean evaluate( Object obj ) {
                             return ( (Actor) obj ).getClearances().contains( getClassification() );
                         }
@@ -289,11 +295,13 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
         /**
          * {@inheritDoc}
          */
+        @Override
         @SuppressWarnings( "unchecked" )
         protected List<Flow> findIndexedFlows() {
             return (List<Flow>) CollectionUtils.select(
                     getQueryService().findAllFlows(),
                     new Predicate() {
+                        @Override
                         public boolean evaluate( Object obj ) {
                             return ( (Flow) obj ).getClassifications().contains( getClassification() );
                         }

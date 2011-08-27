@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.engine.nlp.Matcher;
+import com.mindalliance.channels.core.Matcher;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -8,37 +8,29 @@ import java.text.Collator;
 
 /**
  * The subject of a transformation.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Oct 10, 2010
- * Time: 3:32:57 PM
  */
-public class Subject implements Serializable, Comparable {
+public class Subject implements Serializable, Comparable<Subject> {
+
     /**
      * Information name.
      */
     private String info = "";
+
     /**
      * EOI name,
      */
     private String content = "";
+
     /**
      * "Root" subject from which dissemination is traced.
      */
     private boolean root;
-    /**
-     * Maximum length of info in label.
-     */
-    private static final int MAX_INFO_LENGTH_IN_LABEL = 20;
 
     public Subject() {
     }
 
-    public Subject ( Subject subject ) {
-        super();
-        this.info = subject.getInfo();
-        this.content = subject.getContent();
+    public Subject( Subject subject ) {
+        this( subject.getInfo(), subject.getContent() );
     }
 
     public Subject( String info, String content ) {
@@ -70,35 +62,27 @@ public class Subject implements Serializable, Comparable {
         this.root = root;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean equals( Object object ) {
-        Matcher matcher = Matcher.getInstance();
-        if ( object instanceof Subject ) {
-            Subject other = (Subject) object;
-            return matcher.same( info, other.getInfo() )
-                    && matcher.same( content, other.getContent() );
-        } else {
-            return false;
+    @Override
+    public boolean equals( Object obj ) {
+        if ( obj instanceof Subject ) {
+            Subject other = (Subject) obj;
+            return Matcher.same( info, other.getInfo() ) && Matcher.same( content, other.getContent() );
         }
+
+        return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public int hashCode() {
-        Matcher matcher = Matcher.getInstance();
         int hash = 1;
-        hash = hash * 31 + matcher.makeCanonical( info ).hashCode();
-        hash = hash * 31 + matcher.makeCanonical( content ).hashCode();
+        hash = hash * 31 + Matcher.makeCanonical( info ).hashCode();
+        hash = hash * 31 + Matcher.makeCanonical( content ).hashCode();
         return hash;
-
     }
 
     public String getLabel( int maxInfoLength ) {
         StringBuilder sb = new StringBuilder();
-        sb.append( "\"");
+        sb.append( "\"" );
         sb.append( content );
         sb.append( "\" in \"" );
         sb.append( StringUtils.abbreviate( info, maxInfoLength ) );
@@ -106,22 +90,14 @@ public class Subject implements Serializable, Comparable {
         return sb.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String toString() {
         return getLabel( Integer.MAX_VALUE );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public int compareTo( Object other ) {
-        return Collator.getInstance().compare(
-                getLabel( Integer.MAX_VALUE ),
-                ( (Subject) other ).getLabel( Integer.MAX_VALUE ) );
+    @Override
+    public int compareTo( Subject o ) {
+        return Collator.getInstance().compare( getLabel( Integer.MAX_VALUE ), o.getLabel( Integer.MAX_VALUE ) );
     }
-
-
 }
 

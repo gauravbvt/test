@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.engine.nlp.Matcher;
+import com.mindalliance.channels.core.Matcher;
 import org.apache.commons.collections.iterators.IteratorChain;
 
 import java.text.Collator;
@@ -286,7 +286,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
     public boolean hasMultipleSends( String name ) {
         int count = 0;
         for ( Flow send : sends.values() ) {
-            if ( Matcher.getInstance().same( send.getName(), name ) ) count++;
+            if ( Matcher.same( send.getName(), name ) ) count++;
         }
         return count > 1;
     }
@@ -300,7 +300,7 @@ public abstract class Node extends ModelObject implements SegmentObject {
     public boolean hasMultipleReceives( String name ) {
         int count = 0;
         for ( Flow receive : receives.values() ) {
-            if ( Matcher.getInstance().same( receive.getName(), name ) ) count++;
+            if ( Matcher.same( receive.getName(), name ) ) count++;
         }
         return count > 1;
     }

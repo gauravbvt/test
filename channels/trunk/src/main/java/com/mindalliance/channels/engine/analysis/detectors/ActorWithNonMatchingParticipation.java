@@ -1,12 +1,12 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Participation;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class ActorWithNonMatchingParticipation extends AbstractIssueDetector {
             }
             if ( participation != null ) {
                 String userFullName = queryService.getUserFullName( participation );
-                if ( !Matcher.getInstance().same( actor.getName(), userFullName ) ) {
+                if ( !Matcher.same( actor.getName(), userFullName ) ) {
                     Issue issue = makeIssue( Issue.VALIDITY, actor );
                     issue.setDescription( "Agent \"" + actor.getName() + "\" is not a placeholder nor an archetype "
                             + "and is assigned to a user with a different name ("

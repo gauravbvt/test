@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.FilterableModelObjectLink;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
@@ -779,7 +779,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         if ( kind == ModelEntity.Kind.Type ) {
                             if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
                         } else {
-                            if ( Matcher.getInstance().same( s, choice ) ) candidates.add( choice );
+                            if ( Matcher.same( s, choice ) ) candidates.add( choice );
                         }
                     }
                     return candidates.iterator();

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.commands.TransferJobs;
 import com.mindalliance.channels.engine.command.commands.UpdateObject;
@@ -12,7 +13,6 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
@@ -854,7 +854,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                              if ( getQueryService().likelyRelated( s, choice ) )
                             candidates.add( choice );
                         }
-                        else if ( Matcher.getInstance().matches( s, choice ) )
+                        else if ( Matcher.matches( s, choice ) )
                             candidates.add( choice );
                     }
                     return candidates.iterator();

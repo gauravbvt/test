@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.commands.UpdateObject;
 import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -123,20 +123,19 @@ public class PlanScopePanel extends AbstractCommandablePanel {
     }
 
     private void addToScope() {
-        WebMarkupContainer newInvolvedContainer = new WebMarkupContainer( "newInvolvedContainer");
-        add(newInvolvedContainer);
-        addInvolvedField = new AutoCompleteTextField<String>(
-                "newInvolved",
-                new PropertyModel<String>( this, "newInvolvedName" ) ) {
+        WebMarkupContainer newInvolvedContainer = new WebMarkupContainer( "newInvolvedContainer" );
+        add( newInvolvedContainer );
+        addInvolvedField = new AutoCompleteTextField<String>( "newInvolved",
+                                                              new PropertyModel<String>( this, "newInvolvedName" ) ) {
             List<String> choices = getCandidateOrganizationNames();
 
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( Matcher.getInstance().matches( s, choice ) ) candidates.add( choice );
+                    if ( Matcher.matches( s, choice ) )
+                        candidates.add( choice );
                 }
                 return candidates.iterator();
-
             }
         };
         addInvolvedField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {

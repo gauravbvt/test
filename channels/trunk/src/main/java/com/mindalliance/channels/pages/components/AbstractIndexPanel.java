@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Event;
@@ -18,7 +19,6 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.core.util.NameRange;
@@ -182,24 +182,24 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * There is no tag from s such that there is no tag in tag that matches it
      * (all tags from s match at least of this mo's tags).
      *
-     * @param matcher the matcher to use
+     *
      * @param taggable the object
      * @param s a string
      * @return true if the object is tagged with given string
      */
-    private static boolean isTaggedWith( Matcher matcher, Taggable taggable, String s ) {
+    private static boolean isTaggedWith( Taggable taggable, String s ) {
         List<Tag> otherTags = Tag.tagsFromString( s );
 
         for ( Tag otherTag : otherTags )
-            if ( !isTaggedWith( matcher, taggable, otherTag ) )
+            if ( !isTaggedWith( taggable, otherTag ) )
                 return false;
 
         return true;
     }
 
-    public static boolean isTaggedWith( Matcher matcher, Taggable taggable, Tag tag ) {
+    public static boolean isTaggedWith( Taggable taggable, Tag tag ) {
         for ( Tag myTag : taggable.getTags() )
-            if ( matches( matcher, myTag, tag ) )
+            if ( matches( myTag, tag ) )
                 return true;
 
         return false;
@@ -208,12 +208,12 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
     /**
      * Whether two tags match.
      *
-     * @param matcher the matcher to use
+     *
      * @param tag a tag
      * @param other another tag
      * @return a boolean
      */
-    private static boolean matches( Matcher matcher, Tag tag, Tag other ) {
+    private static boolean matches( Tag tag, Tag other ) {
         if ( tag.equals( other ) )
             return true;
 
@@ -226,7 +226,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
 
         boolean matching = true;
         while ( matching && shorter.hasNext() )
-            matching = matcher.same( shorter.next(), longer.next() );
+            matching = Matcher.same( shorter.next(), longer.next() );
         return matching;
     }
 
@@ -730,7 +730,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
 
     private boolean isFilteredOutByTags( Taggable taggable ) {
         return !filter.isEmpty()
-                && !isTaggedWith( Matcher.getInstance(), taggable, filter );
+                && !isTaggedWith( taggable, filter );
     }
 
     private void italicizeIfEntityType( Component component, ModelObject mo ) {

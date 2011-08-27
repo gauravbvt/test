@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.segment;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.commands.LinkFlowClassifications;
 import com.mindalliance.channels.engine.command.commands.UpdateObject;
@@ -11,7 +12,6 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Transformation;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
@@ -510,7 +510,6 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     private boolean addGuessedFromCapability( List<ElementOfInformation> newEois ) {
         Flow flow = getFlow();
         int size = newEois.size();
-        Matcher matcher = Matcher.getInstance();
         List<String> contents = (List<String>) CollectionUtils.collect(
                 flow.getEois(),
                 TransformerUtils.invokerTransformer( "getContent" ) );
@@ -520,7 +519,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         Flow capability = findRelatedCapability();
         if ( capability != null ) {
             for ( ElementOfInformation capabilityEoi : capability.getEois() ) {
-                if ( !matcher.contains( contents, capabilityEoi.getContent() ) ) {
+                if ( !Matcher.contains( contents, capabilityEoi.getContent() ) ) {
                     // Use the first one as-is. Will improve later. Maybe.
                     newEois.add( new ElementOfInformation( capabilityEoi ) );
                     contents.add( capabilityEoi.getContent() );
@@ -542,7 +541,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                         public boolean evaluate( Object object ) {
                             Flow capability = (Flow) object;
                             return !capability.equals( getFlow() )
-                                    && Matcher.getInstance().same( flowName, capability.getName() );
+                                    && Matcher.same( flowName, capability.getName() );
                         }
                     }
             );
@@ -554,7 +553,6 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     private boolean addGuessedFromNeed( List<ElementOfInformation> newEois ) {
         Flow flow = getFlow();
         int size = newEois.size();
-        Matcher matcher = Matcher.getInstance();
         List<String> contents = (List<String>) CollectionUtils.collect(
                 flow.getEois(),
                 TransformerUtils.invokerTransformer( "getContent" ) );
@@ -563,9 +561,9 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 TransformerUtils.invokerTransformer( "getContent" ) ) );
         Flow need = findRelatedNeed();
         if ( need != null ) {
-            if ( !need.equals( flow ) && matcher.same( flow.getName(), need.getName() ) ) {
+            if ( !need.equals( flow ) && Matcher.same( flow.getName(), need.getName() ) ) {
                 for ( ElementOfInformation needEoi : need.getEois() ) {
-                    if ( !matcher.contains( contents, needEoi.getContent() ) ) {
+                    if ( !Matcher.contains( contents, needEoi.getContent() ) ) {
                         // Use the first one as-is. Will improve later. Maybe.
                         newEois.add( new ElementOfInformation( needEoi ) );
                         contents.add( needEoi.getContent() );
@@ -588,7 +586,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                         public boolean evaluate( Object object ) {
                             Flow need = (Flow) object;
                             return !need.equals( getFlow() )
-                                    && Matcher.getInstance().same( flowName, need.getName() );
+                                    && Matcher.same( flowName, need.getName() );
                         }
                     }
             );
@@ -600,7 +598,6 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     private boolean addGuessedFromOtherReceives( Part target, List<ElementOfInformation> newEois ) {
         Flow flow = getFlow();
         int size = newEois.size();
-        Matcher matcher = Matcher.getInstance();
         List<String> contents = (List<String>) CollectionUtils.collect(
                 flow.getEois(),
                 TransformerUtils.invokerTransformer( "getContent" ) );
@@ -610,9 +607,9 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         Iterator<Flow> sharingReceives = target.receives();
         while ( sharingReceives.hasNext() ) {
             Flow sharingReceive = sharingReceives.next();
-            if ( matcher.same( flow.getName(), sharingReceive.getName() ) ) {
+            if ( Matcher.same( flow.getName(), sharingReceive.getName() ) ) {
                 for ( ElementOfInformation needEoi : sharingReceive.getEois() ) {
-                    if ( !matcher.contains( contents, needEoi.getContent() ) ) {
+                    if ( !Matcher.contains( contents, needEoi.getContent() ) ) {
                         // Use the first one as-is. Will improve later. Maybe.
                         newEois.add( new ElementOfInformation( needEoi ) );
                         contents.add( needEoi.getContent() );
@@ -627,13 +624,12 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     private boolean addGuessedFromInfoStandards( List<ElementOfInformation> newEois ) {
         Flow flow = getFlow();
         int size = newEois.size();
-        Matcher matcher = Matcher.getInstance();
         List<String> contents = (List<String>) CollectionUtils.collect(
                 flow.getEois(),
                 TransformerUtils.invokerTransformer( "getContent" ) );
         for ( InfoStandard infoStandard : flow.getInfoStandards( getPlan() ) ) {
             for ( String eoiName : infoStandard.getEoiNames() ) {
-                if ( !matcher.contains( contents, eoiName ) ) {
+                if ( !Matcher.contains( contents, eoiName ) ) {
                     ElementOfInformation eoi = new ElementOfInformation( eoiName );
                     eoi.setDescription( infoStandard.getEoiDescription( eoiName ) );
                     newEois.add( eoi );
@@ -647,7 +643,6 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     private boolean addGuessedFromOtherSends( Part source, List<ElementOfInformation> newEois ) {
         Flow flow = getFlow();
         int size = newEois.size();
-        Matcher matcher = Matcher.getInstance();
         List<String> contents = (List<String>) CollectionUtils.collect(
                 flow.getEois(),
                 TransformerUtils.invokerTransformer( "getContent" ) );
@@ -657,9 +652,9 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         Iterator<Flow> sends = source.sends();
         while ( sends.hasNext() ) {
             Flow send = sends.next();
-            if ( !send.equals( flow ) && matcher.same( flow.getName(), send.getName() ) ) {
+            if ( !send.equals( flow ) && Matcher.same( flow.getName(), send.getName() ) ) {
                 for ( ElementOfInformation sourceEoi : send.getEois() ) {
-                    if ( !matcher.contains( contents, sourceEoi.getContent() ) ) {
+                    if ( !Matcher.contains( contents, sourceEoi.getContent() ) ) {
                         // Use the first one as-is. Will improve later. Maybe.
                         newEois.add( new ElementOfInformation( sourceEoi ) );
                         contents.add( sourceEoi.getContent() );
@@ -674,7 +669,6 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     private boolean addGuessedSentFromReceives( Part source, List<ElementOfInformation> newEois ) {
         Flow flow = getFlow();
         int size = newEois.size();
-        final Matcher matcher = Matcher.getInstance();
         String flowName = flow.getName();
         List<String> contents = (List<String>) CollectionUtils.collect(
                 flow.getEois(),
@@ -690,7 +684,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                     TransformerUtils.invokerTransformer( "getContent" ) ) );
         }
         // Only keep new eoi content
-        Matcher.getInstance().removeAll( newContents, contents );
+        Matcher.removeAll( newContents, contents );
         for ( final String newContent : newContents ) {
             ElementOfInformation newEoi = new ElementOfInformation( newContent );
             Set<String> infos = new HashSet<String>();
@@ -702,14 +696,12 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                             new Predicate() {
                                 @Override
                                 public boolean evaluate( Object object ) {
-                                    return matcher.same(
-                                            newContent,
-                                            ( (ElementOfInformation) object ).getContent() );
+                                    return Matcher.same( newContent, ( (ElementOfInformation) object ).getContent() );
                                 }
                             }
                     );
                     if ( sourceEoi != null ) {
-                        if ( !matcher.same( receiveName, flowName ) ) {
+                        if ( !Matcher.same( receiveName, flowName ) ) {
                             // transformations
                             if ( !infos.contains( receiveName ) ) {
                                 Transformation xform = newEoi.getTransformation();

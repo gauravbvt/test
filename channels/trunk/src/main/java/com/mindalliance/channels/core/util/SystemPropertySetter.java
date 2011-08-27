@@ -59,6 +59,7 @@ public class SystemPropertySetter implements InitializingBean {
     /**
      * Invoked by a BeanFactory after it has set all bean properties supplied.
      */
+    @Override
     public void afterPropertiesSet() throws IOException {
         if ( property == null )
             throw new IllegalArgumentException( "Needs a value for property" );

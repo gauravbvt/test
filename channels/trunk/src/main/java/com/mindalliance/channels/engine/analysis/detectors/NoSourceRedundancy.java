@@ -1,5 +1,6 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Actor;
@@ -7,7 +8,6 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -85,7 +85,7 @@ public class NoSourceRedundancy extends AbstractIssueDetector {
                         public boolean evaluate( Object obj ) {
                             Flow otherFlow = (Flow) obj;
                             return otherFlow != criticalReceive
-                                    && Matcher.getInstance().same( otherFlow.getName(), name )
+                                    && Matcher.same( otherFlow.getName(), name )
                                     && otherFlow.getTarget().isPart()
                                     && partsMatch( (Part) otherFlow.getTarget(), part )
                                     && otherFlow.getSource().isPart()
@@ -106,13 +106,10 @@ public class NoSourceRedundancy extends AbstractIssueDetector {
 
     // Same actors if given, else same roles
     private boolean partsMatch( Part part, Part otherPart ) {
-        Matcher matcher = Matcher.getInstance();
         if ( part.getActor() != null && otherPart.getActor() != null ) {
-            return matcher.same( part.getActor().getName(),
-                                                otherPart.getActor().getName() );
+            return Matcher.same( part.getActor().getName(), otherPart.getActor().getName() );
         } else if ( part.getRole() != null && otherPart.getRole() != null ) {
-            return matcher.same( part.getRole().getName(),
-                                                otherPart.getRole().getName() );
+            return Matcher.same( part.getRole().getName(), otherPart.getRole().getName() );
         } else return false;
     }
 }

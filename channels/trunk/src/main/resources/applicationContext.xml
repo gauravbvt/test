@@ -100,7 +100,7 @@ CONFIGURATION NOTES:
         <property name="iconPath" value="icons/"/>
     </bean>
 
-    <bean id="importExportFactory" class="com.mindalliance.channels.core.export.xml.XmlStreamer">
+    <bean id="importExportFactory" class="com.mindalliance.channels.engine.export.xml.XmlStreamer">
         <constructor-arg ref="idGenerator"/>
         <property name="version" value="1.0"/>
     </bean>

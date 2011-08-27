@@ -1,5 +1,6 @@
 package com.mindalliance.channels.engine.query;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.attachments.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
@@ -46,10 +47,8 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.engine.nlp.Proximity;
 import com.mindalliance.channels.engine.nlp.SemanticMatcher;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -311,7 +310,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
         if ( name != null && !name.trim().isEmpty() ) {
-            String root = ChannelsUtils.stripExtraBlanks( name );
+            String root = name.trim().replaceAll( "\\s+", " " );
             if ( !name.equals( root ) ) {
                 LOG.warn( "\"" + name + "\""
                         + " of " + clazz.getSimpleName()
@@ -1290,7 +1289,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         Flow other = others.next();
                         Node source = other.getSource();
                         connected = !source.isConnector()
-                                && Matcher.getInstance().same( receive.getName(), other.getName() );
+                                && Matcher.same( receive.getName(), other.getName() );
                     }
                     if ( !connected ) unconnectedNeeds.add( receive );
                 }
@@ -1314,7 +1313,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         Flow other = others.next();
                         Node target = other.getTarget();
                         used = !target.isConnector()
-                                && Matcher.getInstance().same( send.getName(), other.getName() );
+                                && Matcher.same( send.getName(), other.getName() );
                     }
                     if ( !used ) unusedCapabilities.add( send );
                 }
@@ -1346,7 +1345,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     private boolean satisfiesNeed( Flow send, Flow need ) {
-        return Matcher.getInstance().same( send.getName(), need.getName() )
+        return Matcher.same( send.getName(), need.getName() )
                 &&
                 ( need.getEois().isEmpty()
                         || hasCommonEOIs( send, need ) );
@@ -1719,16 +1718,15 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     public Boolean isSemanticMatch( String text, String otherText, Proximity proximity ) {
-        return Matcher.getInstance().same( text, otherText )
+        return Matcher.same( text, otherText )
                 || semanticMatcher.matches( text.trim(), otherText.trim(), proximity );
     }
 
     @Override
     public Boolean likelyRelated( String text, String otherText ) {
-        return Matcher.getInstance().matches( text, otherText )
-                || isSemanticMatch( StringUtils.uncapitalize( text ),
-                StringUtils.uncapitalize( otherText ),
-                Proximity.HIGH );
+        return Matcher.matches( text, otherText ) || isSemanticMatch( StringUtils.uncapitalize( text ),
+                                                                      StringUtils.uncapitalize( otherText ),
+                                                                      Proximity.HIGH );
     }
 
     @Override
@@ -1771,7 +1769,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         while ( incoming.hasNext() ) {
             Flow in = incoming.next();
             if ( in.isSharing()
-                    && Matcher.getInstance().same( in.getName(), info )
+                    && Matcher.same( in.getName(), info )
                     // in's restriction is same or more specific so it satisfies need's restriction
                     && Flow.Restriction.implies( in.getRestriction(), need.getRestriction() ) ) {
                 sharings.add( in );
@@ -2531,7 +2529,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         Assignment beneficiary = commitment.getBeneficiary();
         if ( beneficiary.getOrganization().narrowsOrEquals(
                 agreement.getBeneficiary(), getPlan().getLocale() )
-                && Matcher.getInstance().same( agreement.getInformation(), sharing.getName() ) ) {
+                && Matcher.same( agreement.getInformation(), sharing.getName() ) ) {
             List<ElementOfInformation> eois = agreement.getEois();
             if ( eois.isEmpty() || subsetOf( sharing.getEois(), eois ) ) {
                 String usage = agreement.getUsage();
@@ -2546,7 +2544,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public Boolean encompasses( Agreement agreement, Agreement other ) {
         if ( other.getBeneficiary().narrowsOrEquals( agreement.getBeneficiary(), getPlan().getLocale() )
-                && Matcher.getInstance().same( agreement.getInformation(), other.getInformation() ) ) {
+                && Matcher.same( agreement.getInformation(), other.getInformation() ) ) {
             String usage = agreement.getUsage();
             if ( usage.isEmpty() || isSemanticMatch( usage, other.getUsage(), Proximity.HIGH ) )
                 return subsetOf( other.getEois(), agreement.getEois() );
@@ -2565,7 +2563,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public Boolean hasCommonEOIs( Flow flow, Flow otherFlow ) {
         List<ElementOfInformation> eois = flow.getEois();
-        final Matcher matcher = Matcher.getInstance();
         final List<ElementOfInformation> otherEois = otherFlow.getEois();
         return CollectionUtils.exists(
                 eois,
@@ -2579,7 +2576,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                     @Override
                                     public boolean evaluate( Object object ) {
                                         String otherEoi = ( (ElementOfInformation) object ).getContent();
-                                        return matcher.same( eoi, otherEoi );
+                                        return Matcher.same( eoi, otherEoi );
                                     }
                                 } );
                     }
@@ -2594,28 +2591,19 @@ public class DefaultQueryService implements QueryService, InitializingBean {
      * @return a boolean
      */
     @Override
-    public Boolean subsetOf(
-            List<ElementOfInformation> eois, final List<ElementOfInformation> superset ) {
-        final Matcher matcher = Matcher.getInstance();
-        return !CollectionUtils.exists(
-                eois,
-                new Predicate() {
+    public Boolean subsetOf( List<ElementOfInformation> eois, final List<ElementOfInformation> superset ) {
+        return !CollectionUtils.exists( eois, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                final String eoiContent = ( (ElementOfInformation) object ).getContent();
+                return !CollectionUtils.exists( superset, new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        final String eoiContent = ( (ElementOfInformation) object ).getContent();
-                        return !CollectionUtils.exists(
-                                superset,
-                                new Predicate() {
-                                    @Override
-                                    public boolean evaluate( Object object ) {
-                                        String otherEoiContent = ( (ElementOfInformation) object ).getContent();
-                                        return matcher.same( eoiContent, otherEoiContent );
-                                    }
-                                }
-                        );
+                        return Matcher.same( eoiContent, ( (ElementOfInformation) object ).getContent() );
                     }
-                }
-        );
+                } );
+            }
+        } );
     }
 
     @Override
@@ -2646,7 +2634,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             for ( Iterator<Flow> it = target.receives(); it.hasNext(); ) {
                 Flow alternate = it.next();
                 if ( !alternate.equals( flow ) && alternate.isSharing()
-                        && Matcher.getInstance().same( flow.getName(), alternate.getName() )
+                        && Matcher.same( flow.getName(), alternate.getName() )
                         && subsetOf( flow.getEois(), alternate.getEois() ) )
                     answer.add( alternate );
             }
@@ -2715,7 +2703,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<ElementOfInformation> commonEOIs = new ArrayList<ElementOfInformation>();
         List<ElementOfInformation> shorter;
         List<ElementOfInformation> longer;
-        final Matcher matcher = Matcher.getInstance();
         if ( flow.getEois().size() <= otherFlow.getEois().size() ) {
             shorter = flow.getEois();
             longer = otherFlow.getEois();
@@ -2739,9 +2726,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                return matcher.same(
-                                        ( (ElementOfInformation) object ).getContent(),
-                                        eoi.getContent() );
+                                return Matcher.same( ( (ElementOfInformation) object ).getContent(),
+                                                                   eoi.getContent() );
                             }
                         }
                 );
@@ -2914,16 +2900,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     }
 
     private ElementOfInformation disseminatingEoi( final Flow flow, final Subject subject ) {
-        final Matcher matcher = Matcher.getInstance();
         return (ElementOfInformation) CollectionUtils.find(
                 flow.getEois(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return matcher.same( flow.getName(), subject.getInfo() )
-                                && matcher.same(
-                                subject.getContent(),
-                                ( (ElementOfInformation) object ).getContent() );
+                        return Matcher.same( flow.getName(), subject.getInfo() )
+                                && Matcher.same( subject.getContent(), ( (ElementOfInformation) object ).getContent() );
                     }
                 }
         );
@@ -2936,12 +2919,11 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             Part startPart,
             Subject startSubject ) {
         List<Dissemination> disseminations = new ArrayList<Dissemination>();
-        Matcher matcher = Matcher.getInstance();
         for ( ElementOfInformation eoi : flow.getEois() ) {
             Transformation xform = eoi.getTransformation();
             if ( xform.isNone() || subject.isRoot() ) {
-                if ( matcher.same( flow.getName(), subject.getInfo() )
-                        && matcher.same( eoi.getContent(), subject.getContent() ) ) {
+                if ( Matcher.same( flow.getName(), subject.getInfo() )
+                        && Matcher.same( eoi.getContent(), subject.getContent() ) ) {
                     Dissemination dissemination = new Dissemination(
                             flow,
                             xform.getType(),
@@ -2968,8 +2950,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                                 showTargets ) );
                     }
                 } else {
-                    if ( matcher.same( flow.getName(), subject.getInfo() )
-                            && matcher.same( eoi.getContent(), subject.getContent() ) ) {
+                    if ( Matcher.same( flow.getName(), subject.getInfo() )
+                            && Matcher.same( eoi.getContent(), subject.getContent() ) ) {
                         for ( Subject transformedSubject : xform.getSubjects() ) {
                             disseminations.add( new Dissemination(
                                     flow,
@@ -3189,7 +3171,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         List<Part> matchingParts = new ArrayList<Part>();
         for ( Segment segment : getPlan().getSegments() ) {
             for ( Part other : segment.listParts() ) {
-                if ( Matcher.getInstance().same( part.getTask(), other.getTask() ) ) {
+                if ( Matcher.same( part.getTask(), other.getTask() ) ) {
                     matchingParts.add( other );
                 }
             }
@@ -3315,25 +3297,19 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public List<Flow> findAllCapabilitiesNamed( String name ) {
         List<Flow> capabilities = new ArrayList<Flow>();
-        Matcher matcher = Matcher.getInstance();
-        for ( Flow flow : findAllFlows() ) {
-            if ( flow.isCapability() && matcher.same( flow.getName(), name ) ) {
+        for ( Flow flow : findAllFlows() )
+            if ( flow.isCapability() && Matcher.same( flow.getName(), name ) )
                 capabilities.add( flow );
-            }
-        }
         return capabilities;
     }
 
     @Override
     public List<User> findUsersParticipatingAs( Actor actor ) {
         List<User> users = new ArrayList<User>();
-        for ( String userName : getUserService().getUsernames( getPlan().getUri() ) ) {
+        for ( String userName : userService.getUsernames( getPlan().getUri() ) ) {
             Participation participation = findParticipation( userName );
-            if ( participation != null
-                    && participation.getActor() != null
-                    && participation.getActor().equals( actor ) ) {
-                users.add( getUserService().getUserNamed( userName ) );
-            }
+            if ( participation != null && participation.getActor() != null && participation.getActor().equals( actor ) )
+                users.add( userService.getUserNamed( userName ) );
         }
         return users;
     }

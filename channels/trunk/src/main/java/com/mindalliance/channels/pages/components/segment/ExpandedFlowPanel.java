@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.segment;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.commands.RedirectFlow;
@@ -15,7 +16,6 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Taggable;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.PlanPage;
@@ -1281,7 +1281,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     private boolean isEmptyOrEquivalent( SegmentObject connectorFlow ) {
         return getFlow().getName().isEmpty()
-                || Matcher.getInstance().same( getFlow().getName(), connectorFlow.getName() );
+                || Matcher.same( getFlow().getName(), connectorFlow.getName() );
     }
 
     private List<Flow> findRelevantInternalFlows() {

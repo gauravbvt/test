@@ -1,11 +1,11 @@
 package com.mindalliance.channels.engine.query;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Specable;
-import com.mindalliance.channels.engine.nlp.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -72,7 +72,7 @@ public class Commitments implements Serializable, Iterable<Commitment> {
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            return Matcher.getInstance().same(
+                            return Matcher.same(
                                     ( (ElementOfInformation) object ).getContent(),
                                     eoi );
                         }
@@ -86,7 +86,7 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public Commitments withInfo( String info ) {
         Commitments result = new Commitments();
         for ( Commitment commitment : commitments )
-            if ( Matcher.getInstance().same( commitment.getSharing().getName(), info ) )
+            if ( Matcher.same( commitment.getSharing().getName(), info ) )
                 result.add( commitment );
 
         return result;

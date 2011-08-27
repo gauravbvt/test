@@ -32,6 +32,7 @@ public class SortableBeanProvider<T extends Serializable> extends SortableDataPr
     /**
      * {@inheritDoc}
      */
+    @Override
     public Iterator<T> iterator( int first, int count ) {
         final SortParam sortParam = getSort();
         List<T> sortedList = new ArrayList<T>();
@@ -43,6 +44,7 @@ public class SortableBeanProvider<T extends Serializable> extends SortableDataPr
     /**
      * {@inheritDoc}
      */
+    @Override
     public int size() {
         return list.size();
     }
@@ -50,6 +52,7 @@ public class SortableBeanProvider<T extends Serializable> extends SortableDataPr
     /**
      * {@inheritDoc}
      */
+    @Override
     public IModel<T> model( T object ) {
         return new Model<T>( object );
     }

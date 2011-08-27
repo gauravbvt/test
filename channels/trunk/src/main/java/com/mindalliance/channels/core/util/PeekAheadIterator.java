@@ -24,6 +24,7 @@ public class PeekAheadIterator<T> implements Iterator<T> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean hasNext() {
         return next != null;
     }
@@ -31,6 +32,7 @@ public class PeekAheadIterator<T> implements Iterator<T> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public T next() {
         T result;
         if ( next != null ) {
@@ -67,6 +69,7 @@ public class PeekAheadIterator<T> implements Iterator<T> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

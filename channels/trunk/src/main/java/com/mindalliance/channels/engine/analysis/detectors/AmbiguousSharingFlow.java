@@ -1,5 +1,6 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
@@ -7,7 +8,6 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.ResourceSpec;
-import com.mindalliance.channels.engine.nlp.Matcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +30,11 @@ public class AmbiguousSharingFlow extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Flow sharing = (Flow) modelObject;
         if ( !sharing.isReferencesEventPhase() ) {
-            Matcher matcher = Matcher.getInstance();
             Place locale = getPlan().getLocale();
             for ( Flow other : getQueryService().findAllFlows() ) {
                 if ( other.isSharing()
                         && sharing.isAskedFor() == other.isAskedFor()
-                        && matcher.same( sharing.getName(), other.getName() )
+                        && Matcher.same( sharing.getName(), other.getName() )
                         && !sharing.getSegment().sameAs( other.getSegment() ) ) {
                     Part initiatedPart = (Part) ( sharing.isAskedFor() ? sharing.getSource() : sharing.getTarget() );
                     Part otherInitiatedPart = (Part) ( other.isAskedFor() ? other.getSource() : other.getTarget() );
