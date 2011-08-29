@@ -86,6 +86,7 @@ public class MAC0018_CopyAttachment
 					for (int i = 0; i <= 15; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task for attachment"));
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -120,7 +121,7 @@ public class MAC0018_CopyAttachment
 					// Click on copy attachment in task
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Attachment Copied";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/ul/li/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCopyPhaseAttachment"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

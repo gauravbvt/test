@@ -78,7 +78,7 @@ public class MAC0019_CutAttachment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
 					// Click on legend for maximize the graph
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -91,6 +91,7 @@ public class MAC0019_CutAttachment
 					for (int i = 0; i <= 15; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task for attachment"));
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

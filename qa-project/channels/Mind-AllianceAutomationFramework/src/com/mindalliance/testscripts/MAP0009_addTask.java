@@ -60,7 +60,7 @@ public class MAP0009_addTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(1000);
 					
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++;
@@ -130,20 +130,17 @@ public class MAP0009_addTask
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 					for (int i = 0; i <= 50; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is Task 121"));
+					String task="This is Task 121";
+					GlobalVariables.oElement.sendKeys(task);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
-					// select category
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:category"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("Audit"));
-				    GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				    // WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
 				    // write location
 				    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:location:name"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Pune"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Location"));
 				    GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				    // WebElement Synchronization
 					Thread.currentThread();
@@ -181,50 +178,27 @@ public class MAP0009_addTask
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
-					// About plan
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
+					// Click on 'About plan segment' option under 'Show' pop up menu
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlanSegment"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allOrganizations"));
+					// Click on 'task mover' option under 'Shows' pop up menu
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAbtPlanSegShowMenu"),GlobalVariables.viewElements.get("taskMover"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span")).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
-					
-					// Assertion : Verify that task should be added to member of organization
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Task is added to organization";
-					GlobalVariables.bIsSuccess=Boolean.FALSE;
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(10000);
-					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
-					for (WebElement li: tds){
-						if (li.getText().equals(GlobalVariables.testData.get("this is task 121"))){
-							GlobalVariables.bIsSuccess=Boolean.TRUE;
-							break;
-						}
-					}
-					if (GlobalVariables.bIsSuccess == Boolean.FALSE) {
-						// Write Results
+					Thread.sleep(3000);
+					// ASSERTION:  When details are entered of respective task, the newly added task should be updated in the segment
+					// Assertion : Verify that task is moved to another segment					
+				    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(task));
+				    if(GlobalVariables.oElement.getText().equals(task)){
+				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
-					else{
+				    }
+				    else{
+				    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'This is task 1234' "+" Actual "+GlobalVariables.oElement.getText();
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

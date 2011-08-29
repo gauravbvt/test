@@ -71,25 +71,35 @@ public class MAC0011_UndoDisintermediateTask {
 					Thread.currentThread();
 					Thread.sleep(3000);
 
-					// Update the Information of the default task
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Task updated";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThing"))).click();
+					// Add 'New Task' under Action pop-up menu
+					GlobalVariables.iStepNo++;
+					GlobalVariables.sDescription="New task added";
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewTask"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
+					// Add details for New Task
 					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-					for (int i = 0; i <= 15; i++)
+					for (int i = 0; i <= 50; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(5000);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+				    // WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
+					// Click on hide details from action pop-menu bar
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
 			
 					// Add info sent flow
 					GlobalVariables.iStepNo++ ;
@@ -143,13 +153,13 @@ public class MAC0011_UndoDisintermediateTask {
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Intermediate Flow created";
 					// Click on Legend to maximize the information flow details
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),GlobalVariables.viewElements.get("addIntermediate"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Click on Legend to minimize the information flow details
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -199,7 +209,7 @@ public class MAC0011_UndoDisintermediateTask {
 					// Click on 'Disintermediate' option under 'Actions' pop up menu of task section
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task disintermediated";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -207,7 +217,7 @@ public class MAC0011_UndoDisintermediateTask {
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -248,6 +258,7 @@ public class MAC0011_UndoDisintermediateTask {
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
+					// Remove Segment
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();

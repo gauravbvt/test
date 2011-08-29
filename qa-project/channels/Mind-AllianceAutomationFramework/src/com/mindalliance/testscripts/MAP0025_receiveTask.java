@@ -126,11 +126,8 @@ public class MAP0025_receiveTask
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(8000);
-					// select category
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:category"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("audit"));
-				    GlobalVariables.oElement.sendKeys(Keys.ENTER);
-				    // WebElement Synchronization
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(8000);
 					// Click on hide details from action pop-menu bar

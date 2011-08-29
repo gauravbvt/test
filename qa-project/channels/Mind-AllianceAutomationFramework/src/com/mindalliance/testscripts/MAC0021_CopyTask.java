@@ -74,36 +74,35 @@ public class MAC0021_CopyTask
 					Thread.currentThread();
 					Thread.sleep(3000);
 					
-					// Create task
+					// Add 'New Task' under Action pop-up menu
 					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Task Created";
+					GlobalVariables.sDescription="New task added";
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewTask"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
-					// Write Task
+					Thread.sleep(5000);
+					// Add details for New Task
 					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 					for (int i = 0; i <= 50; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Copy task"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
-					// select category
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:category"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("Audit"));
-				    GlobalVariables.oElement.sendKeys(Keys.ENTER);
+					Thread.sleep(5000);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					Thread.sleep(5000);
+					// Click on hide details from action pop-menu bar
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(5000);
 					
 					// Click 'Copy task' option under 'Actions' pop up menu of Task section
 					GlobalVariables.iStepNo++ ;

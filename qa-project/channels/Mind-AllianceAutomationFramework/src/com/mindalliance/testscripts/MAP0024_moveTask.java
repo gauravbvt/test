@@ -130,20 +130,19 @@ public class MAP0024_moveTask
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
-					// Write Task
+					// Add details for New Task
+					GlobalVariables.iStepNo++;
+					GlobalVariables.sDescription="New task added";
 					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 					for (int i = 0; i <= 50; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					String task="This is Task 1234";
+					String task="This is Task 121";
 					GlobalVariables.oElement.sendKeys(task);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
-					// select category
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:category"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("audit"));
-				    GlobalVariables.oElement.sendKeys(Keys.ENTER);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
 				    // WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
@@ -156,7 +155,7 @@ public class MAP0024_moveTask
 					Thread.sleep(5000);
 				    // write type
 				    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:actor:actualOrType"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("type"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("Type"));
 				    GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				    // WebElement Synchronization
 					Thread.currentThread();
@@ -168,9 +167,16 @@ public class MAP0024_moveTask
 				    // WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
+				    // Role
+				    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:role:name"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Role"));
+					GlobalVariables.oElement.sendKeys(Keys.ENTER);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
 					// Organization  
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:organization:name"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afour Tech1234"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afour Tech121"));
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);					
 					// WebElement Synchronization
 					Thread.currentThread();
