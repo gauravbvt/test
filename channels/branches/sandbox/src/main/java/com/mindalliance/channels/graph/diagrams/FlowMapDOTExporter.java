@@ -156,7 +156,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         Segment segment = getSegment();
-        String label = segment.getEventPhase().toString()/* + " starts"*/;
+        String label = sanitize( segment.getEventPhase().toString() )/* + " starts"*/;
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", label ) );
