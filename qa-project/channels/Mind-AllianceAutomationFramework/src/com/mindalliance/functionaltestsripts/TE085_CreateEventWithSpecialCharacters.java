@@ -58,7 +58,7 @@ public class TE085_CreateEventWithSpecialCharacters
 				Thread.sleep(1000);
 				
 				// Create an event
-				String event=")(*&^%$#! To The Plan";
+				String event=")(*&^%$#!";
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription=")(*&^%$#!";
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
@@ -89,7 +89,7 @@ public class TE085_CreateEventWithSpecialCharacters
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected ')(*&^%$#! To The Plan' "+" Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected ')(*&^%$#!' "+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

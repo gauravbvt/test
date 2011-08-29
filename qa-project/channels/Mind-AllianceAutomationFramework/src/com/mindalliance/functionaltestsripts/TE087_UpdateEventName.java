@@ -105,21 +105,24 @@ public class TE087_UpdateEventName
 				for(int i=0;i<30;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an updated event"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);				
-				
-				// Click on 'done' button
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Event details window closed";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				// About Plan
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// All events
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allEvents"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that event is updated
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathEventAssertion")));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("This is an updated event"))){
@@ -138,20 +141,6 @@ public class TE087_UpdateEventName
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);		
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// About Plan
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// All events
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allEvents"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Click on check-box to delete the event 
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 				// WebElement Synchronization
@@ -161,7 +150,11 @@ public class TE087_UpdateEventName
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-								
+//				GlobalVariables.oDriver.findElement(By.className("close")).click();
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(2000);
+//								
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

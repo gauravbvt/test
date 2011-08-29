@@ -38,35 +38,6 @@ public class TE118_PhaseAttachmentAsPicture
 					Thread.currentThread();
 					Thread.sleep(10000);
 				    
-					// Click on 'Add new segment' option under 'Actions' pop up menu
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Segment Added";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);	
-					
-					// Details of Segment
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Details of Segment enetered";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
-					for (int i = 0; i <= 8; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Phase Attachment As Picture"));
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);	
-					
 					//Click on 'About Plan' under show pop-up menu
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="About plan";
@@ -146,14 +117,6 @@ public class TE118_PhaseAttachmentAsPicture
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);;
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					// Click on 'Remove this segment' under 'Actions' pop up menu
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));					
-					// Get a handle to the open alert, prompt or confirmation
-					alert = GlobalVariables.oDriver.switchTo().alert();
-					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

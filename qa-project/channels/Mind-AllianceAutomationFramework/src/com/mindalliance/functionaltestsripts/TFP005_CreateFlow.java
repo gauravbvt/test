@@ -25,6 +25,7 @@ public class TFP005_CreateFlow
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
+				
 				// Click on 'Information Sharing Model' link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Information Sharing Model";
@@ -37,6 +38,11 @@ public class TFP005_CreateFlow
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click on add info receive link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add info receive";

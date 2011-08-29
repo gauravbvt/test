@@ -20,6 +20,7 @@ public class TFP004_AddInfoSend
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
+				
 				// Click on 'Information Sharing Model' link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Information Sharing Model";
@@ -32,6 +33,11 @@ public class TFP004_AddInfoSend
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click on add info receive link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add info receive";
@@ -39,9 +45,9 @@ public class TFP004_AddInfoSend
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Assertion: Verify that When click on add info receive reciev info need panel opens
+				// Assertion: Verify that When click on add info receive receiveiev info need panel opens
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("sXpathAddInfoSendAssertion"));
-				if(GlobalVariables.oElement.getText().equals("Can notify of")){
+				if(GlobalVariables.oElement.getText().equals("something")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
