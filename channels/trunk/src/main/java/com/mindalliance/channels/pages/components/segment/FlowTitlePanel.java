@@ -43,7 +43,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
         add( infoLabel );
         Label postLabel = new Label(
                 "post",
-                new Model<String>( getPost() + "." + operationalString() + prohibitedString() ) );
+                new Model<String>( getPost() + "." + conceptualString() + prohibitedString() ) );
         add( postLabel );
     }
 
@@ -53,8 +53,8 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
                 : "";
     }
 
-    private String operationalString() {
-        return flow.canGetOperational() && !flow.isEffectivelyOperational()
+    private String conceptualString() {
+        return flow.canGetConceptual() && !flow.isEffectivelyConceptual()
                 ? " Conceptual."
                 : "";
     }

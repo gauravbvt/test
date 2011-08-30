@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * An arrow between two nodes in the information flow graph.
  */
-public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Operationable, Prohibitable {
+public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Conceptualizable, Prohibitable {
 
     /**
      * A list of alternate communication channels for the flow.
@@ -72,9 +72,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     private boolean ifTaskFails;
 
     /**
-     * Whether operational.
+     * Whether de facto conceptual.
      */
-    private boolean operational = true;
+    private boolean conceptual = false;
     /**
      * The reason this part was declared conceptual.
      */
@@ -274,12 +274,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.significanceToTarget = significanceToTarget;
     }
 
-    public boolean isOperational() {
-        return operational;
+    public boolean isConceptual() {
+        return conceptual;
     }
 
-    public void setOperational( boolean operational ) {
-        this.operational = operational;
+    public void setConceptual( boolean val ) {
+        this.conceptual = val;
     }
 
     public String getConceptualReason() {
@@ -308,20 +308,21 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.referencesEventPhase = referencesEventPhase;
     }
 
-    public boolean isEffectivelyOperational() {
-        return isOperational()
-                &&
-                ( isNeed() && ( (Part) getTarget() ).isOperational()
-                        || isCapability() && ( (Part) getSource() ).isOperational()
-                        || isOperationalizable() );
+    public boolean isEffectivelyConceptual() {
+        return isConceptual()
+                || isNeed() && ( (Part) getTarget() ).isEffectivelyConceptual()
+                || isCapability() && ( (Part) getSource() ).isEffectivelyConceptual()
+                || isSharing() &&
+                    ( ( (Part) getSource() ).isEffectivelyConceptual()
+                        || ( (Part) getTarget() ).isEffectivelyConceptual() );
     }
 
-    public boolean canGetOperational() {
-        return isOperationalizable();
+    public boolean canGetConceptual() {
+        return isConceptualizable();
     }
 
-    public boolean canSetOperational() {
-        return isOperationalizable();
+    public boolean canSetConceptual() {
+        return isConceptualizable();
     }
 
     public boolean canGetProhibited() {
@@ -340,10 +341,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return canGetReferencesEventPhase();
     }
 
-    public boolean isOperationalizable() {
+    public boolean isConceptualizable() {
         return isSharing()
-                && ( (Part) getSource() ).isOperational()
-                && ( (Part) getTarget() ).isOperational();
+                && !( (Part) getSource() ).isConceptual()
+                && !( (Part) getTarget() ).isConceptual();
     }
 
     public String getShortName( Node node, boolean qualified ) {
@@ -1124,8 +1125,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return isSharing() ? "Flow" : isNeed() ? "Need" : "Capability";
     }
 
-    public String getOperationalLabel() {
-        return isEffectivelyOperational() ? "Yes" : "No";
+    public String getConceptualLabel() {
+        return isEffectivelyConceptual() ? "Yes" : "No";
     }
 
     /**

@@ -125,10 +125,10 @@ public class FlowConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         // Operational
-        writer.startNode( "operational" );
-        writer.setValue( Boolean.toString( flow.isOperational() ) );
+        writer.startNode( "conceptual" );
+        writer.setValue( Boolean.toString( flow.isConceptual() ) );
         writer.endNode();
-        if ( !flow.isOperational() ) {
+        if ( flow.isConceptual() ) {
             writer.startNode( "conceptualReason" );
             writer.setValue( flow.getConceptualReason() );
             writer.endNode();
@@ -275,8 +275,10 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setRestriction( Flow.Restriction.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "ifTaskFails" ) ) {
                 flow.setIfTaskFails( Boolean.valueOf( reader.getValue() ) );
-            } else if ( nodeName.equals( "operational" ) ) {
-                flow.setOperational( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "operational" ) ) { // TODO: Obsolete
+                flow.setConceptual( !reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "conceptual" ) ) {
+                flow.setConceptual( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "conceptualReason" ) ) {
                 flow.setConceptualReason( reader.getValue() );
             } else if ( nodeName.equals( "prohibited" ) ) {

@@ -82,7 +82,7 @@ public class InternalFlow extends Flow {
         setIntent( flow.getIntent() );
         setRestriction( flow.getRestriction() );
         setEois( flow.copyEois() );
-        setOperational( flow.isOperational() );
+        setConceptual( flow.isConceptual() );
     }
 
     /**

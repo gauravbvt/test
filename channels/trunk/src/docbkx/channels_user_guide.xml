@@ -9927,6 +9927,15 @@
           </glossdef>
         </glossentry>
 
+        <glossentry xml:id="conceptual">
+          <glossterm>Conceptual task or flow</glossterm>
+          
+          <glossdef>
+            <para>A task or flow is conceptual if it could not be realized given the environment known to the plan.</para>
+          </glossdef>
+        </glossentry>
+        
+
         <glossentry xml:id="element_of_information">
           <glossterm>Element of information</glossterm>
 
@@ -11620,6 +11629,24 @@
 
                 <entry><para>Yes</para></entry>
               </row>
+              
+              <row>
+                <entry><para>Task or flow is marked as defacto conceptual but no reason is given</para></entry>
+                
+                <entry><para>Low</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Provide a reason</para>
+                  </listitem>
+                  <listitem>
+                    <para>or unmark as de facto conceptual.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
+
             </tbody>
           </tgroup>
         </informaltable>
@@ -11972,7 +11999,7 @@
               </row>
 
               <row>
-                <entry><para>Important task is not operational.</para></entry>
+                <entry><para>Important task is conceptual</para></entry>
 
                 <entry><para>Depends on impacted tasks</para></entry>
 
@@ -11986,8 +12013,7 @@
               </row>
 
               <row>
-                <entry><para>Important sharing flow is not
-                operational.</para></entry>
+                <entry><para>Important sharing flow is conceptual</para></entry>
 
                 <entry><para>Depends on impacted tasks</para></entry>
 

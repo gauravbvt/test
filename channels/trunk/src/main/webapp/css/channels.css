@@ -338,7 +338,7 @@ div.issue-details {
 div.issue-details table {
 }
 
-input.error, div.issues {
+textarea.error, input.error, div.issues {
     background-color: #ebcabd;
 }
 

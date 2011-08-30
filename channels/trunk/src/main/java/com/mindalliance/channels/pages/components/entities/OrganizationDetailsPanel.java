@@ -643,8 +643,8 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                     EMPTY
             ) );
             columns.add( makeColumn(
-                    "Operational",
-                    "part.operationalLabel",
+                    "Conceptual",
+                    "part.conceptualLabel",
                     EMPTY
             ) );
             columns.add( makeFilterableLinkColumn(
@@ -770,8 +770,8 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                     EMPTY,
                     CommitmentsTablePanel.this ) );
             columns.add( makeColumn(
-                    "Operational",
-                    "sharing.operationalLabel",
+                    "Conceptual",
+                    "sharing.conceptualLabel",
                     EMPTY
             ) );
             // provider and table

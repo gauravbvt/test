@@ -1,11 +1,5 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.graph.AbstractMetaProvider;
-import com.mindalliance.channels.graph.DOTAttribute;
-import com.mindalliance.channels.graph.DOTAttributeProvider;
-import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.ExternalFlow;
@@ -14,6 +8,12 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.graph.AbstractMetaProvider;
+import com.mindalliance.channels.graph.DOTAttribute;
+import com.mindalliance.channels.graph.DOTAttributeProvider;
+import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.graph.URLProvider;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.springframework.core.io.Resource;
 
@@ -76,7 +76,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
              */
             public String getVertexURL( Node node ) {
                 if ( node.isPart() ) {
-                    if ( isHidingNoop() && !( (Part) node ).isOperational() ) {
+                    if ( isHidingNoop() && ( (Part) node ).isEffectivelyConceptual() ) {
                         return null;
                     } else {
                         Object[] args = {node.getSegment().getId(), node.getId()};
@@ -95,7 +95,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
              */
             public String getEdgeURL( Flow edge ) {
                 // Plan id = 0 for now sice there is only one plan
-                if ( isHidingNoop() && !edge.isEffectivelyOperational() ) {
+                if ( isHidingNoop() && edge.isEffectivelyConceptual() ) {
                     return null;
                 } else {
                     Object[] args = {0, edge.getId()};
@@ -234,7 +234,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 Connector connector = (Connector) vertex;
                 Iterator<ExternalFlow> externalFlows = connector.externalFlows();
                 list.add( new DOTAttribute( "fontcolor", "white" ) );
-                if ( !isHidingNoop() || connector.getInnerFlow().isEffectivelyOperational() ) {
+                if ( !isHidingNoop() || !connector.getInnerFlow().isEffectivelyConceptual() ) {
                     if ( externalFlows.hasNext() ) {
                         list.add( new DOTAttribute( "tooltip", "Connected to: " + summarizeExternalFlows( externalFlows ) ) );
                     } else {
@@ -254,7 +254,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
         private boolean isInvisible( Node vertex ) {
-            return vertex.isPart() && isHidingNoop() && !( (Part) vertex ).isOperational();
+            return vertex.isPart() && isHidingNoop() && ( (Part) vertex ).isEffectivelyConceptual();
         }
 
         private String getHighlightColor( Node vertex ) {
@@ -369,7 +369,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
         private boolean isInvisible( Flow edge ) {
-            return isHidingNoop() && !edge.isEffectivelyOperational();
+            return isHidingNoop() && edge.isEffectivelyConceptual();
         }
 
 

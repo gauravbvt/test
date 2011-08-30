@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
@@ -43,7 +43,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
      */
     private boolean showingGoals = false;
     /**
-     * Whether to show non-operational tasks and flows in flow map.
+     * Whether to show conceptual tasks and flows in flow map.
      */
     private boolean hidingNoop = false;
     /**
@@ -147,7 +147,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         addReduceToFitControl();
         addShowGoalsControl();
         addShowConnectorsControl();
-        addHideOperationalControl();
+        addHideConceptualControl();
         addShowLegendControl();
     }
 
@@ -163,7 +163,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
     }
 
 
-    private void addHideOperationalControl() {
+    private void addHideConceptualControl() {
         WebMarkupContainer hideNoop = new WebMarkupContainer( "hideNoop" );
         hideNoop.add( new AjaxEventBehavior( "onclick" ) {
             @Override

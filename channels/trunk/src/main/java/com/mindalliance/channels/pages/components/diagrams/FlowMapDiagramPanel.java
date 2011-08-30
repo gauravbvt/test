@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.graph.Diagram;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
      */
     private boolean showingConnectors;
     /**
-     * Whether to hide non-operational tasks and flows.
+     * Whether to hide conceptual tasks and flows.
      */
     private boolean hidingNoop;
 

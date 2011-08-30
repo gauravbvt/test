@@ -1,7 +1,5 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Event;
@@ -14,6 +12,8 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Taggable;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
@@ -387,12 +387,17 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         conceptualContainer = new WebMarkupContainer( "conceptualContainer" );
         conceptualContainer.setOutputMarkupId( true );
         makeVisible( conceptualContainer, !isShowSimpleForm() );
-        add( conceptualContainer );
+        addOrReplace( conceptualContainer );
         conceptualCheckBox = new CheckBox( "conceptual", new PropertyModel<Boolean>( this, "conceptual" ) );
         conceptualContainer.add( conceptualCheckBox );
         conceptualCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getPart(), "operational" ) );
+                update( target, new Change( Change.Type.Updated, getPart(), "conceptual" ) );
+                addIssuesAnnotation(
+                        conceptualReasonTextArea,
+                        getPart(),
+                        conceptualReasonTextArea.getId(),
+                        "small-text-area error" );
                 makeVisible( conceptualReasonContainer, isConceptual() );
                 adjustFields();
                 target.addComponent( conceptualReasonContainer );
@@ -409,8 +414,15 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "conceptualReason" ) );
+                addConceptualFields();
+                target.addComponent( conceptualContainer);
             }
         } );
+        addIssuesAnnotation(
+                conceptualReasonTextArea,
+                getPart(),
+                conceptualReasonTextArea.getId(),
+                "small-text-area error" );
         conceptualReasonContainer.add( conceptualReasonTextArea );
     }
 
@@ -1112,11 +1124,11 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     }
 
     public boolean isConceptual() {
-        return !getPart().isOperational();
+        return getPart().isConceptual();
     }
 
     public void setConceptual( boolean val ) {
-        doCommand( new UpdateSegmentObject( getPart(), "operational", !val ) );
+        doCommand( new UpdateSegmentObject( getPart(), "conceptual", val ) );
     }
 
     public String getConceptualReason() {

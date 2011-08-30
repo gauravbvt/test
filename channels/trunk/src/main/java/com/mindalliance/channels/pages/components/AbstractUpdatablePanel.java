@@ -1,20 +1,20 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Commander;
-import com.mindalliance.channels.engine.command.LockManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Commander;
+import com.mindalliance.channels.engine.command.LockManager;
+import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -100,8 +100,8 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         // Take the root updatable ancestor's query service
         Updatable rootUpdatable = findRootUpdatable();
         return rootUpdatable != null
-            ? rootUpdatable.getOwnQueryService()
-            : queryService;
+                ? rootUpdatable.getOwnQueryService()
+                : queryService;
     }
 
     private Updatable findRootUpdatable() {
@@ -433,7 +433,57 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     protected PlanPage planPage() {
         Page page = getPage();
-        return page instanceof PlanPage ? (PlanPage)page : null;
+        return page instanceof PlanPage ? (PlanPage) page : null;
     }
+
+    /**
+     * Add issues annotations to a component.
+     *
+     * @param component the component
+     * @param object    the object of the issues
+     * @param property  the property of concern. If null, get issues of object
+     */
+    protected void addIssuesAnnotation(
+            FormComponent<?> component,
+            ModelObject object,
+            String property ) {
+        addIssuesAnnotation( component, object, property, "error" );
+    }
+
+    /**
+     * Add issues annotations to a component.
+     *
+     * @param component the component
+     * @param object    the object of the issues
+     * @param property  the property of concern. If null, get issues of object
+     */
+    protected void addIssuesAnnotation(
+            FormComponent<?> component,
+            ModelObject object,
+            String property,
+            String errorClass ) {
+        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
+        String summary = property == null ?
+                analyst.getIssuesSummary( object, false ) :
+                analyst.getIssuesSummary( object, property );
+        boolean hasIssues = analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        if ( !summary.isEmpty() ) {
+            component.add(
+                    new AttributeModifier(
+                            "class", true, new Model<String>( errorClass ) ) );              // NON-NLS
+            component.add(
+                    new AttributeModifier(
+                            "title", true, new Model<String>( summary ) ) );                // NON-NLS
+        } else {
+            if ( property == null && hasIssues ) {
+                // All waived issues
+                component.add(
+                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
+                component.add(
+                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
+            }
+        }
+    }
+
 
 }

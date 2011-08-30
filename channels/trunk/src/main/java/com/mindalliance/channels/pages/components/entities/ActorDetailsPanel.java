@@ -1,7 +1,5 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
@@ -15,6 +13,11 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.util.NameRange;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
@@ -22,9 +25,6 @@ import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
-import com.mindalliance.channels.engine.query.QueryService;
-import com.mindalliance.channels.core.util.NameRange;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -756,8 +756,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     EMPTY
             ) );
             columns.add( makeColumn(
-                    "Operational",
-                    "part.operationalLabel",
+                    "Conceptual",
+                    "part.conceptualLabel",
                     EMPTY
             ) );
             columns.add( makeFilterableLinkColumn(
@@ -877,8 +877,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     EMPTY,
                     CommitmentsTablePanel.this ) );
             columns.add( makeColumn(
-                    "Operational",
-                    "sharing.operationalLabel",
+                    "Conceptual",
+                    "sharing.conceptualLabel",
                     EMPTY
             ) );
             // provider and table

@@ -7,18 +7,25 @@ package com.mindalliance.channels.core.model;
  * Date: Dec 21, 2010
  * Time: 10:31:33 AM
  */
-public interface Operationable {
+public interface Conceptualizable {
     /**
-     * Whether operational.
+     * Whether conceptual.
      *
      * @return a boolean
      */
-    boolean isOperational();
+    boolean isConceptual();
 
     /**
-     * Whether effectively operational.
+     * Whether effectively conceptual.
      *
      * @return a boolean
      */
-    boolean isEffectivelyOperational();
+    boolean isEffectivelyConceptual();
+
+    /**
+     * Reason given.
+     *
+     * @return a string
+     */
+    String getConceptualReason();
 }

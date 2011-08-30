@@ -16,9 +16,9 @@ import java.util.List;
  * Date: Dec 21, 2010
  * Time: 11:55:44 AM
  */
-public class ImportantTaskNotOperational extends AbstractIssueDetector {
+public class ImportantTaskConceptual extends AbstractIssueDetector {
 
-    public ImportantTaskNotOperational() {
+    public ImportantTaskConceptual() {
     }
 
     /**
@@ -27,15 +27,15 @@ public class ImportantTaskNotOperational extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        if ( !part.isOperational() ) {
+        if ( part.isEffectivelyConceptual() ) {
             Level importance = computeTaskFailureSeverity( part );
             if ( importance.compareTo( Level.Low ) >= 1 ) {
                 Issue issue = makeIssue( Issue.ROBUSTNESS, part );
                 issue.setDescription( "Task \""
                         + part.getTitle()
-                        + "\" is important but is conceptual." );
+                        + "\" is important but is effectively conceptual." );
                 issue.setSeverity( importance );
-                issue.setRemediation( "Make the task operational." );
+                issue.setRemediation( "Make the task \"operational\"." );
                 issues.add( issue );
             }
         }
@@ -60,7 +60,7 @@ public class ImportantTaskNotOperational extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Important task is not operational";
+        return "Important task is conceptual";
     }
 
     /**

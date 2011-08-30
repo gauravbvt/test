@@ -1,15 +1,15 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.graph.AbstractMetaProvider;
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.graph.AbstractMetaProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
 
@@ -208,7 +208,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
                     || flow.isCapability() && flow.isSatisfying();
 
             iconName = imagesDirName +
-                    ( hidingNoop && !flow.isEffectivelyOperational() ? "/connector_blank"
+                    ( hidingNoop && flow.isEffectivelyConceptual() ? "/connector_blank"
                             : satisfaction ? "/connector"
                             : "/connector_red" );
         }
@@ -218,7 +218,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
             String[] lines = getNodeLabel( node ).split( "\\|" );
             numLines = Math.min( lines.length, 5 );
             Part part = (Part) node;
-            if ( hidingNoop && !part.isOperational() )
+            if ( hidingNoop && part.isEffectivelyConceptual() )
                 iconName = "blank";
             else
                 iconName = imagingService.findIconName( User.plan(), part,

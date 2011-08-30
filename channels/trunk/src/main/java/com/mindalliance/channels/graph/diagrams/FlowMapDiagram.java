@@ -1,5 +1,8 @@
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.DirectedMultiGraphWithProperties;
@@ -7,9 +10,6 @@ import com.mindalliance.channels.engine.analysis.graph.FlowMapGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphRenderer;
-import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Node;
-import com.mindalliance.channels.core.model.Segment;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
@@ -41,7 +41,7 @@ public class FlowMapDiagram extends AbstractDiagram<Node,Flow> {
      */
     private boolean showingConnectors;
     /**
-     * Whether to hide non-operational tasks and flows.
+     * Whether to hide conceptual tasks and flows.
      */
     private boolean hidingNoop;
 

@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * A part in a segment.
  */
-public class Part extends Node implements GeoLocatable, Specable, Operationable, Prohibitable {
+public class Part extends Node implements GeoLocatable, Specable, Conceptualizable, Prohibitable {
 
     /**
      * Default actor label, when unknown.
@@ -99,9 +99,9 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     private Category category;
 
     /**
-     * Whether a task is operational (i.e. non-conceptual).
+     * Whether a task is de facto conceptual.
      */
-    private boolean operational = true;
+    private boolean conceptual = false;
 
     /**
      * Whether the part is prohibited.
@@ -406,17 +406,17 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     }
 
     @Override
-    public boolean isOperational() {
-        return operational;
+    public boolean isConceptual() {
+        return conceptual;
     }
 
-    public void setOperational( boolean operational ) {
-        this.operational = operational;
+    public void setConceptual( boolean conceptual ) {
+        this.conceptual = conceptual;
     }
 
     @Override
-    public boolean isEffectivelyOperational() {
-        return operational;
+    public boolean isEffectivelyConceptual() {
+        return conceptual;
     }
 
     public String getConceptualReason() {
@@ -993,8 +993,8 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
         return results;
     }
 
-    public String getOperationalLabel() {
-        return isEffectivelyOperational() ? "Yes" : "No";
+    public String getConceptualLabel() {
+        return isEffectivelyConceptual() ? "Yes" : "No";
     }
 
     /**

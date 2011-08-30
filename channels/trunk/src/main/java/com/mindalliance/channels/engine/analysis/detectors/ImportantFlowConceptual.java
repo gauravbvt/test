@@ -16,9 +16,9 @@ import java.util.List;
  * Date: Dec 21, 2010
  * Time: 12:03:56 PM
  */
-public class ImportantFlowNotOperational  extends AbstractIssueDetector {
+public class ImportantFlowConceptual extends AbstractIssueDetector {
 
-    public ImportantFlowNotOperational() {
+    public ImportantFlowConceptual() {
     }
 
     /**
@@ -27,15 +27,15 @@ public class ImportantFlowNotOperational  extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
-        if ( flow.isOperationalizable() && !flow.isOperational() ) {
-            Level importance = computeSharingFailureSeverity( flow );
+        if ( flow.isSharing() && flow.isEffectivelyConceptual() ) {
+            Level importance =  computeSharingFailureSeverity( flow );
             if ( importance.compareTo( Level.Low ) >= 1 ) {
                 Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
                 issue.setDescription( "Flow \""
                         + flow.getTitle()
-                        + "\" is important but is conceptual." );
+                        + "\" is important but is effectively conceptual." );
                 issue.setSeverity( importance );
-                issue.setRemediation( "Make the flow operational." );
+                issue.setRemediation( "Make the flow \"operational\"." );
                 issues.add( issue );
             }
         }
@@ -60,7 +60,7 @@ public class ImportantFlowNotOperational  extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Important sharing flow is not operational";
+        return "Important sharing flow is conceptual";
     }
 
     /**

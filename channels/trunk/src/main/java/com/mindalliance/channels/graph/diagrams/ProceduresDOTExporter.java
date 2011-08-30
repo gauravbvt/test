@@ -360,7 +360,6 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
 
     private boolean isVisible( Part part ) {
         return true;
-        // return !( (ProceduresMetaProvider) getMetaProvider() ).isHidingNoop() || part.isOperational();
     }
 
     private String ifVisibleColor( Part part, String color ) {

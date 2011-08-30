@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 
@@ -37,7 +37,7 @@ public class FlowMapPage extends PngWebPage {
      */
     private boolean showingConnectors;
     /**
-     * Whether to hide non-operational tasks and flows.
+     * Whether to hide conceptual tasks and flows.
      */
     private boolean hidingNoop;
 

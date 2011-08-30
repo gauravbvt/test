@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Command;
-import com.mindalliance.channels.engine.command.commands.AddPart;
-import com.mindalliance.channels.engine.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.engine.command.commands.AddPart;
+import com.mindalliance.channels.engine.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
@@ -227,7 +227,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     }
 
     private String cssClasses() {
-        return getPart().isOperational() ? "task-title" : "task-title-noop";
+        return !getPart().isConceptual() ? "task-title" : "task-title-noop";
     }
 
     private void addReceivesFlowPanel() {

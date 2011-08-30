@@ -2,14 +2,12 @@ package com.mindalliance.channels.engine.export.xml;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.command.AbstractCommand;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.IdGenerator;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Importer;
 import com.mindalliance.channels.core.dao.Journal;
 import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.engine.export.ConnectionSpecification;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Availability;
 import com.mindalliance.channels.core.model.Channel;
@@ -35,6 +33,8 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.engine.command.AbstractCommand;
+import com.mindalliance.channels.engine.export.ConnectionSpecification;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.io.xml.XppReader;
@@ -414,7 +414,7 @@ public class XmlStreamer implements ImportExportFactory {
             external.setAttachments( inner.getAttachments() );
             external.setIntent( inner.getIntent() );
             external.setReferencesEventPhase( inner.isReferencesEventPhase() );
-            external.setOperational( inner.isOperational() );
+            external.setConceptual( inner.isConceptual() );
             external.setIfTaskFails( inner.isIfTaskFails() );
             external.setRestriction( inner.getRestriction() );
         }

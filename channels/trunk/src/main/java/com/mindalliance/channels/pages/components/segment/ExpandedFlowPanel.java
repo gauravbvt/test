@@ -1,11 +1,6 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.RedirectFlow;
-import com.mindalliance.channels.engine.command.commands.SatisfyNeed;
-import com.mindalliance.channels.engine.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.ExternalFlow;
@@ -16,7 +11,11 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Taggable;
-import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.RedirectFlow;
+import com.mindalliance.channels.engine.command.commands.SatisfyNeed;
+import com.mindalliance.channels.engine.command.commands.UpdateSegmentObject;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
@@ -25,7 +24,6 @@ import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
-import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -328,13 +326,18 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addConceptualFields() {
         conceptualContainer = new WebMarkupContainer( "conceptualContainer" );
         conceptualContainer.setOutputMarkupId( true );
-        makeVisible( conceptualContainer, !isShowSimpleForm() && getFlow().canGetOperational() );
-        add( conceptualContainer );
+        makeVisible( conceptualContainer, !isShowSimpleForm() && getFlow().canGetConceptual() );
+        addOrReplace( conceptualContainer );
         conceptualCheckBox = new CheckBox( "conceptual", new PropertyModel<Boolean>( this, "conceptual" ) );
         conceptualContainer.add( conceptualCheckBox );
         conceptualCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getFlow(), "operational" ) );
+                update( target, new Change( Change.Type.Updated, getFlow(), "conceptual" ) );
+                addIssuesAnnotation(
+                        conceptualReasonTextArea,
+                        getFlow(),
+                        conceptualReasonTextArea.getId(),
+                        "small-text-area error" );
                 makeVisible( conceptualReasonContainer, isConceptual() );
                 adjustFields( getFlow() );
                 target.addComponent( conceptualReasonContainer );
@@ -351,8 +354,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getFlow(), "conceptualReason" ) );
+                addConceptualFields();
+                target.addComponent( conceptualContainer );
             }
         } );
+        addIssuesAnnotation(
+                conceptualReasonTextArea,
+                getFlow(),
+                conceptualReasonTextArea.getId(),
+                "small-text-area error" );
         conceptualReasonContainer.add( conceptualReasonTextArea );
     }
 
@@ -502,8 +512,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
         makeVisible( prohibitedContainer, f.canGetProhibited() );
         prohibitedCheckBox.setEnabled( lockedByUser && f.canSetProhibited() );
-        makeVisible( conceptualContainer, !isShowSimpleForm() && f.canGetOperational() );
-        conceptualCheckBox.setEnabled( lockedByUser && f.canSetOperational() );
+        makeVisible( conceptualContainer, !isShowSimpleForm() && f.canGetConceptual() );
+        conceptualCheckBox.setEnabled( lockedByUser && f.canSetConceptual() );
         conceptualReasonTextArea.setEnabled( isConceptual() && isLockedByUser( f ) );
         makeVisible( referencesEventPhaseContainer, f.canGetReferencesEventPhase() );
         referencesEventPhaseCheckBox.setEnabled( lockedByUser && f.canSetReferencesEventPhase() );
@@ -743,7 +753,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 update(
                         target,
-                        new Change( Change.Type.Updated, getFlow(), "operational" ) );
+                        new Change( Change.Type.Updated, getFlow(), "conceptual" ) );
             }
         } );
         conceptualContainer.add( conceptualCheckBox );
@@ -876,7 +886,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         target.addComponent(  timingContainer );
         makeVisible( significanceToSourceContainer, !showSimpleForm );
         target.addComponent( significanceToSourceContainer );
-        makeVisible( conceptualContainer, !showSimpleForm && getFlow().canGetOperational() );
+        makeVisible( conceptualContainer, !showSimpleForm && getFlow().canGetConceptual() );
         target.addComponent(  conceptualContainer );
     }
 
@@ -911,40 +921,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         add( component );
         addIssuesAnnotation( component, getFlow(), component.getId() );
         return result;
-    }
-
-    /**
-     * Add issues annotations to a component.
-     *
-     * @param component the component
-     * @param object    the object of the issues
-     * @param property  the property of concern. If null, get issues of object
-     */
-    private void addIssuesAnnotation(
-            FormComponent<?> component,
-            ModelObject object,
-            String property ) {
-        Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
-        String summary = property == null ?
-                analyst.getIssuesSummary( object, false ) :
-                analyst.getIssuesSummary( object, property );
-        boolean hasIssues = analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        if ( !summary.isEmpty() ) {
-            component.add(
-                    new AttributeModifier(
-                            "class", true, new Model<String>( "error" ) ) );              // NON-NLS
-            component.add(
-                    new AttributeModifier(
-                            "title", true, new Model<String>( summary ) ) );                // NON-NLS
-        } else {
-            if ( hasIssues ) {
-                // All waived issues
-                component.add(
-                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
-                component.add(
-                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
-            }
-        }
     }
 
     private void addOtherField() {
@@ -1589,11 +1565,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @return a boolean
      */
     public boolean isConceptual() {
-        return !getFlow().isOperational();
+        return getFlow().isConceptual();
     }
 
     public void setConceptual( boolean val ) {
-        doCommand( new UpdateSegmentObject( getFlow(), "operational", !val ) );
+        doCommand( new UpdateSegmentObject( getFlow(), "conceptual", val ) );
     }
 
     public String getConceptualReason() {

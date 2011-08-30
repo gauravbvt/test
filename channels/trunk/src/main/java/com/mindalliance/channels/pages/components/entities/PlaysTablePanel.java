@@ -3,9 +3,9 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Specable;
-import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.engine.query.Play;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.engine.query.Play;
+import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
@@ -89,8 +89,8 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
                 EMPTY
         ) );
         columns.add( makeColumn(
-                "Operational",
-                "part.operationalLabel",
+                "Conceptual",
+                "part.conceptualLabel",
                 EMPTY
         ) );
         columns.add( makeColumn( "Info", "flow.name", "@kind", "?", "flow.description" ) );

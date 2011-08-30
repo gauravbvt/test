@@ -1,9 +1,6 @@
 package com.mindalliance.channels.engine.export.xml;
 
 import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.engine.export.ConnectionSpecification;
-import com.mindalliance.channels.engine.export.PartSpecification;
-import com.mindalliance.channels.engine.export.SegmentSpecification;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Delay;
@@ -15,6 +12,9 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.engine.export.ConnectionSpecification;
+import com.mindalliance.channels.engine.export.PartSpecification;
+import com.mindalliance.channels.engine.export.SegmentSpecification;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -125,10 +125,10 @@ public class FlowConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         // Operational
-        writer.startNode( "operational" );
-        writer.setValue( Boolean.toString( flow.isOperational() ) );
+        writer.startNode( "conceptual" );
+        writer.setValue( Boolean.toString( flow.isConceptual() ) );
         writer.endNode();
-        if ( !flow.isOperational() ) {
+        if ( flow.isConceptual() ) {
             writer.startNode( "conceptualReason" );
             writer.setValue( flow.getConceptualReason() );
             writer.endNode();
@@ -275,8 +275,10 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setRestriction( Flow.Restriction.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "ifTaskFails" ) ) {
                 flow.setIfTaskFails( Boolean.valueOf( reader.getValue() ) );
-            } else if ( nodeName.equals( "operational" ) ) {
-                flow.setOperational( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "operational" ) ) { // todo: obsolete
+                flow.setConceptual( !reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "conceptual" ) ) {
+                flow.setConceptual( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "conceptualReason" ) ) {
                 flow.setConceptualReason( reader.getValue() );
             } else if ( nodeName.equals( "prohibited" ) ) {
