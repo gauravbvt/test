@@ -19,9 +19,9 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.pages.ModelObjectLink;
-import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.core.util.NameRange;
+import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.pages.ModelObjectLink;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -857,7 +857,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
          * @return a string
          */
         public String getFullName() {
-            return getIndexEntry().getName();
+            String name = getIndexEntry().getName();
+            return name.trim().isEmpty() ? "UNNAMED" : name;
         }
 
         /**

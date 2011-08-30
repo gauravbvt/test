@@ -1,10 +1,10 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class UnplayedPart extends AbstractIssueDetector {
                         + "\nor profile an agent to match the task specifications"
                         + "\nor modify the task specifications so that it matches at least one agent."
                 );
-                issue.setSeverity( getTaskFailureSeverity( part ) );
+                issue.setSeverity( computeTaskFailureSeverity( part ) );
                 issues.add( issue );
             }
         }

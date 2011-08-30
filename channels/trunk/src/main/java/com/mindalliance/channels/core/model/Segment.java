@@ -518,7 +518,7 @@ public class Segment extends ModelObject {
     public String initiationCause( Part part ) {
         Event initiator = part.getInitiatedEvent();
         if ( getEvent().equals( initiator ) && getPhase().isConcurrent() )
-            return "causes event \"" + getEvent().getLowerCasedName() + '\"';
+            return "causes event \"" + getEvent().getName() + '\"';
         else {
             Segment partSegment = part.getSegment();
             return part.isTerminatesEventPhase()
@@ -552,7 +552,7 @@ public class Segment extends ModelObject {
         Event initiator = part.getInitiatedEvent();
         if ( equals( part.getSegment() ) && part.isTerminatesEventPhase() ) {
             return getPhase().isPreEvent()
-                    ? "can prevent " + getEvent().getLowerCasedName()
+                    ? "can prevent " + getEvent().getName()
                     : "terminates " + getPhaseEventTitle().toLowerCase();
         } else if ( getEvent().equals( initiator ) && getPhase().isPreEvent() ) {
             return "causes event \"" + initiator.getName().toLowerCase() + '\"';

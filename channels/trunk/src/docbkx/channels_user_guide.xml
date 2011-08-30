@@ -10251,8 +10251,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Change the agent’s supervisor or remove the agent
-                      from the supervisor hierarchy</para>
+                      <para>Change the agent’s supervisor </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove the agent from the supervisor hierarchy</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10267,10 +10269,12 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Transfer the supervisor to the agent’s
-                      organization or one of its parents (if any), or transfer
-                      the agent's job to the supervisor's organization or
-                      child organization (if any)</para>
+                      <para>Transfer the supervisor to the agent’s organization or one of its
+                        parents (if any), </para>
+                    </listitem>
+                    <listitem>
+                      <para>or transfer the agent's job to the supervisor's organization or child
+                        organization (if any)</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10285,8 +10289,13 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Name the agent of the source task, or name the
-                      role, or the organization.</para>
+                      <para>Name the agent of the source task, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or name the role, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or the organization.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10301,8 +10310,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Name the agent of the target task, or name the
-                      role or the organization.</para>
+                      <para>Name the agent of the target task, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or name the role or the organization.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10316,8 +10327,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Change the geoname of the place or remove
-                      it.</para>
+                      <para>Change the geoname of the place </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove it.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10332,9 +10345,11 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Specify that a flow of given information always
-                      terminates the task producing it or that it never
-                      does.</para>
+                      <para>Specify that a flow of given information always terminates the task
+                        producing it </para>
+                    </listitem>
+                    <listitem>
+                      <para>or that it never does.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10349,9 +10364,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Specify that a flow of given information always
-                      terminates or always triggers the task consuming it or
-                      that it never does.</para>
+                      <para>Specify that a flow of given information always terminates </para>
+                    </listitem>
+                    <listitem>
+                      <para>or always triggers the task consuming it or that it never does.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10366,11 +10382,15 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Make the security of the delegated-to medium at
-                      least that of the delegated-from medium; make sure that
-                      the delegated-to medium does not “widen” transmission
-                      (for example, from unicast to broadcast), or do not
-                      delegate to the other medium.</para>
+                      <para>Make the security of the delegated-to medium at least that of the
+                        delegated-from medium; </para>
+                    </listitem>
+                    <listitem>
+                      <para>make sure that the delegated-to medium does not “widen” transmission
+                        (for example, from unicast to broadcast), </para>
+                    </listitem>
+                    <listitem>
+                      <para>or do not delegate to the other medium.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10384,9 +10404,13 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>If a duplicate, remove it; make the endpoint
-                      valid; or change the endpoint pattern if the medium is
-                      not built-in.</para>
+                      <para>If a duplicate, remove it; </para>
+                    </listitem>
+                    <listitem>
+                      <para>make the endpoint valid; </para>
+                    </listitem>
+                    <listitem>
+                      <para>or change the endpoint pattern if the medium is not built-in.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10400,10 +10424,13 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove conflicting type from categorization,
-                      change definition of conflicting type to remove
-                      conflict, or change definition of categorized entity to
-                      remove conflict.</para>
+                      <para>Remove conflicting type from categorization, </para>
+                    </listitem>
+                    <listitem>
+                      <para>change definition of conflicting type to remove conflict, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or change definition of categorized entity to remove conflict.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10418,10 +10445,15 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Set medium transmission mode to either unicast
-                      (default), multicast, or broadcast, or categorize the
-                      medium with another that has a set transmission
-                      mode.</para>
+                      <para>Set medium transmission mode to either unicast (default), multicast,
+                      </para>
+                    </listitem>
+                    <listitem>
+                      <para>or broadcast, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or categorize the medium with another that has a set transmission
+                        mode.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10434,8 +10466,13 @@
 
                 <entry><para>Medium</para></entry>
 
-                <entry><para>Name the organization of agents assigned to the
-                task.</para></entry>
+                <entry><para>
+                    <itemizedlist>
+                      <listitem>
+                        <para>Name the organization of agents assigned to the task.</para>
+                      </listitem>
+                    </itemizedlist>
+                  </para></entry>
 
                 <entry><para>Yes</para></entry>
               </row>
@@ -10447,9 +10484,11 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Make the task complete sooner, wait longer before
-                      it repeats, make it non-repeating, or set a completion
-                      time for the task.</para>
+                      <para>Make the task complete sooner, wait longer before it repeats, make it
+                        non-repeating, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or set a completion time for the task.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10461,7 +10500,13 @@
 
                 <entry><para>Low</para></entry>
 
-                <entry><para>Name a role for the task.</para></entry>
+                <entry><para>
+                    <itemizedlist>
+                      <listitem>
+                        <para>Name a role for the task.</para>
+                      </listitem>
+                    </itemizedlist>
+                  </para></entry>
 
                 <entry><para>Yes</para></entry>
               </row>
@@ -10473,8 +10518,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Change the place this one is within or define the
-                      place to be within none.</para>
+                      <para>Change the place this one is within </para>
+                    </listitem>
+                    <listitem>
+                      <para>or define the place to be within none.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10541,8 +10588,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Add a goal to the segment or remove the
-                      segment.</para>
+                      <para>Add a goal to the segment </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove the segment.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10557,9 +10606,11 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Merge the two segments or move all tasks that
-                      achieve the common goal from one segment to the other
-                      and remove the goal.</para>
+                      <para>Merge the two segments </para>
+                    </listitem>
+                    <listitem>
+                      <para>or move all tasks that achieve the common goal from one segment to the
+                        other and remove the goal.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10571,7 +10622,13 @@
 
                 <entry><para>Low</para></entry>
 
-                <entry><para>Name the task.</para></entry>
+                <entry><para>
+                    <itemizedlist>
+                      <listitem>
+                        <para>Name the task.</para>
+                      </listitem>
+                    </itemizedlist>
+                  </para></entry>
 
                 <entry><para>No</para></entry>
               </row>
@@ -10581,7 +10638,13 @@
 
                 <entry><para>High</para></entry>
 
-                <entry><para>Name the information flow.</para></entry>
+                <entry><para>
+                    <itemizedlist>
+                      <listitem>
+                        <para>Name the information flow.</para>
+                      </listitem>
+                    </itemizedlist>
+                  </para></entry>
 
                 <entry><para>No</para></entry>
               </row>
@@ -10594,9 +10657,11 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove the restriction or change the source and/or
-                      target specification to use types of organizations or
-                      locations, or no specifications at all.</para>
+                      <para>Remove the restriction </para>
+                    </listitem>
+                    <listitem>
+                      <para>or change the source and/or target specification to use types of
+                        organizations or locations, or no specifications at all.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10610,9 +10675,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Modify the definition of the contradicted
-                      capability or modify the definition of this sharing
-                      flow.</para>
+                      <para>Modify the definition of the contradicted capability </para>
+                    </listitem>
+                    <listitem>
+                      <para>or modify the definition of this sharing flow.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10627,8 +10693,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove the redundant channel or remove the channel
-                      that makes it redundant.</para>
+                      <para>Remove the redundant channel </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove the channel that makes it redundant.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10656,8 +10724,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove all prohibiting policies; or remove all
-                      mandating policies; or both.</para>
+                      <para>Remove all prohibiting policies; </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove all mandating policies; or both.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10672,9 +10742,16 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Assign a user of the same name to the agent,
-                      assign no user to the agent, make the agent a
-                      placeholder, or make the agent an archetype.</para>
+                      <para>Assign a user of the same name to the agent, </para>
+                    </listitem>
+                    <listitem>
+                      <para>assign no user to the agent, </para>
+                    </listitem>
+                    <listitem>
+                      <para>make the agent a placeholder, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or make the agent an archetype.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10688,9 +10765,14 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Unassign users, make the agent an archetype, or
-                      make the agent a placeholder of which there can be more
-                      than one.</para>
+                      <para>Unassign users, </para>
+                    </listitem>
+                    <listitem>
+                      <para>make the agent an archetype, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or make the agent a placeholder of which there can be more than
+                        one.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10788,8 +10870,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove the sharing agreement or add flows that
-                      imply a commitment covered by the agreement.</para>
+                      <para>Remove the sharing agreement </para>
+                    </listitem>
+                    <listitem>
+                      <para>or add flows that imply a commitment covered by the agreement.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10804,8 +10888,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Have no flow trigger this task or have the task
-                      not start with the plan segment.</para>
+                      <para>Have no flow trigger this task </para>
+                    </listitem>
+                    <listitem>
+                      <para>or have the task not start with the plan segment.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10820,9 +10906,13 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove the expectation on the organization or add
-                      a task that will be assigned to the organization or one
-                      of its sub-organizations, if any.</para>
+                      <para>Remove the expectation on the organization </para>
+                    </listitem>
+                    <listitem>
+                      <para>or add a task that will be assigned to the organization </para>
+                    </listitem>
+                    <listitem>
+                      <para>or one of its sub-organizations, if any.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10908,9 +10998,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Confirm an agreement covering this sharing
-                      commitment or remove the requirement for agreements for
-                      the organization.</para>
+                      <para>Confirm an agreement covering this sharing commitment </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove the requirement for agreements for the organization.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10925,10 +11016,11 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Make sure that the agent has a known endpoint
-                      (address, phone number etc.) for contact via the unicast
-                      channel, or remove the unicast channel from the
-                      flow.</para>
+                      <para>Make sure that the agent has a known endpoint (address, phone number
+                        etc.) for contact via the unicast channel, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove the unicast channel from the flow.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10942,10 +11034,12 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Change the agent sharing the information, change
-                      the agent receiving the information, or generalize task
-                      specifications to assign multiple agents to either the
-                      source or target task.</para>
+                      <para>Change the agent sharing the information, change the agent receiving the
+                        information, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or generalize task specifications to assign multiple agents to either
+                        the source or target task.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10977,8 +11071,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Start this task with the plan segment or have an
-                      incoming sharing flow trigger it.</para>
+                      <para>Start this task with the plan segment </para>
+                    </listitem>
+                    <listitem>
+                      <para>or have an incoming sharing flow trigger it.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10993,8 +11089,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Assign an agent to the user or unregister the
-                      user.</para>
+                      <para>Assign an agent to the user </para>
+                    </listitem>
+                    <listitem>
+                      <para>or unregister the user.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11008,9 +11106,13 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Add a plan segment for phase of event, remove
-                      event from plan scope, or remove phase from plan
-                      scope.</para>
+                      <para>Add a plan segment for phase of event, </para>
+                    </listitem>
+                    <listitem>
+                      <para>remove event from plan scope, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove phase from plan scope.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11024,8 +11126,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Define a plan segment that responds to it or
-                      remove the event's incident status.</para>
+                      <para>Define a plan segment that responds to it </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove the event's incident status.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11040,8 +11144,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Add information produced or add received
-                      consumed.</para>
+                      <para>Add information produced </para>
+                    </listitem>
+                    <listitem>
+                      <para>or add received consumed.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11056,9 +11162,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Name an agent assigned to the task or add a
-                      participating agent to the plan's scope with this
-                      role.</para>
+                      <para>Name an agent assigned to the task </para>
+                    </listitem>
+                    <listitem>
+                      <para>or add a participating agent to the plan's scope with this role.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11072,8 +11179,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Change the name of information transmitted or
-                      break up the sharing flow.</para>
+                      <para>Change the name of information transmitted </para>
+                    </listitem>
+                    <listitem>
+                      <para>or break up the sharing flow.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11087,8 +11196,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove redundant task or specify one of the tasks
-                      differently.</para>
+                      <para>Remove redundant task </para>
+                    </listitem>
+                    <listitem>
+                      <para>or specify one of the tasks differently.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11102,8 +11213,13 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove references to this place, change its
-                      address, or change its geolocation.</para>
+                      <para>Remove references to this place, </para>
+                    </listitem>
+                    <listitem>
+                      <para>change its address, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or change its geolocation.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11118,8 +11234,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Make the event an incident or make sure at least
-                      one task in any segment causes it.</para>
+                      <para>Make the event an incident </para>
+                    </listitem>
+                    <listitem>
+                      <para>or make sure at least one task in any segment causes it.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11200,12 +11318,12 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>If the task starts with its segment (it is
-                      permanent or immediate), make sure the event phase of
-                      the segment can start (it is a co-event phase of an
-                      incident or the phase is started by a task that itself
-                      can start), or else make it so the triggering task can
-                      start itself.</para>
+                      <para>If the task starts with its segment (it is permanent or immediate), make
+                        sure the event phase of the segment can start (it is a co-event phase of an
+                        incident or the phase is started by a task that itself can start), </para>
+                    </listitem>
+                    <listitem>
+                      <para>or else make it so the triggering task can start itself.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11254,10 +11372,14 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Explicitly assign an agent to the task, profile an
-                      agent to match the task specifications, or modify the
-                      task specifications so that it matches at least one
-                      participating agent.</para>
+                      <para>Explicitly assign an agent to the task, </para>
+                    </listitem>
+                    <listitem>
+                      <para>profile an agent to match the task specifications, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or modify the task specifications so that it matches at least one
+                        participating agent.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11272,8 +11394,11 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Add sharing flows or extend current sharing flows
-                      to include the missing elements of information.</para>
+                      <para>Add sharing flows </para>
+                    </listitem>
+                    <listitem>
+                      <para>or extend current sharing flows to include the missing elements of
+                        information.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11287,8 +11412,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Add a supervisor agent to the job or remove the
-                      job for the employing organization's profile.</para>
+                      <para>Add a supervisor agent to the job </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove the job for the employing organization's profile.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11302,8 +11429,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Change the postal code or change the
-                      geolocation.</para>
+                      <para>Change the postal code </para>
+                    </listitem>
+                    <listitem>
+                      <para>or change the geolocation.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11317,10 +11446,14 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Explicitly assign agent to a task, specify a task
-                      that matches the agent's profile, or modify the agent's
-                      profile so that it matches one or more task
-                      specifications.</para>
+                      <para>Explicitly assign agent to a task, </para>
+                    </listitem>
+                    <listitem>
+                      <para>specify a task that matches the agent's profile, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or modify the agent's profile so that it matches one or more task
+                        specifications.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11334,10 +11467,14 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Have the task achieve a goal, end the event phase
-                      (if it would end a risk), or make sure at least one task
-                      that it directly or indirectly triggers or critically
-                      informs achieves a goal.</para>
+                      <para>Have the task achieve a goal, </para>
+                    </listitem>
+                    <listitem>
+                      <para>end the event phase (if it would end a risk), </para>
+                    </listitem>
+                    <listitem>
+                      <para>or make sure at least one task that it directly or indirectly triggers
+                        or critically informs achieves a goal.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11367,8 +11504,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Attach an MOU to the sharing agreement or
-                      unconfirm the sharing agreement.</para>
+                      <para>Attach an MOU to the sharing agreement </para>
+                    </listitem>
+                    <listitem>
+                      <para>or unconfirm the sharing agreement.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11398,10 +11537,16 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Make event in context an incident, have a task
-                      cause the event, make event self-terminating (post-event
-                      only), or make a task terminate the event (post-event
-                      only).</para>
+                      <para>Make event in context an incident, </para>
+                    </listitem>
+                    <listitem>
+                      <para>have a task cause the event, </para>
+                    </listitem>
+                    <listitem>
+                      <para>make event self-terminating (post-event only), </para>
+                    </listitem>
+                    <listitem>
+                      <para>or make a task terminate the event (post-event only).</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11415,8 +11560,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Add expected element of information or remove
-                      information standard tag.</para>
+                      <para>Add expected element of information </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove information standard tag.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11431,8 +11578,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Assign a user to the agent or make the agent not a
-                      placeholder.</para>
+                      <para>Assign a user to the agent </para>
+                    </listitem>
+                    <listitem>
+                      <para>or make the agent not a placeholder.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11462,8 +11611,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Identify the agent’s supervisor or remove the
-                      restriction to share only with a supervisor.</para>
+                      <para>Identify the agent’s supervisor </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove the restriction to share only with a supervisor.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11562,10 +11713,14 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Set the classification of the element sent to be
-                      at least as high as when it is received, lower the
-                      classification of the received element, or do not send
-                      the classified element.</para>
+                      <para>Set the classification of the element sent to be at least as high as
+                        when it is received, </para>
+                    </listitem>
+                    <listitem>
+                      <para>lower the classification of the received element, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or do not send the classified element.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11579,11 +11734,16 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove the channel as an alternative, change the
-                      security profile of its medium, change the secrecy
-                      classification of the problematic elements of
-                      information, or remove the classified element(s) of
-                      information that exceed the channel's security.</para>
+                      <para>Remove the channel as an alternative, change the security profile of its
+                        medium, </para>
+                    </listitem>
+                    <listitem>
+                      <para>change the secrecy classification of the problematic elements of
+                        information, </para>
+                    </listitem>
+                    <listitem>
+                      <para>or remove the classified element(s) of information that exceed the
+                        channel's security.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11597,10 +11757,15 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Declassify the information shared, increase the
-                      clearance of the agents assigned to the recipient task,
-                      or change the definition of the task to assign only
-                      cleared recipients.</para>
+                      <para>Declassify the information shared, </para>
+                    </listitem>
+                    <listitem>
+                      <para>increase the clearance of the agents assigned to the recipient task,
+                      </para>
+                    </listitem>
+                    <listitem>
+                      <para>or change the definition of the task to assign only cleared
+                        recipients.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11647,10 +11812,12 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Generalize task specifications so that the agent
-                      is not the only one assigned to a critical task or add
-                      participating agents to the scope with the same role and
-                      organization.</para>
+                      <para>Generalize task specifications so that the agent is not the only one
+                        assigned to a critical task </para>
+                    </listitem>
+                    <listitem>
+                      <para>or add participating agents to the scope with the same role and
+                        organization.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11664,9 +11831,11 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Ease the time constraints the information need or
-                      reduce the time delay for the matching information
-                      sharing flow.</para>
+                      <para>Ease the time constraints the information need </para>
+                    </listitem>
+                    <listitem>
+                      <para>or reduce the time delay for the matching information sharing
+                        flow.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11680,9 +11849,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Ease the time constraints the information needs or
-                      reduce the time delays of flows disseminating needed
-                      elements.</para>
+                      <para>Ease the time constraints the information needs </para>
+                    </listitem>
+                    <listitem>
+                      <para>or reduce the time delays of flows disseminating needed elements.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11697,9 +11867,12 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Change the specification of the task to allow more
-                      agents to be assigned to it or add participating agents
-                      to the scope who will be assigned to the task</para>
+                      <para>Change the specification of the task to allow more agents to be assigned
+                        to it </para>
+                    </listitem>
+                    <listitem>
+                      <para>or add participating agents to the scope who will be assigned to the
+                        task</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11714,8 +11887,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove incoming sharing flows or add intermediates
-                      to spread the incoming communication load</para>
+                      <para>Remove incoming sharing flows </para>
+                    </listitem>
+                    <listitem>
+                      <para>or add intermediates to spread the incoming communication load</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11730,8 +11905,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Remove outgoing sharing flows or add intermediates
-                      to spread the outgoing communication load</para>
+                      <para>Remove outgoing sharing flows </para>
+                    </listitem>
+                    <listitem>
+                      <para>or add intermediates to spread the outgoing communication load</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11746,9 +11923,12 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Profile agents so that more than one match the
-                      task specifications or modify the task specifications so
-                      that it matches more than one agent.</para>
+                      <para>Profile agents so that more than one match the task specifications
+                      </para>
+                    </listitem>
+                    <listitem>
+                      <para>or modify the task specifications so that it matches more than one
+                        agent.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11763,10 +11943,12 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Change the availabilities of assigned agents so
-                      that they leave no gap or change the specification of
-                      the task so that more agents are assigned to fill the
-                      gaps.</para>
+                      <para>Change the availabilities of assigned agents so that they leave no gap
+                      </para>
+                    </listitem>
+                    <listitem>
+                      <para>or change the specification of the task so that more agents are assigned
+                        to fill the gaps.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11825,12 +12007,37 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Require that the information sharing reference the
-                      event context or rename the sharing flow.</para>
+                      <para>Require that the information sharing reference the event context </para>
+                    </listitem>
+                    <listitem>
+                      <para>or rename the sharing flow.</para>
                     </listitem>
                   </itemizedlist></entry>
 
                 <entry><para>Yes</para></entry>
+              </row>
+              <row>
+                <entry><para>Agent in sharing commitment not qualified to use transmission medium</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Make agent qualified to use the transmission medium</para>
+                  </listitem>
+                  <listitem>
+                    <para>Remove the qualification requirement from the transmission mediu</para>
+                  </listitem>
+                  <listitem>
+                    <para>Remove the transmission medium from the flow's channels</para>
+                  </listitem>
+                  <listitem>
+                    <para>Modify the definition of the source or target task so that the unqualified
+                        agent is not assigned to it.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
               </row>
             </tbody>
           </tgroup>

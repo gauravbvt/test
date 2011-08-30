@@ -105,11 +105,4 @@ public class Event extends ModelEntity implements GeoLocatable {
         this.selfTerminating = selfTerminating;
     }
 
-    public String getLowerCasedName() {
-        return lowerCasedName == null ? getName() : lowerCasedName;
-    }
-
-    public void setLowerCasedName( String lowerCasedName ) {
-        this.lowerCasedName = lowerCasedName;
-    }
 }

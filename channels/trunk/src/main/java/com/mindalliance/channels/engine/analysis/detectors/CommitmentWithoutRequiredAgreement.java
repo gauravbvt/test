@@ -1,12 +1,12 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.engine.analysis.DetectedIssue;
-import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
@@ -32,21 +32,20 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
         final QueryService queryService = getQueryService();
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
-        if ( org.isActual() && org.isAgreementsRequired() ) {
-            // todo - optimize this: only find commitments that cross org lines etc.
-            List<Commitment> commitments = queryService.findAllCommitmentsOf(
+        if ( org.isActual() && org.isEffectiveAgreementsRequired() ) {
+            List<Agreement> confirmed = org.getAgreements();
+            for ( Agreement agreement : getQueryService().findAllImpliedAgreementsOf(
                     org,
                     queryService.getAssignments( false ),
-                    queryService.findAllFlows() );
-            for ( final Commitment commitment : commitments ) {
-                if ( queryService.isAgreementRequired( commitment )
-                        && !queryService.isCoveredByAgreement( commitment ) ) {
+                    queryService.findAllFlows() ) ) {
+                if ( !confirmed.contains( agreement ) ) {
                     DetectedIssue issue = makeIssue( Issue.COMPLETENESS, org );
-                    issue.setDescription( commitment.toString()
-                            + ", but this is not backed by a sharing agreement." );
-                    issue.setRemediation( "Confirm an agreement covering this sharing commitment,\n"
-                            + "or remove the requirement for agreements for "
-                            + org.getName() );
+                    issue.setDescription( "Not confirmed: "
+                            + agreement.getSummary( org )
+                            + "." );
+                    issue.setRemediation( "Confirm the agreement,\n"
+                            + "or remove the requirement for agreements from "
+                            + agreementRequiringOrganization( org ).getName() );
                     issue.setSeverity( Level.Low );
                     issues.add( issue );
                 }
@@ -54,6 +53,14 @@ public class CommitmentWithoutRequiredAgreement extends AbstractIssueDetector {
         }
         return issues;
     }
+
+    private Organization agreementRequiringOrganization( Organization org ) {
+        if ( org.isAgreementsRequired() )
+            return org;
+        else
+            return org.agreementRequiringParent();
+    }
+
 
     /**
      * {@inheritDoc}

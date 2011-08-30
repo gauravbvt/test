@@ -69,10 +69,10 @@ public class EventPhase implements Serializable, Comparable<EventPhase> {
         sb.append( ' ' );
         sb.append( phase.getPreposition() );
         sb.append( ' ' );
-        sb.append( event.getLowerCasedName() );
+        sb.append( event.getName().toLowerCase() );
         if ( eventLevel != null ) {
             sb.append( " (" );
-            sb.append( eventLevel.getLabel() );
+            sb.append( eventLevel.getLabel().toLowerCase() );
             sb.append( ')' );
         }
         return sb.toString();

@@ -1,13 +1,13 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.ResourceSpec;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class AmbiguousSharingFlow extends AbstractIssueDetector {
                                 "other same-named communications in other event contexts." );
                         issue.setRemediation( "Require that the information sharing reference the event context" +
                                 "\nor rename the sharing flow." );
-                        issue.setSeverity( getSharingFailureSeverity( sharing ) );
+                        issue.setSeverity( computeSharingFailureSeverity( sharing ) );
                         issues.add( issue );
                     }
                 }

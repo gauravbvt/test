@@ -1,6 +1,5 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
@@ -9,6 +8,7 @@ import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -55,10 +55,10 @@ public class AgentWithoutSupervisorCommitsToOne extends AbstractIssueDetector {
                 if ( !hasSupervisor ) {
                     Issue issue = makeIssue( Issue.COMPLETENESS, flow );
                     String assignmentLabel = assignment.getResourceSpec().getLabel();
-                    issue.setDescription( assignmentLabel + " has no supervisor and so can't possibly share with one." );
+                    issue.setDescription( assignmentLabel + " has no supervisor and so can not possibly share with one." );
                     issue.setRemediation( "Identify the supervisor of " + assignmentLabel
                             + "\nor remove the restriction to share only with a supervisor." );
-                    issue.setSeverity( getSharingFailureSeverity( flow ) );
+                    issue.setSeverity( computeSharingFailureSeverity( flow ) );
                     issues.add(  issue );
                 }
             }

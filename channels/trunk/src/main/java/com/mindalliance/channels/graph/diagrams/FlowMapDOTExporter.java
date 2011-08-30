@@ -1,9 +1,5 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.graph.AbstractDOTExporter;
-import com.mindalliance.channels.graph.AbstractMetaProvider;
-import com.mindalliance.channels.graph.DOTAttribute;
-import com.mindalliance.channels.graph.MetaProvider;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Flow;
@@ -13,6 +9,10 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.graph.AbstractDOTExporter;
+import com.mindalliance.channels.graph.AbstractMetaProvider;
+import com.mindalliance.channels.graph.DOTAttribute;
+import com.mindalliance.channels.graph.MetaProvider;
 import org.jgrapht.Graph;
 
 import java.io.IOException;
@@ -156,7 +156,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         Segment segment = getSegment();
-        String label = segment.getEventPhase().toString()/* + " starts"*/;
+        String label = sanitize( segment.getEventPhase().toString() )/* + " starts"*/;
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", label ) );

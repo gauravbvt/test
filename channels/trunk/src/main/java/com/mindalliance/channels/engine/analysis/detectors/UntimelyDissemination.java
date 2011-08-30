@@ -1,6 +1,5 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Dissemination;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
@@ -8,6 +7,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Subject;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -65,7 +65,7 @@ public class UntimelyDissemination extends AbstractIssueDetector {
                                     + "\nor reduce the max delays of flows disseminating the element \""
                                     + eoi.getContent()
                                     + "\"." );
-                            issue.setSeverity( getTaskFailureSeverity( target ) );
+                            issue.setSeverity( computeTaskFailureSeverity( target ) );
                             issues.add( issue );
                         }
                     }

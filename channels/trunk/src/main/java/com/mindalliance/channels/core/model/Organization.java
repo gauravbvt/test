@@ -113,6 +113,18 @@ public class Organization extends AbstractUnicastChannelable
         this.agreementsRequired = agreementsRequired;
     }
 
+    public boolean isEffectiveAgreementsRequired() {
+        return agreementsRequired ||
+                CollectionUtils.exists(
+                        ancestors(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return ( (Organization) object ).isAgreementsRequired();
+                            }
+                        } );
+    }
+
     public List<Agreement> getAgreements() {
         return agreements;
     }
@@ -396,6 +408,18 @@ public class Organization extends AbstractUnicastChannelable
             List<Organization> ancestors = ancestors();
             return ancestors.get( ancestors.size() - 1 );
         }
+    }
+
+    public Organization agreementRequiringParent() {
+        return (Organization) CollectionUtils.find(
+                ancestors(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Organization) object).isAgreementsRequired();
+                    }
+                }
+        );
     }
 
     /**

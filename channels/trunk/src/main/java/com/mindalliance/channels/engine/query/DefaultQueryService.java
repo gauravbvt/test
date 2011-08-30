@@ -122,8 +122,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * Whether the flow could be essential to risk mitigation.
      *
-     * @param flow the flow
-     * @param assumeFails  whether alternate flows are assumed
+     * @param flow        the flow
+     * @param assumeFails whether alternate flows are assumed
      * @return a boolean
      */
     @Override
@@ -2282,20 +2282,21 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                 assignments,
                 allFlows );
         for ( final Commitment commitment : commitments ) {
-            if ( commitment.isBetweenOrganizations() ) {
-                Agreement agreement = Agreement.from( commitment );
-                encompassed.addAll( (List<Agreement>) CollectionUtils.select(
-                        agreements,
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return encompasses( Agreement.from( commitment ),
-                                        (Agreement) object );
-                            }
-                        } )
-                );
-                agreements.add( agreement );
-            }
+            if ( ModelObject.areIdentical( commitment.getCommitter().getOrganization(), organization ) )
+                if ( commitment.isBetweenUnrelatedOrganizations() ) {
+                    Agreement agreement = Agreement.from( commitment );
+                    encompassed.addAll( (List<Agreement>) CollectionUtils.select(
+                            agreements,
+                            new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                    return encompasses( Agreement.from( commitment ),
+                                            (Agreement) object );
+                                }
+                            } )
+                    );
+                    agreements.add( agreement );
+                }
         }
         return (List<Agreement>) CollectionUtils.subtract( agreements, encompassed );
     }
@@ -2314,7 +2315,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                     assignments,
                     allFlows );
             for ( Commitment commitment : commitments )
-                if ( commitment.isBetweenOrganizations() && covers( agreement, commitment ) )
+                if ( commitment.isBetweenUnrelatedOrganizations() && covers( agreement, commitment ) )
                     results.add( commitment );
         }
         return new ArrayList<Commitment>( results );
@@ -2496,8 +2497,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     /** {@inheritDoc} */
     public Boolean isAgreementRequired( Commitment commitment ) {
-        return commitment.getCommitter().getOrganization().isAgreementsRequired()
-                && commitment.isBetweenOrganizations();
+        return commitment.getCommitter().getOrganization().isEffectiveAgreementsRequired()
+                && commitment.isBetweenUnrelatedOrganizations();
     }
 
     @Override
@@ -3353,7 +3354,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * Get user's full name.
      *
-     *
      * @param participation@return a string
      */
     @Override
@@ -3364,7 +3364,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * Whether this participation's username corresponds to a registered user.
      *
-     *
      * @param participation@return a boolean
      */
     private boolean hasUser( Participation participation ) {
@@ -3374,13 +3373,13 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public Actor getKnownActualActor( Part part ) {
         List<Actor> knownActors = (List<Actor>) CollectionUtils.collect( findAllAssignments( part, false ),
-                                                                         new Transformer() {
-                                                                             @Override
-                                                                             public Object transform( Object input ) {
-                                                                                 Assignment assignment = (Assignment) input;
-                                                                                 return assignment.getActor();
-                                                                             }
-                                                                         } );
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        Assignment assignment = (Assignment) input;
+                        return assignment.getActor();
+                    }
+                } );
 
         return knownActors.size() == 1 ? knownActors.get( 0 ) : null;
     }
@@ -3388,8 +3387,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * Get extended title for the part.
      *
-     *
-     * @param sep separator string
+     * @param sep  separator string
      * @param part
      * @return a string
      */

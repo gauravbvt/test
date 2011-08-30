@@ -210,6 +210,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.PartTerminatedByManySends"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.NeedWithNoTimeSensitiveEOI"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentWithoutSupervisorCommitsToOne"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentUnqualifiedForMedium"/>
             </list>
         </property>
     </bean>

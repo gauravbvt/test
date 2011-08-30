@@ -1,11 +1,11 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class ActorIsTaskBottleneck extends AbstractIssueDetector {
                             + "\"." );
                     issue.setRemediation( "Change the specification of the task to allow more agents to be assigned to it"
                             + "\nor add participating agents to the scope who will be assigned to the task." );
-                    issue.setSeverity( getTaskFailureSeverity( part ) );
+                    issue.setSeverity( computeTaskFailureSeverity( part ) );
                     issues.add( issue );
                 }
             }

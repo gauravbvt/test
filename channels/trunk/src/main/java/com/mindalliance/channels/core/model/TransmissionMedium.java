@@ -57,6 +57,10 @@ public class TransmissionMedium extends ModelEntity {
      */
     private Place reach;
     /**
+     * Type of agent qualified to operate this transmission medium.
+     */
+    private Actor qualification;
+    /**
      * Media this medium delegates transmissions to.
      * E.g. Phone tele-conference delegates to phone,
      * A Notification System delegates to phone, email, IM...
@@ -284,6 +288,14 @@ public class TransmissionMedium extends ModelEntity {
             security.add( classification );
     }
 
+    public Actor getQualification() {
+        return qualification;
+    }
+
+    public void setQualification( Actor qualification ) {
+        assert qualification == null || qualification.isType();
+        this.qualification = qualification;
+    }
 
     /**
      * Check if an address is valid if set.
@@ -467,8 +479,8 @@ public class TransmissionMedium extends ModelEntity {
      */
     public boolean references( ModelObject mo ) {
         return super.references( mo )
-                || mo instanceof TransmissionMedium
-                && delegatedToMedia.contains( (TransmissionMedium) mo );
+                || ( mo instanceof TransmissionMedium && delegatedToMedia.contains( (TransmissionMedium) mo ) )
+                || ModelObject.areIdentical( mo, qualification );
     }
 
     /**

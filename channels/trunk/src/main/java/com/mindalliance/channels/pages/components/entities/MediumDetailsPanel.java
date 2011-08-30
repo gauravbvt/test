@@ -1,14 +1,19 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdateObject;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -16,7 +21,11 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -52,6 +61,16 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
      */
     private DelegatedToMediaPanel delegatedToMediaPanel;
 
+    /**
+     * Qualification link.
+     */
+    private ModelObjectLink qualificationLink;
+    /**
+     * Agent type name field.
+     */
+    private TextField qualificationField;
+
+
     public MediumDetailsPanel( String id, PropertyModel<ModelEntity> entityModel, Set<Long> expansions ) {
         super( id, entityModel, expansions );
     }
@@ -66,6 +85,8 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
         addCastChoiceAndReset();
         addDelegatedToMedia();
         addSecurity();
+        addQualificationLink();
+        addQualificationField();
         adjustFields();
     }
 
@@ -73,6 +94,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
         castChoice.setEnabled( isLockedByUser( getMedium() ) );
         castResetLink.setVisible( isLockedByUser( getMedium() ) );
         addressPatternField.setEnabled( isLockedByUser( getMedium() ) );
+        qualificationField.setEnabled( isLockedByUser( getMedium() ) );
     }
 
     private void addCastLabel() {
@@ -164,6 +186,47 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
         ) );
     }
 
+    private void addQualificationLink() {
+        qualificationLink = new ModelObjectLink(
+                "qualification-link",
+                new PropertyModel<Actor>( getMedium(), "qualification" ),
+                new Model<String>( "Required qualification" ) );
+        moDetailsDiv.addOrReplace( qualificationLink );
+    }
+
+    private void addQualificationField() {
+        qualificationField = new AutoCompleteTextField<String>( "qualification",
+                new PropertyModel<String>( this, "qualificationName" ) ) {
+            @Override
+            protected Iterator<String> getChoices( String s ) {
+                final List<String> qualificationChoices = findCandidateQualifications();
+                List<String> candidates = new ArrayList<String>();
+                for ( String choice : qualificationChoices ) {
+                    if ( Matcher.matches( s, choice ) ) candidates.add( choice );
+                }
+                return candidates.iterator();
+            }
+        };
+        qualificationField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addQualificationLink();
+                target.addComponent( qualificationLink );
+                target.addComponent( qualificationField );
+                update( target, new Change( Change.Type.Updated, getMedium(), "qualification" ) );
+            }
+        } );
+        moDetailsDiv.add( qualificationField );
+    }
+
+    private List<String> findCandidateQualifications() {
+        List<String> candidateNames = new ArrayList<String>();
+        for ( Actor actorType : getQueryService().listTypeEntities( Actor.class ) ) {
+            candidateNames.add( actorType.getName() );
+        }
+        Collections.sort( candidateNames );
+        return candidateNames;
+    }
+
     private TransmissionMedium getMedium() {
         return (TransmissionMedium) getEntity();
     }
@@ -209,6 +272,37 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
             doCommand( new UpdatePlanObject( getMedium(), "addressPattern", value ) );
         }
     }
+
+    /**
+     * Get qualification's name.
+     *
+     * @return a string
+     */
+    public String getQualificationName() {
+        Actor qualification = getMedium().getQualification();
+        return qualification == null ? "" : qualification.getName();
+    }
+
+    /**
+     * Set the medium's qualification.
+     *
+     * @param name a string
+     */
+    public void setQualificationName( String name ) {
+        String oldName = getQualificationName();
+        String newName = name == null ? "" : name.trim();
+        if ( !isSame( oldName, newName ) ) {
+            Actor newQualification = newName.isEmpty() ? null : doSafeFindOrCreateType( Actor.class, name );
+            doCommand(
+                    new UpdatePlanObject(
+                            getEntity(),
+                            "qualification",
+                            newQualification,
+                            UpdateObject.Action.Set ) );
+            getCommander().cleanup( Actor.class, oldName );
+        }
+    }
+
 
     /**
      * {@inheritDoc}

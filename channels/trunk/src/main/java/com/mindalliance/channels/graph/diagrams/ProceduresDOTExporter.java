@@ -1,9 +1,5 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.graph.AbstractDOTExporter;
-import com.mindalliance.channels.graph.AbstractMetaProvider;
-import com.mindalliance.channels.graph.DOTAttribute;
-import com.mindalliance.channels.graph.MetaProvider;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Event;
@@ -13,6 +9,10 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.graph.AbstractDOTExporter;
+import com.mindalliance.channels.graph.AbstractMetaProvider;
+import com.mindalliance.channels.graph.DOTAttribute;
+import com.mindalliance.channels.graph.MetaProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.jgrapht.Graph;
@@ -301,7 +301,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
     private void exportTerminations( PrintWriter out, Graph<Assignment, Commitment> g ) {
         for ( EventPhase eventPhase : terminators.keySet() ) {
             for ( Assignment assignment : terminators.get( eventPhase ) ) {
-                String label = sanitize( "terminates " + eventPhase.toString().toLowerCase() );
+                String label = sanitize( "terminates " + eventPhase.toString() );
                 List<DOTAttribute> attributes = getTimingEdgeAttributes( assignment.getPart() );
                 attributes.add( new DOTAttribute( "label", label ) );
                 String terminatorId = getVertexID( assignment );
@@ -319,7 +319,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         for ( EventPhase stopped : terminators.keySet() ) {
             if ( stopped.getPhase().isConcurrent() ) {
                 for ( EventPhase started : findEventPhases( stopped.getEvent(), Phase.Timing.PostEvent ) ) {
-                    String label = sanitize( "starts " + started.toString().toLowerCase() );
+                    String label = sanitize( "starts " + started.toString() );
                     List<DOTAttribute> attributes = getTimingEdgeAttributes();
                     attributes.add( new DOTAttribute( "label", label ) );
                     out.print( getIndent() + getStopId( stopped ) + getArrow( g ) + getStartId( started ) );

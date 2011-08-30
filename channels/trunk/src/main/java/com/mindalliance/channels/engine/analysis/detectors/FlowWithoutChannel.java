@@ -1,12 +1,12 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.analysis.DetectedIssue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class FlowWithoutChannel extends AbstractIssueDetector {
 
     private Level getSeverity( Flow flow ) {
         if ( flow.isSharing() ) {
-            return getSharingFailureSeverity( flow );
+            return computeSharingFailureSeverity( flow );
         } else {
             return Level.Low;
         }

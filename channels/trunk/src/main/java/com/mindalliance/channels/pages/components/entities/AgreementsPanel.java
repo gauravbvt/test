@@ -1,16 +1,16 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.UpdateObject;
-import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdateObject;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.segment.CommitmentsTablePanel;
-import com.mindalliance.channels.engine.query.QueryService;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
@@ -266,6 +266,10 @@ public class AgreementsPanel extends AbstractCommandablePanel {
             return organization;
         }
 
+        public boolean isConfirmable() {
+           return isLockedByUserIfNeeded( getOrganization() );
+        }
+
         public boolean isConfirmed() {
             return confirmed;
         }
@@ -371,7 +375,7 @@ public class AgreementsPanel extends AbstractCommandablePanel {
             columns.add( makeCheckBoxColumn(
                     "Confirmed",
                     "confirmed",
-                    isLockedByUser( getOrganization() ),
+                    "confirmable",
                     AgreementsPanel.this
             ) );
             columns.add( makeColumn(

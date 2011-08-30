@@ -1,6 +1,5 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -10,6 +9,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.query.Assignments;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
@@ -57,7 +57,7 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
                         + ")." );
                 issue.setRemediation( "Remove \"send\" sharing flows"
                         + "\nor add intermediates to spread the outgoing communication load." );
-                issue.setSeverity( this.getTaskFailureSeverity( part ) );
+                issue.setSeverity( this.computeTaskFailureSeverity( part ) );
                 issues.add( issue );
             }
         }

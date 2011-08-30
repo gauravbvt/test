@@ -273,7 +273,7 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
                 Organization beneficiaryOrg = commitment.getBeneficiary().getOrganization();
                 if ( committerOrg.isUnknown() || beneficiaryOrg.isUnknown()
                         || ( !committerOrg.equals( beneficiaryOrg )
-                        && committerOrg.isAgreementsRequired() ) ) {
+                        && committerOrg.isEffectiveAgreementsRequired() ) ) {
                     return "A sharing agreement may be required";
                 }
             }

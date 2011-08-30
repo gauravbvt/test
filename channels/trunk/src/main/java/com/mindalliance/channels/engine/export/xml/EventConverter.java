@@ -1,11 +1,10 @@
 package com.mindalliance.channels.engine.export.xml;
 
-import com.mindalliance.channels.engine.export.xml.XmlStreamer.Context;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelEntity.Kind;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.export.xml.XmlStreamer.Context;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -62,7 +61,6 @@ public class EventConverter extends EntityConverter {
             ModelEntity entity, String nodeName, HierarchicalStreamReader reader, UnmarshallingContext context ) {
 
         Event event = (Event) entity;
-        event.setLowerCasedName( ChannelsUtils.smartUncapitalize( event.getName() ) );
         if ( "scope".equals( nodeName ) ) {
             String id = reader.getAttribute( "id" );
             String kindName = reader.getAttribute( "kind" );

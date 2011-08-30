@@ -1,11 +1,11 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.query.Assignments;
 import com.mindalliance.channels.engine.query.QueryService;
 
@@ -83,7 +83,7 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
             }
             description += ".";
             issue.setDescription( description );
-            issue.setSeverity( this.getSharingFailureSeverity( flow ) );
+            issue.setSeverity( this.computeSharingFailureSeverity( flow ) );
             issues.add( issue );
         }
         return issues;

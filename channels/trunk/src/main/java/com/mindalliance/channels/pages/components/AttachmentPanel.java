@@ -2,16 +2,16 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.attachments.AttachmentManager;
 import com.mindalliance.channels.core.attachments.Upload;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.AttachDocument;
-import com.mindalliance.channels.engine.command.commands.CopyAttachment;
-import com.mindalliance.channels.engine.command.commands.DetachDocument;
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Attachable;
 import com.mindalliance.channels.core.model.Attachment;
 import com.mindalliance.channels.core.model.Attachment.Type;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.AttachDocument;
+import com.mindalliance.channels.engine.command.commands.CopyAttachment;
+import com.mindalliance.channels.engine.command.commands.DetachDocument;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -120,7 +120,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     /**
      * Where documents get attached
      */
-    private String attachablePath;
+    private String attachablePath = "";
 
     /**
      * The content of the url field.
@@ -142,11 +142,11 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         setOutputMarkupId( true );
         container = new WebMarkupContainer( "container" );
         container.setOutputMarkupId( true );
-        container.setVisible( isLockedByUser( getAttachee() ) || !getAttachee().getAttachments().isEmpty() );
         add( container );
         addAttachmentList();
         controlsContainer = new WebMarkupContainer( "controls" );
         controlsContainer.setOutputMarkupId( true );
+        makeVisible( controlsContainer, isLockedByUserIfNeeded( getAttachee() ) );
         container.add( controlsContainer );
         addTypeChoice();
         addKindSelector();
@@ -295,6 +295,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                         ) ) );
             }
         };
+        makeVisible( attachmentsContainer, !getAttachments().isEmpty() );
         attachmentsContainer.add( attachmentList );
     }
 
@@ -483,7 +484,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
 
     private void postProcess( Attachment attachment ) {
         ModelObject attachee = getAttachee();
-        if ( attachment.isPicture() && attachee.isIconized() ) {
+        if ( attachablePath.isEmpty() && attachment.isPicture() && attachee.isIconized() ) {
             imagingService.iconize( getPlan(), attachment.getUrl(), attachee );
         }
     }

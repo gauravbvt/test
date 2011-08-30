@@ -1,9 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.UpdateObject;
-import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Commitment;
@@ -11,11 +8,14 @@ import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdateObject;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
-import com.mindalliance.channels.engine.query.QueryService;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
@@ -221,28 +221,36 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     }
 
     private void addReceiveFields() {
+        final Organization organization = getOrganization();
         WebMarkupContainer receivesContainers = new WebMarkupContainer( "constraintsContainers" );
-        receivesContainers.setVisible( getOrganization().isActual() );
+        receivesContainers.setVisible( organization.isActual() );
         moDetailsDiv.add( receivesContainers );
         actorsRequiredCheckBox = new CheckBox(
                 "actorsRequired",
                 new PropertyModel<Boolean>( this, "actorsRequired" ) );
         actorsRequiredCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getOrganization(), "actorsRequired" ) );
+                update( target, new Change( Change.Type.Updated, organization, "actorsRequired" ) );
             }
         } );
-        actorsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
+        actorsRequiredCheckBox.setEnabled( isLockedByUser( organization ) );
         receivesContainers.add( actorsRequiredCheckBox );
         agreementsRequiredCheckBox = new CheckBox(
                 "agreementsRequired",
                 new PropertyModel<Boolean>( this, "agreementsRequired" ) );
         agreementsRequiredCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getOrganization(), "agreementsRequired" ) );
+                update( target, new Change( Change.Type.Updated, organization, "agreementsRequired" ) );
             }
         } );
-        agreementsRequiredCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
+        Organization requiringParent = organization.agreementRequiringParent();
+        if ( requiringParent != null ) {
+           agreementsRequiredCheckBox.add(  new AttributeModifier(
+                   "title",
+                   true,
+                   new Model<String>( "Agreements required by parent organization " +  requiringParent.getName() ) ) );
+        }
+        agreementsRequiredCheckBox.setEnabled( requiringParent == null && isLockedByUser( organization ) );
         receivesContainers.add( agreementsRequiredCheckBox );
     }
 
@@ -524,7 +532,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      * @return a boolean
      */
     public boolean isAgreementsRequired() {
-        return getOrganization().isAgreementsRequired();
+        return getOrganization().isEffectiveAgreementsRequired();
     }
 
     /**

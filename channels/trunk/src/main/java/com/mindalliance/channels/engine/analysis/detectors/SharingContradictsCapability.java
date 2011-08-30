@@ -1,7 +1,6 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.ElementOfInformation;
@@ -11,6 +10,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -52,7 +52,7 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
                         issue.setRemediation( "Modify the definition " +
                                 "of the contradicted capability" +
                                 "\nor modify the definition of this sharing flow." );
-                        issue.setSeverity( getSharingFailureSeverity( flow ));
+                        issue.setSeverity( computeSharingFailureSeverity( flow ));
                         issues.add( issue );
                     }
                 }

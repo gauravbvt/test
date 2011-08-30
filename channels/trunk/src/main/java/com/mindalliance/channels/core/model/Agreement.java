@@ -115,22 +115,28 @@ public class Agreement extends AbstractAttachable implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append( "Agreement by " );
         sb.append( organization.getName() );
-        sb.append( " with " );
+        sb.append( " to share with " );
         sb.append( beneficiary.getName() );
-        sb.append( " to share " );
         if ( information.isEmpty() ) {
-            sb.append( "everything" );
+            sb.append( " something" );
         } else {
+            sb.append( " \"" );
             sb.append( information );
-            sb.append( '[' );
-            sb.append( getEOIsString() );
-            sb.append( ']' );
+            sb.append( "\"" );
+            String eoiString = getEOIsString();
+            if ( !eoiString.isEmpty() ) {
+                sb.append( " [" );
+                sb.append( eoiString );
+                sb.append( ']' );
+            }
         }
         if ( usage.isEmpty() ) {
             sb.append( " for any use" );
         } else {
-            sb.append( " for " );
+            sb.append( " for task " );
+            sb.append( "\"" );
             sb.append( usage );
+            sb.append( "\"" );
         }
         return sb.toString();
     }
@@ -145,7 +151,7 @@ public class Agreement extends AbstractAttachable implements Serializable {
         Iterator<ElementOfInformation> iter = getEois().iterator();
         while ( iter.hasNext() ) {
             sb.append( iter.next().getLabel() );
-            if ( iter.hasNext() ) sb.append( ',' );
+            if ( iter.hasNext() ) sb.append( ", " );
         }
         return sb.toString();
 

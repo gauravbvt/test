@@ -1,10 +1,10 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -47,7 +47,7 @@ public class BroadcastOnlyChannels extends AbstractIssueDetector {
                 Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
                 issue.setDescription( "There is no guarantee the information will be received because sharing is done only over broadcast channels." );
                 issue.setRemediation( "Add an alternate, non-broadcast channel to the flow." );
-                issue.setSeverity( getSharingFailureSeverity( flow ) );
+                issue.setSeverity( computeSharingFailureSeverity( flow ) );
                 issues.add( issue );
             }
         }
