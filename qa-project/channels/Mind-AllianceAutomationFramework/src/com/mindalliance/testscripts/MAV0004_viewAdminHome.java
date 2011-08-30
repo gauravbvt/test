@@ -1,7 +1,6 @@
 package com.mindalliance.testscripts;
 
 import org.openqa.selenium.By;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -21,6 +20,7 @@ public class MAV0004_viewAdminHome
 			  GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			  LogFunctions.writeLogs(GlobalVariables.sDescription);
 			  System.out.println(GlobalVariables.sDescription);
+			  
 			  // Call login()
 			  GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			  if (GlobalVariables.bIsSuccess) {

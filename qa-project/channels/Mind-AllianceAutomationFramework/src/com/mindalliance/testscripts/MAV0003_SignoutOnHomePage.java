@@ -21,6 +21,7 @@ public class MAV0003_SignoutOnHomePage
 			    GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				System.out.println(GlobalVariables.sDescription);
+				
 				// Call login()
 				GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			    if (GlobalVariables.bIsSuccess) {
