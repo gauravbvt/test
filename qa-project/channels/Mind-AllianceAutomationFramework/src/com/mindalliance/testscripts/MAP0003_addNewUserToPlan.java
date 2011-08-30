@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -23,6 +26,18 @@ public class MAP0003_addNewUserToPlan
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
+			// Class level Driver
+			if (GlobalVariables.sBrowser.equals("Mozilla Firefox"))
+				GlobalVariables.oDriver = new FirefoxDriver();
+			else if (GlobalVariables.sBrowser.equals("Internet Explorer"))
+			{
+				try{
+					GlobalVariables.oDriver = new InternetExplorerDriver();
+				}
+				catch (Exception e){
+					GlobalVariables.oDriver = new InternetExplorerDriver();
+				}
+			}
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
@@ -37,7 +52,7 @@ public class MAP0003_addNewUserToPlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);	
+				Thread.sleep(3000);	
 				
 				// Enter the details: newUserId
 				GlobalVariables.iStepNo++ ;
@@ -50,7 +65,7 @@ public class MAP0003_addNewUserToPlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -62,7 +77,7 @@ public class MAP0003_addNewUserToPlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Enter the 'Full Name', 'Email', 'Password' and select the role of the user (Admin/Planner/User/Disable)
 				GlobalVariables.iStepNo++ ;
@@ -92,7 +107,7 @@ public class MAP0003_addNewUserToPlan
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:0:group"));
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -100,7 +115,7 @@ public class MAP0003_addNewUserToPlan
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				// Assertion:
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table"));
 				tds = GlobalVariables.oElement.findElements(By.tagName("td"));
@@ -130,7 +145,7 @@ public class MAP0003_addNewUserToPlan
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

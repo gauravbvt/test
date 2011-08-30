@@ -5,6 +5,8 @@ import java.util.List;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
@@ -26,6 +28,19 @@ public class MAP0005_deletePlan
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
+			// Class level Driver
+			if (GlobalVariables.sBrowser.equals("Mozilla Firefox"))
+				GlobalVariables.oDriver = new FirefoxDriver();
+			else if (GlobalVariables.sBrowser.equals("Internet Explorer"))
+			{
+				try{
+					GlobalVariables.oDriver = new InternetExplorerDriver();
+				}
+				catch (Exception e){
+					GlobalVariables.oDriver = new InternetExplorerDriver();
+				}
+			}
+			
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
@@ -40,7 +55,7 @@ public class MAP0005_deletePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Enter the details: newPlanUri
 				GlobalVariables.iStepNo++ ;
@@ -56,7 +71,7 @@ public class MAP0005_deletePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Click on 'Submit' button
 				GlobalVariables.iStepNo++ ;
@@ -68,7 +83,7 @@ public class MAP0005_deletePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 
 				// Select the plan
 				GlobalVariables.iStepNo++ ;
@@ -88,7 +103,7 @@ public class MAP0005_deletePlan
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization				
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Click on 'Delete Plan' button
 				GlobalVariables.iStepNo++ ;
@@ -126,7 +141,7 @@ public class MAP0005_deletePlan
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Logout
 				GlobalVariables.iStepNo++ ;

@@ -5,6 +5,8 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
@@ -26,6 +28,18 @@ public class MAP0006_addOrganizations
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
+			// Class level Driver
+			if (GlobalVariables.sBrowser.equals("Mozilla Firefox"))
+				GlobalVariables.oDriver = new FirefoxDriver();
+			else if (GlobalVariables.sBrowser.equals("Internet Explorer"))
+			{
+				try{
+					GlobalVariables.oDriver = new InternetExplorerDriver();
+				}
+				catch (Exception e){
+					GlobalVariables.oDriver = new InternetExplorerDriver();
+				}
+			}
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 				if (GlobalVariables.bIsSuccess) {
@@ -47,7 +61,7 @@ public class MAP0006_addOrganizations
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(3000);	
 					
 					// Click on 'Information Sharing Model' link
 					GlobalVariables.iStepNo++ ;
@@ -59,7 +73,7 @@ public class MAP0006_addOrganizations
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);				     
+					Thread.sleep(3000);				     
 				    
 					//Click on 'About Plan' from show popup manu
 					GlobalVariables.iStepNo++;
@@ -71,7 +85,7 @@ public class MAP0006_addOrganizations
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					//Click on 'all organizations' from show pop-up menu
 					GlobalVariables.iStepNo++;
@@ -83,7 +97,7 @@ public class MAP0006_addOrganizations
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Enter name of organization in 'Other organization that should be assigned tasks ' field
 					GlobalVariables.iStepNo++;
@@ -98,7 +112,7 @@ public class MAP0006_addOrganizations
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);			
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(3000);	
 					// Assertion: Verify that organization should get added to plan
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName));
 					if (GlobalVariables.oElement.getText().equals(sOrgName)) {
@@ -116,7 +130,7 @@ public class MAP0006_addOrganizations
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);		
+					Thread.sleep(3000);		
 					
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
@@ -128,7 +142,7 @@ public class MAP0006_addOrganizations
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);;
+					Thread.sleep(3000);;
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
@@ -140,7 +154,7 @@ public class MAP0006_addOrganizations
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(3000);	
 				
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
