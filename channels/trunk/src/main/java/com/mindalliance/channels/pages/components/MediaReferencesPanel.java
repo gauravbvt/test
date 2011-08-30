@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.core.attachments.AttachmentManager;
-import com.mindalliance.channels.core.model.Attachment;
+import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.model.ModelObject;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;

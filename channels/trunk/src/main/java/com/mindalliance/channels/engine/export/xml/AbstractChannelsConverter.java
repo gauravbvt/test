@@ -1,10 +1,11 @@
 package com.mindalliance.channels.engine.export.xml;
 
-import com.mindalliance.channels.core.attachments.AttachmentManager;
+import com.mindalliance.channels.core.Attachable;
+import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.engine.export.ConnectionSpecification;
-import com.mindalliance.channels.core.model.Attachable;
-import com.mindalliance.channels.core.model.Attachment;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -225,7 +226,7 @@ public abstract class AbstractChannelsConverter implements Converter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "attachment" ) ) {
-                Attachment.Type type = Attachment.Type.valueOf( reader.getAttribute( "type" ) );
+                AttachmentImpl.Type type = AttachmentImpl.Type.valueOf( reader.getAttribute( "type" ) );
                 String name;
                 String url;
                 if ( IteratorUtils.toList( reader.getAttributeNames() ).contains( "url" )) {
@@ -238,7 +239,7 @@ public abstract class AbstractChannelsConverter implements Converter {
                     name = "";
                 }
                 if ( attachmentManager.exists( getPlan(), url ) ) {
-                    attachmentManager.addAttachment( new Attachment( url, type, name ), attachable );
+                    attachmentManager.addAttachment( new AttachmentImpl( url, type, name ), attachable );
                 } else {
                     LOG.warn( "Dropping attachment to {} (not found)", url );
                 }

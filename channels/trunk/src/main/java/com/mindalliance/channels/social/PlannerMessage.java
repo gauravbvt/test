@@ -4,7 +4,6 @@ import com.mindalliance.channels.engine.command.ModelObjectRef;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.core.odb.PersistentObject;
 import com.mindalliance.channels.engine.query.QueryService;
 
 /**
@@ -14,7 +13,7 @@ import com.mindalliance.channels.engine.query.QueryService;
  * Date: Jul 1, 2010
  * Time: 2:04:30 PM
  */
-public class PlannerMessage extends PersistentObject {
+public class PlannerMessage extends AbstractPersistentObject {
 
     private String planId;
     private String fromUsername;

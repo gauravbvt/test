@@ -1,7 +1,7 @@
 package com.mindalliance.channels.engine.query;
 
+import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.core.attachments.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;

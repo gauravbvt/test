@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.procedures;
 
-import com.mindalliance.channels.core.attachments.AttachmentManager;
+import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;

@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.social.menus;
 
+import com.mindalliance.channels.core.PersistentObject;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.CommandException;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
-import com.mindalliance.channels.core.odb.PersistentObject;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;

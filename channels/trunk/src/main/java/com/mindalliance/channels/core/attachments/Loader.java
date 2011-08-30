@@ -1,14 +1,16 @@
-package com.mindalliance.channels.core.util;
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
+package com.mindalliance.channels.core.attachments;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 2/2/11
- * Time: 11:06 AM
+ * A loader...
  */
 public interface Loader {
     /**

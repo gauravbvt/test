@@ -1,10 +1,11 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.core.attachments.AttachmentManager;
-import com.mindalliance.channels.core.attachments.Upload;
-import com.mindalliance.channels.core.model.Attachable;
-import com.mindalliance.channels.core.model.Attachment;
-import com.mindalliance.channels.core.model.Attachment.Type;
+import com.mindalliance.channels.core.Attachable;
+import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.Attachment.Type;
+import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.Upload;
+import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.command.Change;
@@ -464,7 +465,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             // URL url;
             try {
                 new URL( value );
-                Attachment attachment = new Attachment( value, getSelectedType(), getName() );
+                Attachment attachment = new AttachmentImpl( value, getSelectedType(), getName() );
                 doCommand( new AttachDocument( mo, attachablePath, attachment ) );
                 postProcess( attachment );
                 this.url = null;

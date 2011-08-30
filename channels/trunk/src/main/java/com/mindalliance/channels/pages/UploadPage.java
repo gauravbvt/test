@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.core.attachments.FileBasedManager;
+import com.mindalliance.channels.core.AttachmentManager;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -14,7 +14,7 @@ import java.net.URLDecoder;
 public class UploadPage extends AbstractImageFilePage {
 
     @SpringBean
-    private FileBasedManager attachmentManager;
+    private AttachmentManager attachmentManager;
 
 
     public UploadPage( PageParameters parameters ) {

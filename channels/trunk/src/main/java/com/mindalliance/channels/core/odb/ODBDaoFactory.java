@@ -1,11 +1,13 @@
 /*
  * Copyright (C) 2011 Mind-Alliance Systems LLC.
  * All rights reserved.
- * CONFIDENTIAL.
+ * Proprietary and Confidential.
  */
 
 package com.mindalliance.channels.core.odb;
 
+import com.mindalliance.channels.core.PersistentObjectDao;
+import com.mindalliance.channels.core.PersistentObjectDaoFactory;
 import org.neodatis.odb.ODB;
 import org.neodatis.odb.ODBFactory;
 import org.neodatis.odb.ODBRuntimeException;
@@ -17,11 +19,15 @@ import org.springframework.core.io.Resource;
 import java.io.File;
 import java.io.IOException;
 
-/** Neodatis transaction factory. */
-public class ODBTransactionFactory {
+/**
+ * Neodatis transaction factory.
+ */
+public class ODBDaoFactory implements PersistentObjectDaoFactory {
 
-    /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger( ODBTransactionFactory.class );
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( ODBDaoFactory.class );
 
     private Resource odbDir;
 
@@ -31,29 +37,55 @@ public class ODBTransactionFactory {
 
     private static final long WAIT_TIME = 100L;
 
-    public ODB openDatabase( String planUri ) throws IOException {
+    @Override
+    public boolean check( String uri ) {
+        ODB odb = null;
+        try {
+            odb = openDatabase( uri );
+            return true;
+
+        } catch ( IOException e ) {
+            LOG.warn( "Unable to open db", e );
+            return false;
+        } finally {
+            if ( odb != null && !odb.isClosed() )
+                odb.close();
+        }
+    }
+
+    /**
+     * Open a connection to the database.
+     *
+     * @param planUri the plan uri
+     * @return the ODB connection
+     * @throws IOException on errors
+     */
+    ODB openDatabase( String planUri ) throws IOException {
         int attempts = 0;
         File planDir = new File( odbDir.getFile(), planUri );
         File path = new File( planDir, fileName );
+        Exception last;
         do {
             try {
                 return ODBFactory.open( path.getAbsolutePath() );
-            } catch ( ODBRuntimeException ignored ) {
+            } catch ( ODBRuntimeException e ) {
                 LOG.info( "Database of {} is locked. Retrying", planUri );
+                last = e;
                 try {
                     attempts++;
                     Thread.sleep( WAIT_TIME );
-                } catch ( InterruptedException ignored2 ) {
-                    // do nothing
+                } catch ( InterruptedException e2 ) {
+                    last = e2;
                 }
             }
         } while ( attempts < MAX_ATTEMPTS );
 
-        throw new IOException( "Failed to open database for " + planUri );
+        throw new IOException( "Failed to open database for " + planUri, last );
     }
 
-    public ODBAccessor getODBAccessor( String planUri ) {
-        return new ODBAccessor( this, planUri );
+    @Override
+    public PersistentObjectDao getDao( String planUri ) {
+        return new ODBDao( this, planUri );
     }
 
     @Required

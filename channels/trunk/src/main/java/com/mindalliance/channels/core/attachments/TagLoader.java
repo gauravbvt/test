@@ -1,4 +1,10 @@
-package com.mindalliance.channels.core.util;
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
+package com.mindalliance.channels.core.attachments;
 
 import com.mindalliance.channels.core.model.Taggable;
 
@@ -7,11 +13,6 @@ import java.io.IOException;
 
 /**
  * Tag loader.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 2/2/11
- * Time: 10:52 AM
  */
 public class TagLoader implements Loader {
 

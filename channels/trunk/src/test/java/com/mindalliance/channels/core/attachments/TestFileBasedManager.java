@@ -1,9 +1,11 @@
 package com.mindalliance.channels.core.attachments;
 
 import com.mindalliance.channels.AbstractChannelsTest;
+import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.Upload;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.model.Attachment;
-import com.mindalliance.channels.core.model.Attachment.Type;
+import com.mindalliance.channels.core.Attachment.Type;
+import com.mindalliance.channels.core.model.AttachmentImpl;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.upload.FileItem;
@@ -69,7 +71,7 @@ public class TestFileBasedManager extends AbstractChannelsTest {
                                             } );
         assertNotNull( attachment );
         assertEquals( attachment.getUrl(), "test.txt" );
-        assertEquals( attachment.getType(), Attachment.Type.Reference );
+        assertEquals( attachment.getType(), AttachmentImpl.Type.Reference );
     }
 
 }

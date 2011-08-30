@@ -1,14 +1,15 @@
 package com.mindalliance.channels.engine.command.commands;
 
-import com.mindalliance.channels.core.attachments.AttachmentManager;
+import com.mindalliance.channels.core.Attachable;
+import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.engine.command.AbstractCommand;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.Command;
 import com.mindalliance.channels.engine.command.CommandException;
 import com.mindalliance.channels.engine.command.Commander;
 import com.mindalliance.channels.core.model.AbstractAttachable;
-import com.mindalliance.channels.core.model.Attachable;
-import com.mindalliance.channels.core.model.Attachment;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 
@@ -65,9 +66,9 @@ public class DetachDocument extends AbstractCommand {
     }
 
     private Attachment getAttachment() {
-        return new Attachment(
+        return new AttachmentImpl(
                 (String) get( "url" ),
-                Attachment.Type.valueOf( (String) get( "type" ) ),
+                AttachmentImpl.Type.valueOf( (String) get( "type" ) ),
                 (String) get( "name" )
         );
     }

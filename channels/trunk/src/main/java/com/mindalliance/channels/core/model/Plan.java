@@ -1,7 +1,7 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.core.model.Attachment.Type;
+import com.mindalliance.channels.core.Attachment.Type;
 import com.mindalliance.channels.core.model.Phase.Timing;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -638,7 +638,7 @@ public class Plan extends ModelObject {
         types.add( Type.TAGS );
         types.add( Type.InfoStandards );
         types.add( Type.Image );
-        if ( !hasAttachmentOfType( Attachment.Type.Help ) )
+        if ( !hasAttachmentOfType( AttachmentImpl.Type.Help ) )
             types.add(  Type.Help );
         return types;
     }

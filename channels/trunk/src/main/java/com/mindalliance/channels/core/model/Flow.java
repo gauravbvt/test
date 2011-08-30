@@ -895,12 +895,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return isInternal() && getTarget().isConnector();
     }
 
-    public List<Attachment.Type> getAttachmentTypes() {
-        List<Attachment.Type> types = super.getAttachmentTypes();
+    public List<AttachmentImpl.Type> getAttachmentTypes() {
+        List<AttachmentImpl.Type> types = super.getAttachmentTypes();
         if ( !hasImage() )
-            types.add( Attachment.Type.Image );
-        types.add( Attachment.Type.PolicyMust );
-        types.add( Attachment.Type.PolicyCant );
+            types.add( AttachmentImpl.Type.Image );
+        types.add( AttachmentImpl.Type.PolicyMust );
+        types.add( AttachmentImpl.Type.PolicyCant );
         return types;
     }
 

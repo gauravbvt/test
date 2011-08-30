@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.core.attachments.AttachmentManager;
-import com.mindalliance.channels.core.model.Attachment;
+import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;

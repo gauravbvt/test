@@ -1,7 +1,8 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.model.Agreement;
-import com.mindalliance.channels.core.model.Attachment;
+import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
@@ -50,7 +51,7 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
     /**
      * Selected attachment type.
      */
-    private Attachment.Type selectedType = null;
+    private AttachmentImpl.Type selectedType = null;
     /**
      * Filters mapped by property.
      */
@@ -67,7 +68,7 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
     static {
         TypeNames = new ArrayList<String>();
         TypeNames.add( ALL );
-        for ( Attachment.Type type : Attachment.Type.values() ) {
+        for ( AttachmentImpl.Type type : AttachmentImpl.Type.values() ) {
             TypeNames.add( type.name() );
         }
     }
@@ -95,7 +96,7 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
                 TypeNames,
                 new IChoiceRenderer<String>() {
                     public Object getDisplayValue( String id ) {
-                        return id.equals( ALL ) ? ALL : Attachment.Type.valueOf( id ).getLabel();
+                        return id.equals( ALL ) ? ALL : AttachmentImpl.Type.valueOf( id ).getLabel();
                     }
 
                     public String getIdValue( String id, int i ) {
@@ -153,7 +154,7 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
         if ( val.equals( ALL ) )
             selectedType = null;
         else
-            selectedType = Attachment.Type.valueOf( val );
+            selectedType = AttachmentImpl.Type.valueOf( val );
     }
 
     /**

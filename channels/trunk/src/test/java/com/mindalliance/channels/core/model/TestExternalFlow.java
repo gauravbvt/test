@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.odb.ODBTransactionFactory;
+import com.mindalliance.channels.core.odb.ODBDaoFactory;
 import junit.framework.TestCase;
 import org.springframework.core.io.FileSystemResource;
 
@@ -34,7 +34,7 @@ public class TestExternalFlow extends TestCase {
             new FileSystemResource( new File( "target/channel-test-data" ) ), null );
         definitionManager.afterPropertiesSet();
         PlanManager planManager = new PlanManager( definitionManager );
-        ODBTransactionFactory databaseFactory = new ODBTransactionFactory();
+        ODBDaoFactory databaseFactory = new ODBDaoFactory();
         databaseFactory.setOdbDir( new FileSystemResource( new File( "target/channel-test-data" ) ) );
         planManager.setDatabaseFactory( databaseFactory );
         planManager.assignPlans();

@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.SimpleIdGenerator;
-import com.mindalliance.channels.core.odb.ODBTransactionFactory;
+import com.mindalliance.channels.core.odb.ODBDaoFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.FileSystemResource;
@@ -75,7 +75,7 @@ public class TestResourceSpec {
         definitionManager.getOrCreate( "test", "test", "MAS" );
 
         PlanManager planManager = new PlanManager( definitionManager );
-        ODBTransactionFactory databaseFactory = new ODBTransactionFactory();
+        ODBDaoFactory databaseFactory = new ODBDaoFactory();
         databaseFactory.setOdbDir( new FileSystemResource( new File( "target/channel-test-data" ) ) );
         planManager.setDatabaseFactory( databaseFactory );
         planDao = planManager.getDao( "test", true );

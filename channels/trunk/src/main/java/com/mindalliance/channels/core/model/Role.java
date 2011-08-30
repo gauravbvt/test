@@ -33,10 +33,10 @@ public class Role extends ModelEntity implements Specable {
     /**
      * {@inheritDoc}
      */
-    public List<Attachment.Type> getAttachmentTypes() {
-        List<Attachment.Type> types = new ArrayList<Attachment.Type>();
+    public List<AttachmentImpl.Type> getAttachmentTypes() {
+        List<AttachmentImpl.Type> types = new ArrayList<AttachmentImpl.Type>();
         if ( !hasImage() )
-            types.add( Attachment.Type.Image );
+            types.add( AttachmentImpl.Type.Image );
         types.addAll( super.getAttachmentTypes() );
         return types;
     }

@@ -1,11 +1,11 @@
 package com.mindalliance.channels.engine.command.commands;
 
+import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.engine.command.AbstractCommand;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.Command;
 import com.mindalliance.channels.engine.command.CommandException;
 import com.mindalliance.channels.engine.command.Commander;
-import com.mindalliance.channels.core.model.Attachment;
 
 import java.util.HashMap;
 import java.util.Map;

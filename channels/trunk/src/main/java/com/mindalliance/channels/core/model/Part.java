@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -877,10 +878,10 @@ public class Part extends Node implements GeoLocatable, Specable, Operationable,
     }
 
     @Override
-    public List<Attachment.Type> getAttachmentTypes() {
-        List<Attachment.Type> types = super.getAttachmentTypes();
-        types.add( Attachment.Type.PolicyMust );
-        types.add( Attachment.Type.PolicyCant );
+    public List<AttachmentImpl.Type> getAttachmentTypes() {
+        List<AttachmentImpl.Type> types = super.getAttachmentTypes();
+        types.add( AttachmentImpl.Type.PolicyMust );
+        types.add( AttachmentImpl.Type.PolicyCant );
         return types;
     }
 

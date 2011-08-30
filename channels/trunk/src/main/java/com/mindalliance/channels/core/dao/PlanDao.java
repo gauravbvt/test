@@ -1,5 +1,7 @@
 package com.mindalliance.channels.core.dao;
 
+import com.mindalliance.channels.core.Attachable;
+import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.dao.PlanDefinition.Version;
 import com.mindalliance.channels.core.model.*;
 import org.apache.commons.collections.CollectionUtils;

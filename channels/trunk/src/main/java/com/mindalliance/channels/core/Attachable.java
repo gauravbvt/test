@@ -1,19 +1,14 @@
-package com.mindalliance.channels.core.model;
+package com.mindalliance.channels.core;
 
-import com.mindalliance.channels.core.attachments.AttachmentManager;
-import com.mindalliance.channels.core.model.Attachment.Type;
+import com.mindalliance.channels.core.Attachment.Type;
 
 import java.util.List;
 
 /**
- * Can have attachments.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Nov 8, 2010
- * Time: 9:50:23 AM
+ * An object that can have attachments.
  */
 public interface Attachable {
+
     /**
      * Get attachments.
      *
@@ -22,7 +17,7 @@ public interface Attachable {
     List<Attachment> getAttachments();
 
     /**
-     * Set attachments
+     * Set attachments.
      *
      * @param attachments a list a attachments
      */
@@ -36,7 +31,6 @@ public interface Attachable {
      */
     List<Type> getAttachmentTypes( String attachablePath );
 
-
     /**
      * Return list of meaningful types of attachments for class of model objects.
      *
@@ -45,18 +39,18 @@ public interface Attachable {
     List<Type> getAttachmentTypes();
 
     /**
-     * Add an attachment.
-     * Do not call directly...
-     * @see AttachmentManager#addAttachment
+     * Add an attachment. Do not call directly...
+     *
      * @param attachment the attachment
+     * @see AttachmentManager#addAttachment
      */
     void addAttachment( Attachment attachment );
 
     /**
-     * Delete an attachment.
-     * Do not call directly...
-     * @see AttachmentManager#removeAttachment
+     * Delete an attachment. Do not call directly...
+     *
      * @param attachment the attachment
+     * @see AttachmentManager#removeAttachment
      */
     void removeAttachment( Attachment attachment );
 }

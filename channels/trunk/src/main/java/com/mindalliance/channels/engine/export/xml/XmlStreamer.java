@@ -1,7 +1,7 @@
 package com.mindalliance.channels.engine.export.xml;
 
+import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.core.attachments.AttachmentManager;
 import com.mindalliance.channels.engine.command.AbstractCommand;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.IdGenerator;

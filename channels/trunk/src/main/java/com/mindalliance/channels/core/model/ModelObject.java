@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.Attachment;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -314,7 +315,7 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
         );
     }
 
-    public boolean hasAttachmentOfType( final Attachment.Type attachmentType ) {
+    public boolean hasAttachmentOfType( final AttachmentImpl.Type attachmentType ) {
         return CollectionUtils.exists(
                 getAttachments(),
                 new Predicate() {

@@ -1,7 +1,11 @@
-package com.mindalliance.channels.core.attachments;
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
 
-import com.mindalliance.channels.core.model.Attachable;
-import com.mindalliance.channels.core.model.Attachment;
+package com.mindalliance.channels.core;
+
 import com.mindalliance.channels.core.model.Plan;
 
 import java.io.File;

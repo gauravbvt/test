@@ -408,7 +408,7 @@ CONFIGURATION NOTES:
 
     <!-- Collaboration services -->
 
-    <bean id="databaseFactory" class="com.mindalliance.channels.core.odb.ODBTransactionFactory">
+    <bean id="databaseFactory" class="com.mindalliance.channels.core.odb.ODBDaoFactory">
         <property name="odbDir" value="${channels.home}${file.separator}data"/>
     </bean>
 

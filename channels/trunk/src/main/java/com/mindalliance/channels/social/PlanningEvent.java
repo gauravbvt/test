@@ -1,7 +1,5 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.core.odb.PersistentObject;
-
 /**
  * A planning event.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -10,7 +8,7 @@ import com.mindalliance.channels.core.odb.PersistentObject;
  * Date: Jul 1, 2010
  * Time: 2:04:08 PM
  */
-public abstract class PlanningEvent extends PersistentObject {
+public abstract class PlanningEvent extends AbstractPersistentObject {
 
     private String planId;
 

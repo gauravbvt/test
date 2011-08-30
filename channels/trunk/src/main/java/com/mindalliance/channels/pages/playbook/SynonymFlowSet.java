@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.playbook;
 
+import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.engine.query.QueryService;
-import com.mindalliance.channels.core.model.Attachment;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ExternalFlow;

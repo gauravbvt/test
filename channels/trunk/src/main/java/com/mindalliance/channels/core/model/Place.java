@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.core.model.Attachment.Type;
+import com.mindalliance.channels.core.Attachment.Type;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;

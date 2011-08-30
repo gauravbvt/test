@@ -2,9 +2,9 @@
 // All rights reserved.
 package com.mindalliance.channels.pages.reports.guidelines;
 
-import com.mindalliance.channels.core.attachments.AttachmentManager;
+import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Attachment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Delay;

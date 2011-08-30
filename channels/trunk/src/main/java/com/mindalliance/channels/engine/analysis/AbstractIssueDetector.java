@@ -1,6 +1,6 @@
 package com.mindalliance.channels.engine.analysis;
 
-import com.mindalliance.channels.core.attachments.AttachmentManager;
+import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;

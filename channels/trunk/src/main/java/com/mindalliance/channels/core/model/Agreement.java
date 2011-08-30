@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.Attachment;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;

@@ -1,11 +1,10 @@
 package com.mindalliance.channels.core.dao;
 
+import com.mindalliance.channels.core.PersistentObjectDaoFactory;
 import com.mindalliance.channels.core.dao.PlanDefinition.Version;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.odb.ODBAccessor;
-import com.mindalliance.channels.core.odb.ODBTransactionFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -44,7 +43,7 @@ public class PlanManager {
     /**
      * Persistent object database factory.
      */
-    private ODBTransactionFactory databaseFactory;
+    private PersistentObjectDaoFactory databaseFactory;
     /**
      * All the plans, indexed by version uri (uri:version).
      */
@@ -132,11 +131,11 @@ public class PlanManager {
         this.userService = userService;
     }
 
-    public ODBTransactionFactory getDatabaseFactory() {
+    public PersistentObjectDaoFactory getDatabaseFactory() {
         return databaseFactory;
     }
 
-    public void setDatabaseFactory( ODBTransactionFactory databaseFactory ) {
+    public void setDatabaseFactory( PersistentObjectDaoFactory databaseFactory ) {
         this.databaseFactory = databaseFactory;
     }
 
@@ -254,7 +253,7 @@ public class PlanManager {
 
     private void createPersistentObjectDB( Plan plan ) {
         String planUri = plan.getUri();
-        ODBAccessor.init( databaseFactory, PlanDefinition.sanitize( planUri ) );
+        databaseFactory.check( PlanDefinition.sanitize( planUri ) );
     }
 
     public DefinitionManager getDefinitionManager() {

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.core.attachments.AttachmentManager;
+import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.engine.command.Commander;
 import com.mindalliance.channels.engine.command.LockManager;
 import com.mindalliance.channels.engine.command.commands.CreateEntityIfNew;

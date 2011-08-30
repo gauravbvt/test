@@ -1,7 +1,8 @@
 package com.mindalliance.channels.pages.procedures;
 
+import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Attachment;
+import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
@@ -206,7 +207,7 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
         List<Attachment> answer = new ArrayList<Attachment>();
         for ( Attachment a : reportHelper.getAttachmentManager()
                 .getMediaReferences( reportHelper.getPart() ) )
-            if ( Attachment.Type.Reference.equals( a.getType() ) )
+            if ( AttachmentImpl.Type.Reference.equals( a.getType() ) )
                 answer.add( a );
 
         return answer;
@@ -216,8 +217,8 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
         List<Attachment> answer = new ArrayList<Attachment>();
         for ( Attachment a : reportHelper.getAttachmentManager()
                 .getMediaReferences( reportHelper.getPart() ) )
-            if ( !Attachment.Type.Reference.equals( a.getType() )
-                    && !Attachment.Type.Image.equals( a.getType() ) )
+            if ( !AttachmentImpl.Type.Reference.equals( a.getType() )
+                    && !AttachmentImpl.Type.Image.equals( a.getType() ) )
                 answer.add( a );
 
         return answer;

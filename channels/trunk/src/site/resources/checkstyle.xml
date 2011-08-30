@@ -19,7 +19,7 @@
         <property name="cacheFile" value="target/checkCache"/>
         <property name="tabWidth" value="4"/>
 
-        <module name="AbstractClassName"/>
+        <!--<module name="AbstractClassName"/>-->
         <module name="AnonInnerLength">
             <property name="max" value="40"/>
         </module>

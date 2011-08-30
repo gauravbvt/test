@@ -1,14 +1,12 @@
 package com.mindalliance.channels.social;
 
+import com.mindalliance.channels.core.PersistentObjectDao;
+import com.mindalliance.channels.core.PersistentObjectDaoFactory;
 import com.mindalliance.channels.core.dao.PlanDefinition;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserService;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.odb.ODBAccessor;
-import com.mindalliance.channels.core.odb.ODBTransactionFactory;
 import org.apache.commons.lang.StringUtils;
-import org.neodatis.odb.core.query.criteria.ComposedExpression;
-import org.neodatis.odb.core.query.criteria.Where;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailSender;
@@ -23,11 +21,6 @@ import java.util.Map;
 
 /**
  * Default implementation of the planner messaging service.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jul 2, 2010
- * Time: 3:36:33 PM
  */
 public class DefaultPlannerMessagingService implements PlannerMessagingService {
 
@@ -40,7 +33,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
      */
     private MailSender mailSender;
     private UserService userService;
-    private ODBTransactionFactory databaseFactory;
+    private PersistentObjectDaoFactory databaseFactory;
     private Map<String,Date> whenLastChanged;
     private static final int SUMMARY_MAX = 25;
 
@@ -48,7 +41,46 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         whenLastChanged = new HashMap<String,Date>();
     }
 
-    public void setDatabaseFactory( ODBTransactionFactory databaseFactory ) {
+    private static String getLongTimeElapsedString( Date start, Date end ) {
+        long diffInSeconds = ( end.getTime() - start.getTime() ) / 1000;
+        /* sec */
+        long seconds = diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds;
+        /* min */
+        long minutes = ( diffInSeconds = diffInSeconds / 60 ) >= 60 ? diffInSeconds % 60 : diffInSeconds;
+        /* hours */
+        long hours = ( diffInSeconds = diffInSeconds / 60 ) >= 24 ? diffInSeconds % 24 : diffInSeconds;
+        /* days */
+        long days = diffInSeconds / 24;
+
+        StringBuilder sb = new StringBuilder();
+        if ( days > 0 ) {
+            sb.append( days );
+            sb.append( " day" );
+            sb.append( days > 1 ? "s" : "" );
+        }
+        if ( hours > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( hours );
+            sb.append( " hour" );
+            sb.append( hours > 1 ? "s" : "" );
+        }
+        if ( minutes > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( minutes );
+            sb.append( " minute" );
+            sb.append( minutes > 1 ? "s" : "" );
+        }
+        if ( sb.length() == 0 || seconds > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( seconds );
+            sb.append( " second" );
+            sb.append( seconds > 1 ? "s" : "" );
+        }
+        sb.append( " ago" );
+        return sb.toString();
+    }
+
+    public void setDatabaseFactory( PersistentObjectDaoFactory databaseFactory ) {
         this.databaseFactory = databaseFactory;
     }
 
@@ -61,6 +93,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         whenLastChanged.put( plan.getUri(), new Date() );
     }
 
+    @Override
     public boolean sendMessage( PlannerMessage message, boolean emailIt, Plan plan ) {
         boolean success = true;
         addSentMessage( message, plan );
@@ -70,6 +103,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         return success;
     }
 
+    @Override
     public boolean email( PlannerMessage message, Plan plan ) {
         List<User> recipients = new ArrayList<User>();
         String username = message.getToUsername();
@@ -84,6 +118,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
             recipients.add( userService.getUserNamed( username ) );
         }
         try {
+            Date now = new Date();
             for ( User recipient : recipients ) {
                 SimpleMailMessage email = new SimpleMailMessage();
                 email.setTo( recipient.getEmail() );
@@ -98,7 +133,8 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                     text = "About " + aboutString + "\n\n";
                 }
                 text += message.getText();
-                text += "\n\n -- Message first sent in Channels " + message.getLongTimeElapsedString() + " --";
+                text += "\n\n -- Message first sent in Channels " + getLongTimeElapsedString( message.getDate(), now )
+                        + " --";
                 email.setText( text );
                 mailSender.send( email );
                 LOG.info( currentUser.getUsername()
@@ -119,55 +155,34 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         return userService.getUserNamed( username );
     }
 
+    @Override
     public void deleteMessage( PlannerMessage message, Plan plan ) {
         getOdb( plan ).delete( PlannerMessage.class, message.getId() );
         changed( plan );
     }
 
+    @Override
     public Iterator<PlannerMessage> getReceivedMessages( Plan plan ) {
-        ComposedExpression isBroadcast = Where.or();
-        isBroadcast.add( Where.equal( "toUsername", PlannerMessagingService.USERS ) );
-        if ( User.current().isPlanner() ) {
-            isBroadcast.add( Where.isNull( "toUsername" ) ); // legacy for all planners
-           isBroadcast.add( Where.equal( "toUsername", PlannerMessagingService.PLANNERS ) );
-        }
-        return getOdb( plan ).iterate(
-                PlannerMessage.class,
-                Where.and()
-                        .add( Where.equal( "planId", plan.getUri() ) )
-                        .add(
-                        Where.or()
-                                .add( Where.equal( "toUsername", getUsername() ) )
-                                .add( Where.and()
-                                    .add( isBroadcast )
-                                    .add( Where.not( Where.equal( "fromUsername", getUsername() ) ) ) )
-                ),
-                ODBAccessor.Ordering.Descendant,
-                "date"
-        );
+        return getOdb( plan ).findAllExceptUser(
+                PlannerMessage.class, User.current().getUsername(), User.current().isPlanner(), PlannerMessagingService.USERS, PlannerMessagingService.PLANNERS );
     }
 
-    private ODBAccessor getOdb( Plan plan ) {
+    private PersistentObjectDao getOdb( Plan plan ) {
         String planUri = plan.getUri();
-        return databaseFactory.getODBAccessor( PlanDefinition.sanitize( planUri ) );
+        return databaseFactory.getDao( PlanDefinition.sanitize( planUri ) );
     }
 
-
+    @Override
     public Iterator<PlannerMessage> getSentMessages( Plan plan ) {
-        return getOdb( plan ).iterate(
-                PlannerMessage.class,
-                Where.and()
-                        .add( Where.equal( "planId", plan.getUri() ) )
-                        .add( Where.equal( "fromUsername", getUsername() ) ),
-                ODBAccessor.Ordering.Descendant,
-                "date"
-        );
+        return getOdb( plan ).findAllFrom( PlannerMessage.class, getUsername() );
     }
 
+    @Override
     public Date getWhenLastChanged( Plan plan ) {
         return whenLastChanged.get( plan.getUri() );
     }
 
+    @Override
     public Date getWhenLastReceived( Plan plan ) {
         Iterator<PlannerMessage> received = getReceivedMessages( plan );
         if ( received.hasNext() ) {

@@ -1,7 +1,8 @@
 package com.mindalliance.channels.core.util;
 
+import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.core.model.Attachment;
+import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Copyable;
@@ -218,9 +219,9 @@ public final class ChannelsUtils {
 
     private static List<Attachment> aggregateAttachments( List<Attachment> attachments, List<Attachment> others ) {
         List<Attachment> aggregate = new ArrayList<Attachment>();
-        for ( Attachment attachment : attachments ) {
-            aggregate.add( new Attachment( attachment ) );
-        }
+        for ( Attachment attachment : attachments )
+            aggregate.add( new AttachmentImpl( attachment ) );
+
         for ( final Attachment attachment : others ) {
             Attachment synonymous = (Attachment) CollectionUtils.find(
                     attachments,
@@ -232,11 +233,11 @@ public final class ChannelsUtils {
                         }
                     }
             );
-            if ( synonymous == null ) {
-                aggregate.add( new Attachment( attachment ) );
-            } else {
+            if ( synonymous == null )
+                aggregate.add( new AttachmentImpl( attachment ) );
+            else {
                 aggregate.remove( synonymous );
-                aggregate.add( Attachment.merge( synonymous, attachment ) );
+                aggregate.add( AttachmentImpl.merge( synonymous, attachment ) );
             }
         }
         return aggregate;

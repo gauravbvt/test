@@ -1,12 +1,11 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.core.PersistentObjectDao;
+import com.mindalliance.channels.core.PersistentObjectDaoFactory;
 import com.mindalliance.channels.core.dao.PlanDefinition;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.odb.ODBAccessor;
-import com.mindalliance.channels.core.odb.ODBTransactionFactory;
-import org.neodatis.odb.core.query.criteria.Where;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Command;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +27,7 @@ import java.util.Set;
  */
 public class DefaultPlanningEventService implements PlanningEventService {
 
-    private ODBTransactionFactory databaseFactory;
+    private PersistentObjectDaoFactory databaseFactory;
 
     private Map<String, Map<String, PresenceEvent>> latestPresences;
     private Map<String, Date> whenLastChanged;
@@ -51,25 +50,29 @@ public class DefaultPlanningEventService implements PlanningEventService {
         latestPresences.put( plan.getUri(), new HashMap<String, PresenceEvent>() );
     }
 
-    public void setDatabaseFactory( ODBTransactionFactory databaseFactory ) {
+    public void setDatabaseFactory( PersistentObjectDaoFactory databaseFactory ) {
         this.databaseFactory = databaseFactory;
     }
 
+    @Override
     public void commandDone( Command command, Change change, Plan plan ) {
         CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Done, command, change, plan.getUri() );
         addPlanningEvent( commandEvent, plan );
     }
 
+    @Override
     public void commandUndone( Command command, Plan plan ) {
         CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Undone, command, plan.getUri() );
         addPlanningEvent( commandEvent, plan );
     }
 
+    @Override
     public void commandRedone( Command command, Plan plan ) {
         CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Redone, command, plan.getUri() );
         addPlanningEvent( commandEvent, plan );
     }
 
+    @Override
     public synchronized void inactive( String username, Plan plan ) {
         if ( isActive( username, plan ) ) {
             recordAbsence( username, plan );
@@ -86,6 +89,7 @@ public class DefaultPlanningEventService implements PlanningEventService {
         lives.put( username, System.currentTimeMillis() + refreshDelay * 2 * 1000 );
     }
 
+    @Override
     public synchronized boolean isActive( String username, Plan plan ) {
         Map<String, Long> lives = getUserLives( plan );
         boolean alive = false;
@@ -107,19 +111,13 @@ public class DefaultPlanningEventService implements PlanningEventService {
         return deathRoll;
     }
 
+    @Override
     public synchronized PresenceEvent findLatestPresence( String username, Plan plan ) {
         PresenceEvent latestPresence;
         if ( isLatestPresenceCached( plan, username ) ) {
             latestPresence = getLatestCachedPresence( plan, username );
         } else {
-            latestPresence = getOdb( plan ).first(
-                    PresenceEvent.class,
-                    Where.and()
-                            .add( Where.equal( "username", username ) )
-                            .add( Where.equal( "planId", plan.getUri() ) )
-                            .add( Where.ge( "date", startupDate ) ),
-                    ODBAccessor.Ordering.Descendant,
-                    "date" );
+            latestPresence = getOdb( plan ).findLatestFrom( PresenceEvent.class, username, startupDate );
             cacheLatestPresence( plan, username, latestPresence );
         }
         return latestPresence;
@@ -156,12 +154,9 @@ public class DefaultPlanningEventService implements PlanningEventService {
         whenLastChanged.put( plan.getUri(), new Date() );
     }
 
+    @Override
     public Iterator<CommandEvent> getCommandEvents( Plan plan ) {
-        return getOdb( plan ).iterate(
-                CommandEvent.class,
-                Where.equal( "planId", plan.getUri() ),
-                ODBAccessor.Ordering.Descendant,
-                "date" );
+        return getOdb( plan ).findAll( CommandEvent.class );
     }
 
     private boolean isLatestPresenceCached( Plan plan, String username ) {
@@ -186,12 +181,13 @@ public class DefaultPlanningEventService implements PlanningEventService {
     }
 
 
-    private ODBAccessor getOdb( Plan plan ) {
+    private PersistentObjectDao getOdb( Plan plan ) {
         String planUri = plan.getUri();
-        return databaseFactory.getODBAccessor( PlanDefinition.sanitize( planUri ) );
+        return databaseFactory.getDao( PlanDefinition.sanitize( planUri ) );
     }
 
 
+    @Override
     public Date getWhenLastChanged( Plan plan ) {
         return whenLastChanged.get( plan.getUri() );
     }

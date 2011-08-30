@@ -1,16 +1,22 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.attachments;
 
+import com.mindalliance.channels.core.Attachable;
+import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.Attachment.Type;
+import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.Upload;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanListener;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.model.Attachable;
-import com.mindalliance.channels.core.model.Attachment;
-import com.mindalliance.channels.core.model.Attachment.Type;
+import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Tag;
-import com.mindalliance.channels.core.util.InfoStandardsLoader;
-import com.mindalliance.channels.core.util.Loader;
-import com.mindalliance.channels.core.util.TagLoader;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -29,6 +35,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
@@ -38,7 +45,6 @@ import java.net.URLEncoder;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -163,15 +169,15 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         this.imageDomains = new ArrayList<String>( imageDomains );
     }
 
-    private File createFile( Plan plan, String name ) {
+    private File createFile( File uploadDirectory, String name ) {
         String truncatedName = StringUtils
                 .reverse( StringUtils.reverse( name ).substring( 0, Math.min( name.length(), maxLength ) ) );
         // String idealName = escape( truncatedName );
-        File result = new File( getUploadDirectory( plan ), truncatedName );
+        File result = new File( uploadDirectory, truncatedName );
         int i = 0;
         while ( result.exists() ) {
             String actual = ++i + "_" + truncatedName;
-            result = new File( getUploadDirectory( plan ), actual );
+            result = new File( uploadDirectory, actual );
         }
 
         return result;
@@ -186,11 +192,12 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     private FileDocument resolve( FileDocument document ) {
         synchronized ( documentMap ) {
             for ( FileDocument prior : documentMap.values() )
-                if ( document.isDuplicate( prior ) )
+                if ( document.isDuplicate( prior ) ) {
+                    document.delete();
                     return prior;
+                }
 
-            document.delete();
-            return new FileDocument( document.getFile(), document.getUrl(), document.getDigest() );
+            return document;
         }
     }
 
@@ -247,7 +254,9 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
                 digests.setProperty( entry.getKey(), entry.getValue().getDigest() );
         }
 
-        Writer out = new FileWriter( new File( getUploadDirectory( plan ), digestsMapFile ) );
+        File file = new File( getUploadDirectory( plan ), digestsMapFile );
+        LOG.debug( "Saving attachment digests into " + file.getAbsolutePath() );
+        Writer out = new FileWriter( file );
         try {
             digests.store( out, " File digests. Do not edit." );
 
@@ -288,48 +297,62 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     @Override
     public Attachment upload( Plan plan, Upload upload ) {
 
-        //String escaped = escape( fileName );
-        BufferedInputStream in = null;
-        BufferedOutputStream out = null;
-        Attachment attachment = null;
         try {
-            File file = createFile( plan, upload.getFileName() );
-            MessageDigest messageDigest = MessageDigest.getInstance( "SHA" );
-            in = new BufferedInputStream( new DigestInputStream( upload.getInputStream(), messageDigest ) );
-            out = new BufferedOutputStream( new FileOutputStream( file ) );
+            return doUpload( plan, upload );
+
+        } catch ( NoSuchAlgorithmException e ) {
+            LOG.error( "System does not support SHA digests", e );
+        } catch ( IOException e ) {
+            LOG.warn( "Unable to download attachment", e );
+        }
+
+        return null;
+    }
+
+    private Attachment doUpload( Plan plan, Upload upload ) throws NoSuchAlgorithmException, IOException {
+        AttachmentImpl attachment = null;
+
+        MessageDigest messageDigest = MessageDigest.getInstance( "SHA" );
+        InputStream in = new BufferedInputStream( new DigestInputStream( upload.getInputStream(), messageDigest ) );
+        try {
+            FileDocument fileDocument = upload( in, messageDigest, createFile( getUploadDirectory( plan ),
+                                                                               upload.getFileName() ) );
+
+            synchronized ( documentMap ) {
+                FileDocument actual = resolve( fileDocument );
+                documentMap.put( actual.getUrl(), actual );
+                attachment = new AttachmentImpl( actual.getUrl(), upload.getSelectedType() );
+                attachment.setName( upload.getName() );
+                save( plan );
+            }
+
+        } finally {
+            in.close();
+        }
+
+        return attachment;
+    }
+
+    private FileDocument upload( InputStream in, MessageDigest messageDigest, File outputFile ) throws IOException {
+
+        BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( outputFile ) );
+        try {
             int count;
             do {
                 count = in.read();
                 if ( count >= 0 )
                     out.write( count );
             } while ( count >= 0 );
-            // fileUpload.writeTo( file );
-            String digest = URLEncoder
-                    .encode( new String( messageDigest.digest() ).replaceAll( ",", "\\u002c" ), "UTF-8" );
-            FileDocument fileDocument = new FileDocument( file, uploadPath + file.getName(), digest );
+            LOG.info( "Uploaded file into ", outputFile );
 
-            synchronized ( documentMap ) {
-                FileDocument actual = resolve( fileDocument );
-                documentMap.put( actual.getUrl(), actual );
-                attachment = new Attachment( actual.getUrl(), upload.getSelectedType() );
-                attachment.setName( upload.getName() );
-                save( plan );
-            }
-        } catch ( IOException e ) {
-            LOG.error( MessageFormat.format( "Error while uploading file: {0}", upload.getFileName() ), e );
-        } catch ( NoSuchAlgorithmException e ) {
-            LOG.error( MessageFormat.format( "Error while uploading file: {0}", upload.getFileName() ), e );
+            return new FileDocument( outputFile,
+                                     uploadPath + outputFile.getName(),
+                                     URLEncoder.encode( new String( messageDigest.digest() )
+                                                                .replaceAll( ",", "\\u002c" ), "UTF-8" ) );
+
         } finally {
-            try {
-                if ( in != null )
-                    in.close();
-                if ( out != null )
-                    out.close();
-            } catch ( IOException e ) {
-                LOG.warn( "Unable to close uploaded file", e );
-            }
+            out.close();
         }
-        return attachment;
     }
 
     @Override
@@ -413,6 +436,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
 
         if ( attachable instanceof Plan && ( attachment.isTags() || attachment.isInfoStandards() ) )
             reloadTags( (Plan) attachable );
+        LOG.debug( "Removed " + attachment + " from " + attachable );
     }
 
     @Override
@@ -420,6 +444,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         attachable.addAttachment( attachment );
         if ( attachable instanceof Plan && ( attachment.isTags() || attachment.isInfoStandards() ) )
             reloadTags( (Plan) attachable );
+        LOG.debug( "Added " + attachment + " from " + attachable );
     }
 
     @Override

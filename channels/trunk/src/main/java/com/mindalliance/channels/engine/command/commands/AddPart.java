@@ -1,13 +1,8 @@
 package com.mindalliance.channels.engine.command.commands;
 
-import com.mindalliance.channels.engine.command.AbstractCommand;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Command;
-import com.mindalliance.channels.engine.command.CommandException;
-import com.mindalliance.channels.engine.command.Commander;
+import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Attachment;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Goal;
@@ -17,6 +12,11 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.command.AbstractCommand;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.engine.command.CommandException;
+import com.mindalliance.channels.engine.command.Commander;
 import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
@@ -121,7 +121,7 @@ public class AddPart extends AbstractCommand {
         part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );
         part.setCategory( (Part.Category) state.get( "category") );
-        part.setAttachments( new ArrayList<Attachment>( (ArrayList<Attachment>) state.get( "attachments" ) ) );
+        part.setAttachments( new ArrayList<Attachment>( (List<Attachment>) state.get( "attachments" ) ) );
         for (Map<String,Object> goalMap : (List<Map<String,Object>>)state.get( "goals" ) ) {
             Goal goal = queryService.goalFromMap( goalMap );
             part.addGoal(  goal );

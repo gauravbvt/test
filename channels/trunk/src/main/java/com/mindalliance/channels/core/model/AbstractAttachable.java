@@ -1,6 +1,8 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.core.model.Attachment.Type;
+import com.mindalliance.channels.core.Attachable;
+import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.Attachment.Type;
 
 import java.util.ArrayList;
 import java.util.Collections;

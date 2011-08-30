@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.social;
 
+import com.mindalliance.channels.core.PersistentObject;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Participation;
-import com.mindalliance.channels.core.odb.PersistentObject;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.menus.SocialItemMenuPanel;
