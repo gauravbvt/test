@@ -52,7 +52,8 @@ public class TFP009_TaskTagsDetails
 				// Click on Show Advance form link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Advance form";
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span[2]/")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/span/div/div[3]/div/div[2]/table/tbody/tr/td/span[2]"));
+				GlobalVariables.oDriver.findElement(By.xpath("/html/body/span/div/div[3]/div/div[2]/table/tbody/tr/td/span[2]")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

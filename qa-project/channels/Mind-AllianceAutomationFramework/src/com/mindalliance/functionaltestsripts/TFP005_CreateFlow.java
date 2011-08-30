@@ -112,7 +112,7 @@ public class TFP005_CreateFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
-				// Remove Information Sharing Capability
+				// Remove Break up flow
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Break up flow");
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
@@ -120,16 +120,11 @@ public class TFP005_CreateFlow
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Show details");
-				alert = GlobalVariables.oDriver.switchTo().alert();
-				// Click on 'OK" button of message box in order to confirm it
-				alert.accept();
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				
+				Thread.sleep(2000);				
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Remove info need");
 				alert = GlobalVariables.oDriver.switchTo().alert();

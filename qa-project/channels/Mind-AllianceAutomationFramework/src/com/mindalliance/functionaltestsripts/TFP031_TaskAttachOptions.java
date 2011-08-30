@@ -90,16 +90,15 @@ public class TFP031_TaskAttachOptions
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);					
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
-				}
-				else {
-					
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
+					else {					
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+					}
+				}				
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
