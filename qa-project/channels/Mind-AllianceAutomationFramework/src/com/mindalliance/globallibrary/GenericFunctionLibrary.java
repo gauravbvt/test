@@ -269,6 +269,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathViewAllTypesOfAddInfoSendNewMedium",oXmlElePlanPage.getElementsByTagName("xPathViewAllTypesOfAddInfoSendNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathSendsAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathSendsAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathReceivesAttachmentURL",oXmlElePlanPage.getElementsByTagName("xPathReceivesAttachmentURL").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathCopyTaskAttachment",oXmlElePlanPage.getElementsByTagName("xPathCopyTaskAttachment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathPlanHomeIcon",oXmlElePlanPage.getElementsByTagName("xPathPlanHomeIcon").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAddInfoSendNewMedium",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathTaskCausesEvent",oXmlElePlanPage.getElementsByTagName("xPathTaskCausesEvent").item(0).getChildNodes().item(0).getNodeValue());
