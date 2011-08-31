@@ -47,17 +47,35 @@ public class TFP021_UsuallyCompletesAfterOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+
+				// Click on Show Advance form link
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Navigated to Advance form";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormOfTask"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 					
 				// Click on Usually Completes After Checkbox
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Usually Completes After";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:self-terminating")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:self-terminating")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				GlobalVariables.oDriver.navigate().refresh();
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that Textbox & Listbox gets Enabled
-				if(GlobalVariables.oDriver.findElement(By.name("segment:part:completion-time:delay-amount")).isEnabled() &&
-				   GlobalVariables.oDriver.findElement(By.name("segment:part:completion-time:delay-unit")).isEnabled()) {
+				if(GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:completion-time:delay-amount")).isEnabled() &&
+				   GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:completion-time:delay-unit")).isEnabled()) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -72,6 +90,10 @@ public class TFP021_UsuallyCompletesAfterOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:self-terminating")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

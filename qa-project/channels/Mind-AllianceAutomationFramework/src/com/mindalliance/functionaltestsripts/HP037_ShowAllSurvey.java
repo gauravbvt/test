@@ -36,6 +36,9 @@ public class HP037_ShowAllSurvey
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Hide completed";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideShowAllSurvey"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000); 
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHideShowAllSurvey")));
 				// Assertion: Verify that show all link is present under survey tab.
 				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showAll"))){
@@ -45,7 +48,7 @@ public class HP037_ShowAllSurvey
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 			    else{
-			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("showAllMessages")+" Actual "+GlobalVariables.oElement.getText();
+			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("hideCompleted")+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

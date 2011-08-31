@@ -35,7 +35,7 @@ public class TFP065_AddInfoReceiveSendChannelsOptions
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
+
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
@@ -67,56 +67,51 @@ public class TFP065_AddInfoReceiveSendChannelsOptions
 
 				// Sends : Channels <option> List 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Select Channels <option> from List";
+				GlobalVariables.sDescription = "Channels <option> List";
 				// Select option from List
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
-				options.get(1).setSelected();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Assertion : Verify that channels medium is added
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText("Cell"));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("cell"))) {
-						// 	Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+				for(WebElement option : options) {
+					if("newMedium".equals(option.getText())){
+						option.setSelected();
+						GlobalVariables.bIsSuccess=Boolean.TRUE;
+						break;
+					}
 				}
-				else {
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("cell")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
-				}
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
-				// Sends : Remove the channels medium  
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Channels medium removed";
-				// Remove channels medium
-				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:included")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Assertion : Verify that channels medium is removed
-				try {
-					GlobalVariables.oElement=GlobalVariables.oElement.findElement(By.linkText("Cell"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
-				}
-				catch(Exception e) {
-					// Write Results
+				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Remove Information Sharing Capability
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),"Remove sharing capability");
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click 'Add info received' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Received' Link Clicked";
@@ -131,55 +126,42 @@ public class TFP065_AddInfoReceiveSendChannelsOptions
 
 				// Receives : Channels <option> List 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Select Channels <option> from List";
+				GlobalVariables.sDescription = "Channels <option> List";
 				// Select option from List
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium")));
 				options = GlobalVariables.oDropDown.getOptions();
-				options.get(1).setSelected();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Assertion : Verify that channels medium is added
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText("Cell"));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("cell"))) {
-						// 	Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+				for(WebElement option : options) {
+					if("newMedium".equals(option.getText())){
+						option.setSelected();
+						GlobalVariables.bIsSuccess=Boolean.TRUE;
+						break;
+					}
 				}
-				else {
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("cell")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
-				}
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
-				// Receives : Remove the channels medium  
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Channels medium removed";
-				// Remove channels medium
-				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:included")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Assertion : Verify that channels medium is removed
-				try {
-					GlobalVariables.oElement=GlobalVariables.oElement.findElement(By.linkText("Cell"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
-				}
-				catch(Exception e) {
-					// Write Results
+				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Remove Information Sharing Capability
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Remove info need");
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -189,7 +171,7 @@ public class TFP065_AddInfoReceiveSendChannelsOptions
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert = GlobalVariables.oDriver.switchTo().alert();
 				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
 				// WebElement Synchronization

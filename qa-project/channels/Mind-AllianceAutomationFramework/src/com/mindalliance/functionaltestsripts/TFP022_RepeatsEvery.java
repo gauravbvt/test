@@ -47,17 +47,29 @@ public class TFP022_RepeatsEvery
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+
+				// Click on Show Advance form link
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Navigated to Advance form";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormOfTask"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 					
 				// Click on Usually Completes After Check box
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Repeats Every";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:repeating")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:repeating")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that Text box & List box gets Enabled
-				if(GlobalVariables.oDriver.findElement(By.name("segment:part:repeats-every:delay-amount")).isEnabled() &&
-				   GlobalVariables.oDriver.findElement(By.name("segment:part:repeats-every:delay-unit")).isEnabled()) {
+				if(GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:repeats-every:delay-amount")).isEnabled() &&
+				   GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:repeats-every:delay-unit")).isEnabled()) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -72,7 +84,11 @@ public class TFP022_RepeatsEvery
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
+				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:repeating")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

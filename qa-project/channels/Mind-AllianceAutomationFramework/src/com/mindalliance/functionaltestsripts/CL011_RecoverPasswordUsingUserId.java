@@ -150,7 +150,7 @@ public class CL011_RecoverPasswordUsingUserId
 		      GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathRequestNewPassword"))).click();
 	    	  // WebElement Synchronization
 		      Thread.currentThread();
-		      Thread.sleep(10000);
+		      Thread.sleep(40000);
 		      // Assertion: Verify that a message is displayed to the user as 'A new password is emailed to you'
 		      GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathRequestPasswordMessage")));
 		      if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("newPasswordMsg"))) {

@@ -47,6 +47,18 @@ public class TFP023_Responding
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+
+				// Click on Show Advance form link
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Navigated to Advance form";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormOfTask"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 					
 				// Click on Usually Completes After Check box
 				GlobalVariables.iStepNo++;
@@ -57,7 +69,7 @@ public class TFP023_Responding
 				Thread.sleep(2000);
 				// Assertion : Verify that Phase window opens with name 'Responding'
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name"));
-				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.viewElements.get("responding"))) {
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("responding"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

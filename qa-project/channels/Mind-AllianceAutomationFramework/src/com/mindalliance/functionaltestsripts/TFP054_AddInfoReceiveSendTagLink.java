@@ -62,6 +62,18 @@ public class TFP054_AddInfoReceiveSendTagLink
 				Thread.currentThread();
 				Thread.sleep(2000);
 
+				// Click on Show Advance form link
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Navigated to Advance form";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormSendInfo"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
 				// Click 'Tags' Link 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Tags Link Clicked";				
@@ -91,7 +103,25 @@ public class TFP054_AddInfoReceiveSendTagLink
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
+				// Remove Information Sharing Capability
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),"Remove sharing capability");
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click 'Add info received' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Received' Link Clicked";
@@ -104,6 +134,18 @@ public class TFP054_AddInfoReceiveSendTagLink
 				Thread.currentThread();
 				Thread.sleep(2000);
 
+				// Click on Show Advance form link
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Navigated to Advance form";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormReceiveInfo"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
 				// Click 'Tags' Link 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Tags Link Clicked";				
@@ -133,13 +175,26 @@ public class TFP054_AddInfoReceiveSendTagLink
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				// Remove Information Sharing Capability
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Remove info need");
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert = GlobalVariables.oDriver.switchTo().alert();
 				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
 				// WebElement Synchronization

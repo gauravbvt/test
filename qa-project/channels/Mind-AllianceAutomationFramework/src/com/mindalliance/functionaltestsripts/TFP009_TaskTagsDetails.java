@@ -52,8 +52,7 @@ public class TFP009_TaskTagsDetails
 				// Click on Show Advance form link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Advance form";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/span/div/div[3]/div/div[2]/table/tbody/tr/td/span[2]"));
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/span/div/div[3]/div/div[2]/table/tbody/tr/td/span[2]")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormOfTask"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -65,8 +64,8 @@ public class TFP009_TaskTagsDetails
 				// Click on Tags text field
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Tags";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:tags:tags")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:tags:tags"));
+				GlobalVariables.oDriver.findElement(By.name("segment:part:tagsContainer:tags:tags")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:tagsContainer:tags:tags"));
 				for(int i=0;i<8;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys("Tags");

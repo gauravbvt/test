@@ -24,6 +24,9 @@ public class HP038_CalendarTab
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Calender tab is present";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialCalendar"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000); 
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialCalendar")));
 				// Assertion: Verify that message tab is present on social panel
 				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("calendar"))) {

@@ -60,11 +60,11 @@ public class TFP012_TaskIsOperational
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				
+
 				// Click on Show Advance form link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Advance form";
-				GlobalVariables.oDriver.findElement(By.linkText("Show advanced form")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormOfTask"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -75,8 +75,8 @@ public class TFP012_TaskIsOperational
 				
 				// Uncheck 'Operational' Option to make task as 'Not Operational'
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Task Not Operational";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:operational")).click();
+				GlobalVariables.sDescription="Task Not Conceptual";
+				GlobalVariables.oDriver.findElement(By.name("segment:part:classificationContainer:conceptual")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -97,8 +97,8 @@ public class TFP012_TaskIsOperational
 
 				// Check 'Operational' Option to make task as 'Operational'
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Task Operational";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:operational")).click();
+				GlobalVariables.sDescription="Task is Conceptual";
+				GlobalVariables.oDriver.findElement(By.name("segment:part:classificationContainer:conceptual")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

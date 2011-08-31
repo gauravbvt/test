@@ -64,6 +64,18 @@ public class TFP063_AddInfoReceiveSendButOnlyIfOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				
+				// Click on Show Advance form link
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Navigated to Advance form";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormSendInfo"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 
 				// Sends : but only if <option> List 
 				GlobalVariables.iStepNo++ ;
@@ -76,35 +88,47 @@ public class TFP063_AddInfoReceiveSendButOnlyIfOption
 				// Select option from List
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:restrictionContainer:restriction")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
-				if(options.get(0).getText().equals(GlobalVariables.viewElements.get("unspecified")) &&
-				   options.get(1).getText().equals(GlobalVariables.viewElements.get("inDiffLoc")) &&
-				   options.get(2).getText().equals(GlobalVariables.viewElements.get("inDiffOrg")) &&
-				   options.get(3).getText().equals(GlobalVariables.viewElements.get("inDiffOverallOrg")) &&
-				   options.get(4).getText().equals(GlobalVariables.viewElements.get("inSameLoc")) &&
-				   options.get(5).getText().equals(GlobalVariables.viewElements.get("inSameOrg")) &&
-				   options.get(6).getText().equals(GlobalVariables.viewElements.get("inSameOrgAndLoc")) &&
-				   options.get(7).getText().equals(GlobalVariables.viewElements.get("inSameOverallOrg")) &&
-				   options.get(8).getText().equals(GlobalVariables.viewElements.get("toSupervisor")) &&
-				   options.get(9).getText().equals(GlobalVariables.viewElements.get("toSelf")) &&
-				   options.get(10).getText().equals(GlobalVariables.viewElements.get("toSomeoneElse"))) {
-					options.get(5).setSelected();
-					if(options.get(5).isSelected()){
-						// 	Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+				for(WebElement option : options) {
+					if("unspecified".equals(option.getText())){
+						option.setSelected();
+						GlobalVariables.bIsSuccess=Boolean.TRUE;
+						break;
 					}
 				}
-				else {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
+				// Remove Information Sharing Capability
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),"Remove sharing capability");
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click 'Add info received' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Received' Link Clicked";
@@ -117,6 +141,18 @@ public class TFP063_AddInfoReceiveSendButOnlyIfOption
 				Thread.currentThread();
 				Thread.sleep(2000);
 
+				// Click on Show Advance form link
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Navigated to Advance form";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormReceiveInfo"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+
 				// Receives : but only if <option> List 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Select but only if <option> from List";
@@ -128,31 +164,38 @@ public class TFP063_AddInfoReceiveSendButOnlyIfOption
 				// Select option from List
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:restrictionContainer:restriction")));
 				options = GlobalVariables.oDropDown.getOptions();
-				if(options.get(0).getText().equals(GlobalVariables.viewElements.get("unspecified")) &&
-				   options.get(1).getText().equals(GlobalVariables.viewElements.get("fromSupervisor")) &&
-				   options.get(2).getText().equals(GlobalVariables.viewElements.get("fromSelf")) &&
-				   options.get(3).getText().equals(GlobalVariables.viewElements.get("fromSomeoneElse")) &&
-				   options.get(4).getText().equals(GlobalVariables.viewElements.get("inDiffLoc")) &&
-				   options.get(5).getText().equals(GlobalVariables.viewElements.get("inDiffOrg")) &&
-				   options.get(6).getText().equals(GlobalVariables.viewElements.get("inDiffOverallOrg")) &&
-				   options.get(7).getText().equals(GlobalVariables.viewElements.get("inSameLoc")) &&
-				   options.get(8).getText().equals(GlobalVariables.viewElements.get("inSameOrg")) &&
-				   options.get(9).getText().equals(GlobalVariables.viewElements.get("inSameOrgAndLoc")) &&
-				   options.get(10).getText().equals(GlobalVariables.viewElements.get("inSameOverallOrg"))) {
-					options.get(5).setSelected();
-					if(options.get(5).isSelected()){
-						// 	Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+				for(WebElement option : options) {
+					if("unspecified".equals(option.getText())){
+						option.setSelected();
+						GlobalVariables.bIsSuccess=Boolean.TRUE;
+						break;
 					}
 				}
-				else {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Remove Information Sharing Capability
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Remove info need");
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -162,7 +205,7 @@ public class TFP063_AddInfoReceiveSendButOnlyIfOption
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert = GlobalVariables.oDriver.switchTo().alert();
 				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
 				// WebElement Synchronization

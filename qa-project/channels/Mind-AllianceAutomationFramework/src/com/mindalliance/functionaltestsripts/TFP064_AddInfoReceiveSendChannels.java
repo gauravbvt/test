@@ -48,6 +48,11 @@ public class TFP064_AddInfoReceiveSendChannels
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
@@ -66,40 +71,46 @@ public class TFP064_AddInfoReceiveSendChannels
 				// Select option from List
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
-				if(options.get(1).getText().equals(GlobalVariables.viewElements.get("cell")) &&
-				   options.get(2).getText().equals(GlobalVariables.viewElements.get("conferenceCall")) &&
-				   options.get(3).getText().equals(GlobalVariables.viewElements.get("courier")) &&
-				   options.get(4).getText().equals(GlobalVariables.viewElements.get("email")) &&
-				   options.get(5).getText().equals(GlobalVariables.viewElements.get("faceToFace")) &&
-				   options.get(6).getText().equals(GlobalVariables.viewElements.get("fax")) &&
-				   options.get(7).getText().equals(GlobalVariables.viewElements.get("im")) &&
-				   options.get(8).getText().equals(GlobalVariables.viewElements.get("landline")) &&
-				   options.get(9).getText().equals(GlobalVariables.viewElements.get("mail")) &&
-				   options.get(10).getText().equals(GlobalVariables.viewElements.get("meeting")) &&
-				   options.get(11).getText().equals(GlobalVariables.viewElements.get("notificationSystem")) &&
-				   options.get(12).getText().equals(GlobalVariables.viewElements.get("onlineChat")) &&
-				   options.get(13).getText().equals(GlobalVariables.viewElements.get("pager")) &&
-				   options.get(14).getText().equals(GlobalVariables.viewElements.get("paSystems")) &&
-				   options.get(15).getText().equals(GlobalVariables.viewElements.get("phone")) &&
-				   options.get(16).getText().equals(GlobalVariables.viewElements.get("radio")) &&
-				   options.get(17).getText().equals(GlobalVariables.viewElements.get("television")) &&
-				   options.get(18).getText().equals(GlobalVariables.viewElements.get("twoWayRadio")) &&
-				   options.get(19).getText().equals(GlobalVariables.viewElements.get("newMedium"))) {
-						// 	Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+				for(WebElement option : options) {
+					if("newMedium".equals(option.getText())){
+						GlobalVariables.bIsSuccess=Boolean.TRUE;
+						break;
+					}
 				}
-				else {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
+				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
+			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Remove Information Sharing Capability
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),"Remove sharing capability");
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click 'Add info received' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Received' Link Clicked";
@@ -118,36 +129,37 @@ public class TFP064_AddInfoReceiveSendChannels
 				// Select option from List
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium")));
 				options = GlobalVariables.oDropDown.getOptions();
-				if(options.get(1).getText().equals(GlobalVariables.viewElements.get("cell")) &&
-				   options.get(2).getText().equals(GlobalVariables.viewElements.get("conferenceCall")) &&
-				   options.get(3).getText().equals(GlobalVariables.viewElements.get("courier")) &&
-				   options.get(4).getText().equals(GlobalVariables.viewElements.get("email")) &&
-				   options.get(5).getText().equals(GlobalVariables.viewElements.get("faceToFace")) &&
-				   options.get(6).getText().equals(GlobalVariables.viewElements.get("fax")) &&
-				   options.get(7).getText().equals(GlobalVariables.viewElements.get("im")) &&
-				   options.get(8).getText().equals(GlobalVariables.viewElements.get("landline")) &&
-				   options.get(9).getText().equals(GlobalVariables.viewElements.get("mail")) &&
-				   options.get(10).getText().equals(GlobalVariables.viewElements.get("meeting")) &&
-				   options.get(11).getText().equals(GlobalVariables.viewElements.get("notificationSystem")) &&
-				   options.get(12).getText().equals(GlobalVariables.viewElements.get("onlineChat")) &&
-				   options.get(13).getText().equals(GlobalVariables.viewElements.get("pager")) &&
-				   options.get(14).getText().equals(GlobalVariables.viewElements.get("paSystems")) &&
-				   options.get(15).getText().equals(GlobalVariables.viewElements.get("phone")) &&
-				   options.get(16).getText().equals(GlobalVariables.viewElements.get("radio")) &&
-				   options.get(17).getText().equals(GlobalVariables.viewElements.get("television")) &&
-				   options.get(18).getText().equals(GlobalVariables.viewElements.get("twoWayRadio")) &&
-				   options.get(19).getText().equals(GlobalVariables.viewElements.get("newMedium"))) {
-						// 	Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+				for(WebElement option : options) {
+					if("newMedium".equals(option.getText())){
+						GlobalVariables.bIsSuccess=Boolean.TRUE;
+						break;
+					}
 				}
-				else {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
+				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
+			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Remove Information Sharing Capability
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Remove info need");
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -157,7 +169,7 @@ public class TFP064_AddInfoReceiveSendChannels
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert = GlobalVariables.oDriver.switchTo().alert();
 				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
 				// WebElement Synchronization

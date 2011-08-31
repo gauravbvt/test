@@ -3,7 +3,6 @@ package com.mindalliance.functionaltestsripts;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -57,7 +56,7 @@ public class TFP011_TaskIsOption
 				// Click on Show Advance form link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Advance form";
-				GlobalVariables.oDriver.findElement(By.linkText("Show advanced form")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormOfTask"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -66,77 +65,35 @@ public class TFP011_TaskIsOption
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
-				// Update Task Name
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Task Name Updated";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).clear();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task 1"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
 				// Task is <option> Selected
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Task is <option> Present";
-				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:part:category")));
+				GlobalVariables.bIsSuccess=Boolean.FALSE;
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:part:classificationContainer:category")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
-				if(options.get(0).getText().equals(GlobalVariables.viewElements.get("unspecified")) &&
-				   options.get(1).getText().equals(GlobalVariables.viewElements.get("analysis")) &&
-				   options.get(2).getText().equals(GlobalVariables.viewElements.get("audit")) &&
-				   options.get(3).getText().equals(GlobalVariables.viewElements.get("direction")) &&
-				   options.get(4).getText().equals(GlobalVariables.viewElements.get("operationalCoordination")) &&
-				   options.get(5).getText().equals(GlobalVariables.viewElements.get("operations")) &&
-				   options.get(6).getText().equals(GlobalVariables.viewElements.get("operationsManagement")) &&
-				   options.get(7).getText().equals(GlobalVariables.viewElements.get("planningAndPreparing")) &&
-				   options.get(8).getText().equals(GlobalVariables.viewElements.get("policySetting"))) {
-					// Write Results
+				for(WebElement option : options) {
+					if("unspecified".equals(option.getText())){
+						option.setSelected();
+						GlobalVariables.bIsSuccess=Boolean.TRUE;
+						break;
+					}
+				}
+				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-					options.get(8).setSelected();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Task is <option> Selected";
-					if(options.get(8).isSelected()){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);											
-					}
-					else {
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);					
-					}
-				}
-				else {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
-				// Remove Added Task
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoUpdateTask"));
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoUpdateTask"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
+					
 				// 	Call Logout
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Logout Successful";

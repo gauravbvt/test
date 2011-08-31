@@ -90,7 +90,7 @@ public class CCE004_DoUndoRedoAddNewTask
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
 					for (WebElement td: tds){
-						if (td.getText().equals("")){
+						if (td.getText().equals("Task 1")){
 							// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

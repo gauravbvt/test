@@ -52,22 +52,34 @@ public class TFP025_OngoingOrStartsWith
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click 'Add new task' option under 'Actions' pop up menu 
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New task added";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewTask"));
+				// Click on default task
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Task";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
+
+				// Click on Show Advance form link
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Navigated to Advance form";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormOfTask"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				
 				// Check Ongoing or Starts with Option
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Ongoing or Starts With option checked";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:startsWithSegment")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:startsWithSegment")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -86,10 +98,10 @@ public class TFP025_OngoingOrStartsWith
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 
-				// Uncheck Ongoing or Starts with Option
+				// Un-check Ongoing or Starts with Option
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Ongoing or Starts With option unchecked";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:startsWithSegment")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:startsWithSegment")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

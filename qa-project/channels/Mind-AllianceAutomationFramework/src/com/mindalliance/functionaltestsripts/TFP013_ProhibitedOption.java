@@ -67,7 +67,7 @@ public class TFP013_ProhibitedOption
 				// Click on Show Advance form link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Advance form";
-				GlobalVariables.oDriver.findElement(By.linkText("Show advanced form")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormOfTask"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -79,7 +79,7 @@ public class TFP013_ProhibitedOption
 				// Check Prohibit Option to Prohibit the task
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Task Prohibited";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:prohibited")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:classificationContainer:prohibited")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -101,7 +101,7 @@ public class TFP013_ProhibitedOption
 				// Uncheck Prohibit Option to Permit the task
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Task Permitted";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:prohibited")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:classificationContainer:prohibited")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
