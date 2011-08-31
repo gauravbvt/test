@@ -273,6 +273,9 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathAddInfoSendNewMedium",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathTaskCausesEvent",oXmlElePlanPage.getElementsByTagName("xPathTaskCausesEvent").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathDeletePlacesAttachment",oXmlElePlanPage.getElementsByTagName("xPathDeletePlacesAttachment").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathShowAdvanceSimpleFormOfTask",oXmlElePlanPage.getElementsByTagName("xPathShowAdvanceSimpleFormOfTask").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathShowAdvanceSimpleFormReceiveInfo",oXmlElePlanPage.getElementsByTagName("xPathShowAdvanceSimpleFormReceiveInfo").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathShowAdvanceSimpleFormSendInfo",oXmlElePlanPage.getElementsByTagName("xPathShowAdvanceSimpleFormSendInfo").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathCrossOnAttachmentCopiedMessage",oXmlElePlanPage.getElementsByTagName("xPathCrossOnAttachmentCopiedMessage").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathDeletePlaceAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathDeletePlaceAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
