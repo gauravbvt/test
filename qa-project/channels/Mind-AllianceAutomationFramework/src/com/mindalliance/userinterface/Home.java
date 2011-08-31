@@ -1,6 +1,7 @@
 package com.mindalliance.userinterface;
 
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -706,6 +707,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 				frame.setLocationRelativeTo(null);
 				frame.setVisible(true);
 				frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+				frame.setPreferredSize(new Dimension(4510,210));
 			}
 		});
 	}
