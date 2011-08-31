@@ -25,7 +25,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -50,7 +49,6 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	private String arrayOfTestCaseIdNew[];
 	private static int noOfSelectedTestCases;
 	private JButton jButtonAdd;
-	private JTextField jTextField0;
 	private JLabel jLabel0;
 	private JList jListExecute;
 	private JScrollPane jScrollPane3;
@@ -97,7 +95,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	private void initComponents() {
 		setTitle("Mind Alliance Automation Framework");
 		setLayout(new GroupLayout());
-		add(getJTextField0(), new Constraints(new Leading(256, -53, 10, 10), new Leading(63, 12, 12)));
+//		add(getJTextField0(), new Constraints(new Leading(256, -53, 10, 10), new Leading(63, 12, 12)));
 		add(getJScrollPane3(), new Constraints(new Leading(1027, 298, 10, 10), new Leading(34, 317, 10, 10)));
 		add(getJScrollPane0(), new Constraints(new Leading(500, 350, 100, 50), new Leading(34, 317, 12, 12)));
 		add(getJButton2(), new Constraints(new Leading(1027, 12, 12), new Leading(525, 10, 10)));
@@ -164,7 +162,6 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	HomeForFunctionalTestCase(BufferedImage image) {
 	        this.image = image;
 	    }
-
 
 	private JPanel getJPanel1() {
 		if (jPanelLogo == null) {
@@ -457,13 +454,6 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		return jLabel0;
 	}
 
-	private JTextField getJTextField0() {
-		if (jTextField0 == null) {
-			jTextField0 = new JTextField();
-		}
-		return jTextField0;
-	}
-
 	private JButton getJButton0() {
 		if (jButtonAdd == null) {
 			jButtonAdd = new JButton();
@@ -501,7 +491,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				arrayOfTestCaseIdNew=new String[500];
 				jListFunctional = new JList();
 				arrayOfTestCaseIdNew = ReportFunctions.readTestCaseIdForFunctional(sheetNumber);
-				for(int i=0;i<100;i++) {
+				for(int i=0;i<500;i++) {
 					arrayOfTestCaseIdOld[jListCount++]= arrayOfTestCaseIdNew[i];
 				}
 				for (int i=0;i<500;i++) {
@@ -906,6 +896,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				arrayOfTestCaseIdNew[j++]=arrayOfTestCaseIdOld[i];
 			}
 		}
+		
 		jListFunctional=new JList();
 		listModel=new DefaultListModel();
 		int cnt=0;
@@ -915,6 +906,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				listModel.addElement(arrayOfTestCaseIdNew[i]);
 			}
 		}
+		
 		jListCount=cnt;
 		for (int i=0;i<jListCount;i++)
 			arrayOfTestCaseIdOld[i]=arrayOfTestCaseIdNew[i];
