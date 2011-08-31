@@ -1,7 +1,6 @@
 package com.mindalliance.userinterface;
 
 import java.awt.Desktop;
-import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -87,6 +86,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		setTitle("Mind Alliance Automation Framework");
 		setLayout(new GroupLayout());
 		add(getJTextField0(), new Constraints(new Leading(256, -53, 10, 10), new Leading(63, 12, 12)));
+		add(getJScrollPane3(), new Constraints(new Leading(1027, 298, 10, 10), new Leading(34, 317, 10, 10)));
+		add(getJScrollPane0(), new Constraints(new Leading(41, 298, 10, 10), new Leading(34, 317, 12, 12)));
+		add(getJScrollPane1(), new Constraints(new Leading(338, 298, 10, 10), new Leading(34, 317, 10, 10)));
+		add(getJScrollPane2(), new Constraints(new Leading(634, 298, 10, 10), new Leading(34, 317, 10, 10)));
+		add(getJButton2(), new Constraints(new Leading(1027, 12, 12), new Leading(525, 10, 10)));
 		add(getJLabel0(), new Constraints(new Leading(41, 12, 12), new Leading(8, 10, 10)));
 		add(getJLabel1(), new Constraints(new Leading(341, 10, 10), new Leading(8, 12, 12)));
 		add(getJCheckBox0(), new Constraints(new Leading(166, 10, 10), new Leading(4, 8, 8)));
@@ -96,14 +100,13 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		add(getJProgressBar0(), new Constraints(new Leading(1024, 298, 10, 10), new Leading(413, 12, 12)));
 		add(getJLabel3(), new Constraints(new Leading(1024, 12, 12), new Leading(453, 10, 10)));
 		add(getJLabel4(), new Constraints(new Leading(1024, 12, 12), new Leading(489, 12, 12)));
+		add(getJButton3(), new Constraints(new Leading(1027, 12, 12), new Leading(575, 10, 10)));
 		add(getJButton4(), new Constraints(new Leading(1026, 12, 12), new Leading(622, 10, 10)));
-		add(getJLabel2(), new Constraints(new Leading(637, 12, 12), new Leading(10, 12, 12, 12)));
-		add(getJScrollPane3(), new Constraints(new Leading(1027, 298, 10, 10), new Leading(34, 317, 10, 10)));
 		add(getJButton0(), new Constraints(new Leading(959, 10, 10), new Leading(174, 12, 12)));
-		add(getJScrollPane2(), new Constraints(new Leading(634, 298, 10, 10), new Leading(34, 317, 10, 10)));
-		add(getJScrollPane1(), new Constraints(new Leading(338, 298, 10, 10), new Leading(34, 317, 10, 10)));
-		add(getJScrollPane0(), new Constraints(new Leading(41, 298, 10, 10), new Leading(34, 317, 12, 12)));
-		add(getJButton2(), new Constraints(new Leading(1027, 12, 12), new Leading(525, 10, 10)));
+		add(getJLabel2(), new Constraints(new Leading(637, 12, 12), new Leading(10, 12, 12, 12)));
+		add(getJButton5(), new Constraints(new Leading(1239, 10, 10), new Leading(369, 12, 12)));
+		add(getJButton1(), new Constraints(new Leading(1153, 12, 12), new Leading(369, 12, 12)));
+		add(getJComboBox0(), new Constraints(new Leading(1023, 122, 10, 10), new Leading(369, 12, 12)));
 		setSize(1356, 698);
 	}
 
@@ -166,10 +169,6 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			jPanelReport.add(getJLabel7(), new Constraints(new Leading(31, 12, 12), new Leading(139, 10, 10)));
 			jPanelReport.add(getJLabel6(), new Constraints(new Leading(132, 30, 130), new Leading(95, 10, 10)));
 			jPanelReport.add(getJLabel5(), new Constraints(new Leading(125, 30, 130), new Leading(53, 10, 10)));
-			jPanelReport.add(getJComboBox0(), new Constraints(new Leading(366, 122, 10, 10), new Leading(20, 10, 10)));
-			jPanelReport.add(getJButton1(), new Constraints(new Leading(369, 10, 10), new Leading(68, 10, 10)));
-			jPanelReport.add(getJButton5(), new Constraints(new Leading(366, 12, 12), new Leading(114, 12, 12)));
-			jPanelReport.add(getJButton3(), new Constraints(new Leading(366, 12, 12), new Leading(178, 12, 12)));
 		}
 		return jPanelReport;
 	}
@@ -707,7 +706,6 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 				frame.setLocationRelativeTo(null);
 				frame.setVisible(true);
 				frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-				frame.setPreferredSize(new Dimension(4510,210));
 			}
 		});
 	}
