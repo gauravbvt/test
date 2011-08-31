@@ -106,7 +106,17 @@ public class TE040_RemoveLocaleCategory
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-			
+				//Close 'About Plan' Window
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);				
+				//Select Locale to add Category
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);		
+				
 				// Remove Locale's Category
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Locale's Category Removed";

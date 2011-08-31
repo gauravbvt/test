@@ -102,13 +102,18 @@ public class TE038_AddLocaleCategory
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oDriver.navigate().refresh();
-//				//Assertion : Verify that Locale's Category is added
-//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(1000);
-				//Update Locale Tags
+				//Close 'About Plan' Window
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				
+				//Select Locale to add Category
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);				
+				// Assertion : Verify that Locale's Category is added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentCategory")));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Category 1")))
 				{
@@ -135,8 +140,7 @@ public class TE038_AddLocaleCategory
 				alert.accept();
 				//Thread sleep
 				Thread.currentThread();
-				Thread.sleep(1000);
-				
+				Thread.sleep(1000);				
 				//Close 'Locale' Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization

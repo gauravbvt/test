@@ -158,7 +158,7 @@ public class CCE026_DoUndoRedoBreakUpFlow
 				List<WebElement> areas = GlobalVariables.oElement.findElements(By.tagName("area"));
 				for(WebElement area:areas){
 					GlobalVariables.sStrCheck=area.getAttribute("id");
-				if(area.getAttribute("id").equals("CAP.txt"))
+				if(area.getAttribute("id").equals("node 1"))
 					 GlobalVariables.bIsSuccess = Boolean.TRUE;
 					 break;
 			    }

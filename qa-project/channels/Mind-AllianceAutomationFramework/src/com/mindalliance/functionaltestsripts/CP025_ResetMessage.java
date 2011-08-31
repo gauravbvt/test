@@ -47,7 +47,7 @@ public class CP025_ResetMessage
 				
 				// Enter message in message tab
 				GlobalVariables.iStepNo++;
-				GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:newMessage:text")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:social:tabs:panel:newMessage:text")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:social:tabs:panel:newMessage:text"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Messages"));
 				// Write Results

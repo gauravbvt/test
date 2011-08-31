@@ -129,7 +129,7 @@ public class TE046_DeleteLocalePicture
 				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "Mind-Alliance_Logo.png");
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:submit")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -137,7 +137,7 @@ public class TE046_DeleteLocalePicture
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);				
+				Thread.sleep(3000);				
 				
 				// Delete Attachment
 				GlobalVariables.iStepNo++;
@@ -152,7 +152,7 @@ public class TE046_DeleteLocalePicture
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);				
+				Thread.sleep(3000);				
 //				// Assertion: Verify that file is deleted
 //				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathDeletePlaceAttachmentAssertion")));
 //				if (GlobalVariables.oElement.getText().equals("")){
@@ -171,6 +171,10 @@ public class TE046_DeleteLocalePicture
 //				// WebElement Synchronization
 //				Thread.currentThread();
 //				Thread.sleep(1000);
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();

@@ -119,16 +119,6 @@ public class TFP013_ProhibitedOption
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				// Remove Added Task
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoAddNewTask"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoUpdateTask"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoAddNewTask"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

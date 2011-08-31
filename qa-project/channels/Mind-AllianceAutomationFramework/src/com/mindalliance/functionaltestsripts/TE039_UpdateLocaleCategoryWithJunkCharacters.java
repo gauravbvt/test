@@ -73,7 +73,7 @@ public class TE039_UpdateLocaleCategoryWithJunkCharacters
 				
 				// Add Locale's Category				
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Locale's Category Added";
+				GlobalVariables.sDescription = "Locale's Category Added with Special Characters";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("index"));
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -103,12 +103,17 @@ public class TE039_UpdateLocaleCategoryWithJunkCharacters
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				//Assertion : Verify that Locale's Category is added
+				//Close 'About Plan' Window
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);				
+				//Select Locale to add Category
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				//Update Locale Tags
+				Thread.sleep(1000);		
+				//Assertion : Verify that Locale's Category is added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentCategory")));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get(")(*&^%$#!")))
 				{
@@ -135,8 +140,7 @@ public class TE039_UpdateLocaleCategoryWithJunkCharacters
 				alert.accept();
 				//Thread sleep
 				Thread.currentThread();
-				Thread.sleep(1000);
-				
+				Thread.sleep(1000);				
 				//Close 'Locale' Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
@@ -147,7 +151,7 @@ public class TE039_UpdateLocaleCategoryWithJunkCharacters
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-
+				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

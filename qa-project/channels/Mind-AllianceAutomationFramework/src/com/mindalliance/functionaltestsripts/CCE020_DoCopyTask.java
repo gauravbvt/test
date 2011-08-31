@@ -81,7 +81,7 @@ public class CCE020_DoCopyTask
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					// Write Task
+					// Add details for New Task
 					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 					for (int i = 0; i <= 50; i++)
@@ -90,11 +90,17 @@ public class CCE020_DoCopyTask
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					// select category
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:category"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("Audit"));
-				    GlobalVariables.oElement.sendKeys(Keys.ENTER);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
 				    // WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					// Click on hide details from action pop-menu bar
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
+					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Write Results

@@ -65,20 +65,37 @@ public class CCE010_DoUndoDisintermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(5000);
 
 					// Update the Information of the default task
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThing"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
+					// Add details for New Task
 					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-					for (int i = 0; i <= 15; i++)
+					for (int i = 0; i <= 50; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+				    // WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					// Click on hide details from action pop-menu bar
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -86,7 +103,7 @@ public class CCE010_DoUndoDisintermediateTask
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-			
+					
 					// Add info sent flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Sent Flow added";
@@ -243,7 +260,7 @@ public class CCE010_DoUndoDisintermediateTask
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(5000);
 
 					// Click on 'Redo disintermediate' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;

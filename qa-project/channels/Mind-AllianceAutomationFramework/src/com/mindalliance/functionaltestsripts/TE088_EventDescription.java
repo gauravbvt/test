@@ -124,6 +124,10 @@ public class TE088_EventDescription
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);				
 				// About Plan
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
 				// WebElement Synchronization

@@ -109,7 +109,7 @@ public class TE043_DeleteLocaleAttachment
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Delete Attachment
 				GlobalVariables.iStepNo++;

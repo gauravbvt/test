@@ -125,7 +125,7 @@ public class TE042_AttachFileToLocale
 				Thread.currentThread();
 				Thread.sleep(1000);
 				// Delete Attachment
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePlacesAttachment"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
@@ -139,14 +139,6 @@ public class TE042_AttachFileToLocale
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);				
-				// Click on 'Remove this segment' under 'Actions' pop up menu
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-				// Get a handle to the open alert, prompt or confirmation
-				alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

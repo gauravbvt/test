@@ -157,7 +157,7 @@ public class CCE028_DoUndoRedoTransferJobs
 					Thread.currentThread();
 					Thread.sleep(2000);
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field"));
-					GlobalVariables .oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
+					GlobalVariables .oElement.sendKeys(GlobalVariables.testData.get("Agent"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

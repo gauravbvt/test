@@ -128,7 +128,7 @@ public class TE045_AttachPictureToLocale
 				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:submit")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -166,6 +166,10 @@ public class TE045_AttachPictureToLocale
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);				
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);	
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

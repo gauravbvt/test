@@ -105,6 +105,9 @@ public class TE087_UpdateEventName
 				for(int i=0;i<30;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an updated event"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();

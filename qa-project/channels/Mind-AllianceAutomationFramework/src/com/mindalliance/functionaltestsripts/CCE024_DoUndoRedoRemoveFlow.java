@@ -65,21 +65,28 @@ public class CCE024_DoUndoRedoRemoveFlow
 				// Enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Task detail updated";
-				// Task Name
+				// Add details for New Task
 				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-				for (int i = 0; i <= 15; i++)
+				for (int i = 0; i <= 50; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Remove Flow"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// select category
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:category"));
-				GlobalVariables.oElement.sendKeys("Audit");
-			    GlobalVariables.oElement.sendKeys(Keys.ENTER);
-			    // Click on hide details from action pop-menu bar
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				// Click on hide details from action pop-menu bar
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

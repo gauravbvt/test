@@ -17,7 +17,7 @@ public class TE048_LocaleAttachmentAsURL
 {
 	public TE048_LocaleAttachmentAsURL() {
 		try{
-			GlobalVariables.sTestCaseId = "TE019_AgentAttachmentAsURL";
+			GlobalVariables.sTestCaseId = "TE048_LocaleAttachmentAsURL";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -88,6 +88,13 @@ public class TE048_LocaleAttachmentAsURL
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				//Select Locale 
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
 				// WebElement Synchronization
@@ -104,7 +111,7 @@ public class TE048_LocaleAttachmentAsURL
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Attach Attachment as a URL
 				GlobalVariables.iStepNo++;

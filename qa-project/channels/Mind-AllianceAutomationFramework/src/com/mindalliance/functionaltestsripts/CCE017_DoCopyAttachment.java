@@ -92,7 +92,7 @@ public class CCE017_DoCopyAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(5000);
 					
 					// Attach a document
 					GlobalVariables.iStepNo++;
@@ -100,7 +100,7 @@ public class CCE017_DoCopyAttachment
 					GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(5000);
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
 					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:upload"));
@@ -120,12 +120,12 @@ public class CCE017_DoCopyAttachment
 					// Click on copy attachment in task
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Attachment Copied";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/ul/li/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCopyTaskAttachment"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: verify that When clicked on copy option, the respective attachment should be copied
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//div[@class='change-message']/span/span"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCopyAttachmentAssertion")));
 				    if(GlobalVariables.oElement.getText().equalsIgnoreCase("Attachment copied")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
