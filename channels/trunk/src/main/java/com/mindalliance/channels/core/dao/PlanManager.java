@@ -655,8 +655,10 @@ public class PlanManager {
      */
     @Secured( "ROLE_ADMIN" )
     public void setAuthorities( User user, String role, String uri ) {
-        user.getUserInfo().setAuthorities( role, uri, getPlans() );
-        user.setPlan( uri != null ? getDefaultPlan( user ) : null );
+        synchronized ( user ) {
+            user.getUserInfo().setAuthorities( role, uri, getPlans() );
+            user.setPlan( uri != null ? getDefaultPlan( user ) : null );
+        }
     }
 
     public File getVersionDirectory( Plan plan ) {

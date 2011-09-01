@@ -432,7 +432,7 @@
                 <artifactId>maven-jetty-plugin</artifactId>
                 <configuration>
                     <scanIntervalSeconds>5</scanIntervalSeconds>
-                    <contextPath>/</contextPath>
+                    <contextPath>${contextPath}</contextPath>
                     <webAppSourceDirectory>target/channels-1.0-SNAPSHOT</webAppSourceDirectory>
                     <!--<scanTargets>-->
                     <!--<scanTarget>src/main/webapp</scanTarget>-->
@@ -503,7 +503,8 @@
 
     <profiles>
         <profile>
-            <id>default</id>
+            <!-- Deploy webapp on root "/" -->
+            <id>root</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -512,13 +513,15 @@
             </properties>
         </profile>
         <profile>
-            <id>dev</id>
+            <!-- Deploy webapp on "/channels" -->
+            <id>channels</id>
             <properties>
-                <contextPath>/dev</contextPath>
+                <contextPath>/channels</contextPath>
             </properties>
         </profile>
         <profile>
-            <id>http-80</id>
+            <!-- Deploy to tomcat running on localhost:80 -->
+            <id>tomcat-80</id>
             <build>
                 <plugins>
                     <plugin>
