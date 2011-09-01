@@ -3,13 +3,16 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 /**
  * Flow title panel.
@@ -32,8 +35,25 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
+        addConceptual();
         addTitleLabels();
         addOverridesImage();
+    }
+
+    private void addConceptual() {
+        WebMarkupContainer conceptualImage = new WebMarkupContainer( "conceptual" );
+        List<String> causes = getAnalyst().findConceptualCauses( flow );
+        conceptualImage.setVisible( !causes.isEmpty()  );
+        if ( !causes.isEmpty() ) {
+            conceptualImage.add(  new AttributeModifier(
+                    "title",
+                    true,
+                    new Model<String>( "Conceptual: "
+                            + StringUtils.capitalize( ChannelsUtils.listToString( causes, ", and " ) ) )
+            ) );
+        }
+        add( conceptualImage );
+
     }
 
     private void addTitleLabels() {
@@ -43,19 +63,13 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
         add( infoLabel );
         Label postLabel = new Label(
                 "post",
-                new Model<String>( getPost() + "." + conceptualString() + prohibitedString() ) );
+                new Model<String>( getPost() + "." + prohibitedString() ) );
         add( postLabel );
     }
 
     private String prohibitedString() {
         return flow.canGetProhibited() && flow.isProhibited()
                 ? " PROHIBITED."
-                : "";
-    }
-
-    private String conceptualString() {
-        return flow.canGetConceptual() && !flow.isEffectivelyConceptual()
-                ? " Conceptual."
                 : "";
     }
 

@@ -415,7 +415,7 @@ public class Part extends Node implements GeoLocatable, Specable, Conceptualizab
     }
 
     @Override
-    public boolean isEffectivelyConceptual() {
+    public boolean isDeFactoConceptual() {
         return conceptual;
     }
 
@@ -994,7 +994,7 @@ public class Part extends Node implements GeoLocatable, Specable, Conceptualizab
     }
 
     public String getConceptualLabel() {
-        return isEffectivelyConceptual() ? "Yes" : "No";
+        return isDeFactoConceptual() ? "Yes" : "No";
     }
 
     /**

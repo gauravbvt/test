@@ -5,7 +5,42 @@ import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserService;
-import com.mindalliance.channels.core.model.*;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Agreement;
+import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.Classification;
+import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Connector;
+import com.mindalliance.channels.core.model.Dissemination;
+import com.mindalliance.channels.core.model.ElementOfInformation;
+import com.mindalliance.channels.core.model.Employment;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.EventTiming;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Goal;
+import com.mindalliance.channels.core.model.Hierarchical;
+import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.Job;
+import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.ResourceSpec;
+import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.core.model.Subject;
+import com.mindalliance.channels.core.model.Tag;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.engine.nlp.Proximity;
 
 import java.util.List;
@@ -21,7 +56,6 @@ public interface QueryService {
      *
      * @param flow the flow
      * @param assumeFails  whether alternate flows are assumed
-     * @param queryService a query service
      * @return a boolean
      */
     boolean isEssential( Flow flow, boolean assumeFails );

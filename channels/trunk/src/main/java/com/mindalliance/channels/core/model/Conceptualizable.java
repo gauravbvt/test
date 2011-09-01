@@ -16,11 +16,11 @@ public interface Conceptualizable {
     boolean isConceptual();
 
     /**
-     * Whether effectively conceptual.
+     * Whether implicitly or explicitly de facto conceptual.
      *
      * @return a boolean
      */
-    boolean isEffectivelyConceptual();
+    boolean isDeFactoConceptual();
 
     /**
      * Reason given.

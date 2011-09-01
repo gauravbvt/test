@@ -80,4 +80,12 @@ public interface Channelable extends Identifiable {
      * @return a boolean
      */
     boolean isEntity();
+
+    /**
+     * Whether it has a channel for the given medium.
+     * @param medium a transmission medium
+     * @param planLocale a place
+     * @return a boolean
+     */
+    boolean hasChannelFor( TransmissionMedium medium, Place planLocale );
 }

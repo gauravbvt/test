@@ -1,15 +1,17 @@
 package com.mindalliance.channels.engine.analysis;
 
-import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.List;
@@ -344,5 +346,47 @@ public interface Analyst {
      */
     List<EntityRelationship> findEntityRelationships(
             Segment segment, ModelEntity entity );
+
+    /**
+     * Whether a part is effectively conceptual.
+     * @param part a part
+     * @return a boolean
+     */
+    Boolean isEffectivelyConceptual( Part part );
+
+    /**
+     * Whether a flow is effectively conceptual.
+     * @param flow a flow
+     * @return a boolean
+     */
+    Boolean isEffectivelyConceptual( Flow flow );
+
+    /**
+     * Find the causes for the part being conceptual, if any.
+     * @param part a part
+     * @return a list of strings
+     */
+    List<String> findConceptualCauses( Part part );
+
+    /**
+     * Find the causes for the flow being conceptual, if any.
+     * @param flow a flow
+     * @return a list of strings
+     */
+    List<String> findConceptualCauses( Flow flow );
+
+    /**
+     * Find remediations for the part being conceptual, if any.
+     * @param part a part
+     * @return a list of strings
+     */
+    List<String> findConceptualRemediations( Part part );
+
+    /**
+     * Find remediations for the flow being conceptual, if any.
+     * @param flow a flow
+     * @return a list of strings
+     */
+    List<String> findConceptualRemediations( Flow flow );
 
 }

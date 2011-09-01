@@ -208,7 +208,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
                     || flow.isCapability() && flow.isSatisfying();
 
             iconName = imagesDirName +
-                    ( hidingNoop && flow.isEffectivelyConceptual() ? "/connector_blank"
+                    ( hidingNoop && getAnalyst().isEffectivelyConceptual( flow ) ? "/connector_blank"
                             : satisfaction ? "/connector"
                             : "/connector_red" );
         }
@@ -218,7 +218,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
             String[] lines = getNodeLabel( node ).split( "\\|" );
             numLines = Math.min( lines.length, 5 );
             Part part = (Part) node;
-            if ( hidingNoop && part.isEffectivelyConceptual() )
+            if ( hidingNoop && getAnalyst().isEffectivelyConceptual( part ) )
                 iconName = "blank";
             else
                 iconName = imagingService.findIconName( User.plan(), part,

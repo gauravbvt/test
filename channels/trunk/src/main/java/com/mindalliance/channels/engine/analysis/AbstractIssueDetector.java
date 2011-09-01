@@ -32,6 +32,10 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      */
     private QueryService queryService;
     /**
+     * An analyst.
+     */
+    private Analyst analyst;
+    /**
      * A geo service.
      */
     private GeoService geoService;
@@ -91,6 +95,14 @@ public abstract class AbstractIssueDetector implements IssueDetector {
      */
     protected QueryService getQueryService() {
         return queryService;
+    }
+
+    public Analyst getAnalyst() {
+        return analyst;
+    }
+
+    public void setAnalyst( Analyst analyst ) {
+        this.analyst = analyst;
     }
 
     public AttachmentManager getAttachmentManager() {

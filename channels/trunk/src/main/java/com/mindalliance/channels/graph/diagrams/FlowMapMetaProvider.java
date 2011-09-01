@@ -76,7 +76,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
              */
             public String getVertexURL( Node node ) {
                 if ( node.isPart() ) {
-                    if ( isHidingNoop() && ( (Part) node ).isEffectivelyConceptual() ) {
+                    if ( isHidingNoop() && getAnalyst().isEffectivelyConceptual( (Part) node ) ) {
                         return null;
                     } else {
                         Object[] args = {node.getSegment().getId(), node.getId()};
@@ -95,7 +95,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
              */
             public String getEdgeURL( Flow edge ) {
                 // Plan id = 0 for now sice there is only one plan
-                if ( isHidingNoop() && edge.isEffectivelyConceptual() ) {
+                if ( isHidingNoop() && getAnalyst().isEffectivelyConceptual( edge ) ) {
                     return null;
                 } else {
                     Object[] args = {0, edge.getId()};
@@ -234,7 +234,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 Connector connector = (Connector) vertex;
                 Iterator<ExternalFlow> externalFlows = connector.externalFlows();
                 list.add( new DOTAttribute( "fontcolor", "white" ) );
-                if ( !isHidingNoop() || !connector.getInnerFlow().isEffectivelyConceptual() ) {
+                if ( !isHidingNoop() || !getAnalyst().isEffectivelyConceptual( connector.getInnerFlow() ) ) {
                     if ( externalFlows.hasNext() ) {
                         list.add( new DOTAttribute( "tooltip", "Connected to: " + summarizeExternalFlows( externalFlows ) ) );
                     } else {
@@ -254,7 +254,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
         private boolean isInvisible( Node vertex ) {
-            return vertex.isPart() && isHidingNoop() && ( (Part) vertex ).isEffectivelyConceptual();
+            return vertex.isPart() && isHidingNoop() && getAnalyst().isEffectivelyConceptual( (Part) vertex );
         }
 
         private String getHighlightColor( Node vertex ) {
@@ -369,7 +369,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
         private boolean isInvisible( Flow edge ) {
-            return isHidingNoop() && edge.isEffectivelyConceptual();
+            return isHidingNoop() && getAnalyst().isEffectivelyConceptual( edge );
         }
 
 

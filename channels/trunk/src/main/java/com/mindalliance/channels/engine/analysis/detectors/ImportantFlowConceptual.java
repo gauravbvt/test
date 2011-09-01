@@ -4,7 +4,9 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,16 +29,21 @@ public class ImportantFlowConceptual extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
-        if ( flow.isSharing() && flow.isEffectivelyConceptual() ) {
+        if ( flow.isSharing() ) {
+            List<String> causes = getAnalyst().findConceptualCauses( flow );
+            if ( !causes.isEmpty() ) {
             Level importance =  computeSharingFailureSeverity( flow );
             if ( importance.compareTo( Level.Low ) >= 1 ) {
                 Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
-                issue.setDescription( "Flow \""
-                        + flow.getTitle()
-                        + "\" is important but is effectively conceptual." );
+                issue.setDescription( "The flow is important but is conceptual: "
+                        + ChannelsUtils.listToString( causes, ", and " )
+                        + ".");
                 issue.setSeverity( importance );
-                issue.setRemediation( "Make the flow \"operational\"." );
+                List<String> remediations = getAnalyst().findConceptualRemediations( flow );
+                issue.setRemediation( StringUtils.capitalize( ChannelsUtils.listToString( remediations, "\nor ", "\nor " )
+                        + "." ) );
                 issues.add( issue );
+                }
             }
         }
         return issues;

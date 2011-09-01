@@ -4,7 +4,9 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +29,18 @@ public class ImportantTaskConceptual extends AbstractIssueDetector {
     public List<Issue> detectIssues( ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        if ( part.isEffectivelyConceptual() ) {
+        List<String> causes = getAnalyst().findConceptualCauses( part );
+        if ( !causes.isEmpty() ) {
             Level importance = computeTaskFailureSeverity( part );
             if ( importance.compareTo( Level.Low ) >= 1 ) {
                 Issue issue = makeIssue( Issue.ROBUSTNESS, part );
-                issue.setDescription( "Task \""
-                        + part.getTitle()
-                        + "\" is important but is effectively conceptual." );
+                issue.setDescription( "The task is important but is conceptual: "
+                        + ChannelsUtils.listToString( causes, ", and " )
+                        + ".");
                 issue.setSeverity( importance );
-                issue.setRemediation( "Make the task \"operational\"." );
+                List<String> remediations = getAnalyst().findConceptualRemediations( part );
+                issue.setRemediation( StringUtils.capitalize( ChannelsUtils.listToString( remediations, "\nor ", "\nor " )
+                        + "." ) );
                 issues.add( issue );
             }
         }

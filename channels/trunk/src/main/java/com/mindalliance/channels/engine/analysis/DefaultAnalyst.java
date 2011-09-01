@@ -1,10 +1,9 @@
 package com.mindalliance.channels.engine.analysis;
 
-import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
-import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
@@ -12,10 +11,16 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.engine.query.Play;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
@@ -158,8 +163,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public List<Issue> listUnwaivedIssues(
             ModelObject modelObject, Boolean includingPropertySpecific ) {
         return detectUnwaivedIssues(
@@ -169,22 +174,22 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public List<Issue> listUnwaivedIssues( ModelObject modelObject, String property ) {
         return detectUnwaivedIssues( modelObject, property, true );
     }
 
     /**
-      * {@inheritDoc}
-      */
-     public List<Issue> listUnwaivedIssues( Assignment assignment, Boolean includingPropertySpecific ) {
-         return detectUnwaivedIssues( assignment, includingPropertySpecific );
-     }
+     * {@inheritDoc}
+     */
+    public List<Issue> listUnwaivedIssues( Assignment assignment, Boolean includingPropertySpecific ) {
+        return detectUnwaivedIssues( assignment, includingPropertySpecific );
+    }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public List<Issue> listWaivedIssues(
             ModelObject modelObject, Boolean includingPropertySpecific ) {
         return detectWaivedIssues(
@@ -194,18 +199,18 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     /**
-      * {@inheritDoc}
-      */
+     * {@inheritDoc}
+     */
     public List<Issue> listWaivedIssues( ModelObject modelObject, String property ) {
         return detectWaivedIssues( modelObject, property, true );
     }
 
     /**
-      * {@inheritDoc}
-      */
-     public List<Issue> listWaivedIssues( Assignment assignment, Boolean includingPropertySpecific ) {
-         return detectWaivedIssues( assignment, includingPropertySpecific );
-     }
+     * {@inheritDoc}
+     */
+    public List<Issue> listWaivedIssues( Assignment assignment, Boolean includingPropertySpecific ) {
+        return detectWaivedIssues( assignment, includingPropertySpecific );
+    }
 
 
     /**
@@ -478,19 +483,19 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     private List<Issue> detectUnwaivedIssues(
             Assignment assignment,
             boolean includingPropertySpecific ) {
-        List<Issue> issues = new ArrayList<Issue> ();
-        issues.addAll( detectUnwaivedIssues( assignment.getPart(), null, includingPropertySpecific ));
+        List<Issue> issues = new ArrayList<Issue>();
+        issues.addAll( detectUnwaivedIssues( assignment.getPart(), null, includingPropertySpecific ) );
         Actor actor = assignment.getActor();
         if ( actor != null && !actor.isUnknown() ) {
-            issues.addAll( detectUnwaivedIssues( actor, null, includingPropertySpecific ));
+            issues.addAll( detectUnwaivedIssues( actor, null, includingPropertySpecific ) );
         }
         Role role = assignment.getRole();
         if ( role != null && !role.isUnknown() ) {
-            issues.addAll( detectUnwaivedIssues( role, null, includingPropertySpecific ));
+            issues.addAll( detectUnwaivedIssues( role, null, includingPropertySpecific ) );
         }
         Organization org = assignment.getOrganization();
         if ( org != null && !org.isUnknown() ) {
-            issues.addAll( detectUnwaivedIssues( org, null, includingPropertySpecific ));
+            issues.addAll( detectUnwaivedIssues( org, null, includingPropertySpecific ) );
         }
         return issues;
     }
@@ -514,23 +519,22 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     private List<Issue> detectWaivedIssues(
             Assignment assignment,
             boolean includingPropertySpecific ) {
-        List<Issue> issues = new ArrayList<Issue> ();
-        issues.addAll( detectWaivedIssues( assignment.getPart(), null, includingPropertySpecific ));
+        List<Issue> issues = new ArrayList<Issue>();
+        issues.addAll( detectWaivedIssues( assignment.getPart(), null, includingPropertySpecific ) );
         Actor actor = assignment.getActor();
         if ( actor != null && !actor.isUnknown() ) {
-            issues.addAll( detectWaivedIssues( actor, null, includingPropertySpecific ));
+            issues.addAll( detectWaivedIssues( actor, null, includingPropertySpecific ) );
         }
         Role role = assignment.getRole();
         if ( role != null && !role.isUnknown() ) {
-            issues.addAll( detectWaivedIssues( role, null, includingPropertySpecific ));
+            issues.addAll( detectWaivedIssues( role, null, includingPropertySpecific ) );
         }
         Organization org = assignment.getOrganization();
         if ( org != null && !org.isUnknown() ) {
-            issues.addAll( detectWaivedIssues( org, null, includingPropertySpecific ));
+            issues.addAll( detectWaivedIssues( org, null, includingPropertySpecific ) );
         }
         return issues;
     }
-
 
 
     /**
@@ -740,4 +744,211 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         }
         return rels;
     }
+
+    @Override
+    public Boolean isEffectivelyConceptual( Part part ) {
+        return !findConceptualCauses( part ).isEmpty();
+    }
+
+    @Override
+    public List<String> findConceptualCauses( Part part ) {
+        List<String> causes = new ArrayList<String>();
+        if ( part.isProhibited() ) {
+            causes.add( "prohibited" );
+        }
+        if ( part.isDeFactoConceptual() ) {
+            StringBuilder sb = new StringBuilder();
+            sb.append( "de facto" );
+            if ( !part.getConceptualReason().isEmpty() ) {
+                sb.append( " because " );
+                sb.append( ChannelsUtils.smartUncapitalize( part.getConceptualReason() ) );
+            }
+            causes.add( sb.toString() );
+        } else {
+            if ( getQueryService().findAllAssignments( part, false ).isEmpty() ) {
+                causes.add( "no agent is assigned to the task" );
+            }
+        }
+        return causes;
+    }
+
+    @Override
+    public List<String> findConceptualRemediations( Part part ) {
+        List<String> remediations = new ArrayList<String>();
+        if ( part.isProhibited() ) {
+            remediations.add( "remove the prohibition" );
+        }
+        if ( part.isDeFactoConceptual() ) {
+            remediations.add( "un-mark the task as de facto conceptual" );
+        } else {
+            if ( getQueryService().findAllAssignments( part, false ).isEmpty() ) {
+                remediations.add( "explicitly assign an agent to the task" );
+                remediations.add( "profile an agent to match the task specifications" );
+                remediations.add( "modify the task specifications so that it matches at least one agent" );
+            }
+        }
+        return remediations;
+    }
+
+
+    @Override
+    public Boolean isEffectivelyConceptual( Flow flow ) {
+        return !findConceptualCauses( flow ).isEmpty();
+    }
+
+    @Override
+    public List<String> findConceptualCauses( Flow flow ) {
+        List<String> causes = new ArrayList<String>();
+        if ( flow.isProhibited() ) {
+            causes.add( "prohibited" );
+        }
+        if ( flow.isDeFactoConceptual() ) {
+            StringBuilder sb = new StringBuilder();
+            sb.append( "de facto" );
+            if ( !flow.getConceptualReason().isEmpty() ) {
+                sb.append( " because " );
+                sb.append( ChannelsUtils.smartUncapitalize( flow.getConceptualReason() ) );
+            }
+            causes.add( sb.toString() );
+        } else {
+            if ( flow.isNeed() && isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
+                causes.add( "the task is conceptual" );
+            } else if ( flow.isCapability() && isEffectivelyConceptual( (Part) flow.getSource() ) ) {
+                    causes.add( "the task is conceptual" );
+            } else if ( flow.isSharing() ) {
+                if ( flow.getEffectiveChannels().isEmpty() ) {
+                    causes.add( "no channels is identified" );
+                }
+                if ( isEffectivelyConceptual( (Part) flow.getSource() ) ) {
+                    causes.add( "the source task is conceptual" );
+                }
+                if ( isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
+                        causes.add( "the target task is conceptual" );
+                }
+                List<Commitment> commitments = getQueryService().findAllCommitments( flow );
+                if ( commitments.isEmpty() ) {
+                    causes.add( "no agent has sharing commitments" );
+                } else {
+                    List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
+                    if ( allAgentsUnqualified( commitments, mediaUsed ) ) {
+                        causes.add( "no agent is qualified to transmit" );
+                    }
+                    if ( allMissingContactInfo( commitments, mediaUsed ) ) {
+                        causes.add( "contact info is missing for all receiving agents" );
+                    }
+                }
+            }
+        }
+        return causes;
+    }
+
+    @Override
+    public List<String> findConceptualRemediations( Flow flow ) {
+        List<String> remediations = new ArrayList<String>();
+        if ( flow.isProhibited() ) {
+            remediations.add( "remove the prohibition" );
+        }
+        if ( flow.isDeFactoConceptual() ) {
+            remediations.add( "un-mark the task as de facto conceptual" );
+        } else {
+            if ( flow.isNeed() && isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
+                remediations.add( "make the task \"operational\"" );
+            } else if ( flow.isCapability() && isEffectivelyConceptual( (Part) flow.getSource() ) ) {
+                    remediations.add( "make the task \"operational\"" );
+            } else if ( flow.isSharing() ) {
+                if ( flow.getEffectiveChannels().isEmpty() ) {
+                    remediations.add( "add at least one channel to the flow" );
+                }
+                if ( isEffectivelyConceptual( (Part) flow.getSource() ) ) {
+                    remediations.add( "make the source task \"operational\""  );
+                }
+                if ( isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
+                        remediations.add( "make the target task \"operational\""  );
+                }
+                List<Commitment> commitments = getQueryService().findAllCommitments( flow );
+                if ( commitments.isEmpty() ) {
+                    remediations.add( "change the definitions of the source and/or target tasks so that agents are assigned to both" );
+                    remediations.add( "add jobs to relevant organizations so that agents can be assigned to source and/or target tasks" );
+                } else {
+                    List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
+                    if ( allAgentsUnqualified( commitments, mediaUsed ) ) {
+                        remediations.add( "make sure that agents assigned to the source task are qualified to use the transmission media" );
+                    }
+                    if ( allMissingContactInfo( commitments, mediaUsed ) ) {
+                        remediations.add( "make sure that agents assigned to the receiving tasks have contact information" );
+                    }
+                }
+            }
+        }
+        return remediations;
+    }
+
+
+    // There is no medium used in fulfilling commitments such that
+    // the medium requires no qualification or at least one committer is qualified.
+
+    private boolean allAgentsUnqualified( final List<Commitment> commitments, List<TransmissionMedium> mediaUsed ) {
+        boolean allAgentsUnqualified = !CollectionUtils.exists(
+                mediaUsed,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final TransmissionMedium medium = (TransmissionMedium) object;
+                        final Place planLocale = planLocale();
+                        return medium.getQualification() == null
+                                || CollectionUtils.exists(
+                                commitments,
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        Commitment commitment = (Commitment) object;
+                                        Actor sender = commitment.getCommitter().getActor();
+                                        return sender.narrowsOrEquals( medium.getQualification(), planLocale );
+                                    }
+                                }
+                        );
+
+                    }
+                }
+        );
+        return !mediaUsed.isEmpty() && allAgentsUnqualified;
+
+    }
+
+    // There is no medium used such that no address is required or the medium is not unicast
+    // or at least one beneficiary has a known address for that medium.
+    private boolean allMissingContactInfo( final List<Commitment> commitments, List<TransmissionMedium> mediaUsed ) {
+        boolean allMissingContactInfo = !CollectionUtils.exists(
+                mediaUsed,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final TransmissionMedium medium = (TransmissionMedium) object;
+                        final Place planLocale = planLocale();
+                        return !medium.requiresAddress()
+                                || !medium.isUnicast()
+                                || CollectionUtils.exists(
+                                commitments,
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        Commitment commitment = (Commitment) object;
+                                        Actor receiver = commitment.getBeneficiary().getActor();
+                                        return receiver.hasChannelFor( medium, planLocale );
+                                    }
+                                }
+                        );
+
+                    }
+                }
+        );
+        return !mediaUsed.isEmpty() && allMissingContactInfo;
+
+    }
+
+    private Place planLocale() {
+        return User.current().getPlan().getLocale();
+    }
+
+
 }

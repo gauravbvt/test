@@ -379,7 +379,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     private boolean isVisible( Part part ) {
-        return !( (FlowMapMetaProvider) getMetaProvider() ).isHidingNoop() || !part.isEffectivelyConceptual();
+        FlowMapMetaProvider metaProvider = (FlowMapMetaProvider) getMetaProvider();
+        return !metaProvider.isHidingNoop() || !metaProvider.getAnalyst().isEffectivelyConceptual( part );
     }
 
     private String ifVisibleColor( Part part, String color ) {

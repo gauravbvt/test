@@ -160,9 +160,6 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
         if ( part.isAsTeam() ) {
             sb.append( " Assignees work as a team." );
         }
-        if ( part.isConceptual() ) {
-            sb.append( " Conceptual." );
-        }
         if ( part.isProhibited() ) {
             sb.append( " PROHIBITED." );
         }

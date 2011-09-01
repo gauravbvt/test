@@ -604,14 +604,17 @@ public final class ChannelsUtils {
     }
 
     public static String listToString( List<?> list, String lastSep ) {
+        return listToString( list, ", ", lastSep );
+    }
 
+    public static String listToString( List<?> list, String sep, String lastSep ) {
         StringWriter w = new StringWriter();
         for ( int i = 0; i < list.size(); i++ ) {
             w.append( String.valueOf( list.get( i ) ) );
             if ( i == list.size() - 2 )
                 w.append( lastSep );
             else if ( i != list.size() - 1 )
-                w.append( ", " );
+                w.append( sep );
         }
         return w.toString();
     }

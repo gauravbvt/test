@@ -79,6 +79,19 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
     }
 
     @Override
+    public boolean hasChannelFor( final TransmissionMedium medium, final Place planLocale ) {
+        return CollectionUtils.exists(
+                getEffectiveChannels(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Channel)object ).getMedium().narrowsOrEquals( medium, planLocale );
+                    }
+                }
+                );
+    }
+
+    @Override
     public boolean isUndefined() {
         return super.isUndefined() && channels.isEmpty();
     }

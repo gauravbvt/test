@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.Command;
 import com.mindalliance.channels.engine.command.commands.AddPart;
@@ -20,6 +21,7 @@ import com.mindalliance.channels.pages.components.social.SocialPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -223,11 +225,20 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 "class",
                 true,
                 new Model<String>( cssClasses() ) ) );
+        List<String> conceptualCauses = getAnalyst().findConceptualCauses( getPart() );
+        if ( !conceptualCauses.isEmpty() ) {
+            taskTitleContainer.add(  new AttributeModifier(
+                    "title",
+                    true,
+                    new Model<String>( "Conceptual: "
+                            + StringUtils.capitalize( ChannelsUtils.listToString( conceptualCauses, ", and " ) ) )
+            ) );
+        }
         addOrReplace( taskTitleContainer );
     }
 
     private String cssClasses() {
-        return !getPart().isConceptual() ? "task-title" : "task-title-noop";
+        return !getAnalyst().isEffectivelyConceptual( getPart() ) ? "task-title" : "task-title-noop";
     }
 
     private void addReceivesFlowPanel() {

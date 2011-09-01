@@ -308,13 +308,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.referencesEventPhase = referencesEventPhase;
     }
 
-    public boolean isEffectivelyConceptual() {
+    public boolean isDeFactoConceptual() {
         return isConceptual()
-                || isNeed() && ( (Part) getTarget() ).isEffectivelyConceptual()
-                || isCapability() && ( (Part) getSource() ).isEffectivelyConceptual()
+                || isNeed() && ( (Part) getTarget() ).isDeFactoConceptual()
+                || isCapability() && ( (Part) getSource() ).isDeFactoConceptual()
                 || isSharing() &&
-                    ( ( (Part) getSource() ).isEffectivelyConceptual()
-                        || ( (Part) getTarget() ).isEffectivelyConceptual() );
+                    ( ( (Part) getSource() ).isDeFactoConceptual()
+                        || ( (Part) getTarget() ).isDeFactoConceptual() );
     }
 
     public boolean canGetConceptual() {
@@ -782,6 +782,19 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
     }
 
+    @Override
+    public boolean hasChannelFor( final TransmissionMedium medium, final Place planLocale ) {
+        return CollectionUtils.exists(
+                getEffectiveChannels(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Channel)object ).getMedium().narrowsOrEquals( medium, planLocale );
+                    }
+                }
+                );
+    }
+
     /**
      * Get part being contacted if any.
      *
@@ -1126,7 +1139,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     public String getConceptualLabel() {
-        return isEffectivelyConceptual() ? "Yes" : "No";
+        return isDeFactoConceptual() ? "Yes" : "No";
     }
 
     /**
@@ -1221,6 +1234,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     }
                 }
         );
+    }
+
+    public List<TransmissionMedium> transmissionMedia() {
+        Set<TransmissionMedium> media = new HashSet<TransmissionMedium>(  );
+        for ( Channel channel : getEffectiveChannels() ) {
+            media.add(  channel.getMedium() );
+        }
+        return new ArrayList<TransmissionMedium>( media );
     }
 
     /**
