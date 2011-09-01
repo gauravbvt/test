@@ -755,11 +755,6 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     "part.category.label",
                     EMPTY
             ) );
-            columns.add( makeColumn(
-                    "Conceptual",
-                    "part.conceptualLabel",
-                    EMPTY
-            ) );
             columns.add( makeFilterableLinkColumn(
                     "Location",
                     "part.location",
@@ -876,11 +871,6 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     "sharing.target.location.name",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
-            columns.add( makeColumn(
-                    "Conceptual",
-                    "sharing.conceptualLabel",
-                    EMPTY
-            ) );
             // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "commitments",

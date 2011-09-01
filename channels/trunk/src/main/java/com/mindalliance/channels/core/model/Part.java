@@ -993,10 +993,6 @@ public class Part extends Node implements GeoLocatable, Specable, Conceptualizab
         return results;
     }
 
-    public String getConceptualLabel() {
-        return isDeFactoConceptual() ? "Yes" : "No";
-    }
-
     /**
      * Find a need for a subject, if any.
      *

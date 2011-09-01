@@ -812,18 +812,22 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             causes.add( sb.toString() );
         } else {
             if ( flow.isNeed() && isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
-                causes.add( "the task is conceptual" );
+                causes.add( "this task is conceptual" );
             } else if ( flow.isCapability() && isEffectivelyConceptual( (Part) flow.getSource() ) ) {
-                    causes.add( "the task is conceptual" );
+                causes.add( "this task is conceptual" );
             } else if ( flow.isSharing() ) {
                 if ( flow.getEffectiveChannels().isEmpty() ) {
                     causes.add( "no channels is identified" );
                 }
                 if ( isEffectivelyConceptual( (Part) flow.getSource() ) ) {
-                    causes.add( "the source task is conceptual" );
+                    causes.add( "the task \""
+                            + ((Part) flow.getSource()).getTask()
+                            + "\" is conceptual" );
                 }
                 if ( isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
-                        causes.add( "the target task is conceptual" );
+                    causes.add( "the task \""
+                            + ((Part) flow.getTarget()).getTask()
+                            + "\" is conceptual" );
                 }
                 List<Commitment> commitments = getQueryService().findAllCommitments( flow );
                 if ( commitments.isEmpty() ) {
@@ -831,7 +835,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 } else {
                     List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
                     if ( allAgentsUnqualified( commitments, mediaUsed ) ) {
-                        causes.add( "no agent is qualified to transmit" );
+                        causes.add( "no agent is qualified to use any of the transmission media" );
                     }
                     if ( allMissingContactInfo( commitments, mediaUsed ) ) {
                         causes.add( "contact info is missing for all receiving agents" );
@@ -849,21 +853,25 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             remediations.add( "remove the prohibition" );
         }
         if ( flow.isDeFactoConceptual() ) {
-            remediations.add( "un-mark the task as de facto conceptual" );
+            remediations.add( "un-mark this flow as de facto conceptual" );
         } else {
             if ( flow.isNeed() && isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
-                remediations.add( "make the task \"operational\"" );
+                remediations.add( "make this task not conceptual" );
             } else if ( flow.isCapability() && isEffectivelyConceptual( (Part) flow.getSource() ) ) {
-                    remediations.add( "make the task \"operational\"" );
+                remediations.add( "make this task not conceptual" );
             } else if ( flow.isSharing() ) {
                 if ( flow.getEffectiveChannels().isEmpty() ) {
                     remediations.add( "add at least one channel to the flow" );
                 }
                 if ( isEffectivelyConceptual( (Part) flow.getSource() ) ) {
-                    remediations.add( "make the source task \"operational\""  );
+                    remediations.add( "make the task \""
+                            + ((Part) flow.getSource()).getTask()
+                            + "\" not conceptual" );
                 }
                 if ( isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
-                        remediations.add( "make the target task \"operational\""  );
+                    remediations.add( "make the task \""
+                            + ((Part) flow.getTarget()).getTask()
+                             + "\" not conceptual" );
                 }
                 List<Commitment> commitments = getQueryService().findAllCommitments( flow );
                 if ( commitments.isEmpty() ) {
@@ -872,10 +880,11 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 } else {
                     List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
                     if ( allAgentsUnqualified( commitments, mediaUsed ) ) {
-                        remediations.add( "make sure that agents assigned to the source task are qualified to use the transmission media" );
+                        remediations.add( "make sure that agents are qualified to use the transmission media" );
+                        remediations.add( "add channels with transmission media requiring no qualification" );
                     }
                     if ( allMissingContactInfo( commitments, mediaUsed ) ) {
-                        remediations.add( "make sure that agents assigned to the receiving tasks have contact information" );
+                        remediations.add( "make sure that the agents contacted have known contact information" );
                     }
                 }
             }
@@ -902,8 +911,10 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                     @Override
                                     public boolean evaluate( Object object ) {
                                         Commitment commitment = (Commitment) object;
-                                        Actor sender = commitment.getCommitter().getActor();
-                                        return sender.narrowsOrEquals( medium.getQualification(), planLocale );
+                                        return commitment.getCommitter().getActor()
+                                                .narrowsOrEquals( medium.getQualification(), planLocale )
+                                                && commitment.getBeneficiary()
+                                                .getActor().narrowsOrEquals( medium.getQualification(), planLocale );
                                     }
                                 }
                         );
@@ -933,7 +944,10 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                     @Override
                                     public boolean evaluate( Object object ) {
                                         Commitment commitment = (Commitment) object;
-                                        Actor receiver = commitment.getBeneficiary().getActor();
+                                        boolean isRequest = commitment.getSharing().isAskedFor();
+                                        Actor receiver = isRequest
+                                                ? commitment.getCommitter().getActor()
+                                                : commitment.getBeneficiary().getActor();
                                         return receiver.hasChannelFor( medium, planLocale );
                                     }
                                 }

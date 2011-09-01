@@ -10,11 +10,11 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
-import com.mindalliance.channels.pages.AbstractChannelsWebPage;
-import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.query.Assignments;
 import com.mindalliance.channels.engine.query.QueryService;
-import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
+import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
@@ -105,7 +105,7 @@ abstract public class AbstractParticipantPage  extends AbstractChannelsWebPage {
                         : new AggregatedContact( queryService, profile.getActor(), getUser().getUsername() );
         contact.resolveChannels( queryService );
         add(
-                new Label( "reportTitle", getReportTitle() ),
+                new Label( "reportTitle", getReportTitle() + " for " + contact.getActorName() ),
                 new Label( "reportName", getReportName() ),
                 new UserFeedbackPanel( "planFeedback", plan, "Send overall feedback" ),
                 new Label( "reportType", getReportType() ),

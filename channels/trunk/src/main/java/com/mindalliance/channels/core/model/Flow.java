@@ -309,12 +309,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     public boolean isDeFactoConceptual() {
-        return isConceptual()
+        return isConceptual()/*
                 || isNeed() && ( (Part) getTarget() ).isDeFactoConceptual()
                 || isCapability() && ( (Part) getSource() ).isDeFactoConceptual()
                 || isSharing() &&
                     ( ( (Part) getSource() ).isDeFactoConceptual()
-                        || ( (Part) getTarget() ).isDeFactoConceptual() );
+                        || ( (Part) getTarget() ).isDeFactoConceptual() )*/;
     }
 
     public boolean canGetConceptual() {
@@ -1136,10 +1136,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public String getNature() {
         return isSharing() ? "Flow" : isNeed() ? "Need" : "Capability";
-    }
-
-    public String getConceptualLabel() {
-        return isDeFactoConceptual() ? "Yes" : "No";
     }
 
     /**
