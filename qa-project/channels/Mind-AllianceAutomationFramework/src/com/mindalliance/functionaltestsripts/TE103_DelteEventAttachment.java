@@ -34,34 +34,6 @@ public class TE103_DelteEventAttachment
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
-				// Click on 'Add new segment' option under 'Actions' pop up menu
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New segment added";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
-				// Enter the details for new segment
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Details entered";
-				GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
-					for (int i = 0; i <= 8; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Delete Attachment Of Event"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
 				// Click on 'done' button
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Segment updated";
@@ -137,6 +109,18 @@ public class TE103_DelteEventAttachment
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+
+				// Click on 'URL' radio button
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="URL radio button clicked";			
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathURL"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				// Attach File to an event
 				GlobalVariables.iStepNo++;
@@ -203,14 +187,6 @@ public class TE103_DelteEventAttachment
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Click on 'Remove this segment' under 'Actions' pop up menu
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-				// Get a handle to the open alert, prompt or confirmation
-				alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

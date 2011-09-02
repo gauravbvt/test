@@ -88,7 +88,7 @@ public class TE030_ShowAgentIssueDetails
 				//Click on 'Issues' option under 'Show' Pop Up Menu
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Issue Details Displayed to User";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("issues"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("Issues"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);

@@ -118,7 +118,7 @@ public class TE051_LocaleAttachmentAsURLUsingNamedValue
 				Thread.sleep(5000);
 				//Assertion : Verify that URL gets Attached
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAgentURLAssertion")));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))){
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URLAssertion"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -165,7 +165,7 @@ public class TE051_LocaleAttachmentAsURLUsingNamedValue
 				Thread.currentThread();
 				Thread.sleep(1000);
 				GlobalVariables.oDriver.quit();
-			      
+			    
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			}

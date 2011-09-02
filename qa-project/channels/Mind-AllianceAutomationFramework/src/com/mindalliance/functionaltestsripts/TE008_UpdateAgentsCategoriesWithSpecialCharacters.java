@@ -104,7 +104,7 @@ public class TE008_UpdateAgentsCategoriesWithSpecialCharacters
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get(""))){
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get(")(*&^%$#!"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

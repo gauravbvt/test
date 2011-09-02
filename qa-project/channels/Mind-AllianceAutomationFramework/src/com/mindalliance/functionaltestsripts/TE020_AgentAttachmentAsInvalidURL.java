@@ -102,13 +102,16 @@ public class TE020_AgentAttachmentAsInvalidURL
 				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(5000);
 				//Assertion : Verify that URL gets Attached
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAgentURLAssertion")));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))){
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URLAssertion"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

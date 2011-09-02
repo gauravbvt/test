@@ -12,7 +12,7 @@ public class TE031_ShowAgentDetails
 {
 	public TE031_ShowAgentDetails() {
 		try{
-			GlobalVariables.sTestCaseId = "TE030_ShowAgentIssueDetails";
+			GlobalVariables.sTestCaseId = "TE031_ShowAgentDetails";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);

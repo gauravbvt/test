@@ -125,7 +125,7 @@ public class TE048_LocaleAttachmentAsURL
 				Thread.sleep(5000);
 				//Assertion : Verify that URL gets Attached
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAgentURLAssertion")));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))){
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URLAssertion"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

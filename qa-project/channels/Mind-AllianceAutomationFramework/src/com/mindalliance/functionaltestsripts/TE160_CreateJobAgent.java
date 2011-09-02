@@ -127,24 +127,28 @@ public class TE160_CreateJobAgent
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Title
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Title"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Role
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Role"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Jury
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Jurisdiction"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Supervisor
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Supervisor"));
 					// WebElement Synchronization

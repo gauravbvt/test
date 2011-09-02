@@ -97,6 +97,7 @@ public class TE141_OrganizationAttachmentOption
 				    if(options.get(0).getText().equals(GlobalVariables.viewElements.get("picture")) &&
 				    		options.get(1).getText().equals(GlobalVariables.viewElements.get("reference")) &&
 					options.get(2).getText().equals(GlobalVariables.viewElements.get("policy"))){
+				    	options.get(1).setSelected();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

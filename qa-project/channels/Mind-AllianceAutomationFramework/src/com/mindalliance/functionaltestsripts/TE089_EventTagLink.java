@@ -107,7 +107,7 @@ public class TE089_EventTagLink
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);				
+				Thread.sleep(2000);
 				
 				// Click on 'done' button
 				GlobalVariables.iStepNo++ ;
