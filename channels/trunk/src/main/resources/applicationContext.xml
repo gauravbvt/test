@@ -89,6 +89,7 @@ CONFIGURATION NOTES:
         <property name="dotPath" value="/usr/bin"/>
         <property name="algo" value="dot"/>
         <property name="timeout" value="10000"/>
+        <property name="tempDir" value="${channels.home}${file.separator}temp"/>
     </bean>
 
     <bean id="analyst" class="com.mindalliance.channels.engine.analysis.DefaultAnalyst" init-method="start"

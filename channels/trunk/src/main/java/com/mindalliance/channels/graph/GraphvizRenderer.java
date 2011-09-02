@@ -3,6 +3,8 @@ package com.mindalliance.channels.graph;
 import org.jgrapht.Graph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,6 +16,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,17 +43,20 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     /**
      * The formats to generate.
      */
-    public static String[] FORMATS = {DiagramFactory.IMAGE_MAP, DiagramFactory.PNG};
-
-    private static final String TEMP = "temp";
+    private static final List<String> FORMATS = Arrays.asList( DiagramFactory.IMAGE_MAP, DiagramFactory.PNG );
 
     /**
-     * The path to the dot executable
+     * Where temporary files are created.
+     */
+    private Resource tempDir = new FileSystemResource( "/tmp/channels-graphs" );
+
+    /**
+     * The path to the dot executable.
      */
     private String dotPath = "/usr/bin/";
 
     /**
-     * Drawing algorithm (neato, dot...)
+     * Drawing algorithm (neato, dot...).
      */
     private String algo = "dot";
 
@@ -59,11 +65,11 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      */
     private long timeout = 60000L;
     /**
-     * The vertices to highlight
+     * The vertices to highlight.
      */
     private Set<V> highlightedVertices;
     /**
-     * The edges to highlight
+     * The edges to highlight.
      */
     private Set<E> highlightedEdges;
     /**
@@ -83,6 +89,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         dotPath = path;
     }
 
+    @Override
     public void setAlgo( String algo ) {
         this.algo = algo;
     }
@@ -92,31 +99,35 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     }
 
     /**
-     * Highlights a vertex
+     * Highlights a vertex.
      *
      * @param vertex -- the vertex to highlight
      */
+    @Override
     public void highlightVertex( V vertex ) {
         highlightedVertices.add( vertex );
     }
 
     /**
-     * Highlights an edge
+     * Highlights an edge.
      *
      * @param edge -- the edge to highlight
      */
+    @Override
     public void highlightEdge( E edge ) {
         highlightedEdges.add( edge );
     }
 
     /**
-     * Removes all highlights
+     * Removes all highlights.
      */
+    @Override
     public void resetHighlight() {
         highlightedVertices = new HashSet<V>();
         highlightedEdges = new HashSet<E>();
     }
 
+    @Override
     public GraphRenderer<V,E> cloneSelf() {
         GraphvizRenderer<V,E> gr = new GraphvizRenderer<V,E>();
         gr.setAlgo( algo );
@@ -125,16 +136,13 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         return gr;
     }
 
-    /**
-     * {@inheritDoc}}
-     */
     @Override
     public void render( Graph<V, E> graph,
                         StyledDOTExporter<V, E> dotExporter,
                         String format,
                         String ticket,
                         OutputStream output ) throws DiagramException {
-        assert( ticket != null );
+        assert ticket != null;
         dotExporter.setHighlightedVertices( highlightedVertices );
         dotExporter.setHighlightedEdges( highlightedEdges );
         // System.out.println( dot );
@@ -220,15 +228,15 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         }
     }
 
-    private File makeFile( String name, String format ) {
+    private File makeFile( String name, String format ) throws IOException {
         String fileSep = System.getProperty( "file.separator" );
-        File tempDir = new File( TEMP );
-        if ( !tempDir.isDirectory() ) {
-            boolean success = tempDir.mkdir();
+        File file = tempDir.getFile();
+        if ( !file.isDirectory() ) {
+            boolean success = file.mkdir();
             if ( !success )
-                throw new DiagramException( "Failed to create temp directory " + TEMP );
+                throw new DiagramException( "Failed to create temp directory " + file.getAbsolutePath() );
         }
-        return new File( TEMP + fileSep + name  + "." + format );
+        return new File( file, name  + '.' + format );
     }
 
     /**
@@ -245,7 +253,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                            String name,
                            String format,
                            OutputStream output ) throws IOException, InterruptedException {
-        assert Arrays.asList( FORMATS ).contains( format );
+        assert FORMATS.contains( format );
         String command = getDotPath()
                 + System.getProperty( "file.separator" )
                 + algo
@@ -307,28 +315,28 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         }
     }
 
-    private String getFormatAndOutputParameters( String name ) {
+    private String getFormatAndOutputParameters( String name ) throws IOException {
         String fileSep = System.getProperty( "file.separator" );
         StringBuilder sb = new StringBuilder();
-            for ( String format : Arrays.asList( FORMATS ) ) {
-                sb.append( " -T" );
-                sb.append( format );
-                sb.append( " -o");
-                sb.append( TEMP );
-                sb.append( fileSep );
-                sb.append( name );
-                sb.append( "." );
-                sb.append( format );
-            }
+        for ( String format : FORMATS ) {
+            sb.append( " -T" );
+            sb.append( format );
+            sb.append( " -o" );
+            sb.append( tempDir.getFile().getAbsolutePath() );
+            sb.append( fileSep );
+            sb.append( name );
+            sb.append( '.' );
+            sb.append( format );
+        }
         return sb.toString();
     }
 
-    private String sanitize( String ticket ) {
+    private static String sanitize( String ticket ) {
         return ticket.replaceAll( "\\W", "_" );
     }
 
     /**
-     * Produces a description of a graph in DOT format
+     * Produces a description of a graph in DOT format.
      *
      * @param graph       -- the graph to be converted to DOT format
      * @param dotExporter -- a DOT generator
@@ -342,9 +350,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         return writer.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void highlight( V vertex, E edge ) {
         resetHighlight();
 
@@ -354,16 +360,25 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
             highlightEdge( edge );
     }
 
+    public Resource getTempDir() {
+        return tempDir;
+    }
+
+    public void setTempDir( Resource tempDir ) {
+        LOG.debug( "Setting temp dir to: {}", tempDir );
+        this.tempDir = tempDir;
+    }
+
     /**
-     * Task that interrupts a threads when run
+     * Task that interrupts a threads when run.
      */
     private class InterruptScheduler extends TimerTask {
         /**
-         * Thread to interrupt
+         * Thread to interrupt.
          */
         private Thread target;
 
-        public InterruptScheduler( Thread target ) {
+        private InterruptScheduler( Thread target ) {
             this.target = target;
         }
 
