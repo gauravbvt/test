@@ -26,7 +26,7 @@
 <allOrganizations>All organizations</allOrganizations>
 <allTypes>All types</allTypes>
 <allSegments>All segments</allSegments>
-<procedureMap>Procedure map</procedureMap>
+<procedureMap>Procedure Map</procedureMap>
 <channelsAdministration>Channels administration</channelsAdministration>
 <whosWho>Who's who</whosWho>
 <allIssues>All issues</allIssues>
@@ -78,7 +78,7 @@
 <showAllMessages>show all messages</showAllMessages>
 <showElements>Show elements</showElements>
 <copyNeed>Copy need</copyNeed>
-<issues>Issues</issues>
+<issues>issues</issues>
 <Issues>Issues</Issues>
 <agents>Agents</agents>
 <network>Network</network>
