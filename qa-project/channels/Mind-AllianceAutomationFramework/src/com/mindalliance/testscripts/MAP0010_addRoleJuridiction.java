@@ -135,7 +135,7 @@ public class MAP0010_addRoleJuridiction
 					// Enter  Role, Title, Jurisdiction and supervisor for an agent inside 'Job' section
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Details Entered";
-					String Agent="Agent";
+					String Agent="Agent 1";
 					if (GlobalVariables.sBrowser.equals("Internet Explorer")) {
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName))	;
 					GlobalVariables.oElement.click();

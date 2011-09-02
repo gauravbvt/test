@@ -272,7 +272,7 @@ public class MAP0024_moveTask
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(5000);
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
@@ -281,7 +281,17 @@ public class MAP0024_moveTask
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
-					
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
+					options = GlobalVariables.oDropDown.getOptions();
+				    for(WebElement option : options) {
+				    	if(option.getText().equals("Segment For Move Task")){
+				    			option.setSelected();
+				    			break;
+				    	}
+				    }
+				    // WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation

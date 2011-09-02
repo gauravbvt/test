@@ -93,9 +93,13 @@ public class MAC0052_RedoSetTaskFromCopy {
 				Thread.sleep(5000);
 				// Click on hide details from action pop-menu bar
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 				
 				// Click on 'Copy task' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;

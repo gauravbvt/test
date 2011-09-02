@@ -68,7 +68,7 @@ public class MAV0138_viewIssueOfEvent
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Event"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
@@ -94,10 +94,10 @@ public class MAV0138_viewIssueOfEvent
 				// Click on issue under show pop up menu
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event issue";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("issues"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("Issues"));
 				// Assertion: Verify that "Event details" page loaded 
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseAssertionDetails")));
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("issues"))) {
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("Issues"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -125,13 +125,23 @@ public class MAV0138_viewIssueOfEvent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				// Remove Event
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				
-				
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allEvents"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				// Remove Event
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);				
 				
 			    // Call logout()
 			    GlobalVariables.iStepNo++ ;

@@ -119,11 +119,11 @@ public class MAV0144_viewNetworkOfOrganizations
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				/*// Remove Organizations
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/span/a/span")).click();
+				// Remove Organizations
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);*/
+				Thread.sleep(3000);
 				
 			    // Call logout()
 			    GlobalVariables.iStepNo++ ;
