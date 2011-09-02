@@ -84,6 +84,12 @@ public class ActorConverter extends EntityConverter {
             context.convertAnother( clearance );
             writer.endNode();
         }
+        // languages spoken
+        for ( String lang : actor.getLanguages() ) {
+            writer.startNode( "language" );
+            context.convertAnother( lang );
+            writer.endNode();
+        }
     }
 
     /**
@@ -112,6 +118,8 @@ public class ActorConverter extends EntityConverter {
         } else if ( nodeName.equals( "clearance" ) ) {
             Classification clearance = (Classification) context.convertAnother( plan, Classification.class );
             actor.addClearance( clearance );
+        } else if ( nodeName.equals( "language" ) ) {
+            actor.addLanguage( reader.getValue() );
         } else if ( nodeName.equals( "availability" ) ) {
             Availability availability = (Availability) context.convertAnother( plan, Availability.class );
             actor.setAvailability(  availability );

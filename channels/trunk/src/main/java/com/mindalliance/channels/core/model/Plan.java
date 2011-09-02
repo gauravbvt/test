@@ -1,7 +1,7 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.Attachment.Type;
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.model.Phase.Timing;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -35,6 +35,10 @@ public class Plan extends ModelObject {
 
     /** Timing of the default phase. */
     public static final Timing DEFAULT_PHASE_TIMING = Timing.Concurrent;
+    /**
+     * Default default spoken language.
+     */
+    public static final String DEFAULT_LANGUAGE = "English";
 
     /** Whether the plan is meant as a template. */
     private boolean template;
@@ -90,6 +94,10 @@ public class Plan extends ModelObject {
 
     /** The plan's locale. */
     private Place locale;
+    /**
+     * The plan's default spoken language.
+     */
+    private String defaultLanguage = DEFAULT_LANGUAGE;
 
     private String plannerSupportCommunity = "";
 
@@ -160,6 +168,17 @@ public class Plan extends ModelObject {
 
     public void setLocale( Place locale ) {
         this.locale = locale;
+    }
+
+    public String getDefaultLanguage() {
+        return defaultLanguage == null || defaultLanguage.isEmpty()
+                ? DEFAULT_LANGUAGE
+                : defaultLanguage;
+    }
+
+    public void setDefaultLanguage( String defaultLanguage ) {
+        if ( defaultLanguage != null )
+            this.defaultLanguage =  defaultLanguage;
     }
 
     public String getPlannerSupportCommunity() {

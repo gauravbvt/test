@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.engine.command.commands.UpdateObject;
@@ -16,10 +17,12 @@ import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
+import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -32,8 +35,11 @@ import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -95,6 +101,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     private WebMarkupContainer assignmentsContainer;
     private WebMarkupContainer commitmentsContainer;
     private WebMarkupContainer moreContainer;
+    private WebMarkupContainer mediaNotDeployedContainer;
 
     public OrganizationDetailsPanel(
             String id,
@@ -114,6 +121,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         addParentField();
         addLocationField();
         addContactInfoPanel();
+        addMediaNotDeployedPanel();
         addReceiveFields();
         addMoreLink();
         addTabPanel();
@@ -220,6 +228,137 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 new Model<Channelable>( organization ) ) );
     }
 
+    private void addMediaNotDeployedPanel() {
+        mediaNotDeployedContainer = new WebMarkupContainer( "mediaNotDeployedContainer" );
+        mediaNotDeployedContainer.setVisible( getOrganization().isActual() );
+        mediaNotDeployedContainer.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( mediaNotDeployedContainer );
+        ListView<String> mediaNotDeployedList = new ListView<String>(
+                "mediaNotDeployed",
+                getMediaNotDeployedNames() ) {
+            @Override
+            protected void populateItem( ListItem<String> item ) {
+                addNotDeployedMediumCell( item );
+                addNotDeployedDeleteMediumCell( item );
+            }
+        };
+        mediaNotDeployedContainer.add( mediaNotDeployedList );
+    }
+
+    private void addNotDeployedMediumCell( ListItem<String> item ) {
+        String name = item.getModelObject();
+        TransmissionMedium medium = name.isEmpty()
+                ? TransmissionMedium.getUNKNOWN()
+                : getQueryService().findOrCreateType( TransmissionMedium.class, name );
+        Component mediumLink = medium.isUnknown()
+                ? new Label( "notDeployedMediumLink", "" )
+                : new ModelObjectLink(
+                "notDeployedMediumLink",
+                new Model<ModelEntity>( medium ),
+                new Model<String>( medium.getName() ) );
+        mediumLink.setVisible( !medium.isUnknown() );
+        item.add( mediumLink );
+        DropDownChoice<String> mediumChoice = new DropDownChoice<String>(
+                "mediumChoice",
+                new PropertyModel<String>( this, "newNotDeployedMediumName" ),
+                getMediaChoices()
+        );
+        mediumChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addMediaNotDeployedPanel();
+                target.addComponent( mediaNotDeployedContainer );
+                update( target, new Change( Change.Type.Updated, getOrganization(), "mediaNotDeployed" ) );
+            }
+        } );
+        mediumChoice.setVisible( medium.isUnknown() );
+        item.add( mediumChoice );
+    }
+
+    private void addNotDeployedDeleteMediumCell( ListItem<String> item ) {
+        String name = item.getModelObject();
+        final TransmissionMedium medium = getQueryService().safeFindOrCreateType(
+                TransmissionMedium.class,
+                name,
+                null );
+        ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
+                "deleteNotDeployedMedium",
+                "Remove medium from list?" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                doCommand( new UpdatePlanObject(
+                        getOrganization(),
+                        "mediaNotDeployed",
+                        medium,
+                        UpdateObject.Action.Remove
+                ) );
+                addMediaNotDeployedPanel();
+                target.addComponent( mediaNotDeployedContainer );
+                update( target,
+                        new Change(
+                                Change.Type.Updated,
+                                getOrganization(),
+                                "mediaNotDeployed"
+                        ) );
+            }
+        };
+        makeVisible( deleteLink, isLockedByUser( getEntity() ) && !name.isEmpty() );
+        item.add( deleteLink );
+    }
+
+    public String getNewNotDeployedMediumName() {
+        return null;
+    }
+
+    public void setNewNotDeployedMediumName( String name ) {
+        if ( name != null && !name.isEmpty() ) {
+            TransmissionMedium medium = getQueryService().safeFindOrCreateType(
+                    TransmissionMedium.class,
+                    name,
+                    null );
+            doCommand( new UpdatePlanObject(
+                    getOrganization(),
+                    "mediaNotDeployed",
+                    medium,
+                    UpdateObject.Action.Add
+            ) );
+        }
+    }
+
+
+    private List<String> getMediaNotDeployedNames() {
+        List<String> media = new ArrayList<String>();
+        for ( TransmissionMedium medium : getOrganization().getMediaNotDeployed() ) {
+            media.add( medium.getName() );
+        }
+        Collections.sort( media );
+        media.add( "" );
+        return media;
+    }
+
+    private List<String> getMediaChoices() {
+        List<String> choices = new ArrayList<String>();
+        final Place planLocale = getPlan().getLocale();
+        for ( final TransmissionMedium medium : getQueryService().list( TransmissionMedium.class ) ) {
+            if ( !medium.isUnknown() ) {
+                boolean subsumed = CollectionUtils.exists(
+                        getOrganization().getMediaNotDeployed(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return medium.narrowsOrEquals( (TransmissionMedium) object, planLocale );
+                            }
+                        }
+                );
+                if ( !subsumed ) {
+                    choices.add( medium.getName() );
+                }
+            }
+        }
+        Collections.sort( choices );
+        choices.add( "New medium" );
+        return choices;
+    }
+
     private void addReceiveFields() {
         final Organization organization = getOrganization();
         WebMarkupContainer receivesContainers = new WebMarkupContainer( "constraintsContainers" );
@@ -245,10 +384,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         } );
         Organization requiringParent = organization.agreementRequiringParent();
         if ( requiringParent != null ) {
-           agreementsRequiredCheckBox.add(  new AttributeModifier(
-                   "title",
-                   true,
-                   new Model<String>( "Agreements required by parent organization " +  requiringParent.getName() ) ) );
+            agreementsRequiredCheckBox.add( new AttributeModifier(
+                    "title",
+                    true,
+                    new Model<String>( "Agreements required by parent organization " + requiringParent.getName() ) ) );
         }
         agreementsRequiredCheckBox.setEnabled( requiringParent == null && isLockedByUser( organization ) );
         receivesContainers.add( agreementsRequiredCheckBox );

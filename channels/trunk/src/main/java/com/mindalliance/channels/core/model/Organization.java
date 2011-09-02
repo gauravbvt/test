@@ -46,6 +46,10 @@ public class Organization extends AbstractUnicastChannelable
      * Confirmed agreement to share information with other organizations.
      */
     private List<Agreement> agreements = new ArrayList<Agreement>();
+    /**
+     * The transmission media not (yet) deployed by an actual organization to its agents.
+     */
+    private List<TransmissionMedium> mediaNotDeployed = new ArrayList<TransmissionMedium>();
 
     /**
      * Bogus organization used to signify that the organization is not known...
@@ -141,6 +145,20 @@ public class Organization extends AbstractUnicastChannelable
     public void addAgreement( Agreement agreement ) {
         if ( !agreements.contains( agreement ) )
             agreements.add( agreement );
+    }
+
+    public List<TransmissionMedium> getMediaNotDeployed() {
+        return mediaNotDeployed;
+    }
+
+    public void setMediaNotDeployed( List<TransmissionMedium> mediaNotDeployed ) {
+        this.mediaNotDeployed = mediaNotDeployed;
+    }
+
+    public void addMediumNotDeployed( TransmissionMedium medium ) {
+        assert isActual();
+        if ( !mediaNotDeployed.contains( medium ) )
+            mediaNotDeployed.add( medium );
     }
 
     public Organization getParent() {
@@ -416,7 +434,19 @@ public class Organization extends AbstractUnicastChannelable
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Organization) object).isAgreementsRequired();
+                        return ( (Organization) object ).isAgreementsRequired();
+                    }
+                }
+        );
+    }
+
+    public boolean isMediumDeployed( final TransmissionMedium medium, final Place planLocale ) {
+        return !CollectionUtils.exists(
+                getMediaNotDeployed(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return medium.narrowsOrEquals( (TransmissionMedium) object, planLocale );
                     }
                 }
         );

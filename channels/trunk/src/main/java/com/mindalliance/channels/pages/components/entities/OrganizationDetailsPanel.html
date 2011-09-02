@@ -13,8 +13,8 @@
     </tr>
     <tr>
         <th align="right">
-            <label for="parent"><span wicket:id="org-link" href=""
-                                   title="Parent organization's details">Parent</span>:</label>
+            <label for="parent"><span wicket:id="org-link"
+                                      title="Parent organization's details">Parent</span>:</label>
         </th>
         <td>
             <input id="parent" width="40" wicket:id="actualParent" type="text"/>
@@ -33,15 +33,37 @@
         </th>
         <td><span id="contact-info" wicket:id="channels">[channel list panel]</span></td>
     </tr>
+    <tr wicket:id="mediaNotDeployedContainer">
+        <th align="right">
+            <label>Media not deployed:</label>
+        </th>
+        <td>
+            <ul>
+                <li wicket:id="mediaNotDeployed">
+                    <span wicket:id="notDeployedMediumLink" title="Medium's details">Phone</span>
+                    <a wicket:id="deleteNotDeployedMedium" href="#">
+                        <img style="border:0;vertical-align:middle" src="images/delete.png"
+                             title="Remove medium from list" alt="Remove medium from list"/>
+                    </a>
+                    <select wicket:id="mediumChoice">
+                        <option>Secure Radio</option>
+                        <option></option>
+                    </select>
+                </li>
+            </ul>
+        </td>
+    </tr>
+
     <tr wicket:id="constraintsContainers">
         <th align="right">Constraints:</th>
         <td>
-            <input wicket:id="agreementsRequired" type="checkbox"/> No sharing commitment with distinct organizations without an agreement
+            <input wicket:id="agreementsRequired" type="checkbox"/> No sharing commitment with distinct organizations
+            without an agreement
             <br/>
             <input wicket:id="actorsRequired" type="checkbox"/> No roles without agents
         </td>
     </tr>
-     <tr>
+    <tr>
         <td colspan="2">
             <span wicket:id="tabContainer">
                 <div wicket:id="tabs" class="tabpanel">[tab panel]</div>
@@ -50,14 +72,16 @@
     </tr>
     <tr wicket:id="moreContainer">
         <td colspan="2">
-            <a wicket:id="more-link" href="#" title="Show more" class="more"><span wicket:id="moreOrLess">more</span></a>
+            <a wicket:id="more-link" href="#" title="Show more" class="more"><span
+                    wicket:id="moreOrLess">more</span></a>
         </td>
     </tr>
     <tr>
         <td colspan="2">
-            <span  wicket:id="assignmentsContainer">
+            <span wicket:id="assignmentsContainer">
                 <h3>
                     <span>Task assignments</span>
+
                     <div>&nbsp;</div>
                 </h3>
                 <div wicket:id="assignments">[assignments panel]</div>
@@ -69,6 +93,7 @@
             <span wicket:id="commitmentsContainer">
                 <h3>
                     <span>Sharing commitments</span>
+
                     <div>&nbsp;</div>
                 </h3>
                 <span wicket:id="commitments">[commitments panel]</span>

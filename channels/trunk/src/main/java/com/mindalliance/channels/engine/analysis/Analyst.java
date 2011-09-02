@@ -1,14 +1,17 @@
 package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
@@ -78,7 +81,7 @@ public interface Analyst {
     /**
      * Use all unwaived issue detectors to find issues about an assignment.
      *
-     * @param assignment               -- the assignment being analyzed
+     * @param assignment                -- the assignment being analyzed
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return a list of issues detected
      */
@@ -105,7 +108,7 @@ public interface Analyst {
     /**
      * Use all waived issue detectors to find issues about an assignment.
      *
-     * @param assignment               -- the assignment being analyzed
+     * @param assignment                -- the assignment being analyzed
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return a list of issues detected
      */
@@ -119,6 +122,7 @@ public interface Analyst {
      * @return a list of issues detected
      */
     List<Issue> listWaivedIssues( ModelObject modelObject, String property );
+
     /**
      * Tests whether a specific property of a model object has issues.
      *
@@ -158,7 +162,7 @@ public interface Analyst {
     /**
      * Tests whether a model object has unwaived issues.
      *
-     * @param assignment               -- the assignment being analyzed
+     * @param assignment                -- the assignment being analyzed
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return whether a model object has issues
      */
@@ -174,13 +178,13 @@ public interface Analyst {
     String getIssuesSummary( ModelObject modelObject, Boolean includingPropertySpecific );
 
     /**
-      * Produces an aggregate description of unwaived issues detected about an assignment.
-      *
-      * @param assignment               -- the assignment being analyzed
-      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
-      * @return an aggregate description of issues or an empty string if none
-      */
-     String getIssuesSummary( Assignment assignment, Boolean includingPropertySpecific );
+     * Produces an aggregate description of unwaived issues detected about an assignment.
+     *
+     * @param assignment                -- the assignment being analyzed
+     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+     * @return an aggregate description of issues or an empty string if none
+     */
+    String getIssuesSummary( Assignment assignment, Boolean includingPropertySpecific );
 
     /**
      * Produces an aggregate description of unwaived issues detected about a specific property.
@@ -244,6 +248,7 @@ public interface Analyst {
 
     /**
      * On startup.
+     *
      * @param plan a plan
      */
     void onStart( Plan plan );
@@ -267,6 +272,7 @@ public interface Analyst {
 
     /**
      * Get the imaging service.
+     *
      * @return the imaging service
      */
     ImagingService getImagingService();
@@ -330,25 +336,28 @@ public interface Analyst {
 
     /**
      * Find relationships with entities of same kind referenced in a segment.
-     * @param segment  a segment
-     * @param entityClass  an entity class
-     * @param kind  a kind of entity (actual or type)
-     * @return  a list of relationships with other model entities
+     *
+     * @param segment     a segment
+     * @param entityClass an entity class
+     * @param kind        a kind of entity (actual or type)
+     * @return a list of relationships with other model entities
      */
     List<EntityRelationship> findEntityRelationships(
             Segment segment, Class<? extends ModelEntity> entityClass, ModelEntity.Kind kind );
 
     /**
      * Find relationships with entities of same kind.
-     * @param segment  a segment
+     *
+     * @param segment a segment
      * @param entity  a model entity
-     * @return  a list of relationships with other model entities
+     * @return a list of relationships with other model entities
      */
     List<EntityRelationship> findEntityRelationships(
             Segment segment, ModelEntity entity );
 
     /**
      * Whether a part is effectively conceptual.
+     *
      * @param part a part
      * @return a boolean
      */
@@ -356,6 +365,7 @@ public interface Analyst {
 
     /**
      * Whether a flow is effectively conceptual.
+     *
      * @param flow a flow
      * @return a boolean
      */
@@ -363,6 +373,7 @@ public interface Analyst {
 
     /**
      * Find the causes for the part being conceptual, if any.
+     *
      * @param part a part
      * @return a list of strings
      */
@@ -370,6 +381,7 @@ public interface Analyst {
 
     /**
      * Find the causes for the flow being conceptual, if any.
+     *
      * @param flow a flow
      * @return a list of strings
      */
@@ -377,6 +389,7 @@ public interface Analyst {
 
     /**
      * Find remediations for the part being conceptual, if any.
+     *
      * @param part a part
      * @return a list of strings
      */
@@ -384,9 +397,69 @@ public interface Analyst {
 
     /**
      * Find remediations for the flow being conceptual, if any.
+     *
      * @param flow a flow
      * @return a list of strings
      */
     List<String> findConceptualRemediations( Flow flow );
 
+    /**
+     * Whether a commitment could be met based on availability.
+     *
+     * @param commitment an info sharing commitment
+     * @return a boolean
+     */
+    boolean isAvailabilityOverlaps( Commitment commitment );
+
+    /**
+     * Whether a commitment could be met based on media deployments.
+     *
+     * @param commitment an info sharing commitment
+     * @param mediaUsed  media used in commitment
+     * @param planLocale a plan locale
+     * @return a boolean
+     */
+    boolean isMediaDeployed( final Commitment commitment,
+                             final List<TransmissionMedium> mediaUsed,
+                             final Place planLocale );
+
+    /**
+     * Whether a commitment could be met based on known contact info.
+     *
+     * @param commitment an info sharing commitment
+     * @param mediaUsed  media used in commitment
+     * @param planLocale a plan locale
+     * @return a boolean
+     */
+    boolean isReachable( final Commitment commitment,
+                         final List<TransmissionMedium> mediaUsed,
+                         final Place planLocale );
+
+    /**
+     * Whether a commitment could be met based on agent qualified to use medium..
+     *
+     * @param commitment an info sharing commitment
+     * @param mediaUsed  media used in commitment
+     * @param planLocale a plan locale
+     * @return a boolean
+     */
+    boolean isAgentsQualified( final Commitment commitment,
+                               final List<TransmissionMedium> mediaUsed,
+                               final Place planLocale );
+
+    /**
+     * Whether a commitment could be met based on common language.
+     *
+     * @param commitment an info sharing commitment
+     * @return a boolean
+     */
+    boolean isCommonLanguage( Commitment commitment );
+
+    /**
+     * Disagnostic about whether a commitment can be realized or is conceptual.
+     *
+     * @param commitment an info sharing commitment
+     * @return a string
+     */
+    String realizability( Commitment commitment );
 }

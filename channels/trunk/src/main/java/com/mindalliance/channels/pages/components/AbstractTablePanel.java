@@ -1,16 +1,17 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.command.Change;
 import com.mindalliance.channels.pages.FilterableModelObjectLink;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -31,6 +32,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -178,6 +180,34 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 }
             }
         };
+    }
+
+    protected AbstractColumn<T> makeAnalysisColumn( String name,
+                                                      final String methodName,
+                                                      final String defaultText) {
+        return new AbstractColumn<T>( new Model<String>( name ) ) {
+
+             public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                       String id,
+                                       IModel<T> model ) {
+                 String text = "" + callAnalyst( methodName, model.getObject() );
+                 String labelText = ( text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
+                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
+             }
+        };
+    }
+
+    private Object callAnalyst( String methodName, Object argument ) {
+        try {
+            Analyst delegate = getAnalyst();
+            Class[] argTypes = { argument.getClass() };
+            Method method = Analyst.class.getMethod( methodName, argTypes );
+            Object[] args = { argument };
+            return method.invoke( delegate, args );
+        } catch ( Exception e ) {
+            LOG.warn( "Delegate method invocation failed.", e );
+            return "";
+        }
     }
 
     /**

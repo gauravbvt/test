@@ -1,9 +1,5 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.PlanRename;
-import com.mindalliance.channels.engine.command.commands.UpdateObject;
-import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -11,6 +7,10 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.PlanRename;
+import com.mindalliance.channels.engine.command.commands.UpdateObject;
+import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -96,6 +96,15 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
              createScopePanel().setEnabled( isLockedByUser( plan ) ),
 
+                new TextField<String>( "defaultLanguage", new PropertyModel<String>( this, "defaultLanguage" ) )
+                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                        @Override
+                        protected void onUpdate( AjaxRequestTarget target ) {
+                            update( target, new Change( Change.Type.Updated, getPlan(), "defaultLanguage" ) );
+                        }
+                    } )
+                .setEnabled( isLockedByUser( plan ) ),
+
              new AttachmentPanel( "attachments", new Model<ModelObject>( plan ) )
         );
 
@@ -154,6 +163,30 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     public void setName( String name ) {
         if ( name != null && !isSame( getName(), name ) )
             doCommand( new PlanRename( getPlan(), definitionManager.makeUniqueName( name ) ) );
+    }
+
+    /**
+     * Get the model object's default language
+     *
+     * @return a string
+     */
+    public String getDefaultLanguage() {
+        return getPlan().getDefaultLanguage();
+    }
+
+    /**
+     * Set the model object's default language.
+     *
+     * @param defaultLanguage a string
+     */
+    public void setDefaultLanguage( String defaultLanguage ) {
+        if ( defaultLanguage != null && !isSame( getDefaultLanguage(), defaultLanguage ) )
+            doCommand(
+                    new UpdatePlanObject(
+                            getPlan(),
+                            "defaultLanguage",
+                            defaultLanguage,
+                            UpdateObject.Action.Set ) );
     }
 
     /**

@@ -114,6 +114,9 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.startNode( "template" );
         writer.setValue( Boolean.toString( plan.isTemplate() ) );
         writer.endNode();
+        writer.startNode( "defaultLanguage" );
+        writer.setValue( plan.getDefaultLanguage() );
+        writer.endNode();
         // Producers - planners who voted to put this version into production
         for ( String producer : plan.getProducers() ) {
             writer.startNode( "producer" );
@@ -199,6 +202,8 @@ public class PlanConverter extends AbstractChannelsConverter {
                 LOG.info( "Plan last saved with last id " + reader.getValue() );
             } else if ( nodeName.equals( "name" ) ) {
                 plan.setName( reader.getValue() );
+            } else if ( nodeName.equals( "defaultLanguage" ) ) {
+                plan.setDefaultLanguage( reader.getValue() );
             } else if ( nodeName.equals( "template" ) ) {
                 plan.setTemplate( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "whenVersioned" ) ) {

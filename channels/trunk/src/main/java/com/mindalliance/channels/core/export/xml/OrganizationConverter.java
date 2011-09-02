@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -102,6 +103,13 @@ public class OrganizationConverter extends EntityConverter {
             context.convertAnother( agreement );
             writer.endNode();
         }
+        // not deployed transmission media
+        for ( TransmissionMedium medium : org.getMediaNotDeployed() ) {
+            writer.startNode( "mediumNotDeployed" );
+            writer.addAttribute( "id", Long.toString( medium.getId() ) );
+            writer.setValue( medium.getName() );
+            writer.endNode();
+        }
     }
 
     /**
@@ -148,6 +156,9 @@ public class OrganizationConverter extends EntityConverter {
         } else if ( nodeName.equals( "agreement" ) ) {
             Agreement agreement = (Agreement) context.convertAnother( plan, Agreement.class );
             org.addAgreement( agreement );
+        } else if ( nodeName.equals( "mediumNotDeployed" ) ) {
+            String id = reader.getAttribute( "id");
+            org.addMediumNotDeployed( findOrCreate( TransmissionMedium.class, reader.getValue(), id ) );
         } else {
             LOG.warn( "Unknown element " + nodeName );
         }

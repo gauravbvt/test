@@ -1,10 +1,12 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment.Type;
+import com.mindalliance.channels.core.Matcher;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -45,6 +47,12 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * Clearances.
      */
     private List<Classification> clearances = new ArrayList<Classification>();
+
+    /**
+     * Spoken languages.
+     */
+    private List<String> languages = new ArrayList<String>();
+
 
     /**
      * Whether placeholder is singular.
@@ -139,6 +147,87 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         } else {
             return false;
         }
+    }
+
+    public List<String> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages( List<String> languages ) {
+        this.languages = languages;
+    }
+
+    /**
+     * Add a language to the actor's spoken languages if unique.
+     *
+     * @param language a language
+     * @return a boolean - whether added
+     */
+    public boolean addLanguage( String language ) {
+        if ( language != null ) {
+            if ( !languages.contains( language ) ) {
+                languages.add( language );
+                return true;
+            } else {
+                return false;
+            }
+        } else return false;
+    }
+
+    /**
+     * Actor can speak a given language.
+     *
+     * @param language the name of a language
+     * @param plan     a plan
+     * @return a boolean
+     */
+    public boolean speaksLanguage( String language, Plan plan ) {
+        final String lang = language.trim().toLowerCase();
+        return languages.isEmpty() && Matcher.same( plan.getDefaultLanguage().toLowerCase(), lang )
+                || CollectionUtils.exists(
+                languages,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return Matcher.same( (String) object, lang );
+                    }
+                }
+        );
+    }
+
+    /**
+     * Languages spoken by actor.
+     * Plan's default language is assumed if none set.
+     *
+     * @param plan a plan
+     * @return a list of strings
+     */
+    public List<String> getEffectiveLanguages( Plan plan ) {
+        HashSet<String> effective = new HashSet<String>();
+        effective.addAll( languages );
+        for ( ModelEntity type : getAllTypes() ) {
+            effective.addAll( ( (Actor) type ).getLanguages() );
+        }
+        if ( effective.isEmpty() ) {
+           effective.add( plan.getDefaultLanguage() );
+        }
+        return new ArrayList<String>( effective );
+    }
+
+    /**
+     * Whether an actor can converse with another, language-wise.
+     *
+     * @param other an actor
+     * @param plan  a plan
+     * @return a boolean
+     */
+    public boolean canSpeakWith( Actor other, Plan plan ) {
+        for ( String lang : getEffectiveLanguages( plan ) ) {
+            for ( String otherLang : other.getEffectiveLanguages( plan ) ) {
+                if ( Matcher.same( lang, otherLang ) ) return true;
+            }
+        }
+        return false;
     }
 
     /**

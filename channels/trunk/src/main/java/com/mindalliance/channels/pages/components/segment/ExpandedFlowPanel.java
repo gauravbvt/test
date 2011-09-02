@@ -231,6 +231,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * The containing plan page.
      */
     private PlanPage planPage;
+    /**
+     * Flow header.
+     */
+    private FlowTitlePanel titlePanel;
 
     protected ExpandedFlowPanel(
             String id,
@@ -840,7 +844,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addHeader() {
-        FlowTitlePanel titlePanel = new FlowTitlePanel( "title", getFlow(), isSend() );
+        titlePanel = new FlowTitlePanel( "title", getFlow(), isSend() );
         // Add style classes
         titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses() ) ) );
         titlePanel.add( new AjaxEventBehavior( "onclick" ) {
@@ -851,7 +855,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         titlePanel.setOutputMarkupId( true );
-        add( titlePanel );
+        addOrReplace( titlePanel );
         addFlowActionMenu();
     }
 
@@ -1642,9 +1646,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } else {
             if ( change.isUpdated() ) {
                 Flow flow = getFlow();
-                if ( flow != null )
+                if ( flow != null ) {
                     adjustFieldsOnUpdate( flow, target );
-//                target.addComponent( this );
+                    addHeader();
+                    target.addComponent( titlePanel );
+                }
             }
             super.updateWith( target, change, updated );
         }

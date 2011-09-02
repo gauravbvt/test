@@ -25,6 +25,7 @@ import com.mindalliance.channels.engine.query.Play;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.context.Lifecycle;
 
 import java.util.ArrayList;
@@ -765,8 +766,11 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             }
             causes.add( sb.toString() );
         } else {
-            if ( getQueryService().findAllAssignments( part, false ).isEmpty() ) {
+            List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
+            if ( assignments.isEmpty() ) {
                 causes.add( "no agent is assigned to the task" );
+            } else if ( noAvailability( assignments ) ) {
+                causes.add( "none of the assigned agents is ever available" );
             }
         }
         return causes;
@@ -781,10 +785,13 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         if ( part.isDeFactoConceptual() ) {
             remediations.add( "un-mark the task as de facto conceptual" );
         } else {
-            if ( getQueryService().findAllAssignments( part, false ).isEmpty() ) {
+            List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
+            if ( assignments.isEmpty() ) {
                 remediations.add( "explicitly assign an agent to the task" );
                 remediations.add( "profile an agent to match the task specifications" );
                 remediations.add( "modify the task specifications so that it matches at least one agent" );
+            } else if ( noAvailability( assignments ) ) {
+                remediations.add( "make assigned agents available" );
             }
         }
         return remediations;
@@ -816,29 +823,66 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             } else if ( flow.isCapability() && isEffectivelyConceptual( (Part) flow.getSource() ) ) {
                 causes.add( "this task is conceptual" );
             } else if ( flow.isSharing() ) {
-                if ( flow.getEffectiveChannels().isEmpty() ) {
-                    causes.add( "no channels is identified" );
-                }
                 if ( isEffectivelyConceptual( (Part) flow.getSource() ) ) {
                     causes.add( "the task \""
-                            + ((Part) flow.getSource()).getTask()
+                            + ( (Part) flow.getSource() ).getTask()
                             + "\" is conceptual" );
                 }
                 if ( isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
                     causes.add( "the task \""
-                            + ((Part) flow.getTarget()).getTask()
+                            + ( (Part) flow.getTarget() ).getTask()
                             + "\" is conceptual" );
                 }
-                List<Commitment> commitments = getQueryService().findAllCommitments( flow );
-                if ( commitments.isEmpty() ) {
-                    causes.add( "no agent has sharing commitments" );
+                if ( flow.getEffectiveChannels().isEmpty() ) {
+                    causes.add( "no channels is identified" );
                 } else {
-                    List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
-                    if ( allAgentsUnqualified( commitments, mediaUsed ) ) {
-                        causes.add( "no agent is qualified to use any of the transmission media" );
-                    }
-                    if ( allMissingContactInfo( commitments, mediaUsed ) ) {
-                        causes.add( "contact info is missing for all receiving agents" );
+                    List<Commitment> commitments = getQueryService().findAllCommitments( flow );
+                    if ( commitments.isEmpty() ) {
+                        causes.add( "there are no sharing commitments between any pair of agents" );
+                    } else {
+                        StringBuilder sb = new StringBuilder();
+                        List<Commitment> availabilityOverlaps = availabilityOverlapsFilter( commitments );
+                        if ( availabilityOverlaps.isEmpty() ) {
+                            sb.append( "in all sharing commitments, " );
+                            sb.append( "agents are never available at the same time" );
+                        }
+                        List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
+                        List<Commitment> mediaDeployed = mediaDeployedFilter( availabilityOverlaps, mediaUsed );
+                        if ( mediaDeployed.isEmpty() ) {
+                            if ( sb.length() == 0 )
+                                sb.append( "in all sharing commitments, " );
+                            else
+                                sb.append( ", or " );
+                            sb.append( "agents do not have access to required transmission media" );
+                        }
+                        List<Commitment> reachable = reachableFilter( availabilityOverlaps, mediaUsed );
+                        if ( reachable.isEmpty() ) {
+                            if ( sb.length() == 0 )
+                                sb.append( "in all sharing commitments, " );
+                            else
+                                sb.append( ", or " );
+                            sb.append( "the agent to be contacted is not reachable (no contact info)" );
+                        }
+                        List<Commitment> agentsQualified = agentsQualifiedFilter( reachable, mediaUsed );
+                        if ( agentsQualified.isEmpty() ) {
+                            if ( sb.length() == 0 )
+                                sb.append( "in all sharing commitments, " );
+                            else
+                                sb.append( ", or " );
+                            sb.append( "both agents are not qualified to use a transmission medium" );
+                        }
+                        List<Commitment> languageOverlap = commonLanguageFilter( agentsQualified );
+                        if ( languageOverlap.isEmpty() ) {
+                            if ( sb.length() == 0 )
+                                sb.append( "in all sharing commitments, " );
+                            else
+                                sb.append( ", or " );
+                            sb.append( "agents do not speak a common language" );
+                        }
+
+                        if ( sb.length() > 0 ) {
+                            causes.add( sb.toString() );
+                        }
                     }
                 }
             }
@@ -847,7 +891,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public List<String> findConceptualRemediations( Flow flow ) {
+    public List<String> findConceptualRemediations
+            ( Flow
+                      flow ) {
         List<String> remediations = new ArrayList<String>();
         if ( flow.isProhibited() ) {
             remediations.add( "remove the prohibition" );
@@ -860,31 +906,49 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             } else if ( flow.isCapability() && isEffectivelyConceptual( (Part) flow.getSource() ) ) {
                 remediations.add( "make this task not conceptual" );
             } else if ( flow.isSharing() ) {
-                if ( flow.getEffectiveChannels().isEmpty() ) {
-                    remediations.add( "add at least one channel to the flow" );
-                }
                 if ( isEffectivelyConceptual( (Part) flow.getSource() ) ) {
                     remediations.add( "make the task \""
-                            + ((Part) flow.getSource()).getTask()
+                            + ( (Part) flow.getSource() ).getTask()
                             + "\" not conceptual" );
                 }
                 if ( isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
                     remediations.add( "make the task \""
-                            + ((Part) flow.getTarget()).getTask()
-                             + "\" not conceptual" );
+                            + ( (Part) flow.getTarget() ).getTask()
+                            + "\" not conceptual" );
                 }
-                List<Commitment> commitments = getQueryService().findAllCommitments( flow );
-                if ( commitments.isEmpty() ) {
-                    remediations.add( "change the definitions of the source and/or target tasks so that agents are assigned to both" );
-                    remediations.add( "add jobs to relevant organizations so that agents can be assigned to source and/or target tasks" );
+                if ( flow.getEffectiveChannels().isEmpty() ) {
+                    remediations.add( "add at least one channel to the flow" );
                 } else {
+                    List<Commitment> commitments = getQueryService().findAllCommitments( flow );
+                    if ( commitments.isEmpty() ) {
+                        remediations.add( "change the definitions of the source and/or target tasks so that agents are assigned to both" );
+                        remediations.add( "add jobs to relevant organizations so that agents can be assigned to source and/or target tasks" );
+                    }
+                    List<Commitment> availabilityOverlaps = availabilityOverlapsFilter( commitments );
+                    if ( availabilityOverlaps.isEmpty() ) {
+                        remediations.add( "change agent availability to make them coincide" );
+                    }
                     List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
-                    if ( allAgentsUnqualified( commitments, mediaUsed ) ) {
-                        remediations.add( "make sure that agents are qualified to use the transmission media" );
+                    List<Commitment> mediaDeployed = mediaDeployedFilter( availabilityOverlaps, mediaUsed );
+                    if ( mediaDeployed.isEmpty() ) {
+                        remediations.add( "make sure that the agents that are available" +
+                                " to each other also have access to required transmission media" );
+                    }
+                    List<Commitment> reachable = reachableFilter( availabilityOverlaps, mediaUsed );
+                    if ( reachable.isEmpty() ) {
+                        remediations.add( "make sure that the agents that are available" +
+                                " to each other also have known contact information" );
+                    }
+                    List<Commitment> agentsQualified = agentsQualifiedFilter( reachable, mediaUsed );
+                    if ( agentsQualified.isEmpty() ) {
+                        remediations.add( "make sure that agents that are available to each other" +
+                                " and reachable are also qualified to use the transmission media" );
                         remediations.add( "add channels with transmission media requiring no qualification" );
                     }
-                    if ( allMissingContactInfo( commitments, mediaUsed ) ) {
-                        remediations.add( "make sure that the agents contacted have known contact information" );
+                    if ( commonLanguageFilter( commitments ).isEmpty() ) {
+                        remediations.add( "make sure that agents that are available to each other, " +
+                                "reachable and qualified to use the transmission media " +
+                                "can also speak a common language" );
                     }
                 }
             }
@@ -892,73 +956,202 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return remediations;
     }
 
-
-    // There is no medium used in fulfilling commitments such that
-    // the medium requires no qualification or at least one committer is qualified.
-
-    private boolean allAgentsUnqualified( final List<Commitment> commitments, List<TransmissionMedium> mediaUsed ) {
-        boolean allAgentsUnqualified = !CollectionUtils.exists(
-                mediaUsed,
+    // Filter commitments where agent availabilities overlap.
+    @SuppressWarnings( "unchecked" )
+    private List<Commitment> availabilityOverlapsFilter
+    (
+            final List<Commitment> commitments ) {
+        return (List<Commitment>) CollectionUtils.select(
+                commitments,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        final TransmissionMedium medium = (TransmissionMedium) object;
-                        final Place planLocale = planLocale();
-                        return medium.getQualification() == null
-                                || CollectionUtils.exists(
-                                commitments,
-                                new Predicate() {
-                                    @Override
-                                    public boolean evaluate( Object object ) {
-                                        Commitment commitment = (Commitment) object;
-                                        return commitment.getCommitter().getActor()
-                                                .narrowsOrEquals( medium.getQualification(), planLocale )
-                                                && commitment.getBeneficiary()
-                                                .getActor().narrowsOrEquals( medium.getQualification(), planLocale );
-                                    }
-                                }
-                        );
-
+                        return isAvailabilityOverlaps( (Commitment) object );
                     }
                 }
         );
-        return !mediaUsed.isEmpty() && allAgentsUnqualified;
-
     }
 
-    // There is no medium used such that no address is required or the medium is not unicast
-    // or at least one beneficiary has a known address for that medium.
-    private boolean allMissingContactInfo( final List<Commitment> commitments, List<TransmissionMedium> mediaUsed ) {
-        boolean allMissingContactInfo = !CollectionUtils.exists(
+    public boolean isAvailabilityOverlaps( Commitment commitment ) {
+        Actor committer = commitment.getCommitter().getActor();
+        Actor beneficiary = commitment.getBeneficiary().getActor();
+        return !committer.getAvailability()
+                .overlap( beneficiary.getAvailability() ).isEmpty();
+    }
+
+
+    // Filter commitments where agent have access to required transmission media.
+    @SuppressWarnings( "unchecked" )
+    private List<Commitment> mediaDeployedFilter
+    ( List<Commitment> commitments, final List<TransmissionMedium> mediaUsed ) {
+        final Place planLocale = planLocale();
+        return (List<Commitment>) CollectionUtils.select(
+                commitments,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final Commitment commitment = (Commitment) object;
+                        return isMediaDeployed( commitment, mediaUsed, planLocale );
+                    }
+                }
+        );
+    }
+
+    public boolean isMediaDeployed( final Commitment commitment,
+                                    final List<TransmissionMedium> mediaUsed,
+                                    final Place planLocale ) {
+        return CollectionUtils.exists(
                 mediaUsed,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        final TransmissionMedium medium = (TransmissionMedium) object;
-                        final Place planLocale = planLocale();
+                        TransmissionMedium medium = (TransmissionMedium) object;
+                        return commitment.getCommitter().getOrganization().isMediumDeployed( medium, planLocale )
+                                && commitment.getBeneficiary().getOrganization().isMediumDeployed( medium, planLocale );
+                    }
+                }
+        );
+    }
+
+    // Filter commitments where agent to eb contacted has known contact info.
+    @SuppressWarnings( "unchecked" )
+    private List<Commitment> reachableFilter
+    ( List<Commitment> commitments, final List<TransmissionMedium> mediaUsed ) {
+        final Place planLocale = planLocale();
+        return (List<Commitment>) CollectionUtils.select(
+                commitments,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return isReachable( (Commitment) object, mediaUsed, planLocale );
+                    }
+                }
+        );
+    }
+
+    public boolean isReachable( final Commitment commitment,
+                                final List<TransmissionMedium> mediaUsed,
+                                final Place planLocale ) {
+        boolean isRequest = commitment.getSharing().isAskedFor();
+        final Actor receiver = isRequest
+                ? commitment.getCommitter().getActor()
+                : commitment.getBeneficiary().getActor();
+        return CollectionUtils.exists(
+                mediaUsed,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        TransmissionMedium medium = (TransmissionMedium) object;
                         return !medium.requiresAddress()
                                 || !medium.isUnicast()
-                                || CollectionUtils.exists(
-                                commitments,
-                                new Predicate() {
-                                    @Override
-                                    public boolean evaluate( Object object ) {
-                                        Commitment commitment = (Commitment) object;
-                                        boolean isRequest = commitment.getSharing().isAskedFor();
-                                        Actor receiver = isRequest
-                                                ? commitment.getCommitter().getActor()
-                                                : commitment.getBeneficiary().getActor();
-                                        return receiver.hasChannelFor( medium, planLocale );
-                                    }
-                                }
-                        );
-
+                                || receiver.hasChannelFor( medium, planLocale );
                     }
                 }
         );
-        return !mediaUsed.isEmpty() && allMissingContactInfo;
-
     }
+
+    // Filter commitments where both agents are qualified to use a transmission medium.
+    @SuppressWarnings( "unchecked" )
+    private List<Commitment> agentsQualifiedFilter
+    ( List<Commitment> commitments,
+      final List<TransmissionMedium> mediaUsed ) {
+        final Place planLocale = planLocale();
+        return (List<Commitment>) CollectionUtils.select(
+                commitments,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return isAgentsQualified( (Commitment) object, mediaUsed, planLocale );
+                    }
+                }
+        );
+    }
+
+    public boolean isAgentsQualified( final Commitment commitment,
+                                      final List<TransmissionMedium> mediaUsed,
+                                      final Place planLocale ) {
+        return CollectionUtils.exists(
+                mediaUsed,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        TransmissionMedium medium = (TransmissionMedium) object;
+                        return medium.getQualification() == null
+                                || commitment.getCommitter().getActor()
+                                .narrowsOrEquals( medium.getQualification(), planLocale )
+                                && commitment.getBeneficiary()
+                                .getActor().narrowsOrEquals( medium.getQualification(), planLocale );
+                    }
+                }
+        );
+    }
+
+    // Filter commitments where agents can understand one another.
+    @SuppressWarnings( "unchecked" )
+    private List<Commitment> commonLanguageFilter
+    ( List<Commitment> commitments ) {
+        return (List<Commitment>) CollectionUtils.select(
+                commitments,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return isCommonLanguage( (Commitment) object );
+                    }
+                }
+        );
+    }
+
+    public boolean isCommonLanguage( Commitment commitment ) {
+        final Plan plan = getPlan();
+        Actor committer = commitment.getCommitter().getActor();
+        Actor beneficiary = commitment.getBeneficiary().getActor();
+        return committer.canSpeakWith( beneficiary, plan );
+    }
+
+    public String realizability( Commitment commitment ) {
+        List<TransmissionMedium> mediaUsed = commitment.getSharing().transmissionMedia();
+        Place planLocale = getPlan().getLocale();
+        List<String> problems = new ArrayList<String>(  );
+        if ( !isAvailabilityOverlaps( commitment ) ) {
+            problems.add( "availabilities do not overlap" );
+        }
+        if ( !isMediaDeployed( commitment, mediaUsed, planLocale ) ) {
+            problems.add( "no access to required transmission media" );
+        }
+        if ( !isAgentsQualified( commitment, mediaUsed, planLocale )){
+            problems.add( "insufficient technical qualification" );
+        }
+        if ( !isReachable( commitment, mediaUsed, planLocale )) {
+            problems.add( "missing contact info" );
+        }
+        if ( !isCommonLanguage( commitment )) {
+            problems.add( "no common language" );
+        }
+        return problems.size() ==0
+                ? "Yes"
+                : "No: " + StringUtils.capitalize( ChannelsUtils.listToString( problems, ", and " ) );
+    }
+
+    private Plan getPlan() {
+        return User.current().getPlan();
+    }
+
+
+    // There is no assigned agent available at any time.
+    private boolean noAvailability( final List<Assignment> assignments ) {
+        boolean noAvailability = !CollectionUtils.exists(
+                assignments,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Assignment assignment = (Assignment) object;
+                        return !assignment.getActor().getAvailability().isEmpty();
+                    }
+                }
+        );
+        return !assignments.isEmpty() && noAvailability;
+    }
+
 
     private Place planLocale() {
         return User.current().getPlan().getLocale();

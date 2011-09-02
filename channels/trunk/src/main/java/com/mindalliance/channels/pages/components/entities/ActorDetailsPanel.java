@@ -16,11 +16,13 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.commands.UpdateObject;
 import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
+import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
@@ -28,17 +30,22 @@ import com.mindalliance.channels.pages.components.NameRangeable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -46,6 +53,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -139,6 +149,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     private WebMarkupContainer participantsContainer;
     private WebMarkupContainer moreContainer;
     private CheckBox isPlaceHolderSingularCheckBox;
+    private WebMarkupContainer languagesContainer;
 
 
     public ActorDetailsPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
@@ -155,6 +166,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         addIsSystem();
         addContactInfo();
         addAvailabilityPanel();
+        addLanguages();
         addClearances();
         addMoreLink();
         addRoles();
@@ -219,6 +231,110 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 "channels",
                 new Model<Channelable>( getActor() ) ) );
         contactContainer.setVisible( getActor().isActual() );
+    }
+
+    private void addLanguages() {
+        final List<String> choices = allLanguageChoices();
+        languagesContainer = new WebMarkupContainer( "languagesContainer" );
+        languagesContainer.setOutputMarkupId( true );
+        ListView<String> languageList = new ListView<String>( "languages", getLanguages() ) {
+            /** {@inheritDoc} */
+            protected void populateItem( ListItem<String> item ) {
+                addLanguageNameCell( item, choices );
+                addDeleteLanguageCell( item );
+            }
+        };
+        languagesContainer.add( languageList );
+        moDetailsDiv.addOrReplace( languagesContainer );
+    }
+
+    private void addLanguageNameCell( final ListItem<String> item, final List<String> choices ) {
+        String language = item.getModelObject();
+        Label nameLabel = new Label( "language", language );
+        nameLabel.setVisible( !language.isEmpty() );
+        item.add( nameLabel );
+        TextField<String> newLanguageField = new AutoCompleteTextField<String>(
+                "newLanguage",
+                new PropertyModel<String>( this, "language" ) ) {
+            protected Iterator<String> getChoices( String s ) {
+                List<String> candidates = new ArrayList<String>();
+                for ( String choice : choices ) {
+                    if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
+                }
+                return candidates.iterator();
+
+            }
+        };
+        newLanguageField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addLanguages();
+                target.addComponent( languagesContainer );
+                update( target, new Change( Change.Type.Updated, getActor(), "languages" ) );
+            }
+        } );
+        newLanguageField.setVisible( language.isEmpty() && isLockedByUser( getActor() ) );
+        item.add( newLanguageField );
+    }
+
+    private void addDeleteLanguageCell( ListItem<String> item ) {
+        final String language = item.getModelObject().toLowerCase();
+        ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
+                "deleteLanguage",
+                "Remove language?" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                doCommand( new UpdatePlanObject(
+                        getActor(),
+                        "languages",
+                        language,
+                        UpdateObject.Action.Remove
+                ) );
+                addLanguages();
+                target.addComponent( languagesContainer );
+                update( target,
+                        new Change(
+                                Change.Type.Updated,
+                                getActor(),
+                                "languages"
+                        ) );
+            }
+        };
+        makeVisible( deleteLink, isLockedByUser( getEntity() ) && !language.isEmpty() );
+        item.add( deleteLink );
+    }
+
+    private List<String> allLanguageChoices() {
+        Set<String> choices = new HashSet<String>();
+        for ( Actor actor : getQueryService().list( Actor.class ) ) {
+            choices.addAll( actor.getLanguages() );
+        }
+        choices.removeAll( getActor().getLanguages() );
+        return new ArrayList<String>( choices );
+    }
+
+    public String getLanguage() {
+        return "";
+    }
+
+    public void setLanguage( String name ) {
+        if ( name != null && !name.isEmpty() ) {
+            doCommand( new UpdatePlanObject(
+                    getActor(),
+                    "languages",
+                    name.toLowerCase(),
+                    UpdateObject.Action.Add
+            ) );
+        }
+    }
+
+
+    private List<String> getLanguages() {
+        List<String> languages = new ArrayList<String>();
+        for ( String language : getActor().getLanguages() ) {
+            languages.add( StringUtils.capitalize( language ) );
+        }
+        Collections.sort( languages );
+        languages.add( "" );
+        return languages;
     }
 
     private void addAvailabilityPanel() {
@@ -289,9 +405,9 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 update( target, new Change( Change.Type.Updated, getActor(), "placeHolderSingular" ) );
             }
         } );
-        singularityContainer.add(  isPlaceHolderSingularCheckBox );
+        singularityContainer.add( isPlaceHolderSingularCheckBox );
         placeHolderContainer.add( singularityContainer );
-        
+
         placeHolderContainer.setVisible( getActor().isActual() );
         moDetailsDiv.add( placeHolderContainer );
     }
@@ -641,17 +757,17 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     /**
-      * Whether the actor is a place holder.
-      *
-      * @return a boolean
-      */
-     public boolean isPlaceHolderSingular() {
-         return getActor().isPlaceHolderSingular();
-     }
+     * Whether the actor is a place holder.
+     *
+     * @return a boolean
+     */
+    public boolean isPlaceHolderSingular() {
+        return getActor().isPlaceHolderSingular();
+    }
 
-     public void setPlaceHolderSingular( boolean val ) {
-         doCommand( new UpdatePlanObject( getActor(), "placeHolderSingular", val ) );
-     }
+    public void setPlaceHolderSingular( boolean val ) {
+        doCommand( new UpdatePlanObject( getActor(), "placeHolderSingular", val ) );
+    }
 
 
     private Actor getActor() {

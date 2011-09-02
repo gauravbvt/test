@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.model.Commitment;
-import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -106,6 +106,11 @@ import java.util.List;
                     "beneficiary.organization.name",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
+            columns.add( makeAnalysisColumn(
+                    "Can be fulfilled?",
+                    "realizability",
+                    "?"
+            ) );
             // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "commitments",
