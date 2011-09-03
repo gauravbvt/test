@@ -214,6 +214,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentUnqualifiedForMedium"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ConceptualDeFactoWithoutReason"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentCanNotFulfillSharingResponsibilities"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.IncorrectMediumSynchronicity"/>
             </list>
         </property>
     </bean>
@@ -265,12 +266,15 @@ CONFIGURATION NOTES:
     <bean id="fax" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="name" value="Fax"/>
         <property name="kind" value="Type"/>
+<!--
         <property name="types">
             <list value-type="java.util.ArrayList">
                 <ref bean="phone"/>
             </list>
         </property>
+-->
         <property name="cast" value="Unicast"/>
+        <property name="synchronous" value="false"/>
     </bean>
     <bean id="cell" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="name" value="Cell"/>
@@ -287,6 +291,7 @@ CONFIGURATION NOTES:
         <property name="kind" value="Type"/>
         <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
         <property name="cast" value="Unicast"/>
+        <property name="synchronous" value="false"/>
     </bean>
     <bean id="conferenceCall" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="name" value="Conference call"/>
@@ -303,6 +308,7 @@ CONFIGURATION NOTES:
         <property name="kind" value="Type"/>
         <property name="addressPattern" value="[^@\s]+@[^@\s]+\.\w+"/>
         <property name="cast" value="Unicast"/>
+        <property name="synchronous" value="false"/>
     </bean>
     <!--
         <bean id="web" class="com.mindalliance.channels.core.model.TransmissionMedium">
@@ -359,12 +365,14 @@ CONFIGURATION NOTES:
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Unicast"/>
+        <property name="synchronous" value="false"/>
     </bean>
     <bean id="mail" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="name" value="Mail"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Unicast"/>
+        <property name="synchronous" value="false"/>
     </bean>
     <bean id="faceToFace" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="name" value="Face to face"/>

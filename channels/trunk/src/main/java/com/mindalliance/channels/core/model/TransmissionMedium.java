@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +72,10 @@ public class TransmissionMedium extends ModelEntity {
      * Can only be made true for built-in media.
      */
     private boolean direct = false;
+    /**
+     * Whether commmunication is done in "real-time" vs "store and forward".
+     */
+    private boolean synchronous = true;
     /**
      * List of security classifications satisfied by this medium for the transmission of classified info.
      */
@@ -261,6 +266,14 @@ public class TransmissionMedium extends ModelEntity {
         this.direct = direct;
     }
 
+    public boolean isSynchronous() {
+        return synchronous;
+    }
+
+    public void setSynchronous( boolean synchronous ) {
+        this.synchronous = synchronous;
+    }
+
     /**
      * Whether the medium is for broadcast.
      *
@@ -349,7 +362,7 @@ public class TransmissionMedium extends ModelEntity {
     @Override
     public boolean validates( ModelEntity entity, Place locale ) {
         return super.validates( entity, locale )
-            && getEffectiveCast() == ( (TransmissionMedium) entity ).getEffectiveCast();
+                && getEffectiveCast() == ( (TransmissionMedium) entity ).getEffectiveCast();
     }
 
     /**
@@ -434,8 +447,8 @@ public class TransmissionMedium extends ModelEntity {
     /**
      * Return aggregated local and inherited security classifications.
      *
-     * @return a list of secrecy classifications
      * @param plan the plan
+     * @return a list of secrecy classifications
      */
     public List<Classification> getEffectiveSecurity( Plan plan ) {
         List<Classification> effective = new ArrayList<Classification>( security );
@@ -452,6 +465,7 @@ public class TransmissionMedium extends ModelEntity {
 
     /**
      * Aggregate local and inherited delegated-to mediua, without redundancies.
+     *
      * @param locale the default location
      * @return a list of transmission media
      */
@@ -530,6 +544,37 @@ public class TransmissionMedium extends ModelEntity {
         Set<TransmissionMedium> effective = new HashSet<TransmissionMedium>( getDelegatedToMedia() );
         effective.addAll( this.getInheritedDelegates() );
         return new ArrayList<TransmissionMedium>( effective );
+    }
+
+    /**
+     * Medium is explicitly or implicitly synchronous.
+     *
+     * @param planLocale
+     * @return
+     */
+    public boolean isEffectiveSynchronous( final Place planLocale ) {
+        List<TransmissionMedium> effectiveDelegates = getEffectiveDelegates( planLocale );
+        return isSynchronous()
+                ||
+                CollectionUtils.exists(
+                        getAllTypes(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return ( (TransmissionMedium) object ).isSynchronous();
+                            }
+                        }
+                )
+                ||
+                ( !effectiveDelegates.isEmpty() && !CollectionUtils.exists(
+                        effectiveDelegates,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return !( (TransmissionMedium) object ).isEffectiveSynchronous( planLocale );
+                            }
+                        }
+                ) );
     }
 
     public enum Cast {

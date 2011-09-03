@@ -109,4 +109,9 @@ public class Availability implements Serializable {
         return always;
     }
 
+    public boolean equals( Object other ) {
+        return other instanceof Availability &&
+                toString().equals( other.toString() );
+    }
+
 }

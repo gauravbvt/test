@@ -836,50 +836,58 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 if ( flow.getEffectiveChannels().isEmpty() ) {
                     causes.add( "no channels is identified" );
                 } else {
-                    List<Commitment> commitments = getQueryService().findAllCommitments( flow );
+                    List<Commitment> commitments = getQueryService().findAllCommitments( flow,
+                            false,
+                            queryService.getAssignments( false ) );
                     if ( commitments.isEmpty() ) {
                         causes.add( "there are no sharing commitments between any pair of agents" );
                     } else {
-                        StringBuilder sb = new StringBuilder();
-                        List<Commitment> availabilityOverlaps = availabilityOverlapsFilter( commitments );
-                        if ( availabilityOverlaps.isEmpty() ) {
-                            sb.append( "in all sharing commitments, " );
-                            sb.append( "agents are never available at the same time" );
-                        }
                         List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
-                        List<Commitment> mediaDeployed = mediaDeployedFilter( availabilityOverlaps, mediaUsed );
-                        if ( mediaDeployed.isEmpty() ) {
-                            if ( sb.length() == 0 )
-                                sb.append( "in all sharing commitments, " );
-                            else
-                                sb.append( ", or " );
-                            sb.append( "agents do not have access to required transmission media" );
+                        StringBuilder sb = new StringBuilder();
+                        List<Commitment> availabilitiesCoincideIfRequired = availabilitiesCoincideIfRequiredFilter(
+                                commitments,
+                                mediaUsed,
+                                planLocale() );
+                        if ( availabilitiesCoincideIfRequired.isEmpty() ) {
+                            sb.append( "in all sharing commitments, " );
+                            sb.append( "agents are never available at the same time as they must to communicate" );
+                        } else {
+                            List<Commitment> mediaDeployed = mediaDeployedFilter( availabilitiesCoincideIfRequired, mediaUsed );
+                            if ( mediaDeployed.isEmpty() ) {
+                                if ( sb.length() == 0 )
+                                    sb.append( "in all sharing commitments, " );
+                                else
+                                    sb.append( ", or " );
+                                sb.append( "agents do not have access to required transmission media" );
+                            } else {
+                                List<Commitment> reachable = reachableFilter( availabilitiesCoincideIfRequired, mediaUsed );
+                                if ( reachable.isEmpty() ) {
+                                    if ( sb.length() == 0 )
+                                        sb.append( "in all sharing commitments, " );
+                                    else
+                                        sb.append( ", or " );
+                                    sb.append( "the agent to be contacted is not reachable (no contact info)" );
+                                } else {
+                                    List<Commitment> agentsQualified = agentsQualifiedFilter( reachable, mediaUsed );
+                                    if ( agentsQualified.isEmpty() ) {
+                                        if ( sb.length() == 0 )
+                                            sb.append( "in all sharing commitments, " );
+                                        else
+                                            sb.append( ", or " );
+                                        sb.append( "both agents are not qualified to use a transmission medium" );
+                                    } else {
+                                        List<Commitment> languageOverlap = commonLanguageFilter( agentsQualified );
+                                        if ( languageOverlap.isEmpty() ) {
+                                            if ( sb.length() == 0 )
+                                                sb.append( "in all sharing commitments, " );
+                                            else
+                                                sb.append( ", or " );
+                                            sb.append( "agents do not speak a common language" );
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        List<Commitment> reachable = reachableFilter( availabilityOverlaps, mediaUsed );
-                        if ( reachable.isEmpty() ) {
-                            if ( sb.length() == 0 )
-                                sb.append( "in all sharing commitments, " );
-                            else
-                                sb.append( ", or " );
-                            sb.append( "the agent to be contacted is not reachable (no contact info)" );
-                        }
-                        List<Commitment> agentsQualified = agentsQualifiedFilter( reachable, mediaUsed );
-                        if ( agentsQualified.isEmpty() ) {
-                            if ( sb.length() == 0 )
-                                sb.append( "in all sharing commitments, " );
-                            else
-                                sb.append( ", or " );
-                            sb.append( "both agents are not qualified to use a transmission medium" );
-                        }
-                        List<Commitment> languageOverlap = commonLanguageFilter( agentsQualified );
-                        if ( languageOverlap.isEmpty() ) {
-                            if ( sb.length() == 0 )
-                                sb.append( "in all sharing commitments, " );
-                            else
-                                sb.append( ", or " );
-                            sb.append( "agents do not speak a common language" );
-                        }
-
                         if ( sb.length() > 0 ) {
                             causes.add( sb.toString() );
                         }
@@ -921,32 +929,41 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                     if ( commitments.isEmpty() ) {
                         remediations.add( "change the definitions of the source and/or target tasks so that agents are assigned to both" );
                         remediations.add( "add jobs to relevant organizations so that agents can be assigned to source and/or target tasks" );
-                    }
-                    List<Commitment> availabilityOverlaps = availabilityOverlapsFilter( commitments );
-                    if ( availabilityOverlaps.isEmpty() ) {
-                        remediations.add( "change agent availability to make them coincide" );
-                    }
-                    List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
-                    List<Commitment> mediaDeployed = mediaDeployedFilter( availabilityOverlaps, mediaUsed );
-                    if ( mediaDeployed.isEmpty() ) {
-                        remediations.add( "make sure that the agents that are available" +
-                                " to each other also have access to required transmission media" );
-                    }
-                    List<Commitment> reachable = reachableFilter( availabilityOverlaps, mediaUsed );
-                    if ( reachable.isEmpty() ) {
-                        remediations.add( "make sure that the agents that are available" +
-                                " to each other also have known contact information" );
-                    }
-                    List<Commitment> agentsQualified = agentsQualifiedFilter( reachable, mediaUsed );
-                    if ( agentsQualified.isEmpty() ) {
-                        remediations.add( "make sure that agents that are available to each other" +
-                                " and reachable are also qualified to use the transmission media" );
-                        remediations.add( "add channels with transmission media requiring no qualification" );
-                    }
-                    if ( commonLanguageFilter( commitments ).isEmpty() ) {
-                        remediations.add( "make sure that agents that are available to each other, " +
-                                "reachable and qualified to use the transmission media " +
-                                "can also speak a common language" );
+                    } else {
+                        List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
+                        List<Commitment> availabilitcoincideIfRequired = availabilitiesCoincideIfRequiredFilter(
+                                commitments,
+                                mediaUsed,
+                                planLocale() );
+                        if ( availabilitcoincideIfRequired.isEmpty() ) {
+                            remediations.add( "change agent availability to make them coincide" );
+                            remediations.add( "add a channel that does not require synchronous communication" );
+                        } else {
+                            List<Commitment> mediaDeployed = mediaDeployedFilter( availabilitcoincideIfRequired, mediaUsed );
+                            if ( mediaDeployed.isEmpty() ) {
+                                remediations.add( "make sure that the agents that are available" +
+                                        " to each other also have access to required transmission media" );
+                            } else {
+                                List<Commitment> reachable = reachableFilter( availabilitcoincideIfRequired, mediaUsed );
+                                if ( reachable.isEmpty() ) {
+                                    remediations.add( "make sure that the agents that are available" +
+                                            " to each other also have known contact information" );
+                                } else {
+                                    List<Commitment> agentsQualified = agentsQualifiedFilter( reachable, mediaUsed );
+                                    if ( agentsQualified.isEmpty() ) {
+                                        remediations.add( "make sure that agents that are available to each other" +
+                                                " and reachable are also qualified to use the transmission media" );
+                                        remediations.add( "add channels with transmission media requiring no qualification" );
+                                    } else {
+                                        if ( commonLanguageFilter( commitments ).isEmpty() ) {
+                                            remediations.add( "make sure that agents that are available to each other, " +
+                                                    "reachable and qualified to use the transmission media " +
+                                                    "can also speak a common language" );
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -954,27 +971,41 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return remediations;
     }
 
-    // Filter commitments where agent availabilities overlap.
+    // Filter commitments where agent availabilities coincide if required.
     @SuppressWarnings( "unchecked" )
-    private List<Commitment> availabilityOverlapsFilter
-    (
-            final List<Commitment> commitments ) {
+    private List<Commitment> availabilitiesCoincideIfRequiredFilter(
+            final List<Commitment> commitments,
+            final List<TransmissionMedium> mediaUsed,
+            final Place planLocale ) {
         return (List<Commitment>) CollectionUtils.select(
                 commitments,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return isAvailabilityOverlaps( (Commitment) object );
+                        return isAvailabilitiesCoincideIfRequired( (Commitment) object, mediaUsed, planLocale );
                     }
                 }
         );
     }
 
-    public boolean isAvailabilityOverlaps( Commitment commitment ) {
+    public boolean isAvailabilitiesCoincideIfRequired( final Commitment commitment,
+                                                       final List<TransmissionMedium> mediaUsed,
+                                                       final Place planLocale ) {
         Actor committer = commitment.getCommitter().getActor();
         Actor beneficiary = commitment.getBeneficiary().getActor();
-        return !committer.getAvailability()
-                .overlap( beneficiary.getAvailability() ).isEmpty();
+        boolean coincide = committer.getAvailability().equals( beneficiary.getAvailability() );
+        // agent availabilities coincide or there is at least one medium used that is not synchronous
+        return !mediaUsed.isEmpty()
+                && ( coincide ||
+                CollectionUtils.exists(
+                        mediaUsed,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return !( (TransmissionMedium) object ).isEffectiveSynchronous( planLocale );
+                            }
+                        }
+                ) );
     }
 
 
@@ -1123,8 +1154,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                     ? "flow was declared conceptual de facto (no reason given)"
                     : reason );
         } else {
-            if ( !isAvailabilityOverlaps( commitment ) ) {
-                problems.add( "availabilities do not overlap" );
+            if ( !isAvailabilitiesCoincideIfRequired( commitment, mediaUsed, planLocale ) ) {
+                problems.add( "availabilities do not coincide as they must" );
             }
             if ( !isCommonLanguage( commitment ) ) {
                 problems.add( "no common language" );

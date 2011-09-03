@@ -407,9 +407,13 @@ public interface Analyst {
      * Whether a commitment could be met based on availability.
      *
      * @param commitment an info sharing commitment
-     * @return a boolean
+     * @param mediaUsed  media used in commitment
+     * @param planLocale a plan locale
+      * @return a boolean
      */
-    boolean isAvailabilityOverlaps( Commitment commitment );
+    boolean isAvailabilitiesCoincideIfRequired( final Commitment commitment,
+                                                final List<TransmissionMedium> mediaUsed,
+                                                final Place planLocale );
 
     /**
      * Whether a commitment could be met based on media deployments.

@@ -16,6 +16,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
@@ -69,6 +70,10 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
      * Agent type name field.
      */
     private TextField qualificationField;
+    /**
+     * Synchronous checkbox field.
+     */
+    private CheckBox synchronousCheckBox;
 
 
     public MediumDetailsPanel( String id, PropertyModel<ModelEntity> entityModel, Set<Long> expansions ) {
@@ -83,6 +88,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
         addAddressPattern();
         addCastLabel();
         addCastChoiceAndReset();
+        addIsSynchronous();
         addDelegatedToMedia();
         addSecurity();
         addQualificationLink();
@@ -95,6 +101,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
         castResetLink.setVisible( isLockedByUser( getMedium() ) );
         addressPatternField.setEnabled( isLockedByUser( getMedium() ) );
         qualificationField.setEnabled( isLockedByUser( getMedium() ) );
+        synchronousCheckBox.setEnabled( isLockedByUser( getMedium() ) );
     }
 
     private void addCastLabel() {
@@ -114,6 +121,18 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
         addCastChoice();
         addCastReset();
     }
+
+    private void addIsSynchronous() {
+        synchronousCheckBox = new CheckBox( "synchronous", new PropertyModel<Boolean>( this, "synchronous" ) );
+        synchronousCheckBox.setOutputMarkupId( true );
+        synchronousCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getMedium(), "synchronous" ) );
+            }
+        } );
+        moDetailsDiv.add( synchronousCheckBox );
+    }
+
 
     private void addCastChoice() {
         castChoice = new DropDownChoice<TransmissionMedium.Cast>(
@@ -272,6 +291,28 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
             doCommand( new UpdatePlanObject( getMedium(), "addressPattern", value ) );
         }
     }
+
+    /**
+     * Is medium synchronous?
+     *
+     * @return a string
+     */
+    public boolean isSynchronous() {
+        return getMedium().isSynchronous();
+    }
+
+    /**
+     * Set if medium synchronous.
+     *
+     * @param value a string
+     */
+    public void setSynchronous( boolean value ) {
+        TransmissionMedium medium = getMedium();
+        if ( medium.isSynchronous() != value ) {
+            doCommand( new UpdatePlanObject( medium, "synchronous", value ) );
+        }
+    }
+
 
     /**
      * Get qualification's name.
