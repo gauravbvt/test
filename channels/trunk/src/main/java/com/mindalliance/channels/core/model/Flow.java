@@ -356,7 +356,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 result = sourceName;
             }
 
-            if ( qualified && node.isPart() && ( (Part) node ).isOnlyRole() )
+            if ( qualified && node.isPart() && ( (Part) node ).isOnlyRoleOrAgentType() )
                 result = MessageFormat.format( isAll() ? "every {0}" : "any {0}", result );
         }
 

@@ -891,9 +891,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public List<String> findConceptualRemediations
-            ( Flow
-                      flow ) {
+    public List<String> findConceptualRemediations( Flow flow ) {
         List<String> remediations = new ArrayList<String>();
         if ( flow.isProhibited() ) {
             remediations.add( "remove the prohibition" );
@@ -1109,27 +1107,43 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     public String realizability( Commitment commitment ) {
-        List<TransmissionMedium> mediaUsed = commitment.getSharing().transmissionMedia();
-        Place planLocale = getPlan().getLocale();
-        List<String> problems = new ArrayList<String>(  );
-        if ( !isAvailabilityOverlaps( commitment ) ) {
-            problems.add( "availabilities do not overlap" );
-        }
-        if ( !isMediaDeployed( commitment, mediaUsed, planLocale ) ) {
-            problems.add( "no access to required transmission media" );
-        }
-        if ( !isAgentsQualified( commitment, mediaUsed, planLocale )){
-            problems.add( "insufficient technical qualification" );
-        }
-        if ( !isReachable( commitment, mediaUsed, planLocale )) {
-            problems.add( "missing contact info" );
-        }
-        if ( !isCommonLanguage( commitment )) {
-            problems.add( "no common language" );
-        }
-        return problems.size() ==0
+        List<String> problems = findRealizabilityProblems( commitment );
+        return problems.size() == 0
                 ? "Yes"
                 : "No: " + StringUtils.capitalize( ChannelsUtils.listToString( problems, ", and " ) );
+    }
+
+    public List<String> findRealizabilityProblems( Commitment commitment ) {
+        List<String> problems = new ArrayList<String>();
+        List<TransmissionMedium> mediaUsed = commitment.getSharing().transmissionMedia();
+        Place planLocale = getPlan().getLocale();
+        if ( commitment.getSharing().isConceptual() ) {
+            String reason = commitment.getSharing().getConceptualReason();
+            problems.add( reason.isEmpty()
+                    ? "flow was declared conceptual de facto (no reason given)"
+                    : reason );
+        } else {
+            if ( !isAvailabilityOverlaps( commitment ) ) {
+                problems.add( "availabilities do not overlap" );
+            }
+            if ( !isCommonLanguage( commitment ) ) {
+                problems.add( "no common language" );
+            }
+            if ( commitment.getSharing().getEffectiveChannels().isEmpty() ) {
+                problems.add( "no channel is identified" );
+            } else {
+                if ( !isMediaDeployed( commitment, mediaUsed, planLocale ) ) {
+                    problems.add( "no access to required transmission media" );
+                }
+                if ( !isAgentsQualified( commitment, mediaUsed, planLocale ) ) {
+                    problems.add( "insufficient technical qualification" );
+                }
+                if ( !isReachable( commitment, mediaUsed, planLocale ) ) {
+                    problems.add( "missing contact info" );
+                }
+            }
+        }
+        return problems;
     }
 
     private Plan getPlan() {

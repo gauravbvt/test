@@ -273,10 +273,10 @@ public class Part extends Node implements GeoLocatable, Specable, Conceptualizab
     }
 
     /**
-     * @return true if part is only specified by a role.
+     * @return true if part is only specified by a role or agent type.
      */
-    public boolean isOnlyRole() {
-        return spec.isRole();
+    public boolean isOnlyRoleOrAgentType() {
+        return spec.isRole() || ( spec.getActor() != null && spec.getActor().isType() );
     }
 
     /**

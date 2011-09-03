@@ -12042,6 +12042,7 @@
 
                 <entry><para>Yes</para></entry>
               </row>
+              
               <row>
                 <entry><para>Agent in sharing commitment not qualified to use transmission medium</para></entry>
                 
@@ -12052,7 +12053,7 @@
                     <para>Make agent qualified to use the transmission medium</para>
                   </listitem>
                   <listitem>
-                    <para>Remove the qualification requirement from the transmission mediu</para>
+                    <para>Remove the qualification requirement from the transmission medium</para>
                   </listitem>
                   <listitem>
                     <para>Remove the transmission medium from the flow's channels</para>
@@ -12065,6 +12066,28 @@
                 
                 <entry><para>No</para></entry>
               </row>
+              
+              <row>
+                <entry><para>Agent can not fulfill sharing responsibilities from flow</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Make agent qualified to use the transmission medium</para>
+                  </listitem>
+                  <listitem>
+                    <para>If flow is to all, make sure the agent can fulfill all commitments from flow</para>
+                  </listitem>
+                  <listitem>
+                    <para>If flow is to any, make sure the agent can fulfill at least commitment from flow</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
+              
+              
             </tbody>
           </tgroup>
         </informaltable>

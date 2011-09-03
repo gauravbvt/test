@@ -462,4 +462,12 @@ public interface Analyst {
      * @return a string
      */
     String realizability( Commitment commitment );
+
+    /**
+     * Find problem impeding realization of a commitment.
+     *
+     * @param commitment an info sharing commitment
+     * @return a boolean
+     */
+    List<String> findRealizabilityProblems( Commitment commitment );
 }

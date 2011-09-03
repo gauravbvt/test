@@ -213,6 +213,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentWithoutSupervisorCommitsToOne"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentUnqualifiedForMedium"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ConceptualDeFactoWithoutReason"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentCanNotFulfillSharingResponsibilities"/>
             </list>
         </property>
     </bean>
