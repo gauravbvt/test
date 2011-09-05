@@ -111,6 +111,10 @@ public class TE116_RemovePhaseCategories
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
+					Thread.sleep(3000);
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
 					Thread.sleep(1000);
 					// Delete an Phase
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();

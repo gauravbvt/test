@@ -122,30 +122,35 @@ public class TE163_JobsCreated
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field"));
 					GlobalVariables .oElement.sendKeys(Agent);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Title
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Title"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Role
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Role"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Jury
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Jurisdiction"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Supervisor
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Supervisor"));
 					// WebElement Synchronization
@@ -158,8 +163,7 @@ public class TE163_JobsCreated
 				    Thread.sleep(3000);
 					// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
 				    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(Agent));
-					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Agent 1")))
-					{
+					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Agent 1"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
