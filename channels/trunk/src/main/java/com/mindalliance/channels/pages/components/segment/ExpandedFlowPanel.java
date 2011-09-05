@@ -1650,6 +1650,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                     adjustFieldsOnUpdate( flow, target );
                     addHeader();
                     target.addComponent( titlePanel );
+                    refreshMenu( target );
                 }
             }
             super.updateWith( target, change, updated );

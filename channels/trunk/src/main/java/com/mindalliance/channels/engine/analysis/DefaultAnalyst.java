@@ -852,7 +852,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                             sb.append( "in all sharing commitments, " );
                             sb.append( "agents are never available at the same time as they must to communicate" );
                         } else {
-                            List<Commitment> mediaDeployed = mediaDeployedFilter( availabilitiesCoincideIfRequired, mediaUsed );
+                            List<Commitment> mediaDeployed = someMediaDeployedFilter( availabilitiesCoincideIfRequired, mediaUsed );
                             if ( mediaDeployed.isEmpty() ) {
                                 if ( sb.length() == 0 )
                                     sb.append( "in all sharing commitments, " );
@@ -939,7 +939,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                             remediations.add( "change agent availability to make them coincide" );
                             remediations.add( "add a channel that does not require synchronous communication" );
                         } else {
-                            List<Commitment> mediaDeployed = mediaDeployedFilter( availabilitcoincideIfRequired, mediaUsed );
+                            List<Commitment> mediaDeployed = someMediaDeployedFilter( availabilitcoincideIfRequired, mediaUsed );
                             if ( mediaDeployed.isEmpty() ) {
                                 remediations.add( "make sure that the agents that are available" +
                                         " to each other also have access to required transmission media" );
@@ -1011,8 +1011,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     // Filter commitments where agent have access to required transmission media.
     @SuppressWarnings( "unchecked" )
-    private List<Commitment> mediaDeployedFilter
-    ( List<Commitment> commitments, final List<TransmissionMedium> mediaUsed ) {
+    private List<Commitment> someMediaDeployedFilter( List<Commitment> commitments,
+                                                      final List<TransmissionMedium> mediaUsed ) {
         final Place planLocale = planLocale();
         return (List<Commitment>) CollectionUtils.select(
                 commitments,
@@ -1020,15 +1020,15 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                     @Override
                     public boolean evaluate( Object object ) {
                         final Commitment commitment = (Commitment) object;
-                        return isMediaDeployed( commitment, mediaUsed, planLocale );
+                        return isSomeMediaDeployed( commitment, mediaUsed, planLocale );
                     }
                 }
         );
     }
 
-    public boolean isMediaDeployed( final Commitment commitment,
-                                    final List<TransmissionMedium> mediaUsed,
-                                    final Place planLocale ) {
+    public boolean isSomeMediaDeployed( final Commitment commitment,
+                                        final List<TransmissionMedium> mediaUsed,
+                                        final Place planLocale ) {
         return CollectionUtils.exists(
                 mediaUsed,
                 new Predicate() {
@@ -1163,7 +1163,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             if ( commitment.getSharing().getEffectiveChannels().isEmpty() ) {
                 problems.add( "no channel is identified" );
             } else {
-                if ( !isMediaDeployed( commitment, mediaUsed, planLocale ) ) {
+                if ( !isSomeMediaDeployed( commitment, mediaUsed, planLocale ) ) {
                     problems.add( "no access to required transmission media" );
                 }
                 if ( !isAgentsQualified( commitment, mediaUsed, planLocale ) ) {

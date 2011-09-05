@@ -441,7 +441,8 @@ public class Organization extends AbstractUnicastChannelable
     }
 
     public boolean isMediumDeployed( final TransmissionMedium medium, final Place planLocale ) {
-        return !CollectionUtils.exists(
+        return getMediaNotDeployed().isEmpty()
+                || !CollectionUtils.exists(
                 getMediaNotDeployed(),
                 new Predicate() {
                     @Override

@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -105,6 +106,15 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     @Override
     public Iterator<Commitment> iterator() {
         return commitments.iterator();
+    }
+
+    public Commitments realizable( Analyst analyst ) {
+        Commitments result = new Commitments();
+        for ( Commitment commitment : commitments )
+            if ( analyst.findRealizabilityProblems( commitment ).isEmpty() )
+                result.add( commitment );
+
+        return result;
     }
 }
 

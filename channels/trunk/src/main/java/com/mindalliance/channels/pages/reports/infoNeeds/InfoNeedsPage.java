@@ -12,14 +12,15 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.query.Assignments;
+import com.mindalliance.channels.engine.query.Commitments;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.ReportSegment;
 import com.mindalliance.channels.pages.reports.ReportTask;
-import com.mindalliance.channels.engine.query.Assignments;
-import com.mindalliance.channels.engine.query.Commitments;
-import com.mindalliance.channels.engine.query.QueryService;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -198,7 +199,8 @@ public class InfoNeedsPage extends AbstractParticipantPage {
 
         Assignments allAssignments = queryService.getAssignments( false, false );
         Assignments assignments = allAssignments.with( profile );
-        Commitments commitments = new Commitments( queryService, profile, allAssignments );
+        Commitments commitments = new Commitments( queryService, profile, allAssignments )
+                .realizable( getAnalyst() );
 
         List<InfoNeedsReportSegment> reportSegments = new ArrayList<InfoNeedsReportSegment>();
         int i = 1;
@@ -210,7 +212,8 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                         segment,
                         segmentAssignments,
                         commitments,
-                        getQueryService() );
+                        getQueryService(),
+                        getAnalyst() );
                 if ( !reportSegment.isEmpty() ) reportSegments.add( reportSegment );
                 i++;
             }
@@ -229,14 +232,15 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                 Segment segment,
                 Assignments assignments,
                 Commitments commitments,
-                QueryService queryService ) {
+                QueryService queryService,
+                Analyst analyst ) {
             super( seq, segment );
             this.assignments = assignments;
             this.commitments = commitments;
-            reportTasks = findReportTasks( queryService );
+            reportTasks = findReportTasks( queryService, analyst );
         }
 
-        private List<InfoNeedsReportTask> findReportTasks( QueryService queryService ) {
+        private List<InfoNeedsReportTask> findReportTasks( QueryService queryService, Analyst analyst ) {
             List<InfoNeedsReportTask> results = new ArrayList<InfoNeedsReportTask>();
             int seq = 1;
             for ( Part part : assignments.getParts() ) {
@@ -245,7 +249,8 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                 seq++;
                 reportTask.setTaskInfoNeeds( findTaskInfoNeedsForTask(
                         assignments.assignedTo( part ),
-                        queryService ) );
+                        queryService,
+                        analyst) );
                 if ( !reportTask.isEmpty() )
                     results.add( reportTask );
             }
@@ -270,7 +275,8 @@ public class InfoNeedsPage extends AbstractParticipantPage {
 
         private List<TaskInfoNeeds> findTaskInfoNeedsForTask(
                 Assignments assignmentsToTask,
-                final QueryService queryService ) {
+                final QueryService queryService,
+                Analyst analyst) {
             List<TaskInfoNeeds> taskInfoNeedsList = new ArrayList<TaskInfoNeeds>();
             Set<String> infos = new HashSet<String>();
             Part part = assignmentsToTask.getParts().get( 0 );

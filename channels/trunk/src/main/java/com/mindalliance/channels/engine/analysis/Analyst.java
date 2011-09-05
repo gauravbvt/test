@@ -423,9 +423,9 @@ public interface Analyst {
      * @param planLocale a plan locale
      * @return a boolean
      */
-    boolean isMediaDeployed( final Commitment commitment,
-                             final List<TransmissionMedium> mediaUsed,
-                             final Place planLocale );
+    boolean isSomeMediaDeployed( final Commitment commitment,
+                                 final List<TransmissionMedium> mediaUsed,
+                                 final Place planLocale );
 
     /**
      * Whether a commitment could be met based on known contact info.

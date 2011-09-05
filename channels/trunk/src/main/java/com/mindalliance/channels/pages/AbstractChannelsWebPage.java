@@ -1,12 +1,9 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.AttachmentManager;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Commander;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserService;
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
@@ -16,11 +13,15 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.engine.command.Commander;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.engine.nlp.SemanticMatcher;
-import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage;
-import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
 import com.mindalliance.channels.engine.query.PlanService;
 import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage;
+import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
@@ -76,6 +77,9 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     private PlanManager planManager;
 
     private transient QueryService queryService;
+
+    @SpringBean
+    private Analyst analyst;
 
     @SpringBean
     private SemanticMatcher semanticMatcher;
@@ -467,6 +471,14 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
 
     public void setSemanticMatcher( SemanticMatcher semanticMatcher ) {
         this.semanticMatcher = semanticMatcher;
+    }
+
+    public Analyst getAnalyst() {
+        return analyst;
+    }
+
+    public void setAnalyst( Analyst analyst ) {
+        this.analyst = analyst;
     }
 
     public User getUser() {
