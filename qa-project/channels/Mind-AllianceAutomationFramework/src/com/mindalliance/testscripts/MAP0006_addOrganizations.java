@@ -142,7 +142,7 @@ public class MAP0006_addOrganizations
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);;
+					Thread.sleep(3000);
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
