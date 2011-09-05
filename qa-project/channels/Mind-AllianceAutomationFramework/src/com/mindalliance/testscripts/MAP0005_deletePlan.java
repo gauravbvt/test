@@ -114,7 +114,7 @@ public class MAP0005_deletePlan
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(500);
+				Thread.sleep(2000);
 				//Assertion:Verify that plan should get deleted.
 				GlobalVariables.bIsSuccess=Boolean.FALSE;
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
