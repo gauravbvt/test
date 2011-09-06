@@ -36,31 +36,25 @@ public class PS001_ShowOptions
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Click on 'Show' Menu";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu"))).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu")));
-				//Assertion : Verify that After clicking on 'show' menu hide planners, About plan, About plan segment, All segments, Surveys ,All issues , All types ,Index & Help Options Displayed to user
-				if(GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowHidePlanners"))).getText().equals(GlobalVariables.viewElements.get("hidePlanners")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAboutPlan"))).getText().equals(GlobalVariables.viewElements.get("aboutPlan")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAboutPlanSegment"))).getText().equals(GlobalVariables.viewElements.get("aboutPlanSegment")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowSurveys"))).getText().equals(GlobalVariables.viewElements.get("surveys")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAllSegments"))).getText().equals(GlobalVariables.viewElements.get("allSegments")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAllIssues"))).getText().equals(GlobalVariables.viewElements.get("allIssues")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAllTypes"))).getText().equals(GlobalVariables.viewElements.get("allTypes")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowIndex"))).getText().equals(GlobalVariables.viewElements.get("index")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowHelp"))).getText().equals(GlobalVariables.viewElements.get("help"))){
+			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu")));
+				GlobalVariables.oElement.click();
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("show"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else{
+				else
+				{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("actions")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000); 
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

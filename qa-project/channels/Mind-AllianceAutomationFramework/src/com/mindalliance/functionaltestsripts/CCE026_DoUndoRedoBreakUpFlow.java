@@ -162,14 +162,14 @@ public class CCE026_DoUndoRedoBreakUpFlow
 					 GlobalVariables.bIsSuccess = Boolean.TRUE;
 					 break;
 			    }
-				if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
+				if (GlobalVariables.bIsSuccess == Boolean.FALSE) {
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP.txt' "+" Actual " + GlobalVariables.sStrCheck;
+				else
+			    {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -177,7 +177,7 @@ public class CCE026_DoUndoRedoBreakUpFlow
 			    }					
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(8000);
+				Thread.sleep(5000);
 				
 				// Click on Redo Break up flow under Action pop up menu
 				GlobalVariables.iStepNo++;
@@ -190,7 +190,7 @@ public class CCE026_DoUndoRedoBreakUpFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Assertion: Verify that When clicked on 'Redo break up flow' option, the operation 'Break up flow' should be performed on respective flow				
+				// Remove Flow
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
 				options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {

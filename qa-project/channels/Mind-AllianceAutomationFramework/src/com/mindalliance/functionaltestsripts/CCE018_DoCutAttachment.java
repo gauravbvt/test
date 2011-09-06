@@ -102,6 +102,10 @@ public class CCE018_DoCutAttachment
 					// Attach a document
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Attachment document";
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
@@ -133,10 +137,7 @@ public class CCE018_DoCutAttachment
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-									
-					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+							GlobalVariables.sBlank, GlobalVariables.sBlank);							
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

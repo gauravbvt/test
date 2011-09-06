@@ -45,279 +45,256 @@ public class PS019_AboutPlanShowComponents
 				
 				// Click on 'Details' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Details option clicked";
+				GlobalVariables.sDescription = "Details";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("Details"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("float-header")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("float-header"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("details")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionDetails")));
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank);	    	     
 				}
 				else
 				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("details")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected " + GlobalVariables.viewElements.get("details") + " Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				// Click on 'all events' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "all events option clicked";
+				GlobalVariables.sDescription = "All events";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allEvents"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allEventsInPlan")))
-				{
-					// Write Results
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionEventWindow")));
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allEventsInPlan"))) {
+			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-				}
-				else
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+	            }
+			    else
 				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("allEventsInPlan")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+ GlobalVariables.viewElements.get("allEventsInPlan") +" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
-				// WebElement Synchronization
+			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
 				// Click on 'secrecy classification' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "secrecy classification option clicked";
+				GlobalVariables.sDescription = "Secrecy classification";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("secrecyClassification"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("classificationSystems")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionSecrecyclassifications")));
+				// Assertion: Verify that "Secrecy classifications" page loaded
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("classificationSystems"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-				}
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}	
 				else
 				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("classificationSystems")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+ GlobalVariables.viewElements.get("classificationSystems")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				// Click on 'all organizations' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "all organizations option clicked";
+				GlobalVariables.sDescription = "All organizations";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allOrganizations"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("organizationsInPlan")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionEventWindow")));
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("organizationsInPlan"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else
-				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("organizationsInPlan")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected " + GlobalVariables.viewElements.get("organizationsInPlan")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				// Click on 'all segments' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "all segments option clicked";
+				GlobalVariables.sDescription = "All segments";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allSegments"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("aspect")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("aspect"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allInterSegmentFlows")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAllSegments")));
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allInterSegmentFlows"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank);  	     
 				}
 				else
 				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("allInterSegmentFlows")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected " + GlobalVariables.viewElements.get("allInterSegmentFlows")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
 				// Click on 'procedure map' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "procedure map option clicked";
+				GlobalVariables.sDescription = "Procedure map";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("procedureMap"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("displayProceduresFrom")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionProcedureMap")));
+				// Assertion: Verify that "Procedures map" page loaded 
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("proceduremMap1"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank); 	    	    	     
 				}
-				else
-				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("displayProceduresFrom")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("procedureMap")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				// Click on 'who's who' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "who's who option clicked";
+				GlobalVariables.sDescription = "Who's who";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("whosWho"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("indexOn")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionWhowho")));
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("whosWho"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else
 				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("indexOn")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+ GlobalVariables.viewElements.get("whosWho")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				// Click on 'all issues' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "all issues option clicked";
+				GlobalVariables.sDescription = "All issues";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allIssues"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("issuesInSegment")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionIssues")));
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allIssues"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else
-				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("issuesInSegment")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected " + GlobalVariables.viewElements.get("allIssues")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				// Click on 'bibliography' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "bibliography option clicked";
+				GlobalVariables.sDescription = "Bibliography";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("bibliography"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("documentsAttached")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionBibliography")));    			    
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("documentsAttached"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank);	     
 				}
-				else
-				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("documentsAttached")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+ GlobalVariables.viewElements.get("documentsAttached")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);	
 
 				// Click on 'Index' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Index option clicked";
+				GlobalVariables.sDescription = "Index";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("index"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("index")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionIndex")));
+				if (GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.viewElements.get("index"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank);    	    	     
 				}
-				else
-				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("index")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+				else{		
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("details")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -325,27 +302,24 @@ public class PS019_AboutPlanShowComponents
 
 				// Click on 'all types' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "all types option clicked";
+				GlobalVariables.sDescription = "All types";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allTypes"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("showTypes")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionTypes")));
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allTypes"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank);    	    	     
 				}
-				else
-				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("showTypes")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+				else{			
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected " + GlobalVariables.viewElements.get("details")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -353,27 +327,25 @@ public class PS019_AboutPlanShowComponents
 
 				// Click on 'all tags' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "all tags option clicked";
+				GlobalVariables.sDescription = "All tags";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allTags"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allKnownTags")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionTags")));
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allKnownTags"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank);		
 				}
 				else
 				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("allKnownTags")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("allKnownTags")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -381,90 +353,89 @@ public class PS019_AboutPlanShowComponents
 
 				// Click on 'evaluation' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "evaluation option clicked";
+				GlobalVariables.sDescription = "Evaluation";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("evaluation"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("evaluation")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionEvaluation")));
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("evaluation"))) {
+			    	// Write Results
+			    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
+			    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);    	     
+	            }
+			    else{
+			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("evaluation")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-				}
-				else
-				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("evaluation")+"' Actual '"+GlobalVariables.oElement.getText()+";";
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
-				// WebElement Synchronization
+			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 
 				// Click on 'participation' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "participation option clicked";
+				GlobalVariables.sDescription = "Participation";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("participation"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allParticipants")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionParticipations")));
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("participations"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else
 				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("allParticipants")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("participations")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
-				// Click on 'version' option Under 'Show' Pop up Menu 
+				// Click on 'Version' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "version option clicked";
+				GlobalVariables.sDescription = "Version";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("versions"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("plan")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("thisIsVersion")))
-				{
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionVersions")));			    			    
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("versions"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank);    	     
 				}
 				else
 				{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("thisIsVersion")+"' Actual '"+GlobalVariables.oElement.getText()+";";
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("versions")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 				//Close 'About plan' windows
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

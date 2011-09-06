@@ -37,26 +37,24 @@ public class PS002_ActionOptions
 				GlobalVariables.sDescription = "Click on 'Actions' Menu";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionsPopUpMenu"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionsPopUpMenu")));
-				//Assertion : Verify that After clicking on 'show' menu hide planners, About plan, About plan segment, All segments, Surveys ,All issues , All types ,Index & Help Options Displayed to user
-				if(GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionSendMessage"))).getText().equals(GlobalVariables.viewElements.get("sendMessage")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionAddNewTask"))).getText().equals(GlobalVariables.viewElements.get("addNewTask")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionAddNewIssue"))).getText().equals(GlobalVariables.viewElements.get("addNewIssue")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionAddNewSegment"))).getText().equals(GlobalVariables.viewElements.get("addNewSegment")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathActionSignOut"))).getText().contains(GlobalVariables.viewElements.get("signOut"))) {
+				GlobalVariables.oElement.click();
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("actions"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else{
+				else
+				{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("actions")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000); 
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

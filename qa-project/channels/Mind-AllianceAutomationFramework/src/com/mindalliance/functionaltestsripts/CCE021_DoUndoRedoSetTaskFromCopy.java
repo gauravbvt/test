@@ -94,11 +94,6 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Click on hide details from action pop-menu bar
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

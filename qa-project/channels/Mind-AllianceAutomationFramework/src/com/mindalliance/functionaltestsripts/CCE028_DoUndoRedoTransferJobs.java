@@ -24,6 +24,7 @@ public class CCE028_DoUndoRedoTransferJobs
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 				if (GlobalVariables.bIsSuccess) {
+					
 					// Click on 'Information Sharing Model' link
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Navigated to Information Sharing Model";
@@ -156,8 +157,9 @@ public class CCE028_DoUndoRedoTransferJobs
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
+					String Agent="Agent 1";
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field"));
-					GlobalVariables .oElement.sendKeys(GlobalVariables.testData.get("Agent"));
+					GlobalVariables .oElement.sendKeys(Agent);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

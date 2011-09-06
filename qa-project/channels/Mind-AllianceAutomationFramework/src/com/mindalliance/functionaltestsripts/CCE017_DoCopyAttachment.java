@@ -92,16 +92,20 @@ public class CCE017_DoCopyAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Attach a document
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Attachment document";
-					GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
+					GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
 					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:upload"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
