@@ -1,11 +1,5 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.graph.AbstractMetaProvider;
-import com.mindalliance.channels.graph.DOTAttribute;
-import com.mindalliance.channels.graph.DOTAttributeProvider;
-import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Dissemination;
 import com.mindalliance.channels.core.model.Flow;
@@ -14,6 +8,12 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Transformation;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.graph.AbstractMetaProvider;
+import com.mindalliance.channels.graph.DOTAttribute;
+import com.mindalliance.channels.graph.DOTAttributeProvider;
+import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.graph.URLProvider;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.springframework.core.io.Resource;
 
@@ -95,21 +95,21 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
                 StringBuilder sb = new StringBuilder();
                 sb.append( edge.getSubject().getLabel( MAX_INFO_LENGTH ) );
                 if ( edge.getFlow().isProhibited() ) {
-                    sb.append( " -PROHIBITED-");
+                    sb.append( " -PROHIBITED-" );
                 }
                 Flow.Restriction restriction = flow.getRestriction();
                 if ( restriction != null ) {
                     sb.append( " (" );
-                    sb.append( restriction.getLabel());
+                    sb.append( restriction.getLabel() );
                     sb.append( ")" );
                 }
                 Transformation.Type xformType = edge.getTransformationType();
-                if ( !(edge.isRoot() || xformType ==  Transformation.Type.Identity ) ) {
+                if ( !( edge.isRoot() || xformType == Transformation.Type.Identity ) ) {
                     sb.append( " [" );
                     sb.append( xformType.getLabel() );
                     sb.append( " " );
                     sb.append( edge.getTransformedSubject().getLabel( MAX_INFO_LENGTH ) );
-                    sb.append( "]");
+                    sb.append( "]" );
                 }
                 String label = AbstractMetaProvider.separate(
                         sb.toString(),
@@ -211,6 +211,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
 
         public List<DOTAttribute> getEdgeAttributes( Dissemination edge, boolean highlighted ) {
             Flow flow = edge.getFlow();
+            boolean conceptual = !getPlan().isTemplate() && getAnalyst().isEffectivelyConceptual( flow );
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
@@ -223,17 +224,24 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
-            if ( flow.isAskedFor() ) {
+            if ( flow.isIfTaskFails() ) {
+                list.add( new DOTAttribute( "arrowtail", "box" ) );
                 list.add( new DOTAttribute( "dir", "both" ) );
-                list.add( new DOTAttribute( "arrowtail", "onormal" ) );
-                list.add( new DOTAttribute( "style", flow.isCritical() ? "bold" : "solid" ) );
-            } else {
-                if ( flow.isCritical() ) {
-                    list.add( new DOTAttribute( "style", "bold" ) );
-                    list.add( new DOTAttribute( "style", "bold" ) );
-                    list.add( new DOTAttribute( "fontcolor", "black" ) );
-                }
             }
+            if ( flow.isAskedFor() ) {
+                list.add( new DOTAttribute( "arrowtail", "onormal" ) );
+                list.add( new DOTAttribute( "dir", "both" ) );
+            }
+            list.add( new DOTAttribute( "style",
+                    conceptual
+                            ? flow.isCritical()
+                            ? "dashed"
+                            : "dotted"
+                            : flow.isCritical()
+                            ? "bold"
+                            : "normal"
+            ) );
+
             // head and tail labels
             String headLabel = null;
             String tailLabel = null;
@@ -250,15 +258,18 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
                     headLabel = "(stop)";
                 else if ( flow.isTriggeringToTarget() )
                     headLabel = "(start)";
-
             }
             if ( flow.isTerminatingToSource() ) {
                 tailLabel = "(stop)";
             } else if ( flow.isTriggeringToSource() ) {
                 tailLabel = "(start)";
             }
-            if ( headLabel != null ) list.add( new DOTAttribute( "headlabel", headLabel ) );
-            if ( tailLabel != null ) list.add( new DOTAttribute( "taillabel", tailLabel ) );
+            if ( headLabel != null )
+                list.add( new DOTAttribute( "headlabel", headLabel )
+            );
+            if ( tailLabel != null )
+                list.add( new DOTAttribute( "taillabel", tailLabel )
+            );
             if ( headLabel != null || tailLabel != null ) {
                 list.add( new DOTAttribute( "labeldistance", LABEL_DISTANCE ) );
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
@@ -275,7 +286,6 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             }
             return list;
         }
-
     }
 
     /**

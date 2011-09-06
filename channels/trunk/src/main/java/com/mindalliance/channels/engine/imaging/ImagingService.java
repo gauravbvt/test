@@ -20,6 +20,15 @@ import java.io.IOException;
 public interface ImagingService {
 
     /**
+     * Last file name part before extension denoting negation if present.
+     */
+    String NEGATED = "_negated";
+    /**
+     * URL of negated icon.
+     */
+    String NEGATED_ICON_URL = "/conceptual.png";
+
+    /**
      * Find the size of an image given its url.
      *
      *

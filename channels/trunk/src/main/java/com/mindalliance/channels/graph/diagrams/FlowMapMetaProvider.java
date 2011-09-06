@@ -272,6 +272,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
         public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
+            boolean conceptual = !getPlan().isTemplate() && getAnalyst().isEffectivelyConceptual( edge );
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute(
                     "color",
@@ -293,33 +294,29 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                             isOverridden( edge ) ? OVERRIDDEN_COLOR : "darkslategray" ) ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
+            if ( edge.isIfTaskFails() ) {
+                list.add( new DOTAttribute( "arrowtail", "box" ) );
+                list.add( new DOTAttribute( "dir", "both" ) );
+            }
             if ( edge.isAskedFor() ) {
                 list.add( new DOTAttribute( "arrowtail", "onormal" ) );
                 list.add( new DOTAttribute( "dir", "both" ) );
-                list.add( new DOTAttribute(
-                        "style",
-                        edge.isIfTaskFails()
-                                ? "dotted"
-                                : edge.isCritical()
-                                ? "bold"
-                                : "solid" ) );
-            } else {
-                if ( edge.isIfTaskFails() ) {
-                    list.add( new DOTAttribute( "style", "dotted" ) );
-                    if ( edge.isCritical() )
-                        list.add( new DOTAttribute(
-                                "fontcolor",
-                                colorIfVisible(
-                                        edge,
-                                        isOverridden( edge ) ? OVERRIDDEN_COLOR : "black" ) ) );
-                } else if ( edge.isCritical() ) {
-                    list.add( new DOTAttribute( "style", "bold" ) );
+            }
+            list.add( new DOTAttribute( "style",
+                    conceptual
+                        ? edge.isCritical()
+                            ? "dashed"
+                            : "dotted"
+                        : edge.isCritical()
+                            ? "bold"
+                            : "normal"
+            ) );
+            if ( edge.isCritical() ) {
                     list.add( new DOTAttribute(
                             "fontcolor",
                             colorIfVisible(
                                     edge,
                                     isOverridden( edge ) ? OVERRIDDEN_COLOR : "black" ) ) );
-                }
             }
             // head and tail labels
             String headLabel = null;

@@ -161,7 +161,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
             BufferedImage resized = resize( image, width, height );
             ImageIO.write( resized, "png", getIconFile( modelObject, ".png" ) );
-            createNumberedIcons( resized, width, modelObject );
+            createNumberedIcons( plan, resized, width, modelObject );
 
         } catch ( IOException e ) {
             LOG.warn( "Failed to iconize uploaded image at " + url + " (" + e.getMessage() + ')',
@@ -270,15 +270,19 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return new File( getIconFilePrefix() + decodedPath );
     }
 
-    private void createNumberedIcons( BufferedImage resized, int width, ModelObject modelObject )
+    private void createNumberedIcons( Plan plan, BufferedImage resized, int width, ModelObject modelObject )
             throws IOException {
 
         for ( int i = 1; i < ICON_HEIGHTS.length; i++ )
-            createNumberedIcon( resized, modelObject, width, ICON_HEIGHTS[i], i );
+            createNumberedIcon( plan, resized, modelObject, width, ICON_HEIGHTS[i], i );
     }
 
-    private void createNumberedIcon(
-            BufferedImage resized, ModelObject modelObject, int width, int height, int number )
+    private void createNumberedIcon( Plan plan,
+            BufferedImage resized,
+            ModelObject modelObject,
+            int width,
+            int height,
+            int number )
             throws IOException {
 
         BufferedImage icon = new BufferedImage( width, height, BufferedImage.TRANSLUCENT );
@@ -286,6 +290,10 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         Graphics2D graphics = (Graphics2D) icon.getGraphics();
         graphics.drawImage( resized, 0, 0, resized.getWidth(), resized.getHeight(), null );
         ImageIO.write( icon, "png", getIconFile( modelObject, number + ".png" ) );
+        String negatedIconUrl = getImageDirectory().getFile().getAbsolutePath() + NEGATED_ICON_URL;
+        BufferedImage negatedIcon = ImageIO.read( new File( negatedIconUrl ) );
+        graphics.drawImage( negatedIcon, 0, 0, null );
+        ImageIO.write( icon, "png", getIconFile( modelObject, number + NEGATED + ".png" ) );
         graphics.dispose();
     }
 

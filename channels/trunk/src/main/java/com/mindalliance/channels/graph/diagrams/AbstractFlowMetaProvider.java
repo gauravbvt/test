@@ -11,8 +11,11 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import org.jgrapht.ext.VertexNameProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +29,11 @@ import java.util.List;
  */
 public abstract class AbstractFlowMetaProvider<V extends Node, E>
         extends AbstractMetaProvider<V, E> {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( AbstractFlowMetaProvider.class );
 
     /**
      * Color for subgraph contour
@@ -194,6 +202,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
 
     protected String getIcon( ImagingService imagingService, Node node ) {
         String imagesDirName;
+        String negated = "";
         try {
             imagesDirName = getImageDirectory().getFile().getAbsolutePath();
         } catch ( IOException e ) {
@@ -220,11 +229,20 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
             Part part = (Part) node;
             if ( hidingNoop && getAnalyst().isEffectivelyConceptual( part ) )
                 iconName = "blank";
-            else
-                iconName = imagingService.findIconName( User.plan(), part,
+            else {
+                negated = !getPlan().isTemplate() && getAnalyst().isEffectivelyConceptual( part )
+                                        ? ImagingService.NEGATED
+                                        : "";
+                iconName = imagingService.findIconName(
+                        User.plan(),
+                        part,
                         getAnalyst().getQueryService().getAssignments() );
+            }
         }
-
-        return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
+        String name = iconName + ( numLines > 0 ? numLines : "" ) + negated + ".png";
+        if ( !new File( name ).canRead() ) {
+            LOG.warn( "Icon file not found " + name );
+        }
+        return name;
     }
 }
