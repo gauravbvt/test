@@ -26,7 +26,8 @@
 <allOrganizations>All organizations</allOrganizations>
 <allTypes>All types</allTypes>
 <allSegments>All segments</allSegments>
-<procedureMap>Procedure Map</procedureMap>
+<procedureMap>Procedure map</procedureMap>
+<proceduremMap1>Procedure Map</proceduremMap1>
 <channelsAdministration>Channels administration</channelsAdministration>
 <whosWho>Who's who</whosWho>
 <allIssues>All issues</allIssues>
@@ -37,6 +38,7 @@
 <participation>Participations</participation>
 <versions>Versions</versions>
 <actions>Actions</actions>
+<show>Show</show>
 <aboutPlanSegment>About plan segment</aboutPlanSegment>
 <goals>Goals</goals>
 <goalsForThisSegment>Goals for this plan segment</goalsForThisSegment>
