@@ -54,19 +54,9 @@ public class MAV0019_viewAllIndexForm
 			GlobalVariables.iStepNo++ ;
 			GlobalVariables.sDescription = "Index section opened";
 			ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("index"));
-			
-			                                              
-			// Write Results
-			LogFunctions.writeLogs(GlobalVariables.sDescription);
-			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
 			// WebElement Synchronization
 			Thread.currentThread();
 			Thread.sleep(1000);
-					 
-			// Assertion: Verify that "Index" page loaded 
-			GlobalVariables.iStepNo++;
-			GlobalVariables.sDescription="'Index' gets loaded on the About Plan window";		            		         
 			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionIndex")));
 			if (GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.viewElements.get("index"))) {
 				// Write Results

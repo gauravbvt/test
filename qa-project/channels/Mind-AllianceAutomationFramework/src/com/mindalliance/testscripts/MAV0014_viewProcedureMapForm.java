@@ -68,7 +68,7 @@ public class MAV0014_viewProcedureMapForm
 		GlobalVariables.sDescription="Procedure Map renders";
 		GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionProcedureMap")));
 		// Assertion: Verify that "Procedures map" page loaded 
-		if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("procedureMap"))) {
+		if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("proceduremMap1"))) {
 			// Write Results
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
