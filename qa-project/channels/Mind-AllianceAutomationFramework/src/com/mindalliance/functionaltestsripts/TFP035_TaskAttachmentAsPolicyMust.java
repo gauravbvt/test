@@ -67,15 +67,7 @@ public class TFP035_TaskAttachmentAsPolicyMust
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<15;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
+				
 				// Attach File as Mandating Policy
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="File Attached as Mandating Policy";

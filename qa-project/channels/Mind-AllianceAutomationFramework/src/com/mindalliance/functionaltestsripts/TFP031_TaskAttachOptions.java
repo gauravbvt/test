@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -67,15 +66,7 @@ public class TFP031_TaskAttachOptions
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<15;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
+				
 				// Click on Attach List
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Attach <Option> List";
