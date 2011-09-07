@@ -21,6 +21,7 @@
 <hidePlanners>Hide planners</hidePlanners>
 <aboutPlan>About plan</aboutPlan>
 <allEvents>All events</allEvents>
+<conceptual>. Conceptual.</conceptual>
 <informationSharingModel>Information sharing model</informationSharingModel>
 <secrecyClassification>Secrecy classifications</secrecyClassification>
 <allOrganizations>All organizations</allOrganizations>
@@ -203,7 +204,7 @@
 <operationsManagement>Operations management</operationsManagement>
 <planningAndPreparing>Planning/preparing</planningAndPreparing>
 <policySetting>Policy setting</policySetting>
-<prohibited>. PROHIBITED.</prohibited>
+<prohibited>PROHIBITED</prohibited>
 <responding>Responding</responding>
 <unnamed>unnamed</unnamed>
 <taskStart>. The task starts with "responding while unnamed".</taskStart>
