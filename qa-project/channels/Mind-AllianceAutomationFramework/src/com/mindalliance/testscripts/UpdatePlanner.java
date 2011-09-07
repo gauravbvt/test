@@ -17,7 +17,7 @@ import com.mindalliance.globallibrary.GlobalVariables;
 public class UpdatePlanner 
 {
     public UpdatePlanner() {
-    		String sChannelURL = "http://192.168.1.128:8081/";
+    		String sChannelURL = "http://192.168.1.126:8081/";
     		String sUserName = "jf";
     		String sPassword = "Mind-Alliance";
 		try {
@@ -31,7 +31,7 @@ public class UpdatePlanner
 				GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/div[6]/input")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(5000);
 				
 				// Click on 'Channel Administration' link
 				GlobalVariables.iStepNo++ ;
