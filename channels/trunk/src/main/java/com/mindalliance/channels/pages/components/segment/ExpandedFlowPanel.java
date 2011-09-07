@@ -168,14 +168,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     private CheckBox ifTaskFailsCheckBox;
     /**
-     * Conceptual checkbox container.
-     */
-    private WebMarkupContainer conceptualContainer;
-    /**
-     * If conceptual.
-     */
-    private CheckBox conceptualCheckBox;
-    /**
      * Prohibited checkbox container.
      */
     private WebMarkupContainer prohibitedContainer;
@@ -220,14 +212,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     private WebMarkupContainer restrictionContainer;
     /**
-     * Reason why task declared conceptual.
-     */
-    private TextArea<String> conceptualReasonTextArea;
-    /**
-     * Conceptual reason container.
-     */
-    private WebMarkupContainer conceptualReasonContainer;
-    /**
      * The containing plan page.
      */
     private PlanPage planPage;
@@ -260,7 +244,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addNameField();
         addTagsPanel();
         addClassificationFields();
-        addConceptualFields();
         addLabeled( "name-label", nameField );
         addEOIs();
         addReferencesEventPhaseField();
@@ -326,50 +309,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
          addIntentField();
          addProhibitedField( );
      }
-
-    private void addConceptualFields() {
-        conceptualContainer = new WebMarkupContainer( "conceptualContainer" );
-        conceptualContainer.setOutputMarkupId( true );
-        makeVisible( conceptualContainer, !isShowSimpleForm() && getFlow().canGetConceptual() );
-        addOrReplace( conceptualContainer );
-        conceptualCheckBox = new CheckBox( "conceptual", new PropertyModel<Boolean>( this, "conceptual" ) );
-        conceptualContainer.add( conceptualCheckBox );
-        conceptualCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getFlow(), "conceptual" ) );
-                addIssuesAnnotation(
-                        conceptualReasonTextArea,
-                        getFlow(),
-                        conceptualReasonTextArea.getId(),
-                        "small-text-area error" );
-                makeVisible( conceptualReasonContainer, isConceptual() );
-                adjustFields( getFlow() );
-                target.addComponent( conceptualReasonContainer );
-            }
-        } );
-        conceptualReasonContainer = new WebMarkupContainer( "conceptualReasonContainer" );
-        conceptualReasonContainer.setOutputMarkupId( true );
-        makeVisible( conceptualReasonContainer, isConceptual() );
-        conceptualContainer.add(  conceptualReasonContainer );
-        conceptualReasonTextArea = new TextArea<String>(
-                "conceptualReason",
-                new PropertyModel<String>( this, "conceptualReason"  ));
-        conceptualReasonTextArea.add(  new AjaxFormComponentUpdatingBehavior( "onchange") {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getFlow(), "conceptualReason" ) );
-                addConceptualFields();
-                target.addComponent( conceptualContainer );
-            }
-        } );
-        addIssuesAnnotation(
-                conceptualReasonTextArea,
-                getFlow(),
-                conceptualReasonTextArea.getId(),
-                "small-text-area error" );
-        conceptualReasonContainer.add( conceptualReasonTextArea );
-    }
-
 
 
     private void addIntentField() {
@@ -516,9 +455,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
         makeVisible( prohibitedContainer, f.canGetProhibited() );
         prohibitedCheckBox.setEnabled( lockedByUser && f.canSetProhibited() );
-        makeVisible( conceptualContainer, !isShowSimpleForm() && f.canGetConceptual() );
-        conceptualCheckBox.setEnabled( lockedByUser && f.canSetConceptual() );
-        conceptualReasonTextArea.setEnabled( isConceptual() && isLockedByUser( f ) );
         makeVisible( referencesEventPhaseContainer, f.canGetReferencesEventPhase() );
         referencesEventPhaseCheckBox.setEnabled( lockedByUser && f.canSetReferencesEventPhase() );
     }
@@ -744,25 +680,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         ifTaskFailsContainer.add( ifTaskFailsCheckBox );
     }
 
-    private void addConceptualField() {
-        conceptualContainer = new WebMarkupContainer( "conceptualContainer" );
-        conceptualContainer.setOutputMarkupId( true );
-        classificationContainer.add( conceptualContainer );
-        conceptualCheckBox = new CheckBox(
-                "conceptual",
-                new PropertyModel<Boolean>( this, "conceptual" )
-        );
-        conceptualCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update(
-                        target,
-                        new Change( Change.Type.Updated, getFlow(), "conceptual" ) );
-            }
-        } );
-        conceptualContainer.add( conceptualCheckBox );
-    }
-
     private void addProhibitedField() {
         prohibitedContainer = new WebMarkupContainer( "prohibitedContainer" );
         prohibitedContainer.setOutputMarkupId( true );
@@ -890,8 +807,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         target.addComponent(  timingContainer );
         makeVisible( significanceToSourceContainer, !showSimpleForm );
         target.addComponent( significanceToSourceContainer );
-        makeVisible( conceptualContainer, !showSimpleForm && getFlow().canGetConceptual() );
-        target.addComponent(  conceptualContainer );
     }
 
 
@@ -1561,27 +1476,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         if ( val != getFlow().isIfTaskFails() ) {
             doCommand( new UpdateSegmentObject( getFlow(), "ifTaskFails", val ) );
         }
-    }
-
-    /**
-     * Get whether flow is conceptual.
-     *
-     * @return a boolean
-     */
-    public boolean isConceptual() {
-        return getFlow().isConceptual();
-    }
-
-    public void setConceptual( boolean val ) {
-        doCommand( new UpdateSegmentObject( getFlow(), "conceptual", val ) );
-    }
-
-    public String getConceptualReason() {
-        return isConceptual() ? getFlow().getConceptualReason() : "";
-    }
-
-    public void setConceptualReason( String val ) {
-        doCommand( new UpdateSegmentObject( getFlow(), "conceptualReason", val ) );
     }
 
     /**

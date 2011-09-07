@@ -140,15 +140,6 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.setValue( part.getCategory().name() );
             writer.endNode();
         }
-        // Operational
-        writer.startNode( "conceptual" );
-        writer.setValue( Boolean.toString( part.isConceptual() ) );
-        writer.endNode();
-        if ( part.isConceptual() ) {
-            writer.startNode( "conceptualReason" );
-            writer.setValue( part.getConceptualReason() );
-            writer.endNode();
-        }
         // Prohibited
         writer.startNode( "prohibited" );
         writer.setValue( Boolean.toString( part.isProhibited() ) );
@@ -255,12 +246,6 @@ public class PartConverter extends AbstractChannelsConverter {
                 context.convertAnother( segment, UserIssue.class );
             } else if ( nodeName.equals( "category" ) ) {
                 part.setCategory( Part.Category.valueOf( reader.getValue() ) );
-            } else if ( nodeName.equals( "operational" ) ) { // todo: obsolete
-                part.setConceptual( !reader.getValue().equals( "true" ) );
-            } else if ( nodeName.equals( "conceptual" ) ) {
-                part.setConceptual( reader.getValue().equals( "true" ) );
-            } else if ( nodeName.equals( "conceptualReason" ) ) {
-                part.setConceptualReason( reader.getValue() );
             } else if ( nodeName.equals( "prohibited" ) ) {
                 part.setProhibited( reader.getValue().equals( "true" ) );
             } else {

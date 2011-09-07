@@ -199,8 +199,6 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SingleAssignmentToImportantTask"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AvailabilityGapInTaskAssignments"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.TaskWithoutFailureProtocol"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ImportantTaskConceptual"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ImportantFlowConceptual"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantSegmentContext"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentContextNeverCaused"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowEOIsNotStandardCompliant"/>
@@ -212,7 +210,6 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.NeedWithNoTimeSensitiveEOI"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentWithoutSupervisorCommitsToOne"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentUnqualifiedForMedium"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ConceptualDeFactoWithoutReason"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentCanNotFulfillSharingResponsibilities"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.IncorrectMediumSynchronicity"/>
             </list>

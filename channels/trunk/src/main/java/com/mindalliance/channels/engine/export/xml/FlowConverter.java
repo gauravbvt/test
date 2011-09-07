@@ -15,11 +15,12 @@ import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.engine.export.ConnectionSpecification;
 import com.mindalliance.channels.engine.export.PartSpecification;
 import com.mindalliance.channels.engine.export.SegmentSpecification;
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,11 @@ import java.util.Map;
  * Time: 3:28:38 PM
  */
 public class FlowConverter extends AbstractChannelsConverter {
+
+    /**
+     * The logger.
+     */
+    private final Logger LOG = LoggerFactory.getLogger( FlowConverter.class );
 
     /**
      * The exported-imported id map
@@ -122,15 +128,6 @@ public class FlowConverter extends AbstractChannelsConverter {
         if ( flow.isIfTaskFails() ) {
             writer.startNode( "ifTaskFails" );
             writer.setValue( Boolean.toString( flow.isIfTaskFails() ) );
-            writer.endNode();
-        }
-        // Operational
-        writer.startNode( "conceptual" );
-        writer.setValue( Boolean.toString( flow.isConceptual() ) );
-        writer.endNode();
-        if ( flow.isConceptual() ) {
-            writer.startNode( "conceptualReason" );
-            writer.setValue( flow.getConceptualReason() );
             writer.endNode();
         }
         // Prohibited
@@ -275,18 +272,12 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setRestriction( Flow.Restriction.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "ifTaskFails" ) ) {
                 flow.setIfTaskFails( Boolean.valueOf( reader.getValue() ) );
-            } else if ( nodeName.equals( "operational" ) ) { // todo: obsolete
-                flow.setConceptual( !reader.getValue().equals( "true" ) );
-            } else if ( nodeName.equals( "conceptual" ) ) {
-                flow.setConceptual( reader.getValue().equals( "true" ) );
-            } else if ( nodeName.equals( "conceptualReason" ) ) {
-                flow.setConceptualReason( reader.getValue() );
             } else if ( nodeName.equals( "prohibited" ) ) {
                 flow.setProhibited( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "referencesEventPhase" ) ) {
                 flow.setReferencesEventPhase( reader.getValue().equals( "true" ) );
             }  else {
-                throw new ConversionException( "Unknown element " + nodeName );
+                LOG.warn( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }

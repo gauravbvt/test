@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * A part in a segment.
  */
-public class Part extends Node implements GeoLocatable, Specable, Conceptualizable, Prohibitable {
+public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
 
     /**
      * Default actor label, when unknown.
@@ -99,19 +99,9 @@ public class Part extends Node implements GeoLocatable, Specable, Conceptualizab
     private Category category;
 
     /**
-     * Whether a task is de facto conceptual.
-     */
-    private boolean conceptual = false;
-
-    /**
      * Whether the part is prohibited.
      */
     private boolean prohibited = false;
-
-    /**
-     * The reason this part was declared conceptual.
-     */
-    private String conceptualReason = "";
 
     public Part() {
         adjustName();
@@ -403,28 +393,6 @@ public class Part extends Node implements GeoLocatable, Specable, Conceptualizab
         if ( !goals.contains( goal ) ) {
             goals.add( goal );
         }
-    }
-
-    @Override
-    public boolean isConceptual() {
-        return conceptual;
-    }
-
-    public void setConceptual( boolean conceptual ) {
-        this.conceptual = conceptual;
-    }
-
-    @Override
-    public boolean isDeFactoConceptual() {
-        return conceptual;
-    }
-
-    public String getConceptualReason() {
-        return conceptualReason == null ? "" : conceptualReason;
-    }
-
-    public void setConceptualReason( String conceptualReason ) {
-        this.conceptualReason = conceptualReason == null ? "" : conceptualReason;
     }
 
     public boolean isProhibited() {

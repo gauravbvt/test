@@ -757,21 +757,11 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         if ( part.isProhibited() ) {
             causes.add( "prohibited" );
         }
-        if ( part.isDeFactoConceptual() ) {
-            StringBuilder sb = new StringBuilder();
-            sb.append( "de facto" );
-            if ( !part.getConceptualReason().isEmpty() ) {
-                sb.append( " because " );
-                sb.append( ChannelsUtils.smartUncapitalize( part.getConceptualReason() ) );
-            }
-            causes.add( sb.toString() );
-        } else {
-            List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
-            if ( assignments.isEmpty() ) {
-                causes.add( "no agent is assigned to the task" );
-            } else if ( noAvailability( assignments ) ) {
-                causes.add( "none of the assigned agents is ever available" );
-            }
+        List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
+        if ( assignments.isEmpty() ) {
+            causes.add( "no agent is assigned to the task" );
+        } else if ( noAvailability( assignments ) ) {
+            causes.add( "none of the assigned agents is ever available" );
         }
         return causes;
     }
@@ -782,17 +772,13 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         if ( part.isProhibited() ) {
             remediations.add( "remove the prohibition" );
         }
-        if ( part.isDeFactoConceptual() ) {
-            remediations.add( "un-mark the task as de facto conceptual" );
-        } else {
-            List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
-            if ( assignments.isEmpty() ) {
-                remediations.add( "explicitly assign an agent to the task" );
-                remediations.add( "profile an agent to match the task specifications" );
-                remediations.add( "modify the task specifications so that it matches at least one agent" );
-            } else if ( noAvailability( assignments ) ) {
-                remediations.add( "make assigned agents available" );
-            }
+        List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
+        if ( assignments.isEmpty() ) {
+            remediations.add( "explicitly assign an agent to the task" );
+            remediations.add( "profile an agent to match the task specifications" );
+            remediations.add( "modify the task specifications so that it matches at least one agent" );
+        } else if ( noAvailability( assignments ) ) {
+            remediations.add( "make assigned agents available" );
         }
         return remediations;
     }
@@ -809,81 +795,71 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         if ( flow.isProhibited() ) {
             causes.add( "prohibited" );
         }
-        if ( flow.isDeFactoConceptual() ) {
-            StringBuilder sb = new StringBuilder();
-            sb.append( "de facto" );
-            if ( !flow.getConceptualReason().isEmpty() ) {
-                sb.append( " because " );
-                sb.append( ChannelsUtils.smartUncapitalize( flow.getConceptualReason() ) );
+        if ( flow.isNeed() && isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
+            causes.add( "this task can not be executed" );
+        } else if ( flow.isCapability() && isEffectivelyConceptual( (Part) flow.getSource() ) ) {
+            causes.add( "this can not be executed" );
+        } else if ( flow.isSharing() ) {
+            if ( isEffectivelyConceptual( (Part) flow.getSource() ) ) {
+                causes.add( "the task \""
+                        + ( (Part) flow.getSource() ).getTask()
+                        + "\" can not be executed" );
             }
-            causes.add( sb.toString() );
-        } else {
-            if ( flow.isNeed() && isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
-                causes.add( "this task is conceptual" );
-            } else if ( flow.isCapability() && isEffectivelyConceptual( (Part) flow.getSource() ) ) {
-                causes.add( "this task is conceptual" );
-            } else if ( flow.isSharing() ) {
-                if ( isEffectivelyConceptual( (Part) flow.getSource() ) ) {
-                    causes.add( "the task \""
-                            + ( (Part) flow.getSource() ).getTask()
-                            + "\" is conceptual" );
-                }
-                if ( isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
-                    causes.add( "the task \""
-                            + ( (Part) flow.getTarget() ).getTask()
-                            + "\" is conceptual" );
-                }
-                if ( flow.getEffectiveChannels().isEmpty() ) {
-                    causes.add( "no channels is identified" );
+            if ( isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
+                causes.add( "the task \""
+                        + ( (Part) flow.getTarget() ).getTask()
+                        + "\" can not be executed" );
+            }
+            if ( flow.getEffectiveChannels().isEmpty() ) {
+                causes.add( "no channels is identified" );
+            } else {
+                List<Commitment> commitments = getQueryService().findAllCommitments( flow,
+                        false,
+                        queryService.getAssignments( false ) );
+                if ( commitments.isEmpty() ) {
+                    causes.add( "there are no sharing commitments between any pair of agents" );
                 } else {
-                    List<Commitment> commitments = getQueryService().findAllCommitments( flow,
-                            false,
-                            queryService.getAssignments( false ) );
-                    if ( commitments.isEmpty() ) {
-                        causes.add( "there are no sharing commitments between any pair of agents" );
+                    List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
+                    StringBuilder sb = new StringBuilder();
+                    List<Commitment> availabilitiesCoincideIfRequired = availabilitiesCoincideIfRequiredFilter(
+                            commitments,
+                            mediaUsed,
+                            planLocale() );
+                    if ( availabilitiesCoincideIfRequired.isEmpty() ) {
+                        sb.append( "in all sharing commitments, " );
+                        sb.append( "agents are never available at the same time as they must to communicate" );
                     } else {
-                        List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
-                        StringBuilder sb = new StringBuilder();
-                        List<Commitment> availabilitiesCoincideIfRequired = availabilitiesCoincideIfRequiredFilter(
-                                commitments,
-                                mediaUsed,
-                                planLocale() );
-                        if ( availabilitiesCoincideIfRequired.isEmpty() ) {
-                            sb.append( "in all sharing commitments, " );
-                            sb.append( "agents are never available at the same time as they must to communicate" );
+                        List<Commitment> mediaDeployed = someMediaDeployedFilter( availabilitiesCoincideIfRequired, mediaUsed );
+                        if ( mediaDeployed.isEmpty() ) {
+                            if ( sb.length() == 0 )
+                                sb.append( "in all sharing commitments, " );
+                            else
+                                sb.append( ", or " );
+                            sb.append( "agents do not have access to required transmission media" );
                         } else {
-                            List<Commitment> mediaDeployed = someMediaDeployedFilter( availabilitiesCoincideIfRequired, mediaUsed );
-                            if ( mediaDeployed.isEmpty() ) {
+                            List<Commitment> reachable = reachableFilter( availabilitiesCoincideIfRequired, mediaUsed );
+                            if ( reachable.isEmpty() ) {
                                 if ( sb.length() == 0 )
                                     sb.append( "in all sharing commitments, " );
                                 else
                                     sb.append( ", or " );
-                                sb.append( "agents do not have access to required transmission media" );
+                                sb.append( "the agent to be contacted is not reachable (no contact info)" );
                             } else {
-                                List<Commitment> reachable = reachableFilter( availabilitiesCoincideIfRequired, mediaUsed );
-                                if ( reachable.isEmpty() ) {
+                                List<Commitment> agentsQualified = agentsQualifiedFilter( reachable, mediaUsed );
+                                if ( agentsQualified.isEmpty() ) {
                                     if ( sb.length() == 0 )
                                         sb.append( "in all sharing commitments, " );
                                     else
                                         sb.append( ", or " );
-                                    sb.append( "the agent to be contacted is not reachable (no contact info)" );
+                                    sb.append( "both agents are not qualified to use a transmission medium" );
                                 } else {
-                                    List<Commitment> agentsQualified = agentsQualifiedFilter( reachable, mediaUsed );
-                                    if ( agentsQualified.isEmpty() ) {
+                                    List<Commitment> languageOverlap = commonLanguageFilter( agentsQualified );
+                                    if ( languageOverlap.isEmpty() ) {
                                         if ( sb.length() == 0 )
                                             sb.append( "in all sharing commitments, " );
                                         else
                                             sb.append( ", or " );
-                                        sb.append( "both agents are not qualified to use a transmission medium" );
-                                    } else {
-                                        List<Commitment> languageOverlap = commonLanguageFilter( agentsQualified );
-                                        if ( languageOverlap.isEmpty() ) {
-                                            if ( sb.length() == 0 )
-                                                sb.append( "in all sharing commitments, " );
-                                            else
-                                                sb.append( ", or " );
-                                            sb.append( "agents do not speak a common language" );
-                                        }
+                                        sb.append( "agents do not speak a common language" );
                                     }
                                 }
                             }
@@ -904,62 +880,58 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         if ( flow.isProhibited() ) {
             remediations.add( "remove the prohibition" );
         }
-        if ( flow.isDeFactoConceptual() ) {
-            remediations.add( "un-mark this flow as de facto conceptual" );
-        } else {
-            if ( flow.isNeed() && isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
-                remediations.add( "make this task not conceptual" );
-            } else if ( flow.isCapability() && isEffectivelyConceptual( (Part) flow.getSource() ) ) {
-                remediations.add( "make this task not conceptual" );
-            } else if ( flow.isSharing() ) {
-                if ( isEffectivelyConceptual( (Part) flow.getSource() ) ) {
-                    remediations.add( "make the task \""
-                            + ( (Part) flow.getSource() ).getTask()
-                            + "\" not conceptual" );
-                }
-                if ( isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
-                    remediations.add( "make the task \""
-                            + ( (Part) flow.getTarget() ).getTask()
-                            + "\" not conceptual" );
-                }
-                if ( flow.getEffectiveChannels().isEmpty() ) {
-                    remediations.add( "add at least one channel to the flow" );
+        if ( flow.isNeed() && isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
+            remediations.add( "make this task executable" );
+        } else if ( flow.isCapability() && isEffectivelyConceptual( (Part) flow.getSource() ) ) {
+            remediations.add( "make this task executable" );
+        } else if ( flow.isSharing() ) {
+            if ( isEffectivelyConceptual( (Part) flow.getSource() ) ) {
+                remediations.add( "make the task \""
+                        + ( (Part) flow.getSource() ).getTask()
+                        + "\" executable" );
+            }
+            if ( isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
+                remediations.add( "make the task \""
+                        + ( (Part) flow.getTarget() ).getTask()
+                        + "\" executable" );
+            }
+            if ( flow.getEffectiveChannels().isEmpty() ) {
+                remediations.add( "add at least one channel to the flow" );
+            } else {
+                List<Commitment> commitments = getQueryService().findAllCommitments( flow );
+                if ( commitments.isEmpty() ) {
+                    remediations.add( "change the definitions of the source and/or target tasks so that agents are assigned to both" );
+                    remediations.add( "add jobs to relevant organizations so that agents can be assigned to source and/or target tasks" );
                 } else {
-                    List<Commitment> commitments = getQueryService().findAllCommitments( flow );
-                    if ( commitments.isEmpty() ) {
-                        remediations.add( "change the definitions of the source and/or target tasks so that agents are assigned to both" );
-                        remediations.add( "add jobs to relevant organizations so that agents can be assigned to source and/or target tasks" );
+                    List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
+                    List<Commitment> availabilitcoincideIfRequired = availabilitiesCoincideIfRequiredFilter(
+                            commitments,
+                            mediaUsed,
+                            planLocale() );
+                    if ( availabilitcoincideIfRequired.isEmpty() ) {
+                        remediations.add( "change agent availability to make them coincide" );
+                        remediations.add( "add a channel that does not require synchronous communication" );
                     } else {
-                        List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
-                        List<Commitment> availabilitcoincideIfRequired = availabilitiesCoincideIfRequiredFilter(
-                                commitments,
-                                mediaUsed,
-                                planLocale() );
-                        if ( availabilitcoincideIfRequired.isEmpty() ) {
-                            remediations.add( "change agent availability to make them coincide" );
-                            remediations.add( "add a channel that does not require synchronous communication" );
+                        List<Commitment> mediaDeployed = someMediaDeployedFilter( availabilitcoincideIfRequired, mediaUsed );
+                        if ( mediaDeployed.isEmpty() ) {
+                            remediations.add( "make sure that the agents that are available" +
+                                    " to each other also have access to required transmission media" );
                         } else {
-                            List<Commitment> mediaDeployed = someMediaDeployedFilter( availabilitcoincideIfRequired, mediaUsed );
-                            if ( mediaDeployed.isEmpty() ) {
+                            List<Commitment> reachable = reachableFilter( availabilitcoincideIfRequired, mediaUsed );
+                            if ( reachable.isEmpty() ) {
                                 remediations.add( "make sure that the agents that are available" +
-                                        " to each other also have access to required transmission media" );
+                                        " to each other also have known contact information" );
                             } else {
-                                List<Commitment> reachable = reachableFilter( availabilitcoincideIfRequired, mediaUsed );
-                                if ( reachable.isEmpty() ) {
-                                    remediations.add( "make sure that the agents that are available" +
-                                            " to each other also have known contact information" );
+                                List<Commitment> agentsQualified = agentsQualifiedFilter( reachable, mediaUsed );
+                                if ( agentsQualified.isEmpty() ) {
+                                    remediations.add( "make sure that agents that are available to each other" +
+                                            " and reachable are also qualified to use the transmission media" );
+                                    remediations.add( "add channels with transmission media requiring no qualification" );
                                 } else {
-                                    List<Commitment> agentsQualified = agentsQualifiedFilter( reachable, mediaUsed );
-                                    if ( agentsQualified.isEmpty() ) {
-                                        remediations.add( "make sure that agents that are available to each other" +
-                                                " and reachable are also qualified to use the transmission media" );
-                                        remediations.add( "add channels with transmission media requiring no qualification" );
-                                    } else {
-                                        if ( commonLanguageFilter( commitments ).isEmpty() ) {
-                                            remediations.add( "make sure that agents that are available to each other, " +
-                                                    "reachable and qualified to use the transmission media " +
-                                                    "can also speak a common language" );
-                                        }
+                                    if ( commonLanguageFilter( commitments ).isEmpty() ) {
+                                        remediations.add( "make sure that agents that are available to each other, " +
+                                                "reachable and qualified to use the transmission media " +
+                                                "can also speak a common language" );
                                     }
                                 }
                             }
@@ -1148,30 +1120,23 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         List<String> problems = new ArrayList<String>();
         List<TransmissionMedium> mediaUsed = commitment.getSharing().transmissionMedia();
         Place planLocale = getPlan().getLocale();
-        if ( commitment.getSharing().isConceptual() ) {
-            String reason = commitment.getSharing().getConceptualReason();
-            problems.add( reason.isEmpty()
-                    ? "flow was declared conceptual de facto (no reason given)"
-                    : reason );
+        if ( !isAvailabilitiesCoincideIfRequired( commitment, mediaUsed, planLocale ) ) {
+            problems.add( "availabilities do not coincide as they must" );
+        }
+        if ( !isCommonLanguage( commitment ) ) {
+            problems.add( "no common language" );
+        }
+        if ( commitment.getSharing().getEffectiveChannels().isEmpty() ) {
+            problems.add( "no channel is identified" );
         } else {
-            if ( !isAvailabilitiesCoincideIfRequired( commitment, mediaUsed, planLocale ) ) {
-                problems.add( "availabilities do not coincide as they must" );
+            if ( !isSomeMediaDeployed( commitment, mediaUsed, planLocale ) ) {
+                problems.add( "no access to required transmission media" );
             }
-            if ( !isCommonLanguage( commitment ) ) {
-                problems.add( "no common language" );
+            if ( !isAgentsQualified( commitment, mediaUsed, planLocale ) ) {
+                problems.add( "insufficient technical qualification" );
             }
-            if ( commitment.getSharing().getEffectiveChannels().isEmpty() ) {
-                problems.add( "no channel is identified" );
-            } else {
-                if ( !isSomeMediaDeployed( commitment, mediaUsed, planLocale ) ) {
-                    problems.add( "no access to required transmission media" );
-                }
-                if ( !isAgentsQualified( commitment, mediaUsed, planLocale ) ) {
-                    problems.add( "insufficient technical qualification" );
-                }
-                if ( !isReachable( commitment, mediaUsed, planLocale ) ) {
-                    problems.add( "missing contact info" );
-                }
+            if ( !isReachable( commitment, mediaUsed, planLocale ) ) {
+                problems.add( "missing contact info" );
             }
         }
         return problems;

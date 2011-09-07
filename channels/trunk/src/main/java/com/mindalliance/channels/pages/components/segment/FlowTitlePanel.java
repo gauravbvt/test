@@ -48,7 +48,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
             conceptualImage.add(  new AttributeModifier(
                     "title",
                     true,
-                    new Model<String>( "Conceptual: "
+                    new Model<String>( "Can not be realized: "
                             + StringUtils.capitalize( ChannelsUtils.listToString( causes, ", and " ) ) )
             ) );
         }

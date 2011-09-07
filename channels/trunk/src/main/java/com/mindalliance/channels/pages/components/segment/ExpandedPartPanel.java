@@ -189,10 +189,6 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * Category choice.
      */
     private DropDownChoice<String> categoryChoice;
-    /**
-     * Conceptual checkbox.
-     */
-    private CheckBox conceptualCheckBox;
 
     /**
      * Prohibited checkbox.
@@ -219,22 +215,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      */
     private WebMarkupContainer timingContainer;
     /**
-     * Conceptual fields container.
-     */
-    private WebMarkupContainer conceptualContainer;
-    /**
      * Show simple vs advanced form label.
      */
     private Label simpleAdvanced;
-    /**
-     * Reason why task declared conceptual.
-     */
-    private TextArea<String> conceptualReasonTextArea;
-    /**
-     * Conceptual reason container.
-     */
-    private WebMarkupContainer conceptualReasonContainer;
-    /**
+     /**
      * The containing plan page;
      */
     private PlanPage planPage;
@@ -249,7 +233,6 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addSummaryPanel();
         addSimpleAdvanced();
         addTagsPanel();
-        addConceptualFields();
         addPartDescription();
         addTaskField();
         addClassificationFields();
@@ -335,8 +318,6 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         target.addComponent(  tagsContainer );
         makeVisible( classificationContainer, !showSimpleForm );
         target.addComponent(  classificationContainer );
-        makeVisible( conceptualContainer, !showSimpleForm );
-        target.addComponent(  conceptualContainer );
         makeVisible( executionContainer, !showSimpleForm );
         target.addComponent(  executionContainer );
         makeVisible( timingContainer, !showSimpleForm );
@@ -381,49 +362,6 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             }
         } );
         classificationContainer.add( categoryChoice );
-    }
-
-    private void addConceptualFields() {
-        conceptualContainer = new WebMarkupContainer( "conceptualContainer" );
-        conceptualContainer.setOutputMarkupId( true );
-        makeVisible( conceptualContainer, !isShowSimpleForm() );
-        addOrReplace( conceptualContainer );
-        conceptualCheckBox = new CheckBox( "conceptual", new PropertyModel<Boolean>( this, "conceptual" ) );
-        conceptualContainer.add( conceptualCheckBox );
-        conceptualCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getPart(), "conceptual" ) );
-                addIssuesAnnotation(
-                        conceptualReasonTextArea,
-                        getPart(),
-                        conceptualReasonTextArea.getId(),
-                        "small-text-area error" );
-                makeVisible( conceptualReasonContainer, isConceptual() );
-                adjustFields();
-                target.addComponent( conceptualReasonContainer );
-            }
-        } );
-        conceptualReasonContainer = new WebMarkupContainer( "conceptualReasonContainer" );
-        conceptualReasonContainer.setOutputMarkupId( true );
-        makeVisible( conceptualReasonContainer, isConceptual() );
-        conceptualContainer.add(  conceptualReasonContainer );
-        conceptualReasonTextArea = new TextArea<String>(
-                "conceptualReason",
-                new PropertyModel<String>( this, "conceptualReason"  ));
-        conceptualReasonTextArea.add(  new AjaxFormComponentUpdatingBehavior( "onchange") {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getPart(), "conceptualReason" ) );
-                addConceptualFields();
-                target.addComponent( conceptualContainer);
-            }
-        } );
-        addIssuesAnnotation(
-                conceptualReasonTextArea,
-                getPart(),
-                conceptualReasonTextArea.getId(),
-                "small-text-area error" );
-        conceptualReasonContainer.add( conceptualReasonTextArea );
     }
 
     private void addProhibitedField() {
@@ -492,8 +430,6 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void adjustFields() {
         taskField.setEnabled( isLockedByUser( getPart() ) );
         categoryChoice.setEnabled( isLockedByUser( getPart() ) );
-        conceptualCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        conceptualReasonTextArea.setEnabled( isConceptual() && isLockedByUser( getPart() ) );
         prohibitedCheckBox.setEnabled( isLockedByUser( getPart() ) );
         for ( EntityReferencePanel entityReferencePanel : entityFields ) {
             entityReferencePanel.enable( isLockedByUser( getPart() ) );
@@ -1121,22 +1057,6 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             category = label.equals( NO_CATEGORY ) ? null : Part.Category.valueOfLabel( label );
             doCommand( new UpdateSegmentObject( getPart(), "category", category ) );
         }
-    }
-
-    public boolean isConceptual() {
-        return getPart().isConceptual();
-    }
-
-    public void setConceptual( boolean val ) {
-        doCommand( new UpdateSegmentObject( getPart(), "conceptual", val ) );
-    }
-
-    public String getConceptualReason() {
-        return isConceptual() ? getPart().getConceptualReason() : "";
-    }
-
-    public void setConceptualReason( String val ) {
-        doCommand( new UpdateSegmentObject( getPart(), "conceptualReason", val ) );
     }
 
     public boolean isProhibited() {

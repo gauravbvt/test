@@ -230,7 +230,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             taskTitleContainer.add(  new AttributeModifier(
                     "title",
                     true,
-                    new Model<String>( "Conceptual: "
+                    new Model<String>( "Not executable: "
                             + StringUtils.capitalize( ChannelsUtils.listToString( conceptualCauses, ", and " ) ) )
             ) );
         }

@@ -9925,16 +9925,7 @@
             information in a given medium is transmitted. An email address,
             radio channel, or phone number are examples of endpoints.</para>
           </glossdef>
-        </glossentry>
-
-        <glossentry xml:id="conceptual">
-          <glossterm>Conceptual task or flow</glossterm>
-          
-          <glossdef>
-            <para>A task or flow is conceptual if it could not be realized given the environment known to the plan.</para>
-          </glossdef>
-        </glossentry>
-        
+        </glossentry>        
 
         <glossentry xml:id="element_of_information">
           <glossterm>Element of information</glossterm>
@@ -11631,7 +11622,7 @@
               </row>
               
               <row>
-                <entry><para>Task or flow is marked as defacto conceptual but no reason is given</para></entry>
+                <entry><para>Task or flow is marked as proposed but no justification is given</para></entry>
                 
                 <entry><para>Low</para></entry>
                 
@@ -11640,7 +11631,7 @@
                     <para>Provide a reason</para>
                   </listitem>
                   <listitem>
-                    <para>or unmark as de facto conceptual.</para>
+                    <para>or unmark as proposed.</para>
                   </listitem>
                 </itemizedlist></entry>
                 
@@ -11992,34 +11983,6 @@
                     <listitem>
                       <para>Add a notification conditional on task
                       failure</para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>Yes</para></entry>
-              </row>
-
-              <row>
-                <entry><para>Important task is conceptual</para></entry>
-
-                <entry><para>Depends on impacted tasks</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Make the task operational</para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>Yes</para></entry>
-              </row>
-
-              <row>
-                <entry><para>Important sharing flow is conceptual</para></entry>
-
-                <entry><para>Depends on impacted tasks</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Make the flow operational</para>
                     </listitem>
                   </itemizedlist></entry>
 

@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * An arrow between two nodes in the information flow graph.
  */
-public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Conceptualizable, Prohibitable {
+public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Prohibitable {
 
     /**
      * A list of alternate communication channels for the flow.
@@ -70,15 +70,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * Flow applies only if task fails. (Send only)
      */
     private boolean ifTaskFails;
-
-    /**
-     * Whether de facto conceptual.
-     */
-    private boolean conceptual = false;
-    /**
-     * The reason this part was declared conceptual.
-     */
-    private String conceptualReason = "";
 
     /**
      * Whether the flow is prohibited.
@@ -274,24 +265,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.significanceToTarget = significanceToTarget;
     }
 
-    public boolean isConceptual() {
-        return conceptual;
-    }
-
-    public void setConceptual( boolean val ) {
-        this.conceptual = val;
-    }
-
-    public String getConceptualReason() {
-        return conceptualReason == null ? "" : conceptualReason;
-    }
-
-    public void setConceptualReason( String conceptualReason ) {
-        this.conceptualReason = conceptualReason == null
-                ? ""
-                : conceptualReason;
-    }
-
     public boolean isProhibited() {
         return prohibited;
     }
@@ -308,23 +281,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.referencesEventPhase = referencesEventPhase;
     }
 
-    public boolean isDeFactoConceptual() {
-        return isConceptual()/*
-                || isNeed() && ( (Part) getTarget() ).isDeFactoConceptual()
-                || isCapability() && ( (Part) getSource() ).isDeFactoConceptual()
-                || isSharing() &&
-                    ( ( (Part) getSource() ).isDeFactoConceptual()
-                        || ( (Part) getTarget() ).isDeFactoConceptual() )*/;
-    }
-
-    public boolean canGetConceptual() {
-        return isConceptualizable();
-    }
-
-    public boolean canSetConceptual() {
-        return isConceptualizable();
-    }
-
     public boolean canGetProhibited() {
         return isSharing();
     }
@@ -339,12 +295,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public boolean canSetReferencesEventPhase() {
         return canGetReferencesEventPhase();
-    }
-
-    public boolean isConceptualizable() {
-        return isSharing()
-                && !( (Part) getSource() ).isConceptual()
-                && !( (Part) getTarget() ).isConceptual();
     }
 
     public String getShortName( Node node, boolean qualified ) {

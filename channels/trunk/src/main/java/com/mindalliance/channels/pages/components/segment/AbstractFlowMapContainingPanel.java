@@ -188,8 +188,8 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 "title",
                 true,
                 new Model<String>( hidingNoop
-                        ? "Show conceptual"
-                        : "Hide conceptual" ) ) );
+                        ? "Show all"
+                        : "Hide not realizable" ) ) );
         hideNoop.add( icon );
     }
 

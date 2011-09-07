@@ -432,7 +432,6 @@ public class XmlStreamer implements ImportExportFactory {
             external.setAttachments( inner.getAttachments() );
             external.setIntent( inner.getIntent() );
             external.setReferencesEventPhase( inner.isReferencesEventPhase() );
-            external.setConceptual( inner.isConceptual() );
             external.setIfTaskFails( inner.isIfTaskFails() );
             external.setRestriction( inner.getRestriction() );
         }
