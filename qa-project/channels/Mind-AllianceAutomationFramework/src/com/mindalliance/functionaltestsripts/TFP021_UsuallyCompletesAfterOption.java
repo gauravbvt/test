@@ -67,12 +67,6 @@ public class TFP021_UsuallyCompletesAfterOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				GlobalVariables.oDriver.navigate().refresh();
-				// Stretch Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Assertion : Verify that Textbox & Listbox gets Enabled
 				if(GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:completion-time:delay-amount")).isEnabled() &&
 				   GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:completion-time:delay-unit")).isEnabled()) {

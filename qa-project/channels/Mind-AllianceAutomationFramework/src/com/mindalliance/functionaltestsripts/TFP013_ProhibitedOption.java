@@ -92,10 +92,11 @@ public class TFP013_ProhibitedOption
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
+					GlobalVariables.sVerifyError="Verification Failed Expected"+GlobalVariables.viewElements.get("notOperational")+"Actual is"+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				}
 
 				// Uncheck Prohibit Option to Permit the task
@@ -114,10 +115,11 @@ public class TFP013_ProhibitedOption
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
+					GlobalVariables.sVerifyError="Verification Failed Expected ."+"Actual is"+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();

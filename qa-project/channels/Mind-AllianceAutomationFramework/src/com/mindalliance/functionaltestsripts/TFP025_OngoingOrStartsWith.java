@@ -35,18 +35,6 @@ public class TFP025_OngoingOrStartsWith
 				Thread.currentThread();
 				Thread.sleep(2000);
 		
-				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New segment added";
-				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Add Task As Operational"), "New");
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
 				// Stretch Up Task Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
@@ -82,7 +70,7 @@ public class TFP025_OngoingOrStartsWith
 				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:startsWithSegment")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Assertion : Verify that 'Ongoing or Starts with' is added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathOperationalNonOperational")));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("taskStart"))) {
@@ -97,7 +85,10 @@ public class TFP025_OngoingOrStartsWith
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
 				// Un-check Ongoing or Starts with Option
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Ongoing or Starts With option unchecked";
@@ -123,19 +114,7 @@ public class TFP025_OngoingOrStartsWith
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Remove Segment
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
+				
 				// 	Call Logout
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Logout Successful";

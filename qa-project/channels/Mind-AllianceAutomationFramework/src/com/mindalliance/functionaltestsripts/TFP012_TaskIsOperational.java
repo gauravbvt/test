@@ -76,29 +76,30 @@ public class TFP012_TaskIsOperational
 				// Uncheck 'Operational' Option to make task as 'Not Operational'
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Task Not Conceptual";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:classificationContainer:conceptual")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:conceptualContainer:conceptual")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that Task gets Prohibited
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathOperationalNonOperational")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("notOperational"))) {
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("conceptual"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
+					GlobalVariables.sVerifyError="Verification Failed Expected"+GlobalVariables.viewElements.get("notOperational")+"Actual is"+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				}
 
 				// Check 'Operational' Option to make task as 'Operational'
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Task is Conceptual";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:classificationContainer:conceptual")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:conceptualContainer:conceptual")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -111,10 +112,11 @@ public class TFP012_TaskIsOperational
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
+					GlobalVariables.sVerifyError="Verification Failed Expected"+GlobalVariables.viewElements.get("notOperational")+"Actual is"+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();

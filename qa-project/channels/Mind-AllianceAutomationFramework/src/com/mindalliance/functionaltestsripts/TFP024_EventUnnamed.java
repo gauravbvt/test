@@ -69,17 +69,18 @@ public class TFP024_EventUnnamed
 				Thread.sleep(2000);
 				// Assertion : Verify that Phase window opens with name 'Responding'
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name"));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("unnamed"))) {
+				if(GlobalVariables.oElement.getText().equals("")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else {
+					GlobalVariables.sVerifyError="Verification Failed Expected "+GlobalVariables.viewElements.get("unnamed")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
