@@ -47,13 +47,13 @@ public class MAV0080_addNewTask
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
+			    Thread.sleep(2000);
 			    
 				// Assertion: Verify that "Task" page loaded 
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Task' gets loaded";		            		         
-			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("task-title"));			    
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("task"))) {
+			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("part-header"));
+			    if (GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("task"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -69,7 +69,7 @@ public class MAV0080_addNewTask
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000); 
+				Thread.sleep(2000); 
 			    
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;

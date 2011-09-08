@@ -85,7 +85,7 @@ public class MAV0146_viewIssueOfOrganizations
 				// Click on Issue under show pop up menu
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Organizations Issue";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("issues"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("Issues"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -97,15 +97,15 @@ public class MAV0146_viewIssueOfOrganizations
 				// Assertion: Verify that "Organizations Issue" page loaded 
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Organiztions Issue details' page gets loaded";
-			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseAssertionDetails")));
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
+			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("float-header"));
+			    if (GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("issues"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 	            }
 			    else{
-			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("details")+" Actual "+GlobalVariables.oElement.getText();
+			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("issues")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -113,17 +113,17 @@ public class MAV0146_viewIssueOfOrganizations
 				}
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
+				// Click on Done
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click on Done
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				/*// Remove Organizations
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/span/a/span")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);*/
+				Thread.sleep(2000);
 				
 			    // Call logout()
 			    GlobalVariables.iStepNo++ ;

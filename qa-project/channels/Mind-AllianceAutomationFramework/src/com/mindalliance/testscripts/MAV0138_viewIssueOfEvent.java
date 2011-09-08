@@ -61,15 +61,16 @@ public class MAV0138_viewIssueOfEvent
 				// Create an event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event created";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
-				for (int i = 0; i <= 50; i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Event"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -77,11 +78,11 @@ public class MAV0138_viewIssueOfEvent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 								
 				// Click on event
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Event";
+				GlobalVariables.sDescription="Event Window Opened";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathEvent"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -95,16 +96,19 @@ public class MAV0138_viewIssueOfEvent
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event issue";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("Issues"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that "Event details" page loaded 
-			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseAssertionDetails")));
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("Issues"))) {
+			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("float-header"));
+			    if (GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("issues"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 	            }
 			    else{
-			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("details")+" Actual "+GlobalVariables.oElement.getText();
+			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("issues")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -112,28 +116,9 @@ public class MAV0138_viewIssueOfEvent
 				}
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
-				
+				Thread.sleep(3000);				
 				// Click on Done
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allEvents"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
@@ -141,7 +126,14 @@ public class MAV0138_viewIssueOfEvent
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);				
+				Thread.sleep(1000);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				
 			    // Call logout()
 			    GlobalVariables.iStepNo++ ;

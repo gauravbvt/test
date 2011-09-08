@@ -107,8 +107,8 @@ public class MAV0140_viewJob
 				// Assertion: Verify that job details is present
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Job details are present";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathOrganizationJobDetails")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("confirmed"))){
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("aspect"));
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("confirmed"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -126,11 +126,14 @@ public class MAV0140_viewJob
 				
 				// Click on Done
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// Click on Done
-				//GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
+				// Click on Done
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 			    // Call logout()
 			    GlobalVariables.iStepNo++ ;

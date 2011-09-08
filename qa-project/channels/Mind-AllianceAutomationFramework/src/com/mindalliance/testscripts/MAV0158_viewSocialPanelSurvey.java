@@ -25,6 +25,9 @@ public class MAV0158_viewSocialPanelSurvey
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Survey tab is present";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialSurvey"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000); 
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialSurvey")));
 				// Assertion: Verify that message tab is present on social panel
 				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("surveys"))) {

@@ -15,7 +15,7 @@ public class MAV0141_viewChart
 	{
 		try{
 			
-			GlobalVariables.sTestCaseId = "MAV0140_viewJob";
+			GlobalVariables.sTestCaseId = "MAV0141_viewChart";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
