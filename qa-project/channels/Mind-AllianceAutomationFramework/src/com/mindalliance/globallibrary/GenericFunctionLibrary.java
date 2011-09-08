@@ -501,6 +501,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("signOut",oXmlEleViewElements.getElementsByTagName("signOut").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("places",oXmlEleViewElements.getElementsByTagName("places").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("issues",oXmlEleViewElements.getElementsByTagName("issues").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("Issues",oXmlEleViewElements.getElementsByTagName("Issues").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("hideBroadcast",oXmlEleViewElements.getElementsByTagName("hideBroadcast").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("samePlan",oXmlEleViewElements.getElementsByTagName("samePlan").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("redoMoveTasks",oXmlEleViewElements.getElementsByTagName("redoMoveTasks").item(0).getChildNodes().item(0).getNodeValue());
