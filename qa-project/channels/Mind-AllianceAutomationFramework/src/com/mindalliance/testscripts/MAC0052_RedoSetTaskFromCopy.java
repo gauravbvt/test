@@ -75,31 +75,16 @@ public class MAC0052_RedoSetTaskFromCopy {
 				Thread.currentThread();
 				Thread.sleep(5000);
 				// Add details for New Task
-				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-				for (int i = 0; i <= 50; i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Set task from Copy"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(5000);
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(5000);
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(5000);
-				// Click on hide details from action pop-menu bar
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click on 'Copy task' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -111,7 +96,7 @@ public class MAC0052_RedoSetTaskFromCopy {
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Select the other segment
 				GlobalVariables.iStepNo++ ;

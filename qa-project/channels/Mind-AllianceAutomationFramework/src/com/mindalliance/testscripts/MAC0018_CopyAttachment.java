@@ -97,7 +97,7 @@ public class MAC0018_CopyAttachment
 					
 					// Attach a document
 					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Attachment document";
+					GlobalVariables.sDescription="Document Attached";
 					GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -121,7 +121,7 @@ public class MAC0018_CopyAttachment
 					// Click on copy attachment in task
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Attachment Copied";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCopyPhaseAttachment"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCopyTaskAttachment"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
