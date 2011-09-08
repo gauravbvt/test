@@ -2,7 +2,6 @@ package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -51,17 +50,17 @@ public class TFP039_TaskNewIssue
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click 'Add new task' option under 'Actions' pop up menu 
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New task added";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewTask"));
+				// Click on default task
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="New Task Added";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Add New Task Issue
 				GlobalVariables.iStepNo++;
@@ -70,17 +69,9 @@ public class TFP039_TaskNewIssue
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<20;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Assertion : Verify that new issue gets added
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("issue-details"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("issue"))) {
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/span/div/div/h4"));
+				if(GlobalVariables.oElement.getText().contains("Task issues")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

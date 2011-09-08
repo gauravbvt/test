@@ -56,25 +56,17 @@ public class TFP043_TaskIssueSeverityOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click 'Add new task' option under 'Actions' pop up menu 
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New task added";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewTask"));
+				// Click on default task
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Task";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<15;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
 				// Add New Task Issue
 				GlobalVariables.iStepNo++;
@@ -103,10 +95,9 @@ public class TFP043_TaskIssueSeverityOption
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				// Assertion : Verify that List Contains validity, completeness & robustness elements
 				if(options.get(0).getText().equals(GlobalVariables.viewElements.get("minor")) &&
-				   options.get(1).getText().equals(GlobalVariables.viewElements.get("major")) &&
-				   options.get(2).getText().equals(GlobalVariables.viewElements.get("severe")) &&
-				   options.get(3).getText().equals(GlobalVariables.viewElements.get("extreme"))) {
-					
+						options.get(1).getText().equals(GlobalVariables.viewElements.get("major")) &&
+						options.get(2).getText().equals(GlobalVariables.viewElements.get("severe")) &&
+						options.get(3).getText().equals(GlobalVariables.viewElements.get("extreme"))) {
 					options.get(3).setSelected();
 					// Assertion : Verify that Issue type is selected from the List
 					if(options.get(3).isSelected()) {
@@ -115,17 +106,16 @@ public class TFP043_TaskIssueSeverityOption
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);					
 					}
-				}
-				else {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
+					else {
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+					}
+				}			
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization

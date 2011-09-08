@@ -51,17 +51,17 @@ public class TFP052_TaskCreateSurvey
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click 'Add new task' option under 'Actions' pop up menu 
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New task added";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewTask"));
+				// Click on default task
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Task";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
 				// Create Survey
 				GlobalVariables.iStepNo++;
