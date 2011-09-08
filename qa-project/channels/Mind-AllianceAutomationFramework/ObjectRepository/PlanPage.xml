@@ -41,10 +41,10 @@
 <xPathPhaseShowMenu>/html/body/form/div[3]/div/div[2]/div/div/span/span/span/span</xPathPhaseShowMenu>
 <xPathIndexAgent>/html/body/form/div[4]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathIndexAgent>
 <xPathEvent>/html/body/form/div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td/span/a/span</xPathEvent>
-<xPathOrganizationJob>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[12]/td/span/div/div/ul/li/a/span</xPathOrganizationJob>
+<xPathOrganizationJob>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[13]/td/span/div/div/ul/li/a/span</xPathOrganizationJob>
 <xPathOrganizationJobDetails>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[12]/td/span/div/div[2]/div/table/thead/tr/td</xPathOrganizationJobDetails>
-<xPathOrganizationChart>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[12]/td/span/div/div/ul/li[2]/a/span</xPathOrganizationChart>
-<xPathOrganizationAgreement>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[12]/td/span/div/div/ul/li[3]/a/span</xPathOrganizationAgreement>
+<xPathOrganizationChart>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[13]/td/span/div/div/ul/li[2]/a/span</xPathOrganizationChart>
+<xPathOrganizationAgreement>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[13]/td/span/div/div/ul/li[3]/a/span</xPathOrganizationAgreement>
 <xPathAboutPlanLocale>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[6]/td/span/input</xPathAboutPlanLocale>
 <xPathAboutPlanLocaleLink>/html/body/form/div[4]/div/div[2]/div[2]/div[2]/table/tbody/tr/td[3]/ul/li/span/span/a/span</xPathAboutPlanLocaleLink>
 <xPathLocaleWithSpecialCharacters>/html/body/form/div[4]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathLocaleWithSpecialCharacters>
