@@ -1,15 +1,12 @@
 package com.mindalliance.functionaltestsripts;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-@SuppressWarnings("unused")
 public class TFP025_OngoingOrStartsWith 
 {
 	public TFP025_OngoingOrStartsWith(){
