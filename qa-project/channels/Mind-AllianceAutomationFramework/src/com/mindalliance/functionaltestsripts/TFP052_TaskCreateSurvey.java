@@ -2,7 +2,6 @@ package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -37,7 +36,7 @@ public class TFP052_TaskCreateSurvey
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
-				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Add Task"), "New");
+				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Add Task"),"New");
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -53,7 +52,7 @@ public class TFP052_TaskCreateSurvey
 				Thread.sleep(2000);
 				// Click on default task
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Task";
+				GlobalVariables.sDescription="Task Added";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -61,24 +60,30 @@ public class TFP052_TaskCreateSurvey
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 
 				// Create Survey
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Survey Created";
+//				// Scroll Down
+//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
+//				GlobalVariables.oElement.click();
+//				for(int i=0;i<35;i++)
+//					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(2000);
 				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<35;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
+				GlobalVariables.oDriver.findElement(By.className("issues")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+
 				// Create Survey
 				GlobalVariables.oDriver.findElement(By.linkText("Create survey")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(40000);
+				Thread.sleep(35000);
 				// Assertion : Verify that Survey gets Created
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("surveys"))) {
@@ -105,11 +110,6 @@ public class TFP052_TaskCreateSurvey
 				// View Survey
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Survey Viewed";
-				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<35;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
 				GlobalVariables.oDriver.findElement(By.linkText("View survey")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -117,6 +117,7 @@ public class TFP052_TaskCreateSurvey
 				// Assertion : Verify that Survey gets Created
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("surveys"))) {
+					System.out.println("Hie......1");
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -133,11 +134,6 @@ public class TFP052_TaskCreateSurvey
 				Thread.sleep(2000);
 				// Close Survey Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Refresh Browser
-				GlobalVariables.oDriver.navigate().refresh();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
