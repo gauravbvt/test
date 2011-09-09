@@ -53,7 +53,7 @@ public class TFP046_TaskIssueAttachName
 				Thread.sleep(2000);
 				// Click on default task
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Task";
+				GlobalVariables.sDescription="Task Added";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -61,7 +61,7 @@ public class TFP046_TaskIssueAttachName
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 
 				// Add New Task Issue
 				GlobalVariables.iStepNo++;
@@ -75,10 +75,7 @@ public class TFP046_TaskIssueAttachName
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<40;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
+				GlobalVariables.oDriver.findElement(By.className("issues")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

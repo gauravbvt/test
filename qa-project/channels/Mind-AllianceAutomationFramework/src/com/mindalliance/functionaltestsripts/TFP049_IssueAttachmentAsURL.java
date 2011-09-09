@@ -53,7 +53,7 @@ public class TFP049_IssueAttachmentAsURL
 				Thread.sleep(2000);
 				// Click on default task
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Task";
+				GlobalVariables.sDescription="Task Added";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -61,7 +61,7 @@ public class TFP049_IssueAttachmentAsURL
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 
 				// Add New Task Issue
 				GlobalVariables.iStepNo++;
@@ -75,10 +75,7 @@ public class TFP049_IssueAttachmentAsURL
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<40;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
+				GlobalVariables.oDriver.findElement(By.className("issues")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -86,11 +83,11 @@ public class TFP049_IssueAttachmentAsURL
 				// Attachment as a URL
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Attachment as a URL";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathTaskAttachmentURL"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathTaskIssueURL"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:url"));
+				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:issues:issues-container:issues:0:issue:attachments:container:controls:url"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization

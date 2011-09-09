@@ -1,13 +1,10 @@
 package com.mindalliance.functionaltestsripts;
 
 import java.util.List;
-
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -58,7 +55,7 @@ public class TFP048_TaskIssueAttachmentAsPolicy
 				Thread.sleep(2000);
 				// Click on default task
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Task";
+				GlobalVariables.sDescription="Task Added";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -66,7 +63,7 @@ public class TFP048_TaskIssueAttachmentAsPolicy
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 
 				// Add New Task Issue
 				GlobalVariables.iStepNo++;
@@ -80,54 +77,48 @@ public class TFP048_TaskIssueAttachmentAsPolicy
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<40;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
+				GlobalVariables.oDriver.findElement(By.className("issues")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
 				// Issue Attach File as Policy
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Issue : File Attached as Policy";
-				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:type")));
+				GlobalVariables.sDescription="File Attached as Policy";
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:part:issues:issues-container:issues:0:issue:attachments:container:controls:type")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				options.get(1).setSelected();
-				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:upload"));
+				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:issues:issues-container:issues:0:issue:attachments:container:controls:upload"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("segment:part:issues:issues-container:issues:0:issue:attachments:container:controls:submit")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<15;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
+				GlobalVariables.oDriver.findElement(By.className("issues")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-//				// Assertion : Verify that file is attached successfully
-//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Policy"));
-//				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-//				}
-//				else {
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				}
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(2000);
+				// Assertion : Verify that file is attached successfully
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Policy"));
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+				}
+				else {
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization
