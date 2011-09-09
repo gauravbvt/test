@@ -61,7 +61,7 @@ public class TFP040_TaskIssueDetails
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 
 				// Add New Task Issue
 				GlobalVariables.iStepNo++;

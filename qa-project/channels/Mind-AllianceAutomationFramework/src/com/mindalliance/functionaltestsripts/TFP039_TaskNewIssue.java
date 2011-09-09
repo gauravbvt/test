@@ -60,7 +60,7 @@ public class TFP039_TaskNewIssue
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Add New Task Issue
 				GlobalVariables.iStepNo++;
@@ -70,8 +70,8 @@ public class TFP039_TaskNewIssue
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that new issue gets added
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/span/div/div/h4"));
-				if(GlobalVariables.oElement.getText().contains("Task issues")) {
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("issue-details"));
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("type"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

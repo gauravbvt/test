@@ -53,7 +53,7 @@ public class TFP032_TaskAttachName
 				Thread.sleep(2000);
 				// Click on default task
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Task";
+				GlobalVariables.sDescription="Task Added";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -61,11 +61,11 @@ public class TFP032_TaskAttachName
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Enter Attach Name
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Attach Name Entered";
+				GlobalVariables.sDescription="Attachment Name Entered";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
