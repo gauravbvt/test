@@ -9,7 +9,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 import org.springframework.security.access.annotation.Secured;
 
 import java.io.File;
@@ -57,11 +56,6 @@ public class PlanManager {
      */
     private final Map<String, List<String>> outOfSyncUsers =
             Collections.synchronizedMap( new HashMap<String, List<String>>() );
-
-    /**
-     * Where to import initial segments from. Don't if null...
-     */
-    private Resource importDirectory;
 
     /**
      * Pre-defined and immutable transmission media.
@@ -113,14 +107,6 @@ public class PlanManager {
      */
     public void removeListener( PlanListener listener ) {
         listeners.removeListener( listener );
-    }
-
-    public Resource getImportDirectory() {
-        return importDirectory;
-    }
-
-    public void setImportDirectory( Resource importDirectory ) {
-        this.importDirectory = importDirectory;
     }
 
     public UserService getUserService() {

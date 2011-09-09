@@ -201,7 +201,7 @@ td span.feedback-container {
 }
 
 span.feedback-container a {
-    background: url('/images/signout-bg.png') repeat-x;
+    background: url('../../../images/signout-bg.png') repeat-x;
     border: 1px solid #a7a9ac;
     color: #727272;
     font-family:Arial, Helvetica, sans-serif;

@@ -650,7 +650,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         }
 
         public String getIcon() {
-            return "/images/bullet-" + status().getColor() + ".png";
+            return "images/bullet-" + status().getColor() + ".png";
         }
 
         public String getStatusString() {

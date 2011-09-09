@@ -54,6 +54,7 @@ public class TestSemanticProximityMatcher extends TestCase {
         WordnetSemanticMatcher matcher = new WordnetSemanticMatcher();
         matcher.setWordnetDict( new FileSystemResource( "src/main/webapp/WEB-INF/data/wordnet-2/dict" ) );
         matcher.setSimIndex( new FileSystemResource( "src/main/webapp/WEB-INF/data/jwsl/wn_index" ) );
+        matcher.afterPropertiesSet();
         // for ( int i = 0; i < 2; i++ )
         for ( Object[] item : data ) {
             Proximity score = matcher.semanticProximity( (String) item[0], (String) item[1] );

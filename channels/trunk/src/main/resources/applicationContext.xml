@@ -45,7 +45,6 @@ CONFIGURATION NOTES:
 
     <bean id="planManager" class="com.mindalliance.channels.core.dao.PlanManager" lazy-init="true">
         <constructor-arg ref="definitionManager"/>
-        <property name="importDirectory" value="${channels.home}${file.separator}import"/>
         <property name="databaseFactory" ref="databaseFactory"/>
         <property name="defaultSupportCommunity" value="channels@mind-alliance.com"/>
         <property name="defaultCommunityCalendarHost" value="https://www.google.com/calendar/embed"/>

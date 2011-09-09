@@ -273,7 +273,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                     "src",
                     true,
                     new Model<String>(
-                            surveyed ? "/images/survey_small.png" : "/images/survey_add_small.png"
+                            surveyed ? "images/survey_small.png" : "images/survey_add_small.png"
                     ) ) );
             image.add( new AttributeModifier(
                     "alt",

@@ -272,7 +272,10 @@ public class IssueScanner implements Scanner, PlanListener {
 
         private void scanIssues( ModelObject mo ) {
             if ( !active ) return;
-            analyst.listIssues( mo, true );
+
+            // Model object can be null when deleted when scan was in progress
+            if ( mo != null )
+                analyst.listIssues( mo, true );
         }
     }
 }

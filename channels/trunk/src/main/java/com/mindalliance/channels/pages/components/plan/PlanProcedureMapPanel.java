@@ -270,7 +270,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             procedureMapDiagramPanel.add( new AttributeModifier(
                     "style",
                     true,
-                    new Model<String>( "background:url('../images/map-background.png') 270px 0 no-repeat #ffffff;" ) ) );
+                    new Model<String>( "background:url('images/map-background.png') 270px 0 no-repeat #ffffff;" ) ) );
         } else {
             Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? new Settings(
                     DOM_IDENTIFIER, null, null, true, true )
@@ -297,8 +297,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                         true,
                         new Model<String>(
                                 noProcedures
-                                ? "background:url('../images/no-procedures.png') 270px 0 no-repeat #ffffff;"
-                                : "background:url('../images/map-background.png') 270px 0 no-repeat #ffffff;") ) );
+                                ? "background:url('images/no-procedures.png') 270px 0 no-repeat #ffffff;"
+                                : "background:url('images/map-background.png') 270px 0 no-repeat #ffffff;") ) );
         }
         procedureMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( procedureMapDiagramPanel );

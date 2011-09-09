@@ -18,7 +18,7 @@
         <property name="contextOverride" value="true"/>
         <property name="searchContextAttributes" value="true"/>
         <property name="properties"><props>
-            <prop key="channels.home">/WEB-INF/samples</prop>
+            <prop key="channels.home">file:///${user.home}${file.separator}channels</prop>
         </props></property>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="location" value="file:///${user.home}/channels.properties"/>

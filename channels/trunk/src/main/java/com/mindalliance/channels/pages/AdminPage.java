@@ -7,7 +7,6 @@ import com.mindalliance.channels.core.dao.UserService;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.surveys.SurveyService;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
@@ -98,7 +97,6 @@ public class AdminPage extends AbstractChannelsWebPage {
 
     private void init() {
         setStatelessHint( true );
-        addChannelsLogo();
         userList = new ListView<User>( "item",
                 new PropertyModel<List<User>>( userService, "users" ) ) {
             private static final long serialVersionUID = 2266583072592123487L;
@@ -146,7 +144,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                 }
             }
         };
-        deleteLink.setEnabled( definitionManager.getSize() > 1 );
+        deleteLink.setEnabled( definitionManager.getSize() >= 1 );
         WebMarkupContainer managePlanSubmit = new WebMarkupContainer( "managePlanSubmit" );
         managePlanSubmit.setVisible( getPlan().isDevelopment() );
         add(
@@ -242,14 +240,6 @@ public class AdminPage extends AbstractChannelsWebPage {
                                 .add( new ValidationStyler() )
                 ) );
     }
-
-    private void addChannelsLogo() {
-        WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome" );
-        String homeUrl = AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
-        channels_logo.add( new AttributeModifier( "href", true, new Model<String>( "/" + homeUrl ) ) );
-        add( channels_logo );
-    }
-
 
     public String getPlannerSupportCommunity() {
         String s = getPlan().getPlannerSupportCommunity();

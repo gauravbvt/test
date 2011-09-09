@@ -67,7 +67,7 @@ div#header h1 {
 }
 
 div#header a.logout {
-    background: url('../../images/signout-bg.png') repeat-x;
+    background: url('../images/signout-bg.png') repeat-x;
     border: 1px solid #a7a9ac;
     color: #727272;
     font-size: 10px;

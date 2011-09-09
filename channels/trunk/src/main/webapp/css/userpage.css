@@ -102,7 +102,7 @@ div#header h1 {
 div#header a.logout,
 div#header a.help,
 div#header a.feedback-button {
-    background: url('/images/signout-bg.png') repeat-x;
+    background: url('../images/signout-bg.png') repeat-x;
     border: 1px solid #a7a9ac;
     color: #727272;
     font-size: 10px;
@@ -295,7 +295,7 @@ div.plan-references ul {
 }
 
 div.plan-references ul li {
-    background: url('/images/bullet-black.png') no-repeat scroll 0 5px transparent;
+    background: url('../images/bullet-black.png') no-repeat scroll 0 5px transparent;
     list-style: none outside none;
     margin: 0;
     padding: 0 0 7px 15px;
@@ -740,7 +740,7 @@ div.right-accordion {
 }
 
 #social div.new-message input {
-    background: url("/images/signout-bg.png") repeat-x scroll 0 0 transparent;
+    background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
     border: 1px solid #999999;
     color: #727272;
     font-size: 10px;
@@ -825,7 +825,7 @@ div.right-accordion {
 }
 
 #social div.userInfo div.buttons input {
-    background: url("/images/signout-bg.png") repeat-x scroll 0 0 transparent;
+    background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
     border: 1px solid #999999;
     color: #727272;
     font-size: 10px;

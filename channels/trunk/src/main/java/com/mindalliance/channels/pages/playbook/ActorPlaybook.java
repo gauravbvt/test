@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public class ActorPlaybook extends PlaybookPage {
 
-    public static final String DEFAULT_PIC = "../images/actor.png";
+    public static final String DEFAULT_PIC = "images/actor.png";
 
     //----------------------------------------------
     public ActorPlaybook( PageParameters parameters ) {

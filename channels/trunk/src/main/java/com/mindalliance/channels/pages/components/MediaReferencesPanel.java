@@ -56,9 +56,9 @@ public class MediaReferencesPanel extends AbstractUpdatablePanel {
                 ExternalLink link = new ExternalLink( "link", attachment.getUrl() );
                 item.add( link );
                 String src = attachmentManager.isImageReference( attachment )
-                        ? "/images/image.png"
+                        ? "images/image.png"
                         : attachmentManager.isVideoReference( attachment )
-                        ? "/images/movie.png"
+                        ? "images/movie.png"
                         : "";
                 String title = attachmentManager.isImageReference( attachment )
                         ? "Image"

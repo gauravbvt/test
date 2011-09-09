@@ -84,7 +84,6 @@
             <property name="severity" value="warning"/>
             <property name="scope" value="package"/>
             <property name="allowUndeclaredRTE" value="true"/>
-            <property name="allowMissingPropertyJavadoc" value="true"/>
             <property name="tokens" value="METHOD_DEF"/>
         </module>
         <module name="JavaNCSS"/>
@@ -96,7 +95,7 @@
         </module>
         <module name="JavadocVariable">
             <property name="severity" value="warning"/>
-            <property name="scope" value="private"/>
+            <property name="scope" value="package"/>
         </module>
         <module name="LeftCurly">
             <property name="severity" value="info"/>

@@ -75,7 +75,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                                 public void onClick( AjaxRequestTarget target ) {
                                     getCommander().absent( User.current().getUsername() );
                                     getRequestCycle().setRequestTarget(
-                                            new RedirectRequestTarget( "/logout" ) );
+                                            new RedirectRequestTarget( "logout" ) );
                                 }
                             } ) );
 
