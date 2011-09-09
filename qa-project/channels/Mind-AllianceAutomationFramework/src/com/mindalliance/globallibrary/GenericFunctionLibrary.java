@@ -559,6 +559,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("twoWayRadio",oXmlEleViewElements.getElementsByTagName("twoWayRadio").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("newPasswordMsg",oXmlEleViewElements.getElementsByTagName("newPasswordMsg").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("iAmPlanner",oXmlEleViewElements.getElementsByTagName("iAmPlanner").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("mandatingPolicy",oXmlEleViewElements.getElementsByTagName("mandatingPolicy").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("prohibitingPolicy",oXmlEleViewElements.getElementsByTagName("prohibitingPolicy").item(0).getChildNodes().item(0).getNodeValue());
 			
 		} catch(Exception e) {
 			System.out.println("Hie.....");
