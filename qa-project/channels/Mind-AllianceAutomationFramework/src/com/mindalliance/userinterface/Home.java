@@ -43,7 +43,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 	private static final long serialVersionUID = 1L;
 	private JList jListView;
 	private JScrollPane jScrollPane0;
-	private String arrayOfTestCaseId[] = new String[150];
+	private String arrayOfTestCaseId[] = new String[200];
 	private static int noOfSelectedTestCases;
 	private JButton jButtonAdd;
 	private JTextField jTextField0;
@@ -364,7 +364,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			jListPlan = new JList();
 			DefaultListModel listModel = new DefaultListModel();
 			arrayOfTestCaseId = ReportFunctions.readTestCaseId(2);
-			for (int i = 0; i <= 50 ; i++ ) {
+			for (int i = 0; i <= 100 ; i++ ) {
 				if (arrayOfTestCaseId[i] != null)
 					listModel.addElement(arrayOfTestCaseId[i]);
 			}
@@ -426,7 +426,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			jListView = new JList();
 			DefaultListModel listModel = new DefaultListModel();
 			arrayOfTestCaseId = ReportFunctions.readTestCaseId(1);
-			for (int i=0;i<127;i++)
+			for (int i=0;i<250;i++)
 				if(arrayOfTestCaseId[i] != null) {
 					listModel.addElement(arrayOfTestCaseId[i]);
 			}
