@@ -278,6 +278,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathShowAdvanceSimpleFormReceiveInfo",oXmlElePlanPage.getElementsByTagName("xPathShowAdvanceSimpleFormReceiveInfo").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathShowAdvanceSimpleFormSendInfo",oXmlElePlanPage.getElementsByTagName("xPathShowAdvanceSimpleFormSendInfo").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathCrossOnAttachmentCopiedMessage",oXmlElePlanPage.getElementsByTagName("xPathCrossOnAttachmentCopiedMessage").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathTaskIssueURL",oXmlElePlanPage.getElementsByTagName("xPathTaskIssueURL").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathDeletePlaceAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathDeletePlaceAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathPlacesAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathPlacesAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
@@ -430,6 +431,9 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("mitigate",oXmlEleViewElements.getElementsByTagName("mitigate").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("financial",oXmlEleViewElements.getElementsByTagName("financial").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("minor",oXmlEleViewElements.getElementsByTagName("minor").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("major",oXmlEleViewElements.getElementsByTagName("major").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("extreme",oXmlEleViewElements.getElementsByTagName("extreme").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("severe",oXmlEleViewElements.getElementsByTagName("severe").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("actual",oXmlEleViewElements.getElementsByTagName("actual").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("undoUpdateSegment",oXmlEleViewElements.getElementsByTagName("undoUpdateSegment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("redoUpdateSegment",oXmlEleViewElements.getElementsByTagName("redoUpdateSegment").item(0).getChildNodes().item(0).getNodeValue());
@@ -561,6 +565,10 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("iAmPlanner",oXmlEleViewElements.getElementsByTagName("iAmPlanner").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("mandatingPolicy",oXmlEleViewElements.getElementsByTagName("mandatingPolicy").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("prohibitingPolicy",oXmlEleViewElements.getElementsByTagName("prohibitingPolicy").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("validity",oXmlEleViewElements.getElementsByTagName("validity").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("completeness",oXmlEleViewElements.getElementsByTagName("completeness").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("robustness",oXmlEleViewElements.getElementsByTagName("robustness").item(0).getChildNodes().item(0).getNodeValue());
+			
 			
 		} catch(Exception e) {
 			System.out.println("Hie.....");
