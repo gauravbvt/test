@@ -75,7 +75,7 @@ public class TFP037_TaskAttachmentAsURL
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Refresh Page
 				GlobalVariables.oDriver.navigate().refresh();
 				GlobalVariables.oDriver.navigate().refresh();

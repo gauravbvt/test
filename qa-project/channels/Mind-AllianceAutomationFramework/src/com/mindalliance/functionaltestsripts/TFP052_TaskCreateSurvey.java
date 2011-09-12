@@ -65,20 +65,6 @@ public class TFP052_TaskCreateSurvey
 				// Create Survey
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Survey Created";
-//				// Scroll Down
-//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-//				GlobalVariables.oElement.click();
-//				for(int i=0;i<35;i++)
-//					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(2000);
-				// Scroll Down
-				GlobalVariables.oDriver.findElement(By.className("issues")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
 				// Create Survey
 				GlobalVariables.oDriver.findElement(By.linkText("Create survey")).click();
 				// WebElement Synchronization
@@ -113,15 +99,17 @@ public class TFP052_TaskCreateSurvey
 				GlobalVariables.oDriver.findElement(By.linkText("View survey")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(15000);
+				Thread.sleep(20000);
 				// Assertion : Verify that Survey gets Created
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("surveys"))) {
-					System.out.println("Hie......1");
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else {
 					// Write Results
@@ -133,7 +121,7 @@ public class TFP052_TaskCreateSurvey
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Close Survey Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
