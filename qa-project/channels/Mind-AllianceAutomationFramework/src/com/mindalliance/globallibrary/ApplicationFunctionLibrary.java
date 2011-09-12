@@ -1,6 +1,7 @@
 package com.mindalliance.globallibrary;
 
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -29,11 +30,11 @@ public class ApplicationFunctionLibrary {
 					GlobalVariables.oDriver = new InternetExplorerDriver();
 				}
 			}
-			/*// Maximize Browser Window
+			// Maximize Browser Window
 			((JavascriptExecutor) GlobalVariables.oDriver).executeScript("if (window.screen) {window.moveTo(0, 0);window.resizeTo(window.screen.availWidth, window.screen.availHeight);};");
 			// WebElement Synchronization
 			Thread.currentThread();
-			Thread.sleep(2000);*/
+			Thread.sleep(2000);
 			
 			// Enter the URL
 			GlobalVariables.oDriver.get(GlobalVariables.login.get("sChannelURL"));

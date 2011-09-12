@@ -568,6 +568,13 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("validity",oXmlEleViewElements.getElementsByTagName("validity").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("completeness",oXmlEleViewElements.getElementsByTagName("completeness").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("robustness",oXmlEleViewElements.getElementsByTagName("robustness").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("unspecified",oXmlEleViewElements.getElementsByTagName("unspecified").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("alarm",oXmlEleViewElements.getElementsByTagName("alarm").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("announcement",oXmlEleViewElements.getElementsByTagName("announcement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("command",oXmlEleViewElements.getElementsByTagName("command").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("feedback",oXmlEleViewElements.getElementsByTagName("feedback").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("report",oXmlEleViewElements.getElementsByTagName("report").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("elementsOfInformation",oXmlEleViewElements.getElementsByTagName("elementsOfInformation").item(0).getChildNodes().item(0).getNodeValue());
 			
 			
 		} catch(Exception e) {
