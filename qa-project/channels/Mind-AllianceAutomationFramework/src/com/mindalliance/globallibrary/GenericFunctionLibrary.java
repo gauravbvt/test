@@ -279,6 +279,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathShowAdvanceSimpleFormSendInfo",oXmlElePlanPage.getElementsByTagName("xPathShowAdvanceSimpleFormSendInfo").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathCrossOnAttachmentCopiedMessage",oXmlElePlanPage.getElementsByTagName("xPathCrossOnAttachmentCopiedMessage").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathTaskIssueURL",oXmlElePlanPage.getElementsByTagName("xPathTaskIssueURL").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathCreateViewSurvey",oXmlElePlanPage.getElementsByTagName("xPathCreateViewSurvey").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathSendMessageSocialPanel",oXmlElePlanPage.getElementsByTagName("xPathSendMessageSocialPanel").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathSendMessageAndEmailSocialPanel",oXmlElePlanPage.getElementsByTagName("xPathSendMessageAndEmailSocialPanel").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathResetMessageSocialPanel",oXmlElePlanPage.getElementsByTagName("xPathResetMessageSocialPanel").item(0).getChildNodes().item(0).getNodeValue());
