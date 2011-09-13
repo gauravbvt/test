@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.support;
 
-import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;

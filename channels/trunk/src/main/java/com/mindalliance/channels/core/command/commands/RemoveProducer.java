@@ -1,0 +1,67 @@
+package com.mindalliance.channels.core.command.commands;
+
+import com.mindalliance.channels.core.command.AbstractCommand;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.CommandException;
+import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Plan;
+
+/**
+ * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: Sep 15, 2009
+ * Time: 9:27:13 AM
+ */
+public class RemoveProducer extends AbstractCommand {
+
+    public RemoveProducer() {
+    }
+
+    public RemoveProducer( String username ) {
+        needLockOn( User.plan() );
+        set( "producer", username );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getName() {
+        return "vote not to put in production";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Change execute( Commander commander ) throws CommandException {
+        String producer = (String) get( "producer" );
+        Plan plan = User.plan();
+        plan.removeProducer( producer );
+        setTargetDescription( producer );
+        return new Change( Change.Type.Updated, plan, "producers" );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isUndoable() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean forcesSnapshot() {
+        return true;
+    }
+
+}

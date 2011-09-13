@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.engine.command.commands.UpdateSegmentObject;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;

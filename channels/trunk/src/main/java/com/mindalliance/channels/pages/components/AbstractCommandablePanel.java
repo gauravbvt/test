@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Command;
-import com.mindalliance.channels.engine.command.Commander;
-import com.mindalliance.channels.engine.command.commands.CreateEntityIfNew;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.command.commands.CreateEntityIfNew;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;

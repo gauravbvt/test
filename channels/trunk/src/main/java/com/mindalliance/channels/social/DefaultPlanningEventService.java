@@ -4,8 +4,8 @@ import com.mindalliance.channels.core.PersistentObjectDao;
 import com.mindalliance.channels.core.PersistentObjectDaoFactory;
 import com.mindalliance.channels.core.dao.PlanDefinition;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Command;
 
 import java.util.ArrayList;
 import java.util.Collections;

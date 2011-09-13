@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.engine.command.CommandListener;
-import com.mindalliance.channels.engine.command.PresenceListener;
+import com.mindalliance.channels.core.command.CommandListener;
+import com.mindalliance.channels.core.command.PresenceListener;
 import com.mindalliance.channels.core.model.Plan;
 
 import java.util.Date;

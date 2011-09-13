@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.core.AttachmentManager;
-import com.mindalliance.channels.engine.command.Commander;
-import com.mindalliance.channels.engine.command.LockManager;
-import com.mindalliance.channels.engine.command.commands.CreateEntityIfNew;
+import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.command.LockManager;
+import com.mindalliance.channels.core.command.commands.CreateEntityIfNew;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserService;

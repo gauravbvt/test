@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;

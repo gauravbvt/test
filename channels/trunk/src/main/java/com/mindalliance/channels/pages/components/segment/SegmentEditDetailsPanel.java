@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Event;

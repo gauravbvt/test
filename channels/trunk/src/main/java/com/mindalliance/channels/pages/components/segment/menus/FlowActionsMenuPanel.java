@@ -1,16 +1,16 @@
 package com.mindalliance.channels.pages.components.segment.menus;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Command;
-import com.mindalliance.channels.engine.command.commands.AddIntermediate;
-import com.mindalliance.channels.engine.command.commands.AddUserIssue;
-import com.mindalliance.channels.engine.command.commands.BreakUpFlow;
-import com.mindalliance.channels.engine.command.commands.CopyFlow;
-import com.mindalliance.channels.engine.command.commands.DisconnectFlow;
-import com.mindalliance.channels.engine.command.commands.DuplicateFlow;
-import com.mindalliance.channels.engine.command.commands.PasteAttachment;
-import com.mindalliance.channels.engine.command.commands.RemoveCapability;
-import com.mindalliance.channels.engine.command.commands.RemoveNeed;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.commands.AddIntermediate;
+import com.mindalliance.channels.core.command.commands.AddUserIssue;
+import com.mindalliance.channels.core.command.commands.BreakUpFlow;
+import com.mindalliance.channels.core.command.commands.CopyFlow;
+import com.mindalliance.channels.core.command.commands.DisconnectFlow;
+import com.mindalliance.channels.core.command.commands.DuplicateFlow;
+import com.mindalliance.channels.core.command.commands.PasteAttachment;
+import com.mindalliance.channels.core.command.commands.RemoveCapability;
+import com.mindalliance.channels.core.command.commands.RemoveNeed;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;

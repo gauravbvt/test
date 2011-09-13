@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.engine.command.ModelObjectRef;
+import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;

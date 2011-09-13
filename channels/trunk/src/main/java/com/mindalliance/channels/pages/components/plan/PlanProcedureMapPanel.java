@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.engine.analysis.graph.ProceduresGraphBuilder;
-import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;

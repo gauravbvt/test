@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Command;
-import com.mindalliance.channels.engine.command.commands.AddCapability;
-import com.mindalliance.channels.engine.command.commands.AddNeed;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.commands.AddCapability;
+import com.mindalliance.channels.core.command.commands.AddNeed;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Node;

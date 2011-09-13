@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Commander;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.GeoLocatable;

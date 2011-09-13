@@ -34,7 +34,7 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.engine.command.AbstractCommand;
+import com.mindalliance.channels.core.command.AbstractCommand;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.io.xml.XppReader;

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.Attachment;
-import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;

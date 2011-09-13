@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.social.menus;
 
 import com.mindalliance.channels.core.PersistentObject;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.CommandException;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;

@@ -2,8 +2,8 @@ package com.mindalliance.channels;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.command.Commander;
-import com.mindalliance.channels.engine.command.LockManager;
+import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserService;

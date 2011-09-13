@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.segment.menus;
 
-import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;

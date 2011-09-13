@@ -1,7 +1,7 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Command;
 
 /**
  * Command event.

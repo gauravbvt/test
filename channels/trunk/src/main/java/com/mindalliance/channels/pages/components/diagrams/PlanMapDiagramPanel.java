@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
-import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.graph.Diagram;

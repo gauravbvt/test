@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.AddPart;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.AddPart;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;

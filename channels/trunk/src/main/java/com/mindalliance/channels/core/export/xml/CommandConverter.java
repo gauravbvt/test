@@ -1,8 +1,8 @@
 package com.mindalliance.channels.core.export.xml;
 
-import com.mindalliance.channels.engine.command.AbstractCommand;
-import com.mindalliance.channels.engine.command.Command;
-import com.mindalliance.channels.engine.command.MultiCommand;
+import com.mindalliance.channels.core.command.AbstractCommand;
+import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.MultiCommand;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;

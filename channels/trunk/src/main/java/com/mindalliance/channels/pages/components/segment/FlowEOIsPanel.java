@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.LinkFlowClassifications;
-import com.mindalliance.channels.engine.command.commands.UpdateObject;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.LinkFlowClassifications;
+import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;

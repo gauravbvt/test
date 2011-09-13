@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;

@@ -3,10 +3,10 @@
 
 package com.mindalliance.channels.pages.reports.guidelines;
 
-import com.mindalliance.channels.engine.command.Commander;
-import com.mindalliance.channels.engine.command.LockingException;
-import com.mindalliance.channels.engine.command.commands.UpdateObject.Action;
-import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.command.LockingException;
+import com.mindalliance.channels.core.command.commands.UpdateObject.Action;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserService;
 import com.mindalliance.channels.core.model.Actor;

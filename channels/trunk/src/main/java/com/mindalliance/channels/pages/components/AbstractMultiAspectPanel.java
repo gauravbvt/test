@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.LockManager;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;

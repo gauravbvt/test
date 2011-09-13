@@ -220,9 +220,9 @@ CONFIGURATION NOTES:
         <property name="imageDirectory" value="WEB-INF${file.separator}images"/>
     </bean>
 
-    <bean id="lockManager" class="com.mindalliance.channels.engine.command.DefaultLockManager" scope="prototype"/>
+    <bean id="lockManager" class="com.mindalliance.channels.core.command.DefaultLockManager" scope="prototype"/>
 
-    <bean id="commander" class="com.mindalliance.channels.engine.command.DefaultCommander" scope="prototype" autowire="no">
+    <bean id="commander" class="com.mindalliance.channels.core.command.DefaultCommander" scope="prototype" autowire="no">
         <property name="analyst" ref="analyst"/>
         <property name="planManager" ref="planManager"/>
         <property name="attachmentManager" ref="attachmentManager"/>
@@ -231,12 +231,12 @@ CONFIGURATION NOTES:
         <property name="importExportFactory" ref="importExportFactory"/>
         <property name="timeout" value="300"/>
         <property name="presenceListeners">
-            <list value-type="com.mindalliance.channels.engine.command.PresenceListener">
+            <list value-type="com.mindalliance.channels.core.command.PresenceListener">
                 <ref bean="planningEventService"/>
             </list>
         </property>
         <property name="commandListeners">
-            <list value-type="com.mindalliance.channels.engine.command.CommandListener">
+            <list value-type="com.mindalliance.channels.core.command.CommandListener">
                 <ref bean="planningEventService"/>
             </list>
         </property>

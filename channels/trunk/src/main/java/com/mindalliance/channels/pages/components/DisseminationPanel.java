@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Dissemination;
 import com.mindalliance.channels.core.model.Flow;

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.segment.menus;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.AddUserIssue;
-import com.mindalliance.channels.engine.command.commands.PasteAttachment;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.AddUserIssue;
+import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;

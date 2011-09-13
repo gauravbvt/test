@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Command;
-import com.mindalliance.channels.engine.command.commands.AddProducer;
-import com.mindalliance.channels.engine.command.commands.RemoveProducer;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.commands.AddProducer;
+import com.mindalliance.channels.core.command.commands.RemoveProducer;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserService;
 import com.mindalliance.channels.core.model.Identifiable;

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.GeoLocation;

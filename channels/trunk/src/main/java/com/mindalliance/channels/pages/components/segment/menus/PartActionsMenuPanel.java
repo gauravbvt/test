@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.components.segment.menus;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.AddUserIssue;
-import com.mindalliance.channels.engine.command.commands.CopyPart;
-import com.mindalliance.channels.engine.command.commands.Disintermediate;
-import com.mindalliance.channels.engine.command.commands.DuplicatePart;
-import com.mindalliance.channels.engine.command.commands.PasteAttachment;
-import com.mindalliance.channels.engine.command.commands.PasteFlow;
-import com.mindalliance.channels.engine.command.commands.RemovePart;
-import com.mindalliance.channels.engine.command.commands.SatisfyAllNeeds;
-import com.mindalliance.channels.engine.command.commands.SetPartFromCopy;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.AddUserIssue;
+import com.mindalliance.channels.core.command.commands.CopyPart;
+import com.mindalliance.channels.core.command.commands.Disintermediate;
+import com.mindalliance.channels.core.command.commands.DuplicatePart;
+import com.mindalliance.channels.core.command.commands.PasteAttachment;
+import com.mindalliance.channels.core.command.commands.PasteFlow;
+import com.mindalliance.channels.core.command.commands.RemovePart;
+import com.mindalliance.channels.core.command.commands.SatisfyAllNeeds;
+import com.mindalliance.channels.core.command.commands.SetPartFromCopy;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;

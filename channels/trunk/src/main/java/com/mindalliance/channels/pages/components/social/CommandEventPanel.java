@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.Command;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;

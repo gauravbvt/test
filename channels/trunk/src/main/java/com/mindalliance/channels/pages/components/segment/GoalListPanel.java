@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.engine.command.Change;
-import com.mindalliance.channels.engine.command.commands.RemoveGoal;
-import com.mindalliance.channels.engine.command.commands.UpdateObject;
-import com.mindalliance.channels.engine.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.RemoveGoal;
+import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Level;

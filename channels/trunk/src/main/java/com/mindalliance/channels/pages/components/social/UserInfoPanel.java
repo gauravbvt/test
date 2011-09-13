@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.engine.command.Change;
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserInfo;
 import com.mindalliance.channels.core.model.Actor;
