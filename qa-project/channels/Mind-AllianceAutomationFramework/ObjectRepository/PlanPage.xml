@@ -139,8 +139,12 @@
 <xPathShowAdvanceSimpleFormOfTask>/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span[2]</xPathShowAdvanceSimpleFormOfTask>
 <xPathShowAdvanceSimpleFormReceiveInfo>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/span[3]</xPathShowAdvanceSimpleFormReceiveInfo>
 <xPathShowAdvanceSimpleFormSendInfo>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span[3]</xPathShowAdvanceSimpleFormSendInfo>
+<xPathSendMessageSocialPanel>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div[2]/div[4]/input</xPathSendMessageSocialPanel>
+<xPathSendMessageAndEmailSocialPanel>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div[2]/div[4]/input[2]</xPathSendMessageAndEmailSocialPanel>
+<xPathResetMessageSocialPanel>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div[2]/div[4]/input[3]</xPathResetMessageSocialPanel>
 <xPathTaskIssueURL>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathTaskIssueURL>
 <!-- Assertions -->
+<xPathErrorMessageSocialPanelAssertion>/html/body/form/div[2]/div/div/div[2]/div/span/span</xPathErrorMessageSocialPanelAssertion>
 <xPathEventAssertion>/html/body/form/div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td/span/a/span</xPathEventAssertion>
 <xPathDeletePlaceAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div/table/tbody/tr[6]/td</xPathDeletePlaceAttachmentAssertion>
 <xPathAgentURLAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathAgentURLAssertion>
