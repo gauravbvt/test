@@ -144,7 +144,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                 }
             }
         };
-        deleteLink.setEnabled( definitionManager.getSize() >= 1 );
+        deleteLink.setVisible( definitionManager.getSize() >= 1 );
         WebMarkupContainer managePlanSubmit = new WebMarkupContainer( "managePlanSubmit" );
         managePlanSubmit.setVisible( getPlan().isDevelopment() );
         add(
