@@ -7,7 +7,6 @@ import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
-import com.mindalliance.testscripts.MAV0150_viewSocialPanelMessage;
 
 public class HP019_MessageTab 
 {
@@ -83,7 +82,7 @@ public class HP019_MessageTab
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new MAV0150_viewSocialPanelMessage();
+			new HP026_SendBlankMessage();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 
