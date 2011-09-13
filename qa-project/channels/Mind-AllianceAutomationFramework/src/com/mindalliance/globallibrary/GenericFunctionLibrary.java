@@ -279,7 +279,11 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathShowAdvanceSimpleFormSendInfo",oXmlElePlanPage.getElementsByTagName("xPathShowAdvanceSimpleFormSendInfo").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathCrossOnAttachmentCopiedMessage",oXmlElePlanPage.getElementsByTagName("xPathCrossOnAttachmentCopiedMessage").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathTaskIssueURL",oXmlElePlanPage.getElementsByTagName("xPathTaskIssueURL").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathSendMessageSocialPanel",oXmlElePlanPage.getElementsByTagName("xPathSendMessageSocialPanel").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathSendMessageAndEmailSocialPanel",oXmlElePlanPage.getElementsByTagName("xPathSendMessageAndEmailSocialPanel").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathResetMessageSocialPanel",oXmlElePlanPage.getElementsByTagName("xPathResetMessageSocialPanel").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
+			GlobalVariables.assertion.put("sXpathErrorMessageSocialPanelAssertion", oXmlElePlanPage.getElementsByTagName("xPathErrorMessageSocialPanelAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathDeletePlaceAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathDeletePlaceAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathPlacesAttachmentAssertion", oXmlElePlanPage.getElementsByTagName("xPathPlacesAttachmentAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAgentURLAssertion", oXmlElePlanPage.getElementsByTagName("xPathAgentURLAssertion").item(0).getChildNodes().item(0).getNodeValue());
