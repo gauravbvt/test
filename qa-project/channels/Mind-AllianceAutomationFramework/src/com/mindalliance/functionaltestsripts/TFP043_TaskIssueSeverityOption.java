@@ -53,18 +53,7 @@ public class TFP043_TaskIssueSeverityOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click on default task
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Task Added";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
+				
 				// Add New Task Issue
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Task Issue Added";
@@ -73,11 +62,6 @@ public class TFP043_TaskIssueSeverityOption
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);					
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Scroll Down
-				GlobalVariables.oDriver.findElement(By.className("issues")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

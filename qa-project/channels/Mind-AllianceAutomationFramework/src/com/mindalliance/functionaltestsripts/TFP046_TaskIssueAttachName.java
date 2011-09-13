@@ -74,12 +74,7 @@ public class TFP046_TaskIssueAttachName
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Scroll Down
-				GlobalVariables.oDriver.findElement(By.className("issues")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
+			
 				// Enter Issue Attach Name
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Issue Attach Name Entered";
