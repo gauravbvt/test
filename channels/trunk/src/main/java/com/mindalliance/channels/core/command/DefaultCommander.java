@@ -411,7 +411,7 @@ public class DefaultCommander implements Commander {
                 afterExecution( command, change );
                 if ( !replaying && command.isTop() ) {
                     for ( CommandListener commandListener : commandListeners )
-                        commandListener.commandDone( command, change, getPlan() );
+                        commandListener.commandDone( command, change, planUrn() );
                 }
             }
 
@@ -421,6 +421,10 @@ public class DefaultCommander implements Commander {
             LOG.warn( "Command failed " + command, e );
             return Change.failed( e.getMessage() );
         }
+    }
+
+    private String planUrn() {
+        return getPlan().urn();
     }
 
 
@@ -445,7 +449,7 @@ public class DefaultCommander implements Commander {
                 history.recordUndone( memento, undoCommand );
                 afterExecution( undoCommand, change );
                 for ( CommandListener commandListener : commandListeners ) {
-                    commandListener.commandUndone( undoCommand, getPlan() );
+                    commandListener.commandUndone( undoCommand, planUrn() );
                 }
                 return change;
             } catch ( CommandException e ) {
@@ -471,7 +475,7 @@ public class DefaultCommander implements Commander {
                 history.recordRedone( memento, redoCommand );
                 afterExecution( redoCommand, change );
                 for ( CommandListener commandListener : commandListeners )
-                    commandListener.commandRedone( redoCommand, getPlan() );
+                    commandListener.commandRedone( redoCommand, planUrn() );
 
                 return change;
             } catch ( CommandException e ) {
@@ -565,7 +569,7 @@ public class DefaultCommander implements Commander {
     public void keepAlive( String username, int refreshDelay ) {
         synchronized ( getPlan() ) {
             for ( PresenceListener presenceListener : presenceListeners ) {
-                presenceListener.keepAlive( username, getPlan(), refreshDelay );
+                presenceListener.keepAlive( username, planUrn(), refreshDelay );
             }
             processDeaths();
         }
@@ -580,7 +584,7 @@ public class DefaultCommander implements Commander {
         synchronized ( getPlan() ) {
             Set<String> deads = new HashSet<String>();
             for ( PresenceListener presenceListener : presenceListeners )
-                deads.addAll( presenceListener.giveMeYourDead( getPlan() ) );
+                deads.addAll( presenceListener.giveMeYourDead( planUrn() ) );
 
             for ( String userName : deads ) {
                 processDeath(  userName );
@@ -598,7 +602,7 @@ public class DefaultCommander implements Commander {
     public void userLeftPlan( String username ) {
         synchronized ( getPlan() ) {
             for ( PresenceListener presenceListener : presenceListeners )
-                presenceListener.killIfAlive( username, getPlan() );
+                presenceListener.killIfAlive( username, planUrn() );
             processDeath( username );
         }
     }

@@ -2,10 +2,10 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.PersistentObject;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.menus.SocialItemMenuPanel;
@@ -77,7 +77,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 : " odd";
         if ( index == 0 )
             cssClasses += " first";
-        PresenceEvent presenceEvent = getLatestPresenceEvent();
+        PresenceEvent presenceEvent = getLatestPresenceEvent( );
         cssClasses += presenceEvent != null && presenceEvent.isEntering()
                 ? " joining"
                 : " leaving";
@@ -251,14 +251,16 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         return nameLabel;
     }
 
-    public boolean isPresent() {
-        PresenceEvent presenceEvent = getLatestPresenceEvent();
+    public boolean isPresent( ) {
+        PresenceEvent presenceEvent = getLatestPresenceEvent( );
         return presenceEvent != null && presenceEvent.isEntering();
     }
 
-    protected PresenceEvent getLatestPresenceEvent() {
+    protected PresenceEvent getLatestPresenceEvent( ) {
         if ( latestPresenceEvent == null ) {
-            latestPresenceEvent = getPlanningEventService().findLatestPresence( getUsername(), getPlan() );
+            latestPresenceEvent = getPlanningEventService().findLatestPresence(
+                    getUsername(),
+                    planUrn() );
         }
         return latestPresenceEvent;
     }

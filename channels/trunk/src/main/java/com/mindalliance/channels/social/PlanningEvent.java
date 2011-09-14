@@ -10,15 +10,15 @@ package com.mindalliance.channels.social;
  */
 public abstract class PlanningEvent extends AbstractPersistentObject {
 
-    private String planId;
+    private String urn;
 
-    PlanningEvent( String planId ) {
+    PlanningEvent( String urn ) {
         super();
-        this.planId = planId;
+        this.urn = urn;
     }
 
-    public String getPlanId() {
-        return planId;
+    public String getUrn() {
+        return urn;
     }
 
     public boolean isPresenceEvent() {

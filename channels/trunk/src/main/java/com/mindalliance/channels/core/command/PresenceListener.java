@@ -1,7 +1,5 @@
 package com.mindalliance.channels.core.command;
 
-import com.mindalliance.channels.core.model.Plan;
-
 import java.util.List;
 
 /**
@@ -18,24 +16,24 @@ public interface PresenceListener {
      * Record a user explicitly leaving a plan.
      *
      * @param username a string
-     * @param plan     a plan
+     * @param uri a sanitized plan uri
      */
-    void killIfAlive( String username, Plan plan );
+    void killIfAlive( String username, String uri );
 
     /**
      * Take not of heart beat signalling user since in a plan.
      *
      * @param username     a string
-     * @param plan         a plan
+     * @param uri a sanitized plan uri
      * @param refreshDelay the delay between heat beats
      */
-    void keepAlive( String username, Plan plan, int refreshDelay );
+    void keepAlive( String username, String uri, int refreshDelay );
 
     /**
      * Give the list of all users who have just left a plan.
      *
-     * @param plan a plan
+     * @param uri a sanitized plan uri
      * @return a list of user names as strings
      */
-    List<String> giveMeYourDead( Plan plan );
+    List<String> giveMeYourDead( String uri );
 }

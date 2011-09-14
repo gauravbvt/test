@@ -168,7 +168,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( plannerMessageListPanel != null && getSelectedTabTitle().equals( getMessagesTabTitle() )  ) {
             plannerMessageListPanel.refresh( target, change );
         }
-        Date whenLastReceived = plannerMessagingService.getWhenLastReceived( getPlan() );
+        Date whenLastReceived = plannerMessagingService.getWhenLastReceived( planUrn() );
         if ( whenLastReceived != null && whenLastReceived.after( whenLastRefreshed ) ) {
             update( target, Change.message( "New message" ) );
         }

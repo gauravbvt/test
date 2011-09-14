@@ -14,7 +14,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
  * Date: Jul 22, 2010
  * Time: 5:00:18 PM
  */
-public class AbstractSocialListPanel  extends AbstractUpdatablePanel {
+public class AbstractSocialListPanel extends AbstractUpdatablePanel {
     private final boolean collapsible;
 
     public AbstractSocialListPanel( String id, boolean collapsible ) {

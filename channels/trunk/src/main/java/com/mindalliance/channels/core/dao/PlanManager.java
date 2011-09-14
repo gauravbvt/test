@@ -239,7 +239,7 @@ public class PlanManager {
 
     private void createPersistentObjectDB( Plan plan ) {
         String planUri = plan.getUri();
-        databaseFactory.check( PlanDefinition.sanitize( planUri ) );
+        databaseFactory.check( plan.urn() );
     }
 
     public DefinitionManager getDefinitionManager() {

@@ -52,7 +52,7 @@ public class ODBDao implements PersistentObjectDao {
     /**
      * The planId attribute.
      */
-    private static final String PLAN_ID = "planId";
+    private static final String URN = "urn";
 
     /**
      * The toUsername attribute.
@@ -67,7 +67,7 @@ public class ODBDao implements PersistentObjectDao {
     /**
      * The plan uri.
      */
-    private final String planUri;
+    private final String urn;
 
     /**
      * Ordering specification.
@@ -84,9 +84,9 @@ public class ODBDao implements PersistentObjectDao {
     }
 
     //-------------------------------
-    ODBDao( ODBDaoFactory factory, String planUri ) {
+    ODBDao( ODBDaoFactory factory, String urn ) {
         this.factory = factory;
-        this.planUri = planUri;
+        this.urn = urn;
     }
 
     //-------------------------------
@@ -96,7 +96,7 @@ public class ODBDao implements PersistentObjectDao {
         boolean closed = false;
         try {
             synchronized ( factory ) {
-                odb = factory.openDatabase( planUri );
+                odb = factory.openDatabase( urn );
                 IQuery query = new CriteriaQuery( clazz, Where.equal( ID, id ) );
 
                 Objects<T> objects = odb.getObjects( query );
@@ -133,7 +133,7 @@ public class ODBDao implements PersistentObjectDao {
 
     @Override
     public <T extends PersistentObject> Iterator<T> findAll( Class<T> clazz ) {
-        return iterate( clazz, Where.equal( PLAN_ID, planUri ), Ordering.Descendant, DATE );
+        return iterate( clazz, Where.equal( URN, urn ), Ordering.Descendant, DATE );
     }
 
     /**
@@ -146,13 +146,14 @@ public class ODBDao implements PersistentObjectDao {
      * @param <T> the specific kind of persistent object
      * @return an iterator on persistent objects
      */
+    @SuppressWarnings( "unchecked" )
     private <T extends PersistentObject> Iterator<T> iterate(
             Class<T> clazz, ICriterion criterion, Ordering ordering, String orderedProperty ) {
         ODB odb = null;
         boolean closed = false;
         try {
             synchronized ( factory ) {
-                odb = factory.openDatabase( planUri );
+                odb = factory.openDatabase( urn );
 
                 IQuery query = new CriteriaQuery( clazz, criterion );
                 if ( ordering != null ) {
@@ -188,7 +189,7 @@ public class ODBDao implements PersistentObjectDao {
 
         return iterate( clazz,
                         Where.and()
-                             .add( Where.equal( PLAN_ID, planUri ) )
+                             .add( Where.equal( URN, urn ) )
                              .add( Where.or().add( Where.equal( TO_USERNAME, username ) ).add( Where.and().add(
                                      isBroadcast ).add( Where.not( Where.equal( FROM_USERNAME, username ) ) ) ) ),
 
@@ -199,7 +200,7 @@ public class ODBDao implements PersistentObjectDao {
     public <T extends PersistentObject> Iterator<T> findAllFrom( Class<T> clazz, String username ) {
         return iterate( clazz,
                         Where.and()
-                             .add( Where.equal( PLAN_ID, planUri ) )
+                             .add( Where.equal( URN, urn ) )
                              .add( Where.equal( FROM_USERNAME, username ) ),
                         Ordering.Descendant, DATE );
     }
@@ -209,7 +210,7 @@ public class ODBDao implements PersistentObjectDao {
         return first( clazz,
                       Where.and()
                            .add( Where.equal( "username", username ) )
-                           .add( Where.equal( PLAN_ID, planUri ) )
+                           .add( Where.equal( URN, urn ) )
                            .add( Where.ge( DATE, startupDate ) ),
 
                       Ordering.Descendant, DATE );
@@ -238,7 +239,7 @@ public class ODBDao implements PersistentObjectDao {
         boolean closed = false;
         try {
             synchronized ( factory ) {
-                odb = factory.openDatabase( planUri );
+                odb = factory.openDatabase( urn );
                 odb.store( po );
                 odb.close();
                 closed = true;
@@ -257,7 +258,7 @@ public class ODBDao implements PersistentObjectDao {
         boolean closed = false;
         try {
             synchronized ( factory ) {
-                odb = factory.openDatabase( planUri );
+                odb = factory.openDatabase( urn );
                 IQuery query = new CriteriaQuery( clazz, Where.equal( ID, id ) );
                 Objects<T> objects = odb.getObjects( query );
                 Iterator<T> answers = objects.iterator();

@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.PersistentObjectDao;
 import com.mindalliance.channels.core.PersistentObjectDaoFactory;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserService;
-import com.mindalliance.channels.core.model.Plan;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,36 +82,36 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         this.databaseFactory = databaseFactory;
     }
 
-    private void addSentMessage( PlannerMessage message, Plan plan ) {
-        getOdb( plan ).store( message );
-        changed( plan );
+    private void addSentMessage( PlannerMessage message, String urn ) {
+        getOdb( urn ).store( message );
+        changed( urn );
     }
 
-    private void changed( Plan plan ) {
-        whenLastChanged.put( plan.getUri(), new Date() );
+    private void changed( String urn ) {
+        whenLastChanged.put( urn, new Date() );
     }
 
     @Override
-    public boolean sendMessage( PlannerMessage message, boolean emailIt, Plan plan ) {
+    public boolean sendMessage( PlannerMessage message, boolean emailIt, String urn ) {
         boolean success = true;
-        addSentMessage( message, plan );
+        addSentMessage( message, urn );
         if ( emailIt ) {
-            success = email( message, plan );
+            success = email( message, urn );
         }
         return success;
     }
 
     @Override
-    public boolean email( PlannerMessage message, Plan plan ) {
+    public boolean email( PlannerMessage message, String urn ) {
         List<User> recipients = new ArrayList<User>();
         String username = message.getToUsername();
         String text = "";
         User currentUser = User.current();
         String summary = StringUtils.abbreviate( message.getText(), SUMMARY_MAX );
         if ( username == null || username.equals( PLANNERS ) ) {
-            recipients = userService.getPlanners( plan.getUri() );
+            recipients = userService.getPlanners( urn );
         } else if ( username.equals( USERS ) ) {
-            recipients = userService.getUsers( plan.getUri() );
+            recipients = userService.getUsers( urn );
         } else {
             recipients.add( userService.getUserNamed( username ) );
         }
@@ -122,7 +121,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                 SimpleMailMessage email = new SimpleMailMessage();
                 email.setTo( recipient.getEmail() );
                 email.setSubject( "["
-                        + plan.getName()
+                        + urn
                         + "] "
                         + summary );
                 email.setFrom( currentUser.getEmail() );
@@ -140,7 +139,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                         + " emailed message to "
                         + recipient.getUsername() );
             }
-            getOdb( plan ).update( message.getClass(), message.getId(), "emailed", true );
+            getOdb( urn ).update( message.getClass(), message.getId(), "emailed", true );
             return true;
         } catch ( Exception e ) {
             LOG.warn( currentUser.getUsername()
@@ -155,36 +154,34 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
     }
 
     @Override
-    public void deleteMessage( PlannerMessage message, Plan plan ) {
-        getOdb( plan ).delete( PlannerMessage.class, message.getId() );
-        changed( plan );
+    public void deleteMessage( PlannerMessage message, String urn ) {
+        getOdb( urn ).delete( PlannerMessage.class, message.getId() );
+        changed( urn );
     }
 
     @Override
-    public Iterator<PlannerMessage> getReceivedMessages( Plan plan ) {
-        return getOdb( plan ).findAllExceptUser(
+    public Iterator<PlannerMessage> getReceivedMessages( String urn ) {
+        return getOdb( urn ).findAllExceptUser(
                 PlannerMessage.class, User.current().getUsername(), User.current().isPlanner(), PlannerMessagingService.USERS, PlannerMessagingService.PLANNERS );
     }
 
-    private PersistentObjectDao getOdb( Plan plan ) {
-        String planUri = plan.getUri();
-        // return databaseFactory.getDao( PlanDefinition.sanitize( planUri ) );
-        return databaseFactory.getDao( planUri );
+    private PersistentObjectDao getOdb( String urn ) {
+        return databaseFactory.getDao( urn );
     }
 
     @Override
-    public Iterator<PlannerMessage> getSentMessages( Plan plan ) {
-        return getOdb( plan ).findAllFrom( PlannerMessage.class, getUsername() );
+    public Iterator<PlannerMessage> getSentMessages( String urn ) {
+        return getOdb( urn ).findAllFrom( PlannerMessage.class, getUsername() );
     }
 
     @Override
-    public Date getWhenLastChanged( Plan plan ) {
-        return whenLastChanged.get( plan.getUri() );
+    public Date getWhenLastChanged( String urn ) {
+        return whenLastChanged.get( urn );
     }
 
     @Override
-    public Date getWhenLastReceived( Plan plan ) {
-        Iterator<PlannerMessage> received = getReceivedMessages( plan );
+    public Date getWhenLastReceived( String urn ) {
+        Iterator<PlannerMessage> received = getReceivedMessages( urn );
         if ( received.hasNext() ) {
             return received.next().getDate();
         } else {

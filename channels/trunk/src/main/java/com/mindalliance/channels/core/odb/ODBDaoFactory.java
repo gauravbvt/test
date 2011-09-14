@@ -56,20 +56,20 @@ public class ODBDaoFactory implements PersistentObjectDaoFactory {
     /**
      * Open a connection to the database.
      *
-     * @param planUri the plan uri
+     * @param uri the plan uri
      * @return the ODB connection
      * @throws IOException on errors
      */
-    ODB openDatabase( String planUri ) throws IOException {
+    ODB openDatabase( String uri ) throws IOException {
         int attempts = 0;
-        File planDir = new File( odbDir.getFile(), planUri );
+        File planDir = new File( odbDir.getFile(), uri );
         File path = new File( planDir, fileName );
         Exception last;
         do {
             try {
                 return ODBFactory.open( path.getAbsolutePath() );
             } catch ( ODBRuntimeException e ) {
-                LOG.info( "Database of {} is locked. Retrying", planUri );
+                LOG.info( "Database of {} is locked. Retrying", uri );
                 last = e;
                 try {
                     attempts++;
@@ -80,12 +80,12 @@ public class ODBDaoFactory implements PersistentObjectDaoFactory {
             }
         } while ( attempts < MAX_ATTEMPTS );
 
-        throw new IOException( "Failed to open database for " + planUri, last );
+        throw new IOException( "Failed to open database for " + uri, last );
     }
 
     @Override
-    public PersistentObjectDao getDao( String planUri ) {
-        return new ODBDao( this, planUri );
+    public PersistentObjectDao getDao( String uri ) {
+        return new ODBDao( this, uri );
     }
 
     @Required

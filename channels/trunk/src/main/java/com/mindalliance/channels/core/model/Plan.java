@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment.Type;
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.dao.PlanDefinition;
 import com.mindalliance.channels.core.model.Phase.Timing;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -43,7 +44,7 @@ public class Plan extends ModelObject {
     /** Whether the plan is meant as a template. */
     private boolean template;
 
-    /** The status of a (version of) plan. */
+     /** The status of a (version of) plan. */
     public enum Status implements Serializable {
         /** In development. */
         DEVELOPMENT,
@@ -385,6 +386,14 @@ public class Plan extends ModelObject {
     public void setTemplate( boolean template ) {
         this.template = template;
     }
+
+    /**
+     * Get sanitized uri.
+     * @return a string
+     */
+    public String urn() {
+         return PlanDefinition.sanitize( getUri() );
+     }
 
     /**
      * Add event.

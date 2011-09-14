@@ -6,8 +6,6 @@
 
 package com.mindalliance.channels.core.command;
 
-import com.mindalliance.channels.core.model.Plan;
-
 /**
  * A listener to command execution.
  */
@@ -18,23 +16,23 @@ public interface CommandListener {
      *
      * @param command a Command
      * @param change a Change
-     * @param plan the plan of concern.
+     * @param uri a sanitized plan uri
      */
-    void commandDone( Command command, Change change, Plan plan );
+    void commandDone( Command command, Change change, String uri );
 
     /**
      * The execution of a command was undone.
      *
      * @param command a Command
-     * @param plan the plan of concern.
+     * @param uri a sanitized plan uri
      */
-    void commandUndone( Command command, Plan plan );
+    void commandUndone( Command command, String uri );
 
     /**
      * The execution of a command was redone.
      *
      * @param command a Command
-     * @param plan the plan of concern.
+     * @param uri a sanitized plan uri
      */
-    void commandRedone( Command command, Plan plan );
+    void commandRedone( Command command, String uri );
 }

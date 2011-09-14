@@ -1,5 +1,8 @@
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -7,9 +10,6 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.Channels;
@@ -360,6 +360,16 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     public Plan getPlan() {
         return getQueryService().getPlan();
     }
+
+    /**
+     * Get sanitized plan urn (its sanitized uri).
+     *
+     * @return a string
+     */
+    protected String planUrn() {
+        return getPlan().urn();
+    }
+
 
     /**
      * Whether or not the idenfiable is collapsed.

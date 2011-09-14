@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.PersistentObjectDao;
 import com.mindalliance.channels.core.PersistentObjectDaoFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
-import com.mindalliance.channels.core.model.Plan;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,8 +44,8 @@ public class DefaultPlanningEventService implements PlanningEventService {
         latestPresences = new HashMap<String, Map<String, PresenceEvent>>();
     }
 
-    private void resetLatestPresences( Plan plan ) {
-        latestPresences.put( plan.getUri(), new HashMap<String, PresenceEvent>() );
+    private void resetLatestPresences( String urn ) {
+        latestPresences.put( urn, new HashMap<String, PresenceEvent>() );
     }
 
     public void setDatabaseFactory( PersistentObjectDaoFactory databaseFactory ) {
@@ -54,148 +53,146 @@ public class DefaultPlanningEventService implements PlanningEventService {
     }
 
     @Override
-    public void commandDone( Command command, Change change, Plan plan ) {
-        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Done, command, change, plan.getUri() );
-        addPlanningEvent( commandEvent, plan );
+    public void commandDone( Command command, Change change, String urn ) {
+        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Done, command, change, urn );
+        addPlanningEvent( commandEvent, urn );
     }
 
     @Override
-    public void commandUndone( Command command, Plan plan ) {
-        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Undone, command, plan.getUri() );
-        addPlanningEvent( commandEvent, plan );
+    public void commandUndone( Command command, String urn ) {
+        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Undone, command, urn );
+        addPlanningEvent( commandEvent, urn );
     }
 
     @Override
-    public void commandRedone( Command command, Plan plan ) {
-        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Redone, command, plan.getUri() );
-        addPlanningEvent( commandEvent, plan );
+    public void commandRedone( Command command, String urn ) {
+        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Redone, command, urn );
+        addPlanningEvent( commandEvent, urn );
     }
 
     @Override
-    public synchronized void killIfAlive( String username, Plan plan ) {
-        if ( isAlive( username, plan ) ) {
-            kill( username, plan );
+    public synchronized void killIfAlive( String username, String urn ) {
+        if ( isAlive( username, urn ) ) {
+            kill( username, urn );
         }
     }
 
-    private void kill( String username, Plan plan ) {
-        recordAbsence( username, plan );
-        getUserLives( plan ).remove( username );
+    private void kill( String username, String urn ) {
+        recordAbsence( username, urn );
+        getUserLives( urn ).remove( username );
         deaths.add( username );
     }
 
     @Override
-    public synchronized void keepAlive( String username, Plan plan, int refreshDelay ) {
-        if ( !getUserLives( plan ).containsKey( username ) ) {
+    public synchronized void keepAlive( String username, String urn, int refreshDelay ) {
+        if ( !getUserLives( urn ).containsKey( username ) ) {
             // Record first sign of life
-            recordPresence( username, plan );
+            recordPresence( username, urn );
         }
-        Map<String, Long> lives = getUserLives( plan );
+        Map<String, Long> lives = getUserLives( urn );
         lives.put( username, System.currentTimeMillis() + ( refreshDelay * 2 * 1000 ) );
     }
 
     @Override
-    public synchronized boolean isAlive( String username, Plan plan ) {
+    public synchronized boolean isAlive( String username, String urn ) {
         long now = System.currentTimeMillis();
-        Map<String, Long> lives = getUserLives( plan );
+        Map<String, Long> lives = getUserLives( urn );
         return lives.containsKey( username ) && now <= lives.get( username );
     }
 
     @Override
-    public synchronized List<String> giveMeYourDead( Plan plan ) {
-        discoverDeadUsers( plan );
+    public synchronized List<String> giveMeYourDead( String urn ) {
+        discoverDeadUsers( urn );
         List<String> deathRoll = new ArrayList<String>( deaths );
         deaths = new HashSet<String>();
         return deathRoll;
     }
 
     @Override
-    public synchronized PresenceEvent findLatestPresence( String username, Plan plan ) {
+    public synchronized PresenceEvent findLatestPresence( String username, String urn ) {
         PresenceEvent latestPresence;
-        if ( isLatestPresenceCached( plan, username ) ) {
-            latestPresence = getLatestCachedPresence( plan, username );
+        if ( isLatestPresenceCached( urn, username ) ) {
+            latestPresence = getLatestCachedPresence( urn, username );
         } else {
-            latestPresence = getOdb( plan ).findLatestFrom( PresenceEvent.class, username, startupDate );
-            cacheLatestPresence( plan, username, latestPresence );
+            latestPresence = getOdb( urn ).findLatestFrom( PresenceEvent.class, username, startupDate );
+            cacheLatestPresence( urn, username, latestPresence );
         }
         return latestPresence;
     }
 
-    private void discoverDeadUsers( Plan plan ) {
+    private void discoverDeadUsers( String urn ) {
         List<String> discovered = new ArrayList<String>(  );
-        for ( String username : getUserLives(  plan  ).keySet() ) {
-            if ( !isAlive(  username, plan ) ) {
+        for ( String username : getUserLives(  urn  ).keySet() ) {
+            if ( !isAlive(  username, urn ) ) {
                discovered.add( username );
             }
         }
         for ( String deadUser : discovered ) {
-             kill( deadUser, plan );
+             kill( deadUser, urn );
         }
     }
 
-    private void recordPresence( String username, Plan plan ) {
-        resetLatestPresences( plan );
+    private void recordPresence( String username, String urn ) {
+        resetLatestPresences( urn );
         // removePlanningEvents( PresenceEvent.Type.Active, username, plan );
-        addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Active, username, plan.getUri() ), plan );
+        addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Active, username, urn ), urn );
     }
 
-    private void recordAbsence( String username, Plan plan ) {
-        resetLatestPresences( plan );
+    private void recordAbsence( String username, String urn ) {
+        resetLatestPresences( urn );
         // removePlanningEvents( PresenceEvent.Type.Active, username, plan );
-        addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Inactive , username, plan.getUri() ), plan );
+        addPlanningEvent( new PresenceEvent( PresenceEvent.Type.Inactive , username, urn ), urn );
     }
 
-    private Map<String, Long> getUserLives( Plan plan ) {
-        Map<String, Long> planLives = userLives.get( plan.getUri() );
+    private Map<String, Long> getUserLives( String urn ) {
+        Map<String, Long> planLives = userLives.get( urn );
         if ( planLives == null ) {
             planLives = new HashMap<String, Long>();
-            userLives.put( plan.getUri(), planLives );
+            userLives.put( urn, planLives );
         }
         return planLives;
     }
 
-    private void addPlanningEvent( PlanningEvent planningEvent, Plan plan ) {
-        getOdb( plan ).store( planningEvent );
-        whenLastChanged.put( plan.getUri(), new Date() );
+    private void addPlanningEvent( PlanningEvent planningEvent, String urn ) {
+        getOdb( urn ).store( planningEvent );
+        whenLastChanged.put( urn, new Date() );
     }
 
     @Override
-    public Iterator<CommandEvent> getCommandEvents( Plan plan ) {
-        return getOdb( plan ).findAll( CommandEvent.class );
+    public Iterator<CommandEvent> getCommandEvents( String urn ) {
+        return getOdb( urn ).findAll( CommandEvent.class );
     }
 
-    private boolean isLatestPresenceCached( Plan plan, String username ) {
-        return getLatestPresenceCache( plan ).get( username ) != null;
+    private boolean isLatestPresenceCached( String urn, String username ) {
+        return getLatestPresenceCache( urn ).get( username ) != null;
     }
 
-    private void cacheLatestPresence( Plan plan, String username, PresenceEvent latestPresence ) {
-        getLatestPresenceCache( plan ).put( username, latestPresence );
+    private void cacheLatestPresence( String urn, String username, PresenceEvent latestPresence ) {
+        getLatestPresenceCache( urn ).put( username, latestPresence );
     }
 
-    private PresenceEvent getLatestCachedPresence( Plan plan, String username ) {
-        return getLatestPresenceCache( plan ).get( username );
+    private PresenceEvent getLatestCachedPresence( String urn, String username ) {
+        return getLatestPresenceCache( urn ).get( username );
     }
 
-    private Map<String, PresenceEvent> getLatestPresenceCache( Plan plan ) {
-        Map<String, PresenceEvent> cache = latestPresences.get( plan.getUri() );
+    private Map<String, PresenceEvent> getLatestPresenceCache( String urn ) {
+        Map<String, PresenceEvent> cache = latestPresences.get( urn );
         if ( cache == null ) {
             cache = new HashMap<String, PresenceEvent>();
-            latestPresences.put( plan.getUri(), cache );
+            latestPresences.put( urn, cache );
         }
         return cache;
     }
 
 
-    private PersistentObjectDao getOdb( Plan plan ) {
-        String planUri = plan.getUri();
-        // return databaseFactory.getDao( PlanDefinition.sanitize( planUri ) );
-        return databaseFactory.getDao( planUri );
+    private PersistentObjectDao getOdb( String urn ) {
+        return databaseFactory.getDao( urn );
     }
 
 
     @Override
-    public Date getWhenLastChanged( Plan plan ) {
-        return whenLastChanged.get( plan.getUri() );
+    public Date getWhenLastChanged( String urn ) {
+        return whenLastChanged.get( urn );
     }
 
 }

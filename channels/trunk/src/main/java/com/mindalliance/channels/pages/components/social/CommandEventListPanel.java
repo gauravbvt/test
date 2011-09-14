@@ -3,10 +3,10 @@ package com.mindalliance.channels.pages.components.social;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.util.PeekAheadIterator;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.CommandEvent;
 import com.mindalliance.channels.social.PlanningEventService;
-import com.mindalliance.channels.core.util.PeekAheadIterator;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -152,7 +152,7 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
     public List<CommandEvent> getCommandEvents() {
         List<CommandEvent> commandEvents = new ArrayList<CommandEvent>();
         PeekAheadIterator<CommandEvent> iterator = new PeekAheadIterator<CommandEvent>(
-                planningEventService.getCommandEvents( getPlan() ) );
+                planningEventService.getCommandEvents( planUrn() ) );
         while ( iterator.hasNext() && commandEvents.size() < numberToShow ) {
             CommandEvent commandEvent = iterator.next();
             if ( commandEvent != null ) {
@@ -177,7 +177,7 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {
-        Date whenLastChanged = planningEventService.getWhenLastChanged( getPlan() );
+        Date whenLastChanged = planningEventService.getWhenLastChanged( planUrn() );
         if ( whenLastChanged != null && whenLastChanged.after( whenLastRefreshed ) ) {
             addCommandEvents();
             adjustComponents( target );

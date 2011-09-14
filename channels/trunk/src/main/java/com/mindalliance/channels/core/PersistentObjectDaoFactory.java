@@ -21,8 +21,8 @@ public interface PersistentObjectDaoFactory {
 
     /**
      * Get the persistent object dao for a given plan uri.
-     * @param planUri the plan uri
+     * @param uri a String
      * @return the dao
      */
-    PersistentObjectDao getDao( String planUri );
+    PersistentObjectDao getDao( String uri );
 }
