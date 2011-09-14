@@ -36,7 +36,7 @@ public class TFP013_ProhibitedOption
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
-				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Add Task As Operational"), "New");
+				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Add Task As Prohibited"), "New");
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
