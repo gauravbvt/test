@@ -20,6 +20,7 @@ public class TFP003_AddInfoReceive
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
+				
 				// Click on 'Information Sharing Model' link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Information Sharing Model";

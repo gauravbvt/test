@@ -19,6 +19,7 @@ public class TFP002_SendPanel
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
+				
 				// Click on 'Information Sharing Model' link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Information Sharing Model";
