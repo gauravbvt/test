@@ -281,3 +281,37 @@ URLAssertion,http://www.google.com
 )(*&^%$#! Updated,)(*&^%$#! Updated
 Agent,Agent
 Task issues,Task issues
+Segment For Add Task As Prohibited,Segment For Add Task As Prohibited
+Segment For Task Attachment as Mandating Policy,Segment For Task Attachment as Mandating Policy
+Segment For Task Attachment As Prohibited,Segment For Task Attachment As Prohibited
+Segment For Task Attachment As URL,Segment For Task Attachment As URL
+Segment For Add New Issue,Segment For Add New Issue
+Segment For Issue Details,Segment For Issue Details
+Segment For Task Issue Option,Segment For Task Issue Option
+Segment For Tags Issue Details,Segment For Tags Issue Details
+Segment For Issue Severity Option,Segment For Issue Severity Option
+Segment For Issue Suggestion,Segment For Issue Suggestion
+Segment For Issue Attach Option,Segment For Issue Attach Option
+Segment For Issue Attachment Name,Segment For Issue Attachment Name
+Segment For Issue Attachment As Reference,Segment For Issue Attachment As Reference
+Segment For Issue Attachment As Policy,Segment For Issue Attachment As Policy
+Segment For Issue Attachment As URL,Segment For Issue Attachment As URL
+Segment For Create Survey,Segment For Create Survey
+Segment For Receive Send Infomation,Segment For Receive Send Infomation
+Segment For Receive Send Tags Link,Segment For Receive Send Tags Link
+Segment For Receive Send Tags Details,Segment For Receive Send Tags Details
+Segment For Receive Send Intent,Segment For Receive Send Intent
+Segment For Receive Send Element Link,Segment For Receive Send Element Link
+Segment For Receive Send But Only If Option,Segment For Receive Send But Only If Option
+Segment For Receive Send Channels,Segment For Receive Send Channels
+Segment For Receive Send Channels Option,Segment For Receive Send Channels Option
+Segment For Receive Send Within,Segment For Receive Send Within
+Segment For Receive Send Instruction,Segment For Receive Send Instruction
+Segment For Receive Send Attach Option,Segment For Receive Send Attach Option
+Segment For Receive Send Attach Name,Segment For Receive Send Attach Name
+Segment For Receive Send Attachment As Reference,Segment For Receive Send Attachment As Reference
+Segment For Receive Send Attachment As Policy,Segment For Receive Send Attachment As Policy
+Segment For Receive Send Attachment As Mandating,Segment For Receive Send Attachment As Mandating
+Segment For Receive Send Attachment As Prohibited,Segment For Receive Send Attachment As Prohibited
+Segment For Receive Send Attachment As Picture,Segment For Receive Send Attachment As Picture
+Segment For Receive Send Attachment As URL,Segment For Receive Send Attachment As URL
