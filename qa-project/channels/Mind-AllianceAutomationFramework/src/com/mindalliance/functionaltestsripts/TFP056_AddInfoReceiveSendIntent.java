@@ -216,6 +216,7 @@ public class TFP056_AddInfoReceiveSendIntent
 			ReportFunctions.generateAutomationReport();
 		} 
 		catch (Exception oException) {
+			// TODO Auto-generated catch block
 			oException.printStackTrace();
 		}
 	}

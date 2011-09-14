@@ -147,7 +147,8 @@ public class TFP055_AddInfoReceiveSendTagDetails
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Verify that 'Tags' Window gets Opened & Tag Details Are Seen]
-				if(GlobalVariables.oDriver.findElement(By.className("indices-table")).getText().contains(GlobalVariables.testData.get("This is a Tag"))) {
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("indices-table"));
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is a Tag"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -226,6 +227,7 @@ public class TFP055_AddInfoReceiveSendTagDetails
 			ReportFunctions.generateAutomationReport();
 		} 
 		catch (Exception oException) {
+			// TODO Auto-generated catch block
 			oException.printStackTrace();
 		}
 	}
