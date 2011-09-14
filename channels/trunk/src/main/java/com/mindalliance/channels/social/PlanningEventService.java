@@ -16,12 +16,37 @@ import java.util.Iterator;
  * Time: 2:03:58 PM
  */
 public interface PlanningEventService extends CommandListener, PresenceListener {
-
+    /**
+     * Get the date when a plan was last changed.
+     *
+     * @param plan a plan
+     * @return a date
+     */
     Date getWhenLastChanged( Plan plan );
 
+    /**
+     * Get an iterator on the command events recorded for a plan.
+     *
+     * @param plan a plan
+     * @return an iterator on command event
+     */
     Iterator<CommandEvent> getCommandEvents( Plan plan );
 
+    /**
+     * Find latest presence change for a user in a plan (entering or leaving).
+     *
+     * @param username a string
+     * @param plan     a plan
+     * @return a presence event
+     */
     PresenceEvent findLatestPresence( String username, Plan plan );
 
-    boolean isActive( String username, Plan plan );
+    /**
+     * Has a keep-alive heartbeat been heard recently?
+     *
+     * @param username a string
+     * @param plan     a plan
+     * @return a boolean
+     */
+    boolean isAlive( String username, Plan plan );
 }

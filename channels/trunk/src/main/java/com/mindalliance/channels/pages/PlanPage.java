@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.dao.User;
@@ -17,6 +16,8 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
@@ -38,7 +39,6 @@ import com.mindalliance.channels.pages.components.segment.SegmentPanel;
 import com.mindalliance.channels.pages.components.segment.SharingCommitmentsPanel;
 import com.mindalliance.channels.pages.components.support.FlowLegendPanel;
 import com.mindalliance.channels.pages.components.surveys.SurveysPanel;
-import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.commons.collections.CollectionUtils;
@@ -728,7 +728,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 dialogWindow.show( target );
         }
         getCommander().keepAlive( User.current().getUsername(), REFRESH_DELAY );
-        getCommander().processDeaths();
         getCommander().processTimeOuts();
         if ( getCommander().isTimedOut() ) {
             if ( getPlan().isDevelopment() ) refreshAll( target );

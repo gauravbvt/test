@@ -14,7 +14,28 @@ import java.util.List;
  */
 public interface PresenceListener {
 
-    void inactive( String username, Plan plan );
+    /**
+     * Record a user explicitly leaving a plan.
+     *
+     * @param username a string
+     * @param plan     a plan
+     */
+    void killIfAlive( String username, Plan plan );
+
+    /**
+     * Take not of heart beat signalling user since in a plan.
+     *
+     * @param username     a string
+     * @param plan         a plan
+     * @param refreshDelay the delay between heat beats
+     */
     void keepAlive( String username, Plan plan, int refreshDelay );
+
+    /**
+     * Give the list of all users who have just left a plan.
+     *
+     * @param plan a plan
+     * @return a list of user names as strings
+     */
     List<String> giveMeYourDead( Plan plan );
 }

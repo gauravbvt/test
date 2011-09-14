@@ -2,10 +2,9 @@ package com.mindalliance.channels.social;
 
 import com.mindalliance.channels.core.PersistentObjectDao;
 import com.mindalliance.channels.core.PersistentObjectDaoFactory;
-import com.mindalliance.channels.core.dao.PlanDefinition;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.model.Plan;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,39 +72,38 @@ public class DefaultPlanningEventService implements PlanningEventService {
     }
 
     @Override
-    public synchronized void inactive( String username, Plan plan ) {
-        if ( isActive( username, plan ) ) {
-            recordAbsence( username, plan );
+    public synchronized void killIfAlive( String username, Plan plan ) {
+        if ( isAlive( username, plan ) ) {
             kill( username, plan );
         }
     }
 
-    @Override
-    public synchronized void keepAlive( String username, Plan plan, int refreshDelay ) {
-        if ( !isActive( username, plan ) ) {
-            recordPresence( username, plan );
-        }
-        Map<String, Long> lives = getUserLives( plan );
-        lives.put( username, System.currentTimeMillis() + refreshDelay * 2 * 1000 );
+    private void kill( String username, Plan plan ) {
+        recordAbsence( username, plan );
+        getUserLives( plan ).remove( username );
+        deaths.add( username );
     }
 
     @Override
-    public synchronized boolean isActive( String username, Plan plan ) {
-        Map<String, Long> lives = getUserLives( plan );
-        boolean alive = false;
-        if ( lives.containsKey( username ) ) {
-                if ( System.currentTimeMillis() <= lives.get( username ) ) {
-                    alive = true;
-                } else {
-                    recordAbsence( username, plan );
-                    kill( username, plan );
-                }
+    public synchronized void keepAlive( String username, Plan plan, int refreshDelay ) {
+        if ( !getUserLives( plan ).containsKey( username ) ) {
+            // Record first sign of life
+            recordPresence( username, plan );
         }
-        return alive;
+        Map<String, Long> lives = getUserLives( plan );
+        lives.put( username, System.currentTimeMillis() + ( refreshDelay * 2 * 1000 ) );
+    }
+
+    @Override
+    public synchronized boolean isAlive( String username, Plan plan ) {
+        long now = System.currentTimeMillis();
+        Map<String, Long> lives = getUserLives( plan );
+        return lives.containsKey( username ) && now <= lives.get( username );
     }
 
     @Override
     public synchronized List<String> giveMeYourDead( Plan plan ) {
+        discoverDeadUsers( plan );
         List<String> deathRoll = new ArrayList<String>( deaths );
         deaths = new HashSet<String>();
         return deathRoll;
@@ -123,9 +121,16 @@ public class DefaultPlanningEventService implements PlanningEventService {
         return latestPresence;
     }
 
-    private void kill( String username, Plan plan ) {
-        getUserLives( plan ).remove( username );
-        deaths.add( username );
+    private void discoverDeadUsers( Plan plan ) {
+        List<String> discovered = new ArrayList<String>(  );
+        for ( String username : getUserLives(  plan  ).keySet() ) {
+            if ( !isAlive(  username, plan ) ) {
+               discovered.add( username );
+            }
+        }
+        for ( String deadUser : discovered ) {
+             kill( deadUser, plan );
+        }
     }
 
     private void recordPresence( String username, Plan plan ) {
@@ -183,7 +188,8 @@ public class DefaultPlanningEventService implements PlanningEventService {
 
     private PersistentObjectDao getOdb( Plan plan ) {
         String planUri = plan.getUri();
-        return databaseFactory.getDao( PlanDefinition.sanitize( planUri ) );
+        // return databaseFactory.getDao( PlanDefinition.sanitize( planUri ) );
+        return databaseFactory.getDao( planUri );
     }
 
 

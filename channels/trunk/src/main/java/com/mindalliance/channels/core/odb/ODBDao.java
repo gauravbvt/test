@@ -93,6 +93,7 @@ public class ODBDao implements PersistentObjectDao {
     @Override
     public <T extends PersistentObject> void delete( Class<T> clazz, String id ) {
         ODB odb = null;
+        boolean closed = false;
         try {
             synchronized ( factory ) {
                 odb = factory.openDatabase( planUri );
@@ -102,11 +103,13 @@ public class ODBDao implements PersistentObjectDao {
                 Iterator<T> answers = objects.iterator();
                 if ( answers.hasNext() )
                     odb.delete( answers.next() );
+                odb.close();
+                closed = true;
             }
         } catch ( IOException e ) {
             LOG.warn( "Unable to delete object", e );
         } finally {
-            if ( odb != null && !odb.isClosed() )
+            if ( odb != null && !closed )
                 odb.close();
         }
     }
@@ -146,6 +149,7 @@ public class ODBDao implements PersistentObjectDao {
     private <T extends PersistentObject> Iterator<T> iterate(
             Class<T> clazz, ICriterion criterion, Ordering ordering, String orderedProperty ) {
         ODB odb = null;
+        boolean closed = false;
         try {
             synchronized ( factory ) {
                 odb = factory.openDatabase( planUri );
@@ -157,14 +161,16 @@ public class ODBDao implements PersistentObjectDao {
                     else
                         query.orderByDesc( orderedProperty );
                 }
-
-                return odb.<T>getObjects( query ).iterator();
+                Iterator results = odb.getObjects( query ).iterator();
+                odb.close();
+                closed = true;
+                return results;
             }
         } catch ( IOException e ) {
             LOG.warn( "Query failed", e );
             return new ArrayList<T>().iterator();
         } finally {
-            if ( odb != null && !odb.isClosed() )
+            if ( odb != null && !closed )
                 odb.close();
         }
     }
@@ -229,15 +235,18 @@ public class ODBDao implements PersistentObjectDao {
     @Override
     public void store( PersistentObject po ) {
         ODB odb = null;
+        boolean closed = false;
         try {
             synchronized ( factory ) {
                 odb = factory.openDatabase( planUri );
                 odb.store( po );
+                odb.close();
+                closed = true;
             }
         } catch ( IOException e ) {
             LOG.warn( "Unable to store object", e );
         } finally {
-            if ( odb != null && !odb.isClosed() )
+            if ( odb != null && !closed )
                 odb.close();
         }
     }
@@ -245,6 +254,7 @@ public class ODBDao implements PersistentObjectDao {
     @Override
     public <T extends PersistentObject> void update( Class<T> clazz, String id, String property, Object value ) {
         ODB odb = null;
+        boolean closed = false;
         try {
             synchronized ( factory ) {
                 odb = factory.openDatabase( planUri );
@@ -255,13 +265,15 @@ public class ODBDao implements PersistentObjectDao {
                     T object = answers.next();
                     PropertyUtils.setProperty( object, property, value );
                     odb.store( object );
+                    odb.close();
+                    closed = true;
                 }
             }
         } catch ( Exception e ) {
             LOG.error( "Update failed", e );
             throw new RuntimeException( e );
         } finally {
-            if ( odb != null && !odb.isClosed() )
+            if ( odb != null && !closed )
                 odb.close();
         }
     }

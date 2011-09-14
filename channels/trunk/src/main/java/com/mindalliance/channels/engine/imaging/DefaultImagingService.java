@@ -245,7 +245,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                 String relPath = absolutePath.substring( prefix.length() );
                 String encodedPath = relPath.replaceAll( File.separator, "||" );
 
-                return "/icons" + File.separator + encodedPath;
+                return "icons" + File.separator + encodedPath;
             }
 
             String path = getModelObjectIconsPath( plan, modelObject );

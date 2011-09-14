@@ -73,7 +73,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                             new ConfirmedAjaxFallbackLink( "link", "Sign out?" ) {
                                 @Override
                                 public void onClick( AjaxRequestTarget target ) {
-                                    getCommander().absent( User.current().getUsername() );
+                                    getCommander().userLeftPlan( User.current().getUsername() );
                                     getRequestCycle().setRequestTarget(
                                             new RedirectRequestTarget( "logout" ) );
                                 }

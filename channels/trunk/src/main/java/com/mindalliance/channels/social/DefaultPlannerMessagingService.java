@@ -2,7 +2,6 @@ package com.mindalliance.channels.social;
 
 import com.mindalliance.channels.core.PersistentObjectDao;
 import com.mindalliance.channels.core.PersistentObjectDaoFactory;
-import com.mindalliance.channels.core.dao.PlanDefinition;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserService;
 import com.mindalliance.channels.core.model.Plan;
@@ -169,7 +168,8 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
 
     private PersistentObjectDao getOdb( Plan plan ) {
         String planUri = plan.getUri();
-        return databaseFactory.getDao( PlanDefinition.sanitize( planUri ) );
+        // return databaseFactory.getDao( PlanDefinition.sanitize( planUri ) );
+        return databaseFactory.getDao( planUri );
     }
 
     @Override

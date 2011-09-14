@@ -2,6 +2,9 @@ package com.mindalliance.channels.core.command;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.command.commands.DisconnectFlow;
+import com.mindalliance.channels.core.command.commands.RemoveCapability;
+import com.mindalliance.channels.core.command.commands.RemoveNeed;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Journal;
@@ -26,9 +29,6 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.core.command.commands.DisconnectFlow;
-import com.mindalliance.channels.core.command.commands.RemoveCapability;
-import com.mindalliance.channels.core.command.commands.RemoveNeed;
 import com.mindalliance.channels.engine.nlp.SemanticMatcher;
 import com.mindalliance.channels.engine.query.PlanService;
 import com.mindalliance.channels.engine.query.QueryService;
@@ -564,8 +564,10 @@ public class DefaultCommander implements Commander {
     @Override
     public void keepAlive( String username, int refreshDelay ) {
         synchronized ( getPlan() ) {
-            for ( PresenceListener presenceListener : presenceListeners )
+            for ( PresenceListener presenceListener : presenceListeners ) {
                 presenceListener.keepAlive( username, getPlan(), refreshDelay );
+            }
+            processDeaths();
         }
     }
 
@@ -574,25 +576,30 @@ public class DefaultCommander implements Commander {
         updateUserActive( User.current().getUsername() );
     }
 
-    @Override
-    public  void processDeaths() {
+    private void processDeaths() {
         synchronized ( getPlan() ) {
             Set<String> deads = new HashSet<String>();
             for ( PresenceListener presenceListener : presenceListeners )
                 deads.addAll( presenceListener.giveMeYourDead( getPlan() ) );
 
             for ( String userName : deads ) {
-                LOG.info( "{} is done planning", userName );
-                lockManager.release( userName );
+                processDeath(  userName );
             }
         }
     }
 
+    private void processDeath( String userName ) {
+        LOG.info( "{} is done planning", userName );
+        whenLastActive.remove( userName );
+        lockManager.release( userName );
+    }
+
     @Override
-    public  void absent( String username ) {
+    public void userLeftPlan( String username ) {
         synchronized ( getPlan() ) {
             for ( PresenceListener presenceListener : presenceListeners )
-                presenceListener.inactive( username, getPlan() );
+                presenceListener.killIfAlive( username, getPlan() );
+            processDeath( username );
         }
     }
 

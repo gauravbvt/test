@@ -241,11 +241,6 @@ public interface Commander {
     void updateUserActive();
 
     /**
-     * Remove locks from any user who is no longer live.
-     */
-    void processDeaths();
-
-    /**
      * Check for and process user inactivity timeouts.
      */
     void processTimeOuts();
@@ -386,7 +381,7 @@ public interface Commander {
      *
      * @param username a string
      */
-    void absent( String username );
+    void userLeftPlan( String username );
 
     /**
      * Make the appropriate command to remove a flow.
