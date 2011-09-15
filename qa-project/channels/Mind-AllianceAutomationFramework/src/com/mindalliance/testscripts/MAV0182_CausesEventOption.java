@@ -69,14 +69,15 @@ public class MAV0182_CausesEventOption
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else {
+					GlobalVariables.sVerifyError="Verification Failed Expected"+GlobalVariables.testData.get("Event")+"Actual is"+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent"));
 				for(int i=0;i<10;i++)

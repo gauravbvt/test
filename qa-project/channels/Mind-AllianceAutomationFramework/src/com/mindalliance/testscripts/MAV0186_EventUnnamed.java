@@ -61,7 +61,7 @@ public class MAV0186_EventUnnamed
 				Thread.currentThread();
 				Thread.sleep(3000);
 					
-				// Click on Usually Completes After Check box
+				// Click on Event Unnamed Link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event Unnamed Link ( Event Window Opened )";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathTaskEventUnnamed"))).click();
