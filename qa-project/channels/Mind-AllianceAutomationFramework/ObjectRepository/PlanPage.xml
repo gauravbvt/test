@@ -21,7 +21,7 @@
 <xPathDeletePhase>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li[2]/a/img</xPathDeletePhase>
 <xPathDeletePlanSegAttachment>/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeletePlanSegAttachment>
 <xPathDeleteOrgs>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/span/a/span</xPathDeleteOrgs>
-<xPathDeleteTaskAttachment>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[15]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteTaskAttachment>
+<xPathDeleteTaskAttachment>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteTaskAttachment>
 <xPathCutAttachment>/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCutAttachment>
 <xPathDeleteEventAttachment>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteEventAttachment>
 <xPathDeletePlacesAttachment>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeletePlacesAttachment>
@@ -128,7 +128,7 @@
 <xPathDeletePhaseCategories>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeletePhaseCategories>
 <xPathDeletePhaseAttachment>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeletePhaseAttachment>
 <xPathCopyPhaseAttachment>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyPhaseAttachment>
-<xPathCopyTaskAttachment>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[15]/td/ul/span/li/ul/li/a/img</xPathCopyTaskAttachment>
+<xPathCopyTaskAttachment>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/ul/li/a/img</xPathCopyTaskAttachment>
 <xPathDeleteOrganizationCategories>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteOrganizationCategories>
 <xPathSendFeedBackOfIssueSummaryReport>/html/body/div/div/span/div/a/span</xPathSendFeedBackOfIssueSummaryReport>
 <xPathTaskAttachmentURL>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/li/span/span/input[2]</xPathTaskAttachmentURL>
@@ -146,6 +146,7 @@
 <xPathResetMessageSocialPanel>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div[2]/div[4]/input[3]</xPathResetMessageSocialPanel>
 <xPathApplySocialPanel>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div[2]/div/div[2]/input</xPathApplySocialPanel>
 <xPathTaskIssueURL>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathTaskIssueURL>
+<xPathCreateViewSurvey>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathCreateViewSurvey>
 <!-- Assertions -->
 <xPathEmailNameInvalidErrorMessageAssertion>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div[2]/div/div/ul/li/span</xPathEmailNameInvalidErrorMessageAssertion>
 <xPathErrorMessageSocialPanelAssertion>/html/body/form/div[2]/div/div/div[2]/div/span/span</xPathErrorMessageSocialPanelAssertion>
