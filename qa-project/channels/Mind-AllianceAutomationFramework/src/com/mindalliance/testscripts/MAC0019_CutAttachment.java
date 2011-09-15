@@ -135,9 +135,6 @@ public class MAC0019_CutAttachment
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-									
-					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

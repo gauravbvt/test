@@ -128,7 +128,7 @@ public class MAC0022_UndoSetTaskFromCopy {
 				
 				// Click on 'Set task from copy' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Task copied";
+				GlobalVariables.sDescription = "Set Task from Copy";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskActionsMenu"),GlobalVariables.viewElements.get("setTaskFromCopy"));
 				// WebElement Synchronization
 				Thread.currentThread();

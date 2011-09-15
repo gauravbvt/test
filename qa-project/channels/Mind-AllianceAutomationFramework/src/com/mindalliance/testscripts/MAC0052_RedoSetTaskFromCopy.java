@@ -67,11 +67,6 @@ public class MAC0052_RedoSetTaskFromCopy {
 				Thread.currentThread();
 				Thread.sleep(5000);
 				
-				// Stretch Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Add 'New Task' under Action pop-up menu
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="New task added";
@@ -80,10 +75,20 @@ public class MAC0052_RedoSetTaskFromCopy {
 				Thread.currentThread();
 				Thread.sleep(5000);
 				// Add details for New Task
-				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).clear();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
+				for (int i = 0; i <= 50; i++)
+					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Set task from Copy"));
-				// Write Results
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
+			    // Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
@@ -101,7 +106,7 @@ public class MAC0052_RedoSetTaskFromCopy {
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(1000);
 				
 				// Select the other segment
 				GlobalVariables.iStepNo++ ;
@@ -130,19 +135,20 @@ public class MAC0052_RedoSetTaskFromCopy {
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
-				// Stretch Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Click on 'Set task from copy' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Task copied";
+				GlobalVariables.sDescription = "Set task from copy";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskActionsMenu"),GlobalVariables.viewElements.get("setTaskFromCopy"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span[2]")).click();
+				// Click on legend for maximize the graph
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Click on hide details from action pop-menu bar
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("showDetails"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
