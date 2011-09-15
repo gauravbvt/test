@@ -13,6 +13,7 @@ public class TFP020_CausesEventOption
 {
 	public TFP020_CausesEventOption(){
     	try {
+    		
     		GlobalVariables.sTestCaseId = "TFP020_CausesEventOption";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -48,22 +49,21 @@ public class TFP020_CausesEventOption
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 
 				// Click on Causes Event Field
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Causes Event ( Event Created )";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent"));
-				for(int i=0;i<10;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);	
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Event"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("Event"))) {
+				if(GlobalVariables.oElement.getValue().contains(GlobalVariables.testData.get("Event"))) {
+					GlobalVariables.oElement.clear();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -78,13 +78,6 @@ public class TFP020_CausesEventOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent"));
-				for(int i=0;i<10;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -94,9 +87,13 @@ public class TFP020_CausesEventOption
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+	
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else 
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

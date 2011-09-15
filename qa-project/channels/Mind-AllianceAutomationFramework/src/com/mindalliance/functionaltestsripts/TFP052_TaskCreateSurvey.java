@@ -66,7 +66,7 @@ public class TFP052_TaskCreateSurvey
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Survey Created";
 				// Create Survey
-				GlobalVariables.oDriver.findElement(By.linkText("Create survey")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCreateViewSurvey"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(35000);
@@ -96,7 +96,7 @@ public class TFP052_TaskCreateSurvey
 				// View Survey
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Survey Viewed";
-				GlobalVariables.oDriver.findElement(By.linkText("View survey")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCreateViewSurvey"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(20000);
