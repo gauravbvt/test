@@ -283,6 +283,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathApplySocialPanel",oXmlElePlanPage.getElementsByTagName("xPathApplySocialPanel").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathSendMessageAndEmailSocialPanel",oXmlElePlanPage.getElementsByTagName("xPathSendMessageAndEmailSocialPanel").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathResetMessageSocialPanel",oXmlElePlanPage.getElementsByTagName("xPathResetMessageSocialPanel").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathSendInfoNotification",oXmlElePlanPage.getElementsByTagName("xPathSendInfoNotification").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathReceiveInfoNotification",oXmlElePlanPage.getElementsByTagName("xPathReceiveInfoNotification").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathEmailNameInvalidErrorMessageAssertion",oXmlElePlanPage.getElementsByTagName("xPathEmailNameInvalidErrorMessageAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathErrorMessageSocialPanelAssertion", oXmlElePlanPage.getElementsByTagName("xPathErrorMessageSocialPanelAssertion").item(0).getChildNodes().item(0).getNodeValue());
