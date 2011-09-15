@@ -67,6 +67,11 @@ public class MAC0052_RedoSetTaskFromCopy {
 				Thread.currentThread();
 				Thread.sleep(5000);
 				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Add 'New Task' under Action pop-up menu
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="New task added";
@@ -84,7 +89,7 @@ public class MAC0052_RedoSetTaskFromCopy {
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click on 'Copy task' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -96,7 +101,7 @@ public class MAC0052_RedoSetTaskFromCopy {
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Select the other segment
 				GlobalVariables.iStepNo++ ;
@@ -125,6 +130,11 @@ public class MAC0052_RedoSetTaskFromCopy {
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click on 'Set task from copy' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Task copied";
