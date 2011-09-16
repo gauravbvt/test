@@ -12,6 +12,7 @@ public class HP019_MessageTab
 {
 	public HP019_MessageTab() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "HP019_MessageTab";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -24,6 +25,9 @@ public class HP019_MessageTab
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Message tab is present";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialMessages"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000); 
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialMessages")));
 				// Assertion: Verify that message tab is present on social panel
 				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("messages"))) {
@@ -41,7 +45,7 @@ public class HP019_MessageTab
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000); 
+				Thread.sleep(2000); 
 				
 				// Call logout()
 			    GlobalVariables.iStepNo++ ;
@@ -52,6 +56,10 @@ public class HP019_MessageTab
 			    LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
 			    LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			    System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 		      

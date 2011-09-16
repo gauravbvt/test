@@ -139,9 +139,12 @@ public class CA026_CreateUserWithLessCharacters
 			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sLogin"))).click();
 			    // WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(3000);
+			    Thread.sleep(2000);
 			    // Assertion : Verify that Newly created user is able to login to channels
 			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialAboutMe"))).click();
+			    // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);
 			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:fullName"));
 			    if(GlobalVariables.oElement.getValue().contains(GlobalVariables.testData.get("Full Name"))) {
 				    // Write Results
