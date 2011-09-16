@@ -41,23 +41,23 @@ public class TFP003_AddInfoReceive
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that When click on add info receive info need panel opens
-//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("sXpathAddInfoReceiveAssertion"));
-//				if(GlobalVariables.oElement.getText().equals("Needs to be notified of")){
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				}
-//				else{
-//					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Sends' "+" Actual " + GlobalVariables.oElement.getText();
-//			    	// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-//				}
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAddInfoReceiveAssertion")));
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Needs to be notified of"))){
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Sends' "+" Actual " + GlobalVariables.oElement.getText();
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Remove info need");
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
