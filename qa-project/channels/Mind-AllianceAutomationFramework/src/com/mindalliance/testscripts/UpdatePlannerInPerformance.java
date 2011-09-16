@@ -14,9 +14,9 @@ import com.mindalliance.globallibrary.GlobalVariables;
  *
  */
 
-public class UpdatePlanner 
+public class UpdatePlannerInPerformance 
 {
-    public UpdatePlanner() {
+    public UpdatePlannerInPerformance() {
     		String sChannelURL = "http://192.168.1.128:8080/";
     		String sUserName = "jf";
     		String sPassword = "Mind-Alliance";
@@ -84,7 +84,7 @@ public class UpdatePlanner
 	}
     public static void main(String args[]) {
 		try {
-			new UpdatePlanner();
+			new UpdatePlannerInPerformance();
 		} 
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
