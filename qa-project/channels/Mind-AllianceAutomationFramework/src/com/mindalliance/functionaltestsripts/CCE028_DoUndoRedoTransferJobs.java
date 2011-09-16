@@ -17,6 +17,7 @@ public class CCE028_DoUndoRedoTransferJobs
 {
 	public CCE028_DoUndoRedoTransferJobs() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CCE028_DoUndoRedoTransferJobs";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -193,7 +194,7 @@ public class CCE028_DoUndoRedoTransferJobs
 				    Thread.currentThread();
 				    Thread.sleep(3000);
 					// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[12]/td/span/div/div[2]/div/table/tbody/tr/td[2]/span/a/span"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td[2]/span/a/span"));
 					if(GlobalVariables.oElement.getText().equals("Agent 1")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

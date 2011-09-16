@@ -18,6 +18,7 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 {
 	public CCE021_DoUndoRedoSetTaskFromCopy() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CCE021_DoUndoRedoSetTaskFromCopy";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -36,7 +37,7 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click on 'Add new segment' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -48,7 +49,7 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click on 'Add new segment' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -60,7 +61,7 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click on 'Add new task' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -72,35 +73,33 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Task detail updated";
 				// Add details for New Task
-				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-				for (int i = 0; i <= 50; i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Set task from Copy"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click on 'Copy task' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -112,7 +111,7 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Select the other segment
 				GlobalVariables.iStepNo++ ;
@@ -127,7 +126,7 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 	            Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Click on 'Add new task' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -139,7 +138,7 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click on 'Set task from copy' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -147,7 +146,7 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskActionsMenu"),GlobalVariables.viewElements.get("setTaskFromCopy"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span[2]")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -177,12 +176,12 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoSetTaskFromCopy"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				// Assertion: Verify that When clicked on 'Undo set task from copy' option, the task's details should be removed and its respective details should be restored in the task
 				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				if (GlobalVariables.oElement.getText().equals("")) {
 					// Write Results
@@ -207,12 +206,12 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("redoSetTaskFromCopy"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				// Assertion: Verify that When clicked on 'Undo set task from copy' option, the task's details should be removed and its respective details should be restored in the task
 				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				if (GlobalVariables.oElement.getText().equals("")) {
 					// Write Results
@@ -229,16 +228,16 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
 				List<WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
@@ -249,16 +248,16 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				alert = GlobalVariables.oDriver.switchTo().alert();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -268,9 +267,13 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

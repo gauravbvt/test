@@ -2,8 +2,6 @@ package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -14,6 +12,7 @@ public class CCE017_DoCopyAttachment
 {
 	public CCE017_DoCopyAttachment() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CCE017_DoCopyAttachment";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -32,7 +31,7 @@ public class CCE017_DoCopyAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Click 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
@@ -44,15 +43,13 @@ public class CCE017_DoCopyAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Enter the details for new segment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Segment's details entered";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).clear();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
-						for (int i = 0; i <= 8; i++)
-							GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Do Copy Attachment"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -60,7 +57,7 @@ public class CCE017_DoCopyAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
@@ -72,7 +69,7 @@ public class CCE017_DoCopyAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Update the Information of the default task
 					GlobalVariables.iStepNo++ ;
@@ -81,10 +78,8 @@ public class CCE017_DoCopyAttachment
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
+					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).clear();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-					for (int i = 0; i <= 15; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task for attachment"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -92,7 +87,7 @@ public class CCE017_DoCopyAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Attach a document
 					GlobalVariables.iStepNo++;
@@ -100,18 +95,18 @@ public class CCE017_DoCopyAttachment
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
 					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:upload"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:submit")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -119,7 +114,7 @@ public class CCE017_DoCopyAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Click on copy attachment in task
 					GlobalVariables.iStepNo++;
@@ -127,10 +122,10 @@ public class CCE017_DoCopyAttachment
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCopyTaskAttachment"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					// Assertion: verify that When clicked on copy option, the respective attachment should be copied
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCopyAttachmentAssertion")));
-				    if(GlobalVariables.oElement.getText().equalsIgnoreCase("Attachment copied")){
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("change-message"));
+				    if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Attachment copied"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -145,12 +140,7 @@ public class CCE017_DoCopyAttachment
 				    }	
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
-					// Click on Cross of 'Attachment copied' option
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[14]/span/a/img")).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(2000);
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
@@ -158,7 +148,7 @@ public class CCE017_DoCopyAttachment
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
@@ -171,6 +161,7 @@ public class CCE017_DoCopyAttachment
 									
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+					
 				}
 				else
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

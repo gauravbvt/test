@@ -270,7 +270,7 @@ public class CCE010_DoUndoDisintermediateTask
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//span[@class='menubar']/span[3]/span/ul"));
 					List<WebElement> list = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: list){
-						if (li.getValue().equals("Redo disintermediate")){
+						if (li.getText().equals("Redo disintermediate")){
 							// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -315,6 +315,7 @@ public class CCE010_DoUndoDisintermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 		} 
 		catch (Exception e) {
+			e.printStackTrace();
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
