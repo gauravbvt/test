@@ -52,10 +52,8 @@ public class CCE010_DoUndoDisintermediateTask
 					// Enter the details
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "New segment updated";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).clear();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
-					for (int i = 0; i <= 8; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Do Undo Redo Disintermediate Task"));
 					// Click on 'done' button
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
@@ -75,10 +73,8 @@ public class CCE010_DoUndoDisintermediateTask
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Add details for New Task
-					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
+					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).clear();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-					for (int i = 0; i <= 50; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -114,7 +110,7 @@ public class CCE010_DoUndoDisintermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					// Create Flow between respective nodes
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Flow created between nodes";
@@ -123,18 +119,18 @@ public class CCE010_DoUndoDisintermediateTask
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					// From
 					GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:firstChoice")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:firstChoice"));
 					GlobalVariables.oElement.sendKeys("Other...");
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					// Enter Task Name of Sender
 					GlobalVariables.oDriver.findElement
 					(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
@@ -150,7 +146,7 @@ public class CCE010_DoUndoDisintermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					
 					// Create Intermediate Flow
 					GlobalVariables.iStepNo++ ;
