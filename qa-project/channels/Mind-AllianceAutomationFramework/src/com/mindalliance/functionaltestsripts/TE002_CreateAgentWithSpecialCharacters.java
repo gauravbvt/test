@@ -62,6 +62,9 @@ public class TE002_CreateAgentWithSpecialCharacters
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Created with Special Characters";
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);

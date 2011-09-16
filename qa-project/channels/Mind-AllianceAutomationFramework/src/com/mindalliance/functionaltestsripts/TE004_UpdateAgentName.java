@@ -12,6 +12,7 @@ public class TE004_UpdateAgentName
 {
 	public TE004_UpdateAgentName() {
 		try{
+			
 			GlobalVariables.sTestCaseId = "TE004_UpdateAgentName";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -59,6 +60,10 @@ public class TE004_UpdateAgentName
 				//Create Agent
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Created";
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
@@ -71,11 +76,6 @@ public class TE004_UpdateAgentName
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("float-bar-title")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("float-bar-title"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -88,6 +88,9 @@ public class TE004_UpdateAgentName
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Name Updated";
 				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 2"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
@@ -115,15 +118,6 @@ public class TE004_UpdateAgentName
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 			    }
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				//Close Agent Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).clear();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
