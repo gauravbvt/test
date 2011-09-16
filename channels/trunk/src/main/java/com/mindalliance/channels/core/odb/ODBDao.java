@@ -50,7 +50,7 @@ public class ODBDao implements PersistentObjectDao {
     private static final Logger LOG = LoggerFactory.getLogger( ODBDao.class );
 
     /**
-     * The planId attribute.
+     * The urn attribute; the db is "segmented" by urn values.
      */
     private static final String URN = "urn";
 

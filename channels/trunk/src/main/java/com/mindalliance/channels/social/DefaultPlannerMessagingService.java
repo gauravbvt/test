@@ -21,84 +21,30 @@ import java.util.Map;
  * Default implementation of the planner messaging service.
  */
 public class DefaultPlannerMessagingService implements PlannerMessagingService {
+    private static final int SUMMARY_MAX = 25;
 
     /**
      * The logger.
      */
     private final Logger LOG = LoggerFactory.getLogger( DefaultPlannerMessagingService.class );
+    private PersistentObjectDaoFactory databaseFactory;
     /**
      * Mail sender.
      */
     private MailSender mailSender;
     private UserService userService;
-    private PersistentObjectDaoFactory databaseFactory;
-    private Map<String,Date> whenLastChanged;
-    private static final int SUMMARY_MAX = 25;
+    private Map<String, Date> whenLastChanged;
 
+    //-------------------------------
     public DefaultPlannerMessagingService() {
-        whenLastChanged = new HashMap<String,Date>();
+        whenLastChanged = new HashMap<String, Date>();
     }
 
-    private static String getLongTimeElapsedString( Date start, Date end ) {
-        long diffInSeconds = ( end.getTime() - start.getTime() ) / 1000;
-        /* sec */
-        long seconds = diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds;
-        /* min */
-        long minutes = ( diffInSeconds = diffInSeconds / 60 ) >= 60 ? diffInSeconds % 60 : diffInSeconds;
-        /* hours */
-        long hours = ( diffInSeconds = diffInSeconds / 60 ) >= 24 ? diffInSeconds % 24 : diffInSeconds;
-        /* days */
-        long days = diffInSeconds / 24;
-
-        StringBuilder sb = new StringBuilder();
-        if ( days > 0 ) {
-            sb.append( days );
-            sb.append( " day" );
-            sb.append( days > 1 ? "s" : "" );
-        }
-        if ( hours > 0 ) {
-            if ( sb.length() > 0 ) sb.append( ", " );
-            sb.append( hours );
-            sb.append( " hour" );
-            sb.append( hours > 1 ? "s" : "" );
-        }
-        if ( minutes > 0 ) {
-            if ( sb.length() > 0 ) sb.append( ", " );
-            sb.append( minutes );
-            sb.append( " minute" );
-            sb.append( minutes > 1 ? "s" : "" );
-        }
-        if ( sb.length() == 0 || seconds > 0 ) {
-            if ( sb.length() > 0 ) sb.append( ", " );
-            sb.append( seconds );
-            sb.append( " second" );
-            sb.append( seconds > 1 ? "s" : "" );
-        }
-        sb.append( " ago" );
-        return sb.toString();
-    }
-
-    public void setDatabaseFactory( PersistentObjectDaoFactory databaseFactory ) {
-        this.databaseFactory = databaseFactory;
-    }
-
-    private void addSentMessage( PlannerMessage message, String urn ) {
-        getOdb( urn ).store( message );
-        changed( urn );
-    }
-
-    private void changed( String urn ) {
-        whenLastChanged.put( urn, new Date() );
-    }
-
+    //-------------------------------
     @Override
-    public boolean sendMessage( PlannerMessage message, boolean emailIt, String urn ) {
-        boolean success = true;
-        addSentMessage( message, urn );
-        if ( emailIt ) {
-            success = email( message, urn );
-        }
-        return success;
+    public void deleteMessage( PlannerMessage message, String urn ) {
+        getOdb( urn ).delete( PlannerMessage.class, message.getId() );
+        changed( urn );
     }
 
     @Override
@@ -144,19 +90,52 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         } catch ( Exception e ) {
             LOG.warn( currentUser.getUsername()
                     + " failed to email message to "
-                    +  username, e );
+                    + username, e );
             return false;
         }
     }
 
-    protected User getUser( String username ) {
-        return userService.getUserNamed( username );
+    private static String getLongTimeElapsedString( Date start, Date end ) {
+        long diffInSeconds = ( end.getTime() - start.getTime() ) / 1000;
+        /* sec */
+        long seconds = diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds;
+        /* min */
+        long minutes = ( diffInSeconds = diffInSeconds / 60 ) >= 60 ? diffInSeconds % 60 : diffInSeconds;
+        /* hours */
+        long hours = ( diffInSeconds = diffInSeconds / 60 ) >= 24 ? diffInSeconds % 24 : diffInSeconds;
+        /* days */
+        long days = diffInSeconds / 24;
+
+        StringBuilder sb = new StringBuilder();
+        if ( days > 0 ) {
+            sb.append( days );
+            sb.append( " day" );
+            sb.append( days > 1 ? "s" : "" );
+        }
+        if ( hours > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( hours );
+            sb.append( " hour" );
+            sb.append( hours > 1 ? "s" : "" );
+        }
+        if ( minutes > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( minutes );
+            sb.append( " minute" );
+            sb.append( minutes > 1 ? "s" : "" );
+        }
+        if ( sb.length() == 0 || seconds > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( seconds );
+            sb.append( " second" );
+            sb.append( seconds > 1 ? "s" : "" );
+        }
+        sb.append( " ago" );
+        return sb.toString();
     }
 
-    @Override
-    public void deleteMessage( PlannerMessage message, String urn ) {
-        getOdb( urn ).delete( PlannerMessage.class, message.getId() );
-        changed( urn );
+    private PersistentObjectDao getOdb( String urn ) {
+        return databaseFactory.getDao( urn );
     }
 
     @Override
@@ -165,13 +144,17 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                 PlannerMessage.class, User.current().getUsername(), User.current().isPlanner(), PlannerMessagingService.USERS, PlannerMessagingService.PLANNERS );
     }
 
-    private PersistentObjectDao getOdb( String urn ) {
-        return databaseFactory.getDao( urn );
-    }
-
     @Override
     public Iterator<PlannerMessage> getSentMessages( String urn ) {
         return getOdb( urn ).findAllFrom( PlannerMessage.class, getUsername() );
+    }
+
+    private String getUsername() {
+        return User.current().getUsername();
+    }
+
+    protected User getUser( String username ) {
+        return userService.getUserNamed( username );
     }
 
     @Override
@@ -189,10 +172,26 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         }
     }
 
-    private String getUsername() {
-        return User.current().getUsername();
+    @Override
+    public boolean sendMessage( PlannerMessage message, boolean emailIt, String urn ) {
+        boolean success = true;
+        addSentMessage( message, urn );
+        if ( emailIt ) {
+            success = email( message, urn );
+        }
+        return success;
     }
 
+    private void addSentMessage( PlannerMessage message, String urn ) {
+        getOdb( urn ).store( message );
+        changed( urn );
+    }
+
+    private void changed( String urn ) {
+        whenLastChanged.put( urn, new Date() );
+    }
+
+    //-------------------------------
     public MailSender getMailSender() {
         return mailSender;
     }
@@ -207,5 +206,9 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
 
     public void setUserService( UserService userService ) {
         this.userService = userService;
+    }
+
+    public void setDatabaseFactory( PersistentObjectDaoFactory databaseFactory ) {
+        this.databaseFactory = databaseFactory;
     }
 }

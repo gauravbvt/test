@@ -31,13 +31,19 @@ import java.util.Set;
  */
 public class DefinitionManager implements InitializingBean, Iterable<PlanDefinition> {
 
-    /** Ye olde logger. */
+    /**
+     * Ye olde logger.
+     */
     private static final Logger LOG = LoggerFactory.getLogger( DefinitionManager.class );
 
-    /** Default snapshot threshold value (10). */
+    /**
+     * Default snapshot threshold value (10).
+     */
     private static final int DEFAULT_THRESHOLD = 10;
 
-    /** Where the plan *data* is saved. Plan data will be under $dataDirectory/$uri/... */
+    /**
+     * Where the plan *data* is saved. Plan data will be under $dataDirectory/$uri/...
+     */
     private final Resource dataDirectory;
 
     /**
@@ -46,14 +52,20 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
      */
     private final Resource planProperties;
 
-    /** The default properties. May be null, for no default plans. */
+    /**
+     * The default properties. May be null, for no default plans.
+     */
     private Resource defaultProperties;
 
-    /** The actual plan definitions, indexed by uri. */
+    /**
+     * The actual plan definitions, indexed by uri.
+     */
     private final Map<String, PlanDefinition> definitions =
             Collections.synchronizedMap( new HashMap<String, PlanDefinition>() );
 
-    /** The id generator for new objects. */
+    /**
+     * The id generator for new objects.
+     */
     private IdGenerator idGenerator;
 
     /**
@@ -93,8 +105,10 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
     }
 
     //---------------------------
+
     /**
      * Get a plan definition given an uri
+     *
      * @param uri the uri
      * @return the plan definition or null if not found
      */
@@ -104,7 +118,8 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
 
     /**
      * Find appropriate version of a plan.
-     * @param uri the plan uri
+     *
+     * @param uri         the plan uri
      * @param development get the development version if true, production otherwise
      * @return the plan version or null if not found
      */
@@ -112,12 +127,14 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
         PlanDefinition definition = definitions.get( uri );
 
         return development ? definition.getDevelopmentVersion()
-                           : definition.getProductionVersion();
+                : definition.getProductionVersion();
     }
 
     //---------------------------
+
     /**
      * Load the definitions from the plan property file.
+     *
      * @throws IOException on erros
      */
     public void load() throws IOException {
@@ -147,8 +164,9 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
 
     /**
      * Create a new plan definition (or get a previously created one).
-     * @param uri the plan uri
-     * @param name the name of the plan. If uri already exists, name will be changed.
+     *
+     * @param uri    the plan uri
+     * @param name   the name of the plan. If uri already exists, name will be changed.
      * @param client the client of the plan. If uri already exists, client will be changed.
      * @return the plan definition
      * @throws IOException on data initialization errors
@@ -170,6 +188,7 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
 
     /**
      * Delete a plan and its versions.
+     *
      * @param uri the plan's uri
      */
     public void delete( String uri ) {
@@ -205,8 +224,7 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
             if ( propFile.isFile() ) {
                 LOG.debug( "Reading plan definitions from {}", propFile.getAbsolutePath() );
                 inputStream = new FileInputStream( propFile );
-            }
-            else
+            } else
                 inputStream = null;
 
         } else if ( defaultProperties != null && defaultProperties.exists() ) {
@@ -221,8 +239,10 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
     }
 
     //---------------------------
+
     /**
      * Save definitions to the plan property file.
+     *
      * @throws IOException on errors
      */
     public void save() throws IOException {
@@ -255,6 +275,7 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
 
     /**
      * Get the id generator for plans generated from this definition manager.
+     *
      * @return the generator as set (defaults to a SimpleIdGenerator)
      */
     public synchronized IdGenerator getIdGenerator() {
@@ -287,6 +308,7 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
     /**
      * Returns an iterator over a set of PlanDefinitions.
      * Note: not thread safe (definitions update may cause problems)
+     *
      * @return an Iterator.
      */
     @Override
@@ -297,6 +319,7 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
 
     /**
      * Test if a definition exists for a given plan name.
+     *
      * @param name the name
      * @return true if there is such a definition
      */
@@ -309,10 +332,11 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
 
     /**
      * Get all plan names.
+     *
      * @return names of all plans (sorted)
      */
     public List<String> getPlanNames() {
-        Set<String> set ;
+        Set<String> set;
         synchronized ( definitions ) {
             set = new HashSet<String>( definitions.size() );
             for ( PlanDefinition plan : definitions.values() )
@@ -326,6 +350,7 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
 
     /**
      * Return the number of managed plan definitions.
+     *
      * @return the number of plan definitions
      */
     public int getSize() {
@@ -340,5 +365,21 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
             uniqueName = prefix + '(' + ++count + ')';
 
         return uniqueName;
+    }
+
+    /**
+     * A new plan URI is valid if no other plan has the same uri even after sanitization.
+     *
+     * @param newUri a string
+     * @return a boolean
+     */
+    public boolean isNewPlanUriValid( String newUri ) {
+        if ( get( newUri ) != null ) return false;
+        for ( PlanDefinition definition : definitions.values() ) {
+            if ( PlanDefinition.sanitize( definition.getUri() )
+                    .equals( PlanDefinition.sanitize( newUri ) ) )
+                return false;
+        }
+        return true;
     }
 }

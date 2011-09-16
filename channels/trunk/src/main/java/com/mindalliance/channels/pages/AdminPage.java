@@ -180,7 +180,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                                 .add( new AbstractValidator<String>() {
                                     @Override
                                     protected void onValidate( IValidatable<String> validatable ) {
-                                        if ( definitionManager.get( validatable.getValue() ) != null )
+                                        if ( !definitionManager.isNewPlanUriValid( validatable.getValue() ) )
                                             error( validatable, "NonUniqueUri" );
                                     }
                                 } )
