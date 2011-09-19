@@ -46,7 +46,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	private static int jListCount=0;
 	private JList jListFunctional;
 	private JScrollPane jScrollPane0;
-	private String arrayOfTestCaseIdOld[] = new String[600];
+	private String arrayOfTestCaseIdOld[];
 	private String arrayOfTestCaseIdNew[];
 	private static int noOfSelectedTestCases;
 	private JButton jButtonAdd;
@@ -486,34 +486,31 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 			listModel = new DefaultListModel();
 			if (jListFunctional == null) {
 				jListFunctional = new JList();
+				arrayOfTestCaseIdOld=new String[600];
 				arrayOfTestCaseIdOld = ReportFunctions.readTestCaseIdForFunctional(sheetNumber);
-				for (int i=0;i<500;i++)
-					if(arrayOfTestCaseIdOld[i] != null) {
-						jListCount=i;
-						listModel.addElement(arrayOfTestCaseIdOld[i]);
-					}
+				for (int i=0;i<GlobalVariables.iIndex;i++){
+					jListCount=i;
+					listModel.addElement(arrayOfTestCaseIdOld[i]);
+				}
 				jListCount++;
 				jListFunctional.setModel(listModel);
 				jListFunctional.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			}
 			else {
-				listModel=new DefaultListModel();
-				arrayOfTestCaseIdNew=new String[500];
 				jListFunctional = new JList();
+				listModel=new DefaultListModel();
+				arrayOfTestCaseIdNew=new String[600];
 				arrayOfTestCaseIdNew = ReportFunctions.readTestCaseIdForFunctional(sheetNumber);
-				for(int i=0;i<100;i++) {
+				for(int i=0;i<GlobalVariables.iIndex;i++) {
 					arrayOfTestCaseIdOld[jListCount++]= arrayOfTestCaseIdNew[i];
 				}
-				for (int i=0;i<500;i++) {
-					if(arrayOfTestCaseIdOld[i] != null) {
-						jListCount=i;
-						listModel.addElement(arrayOfTestCaseIdOld[i]);
-					}
+				for (int i=0;i<jListCount;i++) {
+					listModel.addElement(arrayOfTestCaseIdOld[i]);
 				}
-				jListCount++;
 				jListFunctional.setModel(listModel);
 				jListFunctional.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			}
+			System.out.println("Total Count : "+jListCount);
 			return jListFunctional;
 		}
 		catch (Exception e) {
