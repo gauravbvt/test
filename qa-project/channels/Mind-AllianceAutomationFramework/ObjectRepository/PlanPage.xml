@@ -1,6 +1,10 @@
 <?xml version="1.0"?>	
 <elements>
 <xPathShowPopUpMenu>/html/body/form/div[13]/span/span[2]/span/span</xPathShowPopUpMenu>
+<xPathSendInfoAddNewIssue>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div/div/ul/li/a</xPathSendInfoAddNewIssue>
+<xPathReceiveInfoAddNewIssue>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/div/ul/li/a</xPathReceiveInfoAddNewIssue>
+<xPathReceiveInfoIssueMenu>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li[2]/span/span/span/span/span</xPathReceiveInfoIssueMenu>
+<xPathSendInfoIssueMenu>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li[2]/span/span/span/span/span</xPathSendInfoIssueMenu>
 <xPathSendReplyThatOption>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/lable[2]/input</xPathSendReplyThatOption>
 <xPathReceivedReplyThatOption>/html/body/form/span/div/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/lable[2]/input</xPathReceivedReplyThatOption>
 <xPathSendInfoNotification>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/lable/input</xPathSendInfoNotification>
