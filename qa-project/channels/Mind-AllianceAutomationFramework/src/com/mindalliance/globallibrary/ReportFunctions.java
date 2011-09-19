@@ -81,23 +81,22 @@ public class ReportFunctions {
 	 * @throws XMLStreamException
 	 */
 	public static String[] readTestCaseId(int sheetNumber) throws IOException, XMLStreamException {
-		 File file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
-			// TestCase sheet: Tree_Navigation_Views
-		 Sheet sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
-		 int iIndex = 0;
-		 String[] arrayOfTestCaseId = new String[500];
-		 stestName = null;
-     		 for (int i = 2; i <= sheet.getRowCount() ; i++){
-			   stestName = sheet.getCellAt("A"+i).getValue().toString();
-  			   if (stestName.length() !=0) {
-  				     if (sheet.getCellAt("I"+i).getValue().toString().toUpperCase().equals(GlobalVariables.sAutomatesYes)) {
-				      arrayOfTestCaseId[iIndex] = stestName;
-				      iIndex++;
-  				     }
-			   }
+		File file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
+		// TestCase sheet: Tree_Navigation_Views
+		Sheet sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
+		String[] arrayOfTestCaseId = new String[600];
+		stestName = null;
+		GlobalVariables.iIndex=0;
+     	for (int i = 2; i <= sheet.getRowCount() ; i++){
+     		stestName = sheet.getCellAt("A"+i).getValue().toString();
+  			if (sheet.getCellAt("I"+i).getValue().toString().toUpperCase().equals(GlobalVariables.sAutomatesYes)) {
+  				arrayOfTestCaseId[GlobalVariables.iIndex] = stestName;
+			    GlobalVariables.iIndex++;
+  			}
 		}
-     		 sheet.detach();
-		 return arrayOfTestCaseId;
+//     	System.out.println(GlobalVariables.iIndex);
+     	sheet.detach();
+		return arrayOfTestCaseId;
 	}
 
 	/**
