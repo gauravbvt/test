@@ -1,6 +1,8 @@
 <?xml version="1.0"?>	
 <elements>
 <xPathShowPopUpMenu>/html/body/form/div[13]/span/span[2]/span/span</xPathShowPopUpMenu>
+<xPathSendReplyThatOption>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/lable[2]/input</xPathSendReplyThatOption>
+<xPathReceivedReplyThatOption>/html/body/form/span/div/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/lable[2]/input</xPathReceivedReplyThatOption>
 <xPathSendInfoNotification>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/lable/input</xPathSendInfoNotification>
 <xPathReceiveInfoNotification>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/lable/input/</xPathReceiveInfoNotification>
 <xPathActionsPopUpMenu>/html/body/form/div[13]/span/span[3]/span/span</xPathActionsPopUpMenu>
