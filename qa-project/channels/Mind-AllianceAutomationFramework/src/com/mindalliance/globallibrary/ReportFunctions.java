@@ -528,23 +528,21 @@ public class ReportFunctions {
 	}
 
 	public static String[] readTestCaseIdForFunctional(int sheetNumber) throws IOException {
-		 File file1 = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
-			// TestCase sheet: Tree_Navigation_Views
-		 Sheet sheet1 = SpreadSheet.createFromFile(file1).getSheet(sheetNumber);
-		 int iIndex = 0;
-		 String[] arrayOfTestCaseId = new String[500];
-		 stestName = null;
- 		 for (int i = 2; i <= sheet1.getRowCount() ; i++){
-			   stestName = sheet1.getCellAt("A"+i).getValue().toString();
-			   if (stestName.length() !=0) {
-				     if (sheet1.getCellAt("J"+i).getValue().toString().toUpperCase().equals(GlobalVariables.sAutomatesYes)) {
-				      arrayOfTestCaseId[iIndex] = stestName;
-				      iIndex++;
-				     }
-			   }
-		}
- 		 sheet1.detach();
-		 return arrayOfTestCaseId;
+		File file1 = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
+   		// TestCase sheet: Tree_Navigation_Views
+		Sheet sheet1 = SpreadSheet.createFromFile(file1).getSheet(sheetNumber);
+		String[] arrayOfTestCaseId = new String[600];
+		stestName = null;
+		GlobalVariables.iIndex=0;
+ 		for (int i = 2; i <= sheet1.getRowCount() ; i++){
+ 			stestName = sheet1.getCellAt("A"+i).getValue().toString();
+ 			if (sheet1.getCellAt("J"+i).getValue().toString().toUpperCase().equals(GlobalVariables.sAutomatesYes)) {
+ 				arrayOfTestCaseId[GlobalVariables.iIndex] = stestName;
+ 				GlobalVariables.iIndex++;
+ 			}
+ 		}
+ 		sheet1.detach();
+		return arrayOfTestCaseId;
 	}
 
 	public static void generateAutomationReportForFunctionalTestCases() throws IOException, XMLStreamException {
