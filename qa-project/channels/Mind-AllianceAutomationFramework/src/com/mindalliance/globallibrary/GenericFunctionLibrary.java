@@ -139,6 +139,10 @@ public class GenericFunctionLibrary {
 			GlobalVariables.home.put("sXpathFeedbackSend",oXmlEleHomePage.getElementsByTagName("xPathFeedbackSend").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathHideShowAllSurvey",oXmlEleHomePage.getElementsByTagName("xPathHideShowAllSurvey").item(0).getChildNodes().item(0).getNodeValue());
 			//Channels Plan Page
+			GlobalVariables.plan.put("sXpathSendInfoAddNewIssue",oXmlElePlanPage.getElementsByTagName("xPathSendInfoAddNewIssue").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathReceiveInfoAddNewIssue",oXmlElePlanPage.getElementsByTagName("xPathReceiveInfoAddNewIssue").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathReceiveInfoIssueMenu",oXmlElePlanPage.getElementsByTagName("xPathReceiveInfoIssueMenu").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathSendInfoIssueMenu",oXmlElePlanPage.getElementsByTagName("xPathSendInfoIssueMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathReceiveInfoNotification",oXmlElePlanPage.getElementsByTagName("xPathReceiveInfoNotification").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathSendReplyThatOption",oXmlElePlanPage.getElementsByTagName("xPathSendReplyThatOption").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAgentsURLRadioButton",oXmlElePlanPage.getElementsByTagName("xPathAgentsURLRadioButton").item(0).getChildNodes().item(0).getNodeValue());
