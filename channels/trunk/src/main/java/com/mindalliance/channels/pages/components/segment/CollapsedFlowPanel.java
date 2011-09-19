@@ -34,7 +34,6 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
         addFlowTitlePanel();
         addIssueWarningImage();
         addFlowMediaPanel();
-        addFlowActionMenu();
     }
 
     private void addFlowTitlePanel() {
@@ -43,7 +42,7 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
         titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses(  ) ) ) );
         titlePanel.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getFlow() ) );
+                update( target, new Change( Change.Type.Selected, getFlow() ) );
             }
         } );
         final String c = Channel.toString( getFlow().getEffectiveChannels() );

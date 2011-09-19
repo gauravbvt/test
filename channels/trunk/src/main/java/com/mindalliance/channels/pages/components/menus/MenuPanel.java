@@ -278,6 +278,16 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         return menuItems;
     }
 
+    protected CommandWrapper wrap( final Command command, boolean confirm ) {
+        return new CommandWrapper( command, confirm ) {
+            @Override
+            public void onExecuted( AjaxRequestTarget target, Change change ) {
+                update( target, change );
+            }
+        };
+    }
+
+
     /**
      * A Model object wrapper.
      */

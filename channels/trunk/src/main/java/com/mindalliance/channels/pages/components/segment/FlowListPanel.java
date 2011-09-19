@@ -8,10 +8,14 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.pages.components.segment.menus.FlowActionsMenuPanel;
+import com.mindalliance.channels.pages.components.segment.menus.FlowShowMenuPanel;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -42,6 +46,12 @@ public class FlowListPanel extends AbstractCommandablePanel {
     @SpringBean
     QueryService queryService;
 
+    private ListView<Flow> flowPanelsListView;
+    /**
+     * Flows list container.
+     */
+    private WebMarkupContainer flowsDiv;
+
     /**
      * The node for which flows are listed.
      */
@@ -52,43 +62,48 @@ public class FlowListPanel extends AbstractCommandablePanel {
      */
     private boolean sends;
     /**
-     * Flows list container.
+     * The currently selected flow in the list.
      */
-    private WebMarkupContainer flowsDiv;
-
+    private Flow selectedFlow = null;
     /**
-     * Expansions.
+     * Whether selected flow was updated.
      */
-    private Set<Long> expansions;
-    private ListView<Flow> flowPanelsListView;
+    private boolean selectedFlowUpdated = false;
+    /**
+     * Show menu for selected flow, if any.
+     */
+    private Component flowShowMenu;
+    /**
+     * Actions menu for expanded flow, if any.
+     */
+    private Component flowActionsMenu;
+    /**
+     * Title container.
+     */
+    private WebMarkupContainer titleContainer;
 
+    //-------------------------------
     public FlowListPanel( String id, IModel<Part> model, boolean sends, Set<Long> expansions ) {
-        super( id );
+        super( id, model, expansions );
         this.model = model;
         this.sends = sends;
-        this.expansions = expansions;
         init();
-    }
-
-    /**
-     * Get CSS class for flow priority.
-     *
-     *
-     * @param flow the flow
-     * @return a string
-     */
-    private String getPriorityCssClass( Flow flow ) {
-        if ( flow.isSharing() ) {
-            Level priority = queryService.computeSharingPriority( flow );
-            return priority.getNegativeLabel().toLowerCase();
-        } else
-            return "none";
     }
 
     private void init() {
         setSends( sends );
         setDefaultModel( new CompoundPropertyModel( this ) );
-        add( new Label( "title" ) );                                                      // NON-NLS
+        addTitle();
+        addFlowsDiv();
+    }
+
+    private void addTitle() {
+        titleContainer = new WebMarkupContainer( "title" );
+        titleContainer.setOutputMarkupId( true );
+        addOrReplace( titleContainer );
+        titleContainer.add( new Label( "title" ) );
+        addShowMenu();
+        addActionsMenu();
         AjaxFallbackLink newLink = new AjaxFallbackLink( "new" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -101,9 +116,37 @@ public class FlowListPanel extends AbstractCommandablePanel {
             }
         };
         newLink.setVisible( getPlan().isDevelopment() );
-        add( newLink );
+        titleContainer.add( newLink );
         newLink.add( new Label( "addFlow", sends ? "Add info sent" : "Add info received" ) );
-        addFlowsDiv();
+    }
+
+    private void addShowMenu() {
+        if ( selectedFlow != null ) {
+            flowShowMenu = new FlowShowMenuPanel(
+                    "flowShowMenu",
+                    new Model<Flow>( selectedFlow ),
+                    isSends(),
+                    !isExpanded( selectedFlow.getId() ) );
+        } else {
+            flowShowMenu = new Label( "flowShowMenu", "Show" );
+        }
+        makeVisible( flowShowMenu, selectedFlow != null );
+        titleContainer.add( flowShowMenu );
+
+    }
+
+    private void addActionsMenu() {
+        boolean visible = false;
+        if ( selectedFlow != null && isExpanded( selectedFlow.getId() ) ) {
+            visible = true;
+            flowActionsMenu = new FlowActionsMenuPanel( "flowActionsMenu",
+                    new Model<Flow>( selectedFlow ),
+                    isSends() );
+        } else {
+            flowActionsMenu = new Label( "flowActionsMenu", "Actions" );
+        }
+        makeVisible( flowActionsMenu, visible );
+        titleContainer.add( flowActionsMenu );
     }
 
     private void addFlowsDiv() {
@@ -119,20 +162,19 @@ public class FlowListPanel extends AbstractCommandablePanel {
             @Override
             protected void populateItem( ListItem<Flow> item ) {
                 Flow flow = item.getModelObject();
-                long flowId = flow.getId();
                 AbstractFlowPanel flowPanel;
-                if ( expansions.contains( flowId ) ) {
+                if ( isExpanded( flow ) ) {
                     flowPanel = areSends ?
                             new ExpandedSendPanel(
                                     "flow",
                                     new Model<Flow>( flow ),
-                                    expansions,
+                                    getExpansions(),
                                     item.getIndex(),
                                     planPage() )
                             : new ExpandedReceivePanel(
                             "flow",
                             new Model<Flow>( flow ),
-                            expansions,
+                            getExpansions(),
                             item.getIndex(),
                             planPage() );
                 } else {
@@ -151,18 +193,165 @@ public class FlowListPanel extends AbstractCommandablePanel {
         };
     }
 
+    //-------------------------------
     String getCssClasses( ListItem<Flow> item ) {
         Flow flow = item.getModelObject();
         String evenOdd = ( item.getIndex() % 2 == 0 ? "even" : "odd" );
         String priority = getPriorityCssClass( flow );
-        return evenOdd + " " + priority;
+        String selected = getSelectedCssClass( flow );
+        return evenOdd + " " + priority + " " + selected;
+    }
+
+    private String getSelectedCssClass( Flow flow ) {
+        return ( selectedFlow != null && flow.equals( selectedFlow ) )
+                ? " selected"
+                : "";
+    }
+
+    /**
+     * Get CSS class for flow priority.
+     *
+     * @param flow the flow
+     * @return a string
+     */
+    private String getPriorityCssClass( Flow flow ) {
+        if ( flow.isSharing() ) {
+            Level priority = queryService.computeSharingPriority( flow );
+            return priority.getNegativeLabel().toLowerCase();
+        } else
+            return "none";
+    }
+
+    public final Node getNode() {
+        return model.getObject();
+    }
+
+    /**
+     * @return the title of this panel.
+     */
+    public String getTitle() {
+        return isSends() ? "Sends" : "Receives";
+    }
+
+    public boolean isSelectedFlowUpdated() {
+        return selectedFlowUpdated;
+    }
+
+    public void setSelectedFlowUpdated( boolean selectedFlowUpdated ) {
+        this.selectedFlowUpdated = selectedFlowUpdated;
+    }
+
+    /**
+     * Refresh list of flows.
+     *
+     * @param target an ajax request target
+     */
+    public void refresh( AjaxRequestTarget target ) {
+        for ( Flow flow : getFlows() ) {
+            if ( getExpansions().contains( flow.getId() ) ) {
+                if ( selectedFlow != null && !selectedFlow.equals( flow ) ) {
+                    selectedFlowUpdated = false;
+                }
+                selectedFlow = flow;
+            }
+        }
+        if ( selectedFlow != null && !getFlows().contains( selectedFlow ) ) {
+            selectedFlow = null;
+            selectedFlowUpdated = false;
+        }
+        refreshMenus( target );
+        target.appendJavascript( PlanPage.IE7CompatibilityScript );
+        target.addComponent( flowsDiv );
+    }
+
+    /**
+     * Refresh menus.
+     *
+     * @param target ajax request target
+     */
+    public void refreshMenus( AjaxRequestTarget target ) {
+        addTitle();
+        target.addComponent( titleContainer );
+    }
+
+    public void changed( Change change ) {
+        if ( change.isUpdated() ) {
+            setSelectedFlowUpdated( true );
+        } else {
+            if ( change.isForInstanceOf( Flow.class ) ) {
+                Flow flow = (Flow) change.getSubject( getQueryService() );
+                if ( flow != null ) { // the flow might have been deleted by another planner
+                    if ( change.isSelected() ) {
+                        if ( selectedFlow != null && flow.equals( selectedFlow ) ) {
+                            change.setType( Change.Type.Expanded );
+                            super.changed( change );
+                        } else {
+                            selectedFlow = flow;
+                            Flow toCollapse = (Flow) CollectionUtils.find(
+                                    getFlows(),
+                                    new Predicate() {
+                                        @Override
+                                        public boolean evaluate( Object object ) {
+                                            return getExpansions().contains( ( (Flow) object ).getId() );
+                                        }
+                                    }
+                            );
+                            if ( toCollapse != null ) {
+                                Change collapse = new Change( Change.Type.Collapsed, toCollapse );
+                                super.changed( collapse );
+                            }
+                        }
+                    } else {
+                        if ( change.isRemoved() ) {
+                            selectedFlow = null;
+                            setSelectedFlowUpdated( false );
+                        } else if ( change.isAdded() ) {
+                            selectedFlow = (Flow) change.getSubject( getQueryService() );
+                        }
+                        super.changed( change );
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        change.addQualifier( "updated", isSelectedFlowUpdated() );
+        target.appendJavascript( PlanPage.IE7CompatibilityScript );
+        if ( change.isSelected() || change.isDisplay() || change.isAdded() ) {
+            refreshMenus( target );
+            target.addComponent( flowsDiv );
+        }
+        super.updateWith( target, change, updated );
+        if ( change.isDisplay() ) {
+            setSelectedFlowUpdated( false );
+        }
+    }
+
+    //-------------------------------
+    List<AbstractFlowPanel> getFlowPanels() {
+        final List<AbstractFlowPanel> flowPanels = new ArrayList<AbstractFlowPanel>();
+        Iterator<? extends ListItem<Flow>> listItems = flowPanelsListView.iterator();
+        while ( listItems.hasNext() ) {
+            listItems.next().visitChildren( new IVisitor<Component>() {
+                @Override
+                public Object component( Component component ) {
+                    if ( component instanceof AbstractFlowPanel ) {
+                        flowPanels.add( (AbstractFlowPanel) component );
+                    }
+                    return null;
+                }
+            } );
+        }
+        return flowPanels;
     }
 
 
     /**
      * Get flows sorted: sharing > not sharing, by priority, by title..
      *
-     * @return a list of lofws
+     * @return a list of flows
      */
     public List<Flow> getFlows() {
         List<Flow> flows = new ArrayList<Flow>();
@@ -192,71 +381,11 @@ public class FlowListPanel extends AbstractCommandablePanel {
         return flows;
     }
 
-    /**
-     * @return the title of this panel.
-     */
-    public String getTitle() {
-        return isSends() ? "Sends" : "Receives";
-    }
-
-    public final Node getNode() {
-        return model.getObject();
-    }
-
     public final boolean isSends() {
         return sends;
     }
 
     public final void setSends( boolean sends ) {
         this.sends = sends;
-    }
-
-
-    @Override
-    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        target.appendJavascript( PlanPage.IE7CompatibilityScript );
-        if ( change.isDisplay() || change.isAdded() ) {
-            target.addComponent( flowsDiv );
-        }
-        super.updateWith( target, change, updated );
-    }
-
-
-    /**
-     * Refresh list of flows.
-     *
-     * @param target an ajax request target
-     */
-    public void refresh( AjaxRequestTarget target ) {
-        target.appendJavascript( PlanPage.IE7CompatibilityScript );
-        target.addComponent( flowsDiv );
-    }
-
-    /**
-     * Refresh menus.
-     *
-     * @param target ajax request target
-     */
-    public void refreshMenus( AjaxRequestTarget target ) {
-        for ( AbstractFlowPanel flowPanel : getFlowPanels() ) {
-            flowPanel.refreshMenu( target );
-        }
-    }
-
-    List<AbstractFlowPanel> getFlowPanels() {
-        final List<AbstractFlowPanel> flowPanels = new ArrayList<AbstractFlowPanel>();
-        Iterator<? extends ListItem<Flow>> listItems = flowPanelsListView.iterator();
-        while ( listItems.hasNext() ) {
-            listItems.next().visitChildren( new IVisitor<Component>() {
-                @Override
-                public Object component( Component component ) {
-                    if ( component instanceof AbstractFlowPanel ) {
-                        flowPanels.add( (AbstractFlowPanel) component );
-                    }
-                    return null;
-                }
-            } );
-        }
-        return flowPanels;
     }
 }

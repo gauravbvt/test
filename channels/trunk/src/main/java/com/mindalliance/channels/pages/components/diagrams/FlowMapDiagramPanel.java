@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.graph.Diagram;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
@@ -191,7 +191,7 @@ public class FlowMapDiagramPanel extends AbstractDiagramPanel {
                 this.update( target, change );
 
             } else {
-                throw new NotFoundException();
+                LOG.warn( "Selection not found" );
             }
         } catch ( NotFoundException e ) {
             LOG.warn( "Selection not found", e );

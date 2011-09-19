@@ -1,14 +1,10 @@
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.pages.components.segment.menus.FlowActionsMenuPanel;
-import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.Set;
 
@@ -26,10 +22,6 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
      * The underlying flow.
      */
     private IModel<Flow> flowModel;
-    /**
-     * Flow action menu.
-     */
-    private Component flowActionMenu;
     /**
      * Whether send flow view.
      */
@@ -83,10 +75,6 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
     }
 
 
-    public Component getFlowActionMenu() {
-        return flowActionMenu;
-    }
-
     public boolean isSend() {
         return send;
     }
@@ -107,19 +95,6 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
         this.index = index;
     }
 
-    /**
-     * Add flow action menu.
-     */
-    protected void addFlowActionMenu( ) {
-        flowActionMenu = new FlowActionsMenuPanel(
-                    "flowActionsMenu",
-                    new PropertyModel<Flow>( this, "flow" ),
-                    isSend(),
-                    isCollapsed() );
-        flowActionMenu.setOutputMarkupId( true );
-        addOrReplace( flowActionMenu );
-    }
-
     protected boolean hasIssues() {
         Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
         return analyst.hasIssues( getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
@@ -130,10 +105,10 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
         return analyst.getIssuesSummary( getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
     }
 
-    protected String getCssClasses(  ) {
+    public String getCssClasses(  ) {
         String flowType = getFlowTypeCssClass();
         String priority = getFlowPriorityCssClass();
-        return "pointer "
+        return "title pointer "
                 + flowType
                // + ( errorType.isEmpty() ? "" : ( " " + errorType ) )
                 + ( priority.isEmpty() ? "" : ( " " + priority ) );
@@ -182,8 +157,4 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
     }
 
 
-    public void refreshMenu( AjaxRequestTarget target ) {
-        addFlowActionMenu();
-        target.addComponent( flowActionMenu );
-    }
 }

@@ -626,7 +626,7 @@ ul.attach ul.menu {
     vertical-align: baseline;
 }
 
-.receives span.menubar, .sends span.menubar, .issues span.menubar {
+.issues span.menubar {
     float: right;
     position: static;
 }
@@ -1641,6 +1641,18 @@ div.part-header > div.section-title > span.menubar {
 	margin-top:1px;
 }
 
+div.receives span.menubar, div.sends span.menubar {
+	margin-top:1px;
+}
+
+div.receives span.menubar {
+	right:10em;
+}
+
+div.sends span.menubar {
+	right:8em;
+}
+
 img.inline {
     vertical-align: middle;
 }
@@ -1657,11 +1669,17 @@ h3.task-title-noop {
 	padding-left:18px;
 }
 
-/* ----- More Menu Lowercase ----- */
 
-div.receives > div.section-content > div.flow > div > span.menubar > span > span.dropmenu > span,
-div.sends > div.section-content > div.flow > div > span.menubar > span > span.dropmenu > span {
-	text-transform:lowercase;
+/* ------ Selected flow ---------- */
+
+.flow .odd.selected {
+    background-color: #D8D8D8;
+    border-top-color: #9C9EA0;
+    border-bottom-color: #9C9EA0;
+}
+
+.flow .selected .title {
+    font-weight: bold;
 }
 
 /* ----- Task, Receive and Send Severity Icon ----- */
@@ -1672,6 +1690,10 @@ div.flow div.extreme {
 
 div.flow div.extreme.even {
 	background: url( '../images/bullet-red.png' ) no-repeat 9px 10px #E8E8E8;
+}
+
+div.flow div.extreme.even.selected {
+	background: url( '../images/bullet-red.png' ) no-repeat 9px 10px #D8D8D8;
 }
 
 span.extreme {
@@ -1686,6 +1708,10 @@ div.flow div.major.even {
 	background: url( '../images/bullet-yellow.png' ) no-repeat 9px 10px #E8E8E8;
 }
 
+div.flow div.major.even.selected {
+	background: url( '../images/bullet-yellow.png' ) no-repeat 9px 10px #D8D8D8;
+}
+
 span.major {
 	background: url( '../images/bullet-yellow.png' ) no-repeat 6px 5px;
 }
@@ -1696,6 +1722,10 @@ div.flow div.minor {
 
 div.flow div.minor.even {
 	background: url( '../images/bullet-blue.png' ) no-repeat 9px 10px #E8E8E8;
+}
+
+div.flow div.minor.even.selected {
+	background: url( '../images/bullet-blue.png' ) no-repeat 9px 10px #D8D8D8;
 }
 
 span.minor {
@@ -1710,6 +1740,10 @@ div.flow div.severe.even {
 	background: url( '../images/bullet-orange.png' ) no-repeat 9px 10px #E8E8E8;
 }
 
+div.flow div.severe.even.selected {
+	background: url( '../images/bullet-orange.png' ) no-repeat 9px 10px #D8D8D8;
+}
+
 span.severe {
 	background: url( '../images/bullet-orange.png' ) no-repeat 6px 5px;
 }
@@ -1721,6 +1755,11 @@ div.flow div.none {
 div.flow div.none.even {
 	background: url( '../images/bullet-black.png' ) no-repeat 9px 10px #E8E8E8;
 }
+
+div.flow div.none.even.selected {
+	background: url( '../images/bullet-black.png' ) no-repeat 9px 10px #D8D8D8;
+}
+
 
 span.none {
 	background: url( '../images/bullet-black.png' ) no-repeat 6px 5px;

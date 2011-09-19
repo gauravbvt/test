@@ -1,6 +1,10 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.RedirectFlow;
+import com.mindalliance.channels.core.command.commands.SatisfyNeed;
+import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.ExternalFlow;
@@ -11,10 +15,6 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Taggable;
-import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.RedirectFlow;
-import com.mindalliance.channels.core.command.commands.SatisfyNeed;
-import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.PlanPage;
@@ -773,7 +773,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } );
         titlePanel.setOutputMarkupId( true );
         addOrReplace( titlePanel );
-        addFlowActionMenu();
     }
 
     private void addSimpleAdvanced() {
@@ -1544,7 +1543,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                     adjustFieldsOnUpdate( flow, target );
                     addHeader();
                     target.addComponent( titlePanel );
-                    refreshMenu( target );
                 }
             }
             super.updateWith( target, change, updated );
