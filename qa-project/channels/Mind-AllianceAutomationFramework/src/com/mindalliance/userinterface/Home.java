@@ -319,18 +319,18 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 
 	private JList getJList2() {
 		try {
-		if (jListCommand == null) {
+//		if (jListCommand == null) {
 			jListCommand = new JList();
 			DefaultListModel listModel = new DefaultListModel();
 			arrayOfTestCaseId = null;
 			arrayOfTestCaseId = ReportFunctions.readTestCaseId(3);
-			for (int i = 0; i <= 70 ; i++) {
-				if (arrayOfTestCaseId[i] != null)
+			for (int i = 0; i <GlobalVariables.iIndex; i++)
+//				if (arrayOfTestCaseId[i] != null) {
 						listModel.addElement(arrayOfTestCaseId[i]);
-			}
+//			}
 			jListCommand.setModel(listModel);
 			jListCommand.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		}
+//		}
 		return jListCommand;
 		}
 		catch (Exception e) {
@@ -357,17 +357,17 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 
 	private JList getJList1() {
 		try {
-		if (jListPlan == null) {
+//		if (jListPlan == null) {
 			jListPlan = new JList();
 			DefaultListModel listModel = new DefaultListModel();
 			arrayOfTestCaseId = ReportFunctions.readTestCaseId(2);
-			for (int i = 0; i <= 100 ; i++ ) {
-				if (arrayOfTestCaseId[i] != null)
+			for (int i = 0; i <GlobalVariables.iIndex ; i++ ) 
+//				if (arrayOfTestCaseId[i] != null){
 					listModel.addElement(arrayOfTestCaseId[i]);
-			}
+//			}
 			jListPlan.setModel(listModel);
 			jListPlan.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		}
+//		}
 		return jListPlan;
 		}
 		catch (Exception e) {
@@ -419,17 +419,17 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 
 	private JList getJList0() {
 		try {
-		if (jListView == null) {
+//		if (jListView == null) {
 			jListView = new JList();
 			DefaultListModel listModel = new DefaultListModel();
 			arrayOfTestCaseId = ReportFunctions.readTestCaseId(1);
-			for (int i=0;i<250;i++)
-				if(arrayOfTestCaseId[i] != null) {
+			for (int i=0;i<GlobalVariables.iIndex;i++)
+//				if(arrayOfTestCaseId[i] != null) {
 					listModel.addElement(arrayOfTestCaseId[i]);
-			}
+//			}
 			jListView.setModel(listModel);
 			jListView.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		}
+//		}
 		return jListView;
 		}
 		catch (Exception e) {
@@ -558,18 +558,27 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			if ("add".equals(e.getActionCommand())) {// when clicked on '>' button
 				Object[] arrayOfListObject;
 				DefaultListModel listModel = new DefaultListModel();
+				int cnt1=0,cnt2=0,cnt3=0;
 				arrayOfListObject = jListView.getSelectedValues();
-				for (Object listObject : arrayOfListObject) 
+				for (Object listObject : arrayOfListObject){ 
 					listModel.addElement(listObject);
-				jListExecute.setModel(listModel);
-				arrayOfListObject = jListPlan.getSelectedValues();
-				for (Object listObject : arrayOfListObject) 
-					listModel.addElement(listObject);
-				jListExecute.setModel(listModel);
-				arrayOfListObject = jListCommand.getSelectedValues();
-				for (Object listObject : arrayOfListObject) {
-					listModel.addElement(listObject);
+					cnt1++;
 				}
+				jListExecute.setModel(listModel);
+				
+				arrayOfListObject = jListPlan.getSelectedValues();
+				for (Object listObject : arrayOfListObject){ 
+					listModel.addElement(listObject);
+					cnt2++;
+				}
+				jListExecute.setModel(listModel);
+				
+				arrayOfListObject = jListCommand.getSelectedValues();
+				for (Object listObject : arrayOfListObject){ 
+					listModel.addElement(listObject);
+					cnt3++;
+				}
+				System.out.println("Total Count : " +(cnt1+cnt2+cnt3));
 				jListExecute.setModel(listModel);
 			}
 			else if ("execute".equals(e.getActionCommand())) { // when clicked on 'Execute' button
