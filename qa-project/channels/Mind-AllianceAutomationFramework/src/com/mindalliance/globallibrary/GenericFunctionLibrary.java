@@ -351,6 +351,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathAddInfoSendAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendAssertion").item(0).getChildNodes().item(0).getNodeValue());	
 			GlobalVariables.assertion.put("sXpathEventAssertion",oXmlElePlanPage.getElementsByTagName("xPathEventAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			// View Elements
+			GlobalVariables.viewElements.put("showSimpleForm",oXmlEleViewElements.getElementsByTagName("showSimpleForm").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("showAdvanceForm",oXmlEleViewElements.getElementsByTagName("showAdvanceForm").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("conceptual",oXmlEleViewElements.getElementsByTagName("conceptual").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("proceduremMap1",oXmlEleViewElements.getElementsByTagName("proceduremMap1").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("show",oXmlEleViewElements.getElementsByTagName("show").item(0).getChildNodes().item(0).getNodeValue());
