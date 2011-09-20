@@ -2,18 +2,19 @@ package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class TFP052_TaskCreateSurvey 
+public class TFP087_AddInfoReceiveSentAttachmentName 
 {
-	public TFP052_TaskCreateSurvey(){
+	public TFP087_AddInfoReceiveSentAttachmentName(){
     	try {
     		
-    		GlobalVariables.sTestCaseId = "TFP052_TaskCreateSurvey";
+    		GlobalVariables.sTestCaseId = "TFP087_AddInfoReceiveSentAttachmentName";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -36,7 +37,7 @@ public class TFP052_TaskCreateSurvey
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
-				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Create Survey"),"New");
+				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Receive Send Attachment Name"), "New");
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -50,10 +51,10 @@ public class TFP052_TaskCreateSurvey
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click on default task
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Task Added";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
+				// Click 'Add Info Sent' Link. 
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
+				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -62,69 +63,80 @@ public class TFP052_TaskCreateSurvey
 				Thread.currentThread();
 				Thread.sleep(2000);
 
-				// Create Survey
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Survey Created";
-				// Create Survey
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCreateViewSurvey"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(35000);
-				// Assertion : Verify that Survey gets Created
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("surveys"))) {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-				}
-				else {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
+				// Click on New link of Send info panel
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "New Issue Added Of Send Panel";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSendInfoAddNewIssue"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Close Survey Window
-				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
-				// View Survey
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Survey Viewed";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCreateViewSurvey"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(20000);
-				// Assertion : Verify that Survey gets Created
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("surveys"))) {
+				
+				// Enter Attachment name
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "New Issue Attachment Name Of Send Panel Entered";
+				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Attachment Name"));
+				// Assertion: Verify that Issue details can be entered
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name"));
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Attachment Name"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
-				else {
+				}				
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Click 'Add info received' Link. 
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "'Add Info Received' Link Clicked";
+				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Click on New link of Receive info panel
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "New Issue added of Receive Panel";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathReceiveInfoAddNewIssue"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Enter details of New Issue
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "New Issue Attachment Name Of Receive Panel Entered";
+				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Attachment Name"));
+				// Assertion: Verify that Issue details can be entered
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name"));
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Attachment Name"))){
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
+				}				
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Close Survey Window
-				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(2000);				
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization
@@ -178,7 +190,7 @@ public class TFP052_TaskCreateSurvey
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new TFP052_TaskCreateSurvey();
+			new TFP087_AddInfoReceiveSentAttachmentName();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 

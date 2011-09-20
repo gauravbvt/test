@@ -2,18 +2,19 @@ package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class TFP052_TaskCreateSurvey 
+public class TFP093_AddInfoReceiveSentCreateSurvey 
 {
-	public TFP052_TaskCreateSurvey(){
+	public TFP093_AddInfoReceiveSentCreateSurvey(){
     	try {
     		
-    		GlobalVariables.sTestCaseId = "TFP052_TaskCreateSurvey";
+    		GlobalVariables.sTestCaseId = "TFP093_AddInfoReceiveSentCreateSurvey";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -36,7 +37,7 @@ public class TFP052_TaskCreateSurvey
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
-				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Create Survey"),"New");
+				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Receive Send Create Survey"), "New");
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -50,10 +51,10 @@ public class TFP052_TaskCreateSurvey
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click on default task
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Task Added";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
+				// Click 'Add Info Sent' Link. 
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
+				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -61,12 +62,11 @@ public class TFP052_TaskCreateSurvey
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
-				// Create Survey
+				
+				// Click on create survey link of Send panel
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Survey Created";
-				// Create Survey
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCreateViewSurvey"))).click();
+				GlobalVariables.sDescription="Survey created of Send Panel";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSendCreateSurvey"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(35000);
@@ -92,24 +92,33 @@ public class TFP052_TaskCreateSurvey
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
-				// View Survey
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Survey Viewed";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCreateViewSurvey"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(20000);
-				// Assertion : Verify that Survey gets Created
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
+				
+				// Click 'Add info received' Link. 
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "'Add Info Received' Link Clicked";
+				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				
+				// Click on create survey link of Receive panel
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Survey created of Receive Panel";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceiveCreateSurvey"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(35000);
+				// Assertion : Verify that Survey gets Created
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("surveys"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
 					// Write Results
@@ -178,7 +187,7 @@ public class TFP052_TaskCreateSurvey
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new TFP052_TaskCreateSurvey();
+			new TFP093_AddInfoReceiveSentCreateSurvey();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 
