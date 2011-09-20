@@ -1,5 +1,7 @@
 <?xml version="1.0"?>	
 <elements>
+<xPathAddInfoSendCreateSurvey>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoSendCreateSurvey>
+<xPathAddInfoReceiveCreateSurvey>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoReceiveCreateSurvey>
 <xPathShowPopUpMenu>/html/body/form/div[13]/span/span[2]/span/span</xPathShowPopUpMenu>
 <xPathSendInfoAddNewIssue>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div/div/ul/li/a</xPathSendInfoAddNewIssue>
 <xPathReceiveInfoAddNewIssue>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/div/ul/li/a</xPathReceiveInfoAddNewIssue>
