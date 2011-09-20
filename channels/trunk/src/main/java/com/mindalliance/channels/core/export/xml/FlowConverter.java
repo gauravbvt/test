@@ -137,6 +137,14 @@ public class FlowConverter extends AbstractChannelsConverter {
         writer.startNode( "referencesEventPhase" );
         writer.setValue( Boolean.toString( flow.isReferencesEventPhase() ) );
         writer.endNode();
+        // Can bypass intermediate
+        writer.startNode( "canBypassIntermediate" );
+        writer.setValue( Boolean.toString( flow.isCanBypassIntermediate() ) );
+        writer.endNode();
+        // Receipt confirmation requested
+        writer.startNode( "receiptConfirmationRequested" );
+        writer.setValue( Boolean.toString( flow.isReceiptConfirmationRequested() ) );
+        writer.endNode();
 
     }
 
@@ -275,7 +283,11 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setProhibited( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "referencesEventPhase" ) ) {
                 flow.setReferencesEventPhase( reader.getValue().equals( "true" ) );
-            }  else {
+            } else if ( nodeName.equals( "canBypassIntermediate" ) ) {
+                flow.setCanBypassIntermediate( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "receiptConfirmationRequested" ) ) {
+                flow.setReceiptConfirmationRequested( reader.getValue().equals( "true" ) );
+            } else {
                 LOG.warn( "Unknown element " + nodeName );
             }
             reader.moveUp();

@@ -105,7 +105,13 @@
 
             <tr>
                 <th class="area" align="right" valign="top">Instructions:</th>
-                <td><textarea id="description" name="description" wicket:id="description"
+                <td><span wicket:id="canBypassIntermediateContainer">
+                        <input wicket:id="canBypassIntermediate" type="checkbox"/> can bypass intermediate<br/>
+                    </span>
+                    <span wicket:id="receiptConfirmationRequestedContainer">
+                        <input wicket:id="receiptConfirmationRequested" type="checkbox"/> receipt confirmation requested<br/>
+                    </span>
+                    <textarea id="description" name="description" wicket:id="description"
                       cols="40" rows="1">Instructions</textarea></td>
             </tr>
 

@@ -80,6 +80,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     private boolean referencesEventPhase = true;
 
+    private boolean canBypassIntermediate = false;
+
+    private boolean receiptConfirmationRequested = false;
+
     protected Flow() {
     }
 
@@ -281,6 +285,30 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.referencesEventPhase = referencesEventPhase;
     }
 
+    public boolean isCanBypassIntermediate() {
+        return canBypassIntermediate;
+    }
+
+    public void setCanBypassIntermediate( boolean canBypassIntermediate ) {
+        this.canBypassIntermediate = canBypassIntermediate;
+    }
+
+    public boolean isReceiptConfirmationRequested() {
+        return receiptConfirmationRequested;
+    }
+
+    public void setReceiptConfirmationRequested( boolean receiptConfirmationRequested ) {
+        this.receiptConfirmationRequested = receiptConfirmationRequested;
+    }
+
+    public boolean canGetCanBypassIntermediate() {
+        return isSharing();
+    }
+
+    public boolean canGetReceiptConfirmationRequested() {
+        return isSharing();
+    }
+
     public boolean canGetProhibited() {
         return isSharing();
     }
@@ -295,6 +323,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public boolean canSetReferencesEventPhase() {
         return canGetReferencesEventPhase();
+    }
+
+    public boolean canSetReceiptConfirmationRequested() {
+        return canGetReceiptConfirmationRequested();
+    }
+
+    public boolean canSetCanBypassIntermediate() {
+        return canGetCanBypassIntermediate();
     }
 
     public String getShortName( Node node, boolean qualified ) {

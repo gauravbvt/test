@@ -177,14 +177,21 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private CheckBox prohibitedCheckBox;
 
     /**
-     * Prohibited checkbox container.
+     * Flow modalities.
      */
     private WebMarkupContainer referencesEventPhaseContainer;
     /**
-     * If prohibited.
+     * If sender can reference event phase.
      */
     private CheckBox referencesEventPhaseCheckBox;
-
+    /**
+     * Can bypass intermediate.
+     */
+    private CheckBox canBypassIntermediateCheckBox;
+    /**
+     * Receipt confirmation requested.
+     */
+    private CheckBox receiptConfirmationRequestedCheckBox;
     /**
      * Flow is to be restricted.
      */
@@ -219,6 +226,14 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Flow header.
      */
     private FlowTitlePanel titlePanel;
+    /**
+     * Can bypass intermediate container
+     */
+    private WebMarkupContainer canBypassIntermediateContainer;
+    /**
+     * Receipt confirmation request container.
+     */
+    private WebMarkupContainer receiptConfirmationRequestedContainer;
 
     protected ExpandedFlowPanel(
             String id,
@@ -226,7 +241,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             boolean send,
             Set<Long> expansions,
             int index,
-            PlanPage planPage) {
+            PlanPage planPage ) {
         super( id, model, send, false, expansions, index );
         this.planPage = planPage;
         init();
@@ -267,6 +282,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addMaxDelayRow();
         addSignificanceToSource();
         addFlowDescription();
+        addCanBypassIntermediate();
+        addReceiptConfirmationRequested();
         add( new AttachmentPanel( "attachments", new PropertyModel<Flow>( this, "flow" ) ) );
         issuesPanel = new IssuesPanel(
                 "issues",
@@ -282,7 +299,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void setShowSimpleForm( boolean val ) {
-         getPlanPage().setShowSimpleForm( getFlow(), val );
+        getPlanPage().setShowSimpleForm( getFlow(), val );
     }
 
     private void addTagsPanel() {
@@ -302,13 +319,13 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addClassificationFields() {
-         classificationContainer = new WebMarkupContainer( "classificationContainer" );
-         classificationContainer.setOutputMarkupId( true );
-         makeVisible(  classificationContainer, !isShowSimpleForm() );
-         add(  classificationContainer );
-         addIntentField();
-         addProhibitedField( );
-     }
+        classificationContainer = new WebMarkupContainer( "classificationContainer" );
+        classificationContainer.setOutputMarkupId( true );
+        makeVisible( classificationContainer, !isShowSimpleForm() );
+        add( classificationContainer );
+        addIntentField();
+        addProhibitedField();
+    }
 
 
     private void addIntentField() {
@@ -456,13 +473,18 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         makeVisible( prohibitedContainer, f.canGetProhibited() );
         prohibitedCheckBox.setEnabled( lockedByUser && f.canSetProhibited() );
         makeVisible( referencesEventPhaseContainer, f.canGetReferencesEventPhase() );
+        makeVisible( canBypassIntermediateContainer, f.canGetCanBypassIntermediate() );
+        makeVisible( receiptConfirmationRequestedContainer, f.canGetReceiptConfirmationRequested() );
         referencesEventPhaseCheckBox.setEnabled( lockedByUser && f.canSetReferencesEventPhase() );
+        canBypassIntermediateCheckBox.setEnabled( lockedByUser && f.canSetCanBypassIntermediate() );
+        receiptConfirmationRequestedCheckBox.setEnabled( lockedByUser && f.canSetReceiptConfirmationRequested() );
     }
 
     /**
      * Show/hide/enable/disable parts of the panel given the state of the flow.
      *
      * @param f the flow
+     * @param target ajax request target
      */
     private void adjustFieldsOnUpdate( Flow f, AjaxRequestTarget target ) {
         triggersSourceContainer.setVisible(
@@ -702,8 +724,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addReferencesEventPhaseField() {
         referencesEventPhaseContainer = new WebMarkupContainer( "referencesEventPhaseContainer" );
         referencesEventPhaseContainer.setOutputMarkupId( true );
-        makeVisible(  referencesEventPhaseContainer, !isShowSimpleForm() );
+        makeVisible( referencesEventPhaseContainer, !isShowSimpleForm() );
         add( referencesEventPhaseContainer );
+        // references event phase
         referencesEventPhaseCheckBox = new CheckBox(
                 "referencesEventPhase",
                 new PropertyModel<Boolean>( this, "referencesEventPhase" )
@@ -734,6 +757,49 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } );
         flowDescription.setOutputMarkupId( true );
         add( flowDescription );
+    }
+
+    private void addCanBypassIntermediate() {
+        canBypassIntermediateContainer = new WebMarkupContainer( "canBypassIntermediateContainer" );
+        canBypassIntermediateContainer.setOutputMarkupId( true );
+        makeVisible( canBypassIntermediateContainer, !isShowSimpleForm() );
+        add( canBypassIntermediateContainer );
+        // can bypass intermediate
+        canBypassIntermediateCheckBox = new CheckBox(
+                "canBypassIntermediate",
+                new PropertyModel<Boolean>( this, "canBypassIntermediate" )
+        );
+        canBypassIntermediateCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update(
+                        target,
+                        new Change( Change.Type.Updated, getFlow(), "canBypassIntermediate" ) );
+            }
+        } );
+        canBypassIntermediateContainer.add( canBypassIntermediateCheckBox );
+        // receipt requested
+    }
+
+    private void addReceiptConfirmationRequested() {
+        receiptConfirmationRequestedContainer = new WebMarkupContainer( "receiptConfirmationRequestedContainer" );
+        receiptConfirmationRequestedContainer.setOutputMarkupId( true );
+        makeVisible( receiptConfirmationRequestedContainer, !isShowSimpleForm() );
+        add(  receiptConfirmationRequestedContainer );
+        // receipt confirmation requested
+        receiptConfirmationRequestedCheckBox = new CheckBox(
+                "receiptConfirmationRequested",
+                new PropertyModel<Boolean>( this, "receiptConfirmationRequested" )
+        );
+        receiptConfirmationRequestedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update(
+                        target,
+                        new Change( Change.Type.Updated, getFlow(), "receiptConfirmationRequested" ) );
+            }
+        } );
+        receiptConfirmationRequestedContainer.add( receiptConfirmationRequestedCheckBox );
     }
 
 
@@ -793,17 +859,24 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void adjustSimpleAdvancedFields( AjaxRequestTarget target ) {
+        Flow f = getFlow();
         boolean showSimpleForm = isShowSimpleForm();
         makeVisible( tagsContainer, !showSimpleForm );
-        target.addComponent(  tagsContainer );
+        target.addComponent( tagsContainer );
         makeVisible( classificationContainer, !showSimpleForm );
-        target.addComponent(  classificationContainer );
+        target.addComponent( classificationContainer );
         makeVisible( restrictionContainer, !showSimpleForm );
-        target.addComponent(  restrictionContainer );
+        target.addComponent( restrictionContainer );
         makeVisible( referencesEventPhaseContainer, !showSimpleForm );
-        target.addComponent(  referencesEventPhaseContainer );
+        target.addComponent( referencesEventPhaseContainer );
+        makeVisible( canBypassIntermediateContainer, !showSimpleForm
+                && f.canGetCanBypassIntermediate() );
+        target.addComponent( canBypassIntermediateContainer );
+        makeVisible( receiptConfirmationRequestedContainer, !showSimpleForm
+                && f.canGetReceiptConfirmationRequested() );
+        target.addComponent( receiptConfirmationRequestedContainer );
         makeVisible( timingContainer, !showSimpleForm );
-        target.addComponent(  timingContainer );
+        target.addComponent( timingContainer );
         makeVisible( significanceToSourceContainer, !showSimpleForm );
         target.addComponent( significanceToSourceContainer );
     }
@@ -1493,7 +1566,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     /**
-     * Get whether flow is prohibited.
+     * Get whether sender can reference event phase.
      *
      * @return a boolean
      */
@@ -1504,6 +1577,36 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     public void setReferencesEventPhase( boolean val ) {
         if ( val != getFlow().isReferencesEventPhase() ) {
             doCommand( new UpdateSegmentObject( getFlow(), "referencesEventPhase", val ) );
+        }
+    }
+
+    /**
+     * Get whether sender can bypass intermediate.
+     *
+     * @return a boolean
+     */
+    public boolean isCanBypassIntermediate() {
+        return getFlow().isCanBypassIntermediate();
+    }
+
+    public void setCanBypassIntermediate( boolean val ) {
+        if ( val != getFlow().isCanBypassIntermediate() ) {
+            doCommand( new UpdateSegmentObject( getFlow(), "canBypassIntermediate", val ) );
+        }
+    }
+
+    /**
+     * Get whether receiver must confirm receipt.
+     *
+     * @return a boolean
+     */
+    public boolean isReceiptConfirmationRequested() {
+        return getFlow().isReceiptConfirmationRequested();
+    }
+
+    public void setReceiptConfirmationRequested( boolean val ) {
+        if ( val != getFlow().isReceiptConfirmationRequested() ) {
+            doCommand( new UpdateSegmentObject( getFlow(), "receiptConfirmationRequested", val ) );
         }
     }
 

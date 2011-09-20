@@ -75,6 +75,9 @@ public final class ChannelsUtils {
         attributes.put( "intent", flow.getIntent() );
         attributes.put( "restriction", flow.getRestriction() );
         attributes.put( "ifTaskFails", flow.isIfTaskFails() );
+        attributes.put( "referencesEventPhase", flow.isReferencesEventPhase() );
+        attributes.put( "canBypassIntermediate", flow.isCanBypassIntermediate() );
+        attributes.put( "receiptConfirmationRequested", flow.isReceiptConfirmationRequested() );
         return attributes;
     }
 
@@ -159,6 +162,16 @@ public final class ChannelsUtils {
         merged.put(
                 "ifTaskFails",
                 (Boolean) attributes.get( "ifTaskFails" ) || (Boolean) others.get( "ifTaskFails" ) );
+        // merge other modalities
+        merged.put(
+                "referencesEventPhase",
+                (Boolean) attributes.get( "referencesEventPhase" ) || (Boolean) others.get( "referencesEventPhase" ) );
+        merged.put(
+                "canBypassIntermediate",
+                (Boolean) attributes.get( "canBypassIntermediate" ) || (Boolean) others.get( "canBypassIntermediate" ) );
+        merged.put(
+                "receiptConfirmationRequested",
+                (Boolean) attributes.get( "receiptConfirmationRequested" ) || (Boolean) others.get( "receiptConfirmationRequested" ) );
         return merged;
     }
 
