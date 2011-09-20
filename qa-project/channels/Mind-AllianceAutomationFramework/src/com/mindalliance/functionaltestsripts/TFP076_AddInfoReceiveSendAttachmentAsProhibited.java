@@ -219,6 +219,7 @@ public class TFP076_AddInfoReceiveSendAttachmentAsProhibited
 			ReportFunctions.generateAutomationReport();
 		} 
 		catch (Exception oException) {
+			// TODO Auto-generated catch block
 			oException.printStackTrace();
 		}
 	}

@@ -219,6 +219,7 @@ public class TFP073_AddInfoReceiveSendAttachmentAsReference
 			ReportFunctions.generateAutomationReport();
 		} 
 		catch (Exception oException) {
+			// TODO Auto-generated catch block
 			oException.printStackTrace();
 		}
 	}

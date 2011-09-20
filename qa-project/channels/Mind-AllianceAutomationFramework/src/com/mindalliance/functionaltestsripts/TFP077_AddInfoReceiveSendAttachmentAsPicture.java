@@ -219,6 +219,7 @@ public class TFP077_AddInfoReceiveSendAttachmentAsPicture
 			ReportFunctions.generateAutomationReport();
 		} 
 		catch (Exception oException) {
+			// TODO Auto-generated catch block
 			oException.printStackTrace();
 		}
 	}
