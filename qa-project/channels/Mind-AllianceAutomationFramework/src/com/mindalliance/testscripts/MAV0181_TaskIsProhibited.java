@@ -91,7 +91,7 @@ public class MAV0181_TaskIsProhibited
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
-					GlobalVariables.sVerifyError="Verification Failed Expected"+GlobalVariables.viewElements.get("notOperational")+"Actual is"+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError="Verification Failed Expected "+GlobalVariables.viewElements.get("prohibited")+"Actual is"+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

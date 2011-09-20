@@ -61,6 +61,7 @@ public class MAV0182_CausesEventOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+				// Assertion: Verify thatTask causes event
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("Event"))) {
 					// Write Results
@@ -69,7 +70,7 @@ public class MAV0182_CausesEventOption
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else {
-					GlobalVariables.sVerifyError="Verification Failed Expected"+GlobalVariables.testData.get("Event")+"Actual is"+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError="Verification Failed Expected "+GlobalVariables.testData.get("Event")+"Actual is"+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
