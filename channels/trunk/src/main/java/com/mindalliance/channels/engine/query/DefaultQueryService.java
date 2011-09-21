@@ -1725,8 +1725,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public Boolean likelyRelated( String text, String otherText ) {
         return Matcher.matches( text, otherText ) || isSemanticMatch( StringUtils.uncapitalize( text ),
-                                                                      StringUtils.uncapitalize( otherText ),
-                                                                      Proximity.HIGH );
+                StringUtils.uncapitalize( otherText ),
+                Proximity.HIGH );
     }
 
     @Override
@@ -2346,7 +2346,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             visited.add( part );
             Set<Flow> importantFlows = new HashSet<Flow>();
             for ( Flow flow : part.getAllSharingSends() ) {
-                if ( flow.isImportant() && ( assumeAlternatesFail || getAlternates( flow ).isEmpty() ) ) {
+                if ( flow.isImportant()
+                        && ( assumeAlternatesFail
+                        || ( getAlternates( flow ).isEmpty()
+                        && CollectionUtils.subtract( flow.intermediatedSources(), visited ).isEmpty() ) ) ) {
                     importantFlows.add( flow );
                     importantFlows.addAll( findImportantFlowsFrom(
                             ( (Part) flow.getTarget() ),
@@ -2356,7 +2359,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
             return new ArrayList<Flow>( importantFlows );
         }
     }
-
 
     @Override
     public List<Part> findFailureImpacts( SegmentObject segmentObject, Boolean assumeFails ) {
@@ -2728,7 +2730,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
                             @Override
                             public boolean evaluate( Object object ) {
                                 return Matcher.same( ( (ElementOfInformation) object ).getContent(),
-                                                                   eoi.getContent() );
+                                        eoi.getContent() );
                             }
                         }
                 );

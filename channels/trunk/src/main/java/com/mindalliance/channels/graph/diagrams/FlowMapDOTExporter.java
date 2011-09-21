@@ -374,7 +374,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
                 String starterId = getVertexID( source );
                 if ( isVisible( source ) ) {
                     List<DOTAttribute> attributes = getBypassEdgeAttributes( sharing );
-                    for ( Part byPassedTo : sharing.intermediatedParts() ) {
+                    for ( Part byPassedTo : sharing.intermediatedTargets() ) {
                         if ( isVisible( byPassedTo ) ) {
                             String enderId = getVertexID( byPassedTo );
                             out.print( getIndent() + starterId + getArrow( g ) + enderId );

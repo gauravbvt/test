@@ -1,11 +1,11 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.InternalFlow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
@@ -62,7 +62,10 @@ public class FailureImpactsGraphBuilder implements GraphBuilder<Node, Flow> {
 
         if ( segmentObject instanceof Flow ) {
             Flow flow = (Flow) segmentObject;
-            if ( flow.isImportant() && ( assumeAlternatesFail || queryService.getAlternates( flow ).isEmpty() ) )
+            if ( flow.isImportant()
+                    && ( assumeAlternatesFail
+                    || ( queryService.getAlternates( flow ).isEmpty()
+                    && flow.intermediatedSources().isEmpty() ) ) )
                 essentialFlows.add( flow );
         } else
             graph.addVertex( (Part) segmentObject );

@@ -1231,17 +1231,36 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a list of parts
      */
-    public List<Part> intermediatedParts() {
-        Set<Part> intermediatedParts = new HashSet<Part>();
+    public List<Part> intermediatedTargets() {
+        Set<Part> intermediatedTargets = new HashSet<Part>();
         if ( isSharing() ) {
             Part target = (Part) getTarget();
             for ( Flow f : target.getAllSharingSends() ) {
                 if ( f.hasSameContentAs( this ) ) {
-                    intermediatedParts.add( (Part) f.getTarget() );
+                    intermediatedTargets.add( (Part) f.getTarget() );
                 }
             }
         }
-        return new ArrayList<Part>( intermediatedParts );
+        return new ArrayList<Part>( intermediatedTargets );
+    }
+
+
+    /**
+     * Get the list of all parts this flow's source intermediates.
+     *
+     * @return a list of parts
+     */
+    public List<Part> intermediatedSources() {
+        Set<Part> intermediatedSources = new HashSet<Part>();
+        if ( isSharing() ) {
+            Part source = (Part) getSource();
+            for ( Flow f : source.getAllSharingReceives() ) {
+                if ( f.hasSameContentAs( this ) ) {
+                    intermediatedSources.add( (Part) f.getSource() );
+                }
+            }
+        }
+        return new ArrayList<Part>( intermediatedSources );
     }
 
     private boolean hasSameContentAs( final Flow flow ) {
