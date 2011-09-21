@@ -13,6 +13,7 @@ public class TE028_UpdateAgentCategory
 {
 	public TE028_UpdateAgentCategory() {
 		try{
+			
 			GlobalVariables.sTestCaseId = "TE028_UpdateAgentCategory";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -60,10 +61,11 @@ public class TE028_UpdateAgentCategory
 				//Create Agent
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Created";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
@@ -86,7 +88,6 @@ public class TE028_UpdateAgentCategory
 				//Add Agent Category
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Category Added";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Category 1"));
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
@@ -102,21 +103,26 @@ public class TE028_UpdateAgentCategory
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Category Details Updated";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentCategory"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				//Update Agent Category Description
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description")).click();
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an Description"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Update Agent Category Tags
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags")).click();
+				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is a Tag"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 			    // WebElement Synchronization
@@ -142,17 +148,16 @@ public class TE028_UpdateAgentCategory
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
-				if(GlobalVariables.oElement.getValue().contains(GlobalVariables.viewElements.get("description"))){
+				if(GlobalVariables.oElement.getValue().contains(GlobalVariables.viewElements.get("description"))) {
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags"));
-					if(GlobalVariables.oElement.getValue().equals(GlobalVariables.viewElements.get("tagDescription"))){
+					if(GlobalVariables.oElement.getValue().equals(GlobalVariables.viewElements.get("tagDescription"))) {
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 				}
-		    	else
-		    	{
+		    	else {
 		    		// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -205,18 +210,17 @@ public class TE028_UpdateAgentCategory
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.quit();
-			      
+				Thread.sleep(2000);
+				  
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			}
 		catch (Exception e) {
-			System.out.println(e.getMessage()+"Hie.....");
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

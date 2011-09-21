@@ -13,6 +13,7 @@ public class TE019_AgentAttachmentAsURL
 {
 	public TE019_AgentAttachmentAsURL() {
 		try{
+			
 			GlobalVariables.sTestCaseId = "TE019_AgentAttachmentAsURL";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -31,7 +32,7 @@ public class TE019_AgentAttachmentAsURL
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				//About Plan Window Opened
 				GlobalVariables.iStepNo++ ;
@@ -43,7 +44,7 @@ public class TE019_AgentAttachmentAsURL
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Click on 'Participation' Option under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
@@ -55,15 +56,16 @@ public class TE019_AgentAttachmentAsURL
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				//Create Agent
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Created";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
@@ -101,15 +103,18 @@ public class TE019_AgentAttachmentAsURL
 				//Attach Attachment as a URL
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Attachment attached as a URL";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("Details"));
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				//Assertion : Verify that URL gets Attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAgentURLAssertion")));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("attach"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URLAssertion"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -123,27 +128,30 @@ public class TE019_AgentAttachmentAsURL
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 			    }
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				//Delete Agent Attached URL
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteAgentURL"))).click();
 				// Get a handle to the open alert, prompt or confirmation
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				//Close Agent Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1500);
+				Thread.sleep(2000);
 				//Close About Plan Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1500);
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -155,11 +163,11 @@ public class TE019_AgentAttachmentAsURL
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.quit();
+				Thread.sleep(2000);
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

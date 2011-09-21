@@ -12,6 +12,7 @@ public class TE030_ShowAgentIssueDetails
 {
 	public TE030_ShowAgentIssueDetails() {
 		try{
+			
 			GlobalVariables.sTestCaseId = "TE030_ShowAgentIssueDetails";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -30,7 +31,7 @@ public class TE030_ShowAgentIssueDetails
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				//About Plan Window Opened
 				GlobalVariables.iStepNo++ ;
@@ -42,7 +43,7 @@ public class TE030_ShowAgentIssueDetails
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Click on 'Participation' Option under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
@@ -54,15 +55,16 @@ public class TE030_ShowAgentIssueDetails
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				//Create Agent
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Created";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
@@ -74,9 +76,6 @@ public class TE030_ShowAgentIssueDetails
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -91,17 +90,15 @@ public class TE030_ShowAgentIssueDetails
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("Issues"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("includeWaivedIssues")))
-				{
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("includeWaivedIssues"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else
-				{
+				else {
 					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("includeWaivedIssues")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -115,12 +112,12 @@ public class TE030_ShowAgentIssueDetails
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				//Close About Plan Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -132,18 +129,17 @@ public class TE030_ShowAgentIssueDetails
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.quit();
-			      
+				Thread.sleep(2000);
+  
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			}
 		catch (Exception e) {
-			System.out.println(e.getMessage()+"Hie.....");
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

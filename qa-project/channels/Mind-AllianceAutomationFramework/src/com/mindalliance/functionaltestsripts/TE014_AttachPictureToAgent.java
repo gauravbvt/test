@@ -160,24 +160,24 @@ public class TE014_AttachPictureToAgent
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-//					// Assertion: verify that file is attached
-//					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr/td/img"));
-//					if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))){
-//						// Write Results
-//						LogFunctions.writeLogs(GlobalVariables.sDescription);
-//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//								GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					}
-//					else{
-//						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'This is File 1' "+" Actual "+GlobalVariables.oElement.getText();
-//				    	// Write Results
-//						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-//				    }
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(1000);
+					// Assertion: verify that file is attached
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Image"));
+					if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))){
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+					}
+					else{
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'This is File 1' "+" Actual "+GlobalVariables.oElement.getText();
+				    	// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				    }
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					
 					// Delete Attachment
 					GlobalVariables.iStepNo++;

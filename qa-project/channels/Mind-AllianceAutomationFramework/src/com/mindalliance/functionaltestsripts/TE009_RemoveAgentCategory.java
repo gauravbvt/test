@@ -94,11 +94,14 @@ public class TE009_RemoveAgentCategory
 				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Category 1"));
-				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentCategory")));
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
@@ -154,8 +157,7 @@ public class TE009_RemoveAgentCategory
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oDriver.quit();
-			      
+				  
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			}

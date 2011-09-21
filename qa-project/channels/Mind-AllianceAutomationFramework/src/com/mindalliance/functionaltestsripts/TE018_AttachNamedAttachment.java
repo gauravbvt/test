@@ -151,7 +151,7 @@ public class TE018_AttachNamedAttachment
 					
 					// Attach file to Agent
 					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Attach File";
+					GlobalVariables.sDescription="File Attached";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
 					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:upload"));
@@ -178,15 +178,16 @@ public class TE018_AttachNamedAttachment
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// Delete Attachment
+					GlobalVariables.iStepNo++;
+					GlobalVariables.sDescription="Delete Attachment";
+					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					
-					// Click on done
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="File is Attahced";
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// And acknowledge the alert (equivalent to clicking "OK")
+					alert.accept();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -194,11 +195,15 @@ public class TE018_AttachNamedAttachment
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
-					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					alert = GlobalVariables.oDriver.switchTo().alert();
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
