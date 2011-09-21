@@ -17,6 +17,7 @@ public class TE040_RemoveLocaleCategory
 {
 	public TE040_RemoveLocaleCategory() {
 		try{
+			
 			GlobalVariables.sTestCaseId = "TE040_RemoveLocaleCategory";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -35,7 +36,7 @@ public class TE040_RemoveLocaleCategory
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				//About Plan Window Opened
 				GlobalVariables.iStepNo++ ;
@@ -47,14 +48,16 @@ public class TE040_RemoveLocaleCategory
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Create Locale 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Locale Created";
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:localePanel:name")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:localePanel:name"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Places"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
@@ -63,12 +66,12 @@ public class TE040_RemoveLocaleCategory
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				//Close 'About Plan' Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Add Locale's Category				
 				GlobalVariables.iStepNo++ ;
@@ -76,7 +79,7 @@ public class TE040_RemoveLocaleCategory
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("index"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
@@ -87,16 +90,14 @@ public class TE040_RemoveLocaleCategory
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				//Select Locale to add Category
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				//Add Locale's Category
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Category 1"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
     			// Write Results
@@ -110,12 +111,12 @@ public class TE040_RemoveLocaleCategory
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);				
+				Thread.sleep(2000);				
 				//Select Locale to add Category
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);		
+				Thread.sleep(2000);		
 				
 				// Remove Locale's Category
 				GlobalVariables.iStepNo++ ;
@@ -128,8 +129,7 @@ public class TE040_RemoveLocaleCategory
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that Locale's Category is Removed
-				try
-				{
+				try {
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentCategory")));
 					GlobalVariables.sVerifyError="Verification Failed. Expected '' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
@@ -137,8 +137,7 @@ public class TE040_RemoveLocaleCategory
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				}
-				catch(Exception e)
-				{
+				catch(Exception e) {
 			    	LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
@@ -147,12 +146,12 @@ public class TE040_RemoveLocaleCategory
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				//Close 'About Plan' Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -165,10 +164,10 @@ public class TE040_RemoveLocaleCategory
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.quit();
-			      
+				  
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
