@@ -348,7 +348,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 update( target, new Change( Change.Type.Updated, getFlow(), "intent" ) );
             }
         } );
-        classificationContainer.add( intentChoice );
+        classificationContainer.addOrReplace( intentChoice );
     }
 
     private void addRestrictionFields() {
