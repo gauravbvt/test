@@ -309,17 +309,17 @@ Segment For Receive Send Within,Segment For Receive Send Within
 Segment For Receive Send Instruction,Segment For Receive Send Instruction
 Segment For Receive Send Attach Option,Segment For Receive Send Attach Option
 Segment For Receive Send Attach Name,Segment For Receive Send Attach Name
-Segment For Receive Send Attachment As Reference,Segment For Receive Send Attachment As Reference
-Segment For Receive Send Attachment As Policy,Segment For Receive Send Attachment As Policy
-Segment For Receive Send Attachment As Mandating,Segment For Receive Send Attachment As Mandating
-Segment For Receive Send Attachment As Prohibited,Segment For Receive Send Attachment As Prohibited
-Segment For Receive Send Attachment As Picture,Segment For Receive Send Attachment As Picture
+Segment For Attachment As Reference,Segment For Attachment As Reference
+Segment For Attachment As Policy,Segment For Attachment As Policy
+Segment For Attachment As Mandating,Segment For Attachment As Mandating
+Segment For Attachment As Prohibited,Segment For Attachment As Prohibited
+Segment For Attachment As Picture,Segment For Attachment As Picture
 Segment For Receive Send Attachment As URL,Segment For Receive Send Attachment As URL
 Segment For Receive Send Notification,Segment For Receive Send Notification
 Attachment copied,Attachment copied
 Can notify of,Can notify of
 Needs to be notified of,Needs to be notified of
-Segment For Receive Send Reply Thta Option,Segment For Receive Send Reply Thta Option
+Segment For Receive Send Reply That Option,Segment For Receive Send Reply That Option
 Segment for Create Flow,Segment for Create Flow
 Segment For Receive Send New Issue,Segment For Receive Send New Issue
 Segment For Receive Send Issue Details,Segment For Receive Send Issue Details
