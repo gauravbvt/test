@@ -47,7 +47,7 @@ public class ISR003_SendFeedbackOfIssueSummaryReport
 				// Assertion: Verify that “Send Feedback” option is accessible
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Send feedback is accessible";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathIssueSummaryReportSendFeedbackCancel")));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathIssueSummaryReportSendFeedbackCancel")));
 				if(GlobalVariables.oElement.getText().equals("")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -61,6 +61,7 @@ public class ISR003_SendFeedbackOfIssueSummaryReport
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathIssueSummaryReportSendFeedbackCancel"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

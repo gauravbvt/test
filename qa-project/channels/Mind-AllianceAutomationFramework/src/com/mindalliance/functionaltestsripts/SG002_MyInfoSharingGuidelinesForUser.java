@@ -1,13 +1,8 @@
 package com.mindalliance.functionaltestsripts;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.support.ui.Select;
-
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
@@ -57,19 +52,6 @@ public class SG002_MyInfoSharingGuidelinesForUser
 			Thread.sleep(3000);
 			
 			if (GlobalVariables.bIsSuccess==false) {
-				
-				// Select  the plan from 'Switch to Plan' drop down, located on the top right corner
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("switch-plan:plan-sel")));
-				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
-			    for(WebElement option : options) {
-			    	if(GlobalVariables.testData.get("Add Test Plan v.1 (dev)").equals(option.getText())){
-			    			option.setSelected();
-			    			break;
-			    	}
-			    }
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(5000);	
 				
 				// 'My Information Sharing Guidelines' link
 				GlobalVariables.iStepNo++ ;
@@ -139,6 +121,7 @@ public class SG002_MyInfoSharingGuidelinesForUser
 				Thread.currentThread();
 				Thread.sleep(3000);
 				GlobalVariables.oDriver.quit();
+				GlobalVariables.iStepNo=0;
 				
 			}else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
