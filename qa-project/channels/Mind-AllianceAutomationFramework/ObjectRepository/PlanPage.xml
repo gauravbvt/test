@@ -25,6 +25,10 @@
 <xPathAddInfoReceive>/html/body/form/span/div/div[3]/div[2]/div/a/span</xPathAddInfoReceive>
 <xPathAddInfoSend>/html/body/form/span/div/div[3]/div[3]/div/a/span</xPathAddInfoSend>
 <xPathReceiveFlowMoreMenu>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/span/span/span/span</xPathReceiveFlowMoreMenu>
+<xPathReceiveInfoActionMenu>/html/body/form/span/div/div[3]/div[2]/div/span/span[2]/span/span</xPathReceiveInfoActionMenu>
+<xPathReceiveShowMenu>/html/body/form/span/div/div[3]/div[2]/div/span/span/span/span</xPathReceiveShowMenu>
+<xPathSendInfoActionMenu>/html/body/form/span/div/div[3]/div[3]/div/span/span[2]/span/span</xPathSendInfoActionMenu>
+<xPathSendInfoShowMenu>/html/body/form/span/div/div[3]/div[3]/div/span/span/span/span</xPathSendInfoShowMenu>
 <xPathSendFlowMoreMenu>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span/span/span/span</xPathSendFlowMoreMenu>
 <xPathIssueMoreMenu>//div[5]/div[@class='floating']/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[3]/span/span/span/span/span</xPathIssueMoreMenu>
 <xPathDeleteGoals>/html/body/form/div[5]/div/div[2]/div[2]/div/table/tbody/tr/td[7]/a/img</xPathDeleteGoals>
