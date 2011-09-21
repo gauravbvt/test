@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.graph.Diagram;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +74,7 @@ public class EntitiesNetworkDiagramPanel<T extends ModelEntity> extends Abstract
 
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/entities.png?class=" );
+        sb.append( "entities.png?class=" );
         sb.append( entityClass.getName() );
         sb.append( "&segment=" );
         sb.append( segment == null ? "NONE" : segment.getId() );

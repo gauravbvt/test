@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -10,9 +9,10 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.png.ProceduresPage;
-import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +78,7 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
     @Override
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/procedures.png?" );
+        sb.append( "procedures.png?" );
         sb.append( "&");
         sb.append( PlanPage.SEGMENT_PARM );
         sb.append("=");

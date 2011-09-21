@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.graph.URLProvider;
+import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -150,7 +150,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
     @Override
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/plan.png?" );
+        sb.append( "plan.png?" );
         sb.append("groupby=");
         sb.append( groupByPhase
                     ? "phase"

@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
+import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.pages.png.DisseminationPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
@@ -90,7 +90,7 @@ public class DisseminationDiagramPanel extends AbstractDiagramPanel {
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
         try {
-        sb.append( "/dissemination.png?" );
+        sb.append( "dissemination.png?" );
         sb.append( DisseminationPage.SEGMENT );
         sb.append( '=' );
         sb.append( getSegmentObject().getSegment().getId() );

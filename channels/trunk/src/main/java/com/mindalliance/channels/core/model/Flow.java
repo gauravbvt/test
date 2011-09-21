@@ -775,10 +775,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ( (Channel)object ).getMedium().narrowsOrEquals( medium, planLocale );
+                        return ( (Channel) object ).getMedium().narrowsOrEquals( medium, planLocale );
                     }
                 }
-                );
+        );
     }
 
     /**
@@ -1219,11 +1219,40 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     public List<TransmissionMedium> transmissionMedia() {
-        Set<TransmissionMedium> media = new HashSet<TransmissionMedium>(  );
+        Set<TransmissionMedium> media = new HashSet<TransmissionMedium>();
         for ( Channel channel : getEffectiveChannels() ) {
-            media.add(  channel.getMedium() );
+            media.add( channel.getMedium() );
         }
         return new ArrayList<TransmissionMedium>( media );
+    }
+
+    /**
+     * Get the list of all parts this flow's target intermediates.
+     *
+     * @return a list of parts
+     */
+    public List<Part> intermediatedParts() {
+        Set<Part> intermediatedParts = new HashSet<Part>();
+        if ( isSharing() ) {
+            Part target = (Part) getTarget();
+            for ( Flow f : target.getAllSharingSends() ) {
+                if ( f.hasSameContentAs( this ) ) {
+                    intermediatedParts.add( (Part) f.getTarget() );
+                }
+            }
+        }
+        return new ArrayList<Part>( intermediatedParts );
+    }
+
+    private boolean hasSameContentAs( final Flow flow ) {
+        return Matcher.same( getName(), flow.getName() )
+                && getEois().size() == flow.getEois().size()
+                && ( !CollectionUtils.exists( getEois(), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return !flow.getEois().contains( (ElementOfInformation) object );
+            }
+        } ) );
     }
 
     /**

@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
-import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.graph.Diagram;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -90,7 +90,7 @@ public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDi
 
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/network.png?entity=" );
+        sb.append( "network.png?entity=" );
         sb.append( getEntity().getId() );
         sb.append( "&connection=" );
         sb.append( selectedEntityRel == null ? "NONE" : selectedEntityRel.getId() );

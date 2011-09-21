@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.graph.Diagram;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -68,7 +68,7 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
     @Override
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "/hierarchy.png?entity=" );
+        sb.append( "hierarchy.png?entity=" );
         sb.append( getHierarchical().getId() );
         sb.append( "&algo=");
         sb.append( algo );

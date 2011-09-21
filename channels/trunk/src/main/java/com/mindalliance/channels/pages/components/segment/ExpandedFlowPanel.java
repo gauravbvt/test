@@ -473,8 +473,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         makeVisible( prohibitedContainer, f.canGetProhibited() );
         prohibitedCheckBox.setEnabled( lockedByUser && f.canSetProhibited() );
         makeVisible( referencesEventPhaseContainer, f.canGetReferencesEventPhase() );
-        makeVisible( canBypassIntermediateContainer, f.canGetCanBypassIntermediate() );
-        makeVisible( receiptConfirmationRequestedContainer, f.canGetReceiptConfirmationRequested() );
+        makeVisible( canBypassIntermediateContainer, !isShowSimpleForm() && f.canGetCanBypassIntermediate() );
+        makeVisible( receiptConfirmationRequestedContainer, !isShowSimpleForm() && f.canGetReceiptConfirmationRequested() );
         referencesEventPhaseCheckBox.setEnabled( lockedByUser && f.canSetReferencesEventPhase() );
         canBypassIntermediateCheckBox.setEnabled( lockedByUser && f.canSetCanBypassIntermediate() );
         receiptConfirmationRequestedCheckBox.setEnabled( lockedByUser && f.canSetReceiptConfirmationRequested() );

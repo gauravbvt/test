@@ -277,6 +277,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         if ( !eventStarters.isEmpty() ) exportEventStarts( out, g );
         if ( !terminators.isEmpty() ) exportTerminations( out, g );
         if ( metaProvider.isShowingGoals() ) exportGoalEdges( out, g );
+        exportBypasses( out, g );
     }
 
     private void exportInitiations( PrintWriter out, Graph<Node, Flow> g ) {
@@ -365,6 +366,30 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         }
     }
 
+    private void exportBypasses( PrintWriter out, Graph<Node, Flow> g ) {
+        Segment segment = getSegment();
+        for ( Flow sharing : segment.getAllSharingFlows() ) {
+            if ( sharing.isCanBypassIntermediate() ) {
+                Part source = (Part) sharing.getSource();
+                String starterId = getVertexID( source );
+                if ( isVisible( source ) ) {
+                    List<DOTAttribute> attributes = getBypassEdgeAttributes( sharing );
+                    for ( Part byPassedTo : sharing.intermediatedParts() ) {
+                        if ( isVisible( byPassedTo ) ) {
+                            String enderId = getVertexID( byPassedTo );
+                            out.print( getIndent() + starterId + getArrow( g ) + enderId );
+                            out.print( "[" );
+                            if ( !attributes.isEmpty() ) {
+                                out.print( asElementAttributes( attributes ) );
+                            }
+                            out.println( "];" );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     private List<DOTAttribute> getTimingEdgeAttributes( Part part ) {
         List<DOTAttribute> list = DOTAttribute.emptyList();
@@ -377,6 +402,22 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         list.add( new DOTAttribute( "weight", "2.0" ) );
         return list;
     }
+
+    private List<DOTAttribute> getBypassEdgeAttributes( Flow flow ) {
+        List<DOTAttribute> list = DOTAttribute.emptyList();
+        list.add( new DOTAttribute( "color",  "gray" ) );
+        list.add( new DOTAttribute( "arrowhead", "normal" ) );
+        list.add( new DOTAttribute( "fontname", AbstractMetaProvider.EDGE_FONT ) );
+        list.add( new DOTAttribute( "fontsize", AbstractMetaProvider.EDGE_FONT_SIZE ) );
+        list.add( new DOTAttribute( "fontcolor", "dimgray" ) );
+        list.add( new DOTAttribute( "len", "1.5" ) );
+        list.add( new DOTAttribute( "weight", "2.0" ) );
+        String label = ((FlowMapMetaProvider)getMetaProvider()).getEdgeLabelProvider().getEdgeName( flow );
+        list.add( new DOTAttribute( "label", label ) );
+        list.add( new DOTAttribute( "tooltip", "Intermediate is bypassed if unreachable" ) );
+        return list;
+    }
+
 
     private boolean isVisible( Part part ) {
         FlowMapMetaProvider metaProvider = (FlowMapMetaProvider) getMetaProvider();
