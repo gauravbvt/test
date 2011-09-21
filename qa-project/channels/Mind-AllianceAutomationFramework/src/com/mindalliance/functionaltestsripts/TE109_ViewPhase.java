@@ -51,7 +51,7 @@ public class TE109_ViewPhase
 				Thread.sleep(1000);
 				
 				//Enter the new phase in text box for the plan inside 'Phase' section
-				String phase="This is phase";
+				String phase="Phase 1";
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Phase added successfully";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
@@ -101,11 +101,18 @@ public class TE109_ViewPhase
 				GlobalVariables.sDescription="Phase is present";
 				// Assertion: Verify that event is present
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span"));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("This is phase")){
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Phase 1")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError="Verification Failed. Expected 'Phase 1' Actual is "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();

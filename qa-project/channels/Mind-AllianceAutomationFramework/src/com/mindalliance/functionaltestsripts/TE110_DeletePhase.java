@@ -47,7 +47,7 @@ public class TE110_DeletePhase
 					Thread.sleep(1000);
 					
 					//Enter the new phase in text box for the plan inside 'Phase' section
-					String phase="This is phase";
+					String phase="Phase 1";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
@@ -70,17 +70,18 @@ public class TE110_DeletePhase
 					alert.accept();
 					// Assertion: Verify that phase has been deleted
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathDeletePhaseAssertion")));
-					if(GlobalVariables.oElement.getText().equalsIgnoreCase("Responding")){
+					if(GlobalVariables.oElement.getText().equalsIgnoreCase("Phase 1")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual "+GlobalVariables.oElement.getText();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+								GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 					}
 					// WebElement Synchronization
 					Thread.currentThread();

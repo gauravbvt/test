@@ -56,23 +56,24 @@ public class TE108_CreatPhaseWithSpecialCharacters
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-//					// Assertion: Verify that Phase has been created
-//					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseCreatedAssertion")));
-//					if(GlobalVariables.oElement.getText().equalsIgnoreCase(phase)){
-//						// Write Results
-//						LogFunctions.writeLogs(GlobalVariables.sDescription);
-//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//								GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					}
-//					else{
-//						// Write Results
-//						LogFunctions.writeLogs(GlobalVariables.sDescription);
-//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//								GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					}
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(1000);
+					// Assertion: Verify that Phase has been created
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseCreatedAssertion")));
+					if(GlobalVariables.oElement.getText().equalsIgnoreCase(phase)){
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+					}
+					else{
+						GlobalVariables.sVerifyError="Verification Failed. Expected "+phase+"Actual is "+GlobalVariables.oElement.getText();
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sVerifyError, GlobalVariables.sBlank);
+					}
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					// Delete an phase
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
@@ -87,14 +88,6 @@ public class TE108_CreatPhaseWithSpecialCharacters
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);;
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					// Click on 'Remove this segment' under 'Actions' pop up menu
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));					
-					// Get a handle to the open alert, prompt or confirmation
-					alert = GlobalVariables.oDriver.switchTo().alert();
-					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

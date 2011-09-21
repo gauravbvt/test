@@ -47,7 +47,7 @@ public class TE115_PhaseCategories
 					Thread.sleep(1000);
 					
 					//Enter the new phase in text box for the plan inside 'Phase' section
-					String phase="This is phase";
+					String phase="Phase 1";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
@@ -81,6 +81,14 @@ public class TE115_PhaseCategories
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);	
 					GlobalVariables.oDriver.findElement(By.linkText(phase)).click();
 					// Assertion: Verify that categories has been added
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseCategoriesAssertion")));
@@ -99,31 +107,27 @@ public class TE115_PhaseCategories
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);	
-					// Delete an Phase
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
+					// Delete Categories
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhaseCategories"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// And acknowledge the alert (equivalent to clicking "OK")
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(3000);
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-										
+					// Delete an Phase
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
+					alert = GlobalVariables.oDriver.switchTo().alert();
+					// And acknowledge the alert (equivalent to clicking "OK")
+					alert.accept();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+					
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan closed";

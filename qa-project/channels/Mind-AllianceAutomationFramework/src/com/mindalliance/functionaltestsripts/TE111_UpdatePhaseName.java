@@ -47,7 +47,7 @@ public class TE111_UpdatePhaseName
 					Thread.sleep(1000);
 					
 					//Enter the new phase in text box for the plan inside 'Phase' section
-					String phase="This is phase";
+					String phase="Phase 1";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
@@ -72,7 +72,7 @@ public class TE111_UpdatePhaseName
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name"));
 					for(int i=0;i<15;i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is Updated Phase Name"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 2"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -86,16 +86,15 @@ public class TE111_UpdatePhaseName
 					GlobalVariables.sDescription="Done";
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// Assertion: Verify that Phase has been updated
-//					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("This is Updated Phase Name")));
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseCreatedAssertion")));
-					if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("This is Updated Phase Name"))){
+					if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("Phase 2"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'This is Updated Phase Name' "+" Actual "+GlobalVariables.oElement.getText();
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Phase 1' "+" Actual "+GlobalVariables.oElement.getText();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

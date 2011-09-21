@@ -47,7 +47,7 @@ public class TE116_RemovePhaseCategories
 					Thread.sleep(1000);
 					
 					//Enter the new phase in text box for the plan inside 'Phase' section
-					String phase="This is phase";
+					String phase="Phase 1";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));

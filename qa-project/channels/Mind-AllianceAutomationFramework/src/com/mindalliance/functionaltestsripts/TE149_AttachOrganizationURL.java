@@ -14,7 +14,7 @@ public class TE149_AttachOrganizationURL
 {
 	public TE149_AttachOrganizationURL() {
 		try {
-			GlobalVariables.sTestCaseId = "TE148_AttachFileToOrganization";
+			GlobalVariables.sTestCaseId = "TE149_AttachOrganizationURL";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);

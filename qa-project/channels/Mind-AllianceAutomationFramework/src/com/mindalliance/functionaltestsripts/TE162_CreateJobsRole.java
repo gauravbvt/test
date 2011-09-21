@@ -137,18 +137,29 @@ public class TE162_CreateJobsRole
 					Thread.sleep(5000);
 					// Role
 					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field"));
 					GlobalVariables.oElement.sendKeys(Role);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Jury
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Jurisdiction"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Supervisor
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Supervisor"));
 					// WebElement Synchronization
@@ -160,9 +171,8 @@ public class TE162_CreateJobsRole
 				    Thread.currentThread();
 				    Thread.sleep(5000);
 					// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
-				    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(Role));
-					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Role 1")))
-					{
+				    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field"));
+					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Role 1"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
