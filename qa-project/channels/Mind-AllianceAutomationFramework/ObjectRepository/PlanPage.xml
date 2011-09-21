@@ -32,7 +32,7 @@
 <xPathSendFlowMoreMenu>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span/span/span/span</xPathSendFlowMoreMenu>
 <xPathIssueMoreMenu>//div[5]/div[@class='floating']/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[3]/span/span/span/span/span</xPathIssueMoreMenu>
 <xPathDeleteGoals>/html/body/form/div[5]/div/div[2]/div[2]/div/table/tbody/tr/td[7]/a/img</xPathDeleteGoals>
-<xPathDeletePhase>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li[2]/a/img</xPathDeletePhase>
+<xPathDeletePhase>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/a/img</xPathDeletePhase>
 <xPathDeletePlanSegAttachment>/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeletePlanSegAttachment>
 <xPathDeleteOrgs>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/span/a/span</xPathDeleteOrgs>
 <xPathDeleteTaskAttachment>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteTaskAttachment>
