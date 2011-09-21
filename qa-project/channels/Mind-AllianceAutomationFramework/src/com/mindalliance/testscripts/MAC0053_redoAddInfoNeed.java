@@ -94,6 +94,7 @@ public class MAC0053_redoAddInfoNeed {
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Add info need added";
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

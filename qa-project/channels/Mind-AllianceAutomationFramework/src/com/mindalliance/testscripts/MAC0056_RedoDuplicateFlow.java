@@ -40,7 +40,7 @@ public class MAC0056_RedoDuplicateFlow
 				
 				// Click on 'Add new segment' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Second segment added";
+				GlobalVariables.sDescription = "Segment added";
 				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Redo duplicate Flow"), "New");
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -96,6 +96,7 @@ public class MAC0056_RedoDuplicateFlow
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(8000);
@@ -130,7 +131,7 @@ public class MAC0056_RedoDuplicateFlow
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Click on Break up flow under more pop up menu
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),GlobalVariables.viewElements.get("duplicateFlow"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("duplicateFlow"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);

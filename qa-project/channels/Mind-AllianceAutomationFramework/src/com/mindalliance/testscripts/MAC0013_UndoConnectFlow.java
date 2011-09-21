@@ -96,6 +96,7 @@ public class MAC0013_UndoConnectFlow {
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Send Flow added";
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -167,7 +168,7 @@ public class MAC0013_UndoConnectFlow {
 					// Click on 'Undo redirect flow' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Undo redirect flow";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),GlobalVariables.viewElements.get("undoRedirectFlow"));
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),GlobalVariables.viewElements.get("undoRedirectFlow"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

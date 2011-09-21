@@ -94,6 +94,7 @@ public class MAC0054_RedoAddInfoCapability {
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Add info capability added";
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

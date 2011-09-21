@@ -92,6 +92,7 @@ public class MAC0040_RedoIntermediateTask {
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Send Flow added";
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -141,13 +142,13 @@ public class MAC0040_RedoIntermediateTask {
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Intermediate Flow created";
 					// Click on legend for maximize the graph
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),GlobalVariables.viewElements.get("addIntermediate"));
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),GlobalVariables.viewElements.get("addIntermediate"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Click on Legend to minimize the information flow details
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLegend"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

@@ -40,7 +40,7 @@ public class MAC0055_RedoRemoveFlow
 				
 				// Click on 'Add new segment' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Second segment added";
+				GlobalVariables.sDescription = "Segment added";
 				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Redo Remove Flow"), "New");
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -96,6 +96,7 @@ public class MAC0055_RedoRemoveFlow
 				Thread.currentThread();
 				Thread.sleep(1000);
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(8000);
@@ -138,7 +139,7 @@ public class MAC0055_RedoRemoveFlow
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Remove Flow";
 				// Click on Remove flow under more pop up menu
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),GlobalVariables.viewElements.get("removeFlow"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("removeFlow"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
