@@ -95,7 +95,7 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),"Remove sharing capability");
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
@@ -154,7 +154,7 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Remove info need");
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),"Remove info need");
 				alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();

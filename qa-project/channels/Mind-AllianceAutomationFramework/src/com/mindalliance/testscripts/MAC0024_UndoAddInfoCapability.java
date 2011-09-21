@@ -83,6 +83,15 @@ public class MAC0024_UndoAddInfoCapability {
 					for (int i = 0; i <= 15; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task 1"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
+					// Click on hide details from action pop-menu bar
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -94,8 +103,7 @@ public class MAC0024_UndoAddInfoCapability {
 					// Add info sends flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Add info capability added";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
+					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -107,8 +115,7 @@ public class MAC0024_UndoAddInfoCapability {
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
-					else
-				    {
+					else{
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Info sends flow displayed' "+" Actual 'Info sends flow is not displayed'";
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);

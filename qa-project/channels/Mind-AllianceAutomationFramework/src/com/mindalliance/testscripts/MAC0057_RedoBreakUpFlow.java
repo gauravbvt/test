@@ -70,10 +70,6 @@ public class MAC0057_RedoBreakUpFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(5000);
 				// Click on hide details from action pop-menu bar
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 				// Write Results
@@ -82,7 +78,7 @@ public class MAC0057_RedoBreakUpFlow
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(8000);
+				Thread.sleep(3000);
 				
 				//  Click on 'add info received' option under 'Receives'  section
 				GlobalVariables.iStepNo++;
@@ -92,8 +88,7 @@ public class MAC0057_RedoBreakUpFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(8000);
@@ -174,8 +169,7 @@ public class MAC0057_RedoBreakUpFlow
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else
-			    {
+				else{
 					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'edge2' "+" Actual "+GlobalVariables.sStrCheck;
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);

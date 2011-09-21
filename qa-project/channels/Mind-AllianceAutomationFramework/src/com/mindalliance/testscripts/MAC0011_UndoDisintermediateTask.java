@@ -91,21 +91,20 @@ public class MAC0011_UndoDisintermediateTask {
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
-				    // WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
 					// Click on hide details from action pop-menu bar
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 			
 					// Add info sent flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Sent Flow added";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
+					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

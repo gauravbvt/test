@@ -84,6 +84,15 @@ public class MAC0013_UndoConnectFlow {
 					for (int i = 0; i <= 15; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
+					// Click on hide details from action pop-menu bar
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -95,8 +104,7 @@ public class MAC0013_UndoConnectFlow {
 					// Add info sends flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Send Flow added";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
+					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -58,7 +58,7 @@ public class MAV0173_AddInfoReceive
 //				Thread.currentThread();
 //				Thread.sleep(3000);
 				// Remove Information Sharing Capability
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),"Remove info need");
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),"Remove info need");
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();

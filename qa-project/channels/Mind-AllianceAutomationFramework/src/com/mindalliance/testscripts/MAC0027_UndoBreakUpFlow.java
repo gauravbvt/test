@@ -71,7 +71,16 @@ public class MAC0027_UndoBreakUpFlow
 				for (int i = 0; i <= 15; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Break up Flow"));
-				// Write Results 
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				// Click on hide details from action pop-menu bar
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
+				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
@@ -87,8 +96,7 @@ public class MAC0027_UndoBreakUpFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);

@@ -97,15 +97,15 @@ public class MAC0028_CopyFlow
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
-				    // WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
 					// Click on hide details from action pop-menu bar
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Create flow
 					// Click on 'add info received' option under 'Receives'  section
@@ -116,8 +116,7 @@ public class MAC0028_CopyFlow
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+					GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

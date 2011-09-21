@@ -95,8 +95,7 @@ public class MAC0056_RedoDuplicateFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(8000);

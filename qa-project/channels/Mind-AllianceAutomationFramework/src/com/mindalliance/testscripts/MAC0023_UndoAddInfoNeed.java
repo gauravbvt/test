@@ -83,6 +83,15 @@ public class MAC0023_UndoAddInfoNeed {
 					for (int i = 0; i <= 15; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task 1"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
+					// Click on hide details from action pop-menu bar
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -94,8 +103,7 @@ public class MAC0023_UndoAddInfoNeed {
 					// Add info need flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Add info need added";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+					GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

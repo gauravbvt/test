@@ -82,6 +82,15 @@ public class MAC0053_redoAddInfoNeed {
 					for (int i = 0; i <= 15; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task 1"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
+					// Click on hide details from action pop-menu bar
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -93,8 +102,7 @@ public class MAC0053_redoAddInfoNeed {
 					// Add info need flow in add info receive
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Add info need added";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+					GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -106,8 +114,7 @@ public class MAC0053_redoAddInfoNeed {
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
-					else
-				    {
+					else{
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Add info received is displayed' "+" Actual 'Add info received is not displayed'";
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);

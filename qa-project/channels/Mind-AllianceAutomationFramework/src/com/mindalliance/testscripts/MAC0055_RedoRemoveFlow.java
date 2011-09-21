@@ -95,8 +95,7 @@ public class MAC0055_RedoRemoveFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(8000);
