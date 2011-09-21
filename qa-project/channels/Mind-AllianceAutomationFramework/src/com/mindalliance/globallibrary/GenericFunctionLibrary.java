@@ -596,7 +596,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("feedback",oXmlEleViewElements.getElementsByTagName("feedback").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("report",oXmlEleViewElements.getElementsByTagName("report").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("elementsOfInformation",oXmlEleViewElements.getElementsByTagName("elementsOfInformation").item(0).getChildNodes().item(0).getNodeValue());
-			
+			GlobalVariables.viewElements.put("myInformationSharingGuidelines",oXmlEleViewElements.getElementsByTagName("myInformationSharingGuidelines").item(0).getChildNodes().item(0).getNodeValue());
 			
 		} catch(Exception e) {
 			System.out.println("Hie.....");
