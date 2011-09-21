@@ -69,7 +69,7 @@ public class TFP058_NotificationOption
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSendInfoNotification"))).click();
 				// Assertion: Verify that Instruction text filed is disable				
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:description"));
-				if(GlobalVariables.oElement.isEnabled()) {
+				if(GlobalVariables.oElement.isEnabled()==false) {
 						// 	Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

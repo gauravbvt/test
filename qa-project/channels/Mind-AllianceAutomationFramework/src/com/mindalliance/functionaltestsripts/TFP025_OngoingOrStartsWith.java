@@ -1,6 +1,8 @@
 package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -65,6 +67,7 @@ public class TFP025_OngoingOrStartsWith
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Ongoing or Starts With option checked";
 				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:startsWithSegment")).click();
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

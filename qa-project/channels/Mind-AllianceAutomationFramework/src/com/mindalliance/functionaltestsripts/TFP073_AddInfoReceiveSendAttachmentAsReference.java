@@ -1,13 +1,10 @@
 package com.mindalliance.functionaltestsripts;
 
 import java.util.List;
-
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -42,7 +39,7 @@ public class TFP073_AddInfoReceiveSendAttachmentAsReference
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
-				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Receive Send Attachment As Reference"), "New");
+				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Attachment As Reference"), "New");
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -56,7 +53,7 @@ public class TFP073_AddInfoReceiveSendAttachmentAsReference
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click 'Add Info Sent' Link.
+				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
 				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
@@ -68,7 +65,7 @@ public class TFP073_AddInfoReceiveSendAttachmentAsReference
 				Thread.currentThread();
 				Thread.sleep(2000);
 
-				// Sends : Attach File as Reference
+				// Sends : Attach File as Policy
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="File Attached as Reference";
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:attachments:container:controls:type")));
@@ -83,16 +80,8 @@ public class TFP073_AddInfoReceiveSendAttachmentAsReference
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<15;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSendAttachment")));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -136,16 +125,8 @@ public class TFP073_AddInfoReceiveSendAttachmentAsReference
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<15;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceiveAttachment")));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

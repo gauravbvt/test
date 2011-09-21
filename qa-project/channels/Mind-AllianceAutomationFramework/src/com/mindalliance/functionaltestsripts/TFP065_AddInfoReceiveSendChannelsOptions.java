@@ -63,7 +63,7 @@ public class TFP065_AddInfoReceiveSendChannelsOptions
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
 				// Sends : Channels <option> List 
 				GlobalVariables.iStepNo++ ;
@@ -71,25 +71,37 @@ public class TFP065_AddInfoReceiveSendChannelsOptions
 				// Select option from List
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
-				for(WebElement option : options) {
-					if("newMedium".equals(option.getText())){
-						option.setSelected();
-						GlobalVariables.bIsSuccess=Boolean.TRUE;
-						break;
-					}
-				}
-				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
-			    	// Write Results
+				if(options.get(1).getText().equals(GlobalVariables.viewElements.get("cell")) &&
+						options.get(2).getText().equals(GlobalVariables.viewElements.get("conferenceCall")) &&
+						options.get(3).getText().equals(GlobalVariables.viewElements.get("courier")) &&
+						options.get(4).getText().equals(GlobalVariables.viewElements.get("email")) &&
+						options.get(5).getText().equals(GlobalVariables.viewElements.get("faceToFace")) &&
+						options.get(6).getText().equals(GlobalVariables.viewElements.get("fax")) &&
+						options.get(7).getText().equals(GlobalVariables.viewElements.get("im")) &&
+						options.get(8).getText().equals(GlobalVariables.viewElements.get("landline")) &&
+						options.get(9).getText().equals(GlobalVariables.viewElements.get("mail")) &&
+						options.get(10).getText().equals(GlobalVariables.viewElements.get("meeting")) &&
+						options.get(11).getText().equals(GlobalVariables.viewElements.get("notificationSystem")) &&
+						options.get(12).getText().equals(GlobalVariables.viewElements.get("onlineChat")) &&
+						options.get(13).getText().equals(GlobalVariables.viewElements.get("pager")) &&
+						options.get(14).getText().equals(GlobalVariables.viewElements.get("paSystems")) &&
+						options.get(15).getText().equals(GlobalVariables.viewElements.get("phone")) &&
+						options.get(16).getText().equals(GlobalVariables.viewElements.get("radio")) &&
+						options.get(17).getText().equals(GlobalVariables.viewElements.get("television")) &&
+						options.get(18).getText().equals(GlobalVariables.viewElements.get("twoWayRadio")) &&
+						options.get(19).getText().equals(GlobalVariables.viewElements.get("newMedium"))) {
+					options.get(19).setSelected();
+					// 	Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
-			    else{
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+				}
+				else {
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -122,7 +134,7 @@ public class TFP065_AddInfoReceiveSendChannelsOptions
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
 				// Receives : Channels <option> List 
 				GlobalVariables.iStepNo++ ;
@@ -130,25 +142,37 @@ public class TFP065_AddInfoReceiveSendChannelsOptions
 				// Select option from List
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium")));
 				options = GlobalVariables.oDropDown.getOptions();
-				for(WebElement option : options) {
-					if("newMedium".equals(option.getText())){
-						option.setSelected();
-						GlobalVariables.bIsSuccess=Boolean.TRUE;
-						break;
-					}
+				if(options.get(1).getText().equals(GlobalVariables.viewElements.get("cell")) &&
+				   options.get(2).getText().equals(GlobalVariables.viewElements.get("conferenceCall")) &&
+				   options.get(3).getText().equals(GlobalVariables.viewElements.get("courier")) &&
+				   options.get(4).getText().equals(GlobalVariables.viewElements.get("email")) &&
+				   options.get(5).getText().equals(GlobalVariables.viewElements.get("faceToFace")) &&
+				   options.get(6).getText().equals(GlobalVariables.viewElements.get("fax")) &&
+				   options.get(7).getText().equals(GlobalVariables.viewElements.get("im")) &&
+				   options.get(8).getText().equals(GlobalVariables.viewElements.get("landline")) &&
+				   options.get(9).getText().equals(GlobalVariables.viewElements.get("mail")) &&
+				   options.get(10).getText().equals(GlobalVariables.viewElements.get("meeting")) &&
+				   options.get(11).getText().equals(GlobalVariables.viewElements.get("notificationSystem")) &&
+				   options.get(12).getText().equals(GlobalVariables.viewElements.get("onlineChat")) &&
+				   options.get(13).getText().equals(GlobalVariables.viewElements.get("pager")) &&
+				   options.get(14).getText().equals(GlobalVariables.viewElements.get("paSystems")) &&
+				   options.get(15).getText().equals(GlobalVariables.viewElements.get("phone")) &&
+				   options.get(16).getText().equals(GlobalVariables.viewElements.get("radio")) &&
+				   options.get(17).getText().equals(GlobalVariables.viewElements.get("television")) &&
+				   options.get(18).getText().equals(GlobalVariables.viewElements.get("twoWayRadio")) &&
+				   options.get(19).getText().equals(GlobalVariables.viewElements.get("newMedium"))) {
+					options.get(19).setSelected();
+						// 	Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
-			    else{
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+				else {
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

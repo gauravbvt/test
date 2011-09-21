@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -42,7 +41,7 @@ public class TFP074_AddInfoReceiveSendAttachmentAsPolicy
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
-				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Receive Send Attachment As Policy"), "New");
+				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Attachment As Policy"), "New");
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -83,16 +82,8 @@ public class TFP074_AddInfoReceiveSendAttachmentAsPolicy
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<15;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Policy"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSendAttachment")));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -136,16 +127,8 @@ public class TFP074_AddInfoReceiveSendAttachmentAsPolicy
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<15;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Policy"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceiveAttachment")));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
