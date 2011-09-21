@@ -264,11 +264,11 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         private String getFontColor( Node vertex ) {
             return isInvisible( vertex )
                     ? vertex.getSegment().equals( getSegment() )
-                        ? INVISIBLE_COLOR
-                        : SUBGRAPH_COLOR
+                    ? INVISIBLE_COLOR
+                    : SUBGRAPH_COLOR
                     : isOverridden( vertex )
-                        ? OVERRIDDEN_COLOR
-                        : FONTCOLOR;
+                    ? OVERRIDDEN_COLOR
+                    : FONTCOLOR;
         }
 
         public List<DOTAttribute> getEdgeAttributes( Flow edge, boolean highlighted ) {
@@ -294,29 +294,22 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                             isOverridden( edge ) ? OVERRIDDEN_COLOR : "darkslategray" ) ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
-            if ( edge.isIfTaskFails() ) {
-                list.add( new DOTAttribute( "arrowtail", "box" ) );
-                list.add( new DOTAttribute( "dir", "both" ) );
-            }
-            if ( edge.isAskedFor() ) {
-                list.add( new DOTAttribute( "arrowtail", "onormal" ) );
-                list.add( new DOTAttribute( "dir", "both" ) );
-            }
+            addTailArrowHead( edge, list );
             list.add( new DOTAttribute( "style",
                     conceptual
-                        ? edge.isCritical()
+                            ? edge.isCritical()
                             ? "dashed"
                             : "dotted"
-                        : edge.isCritical()
+                            : edge.isCritical()
                             ? "bold"
                             : "normal"
             ) );
             if ( edge.isCritical() ) {
-                    list.add( new DOTAttribute(
-                            "fontcolor",
-                            colorIfVisible(
-                                    edge,
-                                    isOverridden( edge ) ? OVERRIDDEN_COLOR : "black" ) ) );
+                list.add( new DOTAttribute(
+                        "fontcolor",
+                        colorIfVisible(
+                                edge,
+                                isOverridden( edge ) ? OVERRIDDEN_COLOR : "black" ) ) );
             }
             // head and tail labels
             String headLabel = null;
@@ -372,6 +365,31 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
 
     }
 
+    public void addTailArrowHead( Flow edge, List<DOTAttribute> list ) {
+        if ( edge.isIfTaskFails() ) {
+            list.add( new DOTAttribute(
+                    "arrowtail",
+                    edge.isReceiptConfirmationRequested()
+                            ? "boxlvee"
+                            : "box" ) );
+            list.add( new DOTAttribute( "dir", "both" ) );
+        }
+        if ( edge.isAskedFor() ) {
+            list.add( new DOTAttribute(
+                    "arrowtail",
+                    edge.isReceiptConfirmationRequested()
+                            ? "onormallvee"
+                            : "onormal" ) );
+            list.add( new DOTAttribute( "dir", "both" ) );
+        }
+        if ( !edge.isIfTaskFails() && !edge.isAskedFor() ) {
+            if ( edge.isReceiptConfirmationRequested() ) {
+                list.add( new DOTAttribute( "arrowtail", "lvee" ) );
+                list.add( new DOTAttribute( "dir", "both" ) );
+            }
+        }
+    }
+
     @SuppressWarnings( "unchecked" )
     private boolean isOverridden( Flow flow ) {
         if ( graphProperties != null && graphProperties.get( "overriddenFlows" ) != null ) {
@@ -386,7 +404,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
     private boolean isOverridden( Node node ) {
         if ( node.isPart() && graphProperties != null && graphProperties.get( "overriddenParts" ) != null ) {
             List<Part> impliedParts = (List<Part>) graphProperties.get( "overriddenParts" );
-            return impliedParts.contains( (Part)node );
+            return impliedParts.contains( (Part) node );
         } else {
             return false;
         }

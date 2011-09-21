@@ -404,17 +404,20 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     private List<DOTAttribute> getBypassEdgeAttributes( Flow flow ) {
+        FlowMapMetaProvider flowMapMetaProvider = (FlowMapMetaProvider)getMetaProvider();
         List<DOTAttribute> list = DOTAttribute.emptyList();
         list.add( new DOTAttribute( "color",  "gray" ) );
+        list.add( new DOTAttribute( "arrowsize", "0.75" ) );
         list.add( new DOTAttribute( "arrowhead", "normal" ) );
         list.add( new DOTAttribute( "fontname", AbstractMetaProvider.EDGE_FONT ) );
         list.add( new DOTAttribute( "fontsize", AbstractMetaProvider.EDGE_FONT_SIZE ) );
         list.add( new DOTAttribute( "fontcolor", "dimgray" ) );
         list.add( new DOTAttribute( "len", "1.5" ) );
         list.add( new DOTAttribute( "weight", "2.0" ) );
-        String label = ((FlowMapMetaProvider)getMetaProvider()).getEdgeLabelProvider().getEdgeName( flow );
+        String label = flowMapMetaProvider.getEdgeLabelProvider().getEdgeName( flow );
         list.add( new DOTAttribute( "label", label ) );
         list.add( new DOTAttribute( "tooltip", "Intermediate is bypassed if unreachable" ) );
+        flowMapMetaProvider.addTailArrowHead( flow, list );
         return list;
     }
 
