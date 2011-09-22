@@ -10794,6 +10794,28 @@
 
                 <entry><para>Yes</para></entry>
               </row>
+
+              <row>
+                <entry><para>Task is both ongoing and starting with the segment</para></entry>
+                
+                <entry><para>Low</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Make the task ongoing but not starting with the segment</para>
+                  </listitem>
+                  <listitem>
+                    <para>or make the task start with the segment but not ongoing</para>
+                  </listitem>
+                  <listitem>
+                    <para>or make the task neither ongoing nor starting with the segment.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
+              
+
             </tbody>
           </tgroup>
         </informaltable>
@@ -11071,7 +11093,10 @@
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Start this task with the plan segment </para>
+                      <para>Start this task with the plan segment</para>
+                    </listitem>
+                    <listitem>
+                      <para>or make it ongoing </para>
                     </listitem>
                     <listitem>
                       <para>or have an incoming sharing flow trigger it.</para>

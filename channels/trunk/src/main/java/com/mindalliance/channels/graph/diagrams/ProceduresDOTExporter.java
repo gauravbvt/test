@@ -279,7 +279,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
                 List<DOTAttribute> attributes = getTimingEdgeAttributes( assignment.getPart() );
                 attributes.add( new DOTAttribute(
                         "headlabel",
-                        assignment.getPart().isStartsWithSegment()? "(starts)" : "(ongoing)" ) );
+                        assignment.getPart().isOngoing()? "(ongoing)" : "(starts)" ) );
                 String autoStarterId = getVertexID( assignment );
                 out.print( getIndent() + getStartId( eventPhase ) + getArrow( g ) + autoStarterId );
                 out.print( "[" );

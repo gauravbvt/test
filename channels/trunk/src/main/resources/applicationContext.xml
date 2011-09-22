@@ -228,6 +228,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentUnqualifiedForMedium"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentCanNotFulfillSharingResponsibilities"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.IncorrectMediumSynchronicity"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartIsOngoingAndStartsWithSegment"/>
             </list>
         </property>
     </bean>

@@ -313,7 +313,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             List<DOTAttribute> attributes = getTimingEdgeAttributes( autoStarter );
             attributes.add( new DOTAttribute(
                     "headlabel",
-                    autoStarter.isStartsWithSegment()? "(starts)" : "(ongoing)" ) );
+                    autoStarter.isOngoing()? "(ongoing)" : "(starts)" ) );
             String autoStarterId = getVertexID( autoStarter );
             out.print( getIndent() + START + getArrow( g ) + autoStarterId );
             out.print( "[" );
