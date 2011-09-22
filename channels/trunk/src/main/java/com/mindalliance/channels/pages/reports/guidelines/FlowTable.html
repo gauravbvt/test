@@ -35,10 +35,13 @@
                     <td class="last" wicket:id="eoi.class">{classification}</td>
                 </tr>
             </span>
-            <tr wicket:id="noContext" class="note">
+            <tr wicket:id="instructions" class="note">
                 <!-- Optional -->
                 <td class="note" colspan="4">
-                    <em>Note:</em> Do not mention context.
+                    <em>Note:</em> <span wicket:id="noContext">Do not mention the current situation.</span>
+                    <span wicket:id="confirmReceipt">Confirm receipt of information.</span>
+                    <span wicket:id="bypass">Contact that guy directly if can't reach this guy in time.</span>
+                    <span wicket:id="other">Flow description</span>
                 </td>
             </tr>
             <!-- Optional -->

@@ -19,18 +19,21 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.query.Assignments;
+import com.mindalliance.channels.engine.query.Commitments;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.ReportSegment;
 import com.mindalliance.channels.pages.reports.ReportTask;
-import com.mindalliance.channels.engine.query.Assignments;
-import com.mindalliance.channels.engine.query.Commitments;
-import com.mindalliance.channels.engine.query.QueryService;
-import com.mindalliance.channels.core.util.ChannelsUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -837,7 +840,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
             allFlows.addAll( requests );
             allFlows.addAll( failures );
             for ( AggregatedFlow flow : allFlows )
-                flow.resolve( service, allAssignments, commitments );
+                flow.resolveContacts( service, allAssignments, commitments );
         }
 
         public List<AggregatedFlow> getFailures() {
@@ -1192,7 +1195,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
             maxDelay = flow.getMaxDelay();
         }
 
-        private void resolve(
+        private void resolveContacts(
                 QueryService service, Assignments assignments, Commitments commitments ) {
             for ( Flow flow : flows ) {
                 Node node = incoming ? flow.getSource() : flow.getTarget();
@@ -1264,6 +1267,52 @@ public class GuidelinesPage extends AbstractParticipantPage {
             List<ContactSpec> result = new ArrayList<ContactSpec>( specs );
             Collections.sort( result );
             return result;
+        }
+
+        public boolean isCantReferenceEventPhase() {
+            return !incoming && !basis.isReferencesEventPhase();
+        }
+
+        public boolean isReceiptConfirmationRequested() {
+            return basis.isReceiptConfirmationRequested();
+        }
+
+        public boolean isCanBypassIntermediate() {
+            return !incoming && basis.isCanBypassIntermediate() && !basis.intermediatedTargets().isEmpty();
+        }
+
+        public String getOtherInstructions() {
+            return !incoming ? basis.getDescription() : "";
+        }
+
+        public String getReferenceContextInstructions() {
+            return "Do not mention the current situation.";
+        }
+
+        public String getConfirmReceiptInstructions() {
+            return incoming ? "Confirm receipt of the information." : "Request receipt confirmation.";
+        }
+
+        // todo: add bypassed-to contacts to list of contacts
+        @SuppressWarnings( "unchecked" )
+        public String getBypassInstructions() {
+            StringBuilder sb = new StringBuilder( ); // "Bypass the intermediate if unreachable.";
+            sb.append( "If unreachable, contact " );
+            List<ContactSpec> directContacts = new ArrayList<ContactSpec>(  );
+            sb.append( ChannelsUtils.listToString( (List<String>)CollectionUtils.collect(
+                    basis.intermediatedTargets(),
+                    new Transformer() {
+                        @Override
+                        public Object transform( Object input ) {
+                            Specable spec = ((Part)input).resourceSpec();
+                            // todo deal with restriction (merging)
+                            ContactSpec contactSpec = new ContactSpec( null, ((Part)input).resourceSpec() );
+                            // todo set any vs every
+                            return contactSpec.getLabel( "a " );
+                        }
+                    }
+            ), " and" ) );
+            return sb.toString();
         }
     }
 }
