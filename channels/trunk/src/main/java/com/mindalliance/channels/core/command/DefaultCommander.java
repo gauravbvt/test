@@ -313,6 +313,7 @@ public class DefaultCommander implements Commander {
         part.setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
         part.setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
         part.setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
+        part.setOngoing( (Boolean) state.get( "ongoing" ) );
         part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );
         part.setAttachments( new ArrayList<Attachment>( (List<Attachment>) state.get( "attachments" ) ) );

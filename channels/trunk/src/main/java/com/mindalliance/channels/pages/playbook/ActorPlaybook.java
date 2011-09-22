@@ -121,7 +121,7 @@ public class ActorPlaybook extends PlaybookPage {
         for ( Segment segment : service.list( Segment.class ) ) {
             for ( Part part :
                     service.getAssignments().with( segment ).with( actor ).getParts() )
-                if ( part.getSegment().equals( segment ) && part.isStartsWithSegment() ) {
+                if ( part.getSegment().equals( segment ) && part.isAutoStarted() ) {
                     Event event = segment.getEvent();
                     EventParts parts = rawEvents.get( event );
                     if ( parts == null ) {

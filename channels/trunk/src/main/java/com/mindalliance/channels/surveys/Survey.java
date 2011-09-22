@@ -1,15 +1,17 @@
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -36,6 +38,10 @@ import java.util.StringTokenizer;
  * Time: 7:23:40 AM
  */
 abstract public class Survey implements Identifiable, Serializable {
+    /**
+     * Class logger.
+     */
+    public static final Logger LOG = LoggerFactory.getLogger( Survey.class );
     /**
      * Max title length.
      */
@@ -150,10 +156,6 @@ abstract public class Survey implements Identifiable, Serializable {
 
     public Survey() {
         status = Status.In_design;
-    }
-
-    public Survey( Identifiable identifiable ) {
-        this();
         userName = User.current().getUsername();
     }
 
@@ -329,7 +331,7 @@ abstract public class Survey implements Identifiable, Serializable {
         if ( isUnknown() ) {
             sb.append( "(unknown)" );
         } else {
-            sb.append( getClass().getName() );
+            sb.append( getClass().getSimpleName() );
             sb.append( ',' );
             sb.append( id );
             sb.append( ',' );
@@ -370,7 +372,7 @@ abstract public class Survey implements Identifiable, Serializable {
     public static Survey fromString( String s ) {
         try {
             StringTokenizer tokens = new StringTokenizer( s, "," );
-            String surveyClass = tokens.nextToken();
+            String surveyClassName = Survey.class.getPackage().getName() + "." + tokens.nextToken();
             long id = Long.parseLong( tokens.nextToken() );
             Survey.Status status = Survey.Status.valueOf( tokens.nextToken() );
             String userName = tokens.nextToken();
@@ -388,7 +390,7 @@ abstract public class Survey implements Identifiable, Serializable {
             }
             String specs = URLDecoder.decode( tokens.nextToken(), "UTF-8" );
             Class<? extends Survey> clazz = (Class<? extends Survey>) Survey.class
-                    .getClassLoader().loadClass( surveyClass );
+                    .getClassLoader().loadClass( surveyClassName );
             Survey survey = clazz.newInstance();
             survey.setId( id );
             survey.setStatus( status );
@@ -401,7 +403,8 @@ abstract public class Survey implements Identifiable, Serializable {
             survey.setIdentifiableSpecs( specs );
             return survey;
         } catch ( Exception e ) {
-            throw new RuntimeException( "Can't load survey", e );
+            LOG.warn( "Can't load survey", e );
+            return null;
         }
     }
 

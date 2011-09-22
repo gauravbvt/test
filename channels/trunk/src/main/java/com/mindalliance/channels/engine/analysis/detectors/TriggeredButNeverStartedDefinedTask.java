@@ -1,9 +1,9 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( !part.hasDefaultTask() ) {
-            if ( !part.isStartsWithSegment() ) {
+            if ( !part.isAutoStarted() ) {
                 if ( part.isTriggered() ) {
                     boolean started = queryService.findIfPartStarted( part );
                     if ( !started ) {
@@ -43,7 +43,7 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
                 }
             } else {
                 boolean started = queryService.findIfSegmentStarted( part.getSegment() );
-                if ( !started ) {
+                if ( part.isStartsWithSegment() && !started ) {
                     Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
                     issue.setDescription( "This task starts with the plan segment but no task"
                             + " is ever started that causes the plan segment to happen.");

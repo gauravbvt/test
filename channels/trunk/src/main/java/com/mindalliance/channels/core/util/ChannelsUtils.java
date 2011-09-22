@@ -330,6 +330,7 @@ public final class ChannelsUtils {
         state.put( "repeating", part.isRepeating() );
         state.put( "terminatesEventPhase", part.isTerminatesEventPhase() );
         state.put( "startsWithSegment", part.isStartsWithSegment() );
+        state.put( "ongoing", part.isOngoing() );
         state.put( "category", part.getCategory() );
         List<Map<String, Object>> mappedGoals = new ArrayList<Map<String, Object>>();
         for ( Goal goal : part.getGoals() ) {

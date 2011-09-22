@@ -6,6 +6,8 @@
 
 package com.mindalliance.channels.pages.components.segment;
 
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Delay;
@@ -19,8 +21,6 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Taggable;
-import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
@@ -187,6 +187,11 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * Whether starts with segment.
      */
     private CheckBox startWithSegmentCheckBox;
+
+    /**
+     * Whether is ongoing.
+     */
+    private CheckBox ongoingCheckBox;
 
     /**
      * Whether terminates event segment responds to.
@@ -467,6 +472,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         selfTerminatingCheckBox.setEnabled( lockedByUser );
         repeatingCheckBox.setEnabled( lockedByUser );
         startWithSegmentCheckBox.setEnabled( lockedByUser );
+        ongoingCheckBox.setEnabled( lockedByUser );
         asTeamCheckBox.setEnabled( lockedByUser );
         terminatesSegmentCheckBox.setEnabled( lockedByUser );
         initiatedEventField.setEnabled( lockedByUser );
@@ -643,6 +649,16 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         timingContainer.add( new ModelObjectLink( "phase-link",
                                                   new PropertyModel<Event>( this, "part.segment.phase" ),
                                                   new PropertyModel<String>( this, "part.segment.phase.name" ) ) );
+        ongoingCheckBox =
+                new CheckBox( "ongoing", new PropertyModel<Boolean>( this, "ongoing" ) );
+        timingContainer.add( ongoingCheckBox );
+        ongoingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getPart(), "ongoing" ) );
+            }
+        } );
+
         terminatesSegmentCheckBox =
                 new CheckBox( "terminatesEventPhase", new PropertyModel<Boolean>( this, "terminatesEventPhase" ) );
         timingContainer.add( terminatesSegmentCheckBox );
@@ -947,6 +963,24 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      */
     public void setStartsWithSegment( boolean val ) {
         doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "startsWithSegment", val ) );
+    }
+
+    /**
+     *Is part ongoing?
+     *
+     * @return a boolean
+     */
+    public boolean isOngoing() {
+        return getPart().isOngoing();
+    }
+
+    /**
+     * Sets whether part is ongoing.
+     *
+     * @param val a boolean
+     */
+    public void setOngoing( boolean val ) {
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "ongoing", val ) );
     }
 
     /**

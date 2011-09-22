@@ -6,7 +6,6 @@
 
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanListener;
 import com.mindalliance.channels.core.dao.PlanManager;
@@ -16,6 +15,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.surveys.Survey.Status;
 import com.mindalliance.channels.surveys.Survey.Type;
@@ -208,7 +208,8 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
                 String line;
                 while ( ( line = in.readLine() ) != null ) {
                     Survey survey = Survey.fromString( line );
-                    addSurvey( plan, survey );
+                    if ( survey != null )
+                        addSurvey( plan, survey );
                 }
             } else
                 file.createNewFile();

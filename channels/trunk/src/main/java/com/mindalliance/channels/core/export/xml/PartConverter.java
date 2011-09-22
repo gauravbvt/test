@@ -111,11 +111,14 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         writer.startNode( "startsWithSegment" );
-        writer.setValue( "" + part.isStartsWithSegment() );
+        writer.setValue( Boolean.toString( part.isStartsWithSegment() ) );
+        writer.endNode();
+        writer.startNode( "ongoing" );
+        writer.setValue( Boolean.toString( part.isOngoing() ) );
         writer.endNode();
         // todo - rename "terminatesEventPhase"
         writer.startNode( "terminatesEvent" );
-        writer.setValue( "" + part.isTerminatesEventPhase() );
+        writer.setValue( Boolean.toString( part.isTerminatesEventPhase() ) );
         writer.endNode();
         if ( part.getInitiatedEvent() != null ) {
             Event initiatedEvent = part.getInitiatedEvent();
@@ -133,7 +136,7 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         writer.startNode( "asTeam" );
-        writer.setValue( "" + part.isAsTeam() );
+        writer.setValue( Boolean.toString( part.isAsTeam() ) );
         writer.endNode();
         if ( part.getCategory() != null ) {
             writer.startNode( "category" );
@@ -220,6 +223,8 @@ public class PartConverter extends AbstractChannelsConverter {
                 part.setRepeatsEvery( Delay.parse( reader.getValue() ) );
             } else if ( nodeName.equals( "startsWithSegment" ) ) {
                 part.setStartsWithSegment( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "ongoing" ) ) {
+                part.setOngoing( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "terminatesEvent" ) ) {
                 part.setTerminatesEventPhase( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "initiatedEvent" ) ) {

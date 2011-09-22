@@ -1,11 +1,11 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class StartedOrTerminatedTaskIsUnnamed extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.hasDefaultTask() ) {
-            if ( part.isStartsWithSegment() || part.isTriggered() ) {
+            if ( part.isAutoStarted() || part.isTriggered() ) {
                 DetectedIssue issue = makeIssue( queryService,
                                                  DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task is started during the plan segment but is unnamed." );

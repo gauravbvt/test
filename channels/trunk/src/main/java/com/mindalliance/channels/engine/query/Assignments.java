@@ -370,7 +370,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     /**
-     * Find assignments that are started with the segments.
+     * Find assignments that are started with the segments or ongoing.
      * @param queryService a query service
      *
      * @return a list of assignments
@@ -386,7 +386,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
     }
 
     public static boolean isImmediate( Part part, QueryService queryService ) {
-        return part.isStartsWithSegment();
+        return part.isAutoStarted();
     }
 
     /**

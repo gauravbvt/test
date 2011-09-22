@@ -106,7 +106,7 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
         if ( part.isRepeating()
                 || part.isSelfTerminating()
                 || part.initiatesEvent()
-                || part.isStartsWithSegment()
+                || part.isAutoStarted()
                 || part.isTerminatesEventPhase() ) {
             sb.append( " The task" );
             StringBuilder sb1 = new StringBuilder();
@@ -114,6 +114,9 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
                 sb1.append( " starts with \"" );
                 sb1.append( part.getSegment().getPhaseEventTitle().toLowerCase() );
                 sb1.append( "\"" );
+            }
+            if ( part.isOngoing() ) {
+                sb1.append( " is ongoing" );
             }
             if ( part.isRepeating() ) {
                 if ( !sb1.toString().isEmpty() ) {

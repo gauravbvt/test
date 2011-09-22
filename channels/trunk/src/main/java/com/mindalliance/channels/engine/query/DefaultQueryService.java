@@ -1184,6 +1184,7 @@ public abstract class DefaultQueryService implements QueryService {
     private boolean doFindIfPartStarted( Part part, Set<ModelObject> visited ) {
         if ( visited.contains( part ) ) return false;
         visited.add( part );
+        if ( part.isOngoing() ) return true;
         if ( part.isStartsWithSegment() ) {
             return doFindIfSegmentStarted( part.getSegment(), visited );
         } else {

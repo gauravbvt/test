@@ -1,9 +1,9 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
@@ -27,11 +27,12 @@ public class NeverTriggeredSpecifiedTask extends AbstractIssueDetector {
     public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        if ( !part.hasDefaultTask() && !part.isStartsWithSegment() && !part.isTriggered() ) {
+        if ( !part.hasDefaultTask() && !part.isAutoStarted() && !part.isTriggered() ) {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
-            issue.setDescription( "This task may never start; it does not start with the plan segment and it is never triggered." );
-            issue.setRemediation( "Start this task with the plan segment\n"
-                    + "or have an incoming sharing flow trigger it" );
+            issue.setDescription( "This task may never start; it does not start with the plan segment, is not ongoing, and it is never triggered." );
+            issue.setRemediation( "Start this task with the plan segment"
+                    + "\nor make it ongoing"
+                    + "\nor have an incoming sharing flow trigger it" );
             issue.setSeverity( queryService.computePartPriority( part ) );
             issues.add( issue );
         }

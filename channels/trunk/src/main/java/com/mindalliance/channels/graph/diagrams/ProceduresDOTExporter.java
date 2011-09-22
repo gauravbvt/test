@@ -75,7 +75,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
             Part part = assignment.getPart();
             if ( part.isTerminatesEventPhase() )
                 put( terminators, part.getSegment().getEventPhase(), assignment );
-            if ( part.isStartsWithSegment() )
+            if ( part.isAutoStarted() )
                 put( autoStarters, part.getSegment().getEventPhase(), assignment );
             if ( part.getInitiatedEvent() != null )
                 for ( EventPhase eventPhase : findEventPhases( queryService,
@@ -277,7 +277,9 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         for ( EventPhase eventPhase : autoStarters.keySet() ) {
             for ( Assignment assignment : autoStarters.get( eventPhase ) ) {
                 List<DOTAttribute> attributes = getTimingEdgeAttributes( assignment.getPart() );
-                attributes.add( new DOTAttribute( "headlabel", "(starts)" ) );
+                attributes.add( new DOTAttribute(
+                        "headlabel",
+                        assignment.getPart().isStartsWithSegment()? "(starts)" : "(ongoing)" ) );
                 String autoStarterId = getVertexID( assignment );
                 out.print( getIndent() + getStartId( eventPhase ) + getArrow( g ) + autoStarterId );
                 out.print( "[" );

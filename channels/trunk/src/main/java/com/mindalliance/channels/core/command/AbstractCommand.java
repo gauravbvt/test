@@ -85,6 +85,10 @@ public abstract class AbstractCommand implements Command {
     private String userName;
 
     //-------------------------------
+
+    protected AbstractCommand() {
+    }
+
     protected AbstractCommand( String userName ) {
         this.userName = userName;
     }

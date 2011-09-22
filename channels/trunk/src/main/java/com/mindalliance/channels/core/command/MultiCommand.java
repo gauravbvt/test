@@ -50,6 +50,11 @@ public class MultiCommand extends AbstractCommand {
     private String name = "multiple commands";
 
     //-------------------------------
+
+    public MultiCommand() {
+        super();
+    }
+
     public MultiCommand( String userName ) {
         super( userName );
         setTop( false );

@@ -50,8 +50,13 @@ public class IssueRemediationSurvey extends Survey {
      */
     private IssueSpec issueSpec;
 
+    // Do NOT delete. Used via reflection.
+    public IssueRemediationSurvey() {
+        super();
+    }
+
     public IssueRemediationSurvey( Issue issue ) {
-        super( issue );
+        super();
         issueSpec = new IssueSpec( issue );
     }
 

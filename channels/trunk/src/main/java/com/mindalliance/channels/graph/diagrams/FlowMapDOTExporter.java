@@ -82,7 +82,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
                     initiators.add( part );
                 else if ( segment.isTerminatedBy( part ) )
                     terminators.add( part );
-                if ( part.getSegment().equals( segment ) && part.isStartsWithSegment() )
+                if ( part.getSegment().equals( segment ) && part.isAutoStarted() )
                     autoStarters.add( part );
                 if ( part.getInitiatedEvent() != null && part.getSegment().equals( segment ) )
                     eventStarters.add( part );
@@ -311,7 +311,9 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private void exportAutoStarts( PrintWriter out, Graph<Node, Flow> g ) {
         for ( Part autoStarter : autoStarters ) {
             List<DOTAttribute> attributes = getTimingEdgeAttributes( autoStarter );
-            attributes.add( new DOTAttribute( "headlabel", "(starts)" ) );
+            attributes.add( new DOTAttribute(
+                    "headlabel",
+                    autoStarter.isStartsWithSegment()? "(starts)" : "(ongoing)" ) );
             String autoStarterId = getVertexID( autoStarter );
             out.print( getIndent() + START + getArrow( g ) + autoStarterId );
             out.print( "[" );

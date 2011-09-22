@@ -72,6 +72,10 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      * Whether this part is started by the onset of the segment.
      */
     private boolean startsWithSegment;
+    /**
+     * Whether a part is ongoing, irrespective of the segment.
+     */
+    private boolean ongoing;
 
     /**
      * Whether the part can terminate the event phase the segment is about.
@@ -339,6 +343,18 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
 
     public void setStartsWithSegment( boolean startsWithSegment ) {
         this.startsWithSegment = startsWithSegment;
+    }
+
+    public boolean isOngoing() {
+        return ongoing;
+    }
+
+    public void setOngoing( boolean ongoing ) {
+        this.ongoing = ongoing;
+    }
+
+    public boolean isAutoStarted() {
+        return isOngoing() || isStartsWithSegment();
     }
 
     public boolean isTerminatesEventPhase() {
@@ -870,6 +886,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         state.put( "repeating", repeating );
         state.put( "terminatesEventPhase", terminatesEventPhase );
         state.put( "startsWithSegment", startsWithSegment );
+        state.put( "ongoing", ongoing );
         List<Map<String, Object>> goalMaps = new ArrayList<Map<String, Object>>();
         for ( Goal goal : goals ) {
             goalMaps.add( goal.toMap() );

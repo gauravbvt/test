@@ -894,7 +894,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
         }
 
         public boolean isStartWithSegment() {
-            return getPart().isStartsWithSegment();
+            return getPart().isAutoStarted();
         }
 
         public boolean getCompletionTime() {

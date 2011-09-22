@@ -113,6 +113,7 @@ public class AddPart extends AbstractCommand {
         part.setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
         part.setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
         part.setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
+        part.setOngoing( (Boolean) state.get( "ongoing" ) );
         part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         part.setCompletionTime( (Delay) state.get( "completionTime" ) );
         part.setCategory( (Part.Category) state.get( "category" ) );
