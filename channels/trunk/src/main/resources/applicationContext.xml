@@ -120,6 +120,14 @@ CONFIGURATION NOTES:
 
     <bean id="planServiceFactory" class="com.mindalliance.channels.engine.query.PlanServiceFactoryImpl" destroy-method="destroy"/>
 
+    <!-- Note: don't use planService directly... Use through the factory... Here for proper aspect initialization. -->
+    <bean id="planService" class="com.mindalliance.channels.engine.query.PlanService" scope="prototype" autowire="no">
+        <constructor-arg ref="planManager"/>
+        <constructor-arg ref="semanticMatcher"/>
+        <constructor-arg ref="userDao"/>
+        <constructor-arg ref="attachmentManager"/>
+    </bean>
+
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
         <property name="resourceLoaderPath" value="/WEB-INF/templates"/>
     </bean>

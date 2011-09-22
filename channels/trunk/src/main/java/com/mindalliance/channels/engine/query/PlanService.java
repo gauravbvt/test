@@ -17,17 +17,30 @@ import com.mindalliance.channels.engine.nlp.SemanticMatcher;
  */
 public class PlanService extends DefaultQueryService {
 
-    private final Plan plan;
+    private Plan plan;
 
-    public PlanService( PlanManager planManager, SemanticMatcher semanticMatcher, UserDao userDao, Plan plan,
+    public PlanService() {
+    }
+
+    public PlanService( PlanManager planManager, SemanticMatcher semanticMatcher, UserDao userDao,
+                        AttachmentManager attachmentManager, Plan plan ) {
+
+        this( planManager, semanticMatcher, userDao, attachmentManager );
+        this.plan = plan;
+    }
+
+    public PlanService( PlanManager planManager, SemanticMatcher semanticMatcher, UserDao userDao,
                         AttachmentManager attachmentManager ) {
 
         super( planManager, attachmentManager, semanticMatcher, userDao );
-        this.plan = plan;
     }
 
     @Override
     public Plan getPlan() {
         return plan;
+    }
+
+    public void setPlan( Plan plan ) {
+        this.plan = plan;
     }
 }

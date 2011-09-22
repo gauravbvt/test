@@ -81,7 +81,7 @@ public class TestParticipantPage extends AbstractChannelsTest {
 
         Plan devPlan = planManager.findDevelopmentPlan( planUri );
 
-        PlanService service = new PlanService( planManager, null, userDao, devPlan, attachmentManager );
+        PlanService service = new PlanService( planManager, null, userDao, attachmentManager, devPlan );
 
         planManager.productize( devPlan );
         Participation participation = new Participation( userName );
