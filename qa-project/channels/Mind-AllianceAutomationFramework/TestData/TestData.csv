@@ -59,7 +59,7 @@ Full Name,Full Name
 Password,Password
 User for deletion,User for deletion
 This is an phase for details,This is an phase for details
-This is an Description,This is an Description
+This is an Description,This is a Description
 Segment For Add New Segment,Segment For Add New Segment
 Segment For Remove Segment,Segment For Remove Segment
 Segment For Add Event,Segment For Add Event
@@ -338,3 +338,4 @@ Segment For Receive Send Attachment As Policy,Segment For Receive Send Attachmen
 Segment For Receive Send Simple Form,Segment For Receive Send Simple Form
 Segment For Receive Send Advance Form,Segment For Receive Send Advance Form
 google,google
+Add Event To The Plan,Add Event To The Plan
