@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.procedures;
 
 import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
-import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -19,13 +19,13 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.engine.nlp.SemanticMatcher;
+import com.mindalliance.channels.engine.query.Assignments;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanProcedureMapPanel;
-import com.mindalliance.channels.engine.query.Assignments;
-import com.mindalliance.channels.engine.query.PlanService;
-import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -65,7 +65,10 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     private PlanManager planManager;
 
     @SpringBean
-    private UserService userService;
+    private UserDao userDao;
+
+    @SpringBean
+    private CommanderFactory commanderFactory;
 
     @SpringBean
     private SemanticMatcher semanticMatcher;
@@ -433,8 +436,8 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     }
 
     @Override
-    public PlanService getPlanService() {
-        return new PlanService( getPlanManager(), semanticMatcher, userService, getPlan(), attachmentManager );
+    public QueryService getPlanService() {
+        return commanderFactory.getCommander( getPlan() ).getQueryService();
     }
 
     @Override

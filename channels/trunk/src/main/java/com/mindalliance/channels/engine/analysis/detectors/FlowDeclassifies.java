@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -10,17 +16,13 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Transformation;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Flow declassifies information.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Nov 10, 2009
- * Time: 1:41:42 PM
  */
 public class FlowDeclassifies extends AbstractIssueDetector {
 
@@ -29,7 +31,7 @@ public class FlowDeclassifies extends AbstractIssueDetector {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         if ( flow.isSharing() ) {
@@ -39,46 +41,36 @@ public class FlowDeclassifies extends AbstractIssueDetector {
                 for ( ElementOfInformation inEOI : receive.getEois() ) {
                     if ( inEOI.isClassified() ) {
                         for ( ElementOfInformation outEOI : flow.getEois() ) {
-                                if ( declassifies( outEOI, flow, inEOI, receive ) ) {
-                                    Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
-                                    Subject inSubject = new Subject(
-                                            receive.getName(),
-                                            inEOI.getContent() );
-                                    Subject outSubject = new Subject( flow.getName(), outEOI.getContent() );
-                                    issue.setDescription( "Received element of information "
-                                            + inSubject
-                                            + " is declassified when sending "
-                                            + outSubject
-                                            +"." );
-                                    issue.setRemediation( "Set the classification of sent "
-                                            +  outSubject
-                                            + " to be at least be as high"
-                                            + " as received "
-                                            + inSubject
-                                            + "\nor lower the classification of received "
-                                            + inSubject
-                                            + "\nor do not send "
-                                            + outSubject);
-                                    issue.setSeverity( Level.Medium );
-                                    issues.add( issue );
-                                }
+                            if ( declassifies( outEOI, flow, inEOI, receive, queryService ) ) {
+                                Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                                Subject inSubject = new Subject( receive.getName(), inEOI.getContent() );
+                                Subject outSubject = new Subject( flow.getName(), outEOI.getContent() );
+                                issue.setDescription( "Received element of information " + inSubject
+                                                      + " is declassified when sending " + outSubject + "." );
+                                issue.setRemediation(
+                                        "Set the classification of sent " + outSubject + " to be at least be as high"
+                                        + " as received " + inSubject + "\nor lower the classification of received "
+                                        + inSubject + "\nor do not send " + outSubject );
+                                issue.setSeverity( Level.Medium );
+                                issues.add( issue );
                             }
                         }
                     }
                 }
+            }
         }
         return issues;
     }
 
-    private boolean declassifies( ElementOfInformation outEOI, Flow send, ElementOfInformation inEOI, Flow receive ) {
+    private boolean declassifies( ElementOfInformation outEOI, Flow send, ElementOfInformation inEOI, Flow receive,
+                                  QueryService queryService ) {
         Subject subjectSent = new Subject( send.getName(), outEOI.getContent() );
         Subject subjectReceived = new Subject( receive.getName(), inEOI.getContent() );
         Transformation xform = outEOI.getTransformation();
         boolean isSame = xform.isNone() ? subjectSent.equals( subjectReceived ) : xform.renames( subjectReceived );
-        return isSame &&
-                Classification.hasHigherClassification(
-                        inEOI.getClassifications(),
-                        outEOI.getClassifications(), getPlan() );
+        return isSame && Classification.hasHigherClassification( inEOI.getClassifications(),
+                                                                 outEOI.getClassifications(),
+                                                                 queryService.getPlan() );
     }
 
     @Override

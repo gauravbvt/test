@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.png;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -17,11 +23,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Abstract superclass for all PNG-generating pages.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Apr 7, 2009
- * Time: 10:13:12 AM
  */
 public abstract class PngWebPage extends AbstractChannelsWebPage {
 
@@ -89,9 +90,8 @@ public abstract class PngWebPage extends AbstractChannelsWebPage {
             double[] size = convertSize( parameters.getString( "size" ) );
             diagram.setDiagramSize( size[0], size[1] );
         }
-        if ( parameters.containsKey( "orientation" ) ) {
+        if ( parameters.containsKey( "orientation" ) )
             diagram.setOrientation( parameters.getString( "orientation" ) );
-        }
     }
 
     /**
@@ -103,12 +103,12 @@ public abstract class PngWebPage extends AbstractChannelsWebPage {
     protected void onRender( MarkupStream markupStream ) {
         double[] size = null;
         String orientation = null;
-        if ( parameters.containsKey( "size" ) ) {
+        if ( parameters.containsKey( "size" ) )
             size = convertSize( parameters.getString( "size" ) );
-        }
-        if ( parameters.containsKey( "orientation" ) ) {
+
+        if ( parameters.containsKey( "orientation" ) )
             orientation = parameters.getString( "orientation" );
-        }
+
         try {
             Diagram diagram = makeDiagram( size, orientation );
             configureDiagram( diagram );
@@ -116,7 +116,12 @@ public abstract class PngWebPage extends AbstractChannelsWebPage {
             if ( resp instanceof WebResponse )
                 setHeaders( (WebResponse) resp );
             LOG.debug( "Rendering PNG" );
-            diagram.render( ticket, DiagramFactory.PNG, getResponse().getOutputStream(), analyst, diagramFactory );
+            diagram.render( ticket,
+                            DiagramFactory.PNG,
+                            getResponse().getOutputStream(),
+                            analyst,
+                            diagramFactory,
+                            getQueryService() );
         } catch ( DiagramException e ) {
             LOG.error( "Error while generating diagram", e );
             // Don't do anything else --> empty png
@@ -126,12 +131,10 @@ public abstract class PngWebPage extends AbstractChannelsWebPage {
     /**
      * Create the diagram.
      *
-     * @param size        width and height as double array. Can be null.
+     * @param size width and height as double array. Can be null.
      * @param orientation string
      * @return a diagram
-     * @throws com.mindalliance.channels.graph.DiagramException if diagram can be generated
+     * @throws DiagramException if diagram can be generated
      */
-    abstract protected Diagram makeDiagram( double[] size, String orientation ) throws DiagramException;
-
-
+    protected abstract Diagram makeDiagram( double[] size, String orientation ) throws DiagramException;
 }

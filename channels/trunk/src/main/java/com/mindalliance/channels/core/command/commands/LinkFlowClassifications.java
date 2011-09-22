@@ -1,11 +1,19 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.MultiCommand;
+import com.mindalliance.channels.core.command.commands.UpdateObject.Action;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -15,38 +23,32 @@ import java.util.List;
 
 /**
  * Link flow's classifications after making them identical.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Nov 6, 2009
- * Time: 11:18:56 AM
  */
 public class LinkFlowClassifications extends AbstractCommand {
 
     public LinkFlowClassifications() {
+        super( "daemon" );
     }
 
-    public LinkFlowClassifications( Flow flow ) {
+    public LinkFlowClassifications( String userName, Flow flow ) {
+        super( userName );
         needLockOn( flow );
         set( "segment", flow.getSegment().getId() );
         set( "flow", flow.getId() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "link element classifications";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             Flow flow = segment.findFlow( (Long) get( "flow" ) );
-            if ( flow == null ) throw new NotFoundException();
+            if ( flow == null )
+                throw new NotFoundException();
             boolean sameClassifications = flow.areAllEOIClassificationsSame();
             MultiCommand multi = (MultiCommand) get( "subCommands" );
             if ( multi == null ) {
@@ -54,52 +56,40 @@ public class LinkFlowClassifications extends AbstractCommand {
                 set( "subCommands", multi );
             }
             multi.execute( commander );
-            if (sameClassifications) {
-                return new Change( Change.Type.Updated, flow, "classificationsLinked" );
-            } else {
-                return new Change( Change.Type.Updated, flow, "eois" );
-            }
-
+            return sameClassifications ?
+                   new Change( Type.Updated, flow, "classificationsLinked" ) :
+                   new Change( Type.Updated, flow, "eois" );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
     }
 
     private MultiCommand makeSubCommands( Flow flow, boolean sameClassifications ) {
-        MultiCommand subCommands = new MultiCommand( "link classifications - extra" );
+        MultiCommand subCommands = new MultiCommand( getUserName(), "link classifications - extra" );
         subCommands.setMemorable( false );
-        subCommands.addCommand( UpdateObject.makeCommand(
-                flow,
-                "classificationsLinked",
-                true,
-                UpdateObject.Action.Set ) );
+        subCommands.addCommand( UpdateObject.makeCommand( getUserName(),
+                                                          flow,
+                                                          "classificationsLinked",
+                                                          true,
+                                                          Action.Set ) );
         if ( !sameClassifications ) {
             List<ElementOfInformation> newEOIs = flow.getEOISWithSameClassifications();
-            subCommands.addCommand( UpdateObject.makeCommand(
-                    flow,
-                    "eois",
-                    newEOIs,
-                    UpdateObject.Action.Set ) );
+            subCommands.addCommand( UpdateObject.makeCommand( getUserName(), flow, "eois", newEOIs, Action.Set ) );
         }
         return subCommands;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "unlink element classifications" );
+        MultiCommand multi = new MultiCommand( getUserName(), "unlink element classifications" );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );
         return multi;
     }
-
 }

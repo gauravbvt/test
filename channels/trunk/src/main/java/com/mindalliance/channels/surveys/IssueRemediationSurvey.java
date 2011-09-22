@@ -1,7 +1,11 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
@@ -10,6 +14,9 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.DetectedIssue;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -30,30 +37,23 @@ import java.util.StringTokenizer;
 
 /**
  * Issue remediation survey.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 4/15/11
- * Time: 10:03 AM
  */
 public class IssueRemediationSurvey extends Survey {
 
-    /** Class logger. */
+    /**
+     * Class logger.
+     */
     public static final Logger LOG = LoggerFactory.getLogger( IssueRemediationSurvey.class );
+
     /**
      * Spec of the issue the survey is about.
      */
     private IssueSpec issueSpec;
 
-    public IssueRemediationSurvey() {
-
-    }
-
     public IssueRemediationSurvey( Issue issue ) {
         super( issue );
         issueSpec = new IssueSpec( issue );
     }
-
 
     @Override
     public String getSurveyType() {
@@ -72,24 +72,17 @@ public class IssueRemediationSurvey extends Survey {
 
     @Override
     public boolean matches( Type type, Identifiable identifiable ) {
-        return type == Survey.Type.Remediation
-                && identifiable instanceof Issue
-                && issueSpec.matches( (Issue) identifiable );
+        return type == Type.Remediation && identifiable instanceof Issue && issueSpec.matches( (Issue) identifiable );
     }
 
-   protected List<String> getDefaultContacts( Analyst analyst ) {
-       Issue issue = getIssue( analyst );
-        List<String> contacts = new ArrayList<String>();
-        if ( issue.isDetected() ) {
-            contacts.addAll( ( (DetectedIssue) issue ).getDefaultRemediators() );
-        } else {
-            // By default all planners
-            contacts.addAll( analyst.getQueryService().findAllPlanners() );
-        }
+    @Override
+    protected List<String> getDefaultContacts( Analyst analyst, QueryService queryService ) {
+        Issue issue = getIssue( analyst, queryService );
         // contacts.remove( survey.getUserName() );
-        return contacts;
+        return new ArrayList<String>( issue.isDetected() ?
+                                          ( (DetectedIssue) issue ).getDefaultRemediators() :
+                                          queryService.findAllPlanners() );
     }
-
 
     @Override
     protected void setIdentifiableSpecs( String specs ) {
@@ -97,25 +90,25 @@ public class IssueRemediationSurvey extends Survey {
     }
 
     @Override
-    public Identifiable findIdentifiable( Analyst analyst ) throws NotFoundException {
-        ModelObject mo = analyst.getQueryService().find( ModelObject.class, issueSpec.getAboutId() );
+    public Identifiable findIdentifiable( Analyst analyst, QueryService queryService ) throws NotFoundException {
+        ModelObject mo = queryService.find( ModelObject.class, issueSpec.getAboutId() );
         Issue issue = (Issue) CollectionUtils.find(
                 // exclude property-specific, exclude waived
-                analyst.listIssues( mo, false, false ), new Predicate() {
-                    @Override
-                    public boolean evaluate( Object obj ) {
-                        return issueSpec.matches( (Issue) obj );
-                    }
-                } );
-        if ( issue != null )
-            return issue;
-        else
+                analyst.listIssues( queryService, mo, false, false ), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return issueSpec.matches( (Issue) object );
+            }
+        } );
+        if ( issue == null )
             throw new NotFoundException();
+        return issue;
     }
 
-    protected Map<String, Object> getSurveyContext( SurveyService surveyService, Plan plan ) {
-        Map<String, Object> context = super.getSurveyContext( surveyService, plan );
-        Issue issue = getIssue( surveyService.getAnalyst() );
+    @Override
+    protected Map<String, Object> getSurveyContext( SurveyService surveyService, Plan plan, QueryService queryService ) {
+        Map<String, Object> context = super.getSurveyContext( surveyService, plan, queryService );
+        Issue issue = getIssue( surveyService.getAnalyst(), queryService );
         if ( issue != null ) {
             context.put( "about", getAboutText( issue ) );
             context.put( "segment", getSegmentText( issue ) );
@@ -125,8 +118,9 @@ public class IssueRemediationSurvey extends Survey {
         return context;
     }
 
-    public Identifiable getAbout( Analyst analyst ) {
-        Issue issue = getIssue( analyst );
+    @Override
+    public Identifiable getAbout( Analyst analyst, QueryService queryService ) {
+        Issue issue = getIssue( analyst, queryService );
         return issue != null ? issue.getAbout() : null;
     }
 
@@ -145,10 +139,11 @@ public class IssueRemediationSurvey extends Survey {
         }
     }
 
-    public Map<String, Object> getInvitationContext(
-            SurveyService surveyService, User user, User issuer, Plan plan ) {
-        Map<String, Object> context = super.getInvitationContext( surveyService, user, issuer, plan );
-        Issue issue = getIssue( surveyService.getAnalyst() );
+    @Override
+    public Map<String, Object> getInvitationContext( SurveyService surveyService, User user, User issuer, Plan plan,
+                                                     QueryService queryService ) {
+        Map<String, Object> context = super.getInvitationContext( surveyService, user, issuer, plan, queryService );
+        Issue issue = getIssue( surveyService.getAnalyst(), queryService );
         context.put( "issue", getIssueDescriptionText( issue ) );
         context.put( "segment", getSegmentText( issue ) );
         context.put( "about", getAboutPlainText( issue ) );
@@ -160,14 +155,13 @@ public class IssueRemediationSurvey extends Survey {
      *
      * @return a string
      */
+    @Override
     public String getTitle() {
         String title;
         if ( isAboutDetectedIssue() )
             title = issueSpec.getDetectorLabel();
         else
-            title = StringUtils.abbreviate(
-                    issueSpec.getDescription(),
-                    Survey.MAX_TITLE_LENGTH );
+            title = StringUtils.abbreviate( issueSpec.getDescription(), Survey.MAX_TITLE_LENGTH );
         return title;
     }
 
@@ -176,23 +170,20 @@ public class IssueRemediationSurvey extends Survey {
         return issueSpec.toString();
     }
 
-
     private String optionize( String line ) {
         String option = StringUtils.trim( line );
-        if ( option.startsWith( "or" ) ) {
+        if ( option.startsWith( "or" ) )
             option = option.substring( 2 );
-        }
         option = StringUtils.trim( option );
-        if ( option.endsWith( "." ) ) {
+        if ( option.endsWith( "." ) )
             option = option.substring( 0, option.length() - 1 );
-        }
         option = StringUtils.capitalize( option );
         return option;
     }
 
-    private Issue getIssue( Analyst analyst ) {
+    private Issue getIssue( Analyst analyst, QueryService queryService ) {
         try {
-            return (Issue) findIdentifiable( analyst );
+            return (Issue) findIdentifiable( analyst, queryService );
         } catch ( NotFoundException e ) {
             return null;
         }
@@ -228,13 +219,8 @@ public class IssueRemediationSurvey extends Survey {
 
     private String getSegmentText( Issue issue ) {
         ModelObject mo = issue.getAbout();
-        if ( mo instanceof SegmentObject ) {
-            return ( (SegmentObject) mo ).getSegment().getName();
-        } else {
-            return null;
-        }
+        return mo instanceof SegmentObject ? ( (SegmentObject) mo ).getSegment().getName() : null;
     }
-
 
     private boolean isAboutDetectedIssue() {
         Long userIssueId = issueSpec.getUserIssueId();
@@ -258,32 +244,31 @@ public class IssueRemediationSurvey extends Survey {
         return issueSpec;
     }
 
-
     /**
      * An issue specification.
-     * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
-     * Proprietary and Confidential.
-     * User: jf
-     * Date: Aug 21, 2009
-     * Time: 7:23:58 AM
      */
     public class IssueSpec implements Serializable {
+
         /**
          * The kind of detection.
          */
         private String kind;
+
         /**
          * The description of the issue.
          */
         private String description;
+
         /**
          * The id of the model object the issue is about.
          */
         private long aboutId;
+
         /**
          * Id of issue if a user issue.
          */
         private Long userIssueId;
+
         /**
          * Detector label.
          */
@@ -352,16 +337,12 @@ public class IssueRemediationSurvey extends Survey {
             if ( issue instanceof UserIssue ) {
                 return userIssueId != null && userIssueId == issue.getId();
             } else {
-                return issue.getKind().equals( kind )
-                        && issue.getAbout().getId() == aboutId
-                        && issue.getDescription().equals( description )
-                        && issue.getDetectorLabel().equals( detectorLabel );
+                return issue.getKind().equals( kind ) && issue.getAbout().getId() == aboutId
+                       && issue.getDescription().equals( description )
+                       && issue.getDetectorLabel().equals( detectorLabel );
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         public String toString() {
             StringBuilder sb = new StringBuilder();
             if ( userIssueId != null ) {
@@ -384,6 +365,5 @@ public class IssueRemediationSurvey extends Survey {
             }
             return sb.toString();
         }
-
     }
 }

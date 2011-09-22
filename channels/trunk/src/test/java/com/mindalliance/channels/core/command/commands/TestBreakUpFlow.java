@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.command.commands;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.ElementOfInformation;
@@ -80,7 +81,7 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         eoi.setDescription( "description" );
         eoi.setSpecialHandling( "handling" );
         flow.addEoi( eoi );
-        command = new BreakUpFlow( flow );
+        command = new BreakUpFlow( User.current().getUsername(), flow );
     }
 
     @Override
@@ -102,8 +103,8 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         assertTrue( change.getSubject( getCommander().getQueryService() ) instanceof Segment );
         assertNull( findFlow() );
         assertSame( 2, countFlows() );
-        assertTrue( commander.canUndo() );
-        assertTrue( commander.undo().isUnknown() );
+        assertTrue( commander.canUndo( User.current().getUsername() ) );
+        assertTrue( commander.undo( User.current().getUsername() ).isUnknown() );
 
         Flow f = findFlow();
         assertNotNull( f );
@@ -120,8 +121,8 @@ public class TestBreakUpFlow extends AbstractChannelsTest {
         assertEquals( "description", eoi.getDescription() );
         assertEquals( "handling", eoi.getSpecialHandling() );
         assertSame( 1, countFlows() );
-        assertTrue( commander.canRedo() );
-        assertTrue( commander.redo().isUnknown() );
+        assertTrue( commander.canRedo( User.current().getUsername() ) );
+        assertTrue( commander.redo( User.current().getUsername() ).isUnknown() );
         assertNull( findFlow() );
         assertSame( 2, countFlows() );
     }

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.model.Flow;
@@ -16,11 +22,6 @@ import java.util.List;
 
 /**
  * Flow title panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jun 16, 2010
- * Time: 5:18:21 PM
  */
 public class FlowTitlePanel extends AbstractUpdatablePanel {
 
@@ -42,7 +43,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
 
     private void addConceptual() {
         WebMarkupContainer conceptualImage = new WebMarkupContainer( "conceptual" );
-        List<String> causes = getAnalyst().findConceptualCauses( flow );
+        List<String> causes = getAnalyst().findConceptualCauses( getQueryService(), flow );
         conceptualImage.setVisible( !causes.isEmpty()  );
         if ( !causes.isEmpty() ) {
             conceptualImage.add(  new AttributeModifier(
@@ -132,38 +133,30 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
         if ( message == null || message.trim().isEmpty() )
             message = "something";
         Flow.Intent intent = flow.getIntent();
-        if ( intent != null ) {
+        if ( intent != null )
             message += " (" + intent.getLabel() + ")";
-        }
         return message.toLowerCase();
     }
 
     private String getPost() {
         Node node = flow.getTarget();
         if ( isSend ) {
-            if ( node.isConnector() ) {
-                return flow.getRestrictionString( isSend );
-            } else {
-                return "";
-            }
+            return node.isConnector() ? flow.getRestrictionString( isSend ) : "";
         } else {
             // receive
             Node source = flow.getSource();
-            if ( source.isConnector() ) {
+            if ( source.isConnector() )
                 return flow.getRestrictionString( isSend );
 
-            } else {
+            else {
                 Part part = (Part) source;
-                if ( flow.isAskedFor() ) {
-                    return "";
-                } else {
-                    return MessageFormat.format(
-                            " by {0}{1}{2}{3}",
-                            flow.getShortName( part, false ),
-                            Flow.getOrganizationString( part ),
-                            Flow.getJurisdictionString( part ),
-                            flow.getRestrictionString( isSend ) );
-                }
+                return flow.isAskedFor() ?
+                       "" :
+                       MessageFormat.format( " by {0}{1}{2}{3}",
+                                             flow.getShortName( part, false ),
+                                             Flow.getOrganizationString( part ),
+                                             Flow.getJurisdictionString( part ),
+                                             flow.getRestrictionString( isSend ) );
             }
         }
 

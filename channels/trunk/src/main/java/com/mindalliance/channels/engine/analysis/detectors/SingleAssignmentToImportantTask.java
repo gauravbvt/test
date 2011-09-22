@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +26,15 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
+        List<Assignment> assignments = queryService.findAllAssignments( part, false );
         if ( assignments.size() == 1 ) {
             if ( !assignments.get( 0 ).getActor().isArchetype() ) {
-                Level importance = this.computeTaskFailureSeverity( part );
+                Level importance = this.computeTaskFailureSeverity( queryService, part );
                 if ( importance.compareTo( Level.Low ) >= 1 ) {
-                    Issue issue = makeIssue( Issue.ROBUSTNESS, part );
+                    Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
                     issue.setDescription( "Task \""
                             + part.getTitle()
                             + "\" is important and yet is assigned to only one agent." );

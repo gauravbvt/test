@@ -6,8 +6,6 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Segment;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -65,7 +65,7 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
     }
 
     private void collectIssues( ModelObject modelObject, List<Issue> collector ) {
-        Iterator<Issue> issues = analyst.listIssues( modelObject,
+        Iterator<Issue> issues = analyst.listIssues( queryService, modelObject,
                 Analyst.INCLUDE_PROPERTY_SPECIFIC ).iterator();
         while ( issues.hasNext() ) {
             Issue issue = issues.next();
@@ -100,7 +100,7 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
     }
 
     private void processSummary( ModelObject modelObject ) {
-        String summary = analyst.getIssuesSummary( modelObject,
+        String summary = analyst.getIssuesSummary( queryService, modelObject,
                 Analyst.INCLUDE_PROPERTY_SPECIFIC );
         System.out.println();
         System.out.println( modelObject.getClass().getSimpleName() +

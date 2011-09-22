@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.command.commands;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.junit.Assert;
@@ -30,7 +31,7 @@ public class TestUpdatePlanObject extends AbstractChannelsTest {
         super.setUp();
         login( "denis" );
         segment = queryService.getDefaultSegment();
-        command = new UpdatePlanObject( segment, "description", "ipso lorem etc." );
+        command = new UpdatePlanObject( User.current().getUsername(), segment, "description", "ipso lorem etc." );
         getCommander().reset();
     }
 
@@ -45,14 +46,14 @@ public class TestUpdatePlanObject extends AbstractChannelsTest {
         assertEquals( "ipso lorem etc.", change.getChangedPropertyValue( queryService ) );
         String newDescription = segment.getDescription();
         assertFalse( description.equals( newDescription ) );
-        assertTrue( commander.canUndo() );
-        change = commander.undo();
+        assertTrue( commander.canUndo( User.current().getUsername() ) );
+        change = commander.undo( User.current().getUsername() );
         assertTrue( change.isUpdated() );
         assertEquals( change.getChangedPropertyValue( queryService ), description );
         newDescription = segment.getDescription();
         Assert.assertEquals( description, newDescription );
-        assertTrue( commander.canRedo() );
-        change = commander.redo();
+        assertTrue( commander.canRedo( User.current().getUsername() ) );
+        change = commander.redo( User.current().getUsername() );
         assertTrue( change.isUpdated() );
         assertEquals( "ipso lorem etc.", change.getChangedPropertyValue( queryService ) );
         newDescription = segment.getDescription();

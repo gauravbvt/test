@@ -2,6 +2,7 @@ package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.List;
 
@@ -24,10 +25,12 @@ public interface IssueDetector {
     /**
      * Detect an issue on a model object
      *
+     *
+     * @param queryService
      * @param modelObject -- the ModelObject being analyzed
      * @return a list of Issues
      */
-    List<Issue> detectIssues( ModelObject modelObject );
+    List<Issue> detectIssues( QueryService queryService, ModelObject modelObject );
 
     /**
      * Tests whether the detector applies to the model object
@@ -66,4 +69,12 @@ public interface IssueDetector {
      */
     boolean isPropertySpecific();
 
+    /**
+     * Test if this detector applies to an object.
+     * @param modelObject the object
+     * @param waived true if waiving was applied
+     * @param propertySpecific  true if specific to a property
+     * @return true if detector is applicable
+     */
+    boolean isApplicable( ModelObject modelObject, boolean waived, boolean propertySpecific );
 }

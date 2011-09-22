@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
@@ -16,33 +22,26 @@ import java.util.Map;
 
 /**
  * Command to break up a given flow.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 3, 2009
- * Time: 7:21:58 PM
  */
 public class BreakUpFlow extends AbstractCommand {
 
     public BreakUpFlow() {
+        super( "daemon" );
     }
 
-    public BreakUpFlow( Flow flow ) {
+    public BreakUpFlow( String userName, Flow flow ) {
+        super( userName );
         needLocksOn( ChannelsUtils.getLockingSetFor( flow ) );
         set( "flow", flow.getId() );
         set( "segment", flow.getSegment().getId() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "break up flow";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
@@ -55,9 +54,9 @@ public class BreakUpFlow extends AbstractCommand {
             // else this is a replay
             multi.execute( commander );
             set( "flowState", ChannelsUtils.getFlowState( flow ) );
-            describeTarget( flow );        
+            describeTarget( flow );
             commander.getPlanDao().disconnect( flow );
-//            breakup( flow, commander );
+            //            breakup( flow, commander );
             ignoreLock( (Long) get( "flow" ) );
             return new Change( Change.Type.Recomposed, segment );
         } catch ( NotFoundException e ) {
@@ -65,20 +64,16 @@ public class BreakUpFlow extends AbstractCommand {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "reconnect flow" );
-        ConnectWithFlow connectWithFlow = new ConnectWithFlow();
+        MultiCommand multi = new MultiCommand( getUserName(), "reconnect flow" );
+        ConnectWithFlow connectWithFlow = new ConnectWithFlow( getUserName() );
         connectWithFlow.setArguments( (Map<String, Object>) get( "flowState" ) );
         connectWithFlow.set( "flow", get( "flow" ) );
         multi.addCommand( connectWithFlow );
@@ -87,16 +82,17 @@ public class BreakUpFlow extends AbstractCommand {
         multi.addCommand( subCommands.getUndoCommand( commander ) );
         return multi;
     }
+
     // Create a capability and/or need if not repetitive
     private MultiCommand makeSubCommands( Flow flow ) {
-        MultiCommand subCommands = new MultiCommand( "breakup flow - extra" );
+        MultiCommand subCommands = new MultiCommand( getUserName(), "breakup flow - extra" );
         subCommands.setMemorable( false );
         if ( flow.isInternal() ) {
             Node source = flow.getSource();
             Node target = flow.getTarget();
             if ( !source.isConnector() && !target.isConnector() ) {
                 if ( !source.hasMultipleSends( flow.getName() ) ) {
-                    Command addCapability = new AddCapability();
+                    Command addCapability = new AddCapability( getUserName() );
                     addCapability.set( "segment", source.getSegment().getId() );
                     addCapability.set( "part", source.getId() );
                     addCapability.set( "name", flow.getName() );
@@ -104,7 +100,7 @@ public class BreakUpFlow extends AbstractCommand {
                     subCommands.addCommand( addCapability );
                 }
                 if ( !target.hasMultipleReceives( flow.getName() ) ) {
-                    Command addNeed = new AddNeed();
+                    Command addNeed = new AddNeed( getUserName() );
                     addNeed.set( "segment", target.getSegment().getId() );
                     addNeed.set( "part", target.getId() );
                     addNeed.set( "name", flow.getName() );
@@ -115,5 +111,4 @@ public class BreakUpFlow extends AbstractCommand {
         }
         return subCommands;
     }
-
 }

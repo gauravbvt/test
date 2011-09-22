@@ -1,6 +1,13 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -22,17 +29,10 @@ import org.springframework.core.io.Resource;
 import java.text.MessageFormat;
 import java.util.List;
 
-/**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 2/9/11
- * Time: 3:48 PM
- */
 public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Commitment> {
 
     /**
-     * Color for subgraph contour
+     * Color for subgraph contour.
      */
     protected static final String SUBGRAPH_COLOR = "azure2";
 
@@ -47,7 +47,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
     protected static final String SUBGRAPH_FONT_SIZE = "10";
 
     /**
-     * Font for node labels
+     * Font for node labels.
      */
     public static final String NODE_FONT = "Arial";
 
@@ -82,18 +82,18 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
     protected static final String HIGHLIGHT_NODE_FONT = "Arial Bold";
 
     private Segment segment;
-    // Extra arguments MUST start with '_'
-    private static final String PROC_VERTEX_URL_FORMAT =  "?graph={0,number,0}&vertex={1,number,0}&_actor={2,number,0}&_role={3,number,0}&_org={4,number,0}";
-    // Extra arguments MUST start with '_'
-    private static final String PROC_EDGE_URL_FORMAT =  "?graph={0,number,0}&edge={1,number,0}&_actor={2,number,0}&_role={3,number,0}&_org={4,number,0}";
 
+    // Extra arguments MUST start with '_'
+    private static final String PROC_VERTEX_URL_FORMAT =
+            "?graph={0,number,0}&vertex={1,number,0}&_actor={2,number,0}&_role={3,number,0}&_org={4,number,0}";
 
-    public ProceduresMetaProvider(
-            Segment segment,
-            String outputFormat,
-            Resource imageDirectory,
-            Analyst analyst) {
-        super( outputFormat, imageDirectory, analyst );
+    // Extra arguments MUST start with '_'
+    private static final String PROC_EDGE_URL_FORMAT =
+            "?graph={0,number,0}&edge={1,number,0}&_actor={2,number,0}&_role={3,number,0}&_org={4,number,0}";
+
+    public ProceduresMetaProvider( Segment segment, String outputFormat, Resource imageDirectory, Analyst analyst,
+                                   QueryService queryService ) {
+        super( outputFormat, imageDirectory, analyst, queryService );
         this.segment = segment;
     }
 
@@ -102,9 +102,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
         return segment;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public URLProvider<Assignment, Commitment> getURLProvider() {
         return new URLProvider<Assignment, Commitment>() {
             /**
@@ -113,9 +111,10 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
              * @param node -- a vertex
              * @return a URL string
              */
+            @Override
             public String getGraphURL( Assignment node ) {
                 // Plan id = 0 since there is only one plan
-                Object[] args = {segment == null ? 0 : segment.getId()};
+                Object[] args = { segment == null ? 0 : segment.getId() };
                 return MessageFormat.format( GRAPH_URL_FORMAT, args );
             }
 
@@ -125,17 +124,17 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
              * @param assignment -- a vertex
              * @return a URL string
              */
+            @Override
             public String getVertexURL( Assignment assignment ) {
                 Part part = assignment.getPart();
                 Actor actor = assignment.getActor();
                 Role role = assignment.getRole();
                 Organization organization = assignment.getOrganization();
                 Object[] args = {
-                        part.getSegment().getId(),
-                         part.getId(),
-                        (actor == null || actor.isUnknown() ? 0 : actor.getId() ),
-                        (role == null || role.isUnknown() ? 0 : role.getId() ),
-                        (organization == null  || organization.isUnknown() ? 0 : organization.getId()  )
+                        part.getSegment().getId(), part.getId(),
+                        actor == null || actor.isUnknown() ? 0 : actor.getId(),
+                        role == null || role.isUnknown() ? 0 : role.getId(),
+                        organization == null || organization.isUnknown() ? 0 : organization.getId()
                 };
                 return MessageFormat.format( PROC_VERTEX_URL_FORMAT, args );
             }
@@ -146,6 +145,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
              * @param commitment -- an edge
              * @return a URL string
              */
+            @Override
             public String getEdgeURL( Commitment commitment ) {
                 Flow flow = commitment.getSharing();
                 Assignment assignment = commitment.getCommitter();
@@ -153,11 +153,10 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
                 Role role = assignment.getRole();
                 Organization organization = assignment.getOrganization();
                 Object[] args = {
-                        flow.getSegment().getId(),
-                         flow.getId(),
-                        (actor == null || actor.isUnknown() ? 0 : actor.getId() ),
-                        (role == null || role.isUnknown() ? 0 : role.getId() ),
-                        (organization == null  || organization.isUnknown() ? 0 : organization.getId()  )
+                        flow.getSegment().getId(), flow.getId(),
+                        ( actor == null || actor.isUnknown() ? 0 : actor.getId() ),
+                        ( role == null || role.isUnknown() ? 0 : role.getId() ),
+                        ( organization == null || organization.isUnknown() ? 0 : organization.getId() )
                 };
                 return MessageFormat.format( PROC_EDGE_URL_FORMAT, args );
             }
@@ -172,22 +171,18 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
     @Override
     public EdgeNameProvider<Commitment> getEdgeLabelProvider() {
         return new EdgeNameProvider<Commitment>() {
+            @Override
             public String getEdgeName( Commitment commitment ) {
                 Flow flow = commitment.getSharing();
                 String flowName = flow.getName();
-                if ( flow.isAskedFor() && !flowName.endsWith( "?" ) ) {
+                if ( flow.isAskedFor() && !flowName.endsWith( "?" ) )
                     flowName += "?";
-                }
-                if ( flow.isProhibited() ) {
+                if ( flow.isProhibited() )
                     flowName += " -PROHIBITED-";
-                }
                 Flow.Restriction restriction = flow.getRestriction();
-                if ( restriction != null ) {
-                    flowName += " (" + restriction.getLabel() + ")";
-                }
-                String label = AbstractMetaProvider.separate(
-                        flowName,
-                        LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
+                if ( restriction != null )
+                    flowName += " (" + restriction.getLabel() + ')';
+                String label = AbstractMetaProvider.separate( flowName, LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
                 return sanitize( label );
             }
         };
@@ -219,9 +214,10 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
      */
     private class ProceduresDOTAttributeProvider implements DOTAttributeProvider<Assignment, Commitment> {
 
-        public ProceduresDOTAttributeProvider() {
+        private ProceduresDOTAttributeProvider() {
         }
 
+        @Override
         public List<DOTAttribute> getGraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
@@ -238,6 +234,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
          *
          * @return the style declarations
          */
+        @Override
         public List<DOTAttribute> getSubgraphAttributes( boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
@@ -248,14 +245,17 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
             return list;
         }
 
-        public List<DOTAttribute> getVertexAttributes( Assignment assignment, boolean highlighted ) {
+        @Override
+        public List<DOTAttribute> getVertexAttributes( QueryService queryService, Assignment assignment,
+                                                       boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             if ( getOutputFormat().equalsIgnoreCase( DiagramFactory.SVG ) ) {
                 list.add( new DOTAttribute( "shape", "box" ) );
                 // assuming a bitmap format
             } else {
-                list.add( new DOTAttribute( "image", getIcon( ProceduresMetaProvider.this.getAnalyst().getImagingService(),
-                        assignment ) ) );
+                list.add( new DOTAttribute( "image",
+                                            getIcon( ProceduresMetaProvider.this.getAnalyst().getImagingService(),
+                                                     assignment ) ) );
                 list.add( new DOTAttribute( "labelloc", "b" ) );
                 if ( highlighted ) {
                     list.add( new DOTAttribute( "shape", "box" ) );
@@ -275,7 +275,8 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
             return list;
         }
 
-        public List<DOTAttribute> getEdgeAttributes( Commitment edge, boolean highlighted ) {
+        @Override
+        public List<DOTAttribute> getEdgeAttributes( QueryService queryService, Commitment edge, boolean highlighted ) {
             Flow flow = edge.getSharing();
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
@@ -316,15 +317,16 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
                     headLabel = "(stop)";
                 else if ( flow.isTriggeringToTarget() )
                     headLabel = "(start)";
-
             }
             if ( flow.isTerminatingToSource() ) {
                 tailLabel = "(stop)";
             } else if ( flow.isTriggeringToSource() ) {
                 tailLabel = "(start)";
             }
-            if ( headLabel != null ) list.add( new DOTAttribute( "headlabel", headLabel ) );
-            if ( tailLabel != null ) list.add( new DOTAttribute( "taillabel", tailLabel ) );
+            if ( headLabel != null )
+                list.add( new DOTAttribute( "headlabel", headLabel ) );
+            if ( tailLabel != null )
+                list.add( new DOTAttribute( "taillabel", tailLabel ) );
             if ( headLabel != null || tailLabel != null ) {
                 list.add( new DOTAttribute( "labeldistance", LABEL_DISTANCE ) );
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
@@ -332,7 +334,6 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
             list.add( new DOTAttribute( "tooltip", sanitize( flow.getTitle() ) ) );
             return list;
         }
-
     }
 
     protected String getIcon( ImagingService imagingService, Assignment assignment ) {
@@ -343,6 +344,4 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
 
         return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
     }
-
-
 }

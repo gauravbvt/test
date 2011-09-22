@@ -1,15 +1,21 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.Attachable;
 import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.Attachment.Type;
 import com.mindalliance.channels.core.AttachmentManager;
-import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.Attachment.Type;
+import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 
@@ -17,22 +23,19 @@ import java.util.Map;
 
 /**
  * Paste attachment into model object.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: May 17, 2009
- * Time: 11:17:15 AM
  */
 public class PasteAttachment extends AbstractCommand {
 
     public PasteAttachment() {
+        super( "daemon" );
     }
 
-    public PasteAttachment( ModelObject modelObject ) {
-        this( modelObject, "" );
+    public PasteAttachment( String userName, ModelObject modelObject ) {
+        this( userName, modelObject, "" );
     }
 
-    public PasteAttachment( ModelObject modelObject, String attachablePath ) {
+    public PasteAttachment( String userName, ModelObject modelObject, String attachablePath ) {
+        super( userName );
         assert modelObject != null;
         needLockOn( modelObject );
         set( "attachee", modelObject.getId() );
@@ -47,7 +50,7 @@ public class PasteAttachment extends AbstractCommand {
     @Override
     public boolean canDo( Commander commander ) {
         return super.canDo( commander )
-                && commander.isAttachmentCopied()
+                && commander.isAttachmentCopied( getUserName() )
                 && attachmentExists( commander );
     }
 
@@ -58,7 +61,7 @@ public class PasteAttachment extends AbstractCommand {
 
     @SuppressWarnings( "unchecked" )
     private Map<String, Object> getCopy( Commander commander ) {
-        return commander.isReplaying() ? (Map<String, Object>) get( "copy" ) : commander.getCopy();
+        return commander.isReplaying() ? (Map<String, Object>) get( "copy" ) : commander.getCopy( getUserName() );
     }
 
     @Override
@@ -96,7 +99,7 @@ public class PasteAttachment extends AbstractCommand {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         Attachment attachment = getAttachmentFromCopy( (Map<String, Object>) get( "copy" ) );
         String attachablePath = (String) get( "attachablePath" );
-        return new DetachDocument( mo, attachablePath, attachment );
+        return new DetachDocument( getUserName(), mo, attachablePath, attachment );
     }
 
 }

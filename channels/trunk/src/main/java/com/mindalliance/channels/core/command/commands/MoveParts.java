@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
@@ -15,18 +21,15 @@ import java.util.List;
 
 /**
  * Moving parts and their flows to another segment.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jun 11, 2010
- * Time: 2:07:58 PM
  */
 public class MoveParts extends AbstractCommand {
 
     public MoveParts() {
+        super( "daemon" );
     }
 
-    public MoveParts( List<Part> parts, Segment fromSegment, Segment toSegment ) {
+    public MoveParts( String userName, List<Part> parts, Segment fromSegment, Segment toSegment ) {
+        super( userName );
         List<Long> partIds = new ArrayList<Long>();
         for ( Part part : parts ) {
             needLocksOn( ChannelsUtils.getLockingSetFor( part ) );
@@ -39,25 +42,17 @@ public class MoveParts extends AbstractCommand {
         set( "toSegment", toSegment.getId() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "move tasks";
     }
 
-    /**
-      * {@inheritDoc}
-      */
-     public boolean canDo( Commander commander ) {
-         return super.canDo( commander )
-                 && commander.getPlan().getSegmentCount() > 1;
-     }
+    @Override
+    public boolean canDo( Commander commander ) {
+        return super.canDo( commander ) && commander.getPlan().getSegmentCount() > 1;
+    }
 
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         Segment fromSegment = commander.resolve( Segment.class, (Long) get( "fromSegment" ) );
@@ -73,41 +68,37 @@ public class MoveParts extends AbstractCommand {
             set( "subCommands", multi );
         }
         multi.execute( commander );
-        for ( Part part : parts ) {
+        for ( Part part : parts )
             ignoreLocksOn( ChannelsUtils.getLockingSetFor( part ) );
-        }
-        describeTarget( toSegment );                
+        describeTarget( toSegment );
         return new Change( Change.Type.Recomposed, fromSegment );
     }
 
     private MultiCommand makeSubCommands( List<Part> parts, Segment fromSegment, Segment toSegment ) {
-        MultiCommand subCommands = new MultiCommand( "move parts - extra" );
+        MultiCommand subCommands = new MultiCommand( getUserName(), "move parts - extra" );
         // make sure there's always at least one part in a segment
         if ( fromSegment.countParts() == parts.size() ) {
-            subCommands.addCommand( new AddPart( fromSegment ) );
+            subCommands.addCommand( new AddPart( getUserName(),
+                                                 fromSegment,
+                                                 getUserName() ) );
         }
         for ( Part part : parts ) {
-            subCommands.addCommand( new MovePart( part, toSegment ) );
+            subCommands.addCommand( new MovePart( getUserName(), part, toSegment ) );
         }
         return subCommands;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "unmove tasks" );
+        MultiCommand multi = new MultiCommand( getUserName(), "unmove tasks" );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );
         return multi;
     }
-
 }

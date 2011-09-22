@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +26,12 @@ public class ConfirmedAgreementWithoutMOU extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
         for ( Agreement agreement : org.getAgreements() ) {
             if ( !agreement.hasMOU() ) {
-                Issue issue = makeIssue( Issue.COMPLETENESS, org );
+                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, org );
                 issue.setDescription( agreement.getSummary( org ) + " is not backed by an MOU." );
                 issue.setSeverity( Level.Medium );
                 issue.setRemediation( "Attach an MOU to the sharing agreement\nor unconfirm the sharing agreement" );

@@ -14,25 +14,27 @@ public interface CommandListener {
     /**
      * A command was executed causing change.
      *
+     * @param commander responsible of executing the command
      * @param command a Command
      * @param change a Change
-     * @param uri a sanitized plan uri
      */
-    void commandDone( Command command, Change change, String uri );
+    void commandDone( Commander commander, Command command, Change change );
 
     /**
      * The execution of a command was undone.
      *
+     * @param commander responsible of executing the command
      * @param command a Command
-     * @param uri a sanitized plan uri
+     * @param change
      */
-    void commandUndone( Command command, String uri );
+    void commandUndone( Commander commander, Command command, Change change );
 
     /**
      * The execution of a command was redone.
      *
+     * @param commander responsible of executing the command
      * @param command a Command
-     * @param uri a sanitized plan uri
+     * @param change
      */
-    void commandRedone( Command command, String uri );
+    void commandRedone( Commander commander, Command command, Change change );
 }

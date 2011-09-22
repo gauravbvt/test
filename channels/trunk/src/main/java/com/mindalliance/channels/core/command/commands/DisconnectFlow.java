@@ -14,82 +14,69 @@ import java.util.Map;
 
 /**
  * Disconnect a flow.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 11, 2009
- * Time: 10:00:00 PM
  */
 public class DisconnectFlow extends AbstractCommand {
 
     public DisconnectFlow() {
+        super( "daemon" );
     }
 
-    public DisconnectFlow( Flow flow ) {
+    public DisconnectFlow( String userName ) {
+        super( userName );
+    }
+
+    public DisconnectFlow( String userName, Flow flow ) {
+        this( userName );
         assert !flow.isNeed() && !flow.isCapability();
         needLocksOn( ChannelsUtils.getLockingSetFor( flow ) );
         set( "segment", flow.getSegment().getId() );
         set( "flow", flow.getId() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "remove flow";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             assert get( "flow" ) != null;
             Flow flow = segment.findFlow( (Long) get( "flow" ) );
             set( "flowState", ChannelsUtils.getFlowState( flow ) );
-            describeTarget( flow );                    
+            describeTarget( flow );
             commander.getPlanDao().disconnect( flow );
-            releaseAnyLockOn( flow, commander );
+            releaseAnyLockOn( commander, flow );
             return new Change( Change.Type.Removed, flow );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh.", e );
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        Command connectWithFlow = new ConnectWithFlow();
+        Command connectWithFlow = new ConnectWithFlow( getUserName() );
         connectWithFlow.setArguments( (Map<String, Object>) get( "flowState" ) );
         // The previous id of the flow being re-connected
         connectWithFlow.set( "flow", get( "flow" ) );
         return connectWithFlow;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getLabel( Commander commander ) throws CommandException {
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
-        Flow flow;
         try {
-            flow = segment.findFlow( (Long) get( "flow" ) );
+            Flow flow = segment.findFlow( (Long) get( "flow" ) );
+            return flow.isCapability() ? "Remove capability" : flow.isNeed() ? "Remove need" : "Remove flow";
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh" );
         }
-        if ( flow.isCapability() ) return "Remove capability";
-        else if ( flow.isNeed() ) return "Remove need";
-        else return "Remove flow";
     }
-
 }

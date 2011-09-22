@@ -1,7 +1,14 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
@@ -13,39 +20,30 @@ import java.util.Map;
 
 /**
  * Paste copied part.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Apr 20, 2009
- * Time: 3:14:01 PM
  */
 public class PastePart extends AbstractCommand {
 
     public PastePart() {
+        super( "daemon" );
     }
 
-    public PastePart( Segment segment ) {
+    public PastePart( String userName, Segment segment ) {
+        super( userName );
         set( "segment", segment.getId() );
         addConflicting( segment );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "paste task";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canDo( Commander commander ) {
-        return super.canDo( commander ) && commander.isPartCopied();
+        return super.canDo( commander ) && commander.isPartCopied( getUserName() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
@@ -53,7 +51,7 @@ public class PastePart extends AbstractCommand {
         copy = (Map<String, Object>) get( "copy" );
         if ( copy == null ) {
             // not replaying or redoing
-            copy = commander.getCopy();
+            copy = commander.getCopy( getUserName() );
             set( "copy", copy );
         }
         MultiCommand multi = (MultiCommand) get( "subCommands" );
@@ -64,7 +62,7 @@ public class PastePart extends AbstractCommand {
         setTargetDescription( makeTargetDescription( copy, commander ) );
         // else this is a replay
         multi.execute( commander );
-        return new Change( Change.Type.Recomposed, segment );
+        return new Change( Type.Recomposed, segment );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -87,16 +85,16 @@ public class PastePart extends AbstractCommand {
 
     @SuppressWarnings( "unchecked" )
     private MultiCommand makeSubCommands( Map<String, Object> copy ) {
-        MultiCommand subCommands = new MultiCommand( "paste task - extra" );
+        MultiCommand subCommands = new MultiCommand( getUserName(), "paste task - extra" );
         subCommands.setMemorable( false );
-        Command addPart = new AddPart();
+        Command addPart = new AddPart( getUserName() );
         addPart.set( "segment", get( "segment" ) );
         // addPart.set( "part", get( "part" ) );
         addPart.set( "partState", copy.get( "partState" ) );
         subCommands.addCommand( addPart );
         List<Map<String, Object>> needStates = (List<Map<String, Object>>) copy.get( "needs" );
         for ( Map<String, Object> needState : needStates ) {
-            Command addNeed = new AddNeed();
+            Command addNeed = new AddNeed( getUserName() );
             addNeed.set( "segment", get( "segment" ) );
             addNeed.set( "name", needState.get( "name" ) );
             addNeed.set( "attributes", needState.get( "attributes" ) );
@@ -106,7 +104,7 @@ public class PastePart extends AbstractCommand {
         List<Map<String, Object>> capabilityStates =
                 (List<Map<String, Object>>) copy.get( "capabilities" );
         for ( Map<String, Object> capabilityState : capabilityStates ) {
-            Command addCapability = new AddCapability();
+            Command addCapability = new AddCapability( getUserName() );
             addCapability.set( "segment", get( "segment" ) );
             addCapability.set( "name", capabilityState.get( "name" ) );
             addCapability.set( "attributes", capabilityState.get( "attributes" ) );
@@ -116,19 +114,15 @@ public class PastePart extends AbstractCommand {
         return subCommands;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "unpaste part" );
+        MultiCommand multi = new MultiCommand( getUserName(), "unpaste part" );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         multi.addCommand( subCommands.getUndoCommand( commander ) );
         return multi;

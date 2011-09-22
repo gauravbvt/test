@@ -2,6 +2,7 @@ package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.surveys.Survey.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,8 +128,8 @@ public class SurveyGizmoService extends AbstractSurveyService {
     }
 
     @Override
-    protected long registerSurvey( Survey survey, Plan plan ) throws SurveyException {
-        String xml = getSurveyXml( survey, plan );
+    protected long registerSurvey( Survey survey, Plan plan, QueryService queryService ) throws SurveyException {
+        String xml = getSurveyXml( survey, plan, queryService );
         Map<String, String> get = new HashMap<String, String>();
         Map<String, String> post = new HashMap<String, String>();
         get.put( "template", getTemplate( plan ) );
@@ -158,10 +159,10 @@ public class SurveyGizmoService extends AbstractSurveyService {
         return xpathEquals( response, "/apiResults/status/text()", "success" );
     }
 
-    private String getSurveyXml( Survey survey, Plan plan ) throws SurveyException {
+    private String getSurveyXml( Survey survey, Plan plan, QueryService queryService ) throws SurveyException {
         return resolveTemplate(
                 survey.getSurveyTemplate(),
-                survey.getSurveyContext( this, plan ) );
+                survey.getSurveyContext( this, plan, queryService ) );
     }
 
     private String xpathExtract( String xml, String expression ) throws SurveyException {

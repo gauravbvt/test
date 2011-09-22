@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,20 +24,20 @@ public class UnverifiedPostalCode extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Place place = (Place) modelObject;
         String postalCode = place.getPostalCode();
         if ( postalCode != null && !postalCode.isEmpty() ) {
             if ( place.getPlaceBasis() == null ) {
-                Issue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
+                Issue issue = makeIssue( queryService, Issue.VALIDITY, place, getTestedProperty() );
                 issue.setSeverity( Level.Low );
                 issue.setDescription( "Can't verify the postal code without a geolocation." );
                 issue.setRemediation( "Set a valid geoname and choose a geolocation." );
                 issues.add( issue );
             } else {
                 if ( !getGeoService().verifyPostalCode( place.getPostalCode(), place.getLocationBasis() ) ) {
-                    Issue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
+                    Issue issue = makeIssue( queryService, Issue.VALIDITY, place, getTestedProperty() );
                     issue.setSeverity( Level.Low );
                     issue.setDescription( "Can't verify the postal code for the geolocation." );
                     issue.setRemediation( "Change the postal code\nor change the geolocation." );

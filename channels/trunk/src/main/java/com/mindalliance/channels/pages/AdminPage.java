@@ -2,8 +2,8 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.dao.UserInfo;
-import com.mindalliance.channels.core.dao.UserService;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.surveys.SurveyService;
@@ -72,7 +72,7 @@ public class AdminPage extends AbstractChannelsWebPage {
      * The user service.
      */
     @SpringBean
-    private UserService userService;
+    private UserDao userDao;
 
     private ListView<User> userList;
 
@@ -98,7 +98,7 @@ public class AdminPage extends AbstractChannelsWebPage {
     private void init() {
         setStatelessHint( true );
         userList = new ListView<User>( "item",
-                new PropertyModel<List<User>>( userService, "users" ) ) {
+                new PropertyModel<List<User>>( userDao, "users" ) ) {
             private static final long serialVersionUID = 2266583072592123487L;
 
             @Override
@@ -220,7 +220,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                                 super.onModelChanged();
                                 String object = getModelObject();
                                 if ( object != null ) {
-                                    userService.createUser( object );
+                                    userDao.createUser( object );
                                     setModelObject( null );
                                 }
                                 userList.removeAll();
@@ -230,7 +230,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                                     @Override
                                     protected void onValidate( IValidatable<String> validatable ) {
                                         String name = validatable.getValue();
-                                        if ( userService.getUserNamed( name ) != null ) {
+                                        if ( userDao.getUserNamed( name ) != null ) {
                                             Map<String, Object> map = new HashMap<String, Object>();
                                             map.put( "name", name );
                                             error( validatable, "Duplicate", map );
@@ -348,7 +348,7 @@ public class AdminPage extends AbstractChannelsWebPage {
     private void submit() {
         for ( User u : toDelete ) {
             getPlanManager().setAuthorities( u, null, null );
-            userService.deleteUser( u );
+            userDao.deleteUser( u );
         }
         if ( !toDelete.isEmpty() ) {
             toDelete.clear();
@@ -368,7 +368,7 @@ public class AdminPage extends AbstractChannelsWebPage {
         getPlanManager().revalidateProducers( getPlan() );
         getPlanManager().save( getPlan() );
         try {
-            userService.save();
+            userDao.save();
         } catch ( IOException e ) {
             LOG.error( "Unable to save user definitions", e );
         }

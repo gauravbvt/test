@@ -1,8 +1,14 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.procedures;
 
+import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -17,6 +23,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -24,13 +31,11 @@ import java.util.List;
 
 /**
  * The plan SOPs report.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Feb 5, 2009
- * Time: 5:13:56 PM
  */
 public class ProceduresReportPage extends AbstractReportPage {
+
+    @SpringBean
+    private CommanderFactory commanderFactory;
 
     /**
      * Restrictions to report generation.
@@ -102,8 +107,7 @@ public class ProceduresReportPage extends AbstractReportPage {
     protected void setHeaders( WebResponse response ) {
 //        super.setHeaders( response );
 
-        Channels channels = (Channels) getApplication();
-        Commander commander = channels.getCommander( selector.getPlan() );
+        Commander commander = commanderFactory.getCommander( selector.getPlan() );
         long longTime = commander.getLastModified();
         long now = System.currentTimeMillis();
 

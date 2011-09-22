@@ -1,7 +1,14 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
@@ -13,38 +20,32 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 
 /**
  * Copy a flow.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Apr 20, 2009
- * Time: 1:25:19 PM
  */
 public class CopyFlow extends AbstractCommand {
 
-    public CopyFlow( Flow flow, Part part ) {
+    public CopyFlow() {
+        super( "daemon" );
+    }
+
+    public CopyFlow( String userName, Flow flow, Part part ) {
+        super( userName );
         set( "part", part.getId() );
         set( "flow", flow.getId() );
         set( "segment", flow.getSegment().getId() );
         needLockOn( flow );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isMemorable() {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "copy";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Flow flow;
@@ -55,31 +56,25 @@ public class CopyFlow extends AbstractCommand {
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );
         }
-        commander.setCopy( flow.getTarget() == part
-                ? ChannelsUtils.getReceiveState( flow, part )
-                : ChannelsUtils.getSendState( flow, part ) );
-        Change change = new Change( Change.Type.None, flow );
+        commander.setCopy( getUserName(), flow.getTarget() == part ?
+                           ChannelsUtils.getReceiveState( flow, part ) :
+                           ChannelsUtils.getSendState( flow, part ) );
+        Change change = new Change( Type.None, flow );
         change.setMessage( flow.getNature() + " copied" );
         return change;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getLabel( Commander commander ) throws CommandException {
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Flow flow;
@@ -88,8 +83,7 @@ public class CopyFlow extends AbstractCommand {
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh" );
         }
-        if ( flow.isCapability() ) return "Copy capability";
-        else if ( flow.isNeed() ) return "Copy need";
-        else return "Copy flow";
+        return flow.isCapability() ? "Copy capability"
+                                   : flow.isNeed() ? "Copy need" : "Copy flow";
     }
 }

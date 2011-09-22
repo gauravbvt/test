@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -136,12 +137,10 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
                 "delete",
                 "Remove from segment context?" ) {
             public void onClick( AjaxRequestTarget target ) {
-                doCommand( new UpdatePlanObject(
-                        getSegment(),
+                doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(),
                         "context",
                         eventTiming,
-                        UpdateObject.Action.Remove
-                ) );
+                        UpdateObject.Action.Remove ) );
                 getCommander().cleanup( Event.class, oldName );
                 update( target,
                         new Change(
@@ -292,12 +291,10 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
     private void addIfComplete() {
         if ( isEventTimingComplete() ) {
             if ( !getSegment().getContext().contains( newEventTiming ) ) {
-                doCommand( new UpdatePlanObject(
-                        getSegment(),
+                doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(),
                         "context",
                         newEventTiming,
-                        UpdateObject.Action.Add
-                ) );
+                        UpdateObject.Action.Add ) );
             }
         }
     }

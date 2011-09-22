@@ -3,6 +3,7 @@ package com.mindalliance.channels.surveys;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class UnknownSurvey extends Survey {
     }
 
     @Override
-    public Identifiable findIdentifiable( Analyst analyst ) throws NotFoundException {
+    public Identifiable findIdentifiable( Analyst analyst, QueryService queryService ) throws NotFoundException {
         return null;
     }
 
@@ -59,7 +60,7 @@ public class UnknownSurvey extends Survey {
     }
 
     @Override
-    protected List<String> getDefaultContacts( Analyst analyst ) {
+    protected List<String> getDefaultContacts( Analyst analyst, QueryService queryService ) {
         return new ArrayList<String>();
     }
 
@@ -79,7 +80,7 @@ public class UnknownSurvey extends Survey {
     }
 
     @Override
-    public Identifiable getAbout( Analyst analyst ) {
+    public Identifiable getAbout( Analyst analyst, QueryService queryService ) {
         return null;
     }
 

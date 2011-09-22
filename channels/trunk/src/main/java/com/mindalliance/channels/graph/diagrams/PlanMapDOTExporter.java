@@ -1,6 +1,7 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
@@ -35,7 +36,7 @@ public class PlanMapDOTExporter extends AbstractDOTExporter<Segment, SegmentRela
     /**
      * {@inheritDoc}
      */
-    protected void exportVertices( PrintWriter out, Graph<Segment, SegmentRelationship> g ) {
+    protected void exportVertices( QueryService queryService, PrintWriter out, Graph<Segment, SegmentRelationship> g ) {
         PlanMapMetaProvider metaProvider = (PlanMapMetaProvider) getMetaProvider();
         if ( metaProvider.isGroupByPhase() || metaProvider.isGroupByEvent() ) {
             Map<ModelObject, Set<Segment>> groupedSegments = new HashMap<ModelObject, Set<Segment>>();
@@ -70,11 +71,11 @@ public class PlanMapDOTExporter extends AbstractDOTExporter<Segment, SegmentRela
                 }
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
-                printoutVertices( out, groupedSegments.get( group ) );
+                printoutVertices( queryService, out, groupedSegments.get( group ) );
                 out.println( "}" );
             }
         } else {
-            super.exportVertices( out, g );
+            super.exportVertices( queryService, out, g );
         }
     }
 

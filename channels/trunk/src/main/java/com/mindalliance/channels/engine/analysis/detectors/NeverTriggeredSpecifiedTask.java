@@ -4,6 +4,7 @@ import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,15 +24,15 @@ public class NeverTriggeredSpecifiedTask extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( !part.hasDefaultTask() && !part.isStartsWithSegment() && !part.isTriggered() ) {
-            Issue issue = makeIssue( Issue.COMPLETENESS, part );
+            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
             issue.setDescription( "This task may never start; it does not start with the plan segment and it is never triggered." );
             issue.setRemediation( "Start this task with the plan segment\n"
                     + "or have an incoming sharing flow trigger it" );
-            issue.setSeverity( getQueryService().computePartPriority( part ) );
+            issue.setSeverity( queryService.computePartPriority( part ) );
             issues.add( issue );
         }
         return issues;

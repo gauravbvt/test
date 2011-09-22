@@ -1,6 +1,11 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command;
 
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -17,11 +22,6 @@ import java.util.Map;
 
 /**
  * Default implementation of LockManager.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 3, 2009
- * Time: 9:33:48 AM
  */
 public class DefaultLockManager implements LockManager {
 
@@ -33,17 +33,14 @@ public class DefaultLockManager implements LockManager {
     /**
      * Query service.
      */
-    private QueryService queryService;
+    private final QueryService queryService;
 
     /**
      * The managed locks, indexed by id.
      */
     private final Map<Long, Lock> locks = Collections.synchronizedMap( new HashMap<Long, Lock>() );
 
-    public DefaultLockManager() {
-    }
-
-    public void setQueryService( QueryService queryService ) {
+    public DefaultLockManager( QueryService queryService ) {
         this.queryService = queryService;
     }
 
@@ -178,10 +175,10 @@ public class DefaultLockManager implements LockManager {
     }
 
     @Override
-    public boolean isLockableByUser( Identifiable identifiable ) {
+    public boolean isLockableByUser( String userName, Identifiable identifiable ) {
         List<Long> ids = new ArrayList<Long>();
         ids.add( identifiable.getId() );
-        return isLockableByUser( User.current().getUsername(), ids );
+        return isLockableByUser( userName, ids );
     }
 
 

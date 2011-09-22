@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.PlaceReference;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +26,14 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
     public PlanLocaleIsRelative() {
     }
 
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Plan plan = (Plan) modelObject;
         Place locale = plan.getLocale();
         if ( locale != null ) {
             PlaceReference ref = locale.getMustBeContainedIn();
             if ( ref != null && ref.getReferencedPlace( locale ) != null ) {
-                Issue issue = makeIssue( Issue.VALIDITY, plan );
+                Issue issue = makeIssue( queryService, Issue.VALIDITY, plan );
                 issue.setSeverity( Level.High );
                 issue.setDescription( "The plan's locale ("
                         + locale.getName()
@@ -45,7 +46,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
             }
             ref = locale.getMustContain();
             if ( ref != null && ref.getReferencedPlace( locale ) != null ) {
-                Issue issue = makeIssue( Issue.VALIDITY, plan );
+                Issue issue = makeIssue( queryService, Issue.VALIDITY, plan );
                 issue.setSeverity( Level.High );
                 issue.setDescription( "The plan's locale ("
                         + locale.getName()
@@ -59,7 +60,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
             Place within = locale.getWithin();
             if ( within != null ) {
                 if ( !within.isAbsolute( locale ) ) {
-                    Issue issue = makeIssue( Issue.VALIDITY, plan );
+                    Issue issue = makeIssue( queryService, Issue.VALIDITY, plan );
                     issue.setSeverity( Level.High );
                     issue.setDescription( "The plan's locale ("
                             + locale.getName()
@@ -78,7 +79,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
             for ( ModelEntity type : locale.getAllTypes() ) {
                 Place placeType = (Place) type;
                 if ( !placeType.isAbsolute( locale ) ) {
-                    Issue issue = makeIssue( Issue.VALIDITY, plan );
+                    Issue issue = makeIssue( queryService, Issue.VALIDITY, plan );
                     issue.setSeverity( Level.High );
                     issue.setDescription( "The plan's locale ("
                             + locale.getName()

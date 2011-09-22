@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -274,24 +275,20 @@ public class TypesPanel extends AbstractCommandablePanel {
             if ( name != null && !name.isEmpty()) {
                 type = doSafeFindOrCreateType( getEntity().getClass(), name );
                 if ( type != null  && !type.isUniversal() && !getEntity().hasType( type ) ) {
-                    doCommand( new UpdatePlanObject(
-                            getEntity(),
+                    doCommand( new UpdatePlanObject( User.current().getUsername(), getEntity(),
                             "types",
                             type,
-                            UpdateObject.Action.Add
-                    ) );
+                            UpdateObject.Action.Add ) );
                 }
             }
         }
 
         public void removeType() {
             assert !isMarkedForCreation();
-            doCommand( new UpdatePlanObject(
-                    getEntity(),
+            doCommand( new UpdatePlanObject( User.current().getUsername(), getEntity(),
                     "types",
                     type,
-                    UpdateObject.Action.Remove
-            ) );
+                    UpdateObject.Action.Remove ) );
         }
 
         public boolean isRemovable() {

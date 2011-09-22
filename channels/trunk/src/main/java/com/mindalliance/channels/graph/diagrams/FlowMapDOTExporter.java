@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.core.model.Event;
@@ -24,13 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Flow map DOT exporter.
- * Exports a Graph in DOT format.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Nov 19, 2008
- * Time: 4:15:11 PM
+ * Flow map DOT exporter. Exports a Graph in DOT format.
  */
 public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
@@ -38,57 +38,56 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
      * Start vertex.
      */
     private static final String START = "__start__";
+
     /**
      * Stop vertex.
      */
     private static final String STOP = "__stop__";
+
     /**
      * Initiating, external parts.
      */
-    Set<Part> initiators = new HashSet<Part>();
+    private final Set<Part> initiators = new HashSet<Part>();
+
     /**
      * Terminating, internal parts.
      */
-    Set<Part> terminators = new HashSet<Part>();
+    private final Set<Part> terminators = new HashSet<Part>();
+
     /**
      * Parts that start with the segment.
      */
-    Set<Part> autoStarters = new HashSet<Part>();
+    private final Set<Part> autoStarters = new HashSet<Part>();
+
     /**
      * Parts that start events.
      */
-    Set<Part> eventStarters = new HashSet<Part>();
+    private final Set<Part> eventStarters = new HashSet<Part>();
 
-    Map<EventTiming, Set<Part>> contextInitiators = new HashMap<EventTiming, Set<Part>>();
+    private final Map<EventTiming, Set<Part>> contextInitiators = new HashMap<EventTiming, Set<Part>>();
 
     public FlowMapDOTExporter( MetaProvider<Node, Flow> metaProvider ) {
         super( metaProvider );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected void beforeExport( Graph<Node, Flow> g ) {
-        super.beforeExport( g );
+    @Override
+    protected void beforeExport( QueryService queryService, Graph<Node, Flow> g ) {
+        super.beforeExport( queryService, g );
         Segment segment = getSegment();
         for ( Node node : g.vertexSet() ) {
             if ( node.isPart() ) {
                 Part part = (Part) node;
                 assert segment.getEvent() != null;
-                if ( segment.isInitiatedBy( part ) ) {
+                if ( segment.isInitiatedBy( part ) )
                     initiators.add( part );
-                } else if ( segment.isTerminatedBy( part ) ) {
+                else if ( segment.isTerminatedBy( part ) )
                     terminators.add( part );
-                }
-                if ( part.getSegment().equals( segment ) && part.isStartsWithSegment() ) {
+                if ( part.getSegment().equals( segment ) && part.isStartsWithSegment() )
                     autoStarters.add( part );
-                }
-                if ( part.getInitiatedEvent() != null && part.getSegment().equals( segment ) ) {
+                if ( part.getInitiatedEvent() != null && part.getSegment().equals( segment ) )
                     eventStarters.add( part );
-                }
             }
         }
-        QueryService queryService = ( (FlowMapMetaProvider) getMetaProvider() ).getAnalyst().getQueryService();
         for ( EventTiming eventTiming : segment.getContext() ) {
             for ( Part part : queryService.findAllInitiators( eventTiming ) ) {
                 Set<Part> parts = contextInitiators.get( eventTiming );
@@ -101,12 +100,11 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected void exportVertices( PrintWriter out, Graph<Node, Flow> g ) {
+    @Override
+    protected void exportVertices( QueryService queryService, PrintWriter out, Graph<Node, Flow> g ) {
         FlowMapMetaProvider metaProvider = (FlowMapMetaProvider) getMetaProvider();
-        if ( !( initiators.isEmpty() && autoStarters.isEmpty() ) ) exportStart( out, metaProvider );
+        if ( !( initiators.isEmpty() && autoStarters.isEmpty() ) )
+            exportStart( out, metaProvider );
         Map<Segment, Set<Node>> segmentNodes = new HashMap<Segment, Set<Node>>();
         for ( Node node : g.vertexSet() ) {
             Segment segment = node.getSegment();
@@ -119,41 +117,42 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         }
         for ( Segment segment : segmentNodes.keySet() ) {
             if ( !segment.equals( getSegment() ) ) {
-                out.println( "subgraph cluster_"
-                        + segment.getName().replaceAll( "[^a-zA-Z0-9_]", "_" )
-                        + " {" );
-                List<DOTAttribute> attributes = new DOTAttribute( "label",
-                        "Segment: " + segment.getName() ).asList();
+                out.println( "subgraph cluster_" + segment.getName().replaceAll( "[^a-zA-Z0-9_]", "_" ) + " {" );
+                List<DOTAttribute> attributes = new DOTAttribute( "label", "Segment: " + segment.getName() ).asList();
                 if ( metaProvider.getDOTAttributeProvider() != null ) {
-                    attributes.addAll(
-                            metaProvider.getDOTAttributeProvider().getSubgraphAttributes( false ) );
+                    attributes.addAll( metaProvider.getDOTAttributeProvider().getSubgraphAttributes( false ) );
                 }
                 if ( metaProvider.getURLProvider() != null ) {
                     String url = metaProvider.getURLProvider().
                             getGraphURL( segmentNodes.get( segment ).iterator().next() );
-                    if ( url != null ) attributes.add( new DOTAttribute( "URL", url ) );
+                    if ( url != null )
+                        attributes.add( new DOTAttribute( "URL", url ) );
                 }
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
-                printoutVertices( out, segmentNodes.get( segment ) );
-                if ( metaProvider.isShowingGoals() ) exportGoals( out, metaProvider, g, segment );
+                printoutVertices( queryService, out, segmentNodes.get( segment ) );
+                if ( metaProvider.isShowingGoals() )
+                    exportGoals( out, metaProvider, g, segment );
                 out.println( "}" );
             } else {
-                if ( metaProvider.isShowingGoals() ) exportGoals( out, metaProvider, g, segment );
-                printoutVertices( out, segmentNodes.get( segment ) );
+                if ( metaProvider.isShowingGoals() )
+                    exportGoals( out, metaProvider, g, segment );
+                printoutVertices( queryService, out, segmentNodes.get( segment ) );
             }
         }
-        if ( !terminators.isEmpty() ) exportStop( out, metaProvider );
-        if ( !eventStarters.isEmpty() ) exportStartedEvents( out, metaProvider );
-        if ( !contextInitiators.isEmpty() ) exportContextInitiators( out, metaProvider );
+        if ( !terminators.isEmpty() )
+            exportStop( out, metaProvider );
+        if ( !eventStarters.isEmpty() )
+            exportStartedEvents( out, metaProvider );
+        if ( !contextInitiators.isEmpty() )
+            exportContextInitiators( out, metaProvider );
     }
-
 
     private void exportStart( PrintWriter out, AbstractMetaProvider<Node, Flow> metaProvider ) {
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
         attributes.add( new DOTAttribute( "fontcolor", AbstractMetaProvider.FONTCOLOR ) );
-        attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
-        attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
+        attributes.add( new DOTAttribute( "fontsize", AbstractFlowMetaProvider.NODE_FONT_SIZE ) );
+        attributes.add( new DOTAttribute( "fontname", AbstractFlowMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         Segment segment = getSegment();
         String label = sanitize( segment.getEventPhase().toString() )/* + " starts"*/;
@@ -176,14 +175,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private void exportStartedEvents( PrintWriter out, FlowMapMetaProvider metaProvider ) {
         Set<Event> events = new HashSet<Event>();
-        for ( Part part : eventStarters ) {
+        for ( Part part : eventStarters )
             events.add( part.getInitiatedEvent() );
-        }
         for ( Event event : events ) {
             List<DOTAttribute> attributes = DOTAttribute.emptyList();
             attributes.add( new DOTAttribute( "fontcolor", AbstractMetaProvider.FONTCOLOR ) );
-            attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
-            attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
+            attributes.add( new DOTAttribute( "fontsize", AbstractFlowMetaProvider.NODE_FONT_SIZE ) );
+            attributes.add( new DOTAttribute( "fontname", AbstractFlowMetaProvider.NODE_FONT ) );
             attributes.add( new DOTAttribute( "labelloc", "b" ) );
             String label = sanitize( event.getName() );
             attributes.add( new DOTAttribute( "label", label ) );
@@ -208,8 +206,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         for ( EventTiming eventTiming : contextInitiators.keySet() ) {
             List<DOTAttribute> attributes = DOTAttribute.emptyList();
             attributes.add( new DOTAttribute( "fontcolor", AbstractMetaProvider.FONTCOLOR ) );
-            attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
-            attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
+            attributes.add( new DOTAttribute( "fontsize", AbstractFlowMetaProvider.NODE_FONT_SIZE ) );
+            attributes.add( new DOTAttribute( "fontname", AbstractFlowMetaProvider.NODE_FONT ) );
             attributes.add( new DOTAttribute( "labelloc", "b" ) );
             String label = sanitize( eventTiming.getEvent().getName() );
             attributes.add( new DOTAttribute( "label", label ) );
@@ -221,11 +219,10 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             } catch ( IOException e ) {
                 throw new RuntimeException( "Unable to get image directory location", e );
             }
-            attributes.add( new DOTAttribute(
-                    "image",
-                    dirName
-                            + "/"
-                            + ( eventTiming.isConcurrent() ? "start.png" : "stop.png" ) ) );
+            attributes.add( new DOTAttribute( "image",
+                                              dirName + "/" + ( eventTiming.isConcurrent() ?
+                                                                "start.png" :
+                                                                "stop.png" ) ) );
             out.print( getIndent() );
             out.print( getEventTimingID( eventTiming ) );
             out.print( "[" );
@@ -238,19 +235,16 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         return eventTiming.getTiming().name() + "_" + eventTiming.getEvent().getId();
     }
 
-
     private void exportStop( PrintWriter out, AbstractMetaProvider<Node, Flow> metaProvider ) {
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
         attributes.add( new DOTAttribute( "fontcolor", AbstractMetaProvider.FONTCOLOR ) );
-        attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
-        attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
+        attributes.add( new DOTAttribute( "fontsize", AbstractFlowMetaProvider.NODE_FONT_SIZE ) );
+        attributes.add( new DOTAttribute( "fontname", AbstractFlowMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         Segment segment = getSegment();
         String label = segment.getEventPhase().toString();
         Phase phase = segment.getPhase();
-        label += phase.isPreEvent()
-                ? " succeeds"
-                : " ends";
+        label += phase.isPreEvent() ? " succeeds" : " ends";
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", label ) );
@@ -268,12 +262,12 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         out.println( "];" );
     }
 
-
-    protected void exportEdges( PrintWriter out, Graph<Node, Flow> g ) {
+    @Override
+    protected void exportEdges( QueryService queryService, PrintWriter out, Graph<Node, Flow> g ) {
         FlowMapMetaProvider metaProvider = (FlowMapMetaProvider) getMetaProvider();
         if ( !( initiators.isEmpty() && contextInitiators.isEmpty() ) ) exportInitiations( out, g );
         if ( !autoStarters.isEmpty() ) exportAutoStarts( out, g );
-        super.exportEdges( out, g );
+        super.exportEdges( queryService, out, g );
         if ( !eventStarters.isEmpty() ) exportEventStarts( out, g );
         if ( !terminators.isEmpty() ) exportTerminations( out, g );
         if ( metaProvider.isShowingGoals() ) exportGoalEdges( out, g );
@@ -299,10 +293,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         for ( EventTiming eventTiming : contextInitiators.keySet() ) {
             for ( Part initiator : contextInitiators.get( eventTiming ) ) {
                 List<DOTAttribute> attributes = getTimingEdgeAttributes( initiator );
-                attributes.add( new DOTAttribute(
-                        "label",
-                        eventTiming.isConcurrent() ? "causes" : "terminates"
-                ) );
+                attributes.add( new DOTAttribute( "label", eventTiming.isConcurrent() ? "causes" : "terminates" ) );
                 /*attributes.add( new DOTAttribute(
           "tooltip",
           sanitize( segment.initiationCause( initiator ) ) ) );*/
@@ -424,24 +415,21 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private boolean isVisible( Part part ) {
         FlowMapMetaProvider metaProvider = (FlowMapMetaProvider) getMetaProvider();
-        return !metaProvider.isHidingNoop() || !metaProvider.getAnalyst().isEffectivelyConceptual( part );
+        return !metaProvider.isHidingNoop()
+               || !metaProvider.getAnalyst().isEffectivelyConceptual( metaProvider.getQueryService(),
+                                                                      part );
     }
 
     private String ifVisibleColor( Part part, String color ) {
-        return part != null && !isVisible( part )
-                ? AbstractMetaProvider.INVISIBLE_COLOR : color;
+        return part != null && !isVisible( part ) ? AbstractMetaProvider.INVISIBLE_COLOR : color;
     }
-
 
     private Segment getSegment() {
         return (Segment) getMetaProvider().getContext();
     }
 
-    private void exportGoals(
-            PrintWriter out,
-            AbstractMetaProvider<Node, Flow> metaProvider,
-            Graph<Node, Flow> g,
-            Segment segment ) {
+    private void exportGoals( PrintWriter out, AbstractMetaProvider<Node, Flow> metaProvider, Graph<Node, Flow> g,
+                              Segment segment ) {
         for ( Node node : g.vertexSet() ) {
             if ( node.isPart() ) {
                 Part part = (Part) node;
@@ -460,16 +448,12 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         }
     }
 
-    private void exportGoal(
-            String riskVertexId,
-            Goal goal,
-            Part part,
-            PrintWriter out,
-            AbstractMetaProvider<Node, Flow> metaProvider ) {
+    private void exportGoal( String riskVertexId, Goal goal, Part part, PrintWriter out,
+                             AbstractMetaProvider<Node, Flow> metaProvider ) {
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
         attributes.add( new DOTAttribute( "fontcolor", ifVisibleColor( part, AbstractMetaProvider.FONTCOLOR ) ) );
-        attributes.add( new DOTAttribute( "fontsize", FlowMapMetaProvider.NODE_FONT_SIZE ) );
-        attributes.add( new DOTAttribute( "fontname", FlowMapMetaProvider.NODE_FONT ) );
+        attributes.add( new DOTAttribute( "fontsize", AbstractFlowMetaProvider.NODE_FONT_SIZE ) );
+        attributes.add( new DOTAttribute( "fontname", AbstractFlowMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         String label = sanitize( goal.getSuccessLabel( "|" ).replaceAll( "\\|", "\\\\n" ) );
         attributes.add( new DOTAttribute( "label", label ) );
@@ -490,32 +474,33 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     private String getGoalIcon( Goal goal, Part part ) {
-        if ( part != null && !isVisible( part ) ) return "goal_blank.png";
+        if ( part != null && !isVisible( part ) )
+            return "goal_blank.png";
         if ( goal.isRiskMitigation() ) {
             switch ( goal.getLevel() ) {
-                case Low:
-                    return "risk_minor.png";
-                case Medium:
-                    return "risk_major.png";
-                case High:
-                    return "risk_severe.png";
-                case Highest:
-                    return "risk_extreme.png";
-                default:
-                    throw new RuntimeException( "Unknown risk level" );
+            case Low:
+                return "risk_minor.png";
+            case Medium:
+                return "risk_major.png";
+            case High:
+                return "risk_severe.png";
+            case Highest:
+                return "risk_extreme.png";
+            default:
+                throw new RuntimeException( "Unknown risk level" );
             }
         } else {
             switch ( goal.getLevel() ) {
-                case Low:
-                    return "gain_low.png";
-                case Medium:
-                    return "gain_medium.png";
-                case High:
-                    return "gain_high.png";
-                case Highest:
-                    return "gain_highest.png";
-                default:
-                    throw new RuntimeException( "Unknown gain level" );
+            case Low:
+                return "gain_low.png";
+            case Medium:
+                return "gain_medium.png";
+            case High:
+                return "gain_high.png";
+            case Highest:
+                return "gain_highest.png";
+            default:
+                throw new RuntimeException( "Unknown gain level" );
             }
         }
     }
@@ -590,6 +575,4 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         list.add( new DOTAttribute( "weight", "2.0" ) );
         return list;
     }
-
-
 }

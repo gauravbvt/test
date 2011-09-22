@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.surveys;
 
 import com.mindalliance.channels.core.command.Change;
@@ -39,93 +45,109 @@ import java.util.Set;
 
 /**
  * Surveys panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Aug 29, 2009
- * Time: 11:16:48 AM
  */
 public class SurveysPanel extends FloatingCommandablePanel implements Filterable {
+
     /**
      * Pad top on move.
      */
     private static final int PAD_TOP = 68;
+
     /**
      * Pad left on move.
      */
     private static final int PAD_LEFT = 5;
+
     /**
      * Pad bottom on move and resize.
      */
     private static final int PAD_BOTTOM = 5;
+
     /**
      * Pad right on move and resize.
      */
     private static final int PAD_RIGHT = 6;
+
     /**
      * Min width on resize.
      */
     private static final int MIN_WIDTH = 300;
+
     /**
      * Min height on resize.
      */
     private static final int MIN_HEIGHT = 300;
 
     private static final String NOT_YET_LAUNCHED = "not yet launched";
+
     private static final String LAUNCHED = "launched";
+
     private static final String CLOSED = "closed";
+
     private static final String RELEVANT = "relevant";
+
     private static final String IRRELEVANT = "no longer relevant";
+
     /**
      * Status choices.
      */
-    private static final String[] StatusChoices =
-            {NOT_YET_LAUNCHED, LAUNCHED, CLOSED};
+    private static final String[] StatusChoices = { NOT_YET_LAUNCHED, LAUNCHED, CLOSED };
+
     /**
      * Relevance choices.
      */
-    private static final String[] RelevanceChoices =
-            {RELEVANT, IRRELEVANT};
+    private static final String[] RelevanceChoices = { RELEVANT, IRRELEVANT };
+
     /**
      * Maximum number of rows shown in table at a time.
      */
     private static final int MAX_SURVEY_ROWS = 10;
+
     /**
      * Whether to filter on status and relevance.
      */
     private boolean stateFiltered = false;
+
     /**
      * What status to filter surveys on.
      */
     private String statusFilter = StatusChoices[0];
+
     /**
      * What relevance to filter surveys on.
      */
     private String relevanceFilter = RelevanceChoices[0];
+
     /**
      * Status filter choice.
      */
     private DropDownChoice<String> statusChoice;
+
     /**
      * Relevance filter choice.
      */
     private DropDownChoice<String> relevanceChoice;
+
     /**
      * Surveys table.
      */
     private SurveysTable surveysTable;
+
     /**
      * Selected survey.
      */
     private Survey selectedSurvey = Survey.UNKNOWN;
+
     /**
      * Survey container.
      */
     private WebMarkupContainer surveyContainer;
+
     /**
      * Title label.
      */
     private Label titleLabel;
+
     /**
      * Survey service.
      */
@@ -143,63 +165,46 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         init();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getTitle() {
         return "Surveys";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected void close( AjaxRequestTarget target ) {
         Change change = new Change( Change.Type.Collapsed, Survey.UNKNOWN );
         update( target, change );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected int getPadTop() {
         return PAD_TOP;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected int getPadLeft() {
         return PAD_LEFT;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected int getPadBottom() {
         return PAD_BOTTOM;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected int getPadRight() {
         return PAD_RIGHT;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected int getMinWidth() {
         return MIN_WIDTH;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected int getMinHeight() {
         return MIN_HEIGHT;
     }
-
 
     private void init() {
         addStatusAndRelevanceFilters();
@@ -207,7 +212,6 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         addSurveysTable();
         addSurveyContainer();
     }
-
 
     private void addStatusAndRelevanceFilters() {
         addFilterCheckBox();
@@ -222,10 +226,9 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     }
 
     private void addFilterCheckBox() {
-        CheckBox filteredCheckBox = new CheckBox(
-                "filtered",
-                new PropertyModel<Boolean>( this, "stateFiltered" ) );
+        CheckBox filteredCheckBox = new CheckBox( "filtered", new PropertyModel<Boolean>( this, "stateFiltered" ) );
         filteredCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateEnabled();
                 target.addComponent( statusChoice );
@@ -247,9 +250,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     }
 
     private void addTableTitle() {
-        titleLabel = new Label(
-                "tableTitle",
-                new PropertyModel<String>( this, "tableTitle" ) );
+        titleLabel = new Label( "tableTitle", new PropertyModel<String>( this, "tableTitle" ) );
         titleLabel.setOutputMarkupId( true );
         add( titleLabel );
     }
@@ -263,11 +264,11 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     }
 
     private void addStatusChoices() {
-        statusChoice = new DropDownChoice<String>(
-                "statusChoice",
-                new PropertyModel<String>( this, "statusFilter" ),
-                Arrays.asList( StatusChoices ) );
+        statusChoice = new DropDownChoice<String>( "statusChoice",
+                                                   new PropertyModel<String>( this, "statusFilter" ),
+                                                   Arrays.asList( StatusChoices ) );
         statusChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 target.addComponent( titleLabel );
                 addSurveysTable();
@@ -286,11 +287,11 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     }
 
     private void addRelevanceChoices() {
-        relevanceChoice = new DropDownChoice<String>(
-                "relevanceChoice",
-                new PropertyModel<String>( this, "relevanceFilter" ),
-                Arrays.asList( RelevanceChoices ) );
+        relevanceChoice = new DropDownChoice<String>( "relevanceChoice",
+                                                      new PropertyModel<String>( this, "relevanceFilter" ),
+                                                      Arrays.asList( RelevanceChoices ) );
         relevanceChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 target.addComponent( titleLabel );
                 addSurveysTable();
@@ -309,16 +310,12 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     }
 
     private void addSurveysTable() {
-        surveysTable = new SurveysTable(
-                "surveysTable",
-                new PropertyModel<List<Survey>>( this, "surveyWrappers" ) );
+        surveysTable = new SurveysTable( "surveysTable", new PropertyModel<List<Survey>>( this, "surveyWrappers" ) );
         surveysTable.setOutputMarkupId( true );
         addOrReplace( surveysTable );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void toggleFilter( Identifiable identifiable, String property, AjaxRequestTarget target ) {
         if ( isFiltered( identifiable, property ) ) {
             filters.remove( property );
@@ -329,9 +326,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         target.addComponent( surveysTable );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isFiltered( Identifiable identifiable, String property ) {
         ModelObject filtered = filters.get( property );
         return filtered != null && filtered.equals( identifiable );
@@ -344,47 +339,42 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
      */
     @SuppressWarnings( "unchecked" )
     public List<SurveyWrapper> getSurveyWrappers() {
-        List<Survey> surveys = (List<Survey>) CollectionUtils.select(
-                surveyService.getSurveys(),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        Survey survey = (Survey) obj;
-                        return !stateFiltered ||
-                                ( matchesRelevance( survey ) && matchesStatus( survey ) );
-                    }
-                }
-        );
+        List<Survey> surveys = (List<Survey>) CollectionUtils.select( surveyService.getSurveys(), new Predicate() {
+            @Override
+            public boolean evaluate( Object obj ) {
+                Survey survey = (Survey) obj;
+                return !stateFiltered || matchesRelevance( survey ) && matchesStatus( survey );
+            }
+        } );
         List<SurveyWrapper> wrappers = new ArrayList<SurveyWrapper>();
         for ( Survey survey : surveys ) {
             wrappers.add( new SurveyWrapper( survey ) );
         }
-        return (List<SurveyWrapper>) CollectionUtils.select(
-                wrappers,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return !isFilteredOut( (SurveyWrapper) obj );
-                    }
-                }
-        );
+        return (List<SurveyWrapper>) CollectionUtils.select( wrappers, new Predicate() {
+            @Override
+            public boolean evaluate( Object obj ) {
+                return !isFilteredOut( (SurveyWrapper) obj );
+            }
+        } );
     }
 
     private boolean isFilteredOut( SurveyWrapper wrapper ) {
         ModelObject about = filters.get( "about" );
-        if ( about != null && !about.equals( wrapper.getAbout() ) ) return true;
+        if ( about != null && !about.equals( wrapper.getAbout() ) )
+            return true;
         Segment segment = (Segment) filters.get( "segment" );
         return segment != null && !segment.equals( wrapper.getSegment() );
     }
 
     private boolean matchesStatus( Survey survey ) {
-        return ( survey.isLaunched() && statusFilter.equals( LAUNCHED ) )
-                || ( survey.isClosed() && statusFilter.equals( CLOSED ) )
-                || ( survey.canBeLaunched() && statusFilter.equals( NOT_YET_LAUNCHED ) );
+        return survey.isLaunched() && statusFilter.equals( LAUNCHED )
+               || survey.isClosed() && statusFilter.equals( CLOSED ) || survey.canBeLaunched() && statusFilter.equals(
+                NOT_YET_LAUNCHED );
     }
 
     private boolean matchesRelevance( Survey survey ) {
-        boolean relevant = surveyService.isRelevant( survey );
-        return ( relevant && relevanceFilter.equals( RELEVANT ) )
-                || ( !relevant && relevanceFilter.equals( IRRELEVANT ) );
+        boolean relevant = surveyService.isRelevant( survey, getQueryService() );
+        return relevant && relevanceFilter.equals( RELEVANT ) || !relevant && relevanceFilter.equals( IRRELEVANT );
     }
 
     private void addSurveyContainer() {
@@ -402,16 +392,14 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     private void addSurveyPanel() {
         Component surveyPanel;
         if ( !selectedSurvey.isUnknown() ) {
-            surveyPanel = new SurveyPanel(
-                    "survey",
-                    new Model<Survey>( selectedSurvey )
-            );
+            surveyPanel = new SurveyPanel( "survey", new Model<Survey>( selectedSurvey ) );
         } else {
             surveyPanel = new Label( "survey", "" );
         }
         surveyContainer.addOrReplace( surveyPanel );
     }
 
+    @Override
     public void changed( Change change ) {
         if ( change.isForInstanceOf( Survey.class ) ) {
             if ( change.isExpanded() ) {
@@ -424,27 +412,24 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         super.changed( change );
     }
 
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( Survey.class ) ) {
             if ( change.isUpdated() || change.isRemoved() ) {
                 addSurveysTable();
                 target.addComponent( surveysTable );
             }
-            if ( !selectedSurvey.isUnknown() || change.isRemoved() ) {
+            if ( selectedSurvey.isUnknown() && !change.isRemoved() )
+                super.updateWith( target, change, updated );
+            else {
                 addSurveyPanel();
                 updateVisibility();
                 target.addComponent( surveyContainer );
-            } else {
-                super.updateWith( target, change, updated );
             }
-        } else {
+        } else
             super.updateWith( target, change, updated );
-        }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void refresh( AjaxRequestTarget target, Change change, String Aspect ) {
         if ( change.isForInstanceOf( Survey.class ) ) {
@@ -486,7 +471,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         }
 
         public Identifiable getAbout() {
-            return survey.getAbout( surveyService.getAnalyst() );
+            return survey.getAbout( surveyService.getAnalyst(), getQueryService() );
         }
 
         public Segment getSegment() {
@@ -505,7 +490,6 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         public String getSurveyType() {
             return survey.getSurveyType();
         }
-
     }
 
     /**
@@ -525,63 +509,27 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // Columns
-            columns.add( makeColumn(
-                    "Type",
-                    "surveyType",
-                    EMPTY ) );
-            columns.add( makeColumn(
-                    "created on",
-                    "formattedCreationDate",
-                    null,
-                    EMPTY,
-                    null,
-                    "creationDate" ) );
-            columns.add( makeColumn(
-                    "by",
-                    "issuer",
-                    EMPTY ) );
-            columns.add( makeColumn(
-                    "titled",
-                    "title",
-                    EMPTY ) );
-            columns.add( makeFilterableLinkColumn(
-                    "about",
-                    "about",
-                    "about.name",
-                    EMPTY,
-                    SurveysPanel.this ) );
-            columns.add( makeFilterableLinkColumn(
-                    "in plan segment",
-                    "segment",
-                    "segment.name",
-                    EMPTY,
-                    SurveysPanel.this ) );
-            columns.add( makeColumn(
-                    "# surveyed",
-                    "contactedCount",
-                    EMPTY ) );
+            columns.add( makeColumn( "Type", "surveyType", EMPTY ) );
+            columns.add( makeColumn( "created on", "formattedCreationDate", null, EMPTY, null, "creationDate" ) );
+            columns.add( makeColumn( "by", "issuer", EMPTY ) );
+            columns.add( makeColumn( "titled", "title", EMPTY ) );
+            columns.add( makeFilterableLinkColumn( "about", "about", "about.name", EMPTY, SurveysPanel.this ) );
+            columns.add( makeFilterableLinkColumn( "in plan segment",
+                                                   "segment",
+                                                   "segment.name",
+                                                   EMPTY,
+                                                   SurveysPanel.this ) );
+            columns.add( makeColumn( "# surveyed", "contactedCount", EMPTY ) );
             if ( !stateFiltered ) {
-                columns.add( makeColumn(
-                        "status",
-                        "status",
-                        EMPTY ) );
+                columns.add( makeColumn( "status", "status", EMPTY ) );
             }
-            columns.add( makeExpandLinkColumn(
-                    "",
-                    "survey",
-                    "more"
-            ) );
+            columns.add( makeExpandLinkColumn( "", "survey", "more" ) );
             // provider and table
-            add( new AjaxFallbackDefaultDataTable(
-                    "surveys",
-                    columns,
-                    new SortableBeanProvider<Survey>(
-                            surveysModel.getObject(),
-                            "creationDate"
-                    ),
-                    MAX_SURVEY_ROWS ) );
+            add( new AjaxFallbackDefaultDataTable( "surveys",
+                                                   columns,
+                                                   new SortableBeanProvider<Survey>( surveysModel.getObject(),
+                                                                                     "creationDate" ),
+                                                   MAX_SURVEY_ROWS ) );
         }
-
     }
-
 }

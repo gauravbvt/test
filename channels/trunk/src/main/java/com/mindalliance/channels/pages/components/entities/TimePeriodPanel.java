@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Availability;
 import com.mindalliance.channels.core.model.Available;
 import com.mindalliance.channels.core.model.TimePeriod;
@@ -220,8 +221,7 @@ public class TimePeriodPanel extends AbstractCommandablePanel {
     }
 
     public void setDayOn( boolean dayOn ) {
-        doCommand( new UpdatePlanObject(
-                getAvailable(),
+        doCommand( new UpdatePlanObject( User.current().getUsername(), getAvailable(),
                 pathToTimePeriod(),
                 dayOn ? TimePeriod.allDayPeriod() : TimePeriod.nilTimePeriod(),
                 UpdateObject.Action.Set ) );

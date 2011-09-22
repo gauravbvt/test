@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,10 +44,10 @@ public class SegmentWithSameGoal extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
-        for ( Segment other : getQueryService().list( Segment.class ) ) {
+        for ( Segment other : queryService.list( Segment.class ) ) {
             if ( !segment.equals( other )
                     && segment.getEvent().equals( other.getEvent() )
                     && sameLevel( segment.getEventLevel(), other.getEventLevel() )
@@ -58,7 +59,7 @@ public class SegmentWithSameGoal extends AbstractIssueDetector {
                     }
                 }
                 for ( Goal sharedGoal : sharedGoals ) {
-                    DetectedIssue issue = makeIssue( Issue.VALIDITY, segment );
+                    DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, segment );
                     issue.setDescription( "This plan segment is for the same event phase as \""
                             + other.getName()
                             + "\" and both have a common goal: \"" + sharedGoal.getLabel()

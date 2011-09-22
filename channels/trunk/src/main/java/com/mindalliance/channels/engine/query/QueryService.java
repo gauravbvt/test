@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
@@ -1158,7 +1158,7 @@ public interface QueryService {
      *
      * @return a file user details service
      */
-    UserService getUserService();
+    UserDao getUserDao();
 
     /**
      * Find the participation by a user.

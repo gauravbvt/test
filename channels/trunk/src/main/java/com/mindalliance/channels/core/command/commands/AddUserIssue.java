@@ -1,50 +1,51 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.Map;
 
 /**
  * Adds a user issue to a model object.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 9, 2009
- * Time: 7:44:31 PM
  */
 public class AddUserIssue extends AbstractCommand {
 
     public AddUserIssue() {
+        super( "daemon" );
     }
 
-    public AddUserIssue( ModelObject modelObject ) {
+    public AddUserIssue( String userName, ModelObject modelObject ) {
+        super( userName );
         addConflicting( modelObject );
         set( "modelObject", modelObject.getId() );
     }
 
-    public AddUserIssue( long aboutId ) {
+    public AddUserIssue( String userName, long aboutId ) {
+        super( userName );
         addConflicting( aboutId );
         set( "modelObject", aboutId );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "add new issue";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
@@ -55,30 +56,24 @@ public class AddUserIssue extends AbstractCommand {
         // State is set when undoing a RemoveIssue
         Map<String, Object> state = (Map<String, Object>) get( "state" );
         issue.setReportedBy( getUserName() );
-        if ( state != null ) {
+        if ( state != null )
             ChannelsUtils.initialize( issue, state );
-        }
         queryService.add( issue, priorId );
         set( "issue", issue.getId() );
         describeTarget( issue );                
-        return new Change( Change.Type.Added, issue );
+        return new Change( Type.Added, issue );
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
-        return new RemoveIssue( issue );
+        return new RemoveIssue( getUserName(), issue );
     }
 
 }

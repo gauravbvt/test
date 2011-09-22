@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
@@ -23,34 +29,27 @@ import java.util.Set;
 
 /**
  * Remove a part from flows where the part acts as an intermediate.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: May 21, 2009
- * Time: 4:06:09 PM
  */
 public class Disintermediate extends AbstractCommand {
 
     public Disintermediate() {
+        super( "daemon" );
     }
 
-    public Disintermediate( Part part ) {
+    public Disintermediate( String userName, Part part ) {
         // May overshoot if needs locks for unaffected flows.
+        super( userName );
         needLocksOn( ChannelsUtils.getLockingSetFor( part ) );
         set( "part", part.getId() );
         set( "segment", part.getSegment().getId() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "disintermediate";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canDo( Commander commander ) {
         return super.canDo( commander ) && isIntermediate( commander );
     }
@@ -65,13 +64,11 @@ public class Disintermediate extends AbstractCommand {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Part part = (Part) segment.getNode( (Long) get( "part" ) );
-        describeTarget( part );                
+        describeTarget( part );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
             multi = makeSubCommands( part, commander );
@@ -83,18 +80,14 @@ public class Disintermediate extends AbstractCommand {
         return new Change( Change.Type.Recomposed, segment );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "add intermediation" );
+        MultiCommand multi = new MultiCommand( getUserName(), "add intermediation" );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );
@@ -103,20 +96,17 @@ public class Disintermediate extends AbstractCommand {
 
     // Create a capability and/or need if not repetitive
     private MultiCommand makeSubCommands( Part part, Commander commander ) {
-        MultiCommand subCommands = new MultiCommand( "disintermediate - extra" );
+        MultiCommand subCommands = new MultiCommand( getUserName(), "disintermediate - extra" );
         subCommands.setMemorable( false );
-        List<Flow[]> inOuts = findIntermediations( part );
         // To avoid disconnecting a flow more than once
         Set<Flow> receivesToDisconnect = new HashSet<Flow>();
         Set<Flow> sendsToDisconnect = new HashSet<Flow>();
-        for ( Flow[] inOut : inOuts ) {
+        for ( Flow[] inOut : findIntermediations( part ) ) {
             Flow receive = inOut[0];
             Flow send = inOut[1];
             // create flow bypassing intermediate part
-            Command directConnect = new ConnectWithFlow(
-                    receive.getSource(),
-                    send.getTarget(),
-                    receive.getName() );
+            Command directConnect =
+                    new ConnectWithFlow( getUserName(), receive.getSource(), send.getTarget(), receive.getName() );
             // Use eois of receive and other attributes of send
             Map<String, Object> attributes = ChannelsUtils.getFlowAttributes( send );
             attributes.put( "eois", send.copyEois() );
@@ -125,59 +115,51 @@ public class Disintermediate extends AbstractCommand {
             sendsToDisconnect.add( send );
             receivesToDisconnect.add( receive );
         }
-        for ( Flow receive : receivesToDisconnect ) {
+        for ( Flow receive : receivesToDisconnect )
             if ( !hasNeed( part, receive.getName() ) ) {
-                AddNeed addNeed = new AddNeed();
+                AddNeed addNeed = new AddNeed( getUserName() );
                 addNeed.set( "segment", get( "segment" ) );
                 addNeed.set( "part", get( "part" ) );
                 addNeed.set( "name", receive.getName() );
                 addNeed.set( "attributes", ChannelsUtils.getFlowAttributes( receive ) );
                 subCommands.addCommand( addNeed );
-                subCommands.addCommand( commander.makeRemoveFlowCommand( receive ) );
+                subCommands.addCommand( commander.makeRemoveFlowCommand( getUserName(), receive ) );
             }
-        }
-        for ( Flow send : sendsToDisconnect ) {
+        for ( Flow send : sendsToDisconnect )
             if ( !hasCapability( part, send.getName() ) ) {
-                AddCapability addCapability = new AddCapability();
+                AddCapability addCapability = new AddCapability( getUserName() );
                 addCapability.set( "segment", get( "segment" ) );
                 addCapability.set( "part", get( "part" ) );
                 addCapability.set( "name", send.getName() );
                 addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( send ) );
                 subCommands.addCommand( addCapability );
-                subCommands.addCommand( commander.makeRemoveFlowCommand( send ) );
+                subCommands.addCommand( commander.makeRemoveFlowCommand( getUserName(), send ) );
             }
-        }
         return subCommands;
     }
 
-    private boolean hasNeed( Part part, final String name ) {
-        return CollectionUtils.exists(
-                IteratorUtils.toList( part.receives() ),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        Flow flow = (Flow) object;
-                        return flow.isNeed() && flow.getName().equals( name );
-                    }
-                }
-        );
-
+    private static boolean hasNeed( Part part, final String name ) {
+        return CollectionUtils.exists( IteratorUtils.toList( part.receives() ), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                Flow flow = (Flow) object;
+                return flow.isNeed() && flow.getName().equals( name );
+            }
+        } );
     }
 
-    private boolean hasCapability( Part part, final String name ) {
-        return CollectionUtils.exists(
-                IteratorUtils.toList( part.sends() ),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        Flow flow = (Flow) object;
-                        return flow.isCapability() && flow.getName().equals( name );
-                    }
-                }
-        );
-
+    private static boolean hasCapability( Part part, final String name ) {
+        return CollectionUtils.exists( IteratorUtils.toList( part.sends() ), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                Flow flow = (Flow) object;
+                return flow.isCapability() && flow.getName().equals( name );
+            }
+        } );
     }
 
     // Find pairs of synonymous internal receives and send on a part.
-    private List<Flow[]> findIntermediations( Part part ) {
+    private static List<Flow[]> findIntermediations( Part part ) {
         List<Flow[]> interms = new ArrayList<Flow[]>();
         Iterator<Flow> receives = part.receives();
         while ( receives.hasNext() ) {
@@ -186,10 +168,10 @@ public class Disintermediate extends AbstractCommand {
                 Iterator<Flow> sends = part.sends();
                 while ( sends.hasNext() ) {
                     Flow send = sends.next();
-                    if ( send.isInternal()
-                            && send.getTarget().isPart()
-                            && receive.getName().equals( send.getName() ) ) {
-                        Flow[] interm = {receive, send};
+                    if ( send.isInternal() && send.getTarget().isPart()
+                         && receive.getName().equals( send.getName() ) )
+                    {
+                        Flow[] interm = { receive, send };
                         interms.add( interm );
                     }
                 }
@@ -197,6 +179,5 @@ public class Disintermediate extends AbstractCommand {
         }
         return interms;
     }
-
 }
 

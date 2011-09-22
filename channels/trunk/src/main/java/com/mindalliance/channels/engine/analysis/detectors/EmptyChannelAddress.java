@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class EmptyChannelAddress extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Channelable channelable = (Channelable) modelObject;
         List<Channel> channels = channelable.getEffectiveChannels();
@@ -42,10 +43,10 @@ public class EmptyChannelAddress extends AbstractIssueDetector {
                         && !( modelObject instanceof Actor && ( (Actor) modelObject ).isPlaceHolder() ) ) {
                     problem = "The " + channel.getMedium().getName() + " channel's address is required but empty.";
                     remediation = "Enter a valid address.";
-                    Issue issue = makeIssue( Issue.COMPLETENESS, modelObject );
+                    Issue issue = makeIssue( queryService, Issue.COMPLETENESS, modelObject );
                     issue.setDescription( channel.toString() + ": " + problem );
                     issue.setRemediation( remediation );
-                    issue.setSeverity( getSeverity( channelable ) );
+                    issue.setSeverity( getSeverity( channelable, queryService ) );
                     issues.add( issue );
 
                 }
@@ -54,17 +55,14 @@ public class EmptyChannelAddress extends AbstractIssueDetector {
         return issues;
     }
 
-    private Level getSeverity( Channelable channelable ) {
+    private Level getSeverity( Channelable channelable, QueryService queryService ) {
         if ( channelable instanceof Flow ) {
             Flow flow = (Flow) channelable;
-            if ( flow.getTarget().isPart() ) {
-                return getQueryService().computePartPriority( (Part) flow.getTarget() );
-            } else {
-                return Level.Medium;
-            }
-        } else {
+            return flow.getTarget().isPart() ?
+                   queryService.computePartPriority( (Part) flow.getTarget() ) :
+                   Level.Medium;
+        } else
             return Level.Medium;
-        }
     }
 
 

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.graph;
 
+import com.mindalliance.channels.engine.query.QueryService;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
@@ -36,17 +37,15 @@ public interface GraphRenderer<V, E> {
     void resetHighlight();
 
     /**
+     * @param queryService
      * @param graph       -- a Graph
      * @param dotExporter -- a DOT generator
      * @param format      -- an output format (png, svg, imap etc.)
      * @param ticket      -- a globally unique, use-once string
      * @param output      -- the rendered graph  @throws DiagramException -- if generation fails
      */
-    void render( Graph<V, E> graph,
-                 StyledDOTExporter<V, E> dotExporter,
-                 String format,
-                 String ticket,
-                 OutputStream output ) throws DiagramException;
+    void render( QueryService queryService, Graph<V, E> graph, StyledDOTExporter<V, E> dotExporter, String format,
+                 String ticket, OutputStream output ) throws DiagramException;
 
     /**
      * Set highlights to given edge and vertex.

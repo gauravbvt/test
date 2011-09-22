@@ -1,5 +1,6 @@
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
@@ -48,8 +49,8 @@ public class FailureImpactsDOTExporter extends AbstractDOTExporter<Node, Flow> {
     /**
      * {@inheritDoc}
      */
-    protected void beforeExport( Graph<Node, Flow> g ) {
-        super.beforeExport( g );
+    protected void beforeExport( QueryService queryService, Graph<Node, Flow> g ) {
+        super.beforeExport( queryService, g );
         for ( Node node : g.vertexSet() ) {
             if ( node.isPart() ) {
                 Part part = (Part) node;
@@ -64,7 +65,7 @@ public class FailureImpactsDOTExporter extends AbstractDOTExporter<Node, Flow> {
     /**
      * {@inheritDoc}
      */
-    protected void exportVertices( PrintWriter out, Graph<Node, Flow> g ) {
+    protected void exportVertices( QueryService queryService, PrintWriter out, Graph<Node, Flow> g ) {
         AbstractMetaProvider<Node, Flow> metaProvider = (AbstractMetaProvider<Node, Flow>) getMetaProvider();
         Map<Segment, Set<Node>> segmentNodes = new HashMap<Segment, Set<Node>>();
         for ( Node node : g.vertexSet() ) {
@@ -93,12 +94,12 @@ public class FailureImpactsDOTExporter extends AbstractDOTExporter<Node, Flow> {
                 }
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
-                printoutVertices( out, segmentNodes.get( segment ) );
+                printoutVertices( queryService, out, segmentNodes.get( segment ) );
                 exportStop( out, metaProvider, segment );
                 exportGoals( out, metaProvider, g, segment );
                 out.println( "}" );
             } else {
-                printoutVertices( out, segmentNodes.get( segment ) );
+                printoutVertices( queryService, out, segmentNodes.get( segment ) );
                 exportStop( out, metaProvider, segment );
                 exportGoals( out, metaProvider, g, segment );
             }
@@ -229,8 +230,8 @@ public class FailureImpactsDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
 
-    protected void exportEdges( PrintWriter out, Graph<Node, Flow> g ) {
-        super.exportEdges( out, g );
+    protected void exportEdges( QueryService queryService, PrintWriter out, Graph<Node, Flow> g ) {
+        super.exportEdges( queryService, out, g );
         if ( !terminators.isEmpty() )
             exportTerminations( out, g );
         exportGoalEdges( out, g );

@@ -4,16 +4,17 @@
 package com.mindalliance.channels.pages.reports.guidelines;
 
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.command.LockingException;
 import com.mindalliance.channels.core.command.commands.UpdateObject.Action;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
-import com.mindalliance.channels.engine.query.PlanService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -45,9 +46,9 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
         super( parameters );
     }
 
-    protected void initComponents( PlanService service, final Plan plan ) {
+    protected void initComponents( QueryService service, final Plan plan ) {
         List<Plan> otherPlans = findOtherPlans( plan );
-        List<User> otherPlanners = findOtherPlanners( getPlanManager().getUserService(), plan );
+        List<User> otherPlanners = findOtherPlanners( getPlanManager().getUserDao(), plan );
         add(
             new Label( "userName", user.getUsername() ),
             new Label( "planName", plan.toString() ),
@@ -64,7 +65,7 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
                         parameters.put( "agent", actor.getId() );
                         String userName = p.getUsername();
                         parameters.put( "user", userName );
-                        User otherUser = getPlanManager().getUserService().getUserNamed( userName );
+                        User otherUser = getPlanManager().getUserDao().getUserNamed( userName );
                         item.add(
                             new BookmarkablePageLink<GuidelinesPage>(
                                 "responder", GuidelinesPage.class, parameters )
@@ -77,9 +78,11 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
                                     public void onClick() {
                                         Participation participation = getModelObject();
                                         try {
-                                            getLockManager().lock( user.getUsername(), plan.getId() );
-                                            assign( getCommander( plan ), participation, null );
-                                            getLockManager().release( user.getUsername(), plan.getId() );
+                                            Commander commander = getCommander( plan );
+                                            LockManager lockManager = commander.getLockManager();
+                                            lockManager.lock( user.getUsername(), plan.getId() );
+                                            assign( commander, participation, null );
+                                            lockManager.release( user.getUsername(), plan.getId() );
                                         } catch ( LockingException e ) {
                                             LoggerFactory.getLogger( getClass() ).warn(
                                                 "Unable to get plan lock",
@@ -122,11 +125,10 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
                                                 try {
                                                     Commander cmdr = getCommander( plan );
                                                     String username = getModelObject().getUsername();
-                                                    getLockManager().lock( user.getUsername(), plan.getId() );
-                                                    assign( cmdr,
-                                                            findParticipation( cmdr, username ),
-                                                            actor );
-                                                    getLockManager().release( user.getUsername(), plan.getId() );
+                                                    LockManager lockManager = cmdr.getLockManager();
+                                                    lockManager.lock( user.getUsername(), plan.getId() );
+                                                    assign( cmdr, findParticipation( cmdr, username ), actor );
+                                                    lockManager.release( user.getUsername(), plan.getId() );
                                                 } catch ( LockingException e ) {
                                                     LoggerFactory.getLogger( getClass() ).warn( "Unable to get plan lock", e );
                                                 }
@@ -198,7 +200,7 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
 
     private static void assign( Commander commander, Participation participation, Actor actor ) {
         participation.setActor( actor );
-        commander.doUnsafeCommand( new UpdatePlanObject( participation,
+        commander.doUnsafeCommand( new UpdatePlanObject( User.current().getUsername(), participation,
                                                    "actor",
                                                    actor,
                                                    Action.Set ) );
@@ -218,10 +220,10 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
     }
 
     private List<User> findOtherPlanners(
-        UserService userService, Plan plan ) {
+        UserDao userDao, Plan plan ) {
         String me = user.getUsername();
 
-        Collection<User> planners = userService.getPlanners( plan.getUri() );
+        Collection<User> planners = userDao.getPlanners( plan.getUri() );
         List<User> answer = new ArrayList<User>( planners.size());
         for ( User u : planners )
             if ( !me.equals( u.getUsername() ) )

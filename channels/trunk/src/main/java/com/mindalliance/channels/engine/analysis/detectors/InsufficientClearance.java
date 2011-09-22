@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,28 +29,28 @@ public class InsufficientClearance extends AbstractIssueDetector {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         if ( flow.isSharing() && flow.isClassified() ) {
-            List<Assignment> assignments = getQueryService().findAllAssignments( (Part) flow.getTarget(), false );
+            List<Assignment> assignments = queryService.findAllAssignments( (Part) flow.getTarget(), false );
             for ( Assignment assignment : assignments ) {
                 Actor actor = assignment.getActor();
-                if ( actor.isActual() && !actor.isClearedFor( flow, getPlan() ) ) {
-                    Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                if ( actor.isActual() && !actor.isClearedFor( flow, queryService.getPlan() ) ) {
+                    Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
                     issue.setDescription( "Assigned recipient " + actor.getName()
                             + " of \"" + flow.getName()
                             + "\" does not have sufficient clearance." );
                     issue.setRemediation( "Declassify the information" +
                             "\nor increase the clearance of " + actor.getName() );
                     if ( flow.isCritical() ) {
-                        issue.setSeverity( getQueryService().computePartPriority( (Part) flow.getTarget() ) );
+                        issue.setSeverity( queryService.computePartPriority( (Part) flow.getTarget() ) );
                     } else {
                         issue.setSeverity( Level.Medium );
                     }
                     issues.add( issue );
                 } else if ( actor.isUnknown() ) {
-                    Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                    Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
                     issue.setDescription( "Assigned recipient "
                             + " of classified \"" + flow.getName()
                             + "\" is unknown." );
@@ -57,7 +58,7 @@ public class InsufficientClearance extends AbstractIssueDetector {
                             "\nor change the definition of the task to assign only cleared recipients"
                     + "\nor increase the classification of the intended recipients");
                     if ( flow.isCritical() ) {
-                        issue.setSeverity( getQueryService().computePartPriority( (Part) flow.getTarget() ) );
+                        issue.setSeverity( queryService.computePartPriority( (Part) flow.getTarget() ) );
                     } else {
                         issue.setSeverity( Level.Low );
                     }

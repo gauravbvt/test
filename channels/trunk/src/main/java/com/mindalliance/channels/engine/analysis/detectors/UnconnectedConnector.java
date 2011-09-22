@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,18 +49,18 @@ public class UnconnectedConnector extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        for ( Flow capability : getQueryService().findUnusedCapabilities( part ) ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
+        for ( Flow capability : queryService.findUnusedCapabilities( part ) ) {
+            DetectedIssue issue = makeIssue( queryService, DetectedIssue.COMPLETENESS, part );
             issue.setDescription( "'" + capability.getName() + "' is produced but never sent." );
             issue.setRemediation( "Share " + capability.getName() + " produced by the task with a task that needs it." );
             issue.setSeverity( Level.Low );
             issues.add( issue );
         }
-        for ( Flow need : getQueryService().findUnconnectedNeeds( part ) ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
+        for ( Flow need : queryService.findUnconnectedNeeds( part ) ) {
+            DetectedIssue issue = makeIssue( queryService, DetectedIssue.COMPLETENESS, part );
             issue.setDescription(
                     ( need.isRequired() ? "Required " : "" )
                             + "'"

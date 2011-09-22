@@ -1,33 +1,27 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.springframework.core.io.Resource;
 
-/**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 12, 2010
- * Time: 1:11:42 PM
- */
 public class FailureImpactsMetaProvider extends FlowMapMetaProvider {
 
-    public FailureImpactsMetaProvider(
-            ModelObject modelObject,
-            String outputFormat,
-            Resource imageDirectory,
-            Analyst analyst ) {
-        super( modelObject, outputFormat, imageDirectory, analyst );
+    public FailureImpactsMetaProvider( ModelObject modelObject, String outputFormat, Resource imageDirectory,
+                                       Analyst analyst, QueryService queryService ) {
+        super( modelObject, outputFormat, imageDirectory, analyst, queryService );
     }
 
+    @Override
     protected String getNodeLabel( Node node ) {
-        if ( node.isPart() ) {
-            return "FAIL: " + super.getNodeLabel( node );
-        } else {
-            return super.getNodeLabel( node );
-        }
+        return node.isPart() ? "FAIL: " + super.getNodeLabel( node ) : super.getNodeLabel( node );
     }
 
 }

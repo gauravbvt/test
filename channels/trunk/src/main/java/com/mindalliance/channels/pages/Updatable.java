@@ -1,6 +1,13 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
@@ -8,11 +15,6 @@ import java.util.List;
 
 /**
  * An updatable page or component.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Feb 25, 2009
- * Time: 3:53:54 PM
  */
 public interface Updatable {
 
@@ -83,9 +85,8 @@ public interface Updatable {
     QueryService getQueryService();
 
     /**
-     * Get query service not from parent.
-     * @return a query service
+     * Get the plan of the page or panel.
+     * @return a plan
      */
-    QueryService getOwnQueryService();
-
+    Plan getPlan();
 }

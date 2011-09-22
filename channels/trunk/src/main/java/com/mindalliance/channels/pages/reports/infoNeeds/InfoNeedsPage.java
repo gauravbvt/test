@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.reports.infoNeeds;
 
 import com.mindalliance.channels.core.Matcher;
@@ -45,18 +51,14 @@ import java.util.Set;
 
 /**
  * Information needs report.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 7/27/11
- * Time: 11:49 AM
  */
 public class InfoNeedsPage extends AbstractParticipantPage {
+
     private static final Logger LOG = LoggerFactory.getLogger( InfoNeedsPage.class );
 
     /**
-     * Called for access without parameters. Find the actor and plan corresponding to the current
-     * user and redirect to that page. Otherwise, redirect to access denied.
+     * Called for access without parameters. Find the actor and plan corresponding to the current user and redirect to
+     * that page. Otherwise, redirect to access denied.
      */
     public InfoNeedsPage() {
         super( InfoNeedsPage.class );
@@ -82,22 +84,16 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         return "Information Needs";
     }
 
-
-    protected void initReportBody(
-            Plan plan,
-            QueryService queryService,
-            ResourceSpec profile,
-            String override,
-            AggregatedContact contact ) {
+    @Override
+    protected void initReportBody( Plan plan, QueryService queryService, ResourceSpec profile, String override,
+                                   AggregatedContact contact ) {
         List<InfoNeedsReportSegment> reportSegments = getReportSegments( queryService, profile );
-        add(
-                new ListView<ReportSegment>( "segmentLinks", reportSegments ) {
-                    @Override
-                    protected void populateItem( ListItem<ReportSegment> item ) {
-                        item.getModelObject().addLinkTo( item );
-                    }
-                }
-        );
+        add( new ListView<ReportSegment>( "segmentLinks", reportSegments ) {
+            @Override
+            protected void populateItem( ListItem<ReportSegment> item ) {
+                item.getModelObject().addLinkTo( item );
+            }
+        } );
         addSegments( reportSegments );
     }
 
@@ -106,17 +102,21 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             @Override
             protected void populateItem( ListItem<InfoNeedsReportSegment> item ) {
                 InfoNeedsReportSegment reportSegment = item.getModelObject();
-                item.add(
-                        new WebMarkupContainer( "segmentAnchor" )
-                                .add( new Label( "segmentText", reportSegment.getName() ) )
-                                .add( new AttributeModifier( "name", true, reportSegment.getAnchor() ) ),
-                        new UserFeedbackPanel( "segmentFeedback", reportSegment.getSegment(), "Send feedback", "Info needs" ),
+                item.add( new WebMarkupContainer( "segmentAnchor" ).add( new Label( "segmentText",
+                                                                                    reportSegment.getName() ) ).add( new AttributeModifier(
+                        "name",
+                        true,
+                        reportSegment.getAnchor() ) ),
+                          new UserFeedbackPanel( "segmentFeedback",
+                                                 reportSegment.getSegment(),
+                                                 "Send feedback",
+                                                 "Info needs" ),
 
-                        new Label( "context", reportSegment.getContext() ),
-                        new Label( "segDesc", ChannelsUtils.ensurePeriod( reportSegment.getDescription() ) )
-                                .setVisible( !reportSegment.getDescription().isEmpty() ),
-                        new Label( "segmentSeq", Integer.toString( reportSegment.getSeq() ) ),
-                        newTasks( reportSegment ) );
+                          new Label( "context", reportSegment.getContext() ),
+                          new Label( "segDesc",
+                                     ChannelsUtils.ensurePeriod( reportSegment.getDescription() ) ).setVisible( !reportSegment.getDescription().isEmpty() ),
+                          new Label( "segmentSeq", Integer.toString( reportSegment.getSeq() ) ),
+                          newTasks( reportSegment ) );
             }
         } );
     }
@@ -128,22 +128,20 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                 InfoNeedsReportTask task = item.getModelObject();
                 QueryService queryService = getQueryService();
 
-                item.add(
-                        new WebMarkupContainer( "taskAnchor" )
-                                .add( new Label( "taskName", task.getTitle() ) )
-                                .add( new AttributeModifier( "name", true, task.getAnchor() ) ),
-                        new UserFeedbackPanel( "taskFeedback", task.getPart(), "Send feedback", "Info needs" ),
-                        new WebMarkupContainer( "backTask" )
-                                .add( new AttributeModifier( "href", true, reportSegment.getLink() ) ),
-                        new Label( "taskSeq", task.getSeqString() ),
-                        new Label( "taskSummary", "The context is " + ChannelsUtils.lcFirst( task.getTaskSummary() ) ),
-                        new Label( "taskRole", ChannelsUtils.ensurePeriod( task.getRoleString() ) ),
-                        new Label( "taskLoc", task.getLocationString() )
-                                .setVisible( task.getLocation() != null ),
-                        new Label( "taskRecur", task.getRepetition() ).setVisible( task.isRepeating() ),
-                        new WebMarkupContainer( "prohibited" ).setVisible( task.isProhibited() ),
-                        newInfoNeeds( task )
-                );
+                item.add( new WebMarkupContainer( "taskAnchor" ).add( new Label( "taskName", task.getTitle() ) ).add(
+                        new AttributeModifier( "name", true, task.getAnchor() ) ),
+                          new UserFeedbackPanel( "taskFeedback", task.getPart(), "Send feedback", "Info needs" ),
+                          new WebMarkupContainer( "backTask" ).add( new AttributeModifier( "href",
+                                                                                           true,
+                                                                                           reportSegment.getLink() ) ),
+                          new Label( "taskSeq", task.getSeqString() ),
+                          new Label( "taskSummary",
+                                     "The context is " + ChannelsUtils.lcFirst( task.getTaskSummary() ) ),
+                          new Label( "taskRole", ChannelsUtils.ensurePeriod( task.getRoleString() ) ),
+                          new Label( "taskLoc", task.getLocationString() ).setVisible( task.getLocation() != null ),
+                          new Label( "taskRecur", task.getRepetition() ).setVisible( task.isRepeating() ),
+                          new WebMarkupContainer( "prohibited" ).setVisible( task.isProhibited() ),
+                          newInfoNeeds( task ) );
             }
         };
     }
@@ -153,17 +151,15 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             @Override
             protected void populateItem( ListItem<TaskInfoNeeds> item ) {
                 TaskInfoNeeds taskInfoNeeds = item.getModelObject();
-                item.add(
-                        new UserFeedbackPanel( "infoNeededFeedback", task.getPart(), "Send feedback", "Info needs" ),
-                        new Label( "intent", taskInfoNeeds.getIntentString() ),
-                        new Label( "info", taskInfoNeeds.getInfo() ),
-                        new Label( "impact", taskInfoNeeds.getImpactString() ),
-                        newEoisNeeded( taskInfoNeeds ),
-                        new Label( "failureSeverity",
-                                taskInfoNeeds.failureImpact( getQueryService() ).getNegativeLabel().toLowerCase() ) );
+                item.add( new UserFeedbackPanel( "infoNeededFeedback", task.getPart(), "Send feedback", "Info needs" ),
+                          new Label( "intent", taskInfoNeeds.getIntentString() ),
+                          new Label( "info", taskInfoNeeds.getInfo() ),
+                          new Label( "impact", taskInfoNeeds.getImpactString() ),
+                          newEoisNeeded( taskInfoNeeds ),
+                          new Label( "failureSeverity",
+                                     taskInfoNeeds.failureImpact( getQueryService() ).getNegativeLabel().toLowerCase() ) );
             }
         };
-
     }
 
     private Component newEoisNeeded( TaskInfoNeeds taskInfoNeeds ) {
@@ -171,15 +167,14 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             @Override
             protected void populateItem( ListItem<EoiNeed> item ) {
                 EoiNeed eoiNeed = item.getModelObject();
-                item.add(
-                        new WebMarkupContainer( "status" )
-                                .add( new AttributeModifier( "src", true, new Model<String>( eoiNeed.getIcon() ) ) )
-                                .add( new AttributeModifier( "title", true, new Model<String>( eoiNeed.getStatusString() ) ) ),
-                        new Label( "eoi.name", eoiNeed.getContentString() ),
-                        newEoiSources( "eoi.sources", eoiNeed.getEoiSources() ),
-                        newEoiSources( "eoi.requiredSources", eoiNeed.getRequiredEoiSources() ),
-                        new Label( "eoi.status", eoiNeed.getStatusString() )
-                );
+                item.add( new WebMarkupContainer( "status" ).add( new AttributeModifier( "src",
+                                                                                         true,
+                                                                                         new Model<String>( eoiNeed.getIcon() ) ) ).add(
+                        new AttributeModifier( "title", true, new Model<String>( eoiNeed.getStatusString() ) ) ),
+                          new Label( "eoi.name", eoiNeed.getContentString() ),
+                          newEoiSources( "eoi.sources", eoiNeed.getEoiSources() ),
+                          newEoiSources( "eoi.requiredSources", eoiNeed.getRequiredEoiSources() ),
+                          new Label( "eoi.status", eoiNeed.getStatusString() ) );
             }
         };
     }
@@ -194,27 +189,26 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         };
     }
 
-
     private List<InfoNeedsReportSegment> getReportSegments( QueryService queryService, ResourceSpec profile ) {
 
         Assignments allAssignments = queryService.getAssignments( false, false );
         Assignments assignments = allAssignments.with( profile );
-        Commitments commitments = new Commitments( queryService, profile, allAssignments )
-                .realizable( getAnalyst() );
+        Commitments commitments = new Commitments( queryService, profile, allAssignments ).realizable( getAnalyst(),
+                                                                                                       queryService.getPlan() );
 
         List<InfoNeedsReportSegment> reportSegments = new ArrayList<InfoNeedsReportSegment>();
         int i = 1;
         for ( Segment segment : getPlan().getSegments() ) {
             Assignments segmentAssignments = assignments.forSegment( segment );
             if ( !segmentAssignments.isEmpty() ) {
-                InfoNeedsReportSegment reportSegment = new InfoNeedsReportSegment(
-                        i,
-                        segment,
-                        segmentAssignments,
-                        commitments,
-                        getQueryService(),
-                        getAnalyst() );
-                if ( !reportSegment.isEmpty() ) reportSegments.add( reportSegment );
+                InfoNeedsReportSegment reportSegment = new InfoNeedsReportSegment( i,
+                                                                                   segment,
+                                                                                   segmentAssignments,
+                                                                                   commitments,
+                                                                                   queryService,
+                                                                                   getAnalyst() );
+                if ( !reportSegment.isEmpty() )
+                    reportSegments.add( reportSegment );
                 i++;
             }
         }
@@ -224,16 +218,13 @@ public class InfoNeedsPage extends AbstractParticipantPage {
     private static class InfoNeedsReportSegment extends ReportSegment {
 
         private Assignments assignments;
+
         private Commitments commitments;
+
         private List<InfoNeedsReportTask> reportTasks;
 
-        private InfoNeedsReportSegment(
-                int seq,
-                Segment segment,
-                Assignments assignments,
-                Commitments commitments,
-                QueryService queryService,
-                Analyst analyst ) {
+        private InfoNeedsReportSegment( int seq, Segment segment, Assignments assignments, Commitments commitments,
+                                        QueryService queryService, Analyst analyst ) {
             super( seq, segment );
             this.assignments = assignments;
             this.commitments = commitments;
@@ -247,10 +238,9 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                 InfoNeedsReportTask reportTask = new InfoNeedsReportTask( getSeq(), part );
                 reportTask.setTaskSeq( seq );
                 seq++;
-                reportTask.setTaskInfoNeeds( findTaskInfoNeedsForTask(
-                        assignments.assignedTo( part ),
-                        queryService,
-                        analyst) );
+                reportTask.setTaskInfoNeeds( findTaskInfoNeedsForTask( assignments.assignedTo( part ),
+                                                                       queryService,
+                                                                       analyst ) );
                 if ( !reportTask.isEmpty() )
                     results.add( reportTask );
             }
@@ -266,17 +256,14 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             Collections.sort( parts, new Comparator<Part>() {
                 @Override
                 public int compare( Part part1, Part part2 ) {
-                    return queryService.computePartPriority( part1 )
-                            .compareTo( queryService.computePartPriority( part2 ) );
+                    return queryService.computePartPriority( part1 ).compareTo( queryService.computePartPriority( part2 ) );
                 }
             } );
             return parts;
         }
 
-        private List<TaskInfoNeeds> findTaskInfoNeedsForTask(
-                Assignments assignmentsToTask,
-                final QueryService queryService,
-                Analyst analyst) {
+        private List<TaskInfoNeeds> findTaskInfoNeedsForTask( Assignments assignmentsToTask,
+                                                              final QueryService queryService, Analyst analyst ) {
             List<TaskInfoNeeds> taskInfoNeedsList = new ArrayList<TaskInfoNeeds>();
             Set<String> infos = new HashSet<String>();
             Part part = assignmentsToTask.getParts().get( 0 );
@@ -293,12 +280,11 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             Collections.sort( taskInfoNeedsList, new Comparator<TaskInfoNeeds>() {
                 @Override
                 public int compare( TaskInfoNeeds t1, TaskInfoNeeds t2 ) {
-                    return t1.failureImpact( queryService ).compareTo( t2.failureImpact( queryService ));
+                    return t1.failureImpact( queryService ).compareTo( t2.failureImpact( queryService ) );
                 }
-            });
+            } );
             return taskInfoNeedsList;
         }
-
 
         private TaskInfoNeeds findTaskInfoNeedsForInfo( Part part, String info, Assignments assignmentsToTask ) {
             TaskInfoNeeds taskInfoNeeds = new TaskInfoNeeds( part, info );
@@ -306,25 +292,20 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             Iterator<Flow> receives = part.receivesNamed( info );
             while ( receives.hasNext() ) {
                 Flow.Intent intent = receives.next().getIntent();
-                if ( intent != null ) taskInfoNeeds.setIntent( intent );
+                if ( intent != null )
+                    taskInfoNeeds.setIntent( intent );
             }
             for ( Assignment assignment : assignmentsToTask ) {
                 commitmentsToTaskInfo.addAll( commitments.to( assignment ).withInfo( info ) );
             }
-            for ( EoiNeed eoiNeed : findEoiNeeds(
-                    part,
-                    info,
-                    commitmentsToTaskInfo ) ) {
+            for ( EoiNeed eoiNeed : findEoiNeeds( part, info, commitmentsToTaskInfo ) ) {
                 taskInfoNeeds.addEoiNeed( eoiNeed );
             }
             return taskInfoNeeds;
         }
 
         @SuppressWarnings( "unchecked" )
-        private List<EoiNeed> findEoiNeeds(
-                Part part,
-                String info,
-                Commitments commitmentsToTaskInfo ) {
+        private List<EoiNeed> findEoiNeeds( Part part, String info, Commitments commitmentsToTaskInfo ) {
             List<EoiNeed> eoiNeeds = new ArrayList<EoiNeed>();
             Set<String> eoiContents = new HashSet<String>();
             List<Flow> incomingFlows = new ArrayList<Flow>();
@@ -349,56 +330,44 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                 eoiContents.add( "" );
             }
             for ( final String content : eoiContents ) {
-                List<Flow> needsForEoi = (List<Flow>) CollectionUtils.select(
-                        needs,
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return content.isEmpty() || CollectionUtils.exists(
-                                        ( (Flow) object ).getEois(),
-                                        new Predicate() {
-                                            @Override
-                                            public boolean evaluate( Object object ) {
-                                                return Matcher.same( ( (ElementOfInformation) object ).getContent(),
-                                                                     content );
-                                            }
-                                        } );
-                            }
-                        }
-                );
-                List<Flow> incomingWithEoi = (List<Flow>) CollectionUtils.select(
-                        incomingFlows,
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return content.isEmpty() || CollectionUtils.exists(
-                                        ( (Flow) object ).getEois(),
-                                        new Predicate() {
-                                            @Override
-                                            public boolean evaluate( Object object ) {
-                                                return Matcher.same( ( (ElementOfInformation) object ).getContent(),
-                                                                     content );
-                                            }
-                                        } );
-                            }
-                        }
-                );
-                Commitments commitmentsToTaskInfoWithEoi = content.isEmpty()
-                        ? commitmentsToTaskInfo
-                        : commitmentsToTaskInfo.withEoi( content );
-                EoiNeed eoiNeed = makeEoiNeed(
-                        content,
-                        incomingWithEoi,
-                        needsForEoi,
-                        commitmentsToTaskInfoWithEoi );
+                List<Flow> needsForEoi = (List<Flow>) CollectionUtils.select( needs, new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return content.isEmpty() || CollectionUtils.exists( ( (Flow) object ).getEois(),
+                                                                            new Predicate() {
+                                                                                @Override
+                                                                                public boolean evaluate(
+                                                                                        Object object ) {
+                                                                                    return Matcher.same( ( (ElementOfInformation) object ).getContent(),
+                                                                                                         content );
+                                                                                }
+                                                                            } );
+                    }
+                } );
+                List<Flow> incomingWithEoi = (List<Flow>) CollectionUtils.select( incomingFlows, new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return content.isEmpty() || CollectionUtils.exists( ( (Flow) object ).getEois(),
+                                                                            new Predicate() {
+                                                                                @Override
+                                                                                public boolean evaluate(
+                                                                                        Object object ) {
+                                                                                    return Matcher.same( ( (ElementOfInformation) object ).getContent(),
+                                                                                                         content );
+                                                                                }
+                                                                            } );
+                    }
+                } );
+                Commitments commitmentsToTaskInfoWithEoi =
+                        content.isEmpty() ? commitmentsToTaskInfo : commitmentsToTaskInfo.withEoi( content );
+                EoiNeed eoiNeed = makeEoiNeed( content, incomingWithEoi, needsForEoi, commitmentsToTaskInfoWithEoi );
                 eoiNeeds.add( eoiNeed );
             }
             return eoiNeeds;
         }
 
-        private EoiNeed makeEoiNeed(
-                String content, List<Flow> incomingWithEoi, List<Flow> needsForEoi,
-                Commitments commitmentsToTaskInfoEoi ) {
+        private EoiNeed makeEoiNeed( String content, List<Flow> incomingWithEoi, List<Flow> needsForEoi,
+                                     Commitments commitmentsToTaskInfoEoi ) {
             EoiNeed eoiNeed = new EoiNeed( content );
             for ( EoiSource eoiSource : findEoiSources( commitmentsToTaskInfoEoi ) ) {
                 eoiNeed.addEoiSource( eoiSource );
@@ -408,9 +377,12 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             }
             Flow combinedNeed = findCombinedNeed( needsForEoi );
             if ( combinedNeed != null ) {
-                eoiNeed.addRequiredEoiSource( new EoiSource( null, combinedNeed.getRestriction(),
-                                                             combinedNeed.getMaxDelay(), !combinedNeed.isAskedFor(),
-                                                             combinedNeed.isRequired(), true ) );
+                eoiNeed.addRequiredEoiSource( new EoiSource( null,
+                                                             combinedNeed.getRestriction(),
+                                                             combinedNeed.getMaxDelay(),
+                                                             !combinedNeed.isAskedFor(),
+                                                             combinedNeed.isRequired(),
+                                                             true ) );
                 eoiNeed.setNeed( combinedNeed );
             }
             return eoiNeed;
@@ -420,8 +392,12 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             List<EoiSource> eoiSources = new ArrayList<EoiSource>();
             for ( Commitment commitment : commitmentsToTaskInfoEoi ) {
                 Flow sharing = commitment.getSharing();
-                eoiSources.add( new EoiSource( commitment.getCommitter().getResourceSpec(), null, sharing.getMaxDelay(),
-                                               !sharing.isAskedFor(), sharing.isRequired(), false ) );
+                eoiSources.add( new EoiSource( commitment.getCommitter().getResourceSpec(),
+                                               null,
+                                               sharing.getMaxDelay(),
+                                               !sharing.isAskedFor(),
+                                               sharing.isRequired(),
+                                               false ) );
             }
             return eoiSources;
         }
@@ -435,13 +411,12 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                     Flow.Restriction restriction = incoming.getRestriction();
                     Delay maxDelay = incoming.getMaxDelay();
                     boolean notified = !incoming.isAskedFor();
-                    requiredEoiSources.add( new EoiSource(
-                            resourceSpec,
-                            restriction,
-                            maxDelay,
-                            notified,
-                            incoming.isRequired(),
-                            incoming.isNeed() ) );
+                    requiredEoiSources.add( new EoiSource( resourceSpec,
+                                                           restriction,
+                                                           maxDelay,
+                                                           notified,
+                                                           incoming.isRequired(),
+                                                           incoming.isNeed() ) );
                 }
             }
             return requiredEoiSources;
@@ -478,13 +453,16 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         }
     }
 
-
     private static class TaskInfoNeeds implements Serializable {
 
         private Part part;
+
         private String info;
+
         private List<EoiNeed> eoiNeeds;
+
         private Flow.Significance significance = Flow.Significance.None;
+
         private String intentString = "";
 
         private TaskInfoNeeds( Part part, String info ) {
@@ -516,20 +494,20 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         public String getImpactString() {
             String str;
             switch ( findSignificance() ) {
-                case Useful:
-                    str = "better execute";
-                    break;
-                case Critical:
-                    str = "successfully execute";
-                    break;
-                case Triggers:
-                    str = "trigger";
-                    break;
-                case Terminates:
-                    str = "terminate";
-                    break;
-                default:
-                    str = "";
+            case Useful:
+                str = "better execute";
+                break;
+            case Critical:
+                str = "successfully execute";
+                break;
+            case Triggers:
+                str = "trigger";
+                break;
+            case Terminates:
+                str = "terminate";
+                break;
+            default:
+                str = "";
             }
             return str;
         }
@@ -539,9 +517,8 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             Iterator<Flow> receives = part.receivesNamed( info );
             while ( receives.hasNext() ) {
                 Flow receive = receives.next();
-                if ( receive.getSignificanceToTarget().compareTo( significance ) > 0 ) {
+                if ( receive.getSignificanceToTarget().compareTo( significance ) > 0 )
                     significance = receive.getSignificanceToTarget();
-                }
             }
             return significance;
         }
@@ -561,9 +538,13 @@ public class InfoNeedsPage extends AbstractParticipantPage {
     private static class EoiNeed implements Serializable {
 
         private String content;
+
         private Set<EoiSource> eoiSources;
+
         private Set<EoiSource> requiredEoiSources;
+
         private Flow need;
+
         private boolean required;
 
         private EoiNeed( String content ) {
@@ -590,11 +571,11 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             Collections.sort( list, new Comparator<EoiSource>() {
                 @Override
                 public int compare( EoiSource s1, EoiSource s2 ) {
-                    if ( s1.isNeed() ) return -1;
-                    if ( s2.isNeed() ) return 1;
-                    else return 0;
+                    return s1.isNeed() ? -1
+                         : s2.isNeed() ? 1
+                                       : 0;
                 }
-            });
+            } );
             return list;
         }
 
@@ -603,11 +584,14 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             Collections.sort( list, new Comparator<EoiSource>() {
                 @Override
                 public int compare( EoiSource s1, EoiSource s2 ) {
-                    if ( s1.isNeed() ) return -1;
-                    if ( s2.isNeed() ) return 1;
-                    else return 0;
+                    if ( s1.isNeed() )
+                        return -1;
+                    if ( s2.isNeed() )
+                        return 1;
+                    else
+                        return 0;
                 }
-            });
+            } );
             return list;
         }
 
@@ -641,8 +625,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             }
             int count = 0;
             for ( EoiSource eoiSource : eoiSources ) {
-                if ( eoiSource.getResourceSpec() != null
-                        && eoiSource.getMaxDelay().getAmount() <= maxDelayAmount ) {
+                if ( eoiSource.getResourceSpec() != null && eoiSource.getMaxDelay().getAmount() <= maxDelayAmount ) {
                     count++;
                 }
             }
@@ -659,10 +642,15 @@ public class InfoNeedsPage extends AbstractParticipantPage {
     }
 
     private static class Status implements Serializable, Comparable<Status> {
+
         private static final String RED = "red";
+
         private static final String YELLOW = "yellow";
+
         private static final String GREEN = "green";
+
         private String color = GREEN;
+
         private String text = "OK";
 
         private Status( String color, String text ) {
@@ -688,30 +676,35 @@ public class InfoNeedsPage extends AbstractParticipantPage {
 
         @Override
         public int compareTo( Status other ) {
-            if ( color.equals( other.getColor() ) ) return 0;
-            if ( color.equals( RED ) ) return -1;
-            if ( color.equals( GREEN ) ) return 1;
-            if ( color.equals( YELLOW ) && other.getColor().equals( GREEN ) ) return -1;
-            else return 1;
+            if ( color.equals( other.getColor() ) )
+                return 0;
+            if ( color.equals( RED ) )
+                return -1;
+            if ( color.equals( GREEN ) )
+                return 1;
+            if ( color.equals( YELLOW ) && other.getColor().equals( GREEN ) )
+                return -1;
+            else
+                return 1;
         }
     }
 
     private static class EoiSource implements Serializable {
 
         private ResourceSpec resourceSpec;
+
         private Flow.Restriction restriction;
+
         private Delay maxDelay;
+
         boolean notified;
+
         boolean required;
+
         boolean need;
 
-        private EoiSource(
-                ResourceSpec resourceSpec,
-                Flow.Restriction restriction,
-                Delay maxDelay,
-                boolean notified,
-                boolean required,
-                boolean need ) {
+        private EoiSource( ResourceSpec resourceSpec, Flow.Restriction restriction, Delay maxDelay, boolean notified,
+                           boolean required, boolean need ) {
             this.resourceSpec = resourceSpec;
             this.restriction = restriction;
             this.maxDelay = maxDelay;
@@ -755,26 +748,27 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                 sb.append( restriction.getLabel( false ) );
             }
             sb.append( " (" );
-            if ( !maxDelay.isImmediate() ) sb.append( "within " );
+            if ( !maxDelay.isImmediate() )
+                sb.append( "within " );
             sb.append( maxDelay.toString() );
             sb.append( " )" );
             return sb.toString();
         }
 
         public boolean equals( Object other ) {
-            return
-                    other instanceof EoiSource
-                    && ResourceSpec.areEqualOrNull( resourceSpec, ( (EoiSource) other ).getResourceSpec() )
-                    && Flow.Restriction.same( restriction, ( (EoiSource) other ).getRestriction() )
-                    && maxDelay.equals( ( (EoiSource) other ).getMaxDelay() )
-                    && notified == ( (EoiSource) other ).isNotified()
-                    && need == ( (EoiSource) other ).isNeed();
+            return other instanceof EoiSource
+                   && ResourceSpec.areEqualOrNull( resourceSpec, ( (EoiSource) other ).getResourceSpec() )
+                   && Flow.Restriction.same( restriction, ( (EoiSource) other ).getRestriction() )
+                   && maxDelay.equals( ( (EoiSource) other ).getMaxDelay() )
+                   && notified == ( (EoiSource) other ).isNotified() && need == ( (EoiSource) other ).isNeed();
         }
 
         public int hashCode() {
             int hash = 1;
-            if ( resourceSpec != null) hash = hash * 31 + resourceSpec.hashCode();
-            if ( restriction != null ) hash = hash * 31 + restriction.hashCode();
+            if ( resourceSpec != null )
+                hash = hash * 31 + resourceSpec.hashCode();
+            if ( restriction != null )
+                hash = hash * 31 + restriction.hashCode();
             hash = hash * 31 + maxDelay.hashCode();
             hash = hash * 31 + Boolean.valueOf( notified ).hashCode();
             hash = hash * 31 + Boolean.valueOf( need ).hashCode();

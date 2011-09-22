@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -14,33 +20,23 @@ import java.util.List;
 
 /**
  * A normal user is not a participant in the plan.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 24, 2010
- * Time: 9:07:58 AM
  */
 public class NonParticipatingNormalUser extends AbstractIssueDetector {
 
     public NonParticipatingNormalUser() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    @Override
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
-        QueryService queryService = getQueryService();
-        for ( String username : queryService.getUserService().getUsernames( getPlan().getUri() ) ) {
+        Plan plan = queryService.getPlan();
+        for ( String username : queryService.getUserDao().getUsernames( plan.getUri() ) ) {
             if ( queryService.findUserRole( username ).equals( UserInfo.ROLE_USER ) ) {
-                Participation participation = queryService.findOrCreate(  Participation.class, username );
+                Participation participation = queryService.findOrCreate( Participation.class, username );
                 if ( participation.getActor() == null ) {
-                    Issue issue = makeIssue( Issue.COMPLETENESS, getPlan() );
+                    Issue issue = makeIssue( queryService, Issue.COMPLETENESS, plan );
                     issue.setDescription( "Normal user " + username + " does not participate in the plan." );
-                    issue.setRemediation(
-                            "Assign an agent to user " + username
-                                    + "\nor unregister user " + username
-                    );
+                    issue.setRemediation( "Assign an agent to user " + username + "\nor unregister user " + username );
                     issue.setSeverity( Level.Low );
                     issues.add( issue );
                 }
@@ -49,30 +45,22 @@ public class NonParticipatingNormalUser extends AbstractIssueDetector {
         return issues;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Plan;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getTestedProperty() {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getKindLabel() {
         return "Non-planner user is not a participant";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canBeWaived() {
         return true;
     }

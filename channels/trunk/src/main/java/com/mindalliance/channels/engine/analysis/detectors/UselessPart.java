@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -59,12 +60,12 @@ public class UselessPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.receives().hasNext() || part.sends().hasNext() ) {
             if ( !isUseful( part, new HashSet<Part>() ) ) {
-                DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
+                DetectedIssue issue = makeIssue( queryService, DetectedIssue.COMPLETENESS, part );
                 issue.setDescription( "The task is not useful: it achieves no goal, "
                         + "and it does not trigger nor send information to a useful task." );
                 issue.setRemediation( "Have the task achieve a goal, end the event phase (if it would end a risk)\n" 

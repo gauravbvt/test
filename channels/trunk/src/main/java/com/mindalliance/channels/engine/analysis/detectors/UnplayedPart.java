@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,19 +26,19 @@ public class UnplayedPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Part part = (Part) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         if ( part.hasNonActualActorResource() ) {
-            List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
+            List<Assignment> assignments = queryService.findAllAssignments( part, false );
             if ( assignments.isEmpty() ) {
-                Issue issue = makeIssue( Issue.COMPLETENESS, part );
+                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
                 issue.setDescription( "The task is assigned to no one." );
                 issue.setRemediation( "Explicitly assign an agent to the task"
                         + "\nor profile an agent to match the task specifications"
                         + "\nor modify the task specifications so that it matches at least one agent."
                 );
-                issue.setSeverity( computeTaskFailureSeverity( part ) );
+                issue.setSeverity( computeTaskFailureSeverity( queryService, part ) );
                 issues.add( issue );
             }
         }

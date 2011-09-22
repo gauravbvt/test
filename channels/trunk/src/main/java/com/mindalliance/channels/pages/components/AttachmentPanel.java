@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.Attachment.Type;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.Upload;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -304,7 +305,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         final Attachment attachment = item.getModelObject();
         AjaxFallbackLink deletelink = new AjaxFallbackLink( "copy" ) {
             public void onClick( AjaxRequestTarget target ) {
-                Change change = doCommand( new CopyAttachment( attachment ) );
+                Change change = doCommand( new CopyAttachment( User.current().getUsername(), attachment ) );
                 change.setType( Change.Type.Copied );
                 update( target, change );
             }
@@ -318,8 +319,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 "delete",
                 "Delete attachment?" ) {
             public void onClick( AjaxRequestTarget target ) {
-                doCommand( new DetachDocument(
-                        getAttachee(),
+                doCommand( new DetachDocument( User.current().getUsername(), getAttachee(),
                         attachablePath,
                         attachment ) );
                 if ( attachment.isPicture() ) {
@@ -416,7 +416,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                     } );
             // Only add non-redundant attachment.
             if ( attachment != null ) {
-                doCommand( new AttachDocument( mo, attachablePath, attachment ) );
+                doCommand( new AttachDocument( User.current().getUsername(), mo, attachablePath, attachment ) );
                 postProcess( attachment );
             }
         }
@@ -466,7 +466,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             try {
                 new URL( value );
                 Attachment attachment = new AttachmentImpl( value, getSelectedType(), getName() );
-                doCommand( new AttachDocument( mo, attachablePath, attachment ) );
+                doCommand( new AttachDocument( User.current().getUsername(), mo, attachablePath, attachment ) );
                 postProcess( attachment );
                 this.url = null;
                 this.name = "";

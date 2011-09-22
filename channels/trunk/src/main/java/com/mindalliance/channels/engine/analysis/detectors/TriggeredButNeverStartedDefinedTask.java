@@ -4,6 +4,7 @@ import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,32 +25,32 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( !part.hasDefaultTask() ) {
             if ( !part.isStartsWithSegment() ) {
                 if ( part.isTriggered() ) {
-                    boolean started = getQueryService().findIfPartStarted( part );
+                    boolean started = queryService.findIfPartStarted( part );
                     if ( !started ) {
-                        Issue issue = makeIssue( Issue.COMPLETENESS, part );
+                        Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
                         issue.setDescription( "This task is triggered but any flow that triggers it"
                                 + "  comes from a task that is itself never started." );
                         issue.setRemediation( "Make sure a triggering flow comes from a task that is started." );
-                        issue.setSeverity( getQueryService().computePartPriority( part ) );
+                        issue.setSeverity( queryService.computePartPriority( part ) );
                         issues.add( issue );
                     }
                 }
             } else {
-                boolean started = getQueryService().findIfSegmentStarted( part.getSegment() );
+                boolean started = queryService.findIfSegmentStarted( part.getSegment() );
                 if ( !started ) {
-                    Issue issue = makeIssue( Issue.COMPLETENESS, part );
+                    Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
                     issue.setDescription( "This task starts with the plan segment but no task"
                             + " is ever started that causes the plan segment to happen.");
                     issue.setRemediation( "Make sure the event phase of the segment can start " +
                             "(it is a co-event phase of an incident " +
                             "or the phase is started by a task that itself can start)" );
-                    issue.setSeverity( getQueryService().computePartPriority( part ) );
+                    issue.setSeverity( queryService.computePartPriority( part ) );
                     issues.add( issue );
                 }
             }

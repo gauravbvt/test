@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -31,13 +37,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 25, 2009
- * Time: 5:39:31 PM
- */
 public class EntityIssuesPanel extends AbstractIssueTablePanel {
 
     private static final int MAX_ROWS = 10;
@@ -45,15 +44,17 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
     /**
      * Whether to show waived issues.
      */
-    private boolean includeWaived = false;
+    private boolean includeWaived;
+
     /**
      * Whether to show issues of "contained" entities.
      */
-    private boolean includeContained = false;
+    private boolean includeContained;
+
     /**
      * Whether to show relevant issues from segments.
      */
-    private boolean includeFromSegments = false;
+    private boolean includeFromSegments;
 
     public EntityIssuesPanel( String id, IModel<ModelEntity> model ) {
         super( id, model, MAX_ROWS );
@@ -63,9 +64,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         return (ModelEntity) getModel().getObject();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<Issue> getIssues() {
         Set<ModelObject> scope = new HashSet<ModelObject>();
@@ -73,56 +72,48 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         ModelObject about = getAbout();
         final String issueType = getIssueType();
         Analyst analyst = getAnalyst();
-        if ( about != null ) {
-            scope.add( about );
-        } else {
+        if ( about == null ) {
             scope.add( getEntity() );
-            if ( includeFromSegments ) {
+            if ( includeFromSegments )
                 scope.addAll( findRelatedSegmentObjects( getEntity() ) );
-            }
+
             if ( includeContained ) {
                 if ( getEntity() instanceof Phase ) {
-                    for ( ModelObject containedModelObject :
-                            getQueryService().findAllModelObjectsIn( (Phase)getEntity()) ) {
+                    for ( ModelObject containedModelObject : getQueryService().findAllModelObjectsIn( (Phase) getEntity() ) )
                         scope.add( containedModelObject );
-                    }
                 } else {
                     for ( ModelEntity containedEntity : findContainedEntities() ) {
                         scope.add( containedEntity );
-                        if ( includeFromSegments ) {
+                        if ( includeFromSegments )
                             scope.addAll( findRelatedSegmentObjects( containedEntity ) );
-                        }
                     }
                 }
             }
-        }
-        for ( ModelObject mo : scope ) {
-            issues.addAll( analyst.listIssues( mo, true, includeWaived ) );
-        }
-        return (List<Issue>) CollectionUtils.select(
-                issues,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return ( issueType.equals( ALL )
-                                || ( (Issue) obj ).getType().equals( issueType ) );
-                    }
-                }
-        );
+        } else
+            scope.add( about );
+
+        for ( ModelObject mo : scope )
+            issues.addAll( analyst.listIssues( getQueryService(), mo, true, includeWaived ) );
+
+        return (List<Issue>) CollectionUtils.select( issues, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ( issueType.equals( ALL ) || ( (Issue) object ).getType().equals( issueType ) );
+            }
+        } );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected void addFilters() {
         // containment (for non-events only)
         WebMarkupContainer containmentContainer = new WebMarkupContainer( "containmentContainer" );
         containmentContainer.setOutputMarkupId( true );
         makeVisible( containmentContainer, !( getEntity() instanceof Event ) );
         addOrReplace( containmentContainer );
-        CheckBox includeContainedCheckBox = new CheckBox(
-                "includeContained",
-                new PropertyModel<Boolean>( this, "includeContained" ) );
+        CheckBox includeContainedCheckBox =
+                new CheckBox( "includeContained", new PropertyModel<Boolean>( this, "includeContained" ) );
         includeContainedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateIssuesTable( target );
             }
@@ -131,11 +122,11 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         containmentContainer.add( containmentLabel );
         containmentContainer.add( includeContainedCheckBox );
         // Including waived
-        CheckBox includeWaivedCheckBox = new CheckBox(
-                "includeWaived",
-                new PropertyModel<Boolean>( this, "includeWaived" ) );
+        CheckBox includeWaivedCheckBox =
+                new CheckBox( "includeWaived", new PropertyModel<Boolean>( this, "includeWaived" ) );
         includeWaivedCheckBox.setOutputMarkupId( true );
         includeWaivedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateIssuesTable( target );
             }
@@ -145,10 +136,10 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
         WebMarkupContainer inSegmentContainer = new WebMarkupContainer( "inSegmentContainer" );
         inSegmentContainer.setOutputMarkupId( true );
         addOrReplace( inSegmentContainer );
-        CheckBox includeFromSegments = new CheckBox(
-                "includeFromSegments",
-                new PropertyModel<Boolean>( this, "includeFromSegments" ) );
+        CheckBox includeFromSegments =
+                new CheckBox( "includeFromSegments", new PropertyModel<Boolean>( this, "includeFromSegments" ) );
         includeFromSegments.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateIssuesTable( target );
             }
@@ -160,26 +151,22 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
     private String getContainmentLabel() {
         ModelEntity entity = getEntity();
         if ( entity instanceof Actor ) {
-            return entity.isActual()
-                    ? "roles played by this agent"
-                    : "roles played by this type of agent";
+            return entity.isActual() ? "roles played by this agent" : "roles played by this type of agent";
         } else if ( entity instanceof Role ) {
-            return entity.isActual()
-                    ? "agents playing this role"
-                    : "agents playing this type of role";
+            return entity.isActual() ? "agents playing this role" : "agents playing this type of role";
         } else if ( entity instanceof Organization ) {
-            return entity.isActual()
-                    ? "agents and roles in this organization"
-                    : "agents and roles in this type of organization";
+            return entity.isActual() ?
+                   "agents and roles in this organization" :
+                   "agents and roles in this type of organization";
         } else if ( entity instanceof Place ) {
-            return entity.isActual()
-                    ? "anything located within this place"
-                    : "anything located within this type of place";
+            return entity.isActual() ?
+                   "anything located within this place" :
+                   "anything located within this type of place";
         } else if ( entity instanceof Event ) {
             return "";
         } else if ( entity instanceof Phase ) {
             return "anything within this phase";
-        }else if ( entity instanceof TransmissionMedium ) {
+        } else if ( entity instanceof TransmissionMedium ) {
             return "any transmission medium delegated to";
         } else {
             throw new IllegalStateException( "Can't display issue table for " + entity.getClass().getSimpleName() );
@@ -206,7 +193,7 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
             return new ArrayList<ModelEntity>();
         } else if ( entity instanceof Phase ) {
             return queryService.findAllEntitiesIn( (Phase) entity );
-        }else if ( entity instanceof TransmissionMedium ) {
+        } else if ( entity instanceof TransmissionMedium ) {
             return queryService.findAllEntitiesIn( (TransmissionMedium) entity );
         } else {
             throw new IllegalStateException( "Can't display issue table for " + entity.getClass().getSimpleName() );
@@ -216,7 +203,6 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
     private List<ModelObject> findRelatedSegmentObjects( ModelEntity entity ) {
         return getQueryService().findAllSegmentObjectsInvolving( entity );
     }
-
 
     public boolean isIncludeWaived() {
         return includeWaived;

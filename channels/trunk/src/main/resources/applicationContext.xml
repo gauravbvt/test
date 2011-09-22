@@ -77,13 +77,6 @@ CONFIGURATION NOTES:
         </property>
     </bean>
 
-    <bean id="queryService" class="com.mindalliance.channels.engine.query.DefaultQueryService">
-        <constructor-arg ref="planManager"/>
-        <constructor-arg ref="attachmentManager"/>
-        <constructor-arg ref="semanticMatcher"/>
-        <constructor-arg ref="userService"/>
-    </bean>
-
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
         <property name="algo" value="dot"/>
@@ -110,6 +103,22 @@ CONFIGURATION NOTES:
                   value="WEB-INF${file.separator}data${file.separator}wordnet-2${file.separator}dict"/>
         <property name="simIndex" value="WEB-INF${file.separator}data${file.separator}jwsl${file.separator}wn_index"/>
     </bean>
+
+    <bean id="commanderFactory" class="com.mindalliance.channels.core.command.CommanderFactoryImpl">
+        <property name="timeout" value="300"/>
+        <property name="commonListeners">
+            <list value-type="com.mindalliance.channels.core.command.CommandListener">
+                <ref bean="planningEventService"/>
+            </list>
+        </property>
+        <property name="presenceListeners">
+            <list value-type="com.mindalliance.channels.core.command.PresenceListener">
+                <ref bean="planningEventService"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="planServiceFactory" class="com.mindalliance.channels.engine.query.PlanServiceFactoryImpl" destroy-method="destroy"/>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
         <property name="resourceLoaderPath" value="/WEB-INF/templates"/>
@@ -218,28 +227,6 @@ CONFIGURATION NOTES:
     <!-- =========================== Prototypes -->
     <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory" scope="prototype">
         <property name="imageDirectory" value="WEB-INF${file.separator}images"/>
-    </bean>
-
-    <bean id="lockManager" class="com.mindalliance.channels.core.command.DefaultLockManager" scope="prototype"/>
-
-    <bean id="commander" class="com.mindalliance.channels.core.command.DefaultCommander" scope="prototype" autowire="no">
-        <property name="analyst" ref="analyst"/>
-        <property name="planManager" ref="planManager"/>
-        <property name="attachmentManager" ref="attachmentManager"/>
-        <property name="userService" ref="userService"/>
-        <property name="semanticMatcher" ref="semanticMatcher"/>
-        <property name="importExportFactory" ref="importExportFactory"/>
-        <property name="timeout" value="300"/>
-        <property name="presenceListeners">
-            <list value-type="com.mindalliance.channels.core.command.PresenceListener">
-                <ref bean="planningEventService"/>
-            </list>
-        </property>
-        <property name="commandListeners">
-            <list value-type="com.mindalliance.channels.core.command.CommandListener">
-                <ref bean="planningEventService"/>
-            </list>
-        </property>
     </bean>
 
     <!-- =========================== Transmission Media -->
@@ -422,7 +409,7 @@ CONFIGURATION NOTES:
     <bean id="plannerMessagingService" class="com.mindalliance.channels.social.DefaultPlannerMessagingService">
         <property name="databaseFactory" ref="databaseFactory"/>
         <property name="mailSender" ref="mailSender"/>
-        <property name="userService" ref="userService"/>
+        <property name="userDao" ref="userDao"/>
     </bean>
 
     <bean id="planningEventService" class="com.mindalliance.channels.social.DefaultPlanningEventService">

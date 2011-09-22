@@ -1,7 +1,14 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.HierarchyRelationship;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -19,62 +26,65 @@ import java.util.List;
 
 /**
  * Hierarchy diagram meta provider.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jul 6, 2009
- * Time: 4:07:33 PM
  */
 public class HierarchyMetaProvider extends AbstractMetaProvider {
 
     /**
-     * Font for node labels
+     * Font for node labels.
      */
     private static final String ENTITY_FONT = "Arial";
+
     /**
      * Font size for node labels.
      */
     private static final String ENTITY_FONT_SIZE = "10";
 
-    public HierarchyMetaProvider(
-            String outputFormat,
-            Resource imageDirectory,
-            Analyst analyst ) {
-        super( outputFormat, imageDirectory, analyst );
+    public HierarchyMetaProvider( String outputFormat, Resource imageDirectory, Analyst analyst,
+                                  QueryService queryService ) {
+        super( outputFormat, imageDirectory, analyst, queryService );
     }
 
+    @Override
     public Object getContext() {
         return getPlan();
     }
 
+    @Override
     public URLProvider getURLProvider() {
         return new URLProvider<Hierarchical, HierarchyRelationship>() {
 
+            @Override
             public String getGraphURL( Hierarchical vertex ) {
                 return null;
             }
 
+            @Override
             public String getVertexURL( Hierarchical hierarchical ) {
-                Object[] args = {0, hierarchical.getId()};
+                Object[] args = { 0, hierarchical.getId() };
                 return MessageFormat.format( VERTEX_URL_FORMAT, args );
             }
 
+            @Override
             public String getEdgeURL( HierarchyRelationship hierarchyRelationship ) {
                 return null;
             }
         };
     }
 
+    @Override
     public EdgeNameProvider getEdgeLabelProvider() {
         return new EdgeNameProvider<HierarchyRelationship>() {
+            @Override
             public String getEdgeName( HierarchyRelationship hierarchyRelationship ) {
                 return "";
             }
         };
     }
 
+    @Override
     public VertexNameProvider getVertexLabelProvider() {
         return new VertexNameProvider<Hierarchical>() {
+            @Override
             public String getVertexName( Hierarchical hierarchical ) {
                 String label = getIdentifiableLabel( hierarchical ).replaceAll( "\\|", "\\\\n" );
                 return sanitize( label );
@@ -82,27 +92,30 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
         };
     }
 
+    @Override
     public VertexNameProvider getVertexIDProvider() {
         return new VertexNameProvider<Hierarchical>() {
+            @Override
             public String getVertexName( Hierarchical hierarchical ) {
                 return "" + hierarchical.getId();
             }
         };
     }
 
+    @Override
     public DOTAttributeProvider getDOTAttributeProvider() {
         return new HierarchyDOTAttributeProvider();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getGraphOrientation() {
         // Hierarchies always displayed top down.
         return "TB";
     }
 
     private class HierarchyDOTAttributeProvider implements DOTAttributeProvider<Hierarchical, HierarchyRelationship> {
+
+        @Override
         public List<DOTAttribute> getGraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "rankdir", getGraphOrientation() ) );
@@ -116,13 +129,16 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             return list;
         }
 
+        @Override
         public List<DOTAttribute> getSubgraphAttributes( boolean highlighted ) {
             return DOTAttribute.emptyList();
         }
 
-        public List<DOTAttribute> getVertexAttributes( Hierarchical vertex, boolean highlighted ) {
+        @Override
+        public List<DOTAttribute> getVertexAttributes( QueryService queryService, Hierarchical vertex,
+                                                       boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), (ModelObject)vertex ) ) );
+            list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), (ModelObject) vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
             if ( highlighted ) {
                 list.add( new DOTAttribute( "shape", "box" ) );
@@ -133,16 +149,22 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             }
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-            if ( getAnalyst().hasUnwaivedIssues( (ModelObject) vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( getAnalyst().hasUnwaivedIssues( queryService,
+                                                 (ModelObject) vertex,
+                                                 Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
+            {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( (ModelObject) vertex,
-                        Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+                list.add( new DOTAttribute( "tooltip",
+                                            sanitize( getAnalyst().getIssuesSummary( queryService,
+                                                                                     (ModelObject) vertex,
+                                                                                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
             return list;
         }
 
-
-        public List<DOTAttribute> getEdgeAttributes( HierarchyRelationship edge, boolean highlighted ) {
+        @Override
+        public List<DOTAttribute> getEdgeAttributes( QueryService queryService, HierarchyRelationship edge,
+                                                     boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "none" ) );
             list.add( new DOTAttribute( "arrowtail", "open" ) );
@@ -172,7 +194,5 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             iconName = imagingService.findIconName( getPlan(), modelObject );
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
-
     }
-
 }

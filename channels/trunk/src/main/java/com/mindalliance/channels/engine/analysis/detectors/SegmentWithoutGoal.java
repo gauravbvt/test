@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,11 @@ public class SegmentWithoutGoal extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         if ( segment.getGoals().isEmpty() ) {
-            DetectedIssue issue = makeIssue( Issue.VALIDITY, segment );
+            DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, segment );
             issue.setSeverity( Level.Medium );
             issue.setDescription( "The plan segment does not have any goal." );
             issue.setRemediation( "Add a goal to the segment"

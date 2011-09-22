@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class PlaceInheritsDifferentStreetAddress extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Place place = (Place) modelObject;
         if ( place.getWithin() != null ) {
@@ -34,7 +35,7 @@ public class PlaceInheritsDifferentStreetAddress extends AbstractIssueDetector {
             if ( streetAddress != null && !streetAddress.isEmpty()
                     && withinAddress != null && !withinAddress.isEmpty()
                     && !streetAddress.equals( withinAddress ) ) {
-                Issue issue = makeIssue( Issue.VALIDITY, place );
+                Issue issue = makeIssue( queryService, Issue.VALIDITY, place );
                 issue.setSeverity( Level.Low );
                 issue.setDescription( place.getName()
                         + " is within a place with a different address." );

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
@@ -22,21 +28,13 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Plan organizatons panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Apr 6, 2010
- * Time: 2:44:16 PM
+ * Plan organizations panel.
  */
 public class PlanOrganizationsPanel extends AbstractCommandablePanel {
 
     private static final String PREFIX_DOM_IDENTIFIER = ".entities";
 
-    public PlanOrganizationsPanel(
-            String id,
-            IModel<? extends Identifiable> model,
-            Set<Long> expansions ) {
+    public PlanOrganizationsPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
     }
@@ -47,19 +45,16 @@ public class PlanOrganizationsPanel extends AbstractCommandablePanel {
         super.redisplay( target );
     }
 
-
-
     private void init() {
         addGeomapLink();
         addTabPanel();
     }
 
     private void addGeomapLink() {
-        GeomapLinkPanel geomapLink = new GeomapLinkPanel(
-                "geomapLink",
-                new Model<String>( "Organizations with known locations" ),
-                getActualOrganizations(),
-                new Model<String>( "Locate organizations on a map" ) );
+        GeomapLinkPanel geomapLink = new GeomapLinkPanel( "geomapLink",
+                                                          new Model<String>( "Organizations with known locations" ),
+                                                          getActualOrganizations(),
+                                                          new Model<String>( "Locate organizations on a map" ) );
         geomapLink.setOutputMarkupId( true );
         makeVisible( geomapLink, !getActualOrganizations().isEmpty() );
         addOrReplace( geomapLink );
@@ -75,20 +70,16 @@ public class PlanOrganizationsPanel extends AbstractCommandablePanel {
         List<ITab> tabs = new ArrayList<ITab>();
         tabs.add( new AbstractTab( new Model<String>( "Scope" ) ) {
             public Panel getPanel( String id ) {
-                return new PlanScopePanel(
-                        id,
-                        new Model<Plan>( getPlan() ),
-                        getExpansions() );
+                return new PlanScopePanel( id, new Model<Plan>( getPlan() ), getExpansions() );
             }
         } );
         tabs.add( new AbstractTab( new Model<String>( "Network" ) ) {
             public Panel getPanel( String id ) {
-                return new EntitiesPanel<Organization>(
-                        id,
-                        Organization.class,
-                        null,
-                        getExpansions(),
-                        PREFIX_DOM_IDENTIFIER );
+                return new EntitiesPanel<Organization>( id,
+                                                        Organization.class,
+                                                        null,
+                                                        getExpansions(),
+                                                        PREFIX_DOM_IDENTIFIER );
             }
         } );
         return tabs;
@@ -101,14 +92,12 @@ public class PlanOrganizationsPanel extends AbstractCommandablePanel {
      */
     @SuppressWarnings( "unchecked" )
     public List<Organization> getActualOrganizations() {
-        return (List<Organization>) CollectionUtils.select(
-                getQueryService().listActualEntities( Organization.class ),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return !( (Organization) object ).isUnknown();
-                    }
-                }
-        );
+        return (List<Organization>) CollectionUtils.select( getQueryService().listActualEntities( Organization.class ),
+                                                            new Predicate() {
+                                                                public boolean evaluate( Object object ) {
+                                                                    return !( (Organization) object ).isUnknown();
+                                                                }
+                                                            } );
     }
 
     /**
@@ -123,12 +112,12 @@ public class PlanOrganizationsPanel extends AbstractCommandablePanel {
             for ( Organization other : orgs ) {
                 if ( org != other ) {
                     EntityRelationship<Organization> sendRel =
-                            getAnalyst().findEntityRelationship( org, other );
-                    if ( sendRel != null ) orgRels.add( sendRel );
+                            getAnalyst().findEntityRelationship( getQueryService(), org, other );
+                    if ( sendRel != null )
+                        orgRels.add( sendRel );
                 }
             }
         }
         return orgRels;
     }
-
 }

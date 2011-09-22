@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -32,12 +33,12 @@ public class InconsistentImpactOnSourcePart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow commitment = (Flow) modelObject;
         for ( Flow similar : getSimilarFlows( commitment ) ) {
             if ( similar.isTriggeringToSource() != commitment.isTriggeringToSource() ) {
-                DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
+                DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, commitment );
                 issue.setDescription( "'"
                         + commitment.getReceiveTitle()
                         + "' triggers '"
@@ -49,7 +50,7 @@ public class InconsistentImpactOnSourcePart extends AbstractIssueDetector {
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             } else if ( similar.isTerminatingToSource() != commitment.isTerminatingToSource() ) {
-                DetectedIssue issue = makeIssue( Issue.VALIDITY, commitment );
+                DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, commitment );
                 issue.setDescription( "'"
                         + commitment.getReceiveTitle()
                         + "' terminates '"

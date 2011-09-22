@@ -1,10 +1,8 @@
 package com.mindalliance.channels.pages.procedures;
 
 import com.mindalliance.channels.core.AttachmentManager;
-import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
-import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
@@ -20,12 +18,12 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.engine.nlp.SemanticMatcher;
+import com.mindalliance.channels.engine.query.Assignments;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.engine.query.Assignments;
-import com.mindalliance.channels.engine.query.PlanService;
-import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -103,16 +101,13 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     private User user;
 
     @SpringBean
-    private PlanManager planManager;
-
-    @SpringBean
     private AttachmentManager attachmentManager;
 
     @SpringBean
     private ImagingService imagingService;
 
     @SpringBean
-    private UserService userService;
+    private UserDao userDao;
 
     @SpringBean
     private SemanticMatcher semanticMatcher;
@@ -253,11 +248,6 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
                                                                                               this,
                                                                                               "plans" ) )
                                                                     .add( newOnChange( "onchange" ) ) );
-    }
-
-    @Override
-    public PlanManager getPlanManager() {
-        return planManager;
     }
 
     /**
@@ -578,7 +568,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     }
 
     @Override
-    public PlanService getPlanService() {
-        return new PlanService( planManager, semanticMatcher, userService, getPlan(), attachmentManager );
+    public QueryService getPlanService() {
+        return getCommanderFactory().getCommander( getPlan() ).getQueryService();
     }
 }

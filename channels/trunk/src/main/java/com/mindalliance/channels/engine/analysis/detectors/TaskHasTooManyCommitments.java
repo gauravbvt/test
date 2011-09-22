@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.model.Actor;
@@ -22,42 +28,34 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Agents who are neither systems nor archetypes and who are assigned to a task
- * have commitments with too many other agents.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Oct 1, 2010
- * Time: 3:04:50 PM
+ * Agents who are neither systems nor archetypes and who are assigned to a task have commitments with too many other
+ * agents.
  */
 public class TaskHasTooManyCommitments extends AbstractIssueDetector {
 
-    public static int TOO_MANY = 10;
+    private static final int TOO_MANY = 10;
 
     public TaskHasTooManyCommitments() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    @Override
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         int n;
         // Send commitments
-        List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
+        List<Assignment> assignments = queryService.findAllAssignments( part, false );
         if ( !assignments.isEmpty() ) {
             if ( !assignments.isEmpty() && !areAllSystemsOrArchetypes( assignments )
-                    && ( n = countDifferentBeneficiaries( part, assignments ) ) > TOO_MANY ) {
-                Issue issue = makeIssue( Issue.ROBUSTNESS, part );
-                issue.setDescription( "Agents executing task \""
-                        + part.getTitle()
-                        + "\" would have sharing commitments with too many different agents ("
-                        + n
-                        + ")." );
+                 && ( n = countDifferentBeneficiaries( part, assignments, queryService ) ) > TOO_MANY )
+            {
+                Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
+                issue.setDescription( "Agents executing task \"" + part.getTitle()
+                                      + "\" would have sharing commitments with too many different agents (" + n
+                                      + ")." );
                 issue.setRemediation( "Remove \"send\" sharing flows"
-                        + "\nor add intermediates to spread the outgoing communication load." );
-                issue.setSeverity( this.computeTaskFailureSeverity( part ) );
+                                      + "\nor add intermediates to spread the outgoing communication load." );
+                issue.setSeverity( computeTaskFailureSeverity( queryService, part ) );
                 issues.add( issue );
             }
         }
@@ -65,33 +63,28 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
     }
 
     // No assignee is neither a system nor an archetype.
-    private boolean areAllSystemsOrArchetypes( List<Assignment> assignments ) {
-        return !CollectionUtils.exists(
-                assignments,
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        Assignment assignment = (Assignment) object;
-                        ModelEntity entity = assignment.getKnownAssignee();
-                        return entity instanceof Organization
-                                || ( entity instanceof Actor
-                                && !( ( (Actor) entity ).isSystem() || ( (Actor) entity ).isArchetype() ) );
-                    }
-                }
-        );
+    private static boolean areAllSystemsOrArchetypes( List<Assignment> assignments ) {
+        return !CollectionUtils.exists( assignments, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                Assignment assignment = (Assignment) object;
+                ModelEntity entity = assignment.getKnownAssignee();
+                return entity instanceof Organization || entity instanceof Actor && !( (Actor) entity ).isSystem()
+                                                         && !( (Actor) entity ).isArchetype();
+            }
+        } );
     }
 
     @SuppressWarnings( "unchecked" )
-    private int countDifferentBeneficiaries( Part part, List<Assignment> assignments ) {
-        final List<ModelEntity> assignees = (List<ModelEntity>) CollectionUtils.collect(
-                assignments,
-                new Transformer() {
+    private static int countDifferentBeneficiaries( Part part, List<Assignment> assignments, QueryService queryService ) {
+        final List<ModelEntity> assignees =
+                (List<ModelEntity>) CollectionUtils.collect( assignments, new Transformer() {
+                    @Override
                     public Object transform( Object input ) {
                         return ( (Assignment) input ).getKnownAssignee();
                     }
-                }
-        );
+                } );
         Set<ModelEntity> beneficiaries = new HashSet<ModelEntity>();
-        QueryService queryService = getQueryService();
         Assignments a = queryService.getAssignments( false );
         for ( Flow sharingSend : part.getAllSharingSends() ) {
             List<Commitment> commitments = queryService.findAllCommitments( sharingSend, false, a );
@@ -103,15 +96,12 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
                         beneficiaries.add( assignee );
                 }
             } else {
-                Commitment commitment = (Commitment) CollectionUtils.find(
-                        commitments,
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return !assignees.contains( ( (Commitment) object ).getBeneficiary().getKnownAssignee() );
-                            }
-                        }
-                );
+                Commitment commitment = (Commitment) CollectionUtils.find( commitments, new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !assignees.contains( ( (Commitment) object ).getBeneficiary().getKnownAssignee() );
+                    }
+                } );
                 if ( commitment != null )
                     beneficiaries.add( commitment.getBeneficiary().getKnownAssignee() );
             }
@@ -119,30 +109,22 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
         return beneficiaries.size();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Part;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getTestedProperty() {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getKindLabel() {
         return "Agents assigned to task have too many sharing commitments";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canBeWaived() {
         return true;
     }

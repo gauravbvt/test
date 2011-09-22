@@ -156,7 +156,7 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
         return assignments.getAssignments().iterator().next();
     }
 
-    public PlanService getPlanService() {
+    public QueryService getPlanService() {
         return (PlanService)getQueryService();
     }
 

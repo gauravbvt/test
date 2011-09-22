@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * ...
  */
-public interface UserService {
+public interface UserDao {
 
     @Secured( "ROLE_ADMIN" )
     User createUser( String name ) throws DuplicateKeyException;

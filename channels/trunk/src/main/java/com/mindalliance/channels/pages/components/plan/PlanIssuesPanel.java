@@ -208,26 +208,17 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
      * @return a list of issues
      */
     public List<Issue> getIssues() {
-        List<Issue> issues;
         // Get issues by about and waived
         ModelObject about = getAbout();
-        if ( about != null ) {
-            issues = getAnalyst().listIssues( about, true, includeWaived );
-        } else {
-            if ( includeWaived ) {
-                issues = getAnalyst().findAllIssues();
-            } else {
-                issues = getAnalyst().findAllUnwaivedIssues();
-            }
-        }
-        // filter by type
+        List<Issue> issues = about != null ? getAnalyst().listIssues( getQueryService(), about, true, includeWaived ) :
+                             includeWaived ? getAnalyst().findAllIssues( getQueryService() )
+                                           : getAnalyst().findAllUnwaivedIssues( getQueryService() );
+
         issues = filterByType( issues, getIssueType() );
-        // filter by segment
         issues = filterBySegment( issues );
-        // filter by severity
         issues = filterBySeverity( issues );
-        // filter by kind
         issues = filterByKind( issues );
+
         return issues;
     }
 

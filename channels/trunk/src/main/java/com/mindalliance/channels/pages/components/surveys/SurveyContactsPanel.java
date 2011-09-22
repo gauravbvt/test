@@ -140,7 +140,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
         );
         try {
             if ( getSurvey().isLaunched() ) {
-                surveyService.inviteContacts( getSurvey(), usernames, getPlan() );
+                surveyService.inviteContacts( getQueryService(), getSurvey(), usernames, getPlan() );
             }
         } catch ( SurveyException e ) {
             e.printStackTrace();
@@ -219,7 +219,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
                     contacts,
                     TransformerUtils.invokerTransformer( "getUsername" ) );
             List<String> others = (List<String>) CollectionUtils.subtract(
-                    queryService.getUserService().getUsernames( getPlan().getUri() ),
+                    queryService.getUserDao().getUsernames( getPlan().getUri() ),
                     surveyed );
             for ( String other : others ) {
                 contacts.add( new Contact( other ) );

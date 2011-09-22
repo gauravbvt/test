@@ -156,7 +156,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
                     if ( surveyContactsPanel instanceof SurveyContactsPanel ) {
                         ( (SurveyContactsPanel) surveyContactsPanel ).updateContacts( target );
                     }
-                    surveyService.launchSurvey( survey, getPlan() );
+                    surveyService.launchSurvey( survey, getPlan(), getQueryService() );
                 } catch ( SurveyException e ) {
                     LOG.warn("Failed lo launch survey", e);
                     target.prependJavascript( "alert(\"Oops! Failed to launch survey.\")" );

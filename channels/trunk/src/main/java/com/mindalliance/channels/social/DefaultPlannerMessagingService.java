@@ -1,9 +1,16 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.social;
 
 import com.mindalliance.channels.core.PersistentObjectDao;
 import com.mindalliance.channels.core.PersistentObjectDaoFactory;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.model.Plan;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,13 +34,13 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
      * The logger.
      */
     private final Logger LOG = LoggerFactory.getLogger( DefaultPlannerMessagingService.class );
-    private PersistentObjectDaoFactory databaseFactory;
     /**
      * Mail sender.
      */
     private MailSender mailSender;
-    private UserService userService;
-    private Map<String, Date> whenLastChanged;
+    private UserDao userDao;
+    private PersistentObjectDaoFactory databaseFactory;
+    private Map<String,Date> whenLastChanged;
 
     //-------------------------------
     public DefaultPlannerMessagingService() {
@@ -54,13 +61,13 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         String text = "";
         User currentUser = User.current();
         String summary = StringUtils.abbreviate( message.getText(), SUMMARY_MAX );
-        if ( username == null || username.equals( PLANNERS ) ) {
-            recipients = userService.getPlanners( urn );
-        } else if ( username.equals( USERS ) ) {
-            recipients = userService.getUsers( urn );
-        } else {
-            recipients.add( userService.getUserNamed( username ) );
-        }
+        if ( username == null || username.equals( PLANNERS ) )
+            recipients = userDao.getPlanners( urn );
+        else if ( username.equals( USERS ) )
+            recipients = userDao.getUsers( urn );
+        else
+            recipients.add( userDao.getUserNamed( username ) );
+
         try {
             Date now = new Date();
             for ( User recipient : recipients ) {
@@ -73,9 +80,9 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                 email.setFrom( currentUser.getEmail() );
                 email.setReplyTo( currentUser.getEmail() );
                 String aboutString = message.getAboutString();
-                if ( !aboutString.isEmpty() ) {
+                if ( !aboutString.isEmpty() )
                     text = "About " + aboutString + "\n\n";
-                }
+
                 text += message.getText();
                 text += "\n\n -- Message first sent in Channels " + getLongTimeElapsedString( message.getDate(), now )
                         + " --";
@@ -154,7 +161,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
     }
 
     protected User getUser( String username ) {
-        return userService.getUserNamed( username );
+        return userDao.getUserNamed( username );
     }
 
     @Override
@@ -200,12 +207,12 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         this.mailSender = mailSender;
     }
 
-    public UserService getUserService() {
-        return userService;
+    public UserDao getUserDao() {
+        return userDao;
     }
 
-    public void setUserService( UserService userService ) {
-        this.userService = userService;
+    public void setUserDao( UserDao userDao ) {
+        this.userDao = userDao;
     }
 
     public void setDatabaseFactory( PersistentObjectDaoFactory databaseFactory ) {

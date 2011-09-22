@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,16 +43,18 @@ public class PartWithInvalidTiming extends AbstractIssueDetector {
     /**
      * Do the work of detecting issues about the model object.
      *
+     *
+     * @param queryService
      * @param modelObject -- the model object being analyzed
      * @return -- a list of issues
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.isRepeating() ) {
             if ( part.isSelfTerminating() ) {
                 if ( part.getCompletionTime().compareTo( part.getRepeatsEvery() ) > 0 ) {
-                   DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject );
+                   DetectedIssue issue = makeIssue( queryService, DetectedIssue.VALIDITY, modelObject );
                     issue.setDescription( "The task repeats before it usually completes." );
                     issue.setRemediation( "Make the task complete sooner\nor wait longer before it repeats." );
                     issue.setSeverity( Level.Low );
@@ -59,7 +62,7 @@ public class PartWithInvalidTiming extends AbstractIssueDetector {
                 }
             }
             else {
-                DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject );
+                DetectedIssue issue = makeIssue( queryService, DetectedIssue.VALIDITY, modelObject );
                  issue.setDescription( "The task repeats but may not complete beforehand." );
                  issue.setRemediation( "Make the task non-repeating\nor set a completion time for the task." );
                  issue.setSeverity( Level.Low );

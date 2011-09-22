@@ -2,8 +2,8 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.dao.UserInfo;
-import com.mindalliance.channels.core.dao.UserService;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -47,7 +47,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private PlannerMessagingService plannerMessagingService;
 
     @SpringBean
-    private UserService userService;
+    private UserDao userDao;
 
     private static final int A_FEW = 5;
     private static final int MORE = 5;
@@ -261,7 +261,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
 
     private List<User> getCandidateRecipients() {
         List<User> recipients = new ArrayList<User>();
-        for ( User user : userService.getPlanners( getPlan().getUri() ) ) {
+        for ( User user : userDao.getPlanners( getPlan().getUri() ) ) {
             if ( !user.getUsername().equals( User.current().getUsername() ) ) {
                 recipients.add( user );
             }
@@ -411,7 +411,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     }
 
     public void newMessage( String username, ModelObject about, AjaxRequestTarget target ) {
-        setNewMessageRecipient( userService.getUserNamed( username ) );
+        setNewMessageRecipient( userDao.getUserNamed( username ) );
         setNewMessageAbout( about );
         addNewMessage();
         refresh( target, new Change( Change.Type.Communicated ) );

@@ -4,6 +4,7 @@
 package com.mindalliance.channels.core.dao;
 
 import com.mindalliance.channels.core.dao.PlanDefinition.Version;
+import com.mindalliance.channels.core.model.Plan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -376,8 +377,8 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
     public boolean isNewPlanUriValid( String newUri ) {
         if ( get( newUri ) != null ) return false;
         for ( PlanDefinition definition : definitions.values() ) {
-            if ( PlanDefinition.sanitize( definition.getUri() )
-                    .equals( PlanDefinition.sanitize( newUri ) ) )
+            if ( Plan.sanitize( definition.getUri() )
+                    .equals( Plan.sanitize( newUri ) ) )
                 return false;
         }
         return true;

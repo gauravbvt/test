@@ -1,46 +1,40 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.List;
 
 /**
  * Find all issues entered by a user about a model object.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jan 23, 2009
- * Time: 3:20:52 PM
  */
 public class FromUser extends AbstractIssueDetector {
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean appliesTo( ModelObject modelObject ) {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getTestedProperty() {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getKindLabel() {
         return "User defined";
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
-        return getQueryService().findAllUserIssues( modelObject );
+    @Override
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
+        return queryService.findAllUserIssues( modelObject );
     }
 }

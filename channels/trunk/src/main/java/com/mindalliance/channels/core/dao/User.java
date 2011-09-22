@@ -87,14 +87,17 @@ public class User implements UserDetails {
         return userInfo.getFullName();
     }
 
+    @Override
     public String getPassword() {
         return userInfo.getPassword();
     }
 
+    @Override
     public String getUsername() {
         return userInfo.getUsername();
     }
 
+    @Override
     public boolean isEnabled() {
         return userInfo.isEnabled();
     }
@@ -104,10 +107,11 @@ public class User implements UserDetails {
     }
 
     /**
-     * Returns the authorities granted to the user. Cannot return <code>null</code>.
+     * Returns the authorities granted to the user. Cannot return {@code null}.
      *
-     * @return the authorities (never <code>null</code>)
+     * @return the authorities (never {@code null})
      */
+    @Override
     public Collection<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> result = new ArrayList<GrantedAuthority>();
         if ( userInfo.isAdmin() )
@@ -125,9 +129,10 @@ public class User implements UserDetails {
     /**
      * Indicates whether the user's account has expired. An expired account cannot be authenticated.
      *
-     * @return <code>true</code> if the user's account is valid (ie non-expired), <code>false</code>
+     * @return <code>true</code> if the user's account is valid (ie non-expired), {@code false}
      *         if no longer valid (ie expired)
      */
+    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -135,8 +140,9 @@ public class User implements UserDetails {
     /**
      * Indicates whether the user is locked or unlocked. A locked user cannot be authenticated.
      *
-     * @return <code>true</code> if the user is not locked, <code>false</code> otherwise
+     * @return <code>true</code> if the user is not locked, {@code false} otherwise
      */
+    @Override
     public boolean isAccountNonLocked() {
         return true;
     }
@@ -145,9 +151,10 @@ public class User implements UserDetails {
      * Indicates whether the user's credentials (password) has expired. Expired credentials prevent
      * authentication.
      *
-     * @return <code>true</code> if the user's credentials are valid (ie non-expired),
-     *         <code>false</code> if no longer valid (ie expired)
+     * @return {@code true} if the user's credentials are valid (ie non-expired),
+     *         {@code false} if no longer valid (ie expired)
      */
+    @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }

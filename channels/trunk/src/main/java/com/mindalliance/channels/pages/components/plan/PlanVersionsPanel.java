@@ -5,7 +5,7 @@ import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.commands.AddProducer;
 import com.mindalliance.channels.core.command.commands.RemoveProducer;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.PlanPage;
@@ -54,7 +54,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
     private SimpleDateFormat dateFormat;
 
     @SpringBean
-    private UserService userService;
+    private UserDao userDao;
 
     public PlanVersionsPanel(
             String id,
@@ -166,7 +166,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
 
     public List<Vote> getVotes() {
         List<Vote> votes = new ArrayList<Vote>();
-        for ( User planner : userService.getPlanners( getPlan().getUri() ) )
+        for ( User planner : userDao.getPlanners( getPlan().getUri() ) )
             votes.add( new Vote( planner ) );
 
         return votes;
@@ -224,9 +224,9 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
         public void setInFavor( boolean inFavor ) {
             Command command;
             if ( inFavor ) {
-                command = new AddProducer( planner.getUsername() );
+                command = new AddProducer( User.current().getUsername(), planner.getUsername() );
             } else {
-                command = new RemoveProducer( planner.getUsername() );
+                command = new RemoveProducer( User.current().getUsername(), getPlan(), planner.getUsername() );
             }
             change = getCommander().doCommand( command );
         }

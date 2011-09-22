@@ -3,20 +3,18 @@
 
 package com.mindalliance.channels.core.command;
 
-import org.mockito.Mock;
-import org.mockito.internal.verification.Times;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.engine.query.QueryService;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.internal.verification.Times;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Remaining tests for coverage.
@@ -32,8 +30,7 @@ public class TestDefaultLockManager {
     @Before
     public void setUp() {
         initMocks( this );
-        lockManager = new DefaultLockManager();
-        lockManager.setQueryService( queryService );
+        lockManager = new DefaultLockManager( queryService );
     }
 
     @Test

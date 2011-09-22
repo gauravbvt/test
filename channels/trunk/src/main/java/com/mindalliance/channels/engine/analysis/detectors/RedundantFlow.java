@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -58,7 +59,7 @@ public class RedundantFlow extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         Iterator<Flow> otherFlows;
@@ -73,7 +74,7 @@ public class RedundantFlow extends AbstractIssueDetector {
             redundant = ( otherFlow != flow ) && equivalent( flow, otherFlow );
         }
         if ( redundant ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, flow );
+            DetectedIssue issue = makeIssue( queryService, DetectedIssue.COMPLETENESS, flow );
             issue.setDescription( "This " + flowKind( flow ) + " is redundant." );
             issue.setRemediation( "Change the name of information transmitted\nor "
                     + ( flow.isSharing() ? "break up" : "remove" )

@@ -1,12 +1,15 @@
-// Copyright (C) 2010 Mind-Alliance Systems LLC.
-// All rights reserved.
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
 
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
-import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.PlanDefinition;
@@ -18,9 +21,11 @@ import com.mindalliance.channels.core.model.Plan;
 public class PlanSetClient extends AbstractCommand {
 
     public PlanSetClient() {
+        super( "daemon" );
     }
 
-    public PlanSetClient( Plan plan, String newClient ) {
+    public PlanSetClient( String userName, Plan plan, String newClient ) {
+        super( userName );
         needLockOn( plan );
         set( "uri", plan.getUri() );
         set( "old", plan.getClient() );
@@ -32,6 +37,7 @@ public class PlanSetClient extends AbstractCommand {
      *
      * @return a string
      */
+    @Override
     public String getName() {
         return "set the persistent client information";
     }
@@ -41,16 +47,15 @@ public class PlanSetClient extends AbstractCommand {
      *
      * @param commander a commander executing the command
      * @return change caused
-     * @throws CommandException if execution fails
      */
+    @Override
     public Change execute( Commander commander ) {
-        DefinitionManager definitionManager =
-                commander.getQueryService().getPlanManager().getDefinitionManager();
+        DefinitionManager definitionManager = commander.getQueryService().getPlanManager().getDefinitionManager();
 
         PlanDefinition planDefinition = definitionManager.get( (String) get( "uri" ) );
         planDefinition.setClient( (String) get( "new" ) );
 
-        return new Change( Change.Type.Updated, "plan.properties" );
+        return new Change( Type.Updated, "plan.properties" );
     }
 
     /**
@@ -58,6 +63,7 @@ public class PlanSetClient extends AbstractCommand {
      *
      * @return a boolean
      */
+    @Override
     public boolean isUndoable() {
         return true;
     }
@@ -67,10 +73,9 @@ public class PlanSetClient extends AbstractCommand {
      *
      * @param commander a a commander
      * @return a command
-     * @throws CommandException if failed to make undo command
      */
     @Override
     protected Command makeUndoCommand( Commander commander ) {
-        return new PlanSetClient( commander.getPlan(), (String) get( "old" ) );
+        return new PlanSetClient( getUserName(), commander.getPlan(), (String) get( "old" ) );
     }
 }

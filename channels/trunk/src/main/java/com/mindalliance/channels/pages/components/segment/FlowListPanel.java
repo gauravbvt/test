@@ -1,14 +1,20 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.commands.AddCapability;
 import com.mindalliance.channels.core.command.commands.AddNeed;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -28,7 +34,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -42,9 +47,6 @@ import java.util.Set;
  * A list of flows from a node, either receives or sends.
  */
 public class FlowListPanel extends AbstractCommandablePanel {
-
-    @SpringBean
-    QueryService queryService;
 
     private ListView<Flow> flowPanelsListView;
     /**
@@ -64,11 +66,11 @@ public class FlowListPanel extends AbstractCommandablePanel {
     /**
      * The currently selected flow in the list.
      */
-    private Flow selectedFlow = null;
+    private Flow selectedFlow;
     /**
      * Whether selected flow was updated.
      */
-    private boolean selectedFlowUpdated = false;
+    private boolean selectedFlowUpdated;
     /**
      * Show menu for selected flow, if any.
      */
@@ -109,8 +111,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 Part n = (Part) getNode();
                 Command command = isSends()
-                        ? new AddCapability( n )
-                        : new AddNeed( n );
+                        ? new AddCapability( User.current().getUsername(), n )
+                        : new AddNeed( User.current().getUsername(), n );
                 Change change = doCommand( command );
                 update( target, change );
             }
@@ -216,7 +218,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
      */
     private String getPriorityCssClass( Flow flow ) {
         if ( flow.isSharing() ) {
-            Level priority = queryService.computeSharingPriority( flow );
+            Level priority = getQueryService().computeSharingPriority( flow );
             return priority.getNegativeLabel().toLowerCase();
         } else
             return "none";
@@ -365,8 +367,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
                 if ( other.isSharing() && !flow.isSharing() ) return 1;
                 int comparison = 0;
                 if ( flow.isSharing() ) {
-                    Level impact = queryService.computeSharingPriority( flow );
-                    Level otherImpact = queryService.computeSharingPriority( other );
+                    Level impact = getQueryService().computeSharingPriority( flow );
+                    Level otherImpact = getQueryService().computeSharingPriority( other );
                     // reverse order
                     comparison = otherImpact.compareTo( impact );
                 }

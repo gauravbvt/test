@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.AttachmentManager;
@@ -6,7 +12,6 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.slf4j.Logger;
@@ -16,85 +21,53 @@ import java.util.List;
 
 /**
  * Abstract IssueDetector class.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Nov 26, 2008
- * Time: 1:39:47 PM
  */
 public abstract class AbstractIssueDetector implements IssueDetector {
+
     /**
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractIssueDetector.class );
-    /**
-     * A query service.
-     */
-    private QueryService queryService;
+
     /**
      * An analyst.
      */
     private Analyst analyst;
+
     /**
      * A geo service.
      */
     private GeoService geoService;
+
     /**
      * Attachment manager.
      */
     private AttachmentManager attachmentManager;
 
-    /**
-     * {@inheritDoc}
-     */
-    public abstract List<Issue> detectIssues( ModelObject modelObject );
+    @Override
+    public abstract List<Issue> detectIssues( QueryService queryService, ModelObject modelObject );
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public abstract boolean appliesTo( ModelObject modelObject );
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public abstract String getTestedProperty();
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getKind() {
         return getClass().getSimpleName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canBeWaived() {
         // default
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean appliesTo( ModelObject modelObject, String property ) {
-        return appliesTo( modelObject )
-                && property != null
-                && isPropertySpecific()
-                && property.equals( getTestedProperty() );
-    }
-
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
-    }
-
-    /**
-     * Get query service.
-     *
-     * @return a query service
-     */
-    protected QueryService getQueryService() {
-        return queryService;
+        return appliesTo( modelObject ) && property != null && isPropertySpecific() && property.equals(
+                getTestedProperty() );
     }
 
     public Analyst getAnalyst() {
@@ -124,17 +97,16 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     /**
      * Make detected issue.
      *
-     * @param type  a string
+     * @param queryService the query service
+     * @param type a string
      * @param about a model object
      * @return a detected issue
      */
-    protected DetectedIssue makeIssue( String type, ModelObject about ) {
+    protected DetectedIssue makeIssue( QueryService queryService, String type, ModelObject about ) {
         DetectedIssue issue = new DetectedIssue( type, about );
-        initializeDetectedIssue( issue );
+        initializeDetectedIssue( queryService, issue );
         if ( !about.isWaived( getKind() ) )
-            LOG.debug( "Detected issue: "
-                    + getKind()
-                    + " on " + issue.getAbout() + "(" + issue.getAbout().getId() + ")" );
+            LOG.debug( "Detected issue: " + getKind() + " on " + about + '(' + about.getId() + ')' );
         return issue;
     }
 
@@ -143,64 +115,58 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     /**
      * Make detected issue.
      *
-     * @param type     a string
-     * @param about    a model object
+     * @param queryService the query service
+     * @param type a string
+     * @param about a model object
      * @param property a string
      * @return a detected issue
      */
-    protected DetectedIssue makeIssue( String type, ModelObject about, String property ) {
+    protected DetectedIssue makeIssue( QueryService queryService, String type, ModelObject about, String property ) {
         DetectedIssue issue = new DetectedIssue( type, about, property );
-        initializeDetectedIssue( issue );
+        initializeDetectedIssue( queryService, issue );
         if ( !about.isWaived( getKind() ) )
-            LOG.debug( "Detected issue: "
-                    + getKind()
-                    + " on " + issue.getAbout() + "(" + issue.getAbout().getId() + ")" + ":" + issue.getProperty() );
+            LOG.debug( "Detected issue: " + getKind() + " on " + about + '(' + about.getId() + ')' + ':'
+                       + issue.getProperty() );
         return issue;
     }
 
-    private void initializeDetectedIssue( DetectedIssue issue ) {
+    private void initializeDetectedIssue( QueryService queryService, DetectedIssue issue ) {
         issue.setKind( getKind() );
         issue.setDetectorLabel( getKindLabel() );
         issue.setCanBeWaived( canBeWaived() );
-        issue.setDefaultRemediators( getDefaultRemediators() );
+        issue.setDefaultRemediators( queryService.findAllPlanners() );
     }
 
-    private List<String> getDefaultRemediators() {
-        return queryService.findAllPlanners();
-    }
-
-    /**
-     * Get current plan.
-     *
-     * @return a plan
-     */
-    protected Plan getPlan() {
-        return queryService.getPlan();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isPropertySpecific() {
         return getTestedProperty() != null;
     }
 
     /**
      * Get the severity of failing a sharing flow.
+     *
+     * @param queryService for queries
      * @param flow a sharing flow
      * @return an issue level
      */
-    protected Level computeSharingFailureSeverity( Flow flow ) {
-        return getQueryService().computeSharingPriority( flow );
+    protected static Level computeSharingFailureSeverity( QueryService queryService, Flow flow ) {
+        return queryService.computeSharingPriority( flow );
     }
 
     /**
      * Get the severity of failing a task.
+     *
+     * @param queryService for queries
      * @param part a part
      * @return an issue level
      */
-    protected Level computeTaskFailureSeverity( Part part ) {
-        return getQueryService().computePartPriority( part );
+    protected static Level computeTaskFailureSeverity( QueryService queryService, Part part ) {
+        return queryService.computePartPriority( part );
     }
 
+    @Override
+    public boolean isApplicable( ModelObject modelObject, boolean waived, boolean propertySpecific ) {
+        return appliesTo( modelObject ) && modelObject.isWaived( getKind() ) == waived
+               && isPropertySpecific() == propertySpecific;
+    }
 }

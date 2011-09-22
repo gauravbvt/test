@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -29,7 +30,7 @@ public class RedundantEOI extends AbstractIssueDetector {
     /**
      * {inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         for ( final ElementOfInformation eoi : flow.getEois() ) {
@@ -44,7 +45,7 @@ public class RedundantEOI extends AbstractIssueDetector {
                     }
             );
             if ( redundant ) {
-                Issue issue = makeIssue( Issue.VALIDITY, flow );
+                Issue issue = makeIssue( queryService, Issue.VALIDITY, flow );
                 issue.setDescription( "Element \"" + eoi.getContent() + "\" is repeated." );
                 issue.setSeverity( Level.Low );
                 issue.setRemediation( "Remove repeated element \"" + eoi.getContent() + "\"" );

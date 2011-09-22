@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
@@ -6,6 +12,7 @@ import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.MultiCommand;
+import com.mindalliance.channels.core.command.commands.UpdateObject.Action;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Part;
@@ -19,21 +26,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Moving a part and its flows to another segment.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jun 11, 2010
- * Time: 9:20:57 PM
  */
 public class MovePart extends AbstractCommand {
 
     public MovePart() {
+        super( "daemon" );
     }
 
-    public MovePart( Part part, Segment toSegment ) {
+    public MovePart( String userName, Part part, Segment toSegment ) {
+        super( userName );
         set( "part", part.getId() );
         set( "toSegment", toSegment.getId() );
         set( "fromSegment", part.getSegment().getId() );
@@ -42,21 +45,16 @@ public class MovePart extends AbstractCommand {
         addConflicting( part.getSegment() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-
+    @Override
     public String getName() {
         return "move task";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         Segment fromSegment = commander.resolve( Segment.class, (Long) get( "fromSegment" ) );
         Part part = (Part) fromSegment.getNode( (Long) get( "part" ) );
-        describeTarget( part );                
+        describeTarget( part );
         Segment toSegment = commander.resolve( Segment.class, (Long) get( "toSegment" ) );
         assert !fromSegment.equals( toSegment );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
@@ -70,75 +68,56 @@ public class MovePart extends AbstractCommand {
         return new Change( Change.Type.Recomposed, fromSegment );
     }
 
-    private MultiCommand makeSubCommands(
-            Part part,
-            Segment toSegment,
-            Commander commander
-    ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "move task - extra" );
+    private MultiCommand makeSubCommands( Part part, Segment toSegment, Commander commander ) throws CommandException {
+        MultiCommand multi = new MultiCommand( getUserName(), "move task - extra" );
         Map<String, Object> partState = part.mapState();
         // add identical part to other segment
         addGoalsToSegment( partState, toSegment, multi, commander );
-        Command addPart = new AddPart( toSegment );
+        Command addPart = new AddPart( getUserName(), toSegment );
         addPart.set( "partState", partState );
         multi.addCommand( addPart );
         // add identical flows to moved part from saved states
         addSends( part, toSegment, multi, addPart );
         addReceives( part, toSegment, multi, addPart );
         // disconnect flows to "old" part
-        for ( Flow sharingSend :  part.getAllSharingSends() ) {
-            multi.addCommand( commander.makeRemoveFlowCommand( sharingSend ) );
-        }
-        for ( Flow capability : part.getCapabilities()  ) {
-            multi.addCommand( new RemoveCapability( capability ) );
-        }
+        for ( Flow sharingSend : part.getAllSharingSends() )
+            multi.addCommand( commander.makeRemoveFlowCommand( getUserName(), sharingSend ) );
+
+        for ( Flow capability : part.getCapabilities() )
+            multi.addCommand( new RemoveCapability( getUserName(), capability ) );
+
         Iterator<Flow> receives = part.receives();
         while ( receives.hasNext() ) {
             Flow receive = receives.next();
-            multi.addCommand( commander.makeRemoveFlowCommand( receive ) ); 
+            multi.addCommand( commander.makeRemoveFlowCommand( getUserName(), receive ) );
         }
         // remove "old" part
-        multi.addCommand( new RemovePart( part ) );
+        multi.addCommand( new RemovePart( getUserName(), part ) );
         return multi;
     }
 
     @SuppressWarnings( "unchecked" )
-    private void addGoalsToSegment(
-            Map<String, Object> partState,
-            Segment toSegment,
-            MultiCommand multi,
-            Commander commander ) {
+    private void addGoalsToSegment( Map<String, Object> partState, Segment toSegment, MultiCommand multi,
+                                    Commander commander ) {
         for ( Map<String, Object> goalState : (List<Map<String, Object>>) partState.get( "goals" ) ) {
             Goal goal = commander.getQueryService().goalFromMap( goalState );
-            if ( !toSegment.getGoals().contains( goal ) ) {
-                UpdatePlanObject updateSegment = new UpdatePlanObject(
-                        toSegment,
-                        "goals",
-                        goal,
-                        UpdateObject.Action.Add );
-                multi.addCommand( updateSegment );
-            }
+            if ( !toSegment.getGoals().contains( goal ) )
+                multi.addCommand( new UpdatePlanObject( getUserName(), toSegment, "goals", goal, Action.Add ) );
         }
     }
 
-
     @SuppressWarnings( "unchecked" )
-    private void addSends(
-            Part partToMove,
-            Segment toSegment,
-            MultiCommand multi,
-            Command addPart ) throws CommandException {
+    private void addSends( Part partToMove, Segment toSegment, MultiCommand multi, Command addPart ) {
         Map<String, Command> addCapabilityCommands = new HashMap<String, Command>();
-        Iterator<Flow> capabilities = IteratorUtils.filteredIterator(
-                partToMove.sends(),
-                new Predicate() {
-                    public boolean evaluate( Object object ) {
-                        return ( (Flow) object ).isCapability();
-                    }
-                } );
+        Iterator<Flow> capabilities = IteratorUtils.filteredIterator( partToMove.sends(), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ( (Flow) object ).isCapability();
+            }
+        } );
         while ( capabilities.hasNext() ) {
             Flow capability = capabilities.next();
-            Command addCapability = new AddCapability();
+            Command addCapability = new AddCapability( getUserName() );
             addCapability.set( "name", capability.getName() );
             addCapability.set( "segment", toSegment.getId() );
             addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( capability ) );
@@ -149,7 +128,7 @@ public class MovePart extends AbstractCommand {
         for ( Flow send : partToMove.getAllSharingSends() ) {
             Map<String, Object> attributes = ChannelsUtils.getFlowAttributes( send );
             String name = send.getName();
-            Command connect = new ConnectWithFlow();
+            Command connect = new ConnectWithFlow( getUserName() );
             connect.set( "name", name );
             connect.set( "attributes", attributes );
             if ( !send.getTarget().getSegment().equals( toSegment ) ) {
@@ -157,7 +136,7 @@ public class MovePart extends AbstractCommand {
                 // don't create redundant capability
                 Command addCapability = addCapabilityCommands.get( name );
                 if ( addCapability == null ) {
-                    addCapability = new AddCapability();
+                    addCapability = new AddCapability( getUserName() );
                     multi.addCommand( addCapability );
                     addCapability.set( "name", name );
                     addCapability.set( "segment", toSegment.getId() );
@@ -182,11 +161,7 @@ public class MovePart extends AbstractCommand {
         }
     }
 
-    private void addReceives(
-            Part partToMove,
-            Segment toSegment,
-            MultiCommand multi,
-            Command addPart ) throws CommandException {
+    private void addReceives( Part partToMove, Segment toSegment, MultiCommand multi, Command addPart ) {
         Segment fromSegment = partToMove.getSegment();
         Iterator<Flow> receives = partToMove.receives();
         while ( receives.hasNext() ) {
@@ -194,7 +169,7 @@ public class MovePart extends AbstractCommand {
             Map<String, Object> attributes = ChannelsUtils.getFlowAttributes( receive );
             String name = receive.getName();
             if ( receive.isNeed() ) {
-                Command addNeed = new AddNeed();
+                Command addNeed = new AddNeed( getUserName() );
                 addNeed.set( "name", name );
                 addNeed.set( "segment", toSegment.getId() );
                 addNeed.set( "attributes", attributes );
@@ -202,7 +177,7 @@ public class MovePart extends AbstractCommand {
                 multi.addCommand( addNeed );
             } else {
                 // a sharing receive
-                Command connect = new ConnectWithFlow();
+                Command connect = new ConnectWithFlow( getUserName() );
                 connect.set( "name", name );
                 connect.set( "attributes", attributes );
                 connect.set( "segment", toSegment.getId() );
@@ -213,7 +188,7 @@ public class MovePart extends AbstractCommand {
                     Part source = (Part) receive.getSource();
                     Flow capability = source.findCapability( name );
                     if ( capability == null ) {
-                        Command addCapability = new AddCapability();
+                        Command addCapability = new AddCapability( getUserName() );
                         multi.addCommand( addCapability );
                         addCapability.set( "name", name );
                         addCapability.set( "segment", fromSegment.getId() );
@@ -241,22 +216,17 @@ public class MovePart extends AbstractCommand {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "unmove task" );
+        MultiCommand multi = new MultiCommand( getUserName(), "unmove task" );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );
         return multi;
     }
-
 }

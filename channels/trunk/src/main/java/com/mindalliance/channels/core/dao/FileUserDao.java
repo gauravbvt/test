@@ -29,12 +29,12 @@ import java.util.Random;
 /**
  * A user details service that keeps in sync with changes to the underlying user definition file.
  */
-public class FileUserDetailsService implements UserDetailsService, UserService {
+public class FileUserDao implements UserDetailsService, UserDao {
 
     /**
      * The logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( FileUserDetailsService.class );
+    private static final Logger LOG = LoggerFactory.getLogger( FileUserDao.class );
 
     /**
      * Users, indexed by username.
@@ -69,7 +69,7 @@ public class FileUserDetailsService implements UserDetailsService, UserService {
 
 
     //---------------------------------------------
-    public FileUserDetailsService() {
+    public FileUserDao() {
     }
 
     private synchronized Map<String, User> readUsers() {

@@ -1,7 +1,14 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AddUserIssue;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.Updatable;
@@ -12,7 +19,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -25,11 +31,6 @@ import java.util.Set;
 
 /**
  * An issues panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jan 8, 2009
- * Time: 10:34:20 AM
  */
 public class IssuesPanel extends AbstractCommandablePanel {
 
@@ -41,7 +42,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
     /**
      * A model on a model object which issues are shown, if any.
      */
-    private IModel<? extends ModelObject> model;
+    private final IModel<? extends ModelObject> model;
 
     /**
      * Issues container.
@@ -60,11 +61,11 @@ public class IssuesPanel extends AbstractCommandablePanel {
         AjaxFallbackLink<?> newIssueLink = new AjaxFallbackLink( "new-issue" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                Change change = doCommand( new AddUserIssue( model.getObject() ) );
-/*
-                makeVisible( this, Channels.analyst().hasIssues( model.getObject(), false ) );
-                target.addComponent( this );
-*/
+                Change change = doCommand( new AddUserIssue( User.current().getUsername(), model.getObject() ) );
+                /*
+                                makeVisible( this, Channels.analyst().hasIssues( model.getObject(), false ) );
+                                target.addComponent( this );
+                */
                 update( target, change );
             }
         };
@@ -87,50 +88,37 @@ public class IssuesPanel extends AbstractCommandablePanel {
         issuesContainer = new WebMarkupContainer( "issues-container" );
         issuesContainer.setOutputMarkupId( true );
         add( issuesContainer );
-        issuesContainer.add( new ListView<Issue>(
-                "issues",
-                new PropertyModel<List<Issue>>( this, "modelObjectIssues" ) ) {
+        issuesContainer.add( new ListView<Issue>( "issues",
+                                                  new PropertyModel<List<Issue>>( this, "modelObjectIssues" ) ) {
             @Override
             protected void populateItem( ListItem<Issue> item ) {
                 Issue issue = item.getModelObject();
-                Panel issuePanel;
-                if ( getExpansions().contains( issue.getId() ) ) {
-                    issuePanel = new ExpandedIssuePanel( "issue", new Model<Issue>( issue ) );
-                } else {
-                    issuePanel = new CollapsedIssuePanel( "issue", new Model<Issue>( issue ) );
-                }
-
-                item.add( issuePanel );
+                item.add( getExpansions().contains( issue.getId() ) ?
+                          new ExpandedIssuePanel( "issue", new Model<Issue>( issue ) ) :
+                          new CollapsedIssuePanel( "issue", new Model<Issue>( issue ) ) );
             }
         } );
     }
 
     /**
-     * Find all issues of model object
+     * Find all issues of model object.
      *
      * @return list of issues
      */
     public List<Issue> getModelObjectIssues() {
-        List<Issue> issues = new ArrayList<Issue>(
-                getAnalyst().listIssues( model.getObject(), false ) );
-        Collections.sort(
-                issues,
-                new Comparator<Issue>(){
-                    public int compare( Issue issue, Issue other ) {
-                        return other.getSeverity().compareTo( issue.getSeverity() );
-                    }
-                }
-        );
+        List<Issue> issues =
+                new ArrayList<Issue>( getAnalyst().listIssues( getQueryService(), model.getObject(), false ) );
+        Collections.sort( issues, new Comparator<Issue>() {
+            public int compare( Issue issue, Issue other ) {
+                return other.getSeverity().compareTo( issue.getSeverity() );
+            }
+        } );
         return issues;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         target.addComponent( issuesContainer );
         super.updateWith( target, change, updated );
     }
-
 }

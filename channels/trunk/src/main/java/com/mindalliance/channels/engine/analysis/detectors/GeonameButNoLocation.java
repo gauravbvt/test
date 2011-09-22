@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +26,13 @@ public class GeonameButNoLocation extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Place place = (Place) modelObject;
         String geoname = place.getGeoname();
         List<GeoLocation> geoLocations = place.getGeoLocations();
         if ( geoname != null && !geoname.isEmpty() && ( geoLocations == null || geoLocations.isEmpty() ) ) {
-            DetectedIssue issue = makeIssue( Issue.VALIDITY, place, getTestedProperty() );
+            DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, place, getTestedProperty() );
             issue.setSeverity( Level.Medium );
             issue.setDescription( "The place's geoname is unknown. No geolocation could be found for it." );
             issue.setRemediation( "Change the geoname\nor remove it." );

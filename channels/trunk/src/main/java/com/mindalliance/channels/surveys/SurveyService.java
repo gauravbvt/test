@@ -2,9 +2,11 @@ package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.surveys.Survey.Type;
 
 import java.util.List;
 
@@ -21,13 +23,15 @@ public interface SurveyService {
     /**
      * Create a new survey of a given type in current plan on an identifiable, or get current, not closed one.
      *
+     *
+     * @param queryService
      * @param type         a survey type
      * @param identifiable an identifiable
      * @param plan         a plan
      * @return a survey
      * @throws SurveyException if fails
      */
-    Survey getOrCreateSurvey( Survey.Type type, Identifiable identifiable, Plan plan ) throws SurveyException;
+    Survey getOrCreateSurvey( QueryService queryService, Type type, Identifiable identifiable, Plan plan ) throws SurveyException;
 
     /**
      * Whether one or more surveys of a given type, created, launched or closed, is already associated with an identifiable.
@@ -41,28 +45,32 @@ public interface SurveyService {
     /**
      * Add contacts to a survey.
      *
+     *
+     * @param queryService
      * @param survey    a survey
      * @param usernames a list of user names
      * @param plan      a plan
      * @throws SurveyException if fails
      */
-    void inviteContacts( Survey survey, List<String> usernames, Plan plan ) throws SurveyException;
+    void inviteContacts( QueryService queryService, Survey survey, List<String> usernames, Plan plan ) throws SurveyException;
 
     /**
      * Whether the survey can still be associated with an existing issue.
      *
      * @param survey a survey
+     * @param queryService
      * @return a boolean
      */
-    boolean isRelevant( Survey survey );
+    boolean isRelevant( Survey survey, QueryService queryService );
 
     /**
      * Find current issue the survey is about.
      *
      * @param survey a survey
+     * @param queryService
      * @return an identifiable or null
      */
-    Identifiable findIdentifiable( Survey survey );      // todo - needed?
+    Identifiable findIdentifiable( Survey survey, QueryService queryService );      // todo - needed?
 
     /**
      * Delete not-yet-launched survey.
@@ -77,9 +85,10 @@ public interface SurveyService {
      *
      * @param survey a survey
      * @param plan   a plan
+     * @param queryService
      * @throws SurveyException if fails
      */
-    void launchSurvey( Survey survey, Plan plan ) throws SurveyException;
+    void launchSurvey( Survey survey, Plan plan, QueryService queryService ) throws SurveyException;
 
     /**
      * Close the survey.
@@ -144,7 +153,7 @@ public interface SurveyService {
      *
      * @return a user service
      */
-    UserService getUserService();
+    UserDao getUserDao();
 
     /**
      * Get analyst.

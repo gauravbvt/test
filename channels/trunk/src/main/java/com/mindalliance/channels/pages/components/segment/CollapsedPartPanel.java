@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.Change;
@@ -18,11 +24,6 @@ import java.util.Set;
 
 /**
  * Collapsed part panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Dec 28, 2009
- * Time: 7:38:19 PM
  */
 public class CollapsedPartPanel extends AbstractUpdatablePanel {
 
@@ -30,10 +31,12 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
      * Summary label.
      */
     private PartSummaryPanel summaryPanel;
+
     /**
      * Instructions label.
      */
     private Label descriptionLabel;
+
     /**
      * Part issues panel.
      */
@@ -56,6 +59,7 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
         summaryPanel = new PartSummaryPanel( "partSummary", new PropertyModel<Part>( this, "part" ) );
         summaryPanel.setOutputMarkupId( true );
         summaryPanel.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, getPart() ) );
             }
@@ -76,16 +80,13 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
     }
 
     private void addIssuesPanel() {
-        partIssuesPanel = new IssuesPanel(
-                "issues",
-                new PropertyModel<Part>( this, "part" ),
-                getExpansions() );
+        partIssuesPanel = new IssuesPanel( "issues", new PropertyModel<Part>( this, "part" ), getExpansions() );
         partIssuesPanel.setOutputMarkupId( true );
         addOrReplace( partIssuesPanel );
     }
 
     private void adjustFields() {
-        boolean partHasIssues = getAnalyst().hasIssues( getPart(), false );
+        boolean partHasIssues = getAnalyst().hasIssues( getQueryService(), getPart(), false );
         makeVisible( partIssuesPanel, partHasIssues );
     }
 
@@ -93,9 +94,7 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
         return (Part) getModel().getObject();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
         target.addComponent( descriptionLabel );
         target.addComponent( summaryPanel );

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.model.Flow;
@@ -10,41 +16,34 @@ import java.util.Set;
 
 /**
  * Abstract flow panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jun 15, 2009
- * Time: 1:52:11 PM
  */
-public class AbstractFlowPanel  extends AbstractCommandablePanel {
+public class AbstractFlowPanel extends AbstractCommandablePanel {
 
     /**
      * The underlying flow.
      */
     private IModel<Flow> flowModel;
+
     /**
      * Whether send flow view.
      */
     private boolean send;
+
     private boolean collapsed;
+
     private int index;
+
     /**
      * Whether flow was updated.
      */
     private boolean flowUpdated = false;
 
-
-    public AbstractFlowPanel( String id, IModel<Flow> flowModel, boolean isSend, boolean collapsed, int index) {
-        this( id, flowModel, isSend, collapsed, null, index);
-        
+    public AbstractFlowPanel( String id, IModel<Flow> flowModel, boolean isSend, boolean collapsed, int index ) {
+        this( id, flowModel, isSend, collapsed, null, index );
     }
-    public AbstractFlowPanel(
-            String id,
-            IModel<Flow> flowModel,
-            boolean send,
-            boolean collapsed,
-            Set<Long> expansions,
-            int index) {
+
+    public AbstractFlowPanel( String id, IModel<Flow> flowModel, boolean send, boolean collapsed, Set<Long> expansions,
+                              int index ) {
         super( id, flowModel, expansions );
         this.flowModel = flowModel;
         this.send = send;
@@ -65,8 +64,7 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
     }
 
     /**
-     * Set flow.
-     * (used by PropertyModel)
+     * Set flow. (used by PropertyModel)
      *
      * @param flow a flow
      */
@@ -74,14 +72,13 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
         flowModel.setObject( flow );
     }
 
-
     public boolean isSend() {
         return send;
     }
 
     public final void setSend( boolean send ) {
-         this.send = send;
-     }
+        this.send = send;
+    }
 
     public boolean isCollapsed() {
         return collapsed;
@@ -97,28 +94,25 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
 
     protected boolean hasIssues() {
         Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
-        return analyst.hasIssues( getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        return analyst.hasIssues( getQueryService(), getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
     }
 
     protected String getErrorSummary() {
         Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
-        return analyst.getIssuesSummary( getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        return analyst.getIssuesSummary( getQueryService(), getFlow(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
     }
 
-    public String getCssClasses(  ) {
+    public String getCssClasses() {
         String flowType = getFlowTypeCssClass();
         String priority = getFlowPriorityCssClass();
-        return "title pointer "
-                + flowType
+        return "title pointer " + flowType
                // + ( errorType.isEmpty() ? "" : ( " " + errorType ) )
-                + ( priority.isEmpty() ? "" : ( " " + priority ) );
+               + ( priority.isEmpty() ? "" : " " + priority );
     }
 
     private String getFlowPriorityCssClass() {
         Flow flow = getFlow();
-        return flow.isSharing()
-                ? getQueryService().computeSharingPriority( flow ).getName().toLowerCase()
-                : "";
+        return flow.isSharing() ? getQueryService().computeSharingPriority( flow ).getName().toLowerCase() : "";
     }
 
     protected String getRowTypeCssClass() {
@@ -145,16 +139,9 @@ public class AbstractFlowPanel  extends AbstractCommandablePanel {
     protected String getFlowTypeCssClass() {
         Flow flow = getFlow();
         if ( isSend() ) {
-            return flow.isCapability()
-                    ? "capability"
-                    : "sharing";
+            return flow.isCapability() ? "capability" : "sharing";
         } else {
-            return flow.isNeed()
-                    ? "need"
-                    : "sharing";
+            return flow.isNeed() ? "need" : "sharing";
         }
-
     }
-
-
 }

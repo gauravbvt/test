@@ -4,6 +4,8 @@ import com.mindalliance.channels.core.PersistentObjectDao;
 import com.mindalliance.channels.core.PersistentObjectDaoFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.model.Plan;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,28 +55,30 @@ public class DefaultPlanningEventService implements PlanningEventService {
     }
 
     @Override
-    public void commandDone( Command command, Change change, String urn ) {
-        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Done, command, change, urn );
-        addPlanningEvent( commandEvent, urn );
+    public void commandDone( Commander commander, Command command, Change change ) {
+        Plan plan = commander.getPlan();
+        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Done, command, change, plan.getUrn() );
+        addPlanningEvent( commandEvent, plan.getUrn() );
     }
 
     @Override
-    public void commandUndone( Command command, String urn ) {
-        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Undone, command, urn );
-        addPlanningEvent( commandEvent, urn );
+    public void commandUndone( Commander commander, Command command, Change change ) {
+        Plan plan = commander.getPlan();
+        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Undone, command, plan.getUrn() );
+        addPlanningEvent( commandEvent, plan.getUrn() );
     }
 
     @Override
-    public void commandRedone( Command command, String urn ) {
-        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Redone, command, urn );
-        addPlanningEvent( commandEvent, urn );
+    public void commandRedone( Commander commander, Command command, Change change ) {
+        Plan plan = commander.getPlan();
+        CommandEvent commandEvent = new CommandEvent( CommandEvent.Type.Redone, command, plan.getUrn() );
+        addPlanningEvent( commandEvent, plan.getUrn() );
     }
 
     @Override
     public synchronized void killIfAlive( String username, String urn ) {
-        if ( isAlive( username, urn ) ) {
+        if ( isAlive( username, urn ) )
             kill( username, urn );
-        }
     }
 
     private void kill( String username, String urn ) {

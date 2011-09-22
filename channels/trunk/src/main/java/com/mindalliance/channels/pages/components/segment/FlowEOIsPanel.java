@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.LinkFlowClassifications;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -466,12 +467,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
             allEOIs.addAll( getFlow().getEois() );
             allEOIs.addAll( newEOIs );
             doCommand(
-                    UpdateObject.makeCommand(
-                            getFlow(),
+                    UpdateObject.makeCommand( User.current().getUsername(), getFlow(),
                             "eois",
                             allEOIs,
-                            UpdateObject.Action.Set
-                    )
+                            UpdateObject.Action.Set )
             );
             populated = true;
         }
@@ -745,16 +744,14 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     }
 
     private void unlinkClassifications() {
-        doCommand( UpdateObject.makeCommand(
-                getFlow(),
+        doCommand( UpdateObject.makeCommand( User.current().getUsername(), getFlow(),
                 "classificationsLinked",
                 false,
-                UpdateObject.Action.Set
-        ) );
+                UpdateObject.Action.Set ) );
     }
 
     private Change linkClassifications() {
-        return doCommand( new LinkFlowClassifications( getFlow() ) );
+        return doCommand( new LinkFlowClassifications( User.current().getUsername(), getFlow() ) );
     }
 
     public void changed( Change change ) {
@@ -884,12 +881,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         public void setConfirmed( boolean val ) {
             assert !markedForCreation;
             if ( !val ) {
-                doCommand( UpdateObject.makeCommand(
-                        getFlow(),
+                doCommand( UpdateObject.makeCommand( User.current().getUsername(), getFlow(),
                         "eois",
                         eoi,
-                        UpdateObject.Action.Remove
-                ) );
+                        UpdateObject.Action.Remove ) );
             }
         }
 
@@ -902,22 +897,18 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
             if ( !content.isEmpty() ) {
                 if ( !markedForCreation ) {
                     if ( !getFlow().hasEoiNamedExactly( content ) ) {
-                        doCommand( UpdateObject.makeCommand(
-                                getFlow(),
+                        doCommand( UpdateObject.makeCommand( User.current().getUsername(), getFlow(),
                                 "eois[" + index + "].content",
                                 content,
-                                UpdateObject.Action.Set
-                        ) );
+                                UpdateObject.Action.Set ) );
                     }
                 } else {
                     if ( !getFlow().getEois().contains( eoi ) ) {
                         eoi.setContent( content );
-                        doCommand( UpdateObject.makeCommand(
-                                getFlow(),
+                        doCommand( UpdateObject.makeCommand( User.current().getUsername(), getFlow(),
                                 "eois",
                                 eoi,
-                                UpdateObject.Action.Add
-                        ) );
+                                UpdateObject.Action.Add ) );
                     }
                 }
             }
@@ -928,12 +919,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         }
 
         public void setTimeSensitive( boolean val ) {
-            doCommand( UpdateObject.makeCommand(
-                    getFlow(),
+            doCommand( UpdateObject.makeCommand( User.current().getUsername(), getFlow(),
                     "eois[" + index + "].timeSensitive",
                     val,
-                    UpdateObject.Action.Set
-            ) );
+                    UpdateObject.Action.Set ) );
         }
 
         public String getDescription() {
@@ -942,12 +931,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
 
         public void setDescription( String val ) {
             String value = val == null ? "" : val.trim();
-            doCommand( UpdateObject.makeCommand(
-                    getFlow(),
+            doCommand( UpdateObject.makeCommand( User.current().getUsername(), getFlow(),
                     "eois[" + index + "].description",
                     value,
-                    UpdateObject.Action.Set
-            ) );
+                    UpdateObject.Action.Set ) );
         }
 
         public String getSpecialHandling() {
@@ -956,12 +943,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
 
         public void setSpecialHandling( String val ) {
             String value = val == null ? "" : val.trim();
-            doCommand( UpdateObject.makeCommand(
-                    getFlow(),
+            doCommand( UpdateObject.makeCommand( User.current().getUsername(), getFlow(),
                     "eois[" + index + "].specialHandling",
                     value,
-                    UpdateObject.Action.Set
-            ) );
+                    UpdateObject.Action.Set ) );
         }
 
     }

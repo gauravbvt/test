@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.graph;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -13,11 +19,6 @@ import java.util.List;
 
 /**
  * Flows between entities of the same kind.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Apr 6, 2009
- * Time: 5:03:25 PM
  */
 public class EntityRelationship<T extends ModelEntity> extends Relationship {
 
@@ -26,19 +27,25 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
      */
     private List<Flow> flows = new ArrayList<Flow>();
 
+    //-------------------------------
     public EntityRelationship() {
     }
+
+    public EntityRelationship( T fromEntity, T toEntity ) {
+        super( fromEntity, toEntity );
+    }
+
+    //-------------------------------
 
     /**
      * Create entity relationship from its synthetic id.
      *
-     * @param id           a long
+     * @param id a long
      * @param queryService a query service
      * @return an entity relationship
-     * @throws com.mindalliance.channels.core.model.NotFoundException if id not valid
+     * @throws NotFoundException if id not valid
      */
-    public static EntityRelationship fromId( long id, QueryService queryService ) throws
-                                                                                  NotFoundException {
+    public static EntityRelationship fromId( long id, QueryService queryService ) throws NotFoundException {
         EntityRelationship entityRel = new EntityRelationship();
         entityRel.setId( id, queryService );
         if ( entityRel.isValid() )
@@ -47,27 +54,53 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
             throw new NotFoundException();
     }
 
-    public EntityRelationship( T fromEntity, T toEntity ) {
-        super( fromEntity, toEntity );
+    /**
+     * Tell the number of issues on all external flows.
+     *
+     * @param analyst an analyst
+     * @param queryService the query service
+     * @return a string
+     */
+    public String getIssuesSummary( Analyst analyst, QueryService queryService ) {
+        int count = 0;
+        for ( Flow flow : flows )
+            count += analyst.listUnwaivedIssues( queryService,
+                                                 flow,
+                                                 Analyst.INCLUDE_PROPERTY_SPECIFIC ).size();
+        return count + ( count > 1 ? " issues" : " issue" );
     }
 
+    /**
+     * Does any of the external flows have issues?
+     *
+     * @param analyst an analyst
+     * @param queryService the query service
+     * @return a boolean
+     */
+    public boolean hasIssues( Analyst analyst, QueryService queryService ) {
+        boolean hasIssues = false;
+        Iterator<Flow> iterator = flows.iterator();
+        while ( !hasIssues && iterator.hasNext() ) {
+            hasIssues = analyst.hasUnwaivedIssues( queryService,
+                                                   iterator.next(),
+                                                   Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        }
+        return hasIssues;
+    }
 
     public void setId( long id, Segment segment, QueryService queryService, Analyst analyst ) {
-        super.setId( id, analyst.getQueryService() );
-        EntityRelationship entityRel;
-        if ( segment == null ) {
-            entityRel = analyst.findEntityRelationship(
-                getFromEntity( queryService ),
-                getToEntity( queryService ) );
-        } else {
-            entityRel = analyst.findEntityRelationship(
-                    getFromEntity( queryService ),
-                    getToEntity( queryService ),
-                    segment );
-        }
-        if ( entityRel != null ) flows = entityRel.getFlows();
+        setId( id, queryService );
+        EntityRelationship entityRel = segment == null ?
+                                       analyst.findEntityRelationship( queryService,
+                                                                       getFromEntity( queryService ),
+                                                                       getToEntity( queryService ) ) :
+                                       analyst.findEntityRelationship( queryService,
+                                                                       getFromEntity( queryService ),
+                                                                       getToEntity( queryService ),
+                                                                       segment );
+        if ( entityRel != null )
+            flows = entityRel.getFlows();
     }
-
 
     private ModelEntity getFromEntity( QueryService queryService ) {
         return (ModelEntity) getFromIdentifiable( queryService );
@@ -77,6 +110,7 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
         return (ModelEntity) getToIdentifiable( queryService );
     }
 
+    //-------------------------------
     public List<Flow> getFlows() {
         return flows;
     }
@@ -84,34 +118,4 @@ public class EntityRelationship<T extends ModelEntity> extends Relationship {
     public void setFlows( List<Flow> flows ) {
         this.flows = flows;
     }
-
-    /**
-     * Does any of the external flows have issues?
-     *
-     * @param analyst an analyst
-     * @return a boolean
-     */
-    public boolean hasIssues( Analyst analyst ) {
-        boolean hasIssues = false;
-        Iterator<Flow> iterator = flows.iterator();
-        while ( !hasIssues && iterator.hasNext() ) {
-            hasIssues = analyst.hasUnwaivedIssues( iterator.next(), Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        }
-        return hasIssues;
-    }
-
-    /**
-     * Tell the number of issues on all external flows.
-     *
-     * @param analyst an analyst
-     * @return a string
-     */
-    public String getIssuesSummary( Analyst analyst ) {
-        int count = 0;
-        for ( Flow flow : flows ) {
-            count += analyst.listUnwaivedIssues( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ).size();
-        }
-        return count + ( count > 1 ? " issues" : " issue" );
-    }
-
 }

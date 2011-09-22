@@ -11,7 +11,6 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.engine.query.Assignments;
-import com.mindalliance.channels.engine.query.PlanService;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -95,7 +94,7 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
     }
 
     @Override
-    public PlanService getPlanService() {
+    public QueryService getPlanService() {
         return selector.getPlanService();
     }
 

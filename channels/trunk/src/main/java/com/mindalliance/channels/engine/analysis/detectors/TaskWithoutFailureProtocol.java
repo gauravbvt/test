@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -28,10 +29,10 @@ public class TaskWithoutFailureProtocol extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Part part = (Part) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        Level failureSeverity = computeTaskFailureSeverity( part );
+        Level failureSeverity = computeTaskFailureSeverity( queryService, part );
         if ( failureSeverity.compareTo( Level.Low ) >= 1 ) {
             boolean notifiesOfFailure = CollectionUtils.exists(
                     part.getAllSharingSends(),
@@ -43,7 +44,7 @@ public class TaskWithoutFailureProtocol extends AbstractIssueDetector {
                     }
             );
             if ( !notifiesOfFailure ) {
-                Issue issue = makeIssue( Issue.ROBUSTNESS, part );
+                Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
                 issue.setDescription( "Failure of this task would have "
                         + failureSeverity.getNegativeLabel().toLowerCase()
                         + " consequences, yet no one is to be notified should it fail." );

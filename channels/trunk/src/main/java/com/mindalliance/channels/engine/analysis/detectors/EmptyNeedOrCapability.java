@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,11 @@ public class EmptyNeedOrCapability extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         if ( !flow.getName().trim().isEmpty() && flow.getEois().isEmpty() ) {
-            DetectedIssue issue = makeIssue( Issue.COMPLETENESS, flow );
+            DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, flow );
             issue.setSeverity( Level.Low );
             String needOrCapability = flow.getTarget().isConnector() ? "capability" : "need";
             issue.setDescription( "Information "

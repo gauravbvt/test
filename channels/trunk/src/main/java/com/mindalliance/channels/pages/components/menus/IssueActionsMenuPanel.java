@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.core.command.Change;
@@ -5,6 +11,7 @@ import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.command.commands.RemoveIssue;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.surveys.Survey;
@@ -23,13 +30,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 12, 2009
- * Time: 1:52:04 PM
- */
 public class IssueActionsMenuPanel extends MenuPanel {
 
     /**
@@ -49,9 +49,6 @@ public class IssueActionsMenuPanel extends MenuPanel {
         doInit();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init() {
         // do nothing
@@ -61,9 +58,6 @@ public class IssueActionsMenuPanel extends MenuPanel {
         super.init();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Component> getMenuItems() throws CommandException {
         Commander commander = getCommander();
@@ -75,76 +69,69 @@ public class IssueActionsMenuPanel extends MenuPanel {
             menuItems.add( getRedoMenuItem( "menuItem" ) );
 
             // Show/hide details
-            menuItems.add(
-                    new LinkMenuItem(
-                            "menuItem",
-                            new Model<String>( isCollapsed ? "Show details" : "Hide details" ),
-                            new AjaxFallbackLink( "link" ) {
-                                @Override
-                                public void onClick( AjaxRequestTarget target ) {
-                                    update(
-                                            target,
-                                            new Change(
-                                                    isCollapsed ? Change.Type.Expanded : Change.Type.Collapsed,
-                                                    getIssue() ) );
-                                }
-                            } ) );
+            menuItems.add( new LinkMenuItem( "menuItem",
+                                             new Model<String>( isCollapsed ? "Show details" : "Hide details" ),
+                                             new AjaxFallbackLink( "link" ) {
+                                                 @Override
+                                                 public void onClick( AjaxRequestTarget target ) {
+                                                     update( target,
+                                                             new Change( isCollapsed ?
+                                                                         Change.Type.Expanded :
+                                                                         Change.Type.Collapsed, getIssue() ) );
+                                                 }
+                                             } ) );
 
             // Create/view survey
             if ( getPlan().isDevelopment() ) {
-                String itemLabel = surveyService.isSurveyed( Survey.Type.Remediation, getIssue() )
-                        ? "View survey"
-                        : "Create survey";
+                String itemLabel = surveyService.isSurveyed( Survey.Type.Remediation, getIssue() ) ?
+                                   "View survey" :
+                                   "Create survey";
 
-                menuItems.add(
-                        getIssue().getDescription().isEmpty() || getIssue().getRemediation().isEmpty() ?
+                menuItems.add( getIssue().getDescription().isEmpty() || getIssue().getRemediation().isEmpty() ?
 
-                                newStyledLabel( itemLabel, "disabled" )
-
-                                : new LinkMenuItem(
-                                "menuItem",
-                                new Model<String>( itemLabel ),
-                                new AjaxFallbackLink( "link" ) {
-                                    @Override
-                                    public void onClick( AjaxRequestTarget target ) {
-                                        try {
-                                            update(
-                                                    target,
-                                                    new Change(
-                                                            Change.Type.Expanded,
-                                                            surveyService.getOrCreateSurvey(
-                                                                    Survey.Type.Remediation,
-                                                                    getIssue(),
-                                                                    getPlan() ) ) );
-                                        } catch ( SurveyException e ) {
-                                            LoggerFactory.getLogger( getClass() ).warn(
-                                                    "Error clicking on survey link", e );
-                                            target.addComponent( IssueActionsMenuPanel.this );
-                                            target.prependJavascript(
-                                                    "alert('Oops -- " + e.getMessage() + "');" );
-                                        }
-                                    }
-                                } ) );
+                               newStyledLabel( itemLabel, "disabled" )
+                                                                                                            :
+                               new LinkMenuItem( "menuItem",
+                                                 new Model<String>( itemLabel ),
+                                                 new AjaxFallbackLink( "link" ) {
+                                                     @Override
+                                                     public void onClick( AjaxRequestTarget target ) {
+                                                         try {
+                                                             update( target,
+                                                                     new Change( Change.Type.Expanded,
+                                                                                 surveyService.getOrCreateSurvey(
+                                                                                         getQueryService(),
+                                                                                         Survey.Type.Remediation,
+                                                                                                                  getIssue(),
+                                                                                                                  getPlan() ) ) );
+                                                         } catch ( SurveyException e ) {
+                                                             LoggerFactory.getLogger( getClass() ).warn(
+                                                                     "Error clicking on survey link",
+                                                                     e );
+                                                             target.addComponent( IssueActionsMenuPanel.this );
+                                                             target.prependJavascript(
+                                                                     "alert('Oops -- " + e.getMessage() + "');" );
+                                                         }
+                                                     }
+                                                 } ) );
             }
 
             // Commands
-            if ( commander.isTimedOut() )
+            if ( commander.isTimedOut( User.current().getUsername() ) )
                 menuItems.add( newStyledLabel( "Timed out", "disabled locked" ) );
 
             else if ( isLockedByUser( getIssue() ) || getLockOwner( getIssue() ) == null )
                 menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
 
             else
-                menuItems.add(
-                        editedByLabel( "menuItem", getIssue(), getLockOwner( getIssue() ) ) );
+                menuItems.add( editedByLabel( "menuItem", getIssue(), getLockOwner( getIssue() ) ) );
 
             return menuItems;
         }
     }
 
     private static Component newStyledLabel( String label, String style ) {
-        return new Label( "menuItem", label )
-                .add( new AttributeModifier( "class", true, new Model<String>( style ) ) );
+        return new Label( "menuItem", label ).add( new AttributeModifier( "class", true, new Model<String>( style ) ) );
     }
 
     private Issue getIssue() {
@@ -155,22 +142,21 @@ public class IssueActionsMenuPanel extends MenuPanel {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         Issue issue = getIssue();
         if ( !issue.isDetected() ) {
-            commandWrappers.add(
-                    new CommandWrapper( new RemoveIssue( (UserIssue) issue ) ) {
-                        @Override
-                        public void onExecuted( AjaxRequestTarget target, Change change ) {
-                            update( target, change );
-                        }
-                    } );
+            commandWrappers.add( new CommandWrapper( new RemoveIssue( User.current().getUsername(), issue ) ) {
+                @Override
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
 
             if ( !isCollapsed )
-                commandWrappers.add(
-                        new CommandWrapper( new PasteAttachment( (UserIssue) issue ) ) {
-                            @Override
-                            public void onExecuted( AjaxRequestTarget target, Change change ) {
-                                update( target, change );
-                            }
-                        } );
+                commandWrappers.add( new CommandWrapper( new PasteAttachment( User.current().getUsername(),
+                                                                              (UserIssue) issue ) ) {
+                    @Override
+                    public void onExecuted( AjaxRequestTarget target, Change change ) {
+                        update( target, change );
+                    }
+                } );
         }
         return commandWrappers;
     }

@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  */
 public class TestFileUserDetailsService {
 
-    private FileUserDetailsService service;
+    private FileUserDao service;
 
     public TestFileUserDetailsService() {
     }
@@ -27,7 +27,7 @@ public class TestFileUserDetailsService {
      */
     @Before
     public void setUp() throws Exception {
-        service = new FileUserDetailsService();
+        service = new FileUserDao();
     }
 
     @Test

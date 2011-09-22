@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -31,21 +32,22 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
     }
 
     @Override
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( final QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.isSharing() ) {
-            Map<Actor, List<Commitment>> actorCommitments = findActorCommitments( flow );
+            Map<Actor, List<Commitment>> actorCommitments = findActorCommitments( queryService, flow );
             for ( Actor actor : actorCommitments.keySet() ) {
                 Set<String> allProblems = new HashSet<String>();
                 List<Commitment> commitments = actorCommitments.get( actor );
                 if ( !commitments.isEmpty() ) {
                     for ( Commitment commitment : commitments ) {
-                        allProblems.addAll( getAnalyst().findRealizabilityProblems( commitment ) );
+                        allProblems.addAll( getAnalyst().findRealizabilityProblems( queryService.getPlan(),
+                                                                                    commitment ) );
                     }
                     if ( flow.isAll() && commitments.size() > 1 ) {
                         if ( !allProblems.isEmpty() ) {
-                            Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                            Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
                             issue.setDescription( "\""
                                     + actor.getName()
                                     + "\" can not fulfill all commitments as required"
@@ -55,7 +57,7 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
                                     + "\""
                                     + actor.getName()
                                     + "\" from this flow can be realized." ); // TODO - elaborate
-                            issue.setSeverity( computeSharingFailureSeverity( flow ) );
+                            issue.setSeverity( computeSharingFailureSeverity( queryService, flow ) );
                             issues.add( issue );
                         }
                     } else {
@@ -64,12 +66,13 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
                                 new Predicate() {
                                     @Override
                                     public boolean evaluate( Object object ) {
-                                        return getAnalyst().findRealizabilityProblems( (Commitment) object).isEmpty();
+                                        return getAnalyst().findRealizabilityProblems( queryService.getPlan(),
+                                                                                       (Commitment) object ).isEmpty();
                                     }
                                 }
                         );
                         if ( noneRealizable ) {
-                            Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                            Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
                             issue.setDescription( "\""
                                     + actor.getName()
                                     + "\" can not fulfill any commitment"
@@ -79,7 +82,7 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
                                     + "\""
                                     + actor.getName()
                                     + "\" from this flow can be realized." ); // TODO - elaborate
-                            issue.setSeverity( computeSharingFailureSeverity( flow ) );
+                            issue.setSeverity( computeSharingFailureSeverity( queryService, flow ) );
                             issues.add( issue );
                         }
                     }
@@ -90,9 +93,9 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
     }
 
 
-    private Map<Actor, List<Commitment>> findActorCommitments( Flow flow ) {
+    private Map<Actor, List<Commitment>> findActorCommitments( QueryService queryService, Flow flow ) {
         Map<Actor, List<Commitment>> actorCommitments = new HashMap<Actor, List<Commitment>>();
-        List<Commitment> commitments = getQueryService().findAllCommitments( flow );
+        List<Commitment> commitments = queryService.findAllCommitments( flow );
         for ( Commitment commitment : commitments ) {
             Actor actor = commitment.getCommitter().getActor();
             List<Commitment> list = actorCommitments.get( actor );

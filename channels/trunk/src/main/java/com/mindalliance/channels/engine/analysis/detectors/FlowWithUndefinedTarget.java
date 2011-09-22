@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +29,12 @@ public class FlowWithUndefinedTarget extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         Node target = flow.getTarget();
         if ( target.isPart() && ( (Part) target ).isEmpty() ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, "target" );
+            DetectedIssue issue = makeIssue( queryService, DetectedIssue.VALIDITY, modelObject, "target" );
             issue.setDescription( "The target task is not defined." );
             issue.setRemediation( "Name the agent of the target task\nor name the role\nor name the organization." );
             issue.setSeverity( Level.Medium );

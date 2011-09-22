@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +25,12 @@ public class UnnamedFlow extends AbstractIssueDetector {
     }
 
     /** {@inheritDoc} */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = null;
         Flow flow = (Flow) modelObject;
         String name = flow.getName();
         if ( name == null || name.trim().isEmpty() ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, "name" );
+            DetectedIssue issue = makeIssue( queryService, DetectedIssue.VALIDITY, modelObject, "name" );
             issue.setDescription( "The name of the information is missing." );
             issue.setRemediation( "Name the information flow." );
             issues = new ArrayList<Issue>();

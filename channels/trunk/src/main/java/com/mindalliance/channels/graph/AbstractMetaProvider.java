@@ -1,37 +1,39 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.core.io.Resource;
 
 /**
  * Abstract meta provider.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Apr 1, 2009
- * Time: 8:05:43 PM
  */
 public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
      * Default font color.
      */
-    public static String FONTCOLOR = "black";
+    public static final String FONTCOLOR = "black";
     /**
      * Message format as URL template with {1} = graph id.
      */
-    protected static String GRAPH_URL_FORMAT = "?graph={0,number,0}";
+    protected static final String GRAPH_URL_FORMAT = "?graph={0,number,0}";
     /**
      * Message format as URL template with {1} = graph id and {2} = vertex id.
      */
-    protected static String VERTEX_URL_FORMAT = "?graph={0,number,0}&vertex={1,number,0}";
+    protected static final String VERTEX_URL_FORMAT = "?graph={0,number,0}&vertex={1,number,0}";
     /**
      * Message format as URL template with {1} = graph id and {2} = edge id.
      */
-    protected static String EDGE_URL_FORMAT = "?graph={0,number,0}&edge={1,number,0}";
+    protected static final String EDGE_URL_FORMAT = "?graph={0,number,0}&edge={1,number,0}";
     /**
      * Color used to indicate issues.
      */
@@ -62,7 +64,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
      */
     private String outputFormat;
     /**
-     * Relative path to icon directory
+     * Relative path to icon directory.
      */
     private Resource imageDirectory;
     /**
@@ -71,20 +73,26 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
      */
     private double[] graphSize;
     /**
-     * Whether the direction is LR or top-bottom
+     * Whether the direction is LR or top-bottom.
      */
     private String graphOrientation = "LR";
     /**
-     * Segment analyst in context
+     * Segment analyst in context.
      */
     private Analyst analyst;
 
-    public AbstractMetaProvider( String outputFormat,
-                                 Resource imageDirectory,
-                                 Analyst analyst ) {
+    private QueryService queryService;
+
+    public AbstractMetaProvider( String outputFormat, Resource imageDirectory, Analyst analyst,
+                                 QueryService queryService ) {
         this.outputFormat = outputFormat;
         this.imageDirectory = imageDirectory;
         this.analyst = analyst;
+        this.queryService = queryService;
+    }
+
+    public QueryService getQueryService() {
+        return queryService;
     }
 
     public String getOutputFormat() {
@@ -108,7 +116,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     }
 
     /**
-     * Set graph orientation
+     * Set graph orientation.
      *
      * @param graphOrientation a String ("TB" or "LR")
      */

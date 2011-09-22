@@ -1,7 +1,11 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ExternalFlow;
@@ -11,6 +15,9 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
@@ -34,66 +41,69 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-
 /**
  * Plan map panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 31, 2009
- * Time: 1:18:49 PM
  */
 public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
 
     /**
      * Expected screen resolution.
      */
-    static private double DPI = 96.0;
+    private static final double DPI = 96.0;
+
     /**
      * Default page size for external flows panel.
      */
     private static final int PAGE_SIZE = 10;
+
     /**
      * DOM identifier for resizeable element.
      */
     private static final String DOM_IDENTIFIER = ".plan .picture";
+
     /**
      * Whether to group segments by phase.
      */
     private boolean groupByPhase;
+
     /**
      * Whether to group by event.
      */
     private boolean groupByEvent = true;
+
     /**
      * Selected phase or event in plan.
      */
     private ModelObject selectedGroup;
+
     /**
      * Selected segment in plan.
      */
     private Segment selectedSegment;
+
     /**
      * Selected segment relationship in plan.
      */
     private SegmentRelationship selectedSgRel;
+
     /**
      * Plan map diagram panel.
      */
     private PlanMapDiagramPanel planMapDiagramPanel;
+
     /**
-     * Width, height dimension constraints on the plan map diagram.
-     * In inches.
-     * None if any is 0.
+     * Width, height dimension constraints on the plan map diagram. In inches. None if any is 0.
      */
     private double[] diagramSize = new double[2];
 
     @SpringBean
     private Analyst analyst;
+
     /**
      * Whether plan map is reduced to fit.
      */
-    private boolean reducedToFit = false;
+    private boolean reducedToFit;
+
     /**
      * Sizing toggle label..
      */
@@ -121,21 +131,21 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
     }
 
     private void addGroupingChoices() {
-        CheckBox groupByPhaseCheckBox = new CheckBox(
-                "groupByPhase",
-                new PropertyModel<Boolean>( this, "groupByPhase" ) );
+        CheckBox groupByPhaseCheckBox =
+                new CheckBox( "groupByPhase", new PropertyModel<Boolean>( this, "groupByPhase" ) );
         groupByPhaseCheckBox.setOutputMarkupId( true );
         groupByPhaseCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 refresh( target );
             }
         } );
         addOrReplace( groupByPhaseCheckBox );
-        CheckBox groupByEventCheckBox = new CheckBox(
-                "groupByEvent",
-                new PropertyModel<Boolean>( this, "groupByEvent" ) );
+        CheckBox groupByEventCheckBox =
+                new CheckBox( "groupByEvent", new PropertyModel<Boolean>( this, "groupByEvent" ) );
         groupByEventCheckBox.setOutputMarkupId( true );
         groupByEventCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 refresh( target );
             }
@@ -164,9 +174,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
     }
 
     private void addPlanSizing() {
-        sizingLabel = new Label(
-                "fit",
-                new Model<String>( reducedToFit ? "Full size" : "Reduce to fit" ) );
+        sizingLabel = new Label( "fit", new Model<String>( reducedToFit ? "Full size" : "Reduce to fit" ) );
         sizingLabel.setOutputMarkupId( true );
         sizingLabel.add( new AbstractDefaultAjaxBehavior() {
             @Override
@@ -175,17 +183,14 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
                 String script;
                 if ( !reducedToFit ) {
                     String domIdentifier = DOM_IDENTIFIER;
-                    script = "wicketAjaxGet('"
-                            + getCallbackUrl( true )
-                            + "&width='+$('" + domIdentifier + "').width()+'"
+                    script =
+                            "wicketAjaxGet('" + getCallbackUrl( true ) + "&width='+$('" + domIdentifier + "').width()+'"
                             + "&height='+$('" + domIdentifier + "').height()";
                 } else {
-                    script = "wicketAjaxGet('"
-                            + getCallbackUrl( true )
-                            + "'";
+                    script = "wicketAjaxGet('" + getCallbackUrl( true ) + "'";
                 }
-                String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
-                        .replaceAll( "&amp;", "&" );
+                String onclick =
+                        ( "{" + generateCallbackScript( script ) + " return false;}" ).replaceAll( "&amp;", "&" );
                 tag.put( "onclick", onclick );
             }
 
@@ -197,9 +202,9 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
                     String sheight = requestCycle.getRequest().getParameter( "height" );
                     diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
                     diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
-                } else {
+                } else
                     diagramSize = new double[2];
-                }
+
                 reducedToFit = !reducedToFit;
                 addPlanMapDiagramPanel();
                 target.addComponent( planMapDiagramPanel );
@@ -210,56 +215,45 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
         addOrReplace( sizingLabel );
     }
 
-
     private void addPlanMapDiagramPanel() {
-        Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? new Settings(
-                ".plan .picture", null, null, true, true )
-                : new Settings( ".plan .picture", null, diagramSize, true, true );
-        planMapDiagramPanel = new PlanMapDiagramPanel(
-                "plan-map",
-                new PropertyModel<List<Segment>>( this, "allSegments" ),
-                groupByPhase,
-                groupByEvent,
-                selectedGroup,
-                selectedSegment,
-                selectedSgRel,
-                settings );
+        Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ?
+                            new Settings( ".plan .picture", null, null, true, true ) :
+                            new Settings( ".plan .picture", null, diagramSize, true, true );
+        planMapDiagramPanel = new PlanMapDiagramPanel( "plan-map",
+                                                       new PropertyModel<List<Segment>>( this, "allSegments" ),
+                                                       groupByPhase,
+                                                       groupByEvent,
+                                                       selectedGroup,
+                                                       selectedSegment,
+                                                       selectedSgRel,
+                                                       settings );
         planMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( planMapDiagramPanel );
     }
 
     private void addFlowsTitleLabel() {
-        Label flowsTitleLabel = new Label( "flows-title",
-                new PropertyModel<String>( this, "flowsTitle" ) );
+        Label flowsTitleLabel = new Label( "flows-title", new PropertyModel<String>( this, "flowsTitle" ) );
         flowsTitleLabel.setOutputMarkupId( true );
         addOrReplace( flowsTitleLabel );
     }
 
     private void addCausesTitleLabel() {
-        Label causesTitleLabel = new Label( "causes-title",
-                new PropertyModel<String>( this, "causesTitle" ) );
+        Label causesTitleLabel = new Label( "causes-title", new PropertyModel<String>( this, "causesTitle" ) );
         causesTitleLabel.setOutputMarkupId( true );
         addOrReplace( causesTitleLabel );
     }
 
     private void addExternalFlowsPanel() {
-        ExternalFlowsPanel externalFlowsPanel = new ExternalFlowsPanel(
-                "flows",
-                new PropertyModel<ArrayList<ExternalFlow>>( this, "externalFlows" ),
-                PAGE_SIZE,
-                getExpansions()
-        );
-        externalFlowsPanel.setOutputMarkupId( true );
-        addOrReplace( externalFlowsPanel );
+        addOrReplace( new ExternalFlowsPanel( "flows",
+                                              new PropertyModel<ArrayList<ExternalFlow>>( this, "externalFlows" ),
+                                              PAGE_SIZE,
+                                              getExpansions() )
+                              .setOutputMarkupId( true ) );
     }
 
     private void addCausesPanel() {
-        SegmentCausesPanel segmentCausesPanel = new SegmentCausesPanel(
-                "causes",
-                getSegmentRelationships(),
-                PAGE_SIZE,
-                getExpansions()
-        );
+        SegmentCausesPanel segmentCausesPanel =
+                new SegmentCausesPanel( "causes", getSegmentRelationships(), PAGE_SIZE, getExpansions() );
         segmentCausesPanel.setOutputMarkupId( true );
         addOrReplace( segmentCausesPanel );
     }
@@ -281,29 +275,19 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
     public String getFlowsTitle() {
         if ( selectedGroup != null ) {
             if ( groupByPhase ) {
-                return "Flows connecting plan segments in phase \""
-                        + selectedGroup.getName()
-                        + "\"";
+                return "Flows connecting plan segments in phase \"" + selectedGroup.getName() + "\"";
             } else {
-                return "Flows connecting plan segments about event \""
-                        + selectedGroup.getName()
-                        + "\"";
+                return "Flows connecting plan segments about event \"" + selectedGroup.getName() + "\"";
             }
         } else if ( selectedSegment != null ) {
-            return "Flows connecting \""
-                    + selectedSegment.getName()
-                    + "\" to other plan segments";
+            return "Flows connecting \"" + selectedSegment.getName() + "\" to other plan segments";
         } else if ( selectedSgRel != null ) {
             Segment fromSegment = selectedSgRel.getFromSegment( getQueryService() );
             Segment toSegment = selectedSgRel.getToSegment( getQueryService() );
             if ( fromSegment == null || toSegment == null ) {
                 return "*** You need to refresh ***";
             } else {
-                return "Flows connecting \""
-                        + fromSegment.getName()
-                        + "\" to \""
-                        + toSegment.getName()
-                        + "\"";
+                return "Flows connecting \"" + fromSegment.getName() + "\" to \"" + toSegment.getName() + "\"";
             }
         } else {
             return "All inter-segment flows";
@@ -318,29 +302,19 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
     public String getCausesTitle() {
         if ( selectedGroup != null ) {
             if ( groupByPhase ) {
-                return "Causations for plan segments in phase \""
-                        + selectedGroup.getName()
-                        + "\"";
+                return "Causations for plan segments in phase \"" + selectedGroup.getName() + "\"";
             } else {
-                return "Causations for plan segments about event \""
-                        + selectedGroup.getName()
-                        + "\"";
+                return "Causations for plan segments about event \"" + selectedGroup.getName() + "\"";
             }
         } else if ( selectedSegment != null ) {
-            return "Causations for plan segment \""
-                    + selectedSegment.getName()
-                    + "\"";
+            return "Causations for plan segment \"" + selectedSegment.getName() + "\"";
         } else if ( selectedSgRel != null ) {
             Segment fromSegment = selectedSgRel.getFromSegment( getQueryService() );
             Segment toSegment = selectedSgRel.getToSegment( getQueryService() );
             if ( fromSegment == null || toSegment == null ) {
                 return "*** You need to refresh ***";
             } else {
-                return "How \""
-                        + fromSegment.getName()
-                        + "\" impacts \""
-                        + toSegment.getName()
-                        + "\"";
+                return "How \"" + fromSegment.getName() + "\" impacts \"" + toSegment.getName() + "\"";
             }
         } else {
             return "All causations";
@@ -353,20 +327,22 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
      * @return a list of external flows
      */
     public List<ExternalFlow> getExternalFlows() {
-        if ( selectedSgRel != null ) {
+        if ( selectedSgRel != null )
             return selectedSgRel.getExternalFlows();
-        } else if ( selectedGroup != null ) {
+
+        QueryService queryService = getQueryService();
+        if ( selectedGroup != null ) {
             List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
             List<Segment> segmentsInGroup = getSegmentsInGroup();
             List<Segment> allSegments = getAllSegments();
             for ( Segment segment : allSegments ) {
                 for ( Segment other : allSegments ) {
-                    if ( !segment.equals( other )
-                            &&
-                            ( segmentsInGroup.contains( segment )
-                                    || segmentsInGroup.contains( other ) ) ) {
-                        SegmentRelationship scRel = analyst.findSegmentRelationship( segment, other );
-                        if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
+                    if ( !segment.equals( other ) && ( segmentsInGroup.contains( segment ) || segmentsInGroup.contains(
+                            other ) ) )
+                    {
+                        SegmentRelationship scRel = analyst.findSegmentRelationship( queryService, segment, other );
+                        if ( scRel != null )
+                            externalFlows.addAll( scRel.getExternalFlows() );
                     }
                 }
             }
@@ -376,10 +352,12 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
             List<Segment> allSegments = getAllSegments();
             for ( Segment other : allSegments ) {
                 if ( !selectedSegment.equals( other ) ) {
-                    SegmentRelationship scRel = analyst.findSegmentRelationship( selectedSegment, other );
-                    if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
-                    scRel = analyst.findSegmentRelationship( other, selectedSegment );
-                    if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
+                    SegmentRelationship scRel = analyst.findSegmentRelationship( queryService, selectedSegment, other );
+                    if ( scRel != null )
+                        externalFlows.addAll( scRel.getExternalFlows() );
+                    scRel = analyst.findSegmentRelationship( queryService, other, selectedSegment );
+                    if ( scRel != null )
+                        externalFlows.addAll( scRel.getExternalFlows() );
                 }
             }
             return externalFlows;
@@ -389,8 +367,9 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
             for ( Segment segment : allSegments ) {
                 for ( Segment other : allSegments ) {
                     if ( !segment.equals( other ) ) {
-                        SegmentRelationship scRel = analyst.findSegmentRelationship( segment, other );
-                        if ( scRel != null ) externalFlows.addAll( scRel.getExternalFlows() );
+                        SegmentRelationship scRel = analyst.findSegmentRelationship( queryService, segment, other );
+                        if ( scRel != null )
+                            externalFlows.addAll( scRel.getExternalFlows() );
                     }
                 }
             }
@@ -400,23 +379,21 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
 
     @SuppressWarnings( "unchecked" )
     private List<Segment> getSegmentsInGroup() {
-        return (List<Segment>) CollectionUtils.select(
-                getAllSegments(),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        if ( selectedGroup != null ) {
-                            Segment segment = (Segment) obj;
-                            if ( groupByPhase ) {
-                                return segment.getPhase().equals( selectedGroup );
-                            } else {
-                                return segment.getEvent().equals( selectedGroup );
-                            }
-                        } else {
-                            return true;
-                        }
+        return (List<Segment>) CollectionUtils.select( getAllSegments(), new Predicate() {
+            @Override
+            public boolean evaluate( Object obj ) {
+                if ( selectedGroup != null ) {
+                    Segment segment = (Segment) obj;
+                    if ( groupByPhase ) {
+                        return segment.getPhase().equals( selectedGroup );
+                    } else {
+                        return segment.getEvent().equals( selectedGroup );
                     }
+                } else {
+                    return true;
                 }
-        );
+            }
+        } );
     }
 
     /**
@@ -433,11 +410,13 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
             List<Segment> allSegments = getAllSegments();
             for ( Segment segment : allSegments ) {
                 for ( Segment other : allSegments ) {
-                    if ( !segment.equals( other )
-                            && ( segmentsInGroup.contains( segment )
-                            || segmentsInGroup.contains( other ) ) ) {
-                        SegmentRelationship scRel = analyst.findSegmentRelationship( segment, other );
-                        if ( scRel != null ) scRels.add( scRel );
+                    if ( !segment.equals( other ) && ( segmentsInGroup.contains( segment ) || segmentsInGroup.contains(
+                            other ) ) )
+                    {
+                        SegmentRelationship scRel =
+                                analyst.findSegmentRelationship( getQueryService(), segment, other );
+                        if ( scRel != null )
+                            scRels.add( scRel );
                     }
                 }
             }
@@ -445,10 +424,13 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
             List<Segment> allSegments = getAllSegments();
             for ( Segment other : allSegments ) {
                 if ( !selectedSegment.equals( other ) ) {
-                    SegmentRelationship scRel = analyst.findSegmentRelationship( selectedSegment, other );
-                    if ( scRel != null ) scRels.add( scRel );
-                    scRel = analyst.findSegmentRelationship( other, selectedSegment );
-                    if ( scRel != null ) scRels.add( scRel );
+                    SegmentRelationship scRel =
+                            analyst.findSegmentRelationship( getQueryService(), selectedSegment, other );
+                    if ( scRel != null )
+                        scRels.add( scRel );
+                    scRel = analyst.findSegmentRelationship( getQueryService(), other, selectedSegment );
+                    if ( scRel != null )
+                        scRels.add( scRel );
                 }
             }
         } else {
@@ -456,8 +438,10 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
             for ( Segment segment : allSegments ) {
                 for ( Segment other : allSegments ) {
                     if ( !segment.equals( other ) ) {
-                        SegmentRelationship scRel = analyst.findSegmentRelationship( segment, other );
-                        if ( scRel != null ) scRels.add( scRel );
+                        SegmentRelationship scRel =
+                                analyst.findSegmentRelationship( getQueryService(), segment, other );
+                        if ( scRel != null )
+                            scRels.add( scRel );
                     }
                 }
             }
@@ -547,5 +531,4 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
     public Plan getPlan() {
         return (Plan) getModel().getObject();
     }
-
 }

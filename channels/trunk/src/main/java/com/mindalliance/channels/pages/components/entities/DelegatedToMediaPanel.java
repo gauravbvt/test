@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -213,12 +214,10 @@ public class DelegatedToMediaPanel extends AbstractCommandablePanel {
         public void setMedium( TransmissionMedium val ) {
             assert markedForCreation;
             if ( !getModeledMedium().getDelegatedToMedia().contains( val ) ) {
-                doCommand( new UpdatePlanObject(
-                        getModeledMedium(),
+                doCommand( new UpdatePlanObject( User.current().getUsername(), getModeledMedium(),
                         "delegatedToMedia",
                         val,
-                        UpdateObject.Action.Add
-                ) );
+                        UpdateObject.Action.Add ) );
             }
             medium = val;
         }
@@ -226,12 +225,10 @@ public class DelegatedToMediaPanel extends AbstractCommandablePanel {
         public void deleteMedium() {
             assert !markedForCreation;
             String name = medium.getName();
-            doCommand( new UpdatePlanObject(
-                    getModeledMedium(),
+            doCommand( new UpdatePlanObject( User.current().getUsername(), getModeledMedium(),
                     "delegatedToMedia",
                     medium,
-                    UpdateObject.Action.Remove
-            ) );
+                    UpdateObject.Action.Remove ) );
             getCommander().cleanup( TransmissionMedium.class, name );
         }
 

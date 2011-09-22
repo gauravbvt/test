@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.core.model.Actor;
@@ -9,6 +15,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -22,27 +29,17 @@ import java.util.List;
 
 /**
  * Dissemination meta provider.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Oct 22, 2010
- * Time: 8:27:02 PM
  */
 public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Dissemination> {
 
     private static final int MAX_INFO_LENGTH = 20;
 
-    public DisseminationMetaProvider(
-            SegmentObject segmentObject,
-            String outputFormat,
-            Resource imageDirectory,
-            Analyst analyst ) {
-        super( (ModelObject) segmentObject, outputFormat, imageDirectory, analyst, false, false, false );
+    public DisseminationMetaProvider( SegmentObject segmentObject, String outputFormat, Resource imageDirectory,
+                                      Analyst analyst, QueryService queryService ) {
+        super( (ModelObject) segmentObject, outputFormat, imageDirectory, analyst, false, false, false, queryService );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public URLProvider<Node, Dissemination> getURLProvider() {
         return new URLProvider<Node, Dissemination>() {
             /**
@@ -51,6 +48,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
              * @param node -- a vertex
              * @return a URL string
              */
+            @Override
             public String getGraphURL( Node node ) {
                 Object[] args = {node.getSegment().getId()};
                 return MessageFormat.format( GRAPH_URL_FORMAT, args );
@@ -62,6 +60,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
              * @param node -- a vertex
              * @return a URL string
              */
+            @Override
             public String getVertexURL( Node node ) {
                 if ( node.isPart() ) {
                     Object[] args = {node.getSegment().getId(), node.getId()};
@@ -77,6 +76,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
              * @param edge -- an edge
              * @return a URL string
              */
+            @Override
             public String getEdgeURL( Dissemination edge ) {
                 // Plan id = 0 for now sice there is only one plan
                 Object[] args = {0, edge.getFlow().getId()};
@@ -85,11 +85,10 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public EdgeNameProvider<Dissemination> getEdgeLabelProvider() {
         return new EdgeNameProvider<Dissemination>() {
+            @Override
             public String getEdgeName( Dissemination edge ) {
                 Flow flow = edge.getFlow();
                 StringBuilder sb = new StringBuilder();
@@ -120,6 +119,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
         };
     }
 
+    @Override
     public DOTAttributeProvider<Node, Dissemination> getDOTAttributeProvider() {
         return new SegmentDOTAttributeProvider();
     }
@@ -132,6 +132,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
         public SegmentDOTAttributeProvider() {
         }
 
+        @Override
         public List<DOTAttribute> getGraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
@@ -151,6 +152,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
          *
          * @return the style declarations
          */
+        @Override
         public List<DOTAttribute> getSubgraphAttributes( boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
@@ -161,7 +163,8 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             return list;
         }
 
-        public List<DOTAttribute> getVertexAttributes( Node vertex, boolean highlighted ) {
+        @Override
+        public List<DOTAttribute> getVertexAttributes( QueryService queryService, Node vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             if ( getOutputFormat().equalsIgnoreCase( DiagramFactory.SVG ) ) {
                 if ( vertex.isPart() ) {
@@ -191,14 +194,16 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
             if ( !getPlan().isTemplate()
-                    && getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+                    && getAnalyst().hasUnwaivedIssues( getQueryService(),
+                                                       vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
+                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( getQueryService(),
+                                                                                                vertex,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             } else {
                 String tooltip = vertex.getTitle();
                 if ( vertex.isPart() ) {
-                    List<Actor> partActors = getAnalyst().getQueryService().findAllActualActors(
+                    List<Actor> partActors = getQueryService().findAllActualActors(
                             ( (Part) vertex ).resourceSpec() );
                     if ( partActors.size() > 1 ) {
                         tooltip = sanitize( listActors( partActors ) );
@@ -209,9 +214,11 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             return list;
         }
 
-        public List<DOTAttribute> getEdgeAttributes( Dissemination edge, boolean highlighted ) {
+        @Override
+        public List<DOTAttribute> getEdgeAttributes( QueryService queryService, Dissemination edge, boolean highlighted ) {
             Flow flow = edge.getFlow();
-            boolean conceptual = !getPlan().isTemplate() && getAnalyst().isEffectivelyConceptual( flow );
+            boolean conceptual = !getPlan().isTemplate() && getAnalyst().isEffectivelyConceptual( getQueryService(),
+                                                                                                  flow );
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
@@ -276,10 +283,12 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             }
             // Issue coloring
             if ( !getPlan().isTemplate()
-                    && getAnalyst().hasUnwaivedIssues( flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+                    && getAnalyst().hasUnwaivedIssues( getQueryService(),
+                                                       flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( flow,
+                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( getQueryService(),
+                                                                                                flow,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             } else {
                 list.add( new DOTAttribute( "tooltip", sanitize( flow.getTitle() ) ) );
@@ -288,9 +297,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Object getContext() {
         return ( (SegmentObject) super.getContext() ).getSegment();
     }

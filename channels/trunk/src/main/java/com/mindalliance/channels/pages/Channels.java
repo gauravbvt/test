@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.playbook.ContactPage;
 import com.mindalliance.channels.pages.playbook.VCardPage;
 import com.mindalliance.channels.pages.png.DisseminationPage;
@@ -24,7 +24,6 @@ import com.mindalliance.channels.pages.procedures.CommitmentReportPage;
 import com.mindalliance.channels.pages.procedures.ProcedureMapPage;
 import com.mindalliance.channels.pages.procedures.ProceduresReportPage;
 import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage;
-import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
@@ -49,9 +48,6 @@ import org.springframework.security.authentication.event.AbstractAuthenticationE
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionIdentifierAware;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Application object for Channels.
  * Initialized in /WEB-INF/applicationContext.xml.
@@ -67,55 +63,80 @@ public class Channels extends WebApplication
     public static final Logger LOG = LoggerFactory.getLogger( Channels.class );
 
     /**
-     * The underlying service.
+     * Expansion id for social panel.
      */
-    private QueryService queryService;
+    public static final long SOCIAL_ID = -1;
 
     /**
-     * A diagram factory  - for testing only
+     * Analyst.
+     */
+    private Analyst analyst;
+
+    private ApplicationContext applicationContext;
+
+    private CommanderFactory commanderFactory;
+
+    /**
+     * A diagram factory  - for testing only.
      */
     private DiagramFactory diagramFactory;
+
+    /**
+     * GeoService.
+     */
+    private GeoService geoService;
 
     /**
      * Segment importer.
      */
     private ImportExportFactory importExportFactory;
 
-    /**
-     * Analyst
-     */
-    private Analyst analyst;
-
-    /**
-     * GeoService
-     */
-    private GeoService geoService;
+    private SpringComponentInjector injector;
 
     private PlanManager planManager;
 
-    /**
-     * One commander per plan.
-     */
-    private final Map<Plan, Commander> commanders = new HashMap<Plan, Commander>();
-
-    /**
-     * One lock manager per plan.
-     */
-    private final Map<Plan, LockManager> lockManagers = new HashMap<Plan, LockManager>();
-
-    private SpringComponentInjector injector;
-
-    private ApplicationContext applicationContext;
-
-    /**
-     * Expansion id for social panel.
-     */
-    public static final long SOCIAL_ID = -1;
-
+    //-------------------------------
     /**
      * Default Constructor.
      */
     public Channels() {
+    }
+
+    //-------------------------------
+    public DiagramFactory getDiagramFactory() {
+        if ( diagramFactory != null ) {
+            // When testing only
+            return diagramFactory;
+        } else {
+            // Get a prototype bean
+            return (DiagramFactory) applicationContext.getBean( "diagramFactory" );
+        }
+    }
+
+    /**
+     * Get the home page for the current user.
+     */
+    @Override
+    public Class<? extends WebPage> getHomePage() {
+        User user = User.current();
+        Plan plan = user.getPlan();
+        if ( plan == null ) {
+            plan = planManager.getDefaultPlan( user );
+            user.setPlan( plan );
+        }
+        return plan == null
+                ? NoAccessPage.class
+                : UserPage.class;
+    }
+    
+    /**
+     * Get the active plan's lock manager.
+     *
+     * @param plan a plan
+     * @return a lock manager
+     */
+    public LockManager getLockManager( Plan plan ) {
+        return commanderFactory.getCommander( plan ).getLockManager();
     }
 
 
@@ -167,144 +188,18 @@ public class Channels extends WebApplication
 
     }
 
-    public SpringComponentInjector getInjector() {
-        if ( injector == null )
-            injector = new SpringComponentInjector( this );
-        return injector;
-    }
-
-    public void setInjector( SpringComponentInjector injector ) {
-        this.injector = injector;
+    @Override
+    public final RequestCycle newRequestCycle( final Request request, final Response response ) {
+        return new WebRequestCycle( this, (WebRequest) request, (WebResponse) response ) {
+            @Override
+            public Page onRuntimeException( Page cause, RuntimeException e ) {
+                // obviously you can check the instanceof the exception and return the appropriate page if desired
+                return e instanceof PageExpiredException ? new ExpiredPage() : new ErrorPage( e );
+            }
+        };
     }
 
     @Override
-    protected void onDestroy() {
-        LOG.info( "Goodbye!" );
-        queryService.onDestroy();
-        analyst.onDestroy();
-    }
-
-    /**
-     * Get the home page for the current user.
-     */
-    @Override
-    public Class<? extends WebPage> getHomePage() {
-        User user = User.current();
-        Plan plan = user.getPlan();
-        if ( plan == null ) {
-            plan = planManager.getDefaultPlan( user );
-            user.setPlan( plan );
-        }
-        return plan == null
-                ? NoAccessPage.class
-                : UserPage.class;
-/*
-        return user.isAdmin() ? PlanPage.class // was AdminPage.class
-                : plan == null ? NoAccessPage.class
-                : user.isPlanner( plan.getUri() ) ? PlanPage.class
-                : ProceduresReportPage.class;
-*/
-    }
-
-    public QueryService getQueryService() {
-        return queryService;
-    }
-
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
-    }
-
-    public DiagramFactory getDiagramFactory() {
-        if ( diagramFactory != null ) {
-            // When testing only
-            return diagramFactory;
-        } else {
-            // Get a prototype bean
-            return (DiagramFactory) applicationContext.getBean( "diagramFactory" );
-        }
-    }
-
-    public void setApplicationContext( ApplicationContext applicationContext ) {
-        this.applicationContext = applicationContext;
-    }
-
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
-    // FOR TESTING ONLY
-    public void setDiagramFactory( DiagramFactory dm ) {
-        diagramFactory = dm;
-    }
-
-    public ImportExportFactory getImportExportFactory() {
-        return importExportFactory;
-    }
-
-    public void setImportExportFactory( ImportExportFactory importExportFactory ) {
-        this.importExportFactory = importExportFactory;
-    }
-
-    public Analyst getAnalyst() {
-        return analyst;
-    }
-
-    public void setAnalyst( Analyst analyst ) {
-        this.analyst = analyst;
-    }
-
-    public static Channels instance() {
-        return (Channels) get();
-    }
-
-    /**
-     * Get the given plan's commander
-     *
-     * @param plan a plan
-     * @return a commander
-     */
-    public Commander getCommander( Plan plan ) {
-        assert plan != null;
-        synchronized ( commanders ) {
-            Commander commander = commanders.get( plan );
-            if ( commander == null ) {
-                commander = (Commander) applicationContext.getBean( "commander" );
-                commander.setLockManager( getLockManager( plan ) );
-                commander.setPlanDao( planManager.getDao( plan ) );
-                commanders.put( plan, commander );
-                commander.initialize();
-            }
-            return commander;
-        }
-    }
-
-    /**
-     * Get the active plan's lock manager
-     *
-     * @return a lock manager
-     */
-    public LockManager getLockManager() {
-        Plan plan = queryService.getPlan();
-        return getLockManager( plan );
-    }
-
-    /**
-     * Get the active plan's lock manager
-     *
-     * @param plan a plan
-     * @return a lock manager
-     */
-    public LockManager getLockManager( Plan plan ) {
-        synchronized ( lockManagers ) {
-            LockManager lockManager = lockManagers.get( plan );
-            if ( lockManager == null ) {
-                lockManager = (LockManager) applicationContext.getBean( "lockManager" );
-                lockManagers.put( plan, lockManager );
-            }
-            return lockManager;
-        }
-    }
-
     public void onApplicationEvent( ApplicationEvent event ) {
         if ( LOG.isDebugEnabled() && event instanceof AbstractAuthenticationEvent ) {
             Authentication auth = ( (AbstractAuthenticationEvent) event ).getAuthentication();
@@ -316,12 +211,62 @@ public class Channels extends WebApplication
 
     }
 
+    @Override
+    protected void onDestroy() {
+        LOG.info( "Goodbye!" );
+        analyst.onDestroy();
+    }
+
+    //-------------------------------
+    public Analyst getAnalyst() {
+        return analyst;
+    }
+
+    public void setAnalyst( Analyst analyst ) {
+        this.analyst = analyst;
+    }
+
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    @Override
+    public void setApplicationContext( ApplicationContext applicationContext ) {
+        this.applicationContext = applicationContext;
+    }
+
+    public CommanderFactory getCommanderFactory() {
+        return commanderFactory;
+    }
+
+    public void setCommanderFactory( CommanderFactory commanderFactory ) {
+        this.commanderFactory = commanderFactory;
+    }
+
     public GeoService getGeoService() {
         return geoService;
     }
 
     public void setGeoService( GeoService geoService ) {
         this.geoService = geoService;
+    }
+
+    public ImportExportFactory getImportExportFactory() {
+        return importExportFactory;
+    }
+
+    public void setImportExportFactory( ImportExportFactory importExportFactory ) {
+        this.importExportFactory = importExportFactory;
+    }
+
+    public SpringComponentInjector getInjector() {
+        if ( injector == null )
+            injector = new SpringComponentInjector( this );
+        return injector;
+    }
+
+    public void setInjector( SpringComponentInjector injector ) {
+        this.injector = injector;
     }
 
     public PlanManager getPlanManager() {
@@ -332,25 +277,9 @@ public class Channels extends WebApplication
         this.planManager = planManager;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final RequestCycle newRequestCycle( final Request request, final Response response ) {
-        return new WebRequestCycle( this, (WebRequest) request, (WebResponse) response ) {
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public Page onRuntimeException( final Page cause, final RuntimeException e ) {
-                // obviously you can check the instanceof the exception and return the appropriate page if desired
-                if ( e instanceof PageExpiredException ) {
-                    return new ExpiredPage();
-                } else {
-                    return new ErrorPage( e );
-                }
-            }
-        };
+    // FOR TESTING ONLY
+    public void setDiagramFactory( DiagramFactory dm ) {
+        diagramFactory = dm;
     }
 
 }

@@ -1,5 +1,12 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.LockManager;
@@ -36,26 +43,31 @@ import java.util.regex.Pattern;
 
 /**
  * Abstract base class of updatable panels.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Feb 27, 2009
- * Time: 7:30:31 PM
  */
 public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     @SpringBean
-    // Default query service set automatically.
-    private QueryService queryService;
+    private CommanderFactory commanderFactory;
+
+    @SpringBean
+    private Analyst analyst;
+
+    @SpringBean
+    private PlanManager planManager;
+
+    @SpringBean
+    private DiagramFactory diagramFactory;
 
     /**
      * String comparator for equality tests.
      */
     private static final Collator COMPARATOR = Collator.getInstance();
+
     /**
      * Model on an identifiable.
      */
-    private IModel<? extends Identifiable> model = null;
+    private IModel<? extends Identifiable> model;
+
     /**
      * Ids of expanded model objects.
      */
@@ -64,23 +76,18 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     /**
      * Name pattern.
      */
-    private Pattern namePattern = Pattern.compile( "^.*?(\\(\\d+\\))?$" );
+    private final Pattern namePattern = Pattern.compile( "^.*?(\\(\\d+\\))?$" );
 
     public AbstractUpdatablePanel( String id ) {
         super( id );
         setOutputMarkupId( true );
     }
 
-    public AbstractUpdatablePanel(
-            String id,
-            IModel<? extends Identifiable> model ) {
+    public AbstractUpdatablePanel( String id, IModel<? extends Identifiable> model ) {
         this( id, model, null );
     }
 
-    public AbstractUpdatablePanel(
-            String id,
-            IModel<? extends Identifiable> model,
-            Set<Long> expansions ) {
+    public AbstractUpdatablePanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model );
         setOutputMarkupId( true );
         this.model = model;
@@ -96,34 +103,9 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      *
      * @return a query service
      */
+    @Override
     public QueryService getQueryService() {
-        // Take the root updatable ancestor's query service
-        Updatable rootUpdatable = findRootUpdatable();
-        return rootUpdatable != null
-                ? rootUpdatable.getOwnQueryService()
-                : queryService;
-    }
-
-    private Updatable findRootUpdatable() {
-        Updatable rootUpdatable = this;
-        Updatable parent = null;
-        boolean found = false;
-        do {
-            parent = findUpdatableParent();
-            if ( rootUpdatable == parent )
-                found = true;
-            else if ( parent != null )
-                rootUpdatable = parent;
-        } while ( parent != null && !found );
-        return rootUpdatable;
-    }
-
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
-    }
-
-    public QueryService getOwnQueryService() {
-        return queryService;
+        return getCommander().getQueryService();
     }
 
     /**
@@ -132,7 +114,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return an analyst
      */
     protected Analyst getAnalyst() {
-        return getChannels().getAnalyst();
+        return analyst;
     }
 
     /**
@@ -141,7 +123,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return diagram factory
      */
     protected DiagramFactory getDiagramFactory() {
-        return getChannels().getDiagramFactory();
+        return diagramFactory;
     }
 
     /**
@@ -150,7 +132,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a commander
      */
     protected Commander getCommander() {
-        return getChannels().getCommander( User.plan() );
+        return commanderFactory.getCommander( getPlan() );
     }
 
     /**
@@ -159,7 +141,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return the plan manager
      */
     protected PlanManager getPlanManager() {
-        return getQueryService().getPlanManager();
+        return planManager;
     }
 
     /**
@@ -168,7 +150,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a lock manager
      */
     protected LockManager getLockManager() {
-        return getChannels().getLockManager();
+        return getCommander().getLockManager();
     }
 
     private Channels getChannels() {
@@ -178,12 +160,11 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     /**
      * Set and update a component's visibility.
      *
-     * @param target    an ajax request target
+     * @param target an ajax request target
      * @param component a component
-     * @param visible   a boolean
+     * @param visible a boolean
      */
-    protected static void makeVisible( AjaxRequestTarget target, Component component,
-                                       boolean visible ) {
+    protected static void makeVisible( AjaxRequestTarget target, Component component, boolean visible ) {
         makeVisible( component, visible );
         target.addComponent( component );
     }
@@ -192,28 +173,20 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * Set a component's visibility.
      *
      * @param component a component
-     * @param visible   a boolean
+     * @param visible a boolean
      */
     protected static void makeVisible( Component component, boolean visible ) {
-        component.add(
-                new AttributeModifier(
-                        "style",
-                        true,
-                        new Model<String>( visible ? "" : "display:none" ) ) );
+        component.add( new AttributeModifier( "style", true, new Model<String>( visible ? "" : "display:none" ) ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void changed( Change change ) {
         Updatable updatableParent = findUpdatableParent();
         if ( updatableParent != null )
             updatableParent.changed( change );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Updatable updatableParent = findUpdatableParent();
         if ( updatableParent != null ) {
@@ -226,9 +199,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return findParent( Updatable.class );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void update( AjaxRequestTarget target, Object object, String action ) {
         // Do nothing
     }
@@ -244,23 +215,17 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         updateWith( target, change, new ArrayList<Updatable>() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void refresh( AjaxRequestTarget target, Change change ) {
         refresh( target, change, new ArrayList<Updatable>() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         refresh( target, change, updated, null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated, String aspect ) {
         if ( !updated.contains( this ) && !change.isNone() ) {
             refresh( target, change, aspect );
@@ -269,7 +234,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     /**
-     * Refresh given change
+     * Refresh given change.
      *
      * @param target an ajax request target
      * @param change the nature of the change
@@ -282,7 +247,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     /**
      * Test if strings are equivalent.
      *
-     * @param name   the new name
+     * @param name the new name
      * @param target the original name
      * @return true if strings are equivalent
      */
@@ -310,10 +275,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                 if ( count > 1 ) {
                     String group = matcher.group( 0 );
                     int index = Integer.valueOf( group.substring( 1, group.length() - 2 ) );
-                    choices.add(
-                            taken.substring( 0, taken.lastIndexOf( '(' ) - 1 )
-                                    + '(' + ( index + 1 ) + ')'
-                    );
+                    choices.add( taken.substring( 0, taken.lastIndexOf( '(' ) - 1 ) + '(' + ( index + 1 ) + ')' );
                 } else
                     choices.add( taken + "(2)" );
             }
@@ -325,31 +287,28 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * Add issues annotations to a component.
      *
      * @param component the component
-     * @param object    the object of the issues
-     * @param property  the property of concern. If null, get issues of object
+     * @param object the object of the issues
+     * @param property the property of concern. If null, get issues of object
      */
     protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
-        Analyst analyst = getAnalyst();
         String summary = property == null ?
-                analyst.getIssuesSummary( object, false ) :
-                analyst.getIssuesSummary( object, property );
+                         analyst.getIssuesSummary( getQueryService(), object, false ) :
+                         analyst.getIssuesSummary( getQueryService(), object, property );
 
         boolean hasIssues = property == null ?
-                analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC ) :
-                analyst.hasIssues( object, property );
+                            analyst.hasIssues( getQueryService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC ) :
+                            analyst.hasIssues( getQueryService(), object, property );
 
         if ( summary.isEmpty() )
-            component.add(
-                    new AttributeModifier(
-                            "class", true,
-                            new Model<String>( hasIssues ? "waived" : "no-error" ) ),
-                    new AttributeModifier(
-                            "title", true,
-                            new Model<String>( hasIssues ? "All issues waived" : "" ) ) );
+            component.add( new AttributeModifier( "class",
+                                                  true,
+                                                  new Model<String>( hasIssues ? "waived" : "no-error" ) ),
+                           new AttributeModifier( "title",
+                                                  true,
+                                                  new Model<String>( hasIssues ? "All issues waived" : "" ) ) );
         else
-            component.add(
-                    new AttributeModifier( "class", true, new Model<String>( "error" ) ),
-                    new AttributeModifier( "title", true, new Model<String>( summary ) ) );
+            component.add( new AttributeModifier( "class", true, new Model<String>( "error" ) ),
+                           new AttributeModifier( "title", true, new Model<String>( summary ) ) );
     }
 
     /**
@@ -357,19 +316,20 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      *
      * @return a plan
      */
+    @Override
     public Plan getPlan() {
-        return getQueryService().getPlan();
+        // TODO Get rid of this ASAP
+        return User.plan();
     }
 
     /**
-     * Get sanitized plan urn (its sanitized uri).
+     * Get sanitized plan getUrn (its sanitized uri).
      *
      * @return a string
      */
     protected String planUrn() {
-        return getPlan().urn();
+        return getPlan().getUrn();
     }
-
 
     /**
      * Whether or not the idenfiable is collapsed.
@@ -404,19 +364,17 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     /**
      * Return an actionalble label declaring that another user is editing.
      *
-     * @param id           a string
+     * @param id a string
      * @param identifiable an identifiable
-     * @param username     a string
+     * @param username a string
      * @return a label
      */
     protected Label editedByLabel( String id, final Identifiable identifiable, final String username ) {
-        Label label = new Label(
-                id, "(Edited by " + getQueryService().findUserFullName( username ) + ")" );
-        label.add(
-                new AttributeModifier( "class", true, new Model<String>( "disabled pointer" ) ) );
-        label.add(
-                new AttributeModifier( "title", true, new Model<String>( "Click to send a message" ) ) );
+        Label label = new Label( id, "(Edited by " + getQueryService().findUserFullName( username ) + ")" );
+        label.add( new AttributeModifier( "class", true, new Model<String>( "disabled pointer" ) ) );
+        label.add( new AttributeModifier( "title", true, new Model<String>( "Click to send a message" ) ) );
         label.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Communicated, identifiable, username ) );
             }
@@ -431,8 +389,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a label
      */
     protected Label timeOutLabel( String id ) {
-        Label label = new Label(
-                id, new Model<String>( getPlan().isDevelopment() ? "Timed out" : "" ) );
+        Label label = new Label( id, new Model<String>( getPlan().isDevelopment() ? "Timed out" : "" ) );
         label.add( new AttributeModifier( "class", true, new Model<String>( "disabled timed-out" ) ) );
         return label;
     }
@@ -446,17 +403,18 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return page instanceof PlanPage ? (PlanPage) page : null;
     }
 
+    public CommanderFactory getCommanderFactory() {
+        return commanderFactory;
+    }
+
     /**
      * Add issues annotations to a component.
      *
      * @param component the component
-     * @param object    the object of the issues
-     * @param property  the property of concern. If null, get issues of object
+     * @param object the object of the issues
+     * @param property the property of concern. If null, get issues of object
      */
-    protected void addIssuesAnnotation(
-            FormComponent<?> component,
-            ModelObject object,
-            String property ) {
+    protected void addIssuesAnnotation( FormComponent<?> component, ModelObject object, String property ) {
         addIssuesAnnotation( component, object, property, "error" );
     }
 
@@ -464,36 +422,25 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * Add issues annotations to a component.
      *
      * @param component the component
-     * @param object    the object of the issues
-     * @param property  the property of concern. If null, get issues of object
+     * @param object the object of the issues
+     * @param property the property of concern. If null, get issues of object
      */
-    protected void addIssuesAnnotation(
-            FormComponent<?> component,
-            ModelObject object,
-            String property,
-            String errorClass ) {
+    protected void addIssuesAnnotation( FormComponent<?> component, ModelObject object, String property,
+                                        String errorClass ) {
         Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
         String summary = property == null ?
-                analyst.getIssuesSummary( object, false ) :
-                analyst.getIssuesSummary( object, property );
-        boolean hasIssues = analyst.hasIssues( object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+                         analyst.getIssuesSummary( getQueryService(), object, false ) :
+                         analyst.getIssuesSummary( getQueryService(), object, property );
+        boolean hasIssues = analyst.hasIssues( getQueryService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !summary.isEmpty() ) {
-            component.add(
-                    new AttributeModifier(
-                            "class", true, new Model<String>( errorClass ) ) );              // NON-NLS
-            component.add(
-                    new AttributeModifier(
-                            "title", true, new Model<String>( summary ) ) );                // NON-NLS
+            component.add( new AttributeModifier( "class", true, new Model<String>( errorClass ) ) );
+            component.add( new AttributeModifier( "title", true, new Model<String>( summary ) ) );
         } else {
             if ( property == null && hasIssues ) {
                 // All waived issues
-                component.add(
-                        new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
-                component.add(
-                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
+                component.add( new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
+                component.add( new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
             }
         }
     }
-
-
 }

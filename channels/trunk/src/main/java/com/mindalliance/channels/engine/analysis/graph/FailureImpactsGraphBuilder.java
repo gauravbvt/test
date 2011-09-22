@@ -22,19 +22,21 @@ public class FailureImpactsGraphBuilder implements GraphBuilder<Node, Flow> {
     /**
      * Whether all alternates to downstream sharing flows are presumed to also fail.
      */
-    boolean assumeAlternatesFail;
+    private final boolean assumeAlternatesFail;
 
-    private QueryService queryService;
+    private final QueryService queryService;
 
     /**
      * Plan segment object presumed to fail.
      */
-    private SegmentObject segmentObject;
+    private final SegmentObject segmentObject;
 
     //-------------------------------
-    public FailureImpactsGraphBuilder( SegmentObject segmentObject, boolean assumeAlternatesFail ) {
+    public FailureImpactsGraphBuilder( SegmentObject segmentObject, boolean assumeAlternatesFail,
+                                       QueryService queryService ) {
         this.segmentObject = segmentObject;
         this.assumeAlternatesFail = assumeAlternatesFail;
+        this.queryService = queryService;
     }
 
     //-------------------------------
@@ -58,7 +60,7 @@ public class FailureImpactsGraphBuilder implements GraphBuilder<Node, Flow> {
     }
 
     private void populateGraph( DirectedGraph<Node, Flow> graph ) {
-        List<Flow> essentialFlows = getEssentialFlows( segmentObject );
+        List<Flow> essentialFlows = getEssentialFlows();
 
         if ( segmentObject instanceof Flow ) {
             Flow flow = (Flow) segmentObject;
@@ -79,25 +81,16 @@ public class FailureImpactsGraphBuilder implements GraphBuilder<Node, Flow> {
         }
     }
 
-    private List<Flow> getEssentialFlows( SegmentObject segmentObject ) {
+    private List<Flow> getEssentialFlows() {
         if ( segmentObject instanceof Part )
             return queryService.findEssentialFlowsFrom( (Part) segmentObject, assumeAlternatesFail );
 
         if ( segmentObject instanceof Flow ) {
             Flow flow = (Flow) segmentObject;
             if ( queryService.isEssential( flow, assumeAlternatesFail ) )
-                return getEssentialFlows( flow.getTarget() );
+                return getEssentialFlows();
         }
 
         return new ArrayList<Flow>();
-    }
-
-    //-------------------------------
-    public QueryService getQueryService() {
-        return queryService;
-    }
-
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
     }
 }

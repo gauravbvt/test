@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -46,13 +47,13 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Actor actor = (Actor) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        List<Organization> employers = getQueryService().findEmployers( actor );
+        List<Organization> employers = queryService.findEmployers( actor );
         if ( employers.size() != 1 ) {
             if ( employers.size() == 0 ) {
-                DetectedIssue issue = makeIssue( Issue.COMPLETENESS, actor );
+                DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, actor );
                 issue.setSeverity( Level.Low );
                 issue.setDescription( actor + " does not belong to any organization." );
                 issue.setRemediation( "Specify an organization in a task played by the agent\n "
@@ -70,7 +71,7 @@ public class ActorNotInOneOrganization extends AbstractIssueDetector {
                                 }
                             } );
                     for ( Organization ancestor : ancestors ) {
-                        DetectedIssue issue = makeIssue( Issue.VALIDITY, actor );
+                        DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, actor );
                         issue.setSeverity( Level.Low );
                         issue.setDescription( actor
                                 + " belongs to " + org.getName()

@@ -76,12 +76,12 @@ public class TestParticipantPage extends AbstractChannelsTest {
 
     private void associate( String userName, String planUri, String agentName ) {
         login( "denis" );
-        User user = userService.getUserNamed( userName );
+        User user = userDao.getUserNamed( userName );
         user.setUserInfo( new UserInfo( userName, "bla,Test,bla,[" + planUri + "|ROLE_USER]" ) );
 
         Plan devPlan = planManager.findDevelopmentPlan( planUri );
 
-        PlanService service = new PlanService( planManager, null, userService, devPlan, attachmentManager );
+        PlanService service = new PlanService( planManager, null, userDao, devPlan, attachmentManager );
 
         planManager.productize( devPlan );
         Participation participation = new Participation( userName );

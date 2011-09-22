@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +27,12 @@ public class FlowWithUndefinedSource extends AbstractIssueDetector {
     }
 
     /** {@inheritDoc} */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         Node source = flow.getSource();
         if ( source.isPart() && ( (Part) source ).isEmpty() ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, "source" );
+            DetectedIssue issue = makeIssue( queryService, DetectedIssue.VALIDITY, modelObject, "source" );
             issue.setDescription( "The source task is not defined." );
             issue.setRemediation( "Name the agent of the source task\nor name the role\nor name the organization." );
             issue.setSeverity( Level.Medium );

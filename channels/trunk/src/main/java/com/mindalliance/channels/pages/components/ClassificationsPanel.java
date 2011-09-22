@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -263,8 +264,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
             name = val;
             Classification classification = getClassification();
             if ( classification != null )
-                doCommand( UpdateObject.makeCommand(
-                        getClassified(),
+                doCommand( UpdateObject.makeCommand( User.current().getUsername(), getClassified(),
                         getClassifiableProperty(),
                         classification,
                         UpdateObject.Action.Add ) );
@@ -286,12 +286,10 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
             assert !markedForCreation;
             Classification oldClassification = getClassification();
             if ( oldClassification != null ) {
-                doCommand( UpdateObject.makeCommand(
-                        getClassified(),
+                doCommand( UpdateObject.makeCommand( User.current().getUsername(), getClassified(),
                         getClassifiableProperty(),
                         oldClassification,
-                        UpdateObject.Action.Remove
-                ) );
+                        UpdateObject.Action.Remove ) );
             }
         }
     }

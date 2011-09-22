@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,18 +28,18 @@ public class RedundantChannel extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Channelable channelable = (Channelable) modelObject;
         List<Channel> channels = channelable.getEffectiveChannels();
-        Place locale = getPlan().getLocale();
+        Place locale = queryService.getPlan().getLocale();
         for ( Channel channel : channels ) {
             for ( Channel other : channels ) {
                 if ( !channel.equals( other ) ) {
                     if ( channel.getAddress().isEmpty() &&
                             other.getAddress().isEmpty()
                             && channel.getMedium().narrowsOrEquals( other.getMedium(), locale ) ) {
-                        Issue issue = makeIssue( Issue.VALIDITY, (ModelObject) channelable );
+                        Issue issue = makeIssue( queryService, Issue.VALIDITY, (ModelObject) channelable );
                         issue.setDescription( "Channel \""
                                 + channel.getLabel()
                                 + "\" is a special case of \""

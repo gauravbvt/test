@@ -1,8 +1,15 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
@@ -24,22 +31,15 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-/**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jan 23, 2009
- * Time: 7:52:29 PM
- */
 public class CollapsedIssuePanel extends AbstractCommandablePanel {
 
-    @SpringBean
     /**
      * Survey service.
      */
+    @SpringBean
     private SurveyService surveyService;
     /**
-     * Issue in panel
+     * Issue in panel.
      */
     private IModel<Issue> model;
 
@@ -65,7 +65,8 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         IndicatingAjaxFallbackLink surveyLink = new IndicatingAjaxFallbackLink( "surveyLink" ) {
             public void onClick( AjaxRequestTarget target ) {
                 try {
-                    Survey survey = surveyService.getOrCreateSurvey( Survey.Type.Remediation, issue, getPlan() );
+                    Survey survey = surveyService.getOrCreateSurvey( getQueryService(),
+                                                                     Survey.Type.Remediation, issue, getPlan() );
                     update( target, new Change( Change.Type.Expanded, survey ) );
                 } catch ( SurveyException e ) {
                     e.printStackTrace();
@@ -187,12 +188,10 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
      * @param waive a boolean
      */
     public void setWaived( boolean waive ) {
-        Command command = UpdateObject.makeCommand(
-                getIssue().getAbout(),
+        Command command = UpdateObject.makeCommand( User.current().getUsername(), getIssue().getAbout(),
                 "waivedIssueDetections",
                 getIssue().getKind(),
-                waive ? UpdateObject.Action.Add : UpdateObject.Action.Remove
-        );
+                waive ? UpdateObject.Action.Add : UpdateObject.Action.Remove );
         doCommand( command );
     }
 }

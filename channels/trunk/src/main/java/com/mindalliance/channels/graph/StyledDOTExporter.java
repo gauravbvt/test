@@ -1,5 +1,6 @@
 package com.mindalliance.channels.graph;
 
+import com.mindalliance.channels.engine.query.QueryService;
 import org.jgrapht.Graph;
 
 import java.io.Writer;
@@ -18,6 +19,6 @@ public interface StyledDOTExporter<V,E> {
 
     void setHighlightedEdges( Set<E> edges);
 
-    void export( Writer writer, Graph<V, E> graph );
+    void export( QueryService queryService, Writer writer, Graph<V, E> graph );
 
 }

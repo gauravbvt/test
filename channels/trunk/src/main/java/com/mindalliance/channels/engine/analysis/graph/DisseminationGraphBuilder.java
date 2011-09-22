@@ -1,13 +1,19 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Dissemination;
 import com.mindalliance.channels.core.model.InternalFlow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
-import com.mindalliance.channels.core.model.Transformation;
+import com.mindalliance.channels.core.model.Transformation.Type;
+import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
@@ -17,34 +23,29 @@ import java.util.List;
 
 /**
  * Dissemination graph builder.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Oct 21, 2010
- * Time: 3:10:11 PM
  */
 public class DisseminationGraphBuilder implements GraphBuilder<Node, Dissemination> {
-    private SegmentObject segmentObject;
-    private Subject subject;
-    private boolean showTargets;
-    private QueryService queryService;
 
-    public DisseminationGraphBuilder() {
-    }
+    private final SegmentObject segmentObject;
 
-    public DisseminationGraphBuilder(
-            SegmentObject segmentObject,
-            Subject subject,
-            boolean showTargets ) {
+    private final Subject subject;
+
+    private final boolean showTargets;
+
+    private final QueryService queryService;
+
+    public DisseminationGraphBuilder( SegmentObject segmentObject, Subject subject, boolean showTargets,
+                                      QueryService queryService ) {
 
         this.segmentObject = segmentObject;
         this.subject = subject;
         this.showTargets = showTargets;
+        this.queryService = queryService;
     }
 
     public DirectedGraph<Node, Dissemination> buildDirectedGraph() {
-        DirectedGraph<Node, Dissemination> digraph = new DirectedMultigraph<Node, Dissemination>(
-                new EdgeFactory<Node, Dissemination>() {
+        DirectedGraph<Node, Dissemination> digraph =
+                new DirectedMultigraph<Node, Dissemination>( new EdgeFactory<Node, Dissemination>() {
                     /**
                      * Separate id generator for diagram-based flows.
                      */
@@ -53,24 +54,15 @@ public class DisseminationGraphBuilder implements GraphBuilder<Node, Disseminati
                     public Dissemination createEdge( Node sourceVertex, Node targetVertex ) {
                         InternalFlow flow = new InternalFlow( sourceVertex, targetVertex, "" );
                         flow.setId( IdCounter++ );
-                        return new Dissemination(
-                                flow,
-                                Transformation.Type.Identity,
-                                new Delay(),
-                                new Subject(),
-                                new Subject());
+                        return new Dissemination( flow, Type.Identity, new Delay(), new Subject(), new Subject() );
                     }
-
                 } );
         populateDisseminationGraph( digraph );
         return digraph;
     }
 
     private void populateDisseminationGraph( DirectedGraph<Node, Dissemination> graph ) {
-        List<Dissemination> disseminations = getQueryService().findAllDisseminations(
-                segmentObject,
-                subject,
-                showTargets );
+        List<Dissemination> disseminations = queryService.findAllDisseminations( segmentObject, subject, showTargets );
         for ( Dissemination dissemination : disseminations ) {
             Node source = dissemination.getFlow().getSource();
             Node target = dissemination.getFlow().getTarget();
@@ -79,14 +71,4 @@ public class DisseminationGraphBuilder implements GraphBuilder<Node, Disseminati
             graph.addEdge( source, target, dissemination );
         }
     }
-
-
-    public QueryService getQueryService() {
-        return queryService;
-    }
-
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
-    }
-
 }

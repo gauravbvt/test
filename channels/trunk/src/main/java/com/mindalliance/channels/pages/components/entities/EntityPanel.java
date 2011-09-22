@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Issue;
@@ -252,7 +253,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      */
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        getCommander().requestLockOn( change.getSubject( getQueryService() ) );
+        getCommander().requestLockOn( User.current().getUsername(), change.getSubject( getQueryService() ) );
         super.refresh( target, change, aspect );
     }
 

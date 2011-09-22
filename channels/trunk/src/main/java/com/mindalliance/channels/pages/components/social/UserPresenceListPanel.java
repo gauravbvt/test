@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.PlanningEventService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -30,7 +30,7 @@ import java.util.List;
 public class UserPresenceListPanel extends AbstractSocialListPanel {
 
     @SpringBean
-    UserService userService;
+    UserDao userDao;
 
     @SpringBean
     private PlanningEventService planningEventService;
@@ -97,7 +97,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
 
     public List<User> getUsersPresent() {
         List<User> usersPresent = new ArrayList<User>();
-        for ( User user : userService.getUsers( getPlan().getUri() ) ) {
+        for ( User user : userDao.getUsers( getPlan().getUri() ) ) {
             if ( !showHereOnly || isHere( user.getUsername() ) ) {
                 usersPresent.add( user );
             }

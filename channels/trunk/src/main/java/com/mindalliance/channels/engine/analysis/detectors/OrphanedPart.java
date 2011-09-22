@@ -5,6 +5,7 @@ import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,14 +47,14 @@ public class OrphanedPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( !part.receives().hasNext() && !part.sends().hasNext() ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.COMPLETENESS, part );
+            DetectedIssue issue = makeIssue( queryService, DetectedIssue.COMPLETENESS, part );
             issue.setDescription( "Does not produce nor need information." );
             issue.setRemediation( "Add information received\nor add information sent." );
-            issue.setSeverity( getQueryService().computePartPriority( part ) );
+            issue.setSeverity( queryService.computePartPriority( part ) );
             issues.add( issue );
         }
         return issues;

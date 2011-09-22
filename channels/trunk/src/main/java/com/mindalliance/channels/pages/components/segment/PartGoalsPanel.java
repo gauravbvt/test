@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Part;
@@ -148,21 +149,17 @@ public class PartGoalsPanel extends AbstractCommandablePanel {
             assert goal != null;
             if ( confirmed ) {
                 if ( !getPart().getGoals().contains( goal ) ) {
-                    doCommand( new UpdateSegmentObject(
-                            getPart(),
+                    doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(),
                             "goals",
                             goal,
-                            UpdateObject.Action.Add
-                    ) );
+                            UpdateObject.Action.Add ) );
                 }
             } else {
                 if ( getPart().getGoals().contains( goal ) ) {
-                    doCommand( new UpdateSegmentObject(
-                            getPart(),
+                    doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(),
                             "goals",
                             goal,
-                            UpdateObject.Action.Remove
-                    ) );
+                            UpdateObject.Action.Remove ) );
                 }
             }
         }

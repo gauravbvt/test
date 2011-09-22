@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
@@ -138,9 +139,11 @@ public class DelayPanel extends AbstractCommandablePanel {
 
     private void setProperty( String prop, Object val ) {
         if ( model.getObject() instanceof SegmentObject ) {
-            doCommand( new UpdateSegmentObject( model.getObject(), property + "." + prop, val ) );
+            doCommand( new UpdateSegmentObject( User.current().getUsername(),
+                                                model.getObject(), property + "." + prop, val ) );
         } else {
-            doCommand( new UpdatePlanObject( model.getObject(), property + "." + prop, val ) );
+            doCommand( new UpdatePlanObject( User.current().getUsername(),
+                                             model.getObject(), property + "." + prop, val ) );
         }
     }
 

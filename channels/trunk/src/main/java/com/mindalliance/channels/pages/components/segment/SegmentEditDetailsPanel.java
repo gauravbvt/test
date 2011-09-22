@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.Change;
@@ -52,34 +58,38 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
      * An issues panel for segment issues.
      */
     private IssuesPanel issuesPanel;
+
     /**
      * Link to event.
      */
     private ModelObjectLink phaseLink;
+
     /**
      * Choice of phases.
      */
     private DropDownChoice<Phase> phaseChoices;
+
     /**
      * Link to phase.
      */
     private ModelObjectLink eventLink;
+
     /**
      * Event level choice.
      */
     private DropDownChoice<String> eventLevelChoice;
+
     /**
      * Event timings panel.
      */
     private EventTimingsPanel eventTimingsPanel;
+
     /**
      * Name for unspecified level.
      */
     private static final String ANY = "Any";
 
-    public SegmentEditDetailsPanel( String id,
-                                    IModel<? extends Identifiable> model,
-                                    Set<Long> expansions ) {
+    public SegmentEditDetailsPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
     }
@@ -100,6 +110,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
 
     private void addTagsPanel() {
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
+            @Override
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TAGS ) );
             }
@@ -111,38 +122,28 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
     }
 
     private void addEventLevelChoice() {
-        eventLevelChoice = new DropDownChoice<String>(
-                "event-level",
-                new PropertyModel<String>( this, "eventLevel" ),
-                getEventLevelChoices() );
+        eventLevelChoice = new DropDownChoice<String>( "event-level",
+                                                       new PropertyModel<String>( this, "eventLevel" ),
+                                                       getEventLevelChoices() );
         eventLevelChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getSegment(), "eventLevel" ) );
             }
         } );
         eventLevelChoice.setOutputMarkupId( true );
-        eventLevelChoice.setEnabled( isLockedByUserIfNeeded( getSegment() )
-                && getSegment().getEvent() != null );
+        eventLevelChoice.setEnabled( isLockedByUserIfNeeded( getSegment() ) && getSegment().getEvent() != null );
         addOrReplace( eventLevelChoice );
     }
 
     public String getEventLevel() {
         Level level = getSegment().getEventLevel();
-        if ( level == null ) {
-            return ANY;
-        } else {
-            return level.name();
-        }
+        return level == null ? ANY : level.name();
     }
 
     public void setEventLevel( String val ) {
-        Level level;
-        if ( val.equals( ANY ) ) {
-            level = null;
-        } else {
-            level = Level.valueOf( val );
-        }
-        doCommand( new UpdatePlanObject( getSegment(), "eventLevel", level ) );
+        Level level = val.equals( ANY ) ? null : Level.valueOf( val );
+        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(), "eventLevel", level ) );
     }
 
     private List<String> getEventLevelChoices() {
@@ -155,11 +156,10 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
     }
 
     private void addIdentityFields() {
-        TextField<String> nameField = new TextField<String>(
-                "name",
-                new PropertyModel<String>( this, "name" ) );
+        TextField<String> nameField = new TextField<String>( "name", new PropertyModel<String>( this, "name" ) );
         add( new FormComponentLabel( "name-label", nameField ) );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getSegment(), "name" ) );
             }
@@ -167,11 +167,11 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
         nameField.setEnabled( isLockedByUserIfNeeded( getSegment() ) );
         add( nameField );
 
-        TextArea<String> descField = new TextArea<String>(
-                "description",
-                new PropertyModel<String>( this, "description" ) );
+        TextArea<String> descField =
+                new TextArea<String>( "description", new PropertyModel<String>( this, "description" ) );
         add( new FormComponentLabel( "description-label", descField ) );
         descField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getSegment(), "description" ) );
             }
@@ -182,20 +182,19 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
 
     private void addPhaseLink() {
         phaseLink = new ModelObjectLink( "phase-link",
-                new PropertyModel<Event>( getSegment(), "phase" ),
-                new Model<String>( "Phase" ) );
+                                         new PropertyModel<Event>( getSegment(), "phase" ),
+                                         new Model<String>( "Phase" ) );
         phaseLink.setOutputMarkupId( true );
         addOrReplace( phaseLink );
     }
 
     private void addPhaseChoice() {
-        phaseChoices = new DropDownChoice<Phase>(
-                "phase-choices",
-                new PropertyModel<Phase>( this, "phase" ),
-                new PropertyModel<List<Phase>>( getPlan(), "phases" )
-        );
+        phaseChoices = new DropDownChoice<Phase>( "phase-choices",
+                                                  new PropertyModel<Phase>( this, "phase" ),
+                                                  new PropertyModel<List<Phase>>( getPlan(), "phases" ) );
         phaseChoices.setOutputMarkupId( true );
         phaseChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addPhaseLink();
                 target.addComponent( phaseLink );
@@ -208,19 +207,20 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
 
     private void addEventField() {
         final List<String> choices = getQueryService().findAllEntityNames( Event.class );
-        TextField<String> eventField = new AutoCompleteTextField<String>(
-                "event",
-                new PropertyModel<String>( this, "eventName" ) ) {
-            protected Iterator<String> getChoices( String s ) {
-                List<String> candidates = new ArrayList<String>();
-                for ( String choice : choices ) {
-                    if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
-                }
-                return candidates.iterator();
-
-            }
-        };
+        TextField<String> eventField =
+                new AutoCompleteTextField<String>( "event", new PropertyModel<String>( this, "eventName" ) ) {
+                    @Override
+                    protected Iterator<String> getChoices( String s ) {
+                        List<String> candidates = new ArrayList<String>();
+                        for ( String choice : choices ) {
+                            if ( getQueryService().likelyRelated( s, choice ) )
+                                candidates.add( choice );
+                        }
+                        return candidates.iterator();
+                    }
+                };
         eventField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addEventLink();
                 target.addComponent( eventLink );
@@ -235,29 +235,23 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
 
     private void addEventLink() {
         eventLink = new ModelObjectLink( "event-link",
-                new PropertyModel<Event>( getSegment(), "event" ),
-                new Model<String>( "event" ) );
+                                         new PropertyModel<Event>( getSegment(), "event" ),
+                                         new Model<String>( "event" ) );
         eventLink.setOutputMarkupId( true );
         addOrReplace( eventLink );
     }
-
 
     private void addEventTimingsPanel() {
         eventTimingsPanel = new EventTimingsPanel( "context", new PropertyModel<Segment>( this, "segment" ) );
         add( eventTimingsPanel );
     }
 
-
     private void addIssuesPanel() {
-        issuesPanel = new IssuesPanel(
-                "issues",
-                new PropertyModel<ModelObject>( this, "segment" ),
-                getExpansions() );
+        issuesPanel = new IssuesPanel( "issues", new PropertyModel<ModelObject>( this, "segment" ), getExpansions() );
         issuesPanel.setOutputMarkupId( true );
         add( issuesPanel );
-        makeVisible( issuesPanel, getAnalyst().hasIssues( getSegment(), false ) );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( getQueryService(), getSegment(), false ) );
     }
-
 
     /**
      * Get edited segment.
@@ -284,7 +278,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
      */
     public void setName( String name ) {
         if ( name != null && !name.isEmpty() )
-            doCommand( new UpdatePlanObject( getSegment(), "name", name ) );
+            doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(), "name", name ) );
     }
 
     /**
@@ -302,7 +296,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
      * @param desc a string
      */
     public void setDescription( String desc ) {
-        doCommand( new UpdatePlanObject( getSegment(), "description", desc ) );
+        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(), "description", desc ) );
     }
 
     /**
@@ -330,7 +324,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
             if ( oldEvent == null || !isSame( name, oldName ) )
                 newEvent = getQueryService().findOrCreateType( Event.class, name );
         }
-        doCommand( new UpdatePlanObject( getSegment(), "event", newEvent ) );
+        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(), "event", newEvent ) );
         getCommander().cleanup( Event.class, oldName );
     }
 
@@ -349,26 +343,22 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
      * @param phase a phase
      */
     public void setPhase( Phase phase ) {
-        doCommand( new UpdatePlanObject( getSegment(), "phase", phase ) );
+        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(), "phase", phase ) );
     }
-
 
     private Event getEvent() {
         return getSegment().getEvent();
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        makeVisible( target, issuesPanel, getAnalyst().hasIssues( getSegment(), false ) );
+        makeVisible( target, issuesPanel, getAnalyst().hasIssues( getQueryService(), getSegment(), false ) );
         target.addComponent( issuesPanel );
         super.updateWith( target, change, updated );
     }
 
     public void refresh( AjaxRequestTarget target ) {
-        makeVisible( target, issuesPanel, getAnalyst().hasIssues( getSegment(), false ) );
+        makeVisible( target, issuesPanel, getAnalyst().hasIssues( getQueryService(), getSegment(), false ) );
         target.addComponent( issuesPanel );
         addPhaseChoice();
         target.addComponent( phaseChoices );

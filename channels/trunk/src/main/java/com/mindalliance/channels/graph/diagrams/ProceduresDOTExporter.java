@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.core.model.Assignment;
@@ -7,6 +13,8 @@ import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Phase.Timing;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
@@ -28,31 +36,29 @@ import java.util.Set;
 
 /**
  * Procedures DOT exporter.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 2/9/11
- * Time: 8:04 PM
  */
 public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commitment> {
-
 
     /**
      * Start vertex.
      */
     private static final String START = "start";
+
     /**
      * Stop vertex.
      */
     private static final String STOP = "stop";
+
     /**
      * Event phase initiating assignments.
      */
     private Map<EventPhase, Set<Assignment>> initiators = new HashMap<EventPhase, Set<Assignment>>();
+
     /**
      * Event phase terminating assignments.
      */
     private Map<EventPhase, Set<Assignment>> terminators = new HashMap<EventPhase, Set<Assignment>>();
+
     /**
      * Assignments that start with an event phase.
      */
@@ -62,32 +68,26 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         super( metaProvider );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected void beforeExport( Graph<Assignment, Commitment> g ) {
-        super.beforeExport( g );
+    @Override
+    protected void beforeExport( QueryService queryService, Graph<Assignment, Commitment> g ) {
+        super.beforeExport( queryService, g );
         for ( Assignment assignment : g.vertexSet() ) {
             Part part = assignment.getPart();
-            if ( part.isTerminatesEventPhase() ) {
+            if ( part.isTerminatesEventPhase() )
                 put( terminators, part.getSegment().getEventPhase(), assignment );
-            }
-            if ( part.isStartsWithSegment() ) {
+            if ( part.isStartsWithSegment() )
                 put( autoStarters, part.getSegment().getEventPhase(), assignment );
-            }
-            if ( part.getInitiatedEvent() != null ) {
-                List<EventPhase> coEventPhases = findEventPhases( part.getInitiatedEvent(), Phase.Timing.Concurrent );
-                for ( EventPhase eventPhase : coEventPhases ) {
+            if ( part.getInitiatedEvent() != null )
+                for ( EventPhase eventPhase : findEventPhases( queryService,
+                                                               part.getInitiatedEvent(),
+                                                               Timing.Concurrent ) )
                     put( initiators, eventPhase, assignment );
-                }
-            }
         }
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<EventPhase> findEventPhases( Event event, final Phase.Timing timing ) {
+    private List<EventPhase> findEventPhases( QueryService queryService, Event event, final Timing timing ) {
         List<EventPhase> eventPhases = new ArrayList<EventPhase>();
-        QueryService queryService = getQueryService();
         List<Phase> phases = (List<Phase>) CollectionUtils.select(
                 queryService.listReferencedEntities( Phase.class ),
                 new Predicate() {
@@ -95,11 +95,9 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
                     public boolean evaluate( Object object ) {
                         return ( (Phase) object ).getTiming() == timing;
                     }
-                }
-        );
-        for ( Phase phase : phases ) {
+                } );
+        for ( Phase phase : phases )
             eventPhases.add( new EventPhase( event, phase, null ) );
-        }
         return eventPhases;
     }
 
@@ -112,11 +110,11 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         assignments.add( assignment );
     }
 
-    private Set<EventPhase> getEventPhaseStarts() {
+    private Set<EventPhase> getEventPhaseStarts( QueryService queryService ) {
         Set<EventPhase> startedEventPhases = new HashSet<EventPhase>();
         startedEventPhases.addAll( initiators.keySet() );
         startedEventPhases.addAll( autoStarters.keySet() );
-        startedEventPhases.addAll( findAllStartedPostEventPhases() );
+        startedEventPhases.addAll( findAllStartedPostEventPhases( queryService ) );
         return startedEventPhases;
     }
 
@@ -124,24 +122,19 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         return terminators.keySet();
     }
 
-    private Set<EventPhase> findAllStartedPostEventPhases() {
+    private Set<EventPhase> findAllStartedPostEventPhases( QueryService queryService ) {
         Set<EventPhase> startedByTermination = new HashSet<EventPhase>();
-        for ( EventPhase terminated : terminators.keySet() ) {
-            if ( terminated.getPhase().isConcurrent() ) {
-                startedByTermination.addAll( findEventPhases( terminated.getEvent(), Phase.Timing.PostEvent ) );
-            }
-        }
+        for ( EventPhase terminated : terminators.keySet() )
+            if ( terminated.getPhase().isConcurrent() )
+                startedByTermination.addAll( findEventPhases( queryService, terminated.getEvent(), Timing.PostEvent ) );
         return startedByTermination;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected void exportVertices( PrintWriter out, Graph<Assignment, Commitment> g ) {
+    @Override
+    protected void exportVertices( QueryService queryService, PrintWriter out, Graph<Assignment, Commitment> g ) {
         ProceduresMetaProvider metaProvider = (ProceduresMetaProvider) getMetaProvider();
-        if ( !( getEventPhaseStarts().isEmpty() ) ) {
-            exportStarts( out, metaProvider );
-        }
+        if ( !getEventPhaseStarts( queryService ).isEmpty() )
+            exportStarts( queryService, out, metaProvider );
         Map<Segment, Set<Assignment>> segmentAssignments = new HashMap<Segment, Set<Assignment>>();
         for ( Assignment assignment : g.vertexSet() ) {
             Segment segment = assignment.getPart().getSegment();
@@ -155,35 +148,33 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         for ( Segment segment : segmentAssignments.keySet() ) {
             if ( isForEntirePlan() || segment.equals( getSegment() ) ) {
                 exportGoals( segment, out, metaProvider, g );
-                printoutVertices( out, segmentAssignments.get( segment ) );
+                printoutVertices( queryService, out, segmentAssignments.get( segment ) );
             } else {
-                out.println( "subgraph cluster_"
-                        + segment.getName().replaceAll( "[^a-zA-Z0-9_]", "_" )
-                        + " {" );
-                List<DOTAttribute> attributes = new DOTAttribute( "label",
-                        "Segment: " + segment.getName() ).asList();
+                out.println( "subgraph cluster_" + segment.getName().replaceAll( "[^a-zA-Z0-9_]", "_" ) + " {" );
+                List<DOTAttribute> attributes = new DOTAttribute( "label", "Segment: " + segment.getName() ).asList();
                 if ( metaProvider.getDOTAttributeProvider() != null ) {
-                    attributes.addAll(
-                            metaProvider.getDOTAttributeProvider().getSubgraphAttributes( false ) );
+                    attributes.addAll( metaProvider.getDOTAttributeProvider().getSubgraphAttributes( false ) );
                 }
                 if ( metaProvider.getURLProvider() != null ) {
                     String url = metaProvider.getURLProvider().
                             getGraphURL( segmentAssignments.get( segment ).iterator().next() );
-                    if ( url != null ) attributes.add( new DOTAttribute( "URL", url ) );
+                    if ( url != null )
+                        attributes.add( new DOTAttribute( "URL", url ) );
                 }
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
-                printoutVertices( out, segmentAssignments.get( segment ) );
+                printoutVertices( queryService, out, segmentAssignments.get( segment ) );
                 exportGoals( segment, out, metaProvider, g );
                 out.println( "}" );
             }
         }
-        if ( !getEventPhaseStops().isEmpty() ) exportStops( out, metaProvider );
+        if ( !getEventPhaseStops().isEmpty() )
+            exportStops( out, metaProvider );
     }
 
-
-    private void exportStarts( PrintWriter out, AbstractMetaProvider<Assignment, Commitment> metaProvider ) {
-        for ( EventPhase eventPhase : getEventPhaseStarts() ) {
+    private void exportStarts( QueryService queryService, PrintWriter out,
+                               AbstractMetaProvider<Assignment, Commitment> metaProvider ) {
+        for ( EventPhase eventPhase : getEventPhaseStarts( queryService ) ) {
             out.print( getIndent() );
             out.print( getStartId( eventPhase ) );
             out.print( "[" );
@@ -202,7 +193,6 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         }
     }
 
-
     private String getStartId( EventPhase eventPhase ) {
         return START + eventPhase.getPhase().getId() + "X" + eventPhase.getEvent().getId();
     }
@@ -211,9 +201,8 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         return STOP + eventPhase.getPhase().getId() + "X" + eventPhase.getEvent().getId();
     }
 
-    private List<DOTAttribute> getStartAttributes(
-            EventPhase eventPhase,
-            AbstractMetaProvider<Assignment, Commitment> metaProvider ) {
+    private List<DOTAttribute> getStartAttributes( EventPhase eventPhase,
+                                                   AbstractMetaProvider<Assignment, Commitment> metaProvider ) {
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
         attributes.add( new DOTAttribute( "fontcolor", AbstractMetaProvider.FONTCOLOR ) );
         attributes.add( new DOTAttribute( "fontsize", ProceduresMetaProvider.NODE_FONT_SIZE ) );
@@ -254,13 +243,16 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         return attributes;
     }
 
-
-    protected void exportEdges( PrintWriter out, Graph<Assignment, Commitment> g ) {
-        if ( !initiators.isEmpty() ) exportInitiations( out, g );
-        if ( !autoStarters.isEmpty() ) exportAutoStarts( out, g );
-        super.exportEdges( out, g );
-        if ( !terminators.isEmpty() ) exportTerminations( out, g );
-        exportStopToStartEdges( out, g );
+    @Override
+    protected void exportEdges( QueryService queryService, PrintWriter out, Graph<Assignment, Commitment> g ) {
+        if ( !initiators.isEmpty() )
+            exportInitiations( out, g );
+        if ( !autoStarters.isEmpty() )
+            exportAutoStarts( out, g );
+        super.exportEdges( queryService, out, g );
+        if ( !terminators.isEmpty() )
+            exportTerminations( out, g );
+        exportStopToStartEdges( queryService, out, g );
         exportGoalEdges( out, g );
     }
 
@@ -274,9 +266,8 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
                 String initiatorId = getVertexID( assignment );
                 out.print( getIndent() + initiatorId + getArrow( g ) + getStartId( eventPhase ) );
                 out.print( "[" );
-                if ( !attributes.isEmpty() ) {
+                if ( !attributes.isEmpty() )
                     out.print( asElementAttributes( attributes ) );
-                }
                 out.println( "];" );
             }
         }
@@ -290,9 +281,8 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
                 String autoStarterId = getVertexID( assignment );
                 out.print( getIndent() + getStartId( eventPhase ) + getArrow( g ) + autoStarterId );
                 out.print( "[" );
-                if ( !attributes.isEmpty() ) {
+                if ( !attributes.isEmpty() )
                     out.print( asElementAttributes( attributes ) );
-                }
                 out.println( "];" );
             }
         }
@@ -307,31 +297,28 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
                 String terminatorId = getVertexID( assignment );
                 out.print( getIndent() + terminatorId + getArrow( g ) + getStopId( eventPhase ) );
                 out.print( "[" );
-                if ( !attributes.isEmpty() ) {
+                if ( !attributes.isEmpty() )
                     out.print( asElementAttributes( attributes ) );
-                }
                 out.println( "];" );
             }
         }
     }
 
-    private void exportStopToStartEdges( PrintWriter out, Graph<Assignment, Commitment> g ) {
+    private void exportStopToStartEdges( QueryService queryService, PrintWriter out, Graph<Assignment, Commitment> g ) {
         for ( EventPhase stopped : terminators.keySet() ) {
             if ( stopped.getPhase().isConcurrent() ) {
-                for ( EventPhase started : findEventPhases( stopped.getEvent(), Phase.Timing.PostEvent ) ) {
+                for ( EventPhase started : findEventPhases( queryService, stopped.getEvent(), Timing.PostEvent ) ) {
                     String label = sanitize( "starts " + started.toString() );
                     List<DOTAttribute> attributes = getTimingEdgeAttributes();
                     attributes.add( new DOTAttribute( "label", label ) );
                     out.print( getIndent() + getStopId( stopped ) + getArrow( g ) + getStartId( started ) );
                     out.print( "[" );
-                    if ( !attributes.isEmpty() ) {
+                    if ( !attributes.isEmpty() )
                         out.print( asElementAttributes( attributes ) );
-                    }
                     out.println( "];" );
                 }
             }
         }
-
     }
 
     private List<DOTAttribute> getTimingEdgeAttributes( Part part ) {
@@ -363,19 +350,16 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
     }
 
     private String ifVisibleColor( Part part, String color ) {
-        return part != null && !isVisible( part )
-                ? AbstractMetaProvider.INVISIBLE_COLOR : color;
+        return part != null && !isVisible( part ) ? AbstractMetaProvider.INVISIBLE_COLOR : color;
     }
 
-
-    private List<Segment> getSegments() {
+    private List<Segment> getSegments( Plan plan ) {
         List<Segment> segments = new ArrayList<Segment>();
         Segment segment = getSegment();
-        if ( segment == null ) {
-            segments.addAll( getQueryService().getPlan().getSegments() );
-        } else {
+        if ( segment == null )
+            segments.addAll( plan.getSegments() );
+        else
             segments.add( segment );
-        }
         return segments;
     }
 
@@ -383,26 +367,20 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         return (Segment) getMetaProvider().getContext();
     }
 
-    private void exportGoals(
-            Segment segment,
-            PrintWriter out,
-            AbstractMetaProvider<Assignment, Commitment> metaProvider,
-            Graph<Assignment, Commitment> g ) {
+    private void exportGoals( Segment segment, PrintWriter out,
+                              AbstractMetaProvider<Assignment, Commitment> metaProvider,
+                              Graph<Assignment, Commitment> g ) {
         for ( Assignment assignment : g.vertexSet() ) {
             Part part = assignment.getPart();
-            if ( part.getSegment().equals( segment ) ) {
-                for ( Goal goal : part.getGoals() ) {
+            if ( part.getSegment().equals( segment ) )
+                for ( Goal goal : part.getGoals() )
                     exportGoal( getGoalVertexId( assignment, goal ), goal, assignment, out, metaProvider );
-                }
-            }
         }
         for ( EventPhase eventPhase : getEventPhaseStops() ) {
             if ( segment.getEventPhase().equals( eventPhase ) ) {
-                for ( Goal goal : segment.getGoals() ) {
-                    if ( goal.isEndsWithSegment() ) {
+                for ( Goal goal : segment.getGoals() )
+                    if ( goal.isEndsWithSegment() )
                         exportGoal( getGoalVertexId( segment, goal ), goal, null, out, metaProvider );
-                    }
-                }
             }
         }
     }
@@ -411,12 +389,8 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         return getSegment() == null;
     }
 
-    private void exportGoal(
-            String goalVertexId,
-            Goal goal,
-            Assignment assignment,
-            PrintWriter out,
-            AbstractMetaProvider<Assignment, Commitment> metaProvider ) {
+    private void exportGoal( String goalVertexId, Goal goal, Assignment assignment, PrintWriter out,
+                             AbstractMetaProvider<Assignment, Commitment> metaProvider ) {
         Part part = assignment == null ? null : assignment.getPart();
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
         attributes.add( new DOTAttribute( "fontcolor", ifVisibleColor( part, AbstractMetaProvider.FONTCOLOR ) ) );
@@ -442,32 +416,33 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
     }
 
     private String getGoalIcon( Goal goal, Part part ) {
-        if ( part != null && !isVisible( part ) ) return "goal_blank.png";
+        if ( part != null && !isVisible( part ) )
+            return "goal_blank.png";
         if ( goal.isRiskMitigation() ) {
             switch ( goal.getLevel() ) {
-                case Low:
-                    return "risk_minor.png";
-                case Medium:
-                    return "risk_major.png";
-                case High:
-                    return "risk_severe.png";
-                case Highest:
-                    return "risk_extreme.png";
-                default:
-                    throw new RuntimeException( "Unknown risk level" );
+            case Low:
+                return "risk_minor.png";
+            case Medium:
+                return "risk_major.png";
+            case High:
+                return "risk_severe.png";
+            case Highest:
+                return "risk_extreme.png";
+            default:
+                throw new RuntimeException( "Unknown risk level" );
             }
         } else {
             switch ( goal.getLevel() ) {
-                case Low:
-                    return "gain_low.png";
-                case Medium:
-                    return "gain_medium.png";
-                case High:
-                    return "gain_high.png";
-                case Highest:
-                    return "gain_highest.png";
-                default:
-                    throw new RuntimeException( "Unknown gain level" );
+            case Low:
+                return "gain_low.png";
+            case Medium:
+                return "gain_medium.png";
+            case High:
+                return "gain_high.png";
+            case Highest:
+                return "gain_highest.png";
+            default:
+                throw new RuntimeException( "Unknown gain level" );
             }
         }
     }
@@ -506,26 +481,20 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         String assignmentId = getMetaProvider().getVertexIDProvider().getVertexName( assignment );
         out.print( getIndent() + assignmentId + getArrow( g ) + goalId );
         out.print( "[" );
-        if ( !attributes.isEmpty() ) {
+        if ( !attributes.isEmpty() )
             out.print( asElementAttributes( attributes ) );
-        }
         out.println( "];" );
     }
 
-    private void exportStopGoalEdge(
-            Goal goal,
-            Assignment assignment,
-            Segment segment,
-            PrintWriter out,
-            Graph<Assignment, Commitment> g ) {
+    private void exportStopGoalEdge( Goal goal, Assignment assignment, Segment segment, PrintWriter out,
+                                     Graph<Assignment, Commitment> g ) {
         List<DOTAttribute> attributes = getNonFlowEdgeAttributes( assignment.getPart() );
         attributes.add( new DOTAttribute( "label", "terminates" ) );
         String goalId = getGoalVertexId( segment, goal );
         out.print( getIndent() + getStopId( segment.getEventPhase() ) + getArrow( g ) + goalId );
         out.print( "[" );
-        if ( !attributes.isEmpty() ) {
+        if ( !attributes.isEmpty() )
             out.print( asElementAttributes( attributes ) );
-        }
         out.println( "];" );
     }
 
@@ -540,13 +509,6 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         list.add( new DOTAttribute( "weight", "2.0" ) );
         return list;
     }
-
-    private QueryService getQueryService() {
-        ProceduresMetaProvider metaProvider = (ProceduresMetaProvider) getMetaProvider();
-        return metaProvider.getAnalyst().getQueryService();
-    }
-
-
 }
 
 

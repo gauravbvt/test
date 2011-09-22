@@ -51,10 +51,6 @@ public class TestAssignments extends AbstractChannelsTest {
         assertEquals( 43, assignments.size() );
     }
 
-    private QueryService getQueryService() {
-        return getAnalyst().getQueryService();
-    }
-
     @Test
     public void testGetSegments() {
         List<Segment> segments = assignments.getSegments();
@@ -198,10 +194,10 @@ public class TestAssignments extends AbstractChannelsTest {
     public void testGetAssignments() {
         assertEquals( assignments.size(), assignments.getAssignments().size() );
 
-        assertEquals( assignments.size(), assignments.getNotifications( getQueryService() ).size()
+        assertEquals( assignments.size(), assignments.getNotifications( queryService ).size()
                 + assignments.getRequests().size()
                 + assignments.getImmediates( queryService ).size()
-                + assignments.getOptionals( getQueryService() ).size() );
+                + assignments.getOptionals( queryService ).size() );
     }
 
     @Test
@@ -213,24 +209,24 @@ public class TestAssignments extends AbstractChannelsTest {
         assertTrue( as.isEmpty() );
 
         as = immediates.getAssignments();
-        as.retainAll( assignments.getNotifications( getQueryService() ).getAssignments() );
+        as.retainAll( assignments.getNotifications( queryService ).getAssignments() );
         assertTrue( as.isEmpty() );
 
         as = immediates.getAssignments();
-        as.retainAll( assignments.getOptionals( getQueryService() ).getAssignments() );
+        as.retainAll( assignments.getOptionals( queryService ).getAssignments() );
         assertTrue( as.isEmpty() );
     }
 
     @Test
     public void testNotifications() {
-        Assignments notifications = assignments.getNotifications( getQueryService() );
+        Assignments notifications = assignments.getNotifications( queryService );
 
         List<Assignment> as = notifications.getAssignments();
         as.retainAll( assignments.getImmediates( queryService ).getAssignments() );
         assertTrue( as.isEmpty() );
 
         as = notifications.getAssignments();
-        as.retainAll( assignments.getOptionals( getQueryService() ).getAssignments() );
+        as.retainAll( assignments.getOptionals( queryService ).getAssignments() );
         assertTrue( as.isEmpty() );
 
         as = notifications.getAssignments();
@@ -247,17 +243,17 @@ public class TestAssignments extends AbstractChannelsTest {
         assertTrue( as.isEmpty() );
 
         as = requests.getAssignments();
-        as.retainAll( assignments.getOptionals( getQueryService() ).getAssignments() );
+        as.retainAll( assignments.getOptionals( queryService ).getAssignments() );
         assertTrue( as.isEmpty() );
 
         as = requests.getAssignments();
-        as.retainAll( assignments.getNotifications( getQueryService() ).getAssignments() );
+        as.retainAll( assignments.getNotifications( queryService ).getAssignments() );
         assertTrue( as.isEmpty() );
     }
 
     @Test
     public void testOptionals() {
-        Assignments optionals = assignments.getOptionals( getQueryService() );
+        Assignments optionals = assignments.getOptionals( queryService );
 
         List<Assignment> as = optionals.getAssignments();
         as.retainAll( assignments.getImmediates( queryService ).getAssignments() );
@@ -268,7 +264,7 @@ public class TestAssignments extends AbstractChannelsTest {
         assertTrue( as.isEmpty() );
 
         as = optionals.getAssignments();
-        as.retainAll( assignments.getNotifications( getQueryService() ).getAssignments() );
+        as.retainAll( assignments.getNotifications( queryService ).getAssignments() );
         assertTrue( as.isEmpty() );
     }
 
@@ -278,7 +274,7 @@ public class TestAssignments extends AbstractChannelsTest {
         Assignments a = assignments.with( jd );
 
         assertEquals( 3, a.size() );
-        Assignments a1 = a.getNotifications( getQueryService() );
+        Assignments a1 = a.getNotifications( queryService );
         assertEquals( 1, a1.size() );
 
         Assignment n = a1.iterator().next();
@@ -303,7 +299,6 @@ public class TestAssignments extends AbstractChannelsTest {
     @Test
     public void testGetSources3() throws NotFoundException {
         Plan plan = planManager.findDevelopmentPlan( "mindalliance.com/channels/plans/acme" );
-        PlanService service = new PlanService( planManager, null, null, plan, attachmentManager );
 
         List<Part> parts = (List<Part>) CollectionUtils.select( queryService.findAllParts(), new Predicate() {
             public boolean evaluate( Object object ) {

@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
@@ -107,7 +108,7 @@ public class PhaseDetailsPanel extends EntityDetailsPanel {
      * @param timing an event timing
      */
     public void setTiming( Phase.Timing timing ) {
-        doCommand( new UpdatePlanObject( getPhase(), "timing", timing ) );
+        doCommand( new UpdatePlanObject( User.current().getUsername(), getPhase(), "timing", timing ) );
     }
 
     private Phase getPhase() {

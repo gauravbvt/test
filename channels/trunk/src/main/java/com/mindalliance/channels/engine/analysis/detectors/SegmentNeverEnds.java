@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,15 +42,15 @@ public class SegmentNeverEnds extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         Phase phase = segment.getPhase();
         Event event = segment.getEvent();
         if ( !( phase.isConcurrent() && event.isSelfTerminating()
-                || phase.isPreEvent() && getPlan().isIncident( event ) )
-                && getQueryService().findTerminators( segment ).isEmpty() ) {
-            Issue issue = makeIssue( Issue.COMPLETENESS, segment );
+                || phase.isPreEvent() && queryService.getPlan().isIncident( event ) )
+                && queryService.findTerminators( segment ).isEmpty() ) {
+            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, segment );
             issue.setDescription( "\"" + segment.getPhaseEventTitle() + "\" is never ended." );
             String remediation;
             if ( segment.getPhase().isConcurrent() ) {

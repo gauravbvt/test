@@ -1,8 +1,15 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.pages.Updatable;
@@ -30,55 +37,55 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jan 12, 2009
- * Time: 7:05:45 PM
- */
 public class EntityDetailsPanel extends AbstractCommandablePanel {
-
-    @SpringBean
-    /**
-     * Imaging service.
-     */
-            ImagingService imagingService;
-
-    /**
-     * The entity being edited
-     */
-    private IModel<? extends ModelEntity> model;
-    /**
-     * Container.
-     */
-    private WebMarkupContainer moDetailsDiv;
-    /**
-     * Image tag.
-     */
-    WebMarkupContainer image;
-    /**
-     * Name field.
-     */
-    private TextField<String> nameField;
-    /**
-     * Description field.
-     */
-    private TextArea<String> descriptionField;
-    /**
-     * Types panel.
-     */
-    private TypesPanel typesPanel;
-    /**
-     * Entity issues panel.
-     */
-    private IssuesPanel issuesPanel;
 
     /**
      * Maximum image height.
      */
     private static final int MAX_IMAGE_HEIGHT = 200;
 
+    /**
+     * Image tag.
+     */
+    WebMarkupContainer image;
+
+    /**
+     * Imaging service.
+     */
+    @SpringBean
+    ImagingService imagingService;
+
+    /**
+     * Description field.
+     */
+    private TextArea<String> descriptionField;
+
+    /**
+     * Entity issues panel.
+     */
+    private IssuesPanel issuesPanel;
+
+    /**
+     * Container.
+     */
+    private WebMarkupContainer moDetailsDiv;
+
+    /**
+     * The entity being edited.
+     */
+    private IModel<? extends ModelEntity> model;
+
+    /**
+     * Name field.
+     */
+    private TextField<String> nameField;
+
+    /**
+     * Types panel.
+     */
+    private TypesPanel typesPanel;
+
+    //-------------------------------
     public EntityDetailsPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
         this.model = model;
@@ -110,17 +117,19 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
 
     private void addNameField() {
         final List<String> choices = getUniqueNameChoices( getEntity() );
-        nameField = new AutoCompleteTextField<String>( "name",
-                new PropertyModel<String>( this, "name" ) ) {
+        nameField = new AutoCompleteTextField<String>( "name", new PropertyModel<String>( this, "name" ) ) {
+            @Override
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
-                    if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
+                    if ( getQueryService().likelyRelated( s, choice ) )
+                        candidates.add( choice );
                 }
                 return candidates.iterator();
             }
         };
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getEntity(), "name" ) );
             }
@@ -129,9 +138,9 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     }
 
     private void addDescriptionField() {
-        descriptionField = new TextArea<String>( "description",
-                new PropertyModel<String>( this, "description" ) );
+        descriptionField = new TextArea<String>( "description", new PropertyModel<String>( this, "description" ) );
         descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getEntity(), "description" ) );
             }
@@ -139,8 +148,15 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         moDetailsDiv.add( descriptionField );
     }
 
+    private void addTypesPanel() {
+        typesPanel = new TypesPanel( "types", new PropertyModel<ModelEntity>( this, "entity" ) );
+        typesPanel.setOutputMarkupId( true );
+        moDetailsDiv.addOrReplace( typesPanel );
+    }
+
     private void addTagsPanel() {
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
+            @Override
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TAGS ) );
             }
@@ -151,68 +167,44 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
         moDetailsDiv.add( tagsPanel );
     }
 
+    private void addEntityReferencesAndMatchesPanel() {
+        ModelEntity entity = getEntity();
+        Label indexTitleLabel =
+                new Label( "indexTitle", new Model<String>( entity.isActual() ? "References to" : "Index of type" ) );
+        moDetailsDiv.add( indexTitleLabel );
+        Label referencedLabel = new Label( "indexedName", new Model<String>( "\"" + entity.getName() + "\"" ) );
+        moDetailsDiv.add( referencedLabel );
+        EntityReferencesAndMatchesPanel refsPanel = new EntityReferencesAndMatchesPanel( "referencesOrMatches",
+                                                                                         new PropertyModel<ModelEntity>(
+                                                                                                 this,
+                                                                                                 "entity" ),
+                                                                                         getExpansions() );
+        moDetailsDiv.add( refsPanel );
+    }
+
     private void addIssuesPanel() {
-        issuesPanel = new IssuesPanel(
-                "issues",
-                new PropertyModel<ModelEntity>( this, "entity" ),
-                getExpansions() );
+        issuesPanel = new IssuesPanel( "issues", new PropertyModel<ModelEntity>( this, "entity" ), getExpansions() );
         issuesPanel.setOutputMarkupId( true );
         moDetailsDiv.addOrReplace( issuesPanel );
     }
 
-    private void addTypesPanel() {
-        typesPanel = new TypesPanel(
-                "types",
-                new PropertyModel<ModelEntity>( this, "entity" ) );
-        typesPanel.setOutputMarkupId( true );
-        moDetailsDiv.addOrReplace( typesPanel );
-    }
-
-    private void addEntityReferencesAndMatchesPanel() {
-        ModelEntity entity = getEntity();
-        Label indexTitleLabel = new Label(
-                "indexTitle",
-                new Model<String>(
-                        entity.isActual()
-                                ? "References to"
-                                : "Index of type" ) );
-        moDetailsDiv.add( indexTitleLabel );
-        Label referencedLabel = new Label(
-                "indexedName",
-                new Model<String>(
-                        "\"" + entity.getName() + "\"" ) );
-        moDetailsDiv.add( referencedLabel );
-        EntityReferencesAndMatchesPanel refsPanel = new EntityReferencesAndMatchesPanel(
-                "referencesOrMatches",
-                new PropertyModel<ModelEntity>( this, "entity" ),
-                getExpansions() );
-        moDetailsDiv.add( refsPanel );
-    }
-
-
     private void adjustFields() {
         if ( getEntity().hasImage() ) {
             String url = getEntity().getImageUrl();
-            image.add( new AttributeModifier(
-                    "src",
-                    true,
-                    new Model<String>( url ) ) );
+            image.add( new AttributeModifier( "src", true, new Model<String>( url ) ) );
             int[] size = imagingService.getImageSize( getPlan(), url );
             int height = size[1];
             if ( height > MAX_IMAGE_HEIGHT ) {
-                image.add( new AttributeModifier(
-                        "height",
-                        true,
-                        new Model<String>( "" + MAX_IMAGE_HEIGHT )
-                ) );
+                image.add( new AttributeModifier( "height", true, new Model<String>( "" + MAX_IMAGE_HEIGHT ) ) );
             }
         }
         makeVisible( image, getEntity().hasImage() );
         nameField.setEnabled( isLockedByUser( getEntity() ) );
         descriptionField.setEnabled( isLockedByUser( getEntity() ) );
-        makeVisible( issuesPanel, getAnalyst().hasIssues( getEntity(), false ) );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( getQueryService(), getEntity(), false ) );
     }
 
+    //-------------------------------
     /**
      * Add class-specific input fields.
      *
@@ -223,12 +215,44 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * Get the model object's name
+     * Get the model object's description.
+     *
+     * @return a string
+     */
+    public String getDescription() {
+        return getEntity().getDescription();
+    }
+
+    /**
+     * Get model object.
+     *
+     * @return an entity
+     */
+    public ModelEntity getEntity() {
+        return model.getObject();
+    }
+
+    /**
+     * Get the model object's name.
      *
      * @return a string
      */
     public String getName() {
         return getEntity().getName();
+    }
+
+    /**
+     * Set the model object's description.
+     *
+     * @param val a string
+     */
+    public void setDescription( String val ) {
+        String desc = val == null ? "" : val;
+        doCommand( new UpdatePlanObject( User.current().getUsername(),
+                                         getEntity(),
+                                         "description",
+                                         desc,
+                                         UpdateObject.Action.Set ) );
     }
 
     /**
@@ -246,54 +270,25 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                 while ( namesTaken.contains( uniqueName ) ) {
                     uniqueName = name + "(" + count++ + ")";
                 }
-                doCommand(
-                        new UpdatePlanObject(
-                                getEntity(),
-                                "name",
-                                uniqueName,
-                                UpdateObject.Action.Set
-                        )
-                );
+                doCommand( new UpdatePlanObject( User.current().getUsername(),
+                                                 getEntity(),
+                                                 "name",
+                                                 uniqueName,
+                                                 UpdateObject.Action.Set ) );
             }
         }
     }
 
     /**
-     * Get the model object's description
+     * React to change in types.
      *
-     * @return a string
+     * @param target an ajax request target
      */
-    public String getDescription() {
-        return getEntity().getDescription();
+    protected void typesChanged( AjaxRequestTarget target ) {
+        // do nothing
     }
 
-    /**
-     * Set the model object's description.
-     *
-     * @param val a string
-     */
-    public void setDescription( String val ) {
-        String desc = val == null ? "" : val;
-        doCommand(
-                new UpdatePlanObject(
-                        getEntity(),
-                        "description",
-                        desc,
-                        UpdateObject.Action.Set ) );
-    }
-
-    /**
-     * Get model object.
-     *
-     * @return an entity
-     */
-    public ModelEntity getEntity() {
-        return model.getObject();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUpdated() && change.isForProperty( "types" ) ) {
             addTypesPanel();
@@ -311,14 +306,5 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             target.addComponent( issuesPanel );
         }
         super.updateWith( target, change, updated );
-    }
-
-    /**
-     * React to change in types.
-     *
-     * @param target an ajax request target
-     */
-    protected void typesChanged( AjaxRequestTarget target ) {
-        // do nothing
     }
 }

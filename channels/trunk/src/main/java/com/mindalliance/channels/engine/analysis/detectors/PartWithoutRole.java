@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +36,12 @@ public class PartWithoutRole extends AbstractIssueDetector {
     }
 
     /** {@inheritDoc} */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.getActor() != null && part.getOrganization() != null && part.getRole() == null  ) {
-            DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
+            DetectedIssue issue = makeIssue( queryService,
+                                             DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
             issue.setDescription( "The role for the task is missing." );
             issue.setRemediation( "Name a role for the task." );
             issue.setSeverity( Level.Low );

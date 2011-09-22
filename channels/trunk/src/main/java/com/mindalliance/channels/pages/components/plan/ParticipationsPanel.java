@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.plan;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Participation;
@@ -226,7 +227,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         QueryService queryService = getQueryService();
         List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
         if ( isLockedByUser( getPlan() ) ) {
-            for ( String username : queryService.getUserService().getUsernames( getPlan().getUri() ) ) {
+            for ( String username : queryService.getUserDao().getUsernames( getPlan().getUri() ) ) {
                 Participation participation = doSafeFindOrCreate( Participation.class, username );
                 ParticipationWrapper wrapper = new ParticipationWrapper( username );
                 wrapper.setParticipation( participation );
@@ -452,7 +453,8 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         }
 
         public void setActor( Actor val ) {
-            doCommand( new UpdatePlanObject( participation, "actor", val, UpdateObject.Action.Set ) );
+            doCommand( new UpdatePlanObject( User.current().getUsername(),
+                                             participation, "actor", val, UpdateObject.Action.Set ) );
         }
     }
 

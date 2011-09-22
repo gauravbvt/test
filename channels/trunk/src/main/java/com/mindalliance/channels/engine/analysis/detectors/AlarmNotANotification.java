@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +26,14 @@ public class AlarmNotANotification extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         Flow.Intent intent = flow.getIntent();
         if ( intent != null && intent.equals( Flow.Intent.Alarm ) ) {
             if ( flow.isAskedFor() ) {
-                Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
-                issue.setSeverity( flow.isSharing() ? computeSharingFailureSeverity( flow ) : Level.Low );
+                Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                issue.setSeverity( flow.isSharing() ? computeSharingFailureSeverity( queryService, flow ) : Level.Low );
                 issue.setDescription( "Information \""
                         + flow.getName()
                         + "\" is intended as an alarm and yet it must be requested." );

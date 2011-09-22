@@ -1,7 +1,12 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Event;
@@ -31,11 +36,6 @@ import java.util.Map;
 
 /**
  * Plan XML converter.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 22, 2009
- * Time: 12:05:43 PM
  */
 public class PlanConverter extends AbstractChannelsConverter {
 
@@ -48,21 +48,14 @@ public class PlanConverter extends AbstractChannelsConverter {
         super( context );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canConvert( Class aClass ) {
         return Plan.class.isAssignableFrom( aClass );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void marshal(
-            Object obj,
-            HierarchicalStreamWriter writer,
-            MarshallingContext context ) {
-        Plan plan = (Plan) obj;
+    @Override
+    public void marshal( Object source, HierarchicalStreamWriter writer, MarshallingContext context ) {
+        Plan plan = (Plan) source;
         PlanDao planDao = getPlanDao();
         writer.addAttribute( "id", String.valueOf( plan.getId() ) );
         writer.addAttribute( "uri", plan.getUri() );
@@ -72,8 +65,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.setValue( new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( plan.getWhenVersioned() ) );
         writer.endNode();
         writer.startNode( "lastId" );
-        writer.setValue( String.valueOf(
-                planDao.getIdGenerator().getLastAssignedId( getContext().getPlan() ) ) );
+        writer.setValue( String.valueOf( planDao.getIdGenerator().getLastAssignedId( getContext().getPlan() ) ) );
         writer.endNode();
         writer.startNode( "name" );
         writer.setValue( plan.getName() );
@@ -117,12 +109,14 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.startNode( "defaultLanguage" );
         writer.setValue( plan.getDefaultLanguage() );
         writer.endNode();
+
         // Producers - planners who voted to put this version into production
         for ( String producer : plan.getProducers() ) {
             writer.startNode( "producer" );
             writer.setValue( producer );
             writer.endNode();
         }
+
         // Classifications
         for ( Classification classification : plan.getClassifications() ) {
             writer.startNode( "classification" );
@@ -132,6 +126,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         exportDetectionWaivers( plan, writer );
         exportAttachments( plan, writer );
         context.put( "exporting-plan", "true" );
+
         // All entities
         Iterator<ModelEntity> entities = planDao.iterateEntities();
         while ( entities.hasNext() ) {
@@ -142,6 +137,7 @@ public class PlanConverter extends AbstractChannelsConverter {
                 writer.endNode();
             }
         }
+
         // All incidents
         for ( Event event : plan.getIncidents() ) {
             writer.startNode( "incident" );
@@ -149,6 +145,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             writer.setValue( event.getName() );
             writer.endNode();
         }
+
         // All phases
         for ( Phase phase : plan.getPhases() ) {
             writer.startNode( "plan-phase" );
@@ -156,6 +153,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             writer.setValue( phase.getName() );
             writer.endNode();
         }
+
         // All organizations to be involved
         for ( Organization organization : plan.getOrganizations() ) {
             writer.startNode( "organization-involved" );
@@ -163,12 +161,14 @@ public class PlanConverter extends AbstractChannelsConverter {
             writer.setValue( organization.getName() );
             writer.endNode();
         }
+
         // All segment
         for ( Segment segment : plan.getSegments() ) {
             writer.startNode( "segment" );
             context.convertAnother( segment, new SegmentConverter( getContext() ) );
             writer.endNode();
         }
+
         // Export user issues
         exportUserIssues( plan, writer, context );
         Place locale = plan.getLocale();
@@ -181,16 +181,11 @@ public class PlanConverter extends AbstractChannelsConverter {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Object unmarshal(
-            HierarchicalStreamReader reader,
-            UnmarshallingContext context ) {
+    @Override
+    public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         getProxyConnectors( context );
         context.put( "importing-plan", "true" );
         Plan plan = getContext().getPlan();
-        User.current().setPlan( plan );
         String uri = reader.getAttribute( "uri" );
         plan.setUri( uri );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
@@ -223,9 +218,9 @@ public class PlanConverter extends AbstractChannelsConverter {
                 plan.setCommunityCalendarHost( reader.getValue() );
             } else if ( nodeName.equals( "communityCalendar" ) ) {
                 plan.setCommunityCalendar( reader.getValue() );
-            }  else if ( nodeName.equals( "communityCalendarPrivateTicket" ) ) {
+            } else if ( nodeName.equals( "communityCalendarPrivateTicket" ) ) {
                 plan.setCommunityCalendarPrivateTicket( reader.getValue() );
-            }else if ( nodeName.equals( "surveyApiKey" ) ) {
+            } else if ( nodeName.equals( "surveyApiKey" ) ) {
                 plan.setSurveyApiKey( reader.getValue() );
             } else if ( nodeName.equals( "surveyUserKey" ) ) {
                 plan.setSurveyUserKey( reader.getValue() );
@@ -286,12 +281,11 @@ public class PlanConverter extends AbstractChannelsConverter {
                 String placeId = reader.getAttribute( "id" );
                 String kindName = reader.getAttribute( "kind" );
                 String name = reader.getValue();
-                Place locale = this.getEntity(
-                        Place.class,
-                        name,
-                        Long.getLong( placeId ),
-                        ModelEntity.Kind.valueOf( kindName ),
-                        context );
+                Place locale = this.getEntity( Place.class,
+                                               name,
+                                               Long.getLong( placeId ),
+                                               ModelEntity.Kind.valueOf( kindName ),
+                                               context );
                 plan.setLocale( locale );
             } else {
                 LOG.warn( "Unknown element " + nodeName );
@@ -303,5 +297,4 @@ public class PlanConverter extends AbstractChannelsConverter {
         state.put( "proxyConnectors", context.get( "proxyConnectors" ) );
         return state;
     }
-
 }

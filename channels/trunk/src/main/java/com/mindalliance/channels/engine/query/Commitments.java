@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.query;
 
 import com.mindalliance.channels.core.Matcher;
@@ -5,6 +11,7 @@ import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
@@ -18,13 +25,9 @@ import java.util.Set;
 
 /**
  * Filterable sharing commitments.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 7/29/11
- * Time: 12:15 PM
  */
 public class Commitments implements Serializable, Iterable<Commitment> {
+
     private final Set<Commitment> commitments = new HashSet<Commitment>();
 
     public Commitments() {
@@ -32,10 +35,8 @@ public class Commitments implements Serializable, Iterable<Commitment> {
 
     public Commitments( QueryService queryService, Specable profile, Assignments assignments ) {
         List<Flow> sharingFlows = queryService.findAllFlows(); //assignments.getSharingFlows();
-        commitments.addAll(
-                queryService.findAllCommitmentsOf( profile, assignments, sharingFlows ) );
-        commitments.addAll(
-                queryService.findAllCommitmentsTo( profile, assignments, sharingFlows ) );
+        commitments.addAll( queryService.findAllCommitmentsOf( profile, assignments, sharingFlows ) );
+        commitments.addAll( queryService.findAllCommitmentsTo( profile, assignments, sharingFlows ) );
     }
 
     public Commitments of( Assignment assignment ) {
@@ -68,21 +69,16 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public Commitments withEoi( final String eoi ) {
         Commitments result = new Commitments();
         for ( Commitment commitment : commitments )
-            if ( CollectionUtils.exists(
-                    commitment.getSharing().getEois(),
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            return Matcher.same(
-                                    ( (ElementOfInformation) object ).getContent(),
-                                    eoi );
-                        }
-                    } ) )
+            if ( CollectionUtils.exists( commitment.getSharing().getEois(), new Predicate() {
+                @Override
+                public boolean evaluate( Object object ) {
+                    return Matcher.same( ( (ElementOfInformation) object ).getContent(), eoi );
+                }
+            } ) )
                 result.add( commitment );
 
         return result;
     }
-
 
     public Commitments withInfo( String info ) {
         Commitments result = new Commitments();
@@ -108,10 +104,10 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         return commitments.iterator();
     }
 
-    public Commitments realizable( Analyst analyst ) {
+    public Commitments realizable( Analyst analyst, Plan plan ) {
         Commitments result = new Commitments();
         for ( Commitment commitment : commitments )
-            if ( analyst.findRealizabilityProblems( commitment ).isEmpty() )
+            if ( analyst.findRealizabilityProblems( plan, commitment ).isEmpty() )
                 result.add( commitment );
 
         return result;

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.AttachmentManager;
@@ -59,11 +65,6 @@ import java.util.Set;
 
 /**
  * XML plan importer.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Dec 16, 2008
- * Time: 9:12:25 PM
  */
 public class XmlStreamer implements ImportExportFactory {
 
@@ -90,22 +91,14 @@ public class XmlStreamer implements ImportExportFactory {
         this.idGenerator = idGenerator;
     }
 
-    /**
-     * Create an import context.
-     * @param planDao the plan dao
-     * @return an importer
-     */
-    public Importer createImporter( PlanDao planDao ) {
-        return new Context( planDao );
+    @Override
+    public Importer createImporter( String userName, PlanDao planDao ) {
+        return new Context( planDao, userName );
     }
 
-    /**
-     * Create an export context.
-     * @param planDao the plan dao
-     * @return an exporter
-     */
-    public Exporter createExporter( PlanDao planDao ) {
-        return new Context( planDao );
+    @Override
+    public Exporter createExporter( String userName, PlanDao planDao ) {
+        return new Context( planDao, userName );
     }
 
     public AttachmentManager getAttachmentManager() {
@@ -147,8 +140,10 @@ public class XmlStreamer implements ImportExportFactory {
      */
     public class Context implements Importer, Exporter {
 
+        private final String userName;
+
         /**
-         * The xstream instance
+         * The xstream instance.
          */
         private XStream xstream = new XStream();
 
@@ -162,7 +157,8 @@ public class XmlStreamer implements ImportExportFactory {
          */
         private final PlanDao planDao;
 
-        private Context( PlanDao planDao ) {
+        private Context( PlanDao planDao, String userName ) {
+            this.userName = userName;
             plan = planDao.getPlan();
             this.planDao = planDao;
             addAliases( xstream );
@@ -175,6 +171,14 @@ public class XmlStreamer implements ImportExportFactory {
 
         public PlanDao getPlanDao() {
             return planDao;
+        }
+
+        /**
+         * The username responsible for the import.
+         * @return "daemon", usually...
+         */
+        public String getUserName() {
+            return userName;
         }
 
         public AttachmentManager getAttachmentManager() {
@@ -242,9 +246,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "eventtiming", EventTiming.class );
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        @Override
         public Map<String, Object> loadSegment( InputStream inputStream ) throws IOException {
             ObjectInputStream in = xstream.createObjectInputStream( inputStream );
             try {
@@ -254,9 +256,7 @@ public class XmlStreamer implements ImportExportFactory {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        @Override
         public Segment restoreSegment( String xml ) {
 
             DataHolder dataHolder = xstream.newDataHolder();
@@ -273,9 +273,7 @@ public class XmlStreamer implements ImportExportFactory {
             return (Segment) results.get( "segment" );
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        @Override
         public Journal importJournal( FileInputStream stream ) throws IOException {
             ObjectInputStream in = xstream.createObjectInputStream( stream );
             try {
@@ -285,18 +283,14 @@ public class XmlStreamer implements ImportExportFactory {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        @Override
         public void export( Journal journal, OutputStream stream ) throws IOException {
             ObjectOutputStream out = xstream.createObjectOutputStream( stream, "export" );
             out.writeObject( journal );
             out.close();
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        @Override
         public void importPlan( FileInputStream stream ) throws IOException {
             ObjectInputStream in = xstream.createObjectInputStream( stream );
             try {
@@ -310,18 +304,14 @@ public class XmlStreamer implements ImportExportFactory {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        @Override
         public void export( OutputStream stream ) throws IOException {
             ObjectOutputStream out = xstream.createObjectOutputStream( stream, "export" );
             out.writeObject( plan );
             out.close();
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        @Override
         public void export( Segment segment, OutputStream stream ) throws IOException {
             ObjectOutputStream out = xstream.createObjectOutputStream( stream, "export" );
             out.writeObject( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
@@ -329,9 +319,7 @@ public class XmlStreamer implements ImportExportFactory {
             out.close();
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        @Override
         public Segment importSegment( InputStream stream ) throws IOException {
             ObjectInputStream in = xstream.createObjectInputStream( stream );
             try {
@@ -346,9 +334,6 @@ public class XmlStreamer implements ImportExportFactory {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         private void reconnectExternalFlows(
                 Map<Connector, List<ConnectionSpecification>> proxyConnectors, boolean loadingPlan ) {
 
@@ -443,6 +428,7 @@ public class XmlStreamer implements ImportExportFactory {
             for ( Segment segment : segments ) {
                 Iterator<Connector> iterator =
                         (Iterator<Connector>) new FilterIterator( segment.nodes(), new Predicate() {
+                            @Override
                             public boolean evaluate( Object object ) {
                                 Node node = (Node) object;
                                 return node.isConnector() &&
@@ -471,13 +457,12 @@ public class XmlStreamer implements ImportExportFactory {
                     || ConverterUtils.partMatches( part, conSpec.getPartSpecification() ) );
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        @Override
         public String getMimeType() {
             return XmlStreamer.this.getMimeType();
         }
 
+        @Override
         public String getVersion() {
             return XmlStreamer.this.getVersion();
         }

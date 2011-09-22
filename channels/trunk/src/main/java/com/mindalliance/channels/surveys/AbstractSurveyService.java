@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -5,12 +11,14 @@ import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanListener;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.surveys.Survey.Status;
+import com.mindalliance.channels.surveys.Survey.Type;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.velocity.app.VelocityEngine;
@@ -38,11 +46,6 @@ import java.util.Map;
 
 /**
  * Abstract survey service.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Aug 21, 2009
- * Time: 1:53:35 PM
  */
 public abstract class AbstractSurveyService implements SurveyService, InitializingBean {
 
@@ -56,12 +59,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
      */
     Map<Plan, List<Survey>> surveys = new HashMap<Plan, List<Survey>>();
 
-    /**
-     * Query service.
-     */
-    private QueryService queryService;
-
-    private UserService userService;
+    private UserDao userDao;
 
     /**
      * Default email address for survey help.
@@ -96,25 +94,19 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     protected AbstractSurveyService() {
     }
 
-    private Survey makeSurvey( Survey.Type type, Identifiable identifiable ) throws SurveyException {
+    private Survey makeSurvey( QueryService queryService, Type type, Identifiable identifiable )
+            throws SurveyException {
         Survey survey = null;
-        switch ( type ) {
-            case Remediation:
-                if ( identifiable instanceof Issue ) {
-                    survey = new IssueRemediationSurvey( (Issue) identifiable );
-                }
-                break;
-            // todo -- add other types of surveys here
-        }
-        if ( survey == null ) {
-            throw new SurveyException( "No known survey for " + type + " and " + identifiable );
-        } else {
-            for ( String username : survey.getDefaultContacts( analyst ) ) {
-                survey.addContact( username );
-            }
-            return survey;
-        }
+        if ( type == Type.Remediation && identifiable instanceof Issue )
+            survey = new IssueRemediationSurvey( (Issue) identifiable );
 
+        if ( survey == null )
+            throw new SurveyException( "No known survey for " + type + " and " + identifiable );
+
+        for ( String username : survey.getDefaultContacts( analyst, queryService ) )
+            survey.addContact( username );
+
+        return survey;
     }
 
     public String getSurveysFile() {
@@ -125,12 +117,8 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         this.surveysFile = surveysFile;
     }
 
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
-    }
-
-    public void setUserDetailsService( UserService userService ) {
-        this.userService = userService;
+    public void setUserDetailsService( UserDao userDao ) {
+        this.userDao = userDao;
     }
 
     public void setAnalyst( Analyst analyst ) {
@@ -149,8 +137,8 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         velocityEngine = engine;
     }
 
-    public UserService getUserService() {
-        return userService;
+    public UserDao getUserDao() {
+        return userDao;
     }
 
     @Override
@@ -168,66 +156,62 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
      */
     @Override
     public void afterPropertiesSet() {
-        planManager.addListener(
-                new PlanListener() {
-                    @Override
-                    public void aboutToProductize( Plan devPlan ) {
-                        for ( Survey survey : getSurveys( devPlan ) )
-                            try {
-                                closeSurvey( survey, devPlan );
-                            } catch ( SurveyException e ) {
-                                LOG.error( "Unable to close survey", e );
-                            }
+        planManager.addListener( new PlanListener() {
+            @Override
+            public void aboutToProductize( Plan devPlan ) {
+                for ( Survey survey : getSurveys( devPlan ) )
+                    try {
+                        closeSurvey( survey, devPlan );
+                    } catch ( SurveyException e ) {
+                        LOG.error( "Unable to close survey", e );
                     }
+            }
 
-                    @Override
-                    public void productized( Plan plan ) {
-                    }
+            @Override
+            public void productized( Plan plan ) {
+            }
 
-                    @Override
-                    public void created( Plan devPlan ) {
-                        loadSurveys( devPlan );
-                    }
+            @Override
+            public void created( Plan devPlan ) {
+                loadSurveys( devPlan );
+            }
 
-                    @Override
-                    public void loaded( PlanDao planDao ) {
-                        loadSurveys( planDao.getPlan() );
-                    }
+            @Override
+            public void loaded( PlanDao planDao ) {
+                loadSurveys( planDao.getPlan() );
+            }
 
-                    @Override
-                    public void aboutToUnload( PlanDao planDao ) {
-                        Plan plan = planDao.getPlan();
-                        for ( Survey survey : getSurveys( plan ) )
-                            try {
-                                closeSurvey( survey, plan );
-                            } catch ( SurveyException e ) {
-                                LOG.error( "Unable to close survey", e );
-                            }
+            @Override
+            public void aboutToUnload( PlanDao planDao ) {
+                Plan plan = planDao.getPlan();
+                for ( Survey survey : getSurveys( plan ) )
+                    try {
+                        closeSurvey( survey, plan );
+                    } catch ( SurveyException e ) {
+                        LOG.error( "Unable to close survey", e );
                     }
-                } );
+            }
+        } );
 
         for ( Plan plan : planManager.getPlans() )
-            if ( plan.isDevelopment() ) {
+            if ( plan.isDevelopment() )
                 loadSurveys( plan );
-            }
     }
 
     private void loadSurveys( Plan plan ) {
-        File file;
         BufferedReader in = null;
         try {
             File dataDirectory = getDataDirectory( plan );
-            file = new File( dataDirectory, surveysFile );
-            if ( !file.exists() ) {
-                file.createNewFile();
-            } else {
+            File file = new File( dataDirectory, surveysFile );
+            if ( file.exists() ) {
                 in = new BufferedReader( new FileReader( file ) );
                 String line;
                 while ( ( line = in.readLine() ) != null ) {
                     Survey survey = Survey.fromString( line );
                     addSurvey( plan, survey );
                 }
-            }
+            } else
+                file.createNewFile();
             LOG.debug( "Survey records loaded" );
         } catch ( Exception e ) {
             LOG.error( "Failed to load survey records", e );
@@ -277,43 +261,41 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     }
 
     @Override
-    public boolean isSurveyed( Survey.Type type, Identifiable identifiable ) {
+    public boolean isSurveyed( Type type, Identifiable identifiable ) {
         return findOpenSurvey( type, identifiable ) != null;
     }
 
     @SuppressWarnings( "unchecked" )
-    private Survey findOpenSurvey( final Survey.Type type, final Identifiable identifiable ) {
+    private Survey findOpenSurvey( final Type type, final Identifiable identifiable ) {
         Survey latestSurvey = null;
-        List<Survey> planSurveys = (List<Survey>) CollectionUtils.select(
-                getSurveys( User.plan() ), new Predicate() {
-                    @Override
-                    public boolean evaluate( Object obj ) {
-                        Survey survey = (Survey) obj;
-                        return !survey.isClosed() && survey.matches( type, identifiable );
-                    }
-                } );
+        List<Survey> planSurveys = (List<Survey>) CollectionUtils.select( getSurveys( User.plan() ), new Predicate() {
+            @Override
+            public boolean evaluate( Object obj ) {
+                Survey survey = (Survey) obj;
+                return !survey.isClosed() && survey.matches( type, identifiable );
+            }
+        } );
         if ( !planSurveys.isEmpty() ) {
-            Collections.sort(
-                    planSurveys, new Comparator<Survey>() {
-                        @Override
-                        public int compare( Survey survey, Survey other ) {
-                            return survey.getCreationDate().compareTo( other.getCreationDate() ) * -1;
-                        }
-                    } );
+            Collections.sort( planSurveys, new Comparator<Survey>() {
+                @Override
+                public int compare( Survey survey, Survey other ) {
+                    return survey.getCreationDate().compareTo( other.getCreationDate() ) * -1;
+                }
+            } );
             latestSurvey = planSurveys.get( 0 );
         }
         return latestSurvey;
     }
 
     @Override
-    public boolean isRelevant( Survey survey ) {
-        return findIdentifiable( survey ) != null;
+    public boolean isRelevant( Survey survey, QueryService queryService ) {
+        return findIdentifiable( survey, queryService ) != null;
     }
 
     @Override
-    public Identifiable findIdentifiable( final Survey survey ) {
+    public Identifiable findIdentifiable( Survey survey, QueryService queryService ) {
         try {
-            return survey.findIdentifiable( analyst );
+            return survey.findIdentifiable( analyst, queryService );
         } catch ( NotFoundException e ) {
             LOG.warn( "What the survey is about does not exist anymore." );
             return null;
@@ -321,14 +303,15 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     }
 
     @Override
-    public Survey getOrCreateSurvey( Survey.Type type, Identifiable identifiable, Plan plan ) throws SurveyException {
+    public Survey getOrCreateSurvey( QueryService queryService, Type type, Identifiable identifiable, Plan plan )
+            throws SurveyException {
         Survey survey = findOpenSurvey( type, identifiable );
         if ( survey == null ) {
-            survey = makeSurvey( type, identifiable );
+            survey = makeSurvey( queryService, type, identifiable );
             survey.setCreationDate( new Date() );
-            long id = registerSurvey( survey, plan );
+            long id = registerSurvey( survey, plan, queryService );
             survey.setId( id );
-            survey.setStatus( Survey.Status.In_design );
+            survey.setStatus( Status.In_design );
             survey.setIssuer( getIssuerName( survey ) );
             addSurvey( User.plan(), survey );
             save();
@@ -338,9 +321,10 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     }
 
     @Override
-    public void inviteContacts( Survey survey, List<String> usernames, Plan plan ) throws SurveyException {
+    public void inviteContacts( QueryService queryService, Survey survey, List<String> usernames, Plan plan )
+            throws SurveyException {
         if ( survey.isLaunched() ) {
-            inviteNewContacts( survey, plan );
+            inviteNewContacts( survey, plan, queryService );
         }
         save();
     }
@@ -365,18 +349,18 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     protected abstract void unregisterSurvey( Survey survey ) throws SurveyException;
 
     @Override
-    public void launchSurvey( Survey survey, Plan plan ) throws SurveyException {
+    public void launchSurvey( Survey survey, Plan plan, QueryService queryService ) throws SurveyException {
         if ( !survey.isRegistered() )
             throw new SurveyException( "Survey not registered." );
         if ( survey.isClosed() || survey.isLaunched() )
             throw new SurveyException( "Survey already launched." );
         try {
             doLaunchSurvey( survey, plan );
-            survey.setStatus( Survey.Status.Launched );
+            survey.setStatus( Status.Launched );
             survey.setLaunchDate( new Date() );
             survey.resetData();
             // Invite to-be-contacted users
-            inviteNewContacts( survey, plan );
+            inviteNewContacts( survey, plan, queryService );
         } finally {
             // save no matter what - launch may succeed while invitations fail
             save();
@@ -389,7 +373,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
             if ( survey.isClosed() )
                 throw new SurveyException( "Survey already closed." );
             doCloseSurvey( survey, plan );
-            survey.setStatus( Survey.Status.Closed );
+            survey.setStatus( Status.Closed );
             survey.setClosedDate( new Date() );
             save();
         }
@@ -400,9 +384,8 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         return new ArrayList<Survey>( surveys.get( User.plan() ) );
     }
 
-
     protected String getIssuerName( Survey survey ) {
-        User user = userService.getUserNamed( survey.getUserName() );
+        User user = userDao.getUserNamed( survey.getUserName() );
         if ( user == null )
             return "unknown user";
         else
@@ -413,7 +396,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
             StringBuilder sb = new StringBuilder();
             List<String> names = new ArrayList<String>();
             for ( Contact contact : survey.getContacts() ) {
-                User user = userService.getUserNamed( contact.getUsername() );
+                User user = userDao.getUserNamed( contact.getUsername() );
                 if ( user != null ) {
                     names.add( user.getNormalizedFullName() );
                 }
@@ -429,28 +412,29 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         }
     */
 
-    protected void inviteNewContacts( Survey survey, Plan plan ) throws SurveyException {
+    protected void inviteNewContacts( Survey survey, Plan plan, QueryService queryService ) throws SurveyException {
         for ( Contact contact : survey.getContacts() ) {
             if ( contact.isToBeContacted() ) {
-                emailInvitationTo( contact, survey, plan );
+                emailInvitationTo( contact, survey, plan, queryService );
                 contact.setContacted();
             }
         }
     }
 
-    private void emailInvitationTo( Contact contact, Survey survey, Plan plan ) throws SurveyException {
+    private void emailInvitationTo( Contact contact, Survey survey, Plan plan, QueryService queryService )
+            throws SurveyException {
         User user = getUser( contact.getUsername() );
         if ( user == null )
             throw new SurveyException( "Unknown contact " + contact.getUsername() );
         User issuer = getUser( survey.getUserName() );
         if ( issuer == null )
             throw new SurveyException( "Unknown issuer " );
-        Identifiable identifiable = findIdentifiable( survey );
+        Identifiable identifiable = findIdentifiable( survey, queryService );
         if ( identifiable == null )
             throw new SurveyException( "Unknown identifiable" );
         try {
             survey.updateSurveyData( this, plan );
-            Map<String, Object> context = survey.getInvitationContext( this, user, issuer, plan );
+            Map<String, Object> context = survey.getInvitationContext( this, user, issuer, plan, queryService );
             SimpleMailMessage email = new SimpleMailMessage();
             email.setTo( user.getEmail() );
             email.setSubject( "Survey: " + survey.getPlanText() );
@@ -466,35 +450,32 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         }
     }
 
-
     protected User getUser( String username ) {
-        return userService.getUserNamed( username );
+        return userDao.getUserNamed( username );
     }
 
-/*
-    protected String getStringResource( String name ) {
-        try {
-            InputStream in = getClass().getClassLoader().getResourceAsStream( name );
-            BufferedReader reader = new BufferedReader( new InputStreamReader( in ) );
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ( ( line = reader.readLine() ) != null ) {
-                sb.append( line );
-                sb.append( '\n' );
+    /*
+        protected String getStringResource( String name ) {
+            try {
+                InputStream in = getClass().getClassLoader().getResourceAsStream( name );
+                BufferedReader reader = new BufferedReader( new InputStreamReader( in ) );
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ( ( line = reader.readLine() ) != null ) {
+                    sb.append( line );
+                    sb.append( '\n' );
+                }
+                return sb.toString();
+            } catch ( IOException e ) {
+                LOG.error( "Failed to read string resource " + name, e );
+                throw new RuntimeException( "Failed to read string resource " + name, e );
             }
-            return sb.toString();
-        } catch ( IOException e ) {
-            LOG.error( "Failed to read string resource " + name, e );
-            throw new RuntimeException( "Failed to read string resource " + name, e );
         }
-    }
-*/
+    */
 
-    protected String resolveTemplate(
-            String template, Map<String, Object> context ) throws SurveyException {
+    protected String resolveTemplate( String template, Map<String, Object> context ) throws SurveyException {
         try {
-            return VelocityEngineUtils.mergeTemplateIntoString(
-                    velocityEngine, template, context );
+            return VelocityEngineUtils.mergeTemplateIntoString( velocityEngine, template, context );
         } catch ( Exception e ) {
             LOG.error( "Failed to process template", e );
             throw new SurveyException( "Failed to process template", e );
@@ -510,7 +491,8 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     }
 
     @Override
-    public List<SurveyResponse> findSurveysResponses( User user, int maxNumber, boolean showCompleted ) throws SurveyException {
+    public List<SurveyResponse> findSurveysResponses( User user, int maxNumber, boolean showCompleted )
+            throws SurveyException {
         List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();
         List<Survey> surveys = findOpenSurveysFor( user );
         Collections.sort( surveys, new Comparator<Survey>() {
@@ -533,24 +515,20 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         return surveyResponses;
     }
 
-
     @SuppressWarnings( "unchecked" )
     private List<Survey> findOpenSurveysFor( User user ) {
         final String userName = user.getUsername();
-        return (List<Survey>) CollectionUtils.select(
-                getSurveys( user.getPlan() ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        Survey survey = (Survey) object;
-                        return survey.isLaunched() && survey.hasContact( userName );
-                    }
-                }
-        );
+        return (List<Survey>) CollectionUtils.select( getSurveys( user.getPlan() ), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                Survey survey = (Survey) object;
+                return survey.isLaunched() && survey.hasContact( userName );
+            }
+        } );
     }
 
-
-    protected abstract long registerSurvey( Survey survey, Plan plan ) throws SurveyException;
+    protected abstract long registerSurvey( Survey survey, Plan plan, QueryService queryService )
+            throws SurveyException;
 
     protected abstract void doLaunchSurvey( Survey survey, Plan plan ) throws SurveyException;
 

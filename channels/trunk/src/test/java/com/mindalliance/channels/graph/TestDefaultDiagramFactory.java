@@ -45,7 +45,7 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
                         DiagramFactory.PNG,
                         fileOut,
                         getAnalyst(),
-                        wicketApplication.getDiagramFactory() );
+                        wicketApplication.getDiagramFactory(), queryService );
                 fileOut.flush();
                 fileOut.close();
                 assertTrue( new File( "target/" + segment.getName() + ".png" ).length() > 0 );
@@ -63,7 +63,8 @@ public class TestDefaultDiagramFactory extends AbstractChannelsTest {
         for ( Segment segment : segments ) {
             DiagramFactory diagramFactory = wicketApplication.getDiagramFactory();
             Diagram flowDiagram = diagramFactory.newFlowMapDiagram( segment, segment.getDefaultPart(), null, null );
-            String map = flowDiagram.makeImageMap( "test", getAnalyst(), wicketApplication.getDiagramFactory() );
+            String map = flowDiagram.makeImageMap( "test", getAnalyst(), wicketApplication.getDiagramFactory(),
+                                                   queryService );
             System.out.print( map );
             assertFalse( map.isEmpty() );
             assertTrue( map.startsWith( "<map" ) );

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.menus;
 
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
@@ -48,7 +49,7 @@ public abstract class ActionMenuPanel extends MenuPanel {
     protected abstract List<CommandWrapper> getCommandWrappers();
 
     protected boolean isLockable( ) {
-        return getLockManager().isLockableByUser( getIdentifiable() );
+        return getLockManager().isLockableByUser( User.current().getUsername(), getIdentifiable() );
     }
 
     protected Identifiable getIdentifiable() {

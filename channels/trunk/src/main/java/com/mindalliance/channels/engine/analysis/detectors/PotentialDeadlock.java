@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.jgrapht.DirectedGraph;
@@ -53,14 +54,16 @@ public class PotentialDeadlock extends AbstractIssueDetector {
     /**
      * Detect cycles where all flows are critical.
      *
+     *
+     * @param queryService
      * @param modelObject -- the ModelObject being analyzed
      * @return a list of Issues
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         GraphBuilder<Node,Flow> graphBuilder =
-                new FlowMapGraphBuilder( segment, getQueryService(), false );
+                new FlowMapGraphBuilder( segment, queryService, false );
         DirectedGraph<Node, Flow> digraph = graphBuilder.buildDirectedGraph( );
         StrongConnectivityInspector<Node, Flow> sci =
                 new StrongConnectivityInspector<Node, Flow>( digraph );
@@ -91,7 +94,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
                     }
                     // This is a "critical" cycle
                     if ( allCritical ) {
-                        Issue issue = makeIssue( Issue.ROBUSTNESS, segment );
+                        Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, segment );
                         issue.setDescription( "Potential deadlock if any of "
                                 + getReceiveDescriptions( criticalReceiveInCycle )
                                 + " fails." );

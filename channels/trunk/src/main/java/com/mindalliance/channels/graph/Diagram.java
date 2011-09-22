@@ -1,6 +1,7 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -37,14 +38,11 @@ public interface  Diagram<V,E> extends Serializable {
      * @param outputStream the output stream
      * @param analyst an analyst
      * @param diagramFactory   a diagram factory
+     * @param queryService
      * @throws DiagramException raised if diagram generation fails
      */
-    void render(
-            String ticket,
-            String outputFormat,
-            OutputStream outputStream,
-            Analyst analyst,
-            DiagramFactory<V, E> diagramFactory );
+    void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
+                 DiagramFactory<V, E> diagramFactory, QueryService queryService );
 
     /**
      * Produce image map
@@ -53,8 +51,10 @@ public interface  Diagram<V,E> extends Serializable {
      * @param ticket  a per-format use-once ticket
      * @param analyst an analyst
      * @param diagramFactory  a diagram factory
+     * @param queryService
      * @return a String
      * @throws DiagramException if fails
      */
-    String makeImageMap( String ticket, Analyst analyst, DiagramFactory<V, E> diagramFactory );
+    String makeImageMap( String ticket, Analyst analyst, DiagramFactory<V, E> diagramFactory,
+                         QueryService queryService );
 }

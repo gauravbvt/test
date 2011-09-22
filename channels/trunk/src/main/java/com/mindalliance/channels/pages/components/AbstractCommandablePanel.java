@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
@@ -16,11 +22,6 @@ import java.util.Set;
 
 /**
  * Abstract panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 9, 2009
- * Time: 9:05:48 PM
  */
 public class AbstractCommandablePanel extends AbstractUpdatablePanel {
 
@@ -58,7 +59,6 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         return commander.doUnsafeCommand( command );
     }
 
-
     /**
      * Whether an identifiable object is locked by current user.
      *
@@ -66,11 +66,10 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a boolean
      */
     protected boolean isLockedByUser( Identifiable identifiable ) {
-        return noLockRequired( identifiable ) ||
-                ( ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
-                        && !isImmutable( identifiable )
-                        && getLockManager().isLockedByUser(
-                        User.current().getUsername(), identifiable.getId() ) );
+        return noLockRequired( identifiable )
+               || ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
+                  && !isImmutable( identifiable ) && getLockManager().isLockedByUser( User.current().getUsername(),
+                                                                                      identifiable.getId() );
     }
 
     private boolean noLockRequired( Identifiable identifiable ) {
@@ -84,15 +83,12 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a boolean
      */
     protected boolean isLockedByUserIfNeeded( Identifiable identifiable ) {
-        return getPlan().isDevelopment() &&
-                ( isImmutable( identifiable )
-                        || isLockedByUser( identifiable ) );
+        return getPlan().isDevelopment() && ( isImmutable( identifiable ) || isLockedByUser( identifiable ) );
     }
 
     private boolean isImmutable( Identifiable identifiable ) {
         return identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isImmutable();
     }
-
 
     /**
      * Get name of lock owner.
@@ -118,30 +114,30 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * Safely find or create a model entity via a command.
      *
      * @param clazz a model entity class
-     * @param name  a name
+     * @param name a name
      * @return a model entity
      */
     @SuppressWarnings( "unchecked" )
     protected <T extends ModelEntity> T doSafeFindOrCreate( Class<T> clazz, String name ) {
-        return (T) doCommand( new CreateEntityIfNew(
-                clazz,
-                name,
-                ModelEntity.Kind.Actual ) ).getSubject( getQueryService() );
+        return (T) doCommand( new CreateEntityIfNew( User.current().getUsername(),
+                                                     clazz,
+                                                     name,
+                                                     ModelEntity.Kind.Actual ) ).getSubject( getQueryService() );
     }
 
     /**
      * Safely find or create a model entity type via a command.
      *
      * @param clazz a model entity class
-     * @param name  a name
+     * @param name a name
      * @return a model entity
      */
     @SuppressWarnings( "unchecked" )
     protected <T extends ModelEntity> T doSafeFindOrCreateType( Class<T> clazz, String name ) {
-        return (T) doCommand( new CreateEntityIfNew(
-                clazz,
-                name,
-                ModelEntity.Kind.Type ) ).getSubject( getQueryService() );
+        return (T) doCommand( new CreateEntityIfNew( User.current().getUsername(),
+                                                     clazz,
+                                                     name,
+                                                     ModelEntity.Kind.Type ) ).getSubject( getQueryService() );
     }
 
     /**

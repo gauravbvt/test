@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.TimePeriod;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 
@@ -28,10 +29,10 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
 
     /** {@inheritDoc} */
     @SuppressWarnings( "unchecked" )
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
+        List<Assignment> assignments = queryService.findAllAssignments( part, false );
         List<Availability> availabilities = (List<Availability>) CollectionUtils.collect(
                 assignments,
                 new Transformer() {
@@ -43,9 +44,9 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
         if ( !availabilities.isEmpty() ) {
             List<TimeGap> gaps = findGaps( availabilities );
             for ( TimeGap gap : gaps ) {
-                Issue issue = makeIssue( Issue.ROBUSTNESS, part );
+                Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
                 issue.setDescription( "No one is available to do task \"" + part.getTask() + "\" on " + gap + "." );
-                issue.setSeverity( this.computeTaskFailureSeverity( part ) );
+                issue.setSeverity( this.computeTaskFailureSeverity( queryService, part ) );
                 issue.setRemediation( "Change the availabilities of assigned agents so that they leave no gap" +
                         "\nor change the specification of the task so that more agents are assigned to fill the gaps" );
                 issues.add( issue );

@@ -1,6 +1,13 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.engine.analysis.graph.HierarchyRelationship;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
@@ -16,28 +23,24 @@ import java.util.List;
 
 /**
  * Hierarchy DOT exporter.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jul 6, 2009
- * Time: 4:26:46 PM
  */
 public class HierarchyDOTExporter extends AbstractDOTExporter<Hierarchical, HierarchyRelationship> {
     public HierarchyDOTExporter( MetaProvider<Hierarchical, HierarchyRelationship> metaProvider ) {
         super( metaProvider );
     }
 
-    protected void exportVertices( PrintWriter out, Graph<Hierarchical, HierarchyRelationship> g ) {
+    @Override
+    protected void exportVertices( QueryService queryService, PrintWriter out, Graph<Hierarchical, HierarchyRelationship> g ) {
         DirectedGraph<Hierarchical, HierarchyRelationship> digraph =
                 (DirectedGraph<Hierarchical, HierarchyRelationship>) g;
         List<Hierarchical> roots = findRoots( digraph );
-        printoutRankedVertices( out, roots );
+        printoutRankedVertices( queryService, out, roots );
         List<Hierarchical> ranked = roots;
         List<Hierarchical> placed = new ArrayList<Hierarchical>( ranked );
         while ( !ranked.isEmpty() ) {
             ranked = findAllChildrenOf( ranked, digraph, placed );
             placed.addAll(  ranked );
-            printoutRankedVertices( out, ranked );
+            printoutRankedVertices( queryService, out, ranked );
         }
     }
 
@@ -47,8 +50,9 @@ public class HierarchyDOTExporter extends AbstractDOTExporter<Hierarchical, Hier
         return (List<Hierarchical>) CollectionUtils.select(
                 digraph.vertexSet(),
                 new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return digraph.inDegreeOf( (Hierarchical) obj ) == 0;
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return digraph.inDegreeOf( (Hierarchical) object ) == 0;
                     }
                 } );
     }
@@ -61,18 +65,16 @@ public class HierarchyDOTExporter extends AbstractDOTExporter<Hierarchical, Hier
         return (List<Hierarchical>) CollectionUtils.select(
                 digraph.vertexSet(),
                 new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return !placed.contains(  (Hierarchical)obj )
-                        && !CollectionUtils.intersection( ranked, ( (Hierarchical) obj ).getSuperiors() ).isEmpty();
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !placed.contains( object )
+                        && !CollectionUtils.intersection( ranked, ( (Hierarchical) object ).getSuperiors() ).isEmpty();
                     }
                 } );
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
-    private void printoutRankedVertices( PrintWriter out, List<Hierarchical> vertices ) {
+    private void printoutRankedVertices( QueryService queryService, PrintWriter out, List<Hierarchical> vertices ) {
         if ( !vertices.isEmpty() ) {
             MetaProvider<Hierarchical, HierarchyRelationship> metaProvider = getMetaProvider();
             out.print( "{ rank=same; " );
@@ -84,7 +86,8 @@ public class HierarchyDOTExporter extends AbstractDOTExporter<Hierarchical, Hier
                     attributes.add( new DOTAttribute( "label", label ) );
                 }
                 if ( metaProvider.getDOTAttributeProvider() != null ) {
-                    attributes.addAll( metaProvider.getDOTAttributeProvider().getVertexAttributes( v,
+                    attributes.addAll( metaProvider.getDOTAttributeProvider().getVertexAttributes( queryService,
+                                                                                                   v,
                             getHighlightedVertices().contains( v ) ) );
                 }
                 if ( metaProvider.getURLProvider() != null ) {

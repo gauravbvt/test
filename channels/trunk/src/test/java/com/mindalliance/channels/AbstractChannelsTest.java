@@ -1,15 +1,16 @@
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.core.AttachmentManager;
-import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.engine.query.DefaultQueryService;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.IRequestCodingStrategy;
@@ -92,19 +93,21 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
     @Autowired
     protected PlanManager planManager;
 
-    @Autowired
-    protected DefaultQueryService queryService;
+    protected QueryService queryService;
 
     protected WicketTester tester;
 
     @Autowired
-    protected UserService userService;
+    protected UserDao userDao;
 
     @Autowired
     protected Channels wicketApplication;
 
     @Autowired
     private Analyst analyst;
+
+    @Autowired
+    private CommanderFactory commanderFactory;
 
     private ConfigurableApplicationContext applicationContext;
 
@@ -176,14 +179,11 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         assertNotNull( "No current user", user );
         Plan plan = user.getPlan();
         assertNotNull( "No plan defined for user", plan );
-        return wicketApplication.getCommander( plan );
+        return commanderFactory.getCommander( plan );
     }
 
     public LockManager getLockManager() {
-        User user = User.current();
-        assertNotNull( "No current user", user );
-        Plan plan = user.getPlan();
-        return wicketApplication.getLockManager( plan );
+        return getCommander().getLockManager();
     }
 
     /**
@@ -193,7 +193,7 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
      */
     protected void login( String username ) {
         SecurityContext context = SecurityContextHolder.getContext();
-        UserDetails details = userService.loadUserByUsername( username );
+        UserDetails details = userDao.loadUserByUsername( username );
         TestingAuthenticationToken auth = new TestingAuthenticationToken( details,
                                                                           "",
                                                                           (List<GrantedAuthority>) details
@@ -252,6 +252,8 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
             List<Plan> planList = planManager.getPlansWithUri( planUri );
             User.current().setPlan( planList.get( 0 ) );
         }
+
+        queryService = getCommander().getQueryService();
     }
 
     @After
@@ -342,7 +344,6 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
             testContext.setAttribute( DependencyInjectionTestExecutionListener.REINJECT_DEPENDENCIES_ATTRIBUTE,
                                       Boolean.TRUE );
         }
-    //---------------- afterTestMethod
     }
 
     /**

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.Attachment;
@@ -42,13 +48,8 @@ import java.util.List;
 
 /**
  * Channels' home page.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 3/2/11
- * Time: 12:42 PM
  */
-public class UserPage extends AbstractChannelsWebPage implements Updatable {
+public class UserPage extends AbstractChannelsWebPage {
 
 
     /**
@@ -454,7 +455,7 @@ public class UserPage extends AbstractChannelsWebPage implements Updatable {
 
     @Override
     public void changed( Change change ) {
-        getCommander().clearTimeOut();
+        getCommander().clearTimeOut( User.current().getUsername() );
         if ( change.getMessage() != null ) {
             message = change.getMessage();
         }

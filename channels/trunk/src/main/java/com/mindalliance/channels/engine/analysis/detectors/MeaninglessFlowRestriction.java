@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         Flow.Restriction restriction = flow.getRestriction();
@@ -51,7 +52,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
                     && targetOrg != null
                     && sourceOrg.isActual()
                     && targetOrg.isActual() ) {
-                Issue issue = makeIssue( Issue.VALIDITY, flow );
+                Issue issue = makeIssue( queryService, Issue.VALIDITY, flow );
                 issue.setDescription( "The restriction adds nothing because " +
                         "the organizations named in specifying both source " +
                         "and target tasks are actual organizations." );
@@ -66,7 +67,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
                     && targetLoc != null
                     && sourceLoc.isActual()
                     && targetLoc.isActual() ) {
-                Issue issue = makeIssue( Issue.VALIDITY, flow );
+                Issue issue = makeIssue( queryService, Issue.VALIDITY, flow );
                 issue.setDescription( "The restriction adds nothing because " +
                         "the locations named in specifying both source " +
                         "and target tasks are actual places." );
@@ -79,7 +80,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
                     && targetActor != null
                     && sourceActor.isActual()
                     && targetActor.isActual() ) {
-                Issue issue = makeIssue( Issue.VALIDITY, flow );
+                Issue issue = makeIssue( queryService, Issue.VALIDITY, flow );
                 issue.setDescription( "The restriction adds nothing because " +
                         "the agents named in specifying both source " +
                         "and target tasks are actual agents." );

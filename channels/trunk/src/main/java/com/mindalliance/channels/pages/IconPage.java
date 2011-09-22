@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -37,7 +38,7 @@ public class IconPage extends AbstractImageFilePage {
     }
 
     protected File getFile( String encodedPath ) throws IOException {
-        return imagingService.findIcon(  encodedPath );
+        return imagingService.findIcon( User.plan(), encodedPath );
     }
 
 }

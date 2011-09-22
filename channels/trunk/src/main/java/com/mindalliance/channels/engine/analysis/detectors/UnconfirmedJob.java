@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +48,11 @@ public class UnconfirmedJob extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
-        for ( Job job : getQueryService().findUnconfirmedJobs( org ) ) {
-            Issue issue = makeIssue( Issue.COMPLETENESS, org );
+        for ( Job job : queryService.findUnconfirmedJobs( org ) ) {
+            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, org );
             issue.setDescription( "Job " + job + " is implied from the plan and not confirmed." );
             issue.setRemediation( "Confirm the job in the profile of " + org.getName() + "." );
             issue.setSeverity( Level.Low );

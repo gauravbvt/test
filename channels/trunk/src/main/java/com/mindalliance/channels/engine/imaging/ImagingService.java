@@ -110,9 +110,11 @@ public interface ImagingService {
 
     /**
      * Find icon file given relative filename.
+     *
+     * @param plan
      * @param encodedPath a string
      * @return  a file
      * @throws java.io.IOException if fails
      */
-    File findIcon( String encodedPath ) throws IOException;
+    File findIcon( Plan plan, String encodedPath ) throws IOException;
 }

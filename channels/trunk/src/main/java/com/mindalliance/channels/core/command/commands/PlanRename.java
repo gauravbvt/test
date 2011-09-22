@@ -1,14 +1,19 @@
-// Copyright (C) 2010 Mind-Alliance Systems LLC.
-// All rights reserved.
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
 
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.MultiCommand;
+import com.mindalliance.channels.core.command.commands.UpdateObject.Action;
 import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.PlanDefinition;
 import com.mindalliance.channels.core.model.Plan;
@@ -19,9 +24,11 @@ import com.mindalliance.channels.core.model.Plan;
 public class PlanRename extends AbstractCommand {
 
     public PlanRename() {
+        super( "daemon" );
     }
 
-    public PlanRename( Plan plan, String newName ) {
+    public PlanRename( String userName, Plan plan, String newName ) {
+        super( userName );
         needLockOn( plan );
         set( "id", plan.getId() );
         set( "old", plan.getName() );
@@ -33,6 +40,7 @@ public class PlanRename extends AbstractCommand {
      *
      * @return a string
      */
+    @Override
     public String getName() {
         return "rename plan";
     }
@@ -44,6 +52,7 @@ public class PlanRename extends AbstractCommand {
      * @return change caused
      * @throws CommandException if execution fails
      */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         Plan plan = getPlan( commander );
 
@@ -57,11 +66,9 @@ public class PlanRename extends AbstractCommand {
         MultiCommand multi = (MultiCommand) get( "subCommands" );
         if ( multi == null ) {
             String newName = (String) get( "new" );
-            multi = new MultiCommand( "rename plan - extra" );
-            multi.addCommand(
-                    new PlanDefinitionRename( plan, newName ) );
-            multi.addCommand(
-                    new UpdatePlanObject( plan, "name", newName, UpdateObject.Action.Set ) );
+            multi = new MultiCommand( getUserName(), "rename plan - extra" );
+            multi.addCommand( new PlanDefinitionRename( getUserName(), plan, newName ) );
+            multi.addCommand( new UpdatePlanObject( getUserName(), plan, "name", newName, Action.Set ) );
             set( "subCommands", multi );
         }
 
@@ -73,6 +80,7 @@ public class PlanRename extends AbstractCommand {
      *
      * @return a boolean
      */
+    @Override
     public boolean isUndoable() {
         return true;
     }
@@ -86,54 +94,50 @@ public class PlanRename extends AbstractCommand {
      */
     @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        return new PlanRename( getPlan( commander ), (String) get( "old" ) );
+        return new PlanRename( getUserName(), getPlan( commander ), (String) get( "old" ) );
     }
 
     private Plan getPlan( Commander commander ) throws CommandException {
         return commander.resolve( Plan.class, (Long) get( "id" ) );
     }
 
-
     //==================================================================
+
     /**
      * Rename a plan in a plan definition.
      */
     public static class PlanDefinitionRename extends AbstractCommand {
 
-        public PlanDefinitionRename() {
-        }
-
-        public PlanDefinitionRename( Plan plan, String name ) {
+        public PlanDefinitionRename( String userName, Plan plan, String name ) {
+            super( userName );
             set( "uri", plan.getUri() );
             set( "old", plan.getName() );
             set( "new", name );
         }
 
-        /** {@inheritDoc} */
+        @Override
         public String getName() {
             return "rename a plan definition";
         }
 
-        /** {@inheritDoc} */
+        @Override
         public Change execute( Commander commander ) throws CommandException {
-            DefinitionManager definitionManager =
-                    commander.getQueryService().getPlanManager().getDefinitionManager();
+            DefinitionManager definitionManager = commander.getQueryService().getPlanManager().getDefinitionManager();
 
             PlanDefinition planDefinition = definitionManager.get( (String) get( "uri" ) );
             planDefinition.setName( (String) get( "new" ) );
 
-            return new Change( Change.Type.Updated, "plan.properties" );
+            return new Change( Type.Updated, "plan.properties" );
         }
 
-        /** {@inheritDoc} */
+        @Override
         public boolean isUndoable() {
             return true;
         }
 
-        /** {@inheritDoc} */
         @Override
         protected Command makeUndoCommand( Commander commander ) throws CommandException {
-            return new PlanDefinitionRename( commander.getPlan(), (String) get( "old" ) );
+            return new PlanDefinitionRename( getUserName(), commander.getPlan(), (String) get( "old" ) );
         }
     }
 }

@@ -2,7 +2,6 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment.Type;
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.core.dao.PlanDefinition;
 import com.mindalliance.channels.core.model.Phase.Timing;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -44,7 +43,16 @@ public class Plan extends ModelObject {
     /** Whether the plan is meant as a template. */
     private boolean template;
 
-     /** The status of a (version of) plan. */
+    /**
+     * Return a "directory-safe" equivalent name.
+     * @param name original name
+     * @return safe version
+     */
+    public static String sanitize( String name ) {
+        return name.replaceAll( "\\W", "_" );
+    }
+
+    /** The status of a (version of) plan. */
     public enum Status implements Serializable {
         /** In development. */
         DEVELOPMENT,
@@ -391,9 +399,9 @@ public class Plan extends ModelObject {
      * Get sanitized uri.
      * @return a string
      */
-    public String urn() {
-         return PlanDefinition.sanitize( getUri() );
-     }
+    public String getUrn() {
+        return sanitize( getUri() );
+    }
 
     /**
      * Add event.

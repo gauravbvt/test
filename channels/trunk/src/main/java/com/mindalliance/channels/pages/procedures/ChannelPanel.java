@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.engine.query.PlanService;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -27,7 +27,7 @@ import java.util.List;
 public class ChannelPanel extends Panel {
     public enum Type { OTHER, PHONE, EMAIL }
 
-    public ChannelPanel( String id, PlanService service, Specable specable ) {
+    public ChannelPanel( String id, QueryService service, Specable specable ) {
         super( id );
         add(
             new GridView<ChannelWrapper>( "channels",
@@ -80,7 +80,7 @@ public class ChannelPanel extends Panel {
         return new AttributeModifier( name, true, new Model<String>( value ) );
     }
 
-    public static List<ChannelWrapper> getChannels( PlanService service, Specable specable ) {
+    public static List<ChannelWrapper> getChannels( QueryService service, Specable specable ) {
         List<ChannelWrapper> result = new ArrayList<ChannelWrapper>();
 
         if ( specable != null ) {

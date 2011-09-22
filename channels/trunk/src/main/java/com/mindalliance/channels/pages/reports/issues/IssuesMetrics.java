@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.reports.issues;
 
 import com.mindalliance.channels.core.model.Issue;
@@ -18,19 +24,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 6/5/11
- * Time: 8:14 AM
- */
 public class IssuesMetrics extends AbstractUpdatablePanel {
 
     private final String issueType;
+
     private Map<String, List<Issue>> issues;
+
     private Map<String, String> issueLabels = new HashMap<String, String>();
+
     private int allIssuesCount;
+
     private WebMarkupContainer issueMetricsContainer;
 
     public IssuesMetrics( String id, String issueType ) {
@@ -40,7 +43,7 @@ public class IssuesMetrics extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        allIssuesCount = getAnalyst().findAllUnwaivedIssues().size();
+        allIssuesCount = getAnalyst().findAllUnwaivedIssues( getQueryService() ).size();
         issueMetricsContainer = new WebMarkupContainer( "issue-metrics" );
         issueMetricsContainer.setVisible( !getIssues().isEmpty() );
         add( issueMetricsContainer );
@@ -55,17 +58,15 @@ public class IssuesMetrics extends AbstractUpdatablePanel {
     }
 
     private void addKinds() {
-        issueMetricsContainer.add( new ListView<String>(
-                "kinds",
-                getIssueKinds() ) {
+        issueMetricsContainer.add( new ListView<String>( "kinds", getIssueKinds() ) {
             @Override
             protected void populateItem( ListItem<String> item ) {
-/*
-                item.add( new AttributeModifier(
-                        "class",
-                        true,
-                        new Model<String>( item.getIndex() % 2 == 0 ? "even" : "odd" ) ) );
-*/
+                /*
+                                item.add( new AttributeModifier(
+                                        "class",
+                                        true,
+                                        new Model<String>( item.getIndex() % 2 == 0 ? "even" : "odd" ) ) );
+                */
                 String kind = item.getModelObject();
                 item.add( new Label( "kind", issueLabels.get( kind ) ) );
                 item.add( new Label( "count", issueCount( kind ) ) );
@@ -78,22 +79,19 @@ public class IssuesMetrics extends AbstractUpdatablePanel {
     }
 
     private String severityCount( String kind, final Level severity ) {
-        return Integer.toString( CollectionUtils.select(
-                getIssues().get( kind ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Issue) object ).getSeverity().equals( severity );
-                    }
-                }
-        ).size() );
+        return Integer.toString( CollectionUtils.select( getIssues().get( kind ), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ( (Issue) object ).getSeverity().equals( severity );
+            }
+        } ).size() );
     }
 
     private String issueCount( String kind ) {
         MessageFormat mf = new MessageFormat( "{0} ({1,number,percent})" );
         double count = issues.get( kind ).size();
         double percent = count / allIssuesCount;
-        Object[] args = {count, Math.max( percent, percent > 0 ? 0.01 : 0.0 )};
+        Object[] args = { count, Math.max( percent, percent > 0 ? 0.01 : 0.0 ) };
         return mf.format( args );
     }
 
@@ -104,11 +102,7 @@ public class IssuesMetrics extends AbstractUpdatablePanel {
             public int compare( String k1, String k2 ) {
                 int k1Count = getIssues().get( k1 ).size();
                 int k2Count = getIssues().get( k2 ).size();
-                return k1Count > k2Count
-                        ? -1
-                        : k1Count < k2Count
-                        ? 1
-                        : 0; // todo - sort on severity
+                return k1Count > k2Count ? -1 : k1Count < k2Count ? 1 : 0; // todo - sort on severity
             }
         } );
         return issueKinds;
@@ -118,15 +112,14 @@ public class IssuesMetrics extends AbstractUpdatablePanel {
     private Map<String, List<Issue>> getIssues() {
         if ( issues == null ) {
             issues = new HashMap<String, List<Issue>>();
-            List<Issue> allUnwaivedIssues = (List<Issue>) CollectionUtils.select(
-                    getAnalyst().findAllUnwaivedIssues(),
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            return ( (Issue) object ).getType().equals( issueType );
-                        }
-                    }
-            );
+            List<Issue> allUnwaivedIssues =
+                    (List<Issue>) CollectionUtils.select( getAnalyst().findAllUnwaivedIssues( getQueryService() ),
+                                                          new Predicate() {
+                                                              @Override
+                                                              public boolean evaluate( Object object ) {
+                                                                  return ( (Issue) object ).getType().equals( issueType );
+                                                              }
+                                                          } );
             for ( Issue issue : allUnwaivedIssues ) {
                 String kind = issue.getKind();
                 List<Issue> issuesOfKind = issues.get( kind );

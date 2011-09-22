@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.model.Channel;
@@ -21,52 +27,43 @@ import java.util.Set;
 
 /**
  * Commitment implied in a flow is missing a valid channel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Dec 9, 2009
- * Time: 10:37:02 AM
  */
 public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetector {
 
     @Override
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         if ( flow.isSharing() ) {
-            QueryService queryService = getQueryService();
             Set<Channelable> contactedEntities = new HashSet<Channelable>();
             Assignments assignments = queryService.getAssignments( false );
-            for ( Commitment commitment : queryService.findAllCommitments( flow,
-                                                                           false, assignments ) )
-                contactedEntities.add( contactedEntity( commitment ) );
+            for ( Commitment commitment : queryService.findAllCommitments( flow, false, assignments ) )
+                contactedEntities.add( commitment.getContactedEntity() );
 
-            final Place locale = getPlan().getLocale();
+            final Place locale = queryService.getPlan().getLocale();
             for ( Channelable contacted : contactedEntities ) {
                 for ( final Channel flowChannel : flow.getEffectiveChannels() ) {
                     if ( flowChannel.isUnicast() && !flowChannel.isDirect() ) {
-                        boolean hasValidChannel = CollectionUtils.exists(
-                            contacted.getEffectiveChannels(),
-                            new Predicate() {
-                                @Override
-                                public boolean evaluate( Object object ) {
-                                  Channel channel = (Channel) object;
-                                  return channel.isValid()
-                                         && channel.getMedium()
-                                            .narrowsOrEquals( flowChannel.getMedium(), locale );
-                              }
-                          } );
+                        boolean hasValidChannel =
+                                CollectionUtils.exists( contacted.getEffectiveChannels(), new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        Channel channel = (Channel) object;
+                                        return channel.isValid()
+                                               && channel.getMedium().narrowsOrEquals( flowChannel.getMedium(),
+                                                                                       locale );
+                                    }
+                                } );
                         if ( !hasValidChannel ) {
-                            Issue issue = makeIssue( Issue.COMPLETENESS, flow );
+                            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, flow );
                             issue.setDescription(
-                                "There is no valid channel for contacting " + contacted.getName()
-                                + " via " + flowChannel.getMedium() );
-                            issue.setRemediation(
-                                "Make sure that " + contacted.getName() + " can be contacted via "
-                                + flowChannel.getMedium()
-                                + " with a correct address if one is required" + "\nor remove "
-                                + flowChannel.getMedium() + " from the flow" );
-                            issue.setSeverity( computeTaskFailureSeverity( (Part) flow.getTarget() ) );
+                                    "There is no valid channel for contacting " + contacted.getName() + " via "
+                                    + flowChannel.getMedium() );
+                            issue.setRemediation( "Make sure that " + contacted.getName() + " can be contacted via "
+                                                  + flowChannel.getMedium()
+                                                  + " with a correct address if one is required" + "\nor remove "
+                                                  + flowChannel.getMedium() + " from the flow" );
+                            issue.setSeverity( computeTaskFailureSeverity( queryService, (Part) flow.getTarget() ) );
                             issues.add( issue );
                         }
                     }
@@ -76,31 +73,17 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
         return issues;
     }
 
-    private Channelable contactedEntity( Commitment commitment ) {
-        if ( commitment.getSharing().isAskedFor() ) {
-            return commitment.getCommitter().getChannelable();
-        } else {
-            return commitment.getBeneficiary().getChannelable();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Flow;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getTestedProperty() {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getKindLabel() {
         return "Sharing commitment without contact info";
     }

@@ -1,7 +1,14 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
@@ -18,18 +25,15 @@ import java.util.List;
 
 /**
  * Remove plan segment command.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 6, 2009
- * Time: 8:59:52 AM
  */
 public class RemoveSegment extends AbstractCommand {
 
     public RemoveSegment() {
+        super( "daemon" );
     }
 
-    public RemoveSegment( Segment segment ) {
+    public RemoveSegment( String userName, Segment segment ) {
+        super( userName );
         List<Part> parts = segment.listParts();
         needLockOn( segment );
         needLocksOn( parts );
@@ -38,16 +42,12 @@ public class RemoveSegment extends AbstractCommand {
         set( "segment", segment.getId() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "delete plan segment";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -55,7 +55,7 @@ public class RemoveSegment extends AbstractCommand {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             describeTarget( segment );
             segment.setBeingDeleted( true );
-            Exporter exporter = commander.getExporter();
+            Exporter exporter = commander.getExporter( getUserName() );
             exporter.export( segment, bos );
             set( "xml", bos.toString() );
             Plan plan = commander.getPlan();
@@ -66,30 +66,25 @@ public class RemoveSegment extends AbstractCommand {
                 set( "defaultSegment", defaultSegment.getId() );
             }
             queryService.remove( segment );
-            releaseAnyLockOn( segment, commander );
-            return new Change( Change.Type.Removed, segment );
+            releaseAnyLockOn( commander, segment );
+            return new Change( Type.Removed, segment );
 
         } catch ( IOException e ) {
             throw new CommandException( "Failed to remove segment.", e );
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         String xml = (String) get( "xml" );
         if ( xml != null ) {
-            MultiCommand multi = new MultiCommand( "restore segment" );
-            RestoreSegment restoreSegment = new RestoreSegment();
+            MultiCommand multi = new MultiCommand( getUserName(), "restore segment" );
+            RestoreSegment restoreSegment = new RestoreSegment( getUserName() );
             restoreSegment.set( "xml", xml );
             Long defaultSegmentId = (Long) get( "defaultSegment" );
             if ( defaultSegmentId != null ) {
@@ -102,9 +97,6 @@ public class RemoveSegment extends AbstractCommand {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isSegmentSpecific() {
         return false;

@@ -2,6 +2,7 @@ package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.List;
 
@@ -17,42 +18,42 @@ public interface Detective {
 
     /**
      * Detect all waived issues on a model object .
+     *
+     * @param queryService
      * @param modelObject a model object
      * @param propertySpecific - whether issues are property specific
      * @return a list of issues
      */
-    List<Issue> detectWaivedIssues(
-            ModelObject modelObject,
-            Boolean propertySpecific );
+    List<Issue> detectWaivedIssues( QueryService queryService, ModelObject modelObject, Boolean propertySpecific );
 
     /**
       * Detect all waived issues on a model object .
-      * @param modelObject a model object
-     * @param propertySpecific - whether issues are property specific
-      * @return a list of issues
+      *
+     * @param queryService
+    * @param modelObject a model object
+   * @param propertySpecific - whether issues are property specific
+    * @return a list of issues
       */
-    List<Issue> detectUnwaivedIssues(
-            ModelObject modelObject,
-            Boolean propertySpecific );
+    List<Issue> detectUnwaivedIssues( QueryService queryService, ModelObject modelObject, Boolean propertySpecific );
 
     /**
      * Detect all waived property issues on a model object .
+     *
+     * @param queryService
      * @param modelObject a model object
      * @param property a string - issues for this property if given
      * @return a list of issues
      */
-    List<Issue> detectWaivedPropertyIssues(
-            ModelObject modelObject,
-            String property );
+    List<Issue> detectWaivedPropertyIssues( QueryService queryService, ModelObject modelObject, String property );
 
     /**
       * Detect all waived property issues on a model object .
-      * @param modelObject a model object
-      * @param property a string - issues for this property if given
-       * @return a list of issues
+      *
+     * @param queryService
+   * @param modelObject a model object
+   * @param property a string - issues for this property if given
+    * @return a list of issues
       */
-    List<Issue> detectUnwaivedPropertyIssues(
-            ModelObject modelObject,
-            String property);
+    List<Issue> detectUnwaivedPropertyIssues( QueryService queryService, ModelObject modelObject, String property );
 
 }

@@ -115,7 +115,7 @@ public class SegmentImportPanel extends AbstractCommandablePanel {
         this.upload = upload;
         if ( upload != null ) {
             try {
-                getPlanManager().importSegment( User.plan(), upload.getInputStream() );
+                getPlanManager().importSegment( User.current().getUsername(), User.plan(), upload.getInputStream() );
             } catch ( IOException e ) {
                 LoggerFactory.getLogger( getClass() ).warn( "Unable to get upload stream", e );
             }

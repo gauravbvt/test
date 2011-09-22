@@ -92,7 +92,7 @@ public class PlanDefinition extends Observable {
      * @throws IOException on initialization errors
      */
     public void initialize( Resource dataDirectory ) throws IOException {
-        planDirectory = new File( dataDirectory.getFile(), sanitize( uri ) );
+        planDirectory = new File( dataDirectory.getFile(), Plan.sanitize( uri ) );
         if ( planDirectory.mkdirs() )
             LOG.debug( "Created {}", planDirectory );
 
@@ -244,15 +244,6 @@ public class PlanDefinition extends Observable {
         if ( client != null )
             buf.append( client );
         return buf.toString();
-    }
-
-    /**
-     * Return a "directory-safe" equivalent name.
-     * @param name original name
-     * @return safe version
-     */
-    public static String sanitize( String name ) {
-        return name.replaceAll( "\\W", "_" );
     }
 
     /**

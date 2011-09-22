@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -30,12 +31,12 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Plan plan = (Plan) modelObject;
-        List<Segment> segments = getQueryService().list( Segment.class );
+        List<Segment> segments = queryService.list( Segment.class );
         for ( final Phase phase : plan.getPhases() ) {
-            for ( final Event event : getQueryService().list( Event.class ) ) {
+            for ( final Event event : queryService.list( Event.class ) ) {
                 if ( !event.isUnknown() ) {
                     boolean exists = CollectionUtils.exists(
                             segments,
@@ -48,7 +49,7 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
                             }
                     );
                     if ( !exists ) {
-                        Issue issue = makeIssue( Issue.COMPLETENESS, plan );
+                        Issue issue = makeIssue( queryService, Issue.COMPLETENESS, plan );
                         issue.setDescription( "No plan segment for phase "
                                 + phase.getName()
                                 + " of event "

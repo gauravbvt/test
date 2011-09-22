@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.command.commands.PasteFlow;
 import com.mindalliance.channels.core.command.commands.RemovePart;
 import com.mindalliance.channels.core.command.commands.SatisfyAllNeeds;
 import com.mindalliance.channels.core.command.commands.SetPartFromCopy;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
@@ -43,19 +44,19 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
      */
     protected List<CommandWrapper> getCommandWrappers() {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
-        commandWrappers.add( new CommandWrapper( new CopyPart( getPart() ) ) {
+        commandWrappers.add( new CommandWrapper( new CopyPart( User.current().getUsername(), getPart() ) ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 update( target, change );
             }
         } );
-        if ( isExpanded( getPart() ) && getCommander().isPartCopied() ) {
-            commandWrappers.add( new CommandWrapper( new SetPartFromCopy( getPart() ) ) {
+        if ( isExpanded( getPart() ) && getCommander().isPartCopied( User.current().getUsername() ) ) {
+            commandWrappers.add( new CommandWrapper( new SetPartFromCopy( User.current().getUsername(), getPart() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
         }
-        commandWrappers.add( new CommandWrapper( new RemovePart( getPart() ), CONFIRM ) {
+        commandWrappers.add( new CommandWrapper( new RemovePart( User.current().getUsername(), getPart() ), CONFIRM ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 Part part = getPart();
                 update( target, change );
@@ -72,32 +73,32 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
             }
         } );
         if ( isExpanded( getPart() ) ) {
-            commandWrappers.add( new CommandWrapper( new PasteAttachment( getPart() ) ) {
+            commandWrappers.add( new CommandWrapper( new PasteAttachment( User.current().getUsername(), getPart() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new PasteFlow( getPart() ) ) {
+            commandWrappers.add( new CommandWrapper( new PasteFlow( User.current().getUsername(), getPart() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new AddUserIssue( getPart() ) ) {
+            commandWrappers.add( new CommandWrapper( new AddUserIssue( User.current().getUsername(), getPart() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new DuplicatePart( getPart() ) ) {
+            commandWrappers.add( new CommandWrapper( new DuplicatePart( User.current().getUsername(), getPart() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new SatisfyAllNeeds( getPart() ) ) {
+            commandWrappers.add( new CommandWrapper( new SatisfyAllNeeds( User.current().getUsername(), getPart() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new Disintermediate( getPart() ) ) {
+            commandWrappers.add( new CommandWrapper( new Disintermediate( User.current().getUsername(), getPart() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }

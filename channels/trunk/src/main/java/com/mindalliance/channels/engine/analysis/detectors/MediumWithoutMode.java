@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +26,11 @@ public class MediumWithoutMode extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         TransmissionMedium medium = (TransmissionMedium)modelObject;
         if ( !medium.isUnknown() && medium.getCast() == null && medium.getInheritedCast() == null ) {
-            Issue issue = makeIssue(Issue.VALIDITY, medium);
+            Issue issue = makeIssue( queryService, Issue.VALIDITY, medium );
             issue.setDescription( "The transmission mode of communication medium \"" + medium.getName()
                     + "\" is undetermined (unicast is assumed).");
             issue.setRemediation( "Set the transmission mode to either Unicast, Multicast or Broadcast"

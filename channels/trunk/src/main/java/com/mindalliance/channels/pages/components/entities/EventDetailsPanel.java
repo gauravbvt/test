@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -138,7 +139,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
         Event event = getPlanEvent();
         boolean oldVal = event.isSelfTerminating();
         if ( oldVal != val ) {
-            doCommand( new UpdatePlanObject( event, "selfTerminating", val ) );
+            doCommand( new UpdatePlanObject( User.current().getUsername(), event, "selfTerminating", val ) );
         }
     }
 

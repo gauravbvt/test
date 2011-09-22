@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,17 +31,17 @@ public class CircularSupervision extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Organization organization = (Organization) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         for ( Job job : organization.getJobs() ) {
             Actor supervisor = job.getSupervisor();
             if ( supervisor != null ) {
-                List<Employment> allSupervised = getQueryService().findAllSupervisedBy( job.getActor() );
+                List<Employment> allSupervised = queryService.findAllSupervisedBy( job.getActor() );
                 for ( Employment employment : allSupervised ) {
                     Actor supervised = employment.getActor();
                     if ( supervised.equals( supervisor ) ) {
-                        Issue issue = makeIssue( Issue.VALIDITY, organization );
+                        Issue issue = makeIssue( queryService, Issue.VALIDITY, organization );
                         issue.setDescription(
                                 job.getLabel()
                                         + " directly or indirectly supervizes "

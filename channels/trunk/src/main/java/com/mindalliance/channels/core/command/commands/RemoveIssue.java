@@ -1,7 +1,14 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
@@ -14,18 +21,15 @@ import java.util.Map;
 
 /**
  * Remove issue command.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 9, 2009
- * Time: 8:01:50 PM
  */
 public class RemoveIssue extends AbstractCommand {
 
     public RemoveIssue() {
+        super( "daemon" );
     }
 
-    public RemoveIssue( Issue issue ) {
+    public RemoveIssue( String userName, Issue issue ) {
+        super( userName );
         needLockOn( issue );
         needLockOn( issue.getAbout() );
         set( "issue", issue.getId() );
@@ -38,35 +42,26 @@ public class RemoveIssue extends AbstractCommand {
         set( "state", state );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "remove issue";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
         UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
         describeTarget( issue );
         queryService.remove( issue );
-        releaseAnyLockOn( issue, commander );
-        return new Change( Change.Type.Removed, issue );
+        releaseAnyLockOn( commander, issue );
+        return new Change( Type.Removed, issue );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
 /*
@@ -74,7 +69,7 @@ public class RemoveIssue extends AbstractCommand {
                 ModelObject.class,
                 (Long) get( "modelObject" ) );
 */
-        AddUserIssue addIssue = new AddUserIssue( (Long) get( "modelObject" ) );
+        AddUserIssue addIssue = new AddUserIssue( getUserName(), (Long) get( "modelObject" ) );
         addIssue.set( "issue", get( "issue" ) );
         addIssue.set( "state", get( "state" ) );
         return addIssue;

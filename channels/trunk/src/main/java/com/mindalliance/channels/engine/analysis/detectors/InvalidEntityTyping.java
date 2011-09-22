@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +27,16 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         ModelEntity entity = (ModelEntity) modelObject;
         List<ModelEntity> types = entity.getAllTypes();
-        Place locale = getPlan().getLocale();
+        Place locale = queryService.getPlan().getLocale();
 
         // Entity is inherently inconsistent with one of its types
         for ( ModelEntity type : types ) {
             if ( !type.validates( entity, locale ) ) {
-                Issue issue = makeIssue( Issue.VALIDITY, entity );
+                Issue issue = makeIssue( queryService, Issue.VALIDITY, entity );
                 issue.setDescription( "This " + entity.getKindLabel()
                         + " is types as a " + type.getName()
                         + " but is not consistent with its definition." );

@@ -1,6 +1,11 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis;
 
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -8,6 +13,7 @@ import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.ModelEntity.Kind;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
@@ -36,11 +42,6 @@ import java.util.Set;
 
 /**
  * Default implementation of Analyst.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Nov 26, 2008
- * Time: 10:07:27 AM
  */
 public class DefaultAnalyst implements Analyst, Lifecycle {
 
@@ -48,11 +49,6 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
      * Description separator.
      */
     private static final String DESCRIPTION_SEPARATOR = " -- ";
-
-    /**
-     * The query service.
-     */
-    private QueryService queryService;
 
     /**
      * The detective service.
@@ -74,18 +70,16 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     public DefaultAnalyst() {
     }
 
-    public QueryService getQueryService() {
-        return queryService;
-    }
-
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
-    }
-
+    /**
+     * Set the detective to use.
+     *
+     * @param detective an issue detector manager
+     */
     public void setDetective( Detective detective ) {
         this.detective = detective;
     }
 
+    @Override
     public void setIssueScanner( IssueScanner issueScanner ) {
         this.issueScanner = issueScanner;
     }
@@ -93,6 +87,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     /**
      * Enable analysis of problems in active plans.
      */
+    @Override
     public void start() {
         running = true;
         // onStart();
@@ -101,182 +96,138 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     /**
      * Disable analysis of problems in active plans.
      */
+    @Override
     public void stop() {
         issueScanner.terminate();
     }
 
+    @Override
     public boolean isRunning() {
         return running;
     }
 
+    @Override
     public void onAfterCommand( Plan plan ) {
         issueScanner.rescan( plan );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onStart( Plan plan ) {
         issueScanner.scan( plan );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onStop() {
         stop();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onDestroy() {
         issueScanner.terminate();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> listIssues(
-            ModelObject modelObject, Boolean includingPropertySpecific, Boolean includingWaived ) {
-        if ( includingWaived ) {
-            return detectAllIssues( modelObject, null, includingPropertySpecific );
-        } else {
-            return detectUnwaivedIssues(
-                    modelObject,
-                    null,
-                    includingPropertySpecific );
-        }
+    @Override
+    public List<Issue> listIssues( QueryService queryService, ModelObject modelObject,
+                                   Boolean includingPropertySpecific, Boolean includingWaived ) {
+        return includingWaived ?
+               detectAllIssues( queryService, modelObject, null, includingPropertySpecific ) :
+               detectUnwaivedIssues( queryService, modelObject, null, includingPropertySpecific );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> listIssues( ModelObject modelObject, Boolean includingPropertySpecific ) {
-        return detectAllIssues( modelObject, null, includingPropertySpecific );
+    @Override
+    public List<Issue> listIssues( QueryService queryService, ModelObject modelObject,
+                                   Boolean includingPropertySpecific ) {
+        return detectAllIssues( queryService, modelObject, null, includingPropertySpecific );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> listIssues( ModelObject modelObject, String property ) {
-        return detectAllIssues( modelObject, property, true );
+    @Override
+    public List<Issue> listIssues( QueryService queryService, ModelObject modelObject, String property ) {
+        return detectAllIssues( queryService, modelObject, property, true );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> listUnwaivedIssues(
-            ModelObject modelObject, Boolean includingPropertySpecific ) {
-        return detectUnwaivedIssues(
-                modelObject,
-                null,
-                includingPropertySpecific );
+    @Override
+    public List<Issue> listUnwaivedIssues( QueryService queryService, ModelObject modelObject,
+                                           Boolean includingPropertySpecific ) {
+        return detectUnwaivedIssues( queryService, modelObject, null, includingPropertySpecific );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> listUnwaivedIssues( ModelObject modelObject, String property ) {
-        return detectUnwaivedIssues( modelObject, property, true );
+    @Override
+    public List<Issue> listUnwaivedIssues( QueryService queryService, ModelObject modelObject, String property ) {
+        return detectUnwaivedIssues( queryService, modelObject, property, true );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> listUnwaivedIssues( Assignment assignment, Boolean includingPropertySpecific ) {
-        return detectUnwaivedIssues( assignment, includingPropertySpecific );
+    @Override
+    public List<Issue> listUnwaivedIssues( QueryService queryService, Assignment assignment,
+                                           Boolean includingPropertySpecific ) {
+        return detectUnwaivedIssues( queryService, assignment, includingPropertySpecific );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> listWaivedIssues(
-            ModelObject modelObject, Boolean includingPropertySpecific ) {
-        return detectWaivedIssues(
-                modelObject,
-                null,
-                includingPropertySpecific );
+    @Override
+    public List<Issue> listWaivedIssues( QueryService queryService, ModelObject modelObject,
+                                         Boolean includingPropertySpecific ) {
+        return detectWaivedIssues( queryService, modelObject, null, includingPropertySpecific );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> listWaivedIssues( ModelObject modelObject, String property ) {
-        return detectWaivedIssues( modelObject, property, true );
+    @Override
+    public List<Issue> listWaivedIssues( QueryService queryService, ModelObject modelObject, String property ) {
+        return detectWaivedIssues( queryService, modelObject, property, true );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> listWaivedIssues( Assignment assignment, Boolean includingPropertySpecific ) {
-        return detectWaivedIssues( assignment, includingPropertySpecific );
+    @Override
+    public List<Issue> listWaivedIssues( QueryService queryService, Assignment assignment,
+                                         Boolean includingPropertySpecific ) {
+        return detectWaivedIssues( queryService, assignment, includingPropertySpecific );
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean hasIssues( ModelObject modelObject, String property ) {
-        return !listIssues( modelObject, property ).isEmpty();
+    @Override
+    public Boolean hasIssues( QueryService queryService, ModelObject modelObject, String property ) {
+        return !listIssues( queryService, modelObject, property ).isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean hasIssues( ModelObject modelObject, Boolean includingPropertySpecific ) {
-        return !listIssues( modelObject, includingPropertySpecific ).isEmpty();
+    @Override
+    public Boolean hasIssues( QueryService queryService, ModelObject modelObject, Boolean includingPropertySpecific ) {
+        return !listIssues( queryService, modelObject, includingPropertySpecific ).isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean hasUnwaivedIssues( ModelObject modelObject, String property ) {
-        return !listUnwaivedIssues( modelObject, property ).isEmpty();
+    @Override
+    public Boolean hasUnwaivedIssues( QueryService queryService, ModelObject modelObject, String property ) {
+        return !listUnwaivedIssues( queryService, modelObject, property ).isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean hasUnwaivedIssues( ModelObject modelObject, Boolean includingPropertySpecific ) {
-        return !listUnwaivedIssues( modelObject, includingPropertySpecific ).isEmpty();
+    @Override
+    public Boolean hasUnwaivedIssues( QueryService queryService, ModelObject modelObject,
+                                      Boolean includingPropertySpecific ) {
+        return !listUnwaivedIssues( queryService, modelObject, includingPropertySpecific ).isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean hasUnwaivedIssues( Assignment assignment, Boolean includingPropertySpecific ) {
-        return !listUnwaivedIssues( assignment, includingPropertySpecific ).isEmpty();
+    @Override
+    public Boolean hasUnwaivedIssues( QueryService queryService, Assignment assignment,
+                                      Boolean includingPropertySpecific ) {
+        return !listUnwaivedIssues( queryService, assignment, includingPropertySpecific ).isEmpty();
     }
 
+    @Override
+    public String getIssuesSummary( QueryService queryService, ModelObject modelObject,
+                                    Boolean includingPropertySpecific ) {
+        List<Issue> issues = listUnwaivedIssues( queryService, modelObject, includingPropertySpecific );
+        return summarize( issues );
+    }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getIssuesSummary( ModelObject modelObject, Boolean includingPropertySpecific ) {
-        List<Issue> issues = listUnwaivedIssues( modelObject, includingPropertySpecific );
+    @Override
+    public String getIssuesSummary( QueryService queryService, Assignment assignment,
+                                    Boolean includingPropertySpecific ) {
+        List<Issue> issues = listUnwaivedIssues( queryService, assignment, includingPropertySpecific );
+        return summarize( issues );
+    }
+
+    @Override
+    public String getIssuesSummary( QueryService queryService, ModelObject modelObject, String property ) {
+        List<Issue> issues = listUnwaivedIssues( queryService, modelObject, property );
         return summarize( issues );
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public String getIssuesSummary( Assignment assignment, Boolean includingPropertySpecific ) {
-        List<Issue> issues = listUnwaivedIssues( assignment, includingPropertySpecific );
-        return summarize( issues );
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getIssuesSummary( ModelObject modelObject, String property ) {
-        List<Issue> issues = listUnwaivedIssues( modelObject, property );
-        return summarize( issues );
-    }
-
-    /**
-     * Aggregate the descriptions of issues
+     * Aggregate the descriptions of issues.
      *
      * @param issues -- an iterator on issues
      * @return a string summarizing the issues
@@ -291,134 +242,116 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return sb.toString();
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> findAllIssuesFor( ResourceSpec resourceSpec, Boolean specific ) {
+    @Override
+    public List<Issue> findAllIssuesFor( QueryService queryService, ResourceSpec resource, Boolean specific ) {
         List<Issue> issues = new ArrayList<Issue>();
-        if ( !resourceSpec.isAnyActor() ) {
-            issues.addAll( listIssues( resourceSpec.getActor(), true ) );
-        }
-        if ( !resourceSpec.isAnyOrganization() ) {
-            issues.addAll( listIssues( resourceSpec.getOrganization(), true ) );
-        }
-        if ( !resourceSpec.isAnyRole() ) {
-            issues.addAll( listIssues( resourceSpec.getRole(), true ) );
-        }
-        if ( !resourceSpec.isAnyJurisdiction() ) {
-            issues.addAll( listIssues( resourceSpec.getJurisdiction(), true ) );
-        }
-        issues.addAll( findAllIssuesInPlays( resourceSpec, specific ) );
+        if ( !resource.isAnyActor() )
+            issues.addAll( listIssues( queryService, resource.getActor(), true ) );
+        if ( !resource.isAnyOrganization() )
+            issues.addAll( listIssues( queryService, resource.getOrganization(), true ) );
+        if ( !resource.isAnyRole() )
+            issues.addAll( listIssues( queryService, resource.getRole(), true ) );
+        if ( !resource.isAnyJurisdiction() )
+            issues.addAll( listIssues( queryService, resource.getJurisdiction(), true ) );
+        issues.addAll( findAllIssuesInPlays( queryService, resource, specific ) );
         return issues;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean isValid( ModelObject modelObject ) {
-        return test( modelObject, Issue.VALIDITY );
+    @Override
+    public Boolean isValid( QueryService queryService, ModelObject modelObject ) {
+        return test( queryService, modelObject, Issue.VALIDITY );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean isComplete( ModelObject modelObject ) {
-        return test( modelObject, Issue.COMPLETENESS );
+    @Override
+    public Boolean isComplete( QueryService queryService, ModelObject modelObject ) {
+        return test( queryService, modelObject, Issue.COMPLETENESS );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean isRobust( ModelObject modelObject ) {
-        return test( modelObject, Issue.ROBUSTNESS );
+    @Override
+    public Boolean isRobust( QueryService queryService, ModelObject modelObject ) {
+        return test( queryService, modelObject, Issue.ROBUSTNESS );
     }
 
-    private boolean test( ModelObject modelObject, String test ) {
-        if ( modelObject instanceof Plan ) {
-            return passes( (Plan) modelObject, test );
-        } else
-            return modelObject instanceof Segment ? passes( (Segment) modelObject, test )
-                    : hasNoTestedIssue( modelObject, test );
+    private boolean test( QueryService queryService, ModelObject modelObject, String test ) {
+        return modelObject instanceof Plan ?
+               passes( queryService, (Plan) modelObject, test ) :
+               modelObject instanceof Segment ?
+               passes( queryService, (Segment) modelObject, test ) :
+               hasNoTestedIssue( queryService, modelObject, test );
     }
 
-    private boolean passes( Plan plan, String test ) {
-        if ( !hasNoTestedIssue( plan, test ) )
+    private boolean passes( QueryService queryService, Plan plan, String test ) {
+        if ( !hasNoTestedIssue( queryService, plan, test ) )
             return false;
-        for ( Segment segment : plan.getSegments() ) {
-            if ( !passes( segment, test ) )
+
+        for ( Segment segment : plan.getSegments() )
+            if ( !passes( queryService, segment, test ) )
                 return false;
-        }
-        for ( ModelEntity entity : queryService.list( ModelEntity.class ) ) {
-            if ( !hasNoTestedIssue( entity, test ) )
+
+        for ( ModelEntity entity : queryService.list( ModelEntity.class ) )
+            if ( !hasNoTestedIssue( queryService, entity, test ) )
                 return false;
-        }
+
         return true;
     }
 
-    private boolean passes( Segment segment, String test ) {
-        if ( !hasNoTestedIssue( segment, test ) )
+    private boolean passes( QueryService queryService, Segment segment, String test ) {
+        if ( !hasNoTestedIssue( queryService, segment, test ) )
             return false;
+
         Iterator<Part> parts = segment.parts();
-        while ( parts.hasNext() ) {
-            if ( !hasNoTestedIssue( parts.next(), test ) )
+        while ( parts.hasNext() )
+            if ( !hasNoTestedIssue( queryService, parts.next(), test ) )
                 return false;
-        }
+
         Iterator<Flow> flows = segment.flows();
-        while ( flows.hasNext() ) {
-            if ( !hasNoTestedIssue( flows.next(), test ) )
+        while ( flows.hasNext() )
+            if ( !hasNoTestedIssue( queryService, flows.next(), test ) )
                 return false;
-        }
         return true;
     }
 
-    private boolean hasNoTestedIssue( ModelObject modelObject, final String test ) {
-        return CollectionUtils.select(
-                listUnwaivedIssues( modelObject, true ), new Predicate() {
-            public boolean evaluate( Object obj ) {
-                return ( (Issue) obj ).getType().equals( test );
+    private boolean hasNoTestedIssue( QueryService queryService, ModelObject modelObject, final String test ) {
+        return CollectionUtils.select( listUnwaivedIssues( queryService, modelObject, true ), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ( (Issue) object ).getType().equals( test );
             }
         } ).isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Integer countTestFailures( ModelObject modelObject, String test ) {
-        if ( modelObject instanceof Plan ) {
-            return countFailures( (Plan) modelObject, test );
-        } else if ( modelObject instanceof Segment ) {
-            return countFailures( (Segment) modelObject, test );
-        } else {
-            return countTestIssues( modelObject, test );
-        }
+    @Override
+    public Integer countTestFailures( QueryService queryService, ModelObject modelObject, String test ) {
+        return modelObject instanceof Plan ?
+               countFailures( queryService, (Plan) modelObject, test ) :
+               modelObject instanceof Segment ?
+               countFailures( queryService, (Segment) modelObject, test ) :
+               countTestIssues( queryService, modelObject, test );
     }
 
-    private int countFailures( Plan plan, String test ) {
-        int count = countTestIssues( plan, test );
-        for ( Segment segment : plan.getSegments() ) {
-            count += countFailures( segment, test );
-        }
-        for ( ModelEntity entity : queryService.list( ModelEntity.class ) ) {
-            count += countTestIssues( entity, test );
-        }
+    private int countFailures( QueryService queryService, Plan plan, String test ) {
+        int count = countTestIssues( queryService, plan, test );
+        for ( Segment segment : plan.getSegments() )
+            count += countFailures( queryService, segment, test );
+        for ( ModelEntity entity : queryService.list( ModelEntity.class ) )
+            count += countTestIssues( queryService, entity, test );
         return count;
     }
 
-    private int countFailures( Segment segment, String test ) {
-        int count = countTestIssues( segment, test );
+    private int countFailures( QueryService queryService, Segment segment, String test ) {
+        int count = countTestIssues( queryService, segment, test );
         Iterator<Part> parts = segment.parts();
         while ( parts.hasNext() )
-            count += countTestIssues( parts.next(), test );
+            count += countTestIssues( queryService, parts.next(), test );
         Iterator<Flow> flows = segment.flows();
         while ( flows.hasNext() )
-            count += countTestIssues( flows.next(), test );
+            count += countTestIssues( queryService, flows.next(), test );
         return count;
     }
 
-    private int countTestIssues( ModelObject modelObject, final String test ) {
-        return CollectionUtils.select(
-                listUnwaivedIssues( modelObject, true ), new Predicate() {
+    private int countTestIssues( QueryService queryService, ModelObject modelObject, final String test ) {
+        return CollectionUtils.select( listUnwaivedIssues( queryService, modelObject, true ), new Predicate() {
+            @Override
             public boolean evaluate( Object object ) {
                 return test.equals( ( (Issue) object ).getType() );
             }
@@ -426,123 +359,112 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     /**
-     * Find the issues on parts and flows for all plays of a resource
+     * Find the issues on parts and flows for all plays of a resource.
      *
+     * @param queryService the query service
      * @param resourceSpec a resource
-     * @param specific     whether the match is "equals" or "narrows or equals"
+     * @param specific whether the match is "equals" or "narrows or equals"
      * @return a list of issues
      */
-    private List<Issue> findAllIssuesInPlays( ResourceSpec resourceSpec, boolean specific ) {
+    private List<Issue> findAllIssuesInPlays( QueryService queryService, ResourceSpec resourceSpec, boolean specific ) {
         List<Issue> issues = new ArrayList<Issue>();
-        List<Play> plays = queryService.findAllPlays( resourceSpec, specific );
         Set<Part> parts = new HashSet<Part>();
-        for ( Play play : plays ) {
+        for ( Play play : queryService.findAllPlays( resourceSpec, specific ) ) {
             parts.add( play.getPartFor( resourceSpec ) );
-            issues.addAll( listIssues( play.getFlow(), true ) );
+            issues.addAll( listIssues( queryService, play.getFlow(), true ) );
         }
-        for ( Part part : parts ) {
-            issues.addAll( listIssues( part, true ) );
-        }
+        for ( Part part : parts )
+            issues.addAll( listIssues( queryService, part, true ) );
         return issues;
     }
 
-    private List<Issue> detectAllIssues(
-            ModelObject modelObject,
-            String property,
-            boolean includingPropertySpecific ) {
+    private List<Issue> detectAllIssues( QueryService queryService, ModelObject modelObject, String property,
+                                         boolean includingPropertySpecific ) {
         List<Issue> issues = new ArrayList<Issue>();
         if ( property != null ) {
-            issues.addAll( detective.detectUnwaivedPropertyIssues( modelObject, property ) );
-            issues.addAll( detective.detectWaivedPropertyIssues( modelObject, property ) );
+            issues.addAll( detective.detectUnwaivedPropertyIssues( queryService, modelObject, property ) );
+            issues.addAll( detective.detectWaivedPropertyIssues( queryService, modelObject, property ) );
         } else {
             if ( includingPropertySpecific ) {
-                issues.addAll( detective.detectUnwaivedIssues( modelObject, true ) );
-                issues.addAll( detective.detectWaivedIssues( modelObject, true ) );
+                issues.addAll( detective.detectUnwaivedIssues( queryService, modelObject, true ) );
+                issues.addAll( detective.detectWaivedIssues( queryService, modelObject, true ) );
             }
-            issues.addAll( detective.detectUnwaivedIssues( modelObject, false ) );
-            issues.addAll( detective.detectWaivedIssues( modelObject, false ) );
+            issues.addAll( detective.detectUnwaivedIssues( queryService, modelObject, false ) );
+            issues.addAll( detective.detectWaivedIssues( queryService, modelObject, false ) );
         }
         return issues;
     }
 
-    private List<Issue> detectUnwaivedIssues(
-            ModelObject modelObject,
-            String property,
-            boolean includingPropertySpecific ) {
-        if ( property != null ) {
-            return detective.detectUnwaivedPropertyIssues( modelObject, property );
-        } else {
+    private List<Issue> detectUnwaivedIssues( QueryService queryService, ModelObject modelObject, String property,
+                                              boolean includingPropertySpecific ) {
+        if ( property == null ) {
             List<Issue> issues = new ArrayList<Issue>();
-            if ( includingPropertySpecific ) {
-                issues.addAll( detective.detectUnwaivedIssues( modelObject, true ) );
-            }
-            issues.addAll( detective.detectUnwaivedIssues( modelObject, false ) );
+            if ( includingPropertySpecific )
+                issues.addAll( detective.detectUnwaivedIssues( queryService, modelObject, true ) );
+            issues.addAll( detective.detectUnwaivedIssues( queryService, modelObject, false ) );
             return issues;
         }
+
+        return detective.detectUnwaivedPropertyIssues( queryService, modelObject, property );
     }
 
-    private List<Issue> detectUnwaivedIssues(
-            Assignment assignment,
-            boolean includingPropertySpecific ) {
-        List<Issue> issues = new ArrayList<Issue>();
-        issues.addAll( detectUnwaivedIssues( assignment.getPart(), null, includingPropertySpecific ) );
+    private List<Issue> detectUnwaivedIssues( QueryService queryService, Assignment assignment,
+                                              boolean includingPropertySpecific ) {
+        List<Issue> issues = new ArrayList<Issue>( detectUnwaivedIssues( queryService,
+                                                                         assignment.getPart(),
+                                                                         null,
+                                                                         includingPropertySpecific ) );
+
         Actor actor = assignment.getActor();
-        if ( actor != null && !actor.isUnknown() ) {
-            issues.addAll( detectUnwaivedIssues( actor, null, includingPropertySpecific ) );
-        }
+        if ( actor != null && !actor.isUnknown() )
+            issues.addAll( detectUnwaivedIssues( queryService, actor, null, includingPropertySpecific ) );
         Role role = assignment.getRole();
-        if ( role != null && !role.isUnknown() ) {
-            issues.addAll( detectUnwaivedIssues( role, null, includingPropertySpecific ) );
-        }
+        if ( role != null && !role.isUnknown() )
+            issues.addAll( detectUnwaivedIssues( queryService, role, null, includingPropertySpecific ) );
         Organization org = assignment.getOrganization();
-        if ( org != null && !org.isUnknown() ) {
-            issues.addAll( detectUnwaivedIssues( org, null, includingPropertySpecific ) );
-        }
+        if ( org != null && !org.isUnknown() )
+            issues.addAll( detectUnwaivedIssues( queryService, org, null, includingPropertySpecific ) );
         return issues;
     }
 
-    private List<Issue> detectWaivedIssues(
-            ModelObject modelObject,
-            String property,
-            boolean includingPropertySpecific ) {
-        if ( property != null ) {
-            return detective.detectWaivedPropertyIssues( modelObject, property );
-        } else {
+    private List<Issue> detectWaivedIssues( QueryService queryService, ModelObject modelObject, String property,
+                                            boolean includingPropertySpecific ) {
+        if ( property == null ) {
             List<Issue> issues = new ArrayList<Issue>();
-            if ( includingPropertySpecific ) {
-                issues.addAll( detective.detectWaivedIssues( modelObject, true ) );
-            }
-            issues.addAll( detective.detectWaivedIssues( modelObject, false ) );
+            if ( includingPropertySpecific )
+                issues.addAll( detective.detectWaivedIssues( queryService, modelObject, true ) );
+            issues.addAll( detective.detectWaivedIssues( queryService, modelObject, false ) );
             return issues;
         }
+
+        return detective.detectWaivedPropertyIssues( queryService, modelObject, property );
     }
 
-    private List<Issue> detectWaivedIssues(
-            Assignment assignment,
-            boolean includingPropertySpecific ) {
-        List<Issue> issues = new ArrayList<Issue>();
-        issues.addAll( detectWaivedIssues( assignment.getPart(), null, includingPropertySpecific ) );
+    private List<Issue> detectWaivedIssues( QueryService queryService, Assignment assignment,
+                                            boolean includingPropertySpecific ) {
+        List<Issue> issues = new ArrayList<Issue>( detectWaivedIssues( queryService,
+                                                                       assignment.getPart(),
+                                                                       null,
+                                                                       includingPropertySpecific ) );
+
         Actor actor = assignment.getActor();
-        if ( actor != null && !actor.isUnknown() ) {
-            issues.addAll( detectWaivedIssues( actor, null, includingPropertySpecific ) );
-        }
+        if ( actor != null && !actor.isUnknown() )
+            issues.addAll( detectWaivedIssues( queryService, actor, null, includingPropertySpecific ) );
         Role role = assignment.getRole();
-        if ( role != null && !role.isUnknown() ) {
-            issues.addAll( detectWaivedIssues( role, null, includingPropertySpecific ) );
-        }
+        if ( role != null && !role.isUnknown() )
+            issues.addAll( detectWaivedIssues( queryService, role, null, includingPropertySpecific ) );
         Organization org = assignment.getOrganization();
-        if ( org != null && !org.isUnknown() ) {
-            issues.addAll( detectWaivedIssues( org, null, includingPropertySpecific ) );
-        }
+        if ( org != null && !org.isUnknown() )
+            issues.addAll( detectWaivedIssues( queryService, org, null, includingPropertySpecific ) );
         return issues;
     }
-
 
     /**
      * Get the imaging service.
      *
      * @return the imaging service
      */
+    @Override
     public ImagingService getImagingService() {
         return imagingService;
     }
@@ -551,73 +473,60 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         this.imagingService = imagingService;
     }
 
-    public List<Issue> findAllIssues() {
+    @Override
+    public List<Issue> findAllIssues( QueryService queryService ) {
         List<Issue> allIssues = new ArrayList<Issue>();
         // allIssues.addAll( analyst.listIssues( getPlan(), true ) );
-        for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
-            allIssues.addAll( listIssues( mo, true ) );
-        }
+        for ( ModelObject mo : queryService.list( ModelObject.class ) )
+            allIssues.addAll( listIssues( queryService, mo, true ) );
         for ( Segment segment : queryService.list( Segment.class ) ) {
             Iterator<Part> parts = segment.parts();
-            while ( parts.hasNext() ) {
-                allIssues.addAll( listIssues( parts.next(), true ) );
-            }
+            while ( parts.hasNext() )
+                allIssues.addAll( listIssues( queryService, parts.next(), true ) );
             Iterator<Flow> flows = segment.flows();
-            while ( flows.hasNext() ) {
-                allIssues.addAll( listIssues( flows.next(), true ) );
-            }
+            while ( flows.hasNext() )
+                allIssues.addAll( listIssues( queryService, flows.next(), true ) );
         }
         return allIssues;
     }
 
-    /**
-     * Find all unwaived issues on all model objects in the plan.
-     *
-     * @return a list of issues.
-     */
-    public List<Issue> findAllUnwaivedIssues() {
+    @Override
+    public List<Issue> findAllUnwaivedIssues( QueryService queryService ) {
         List<Issue> allUnwaivedIssues = new ArrayList<Issue>();
         // allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( getPlan(), true ) );
-        for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
-            allUnwaivedIssues.addAll( listUnwaivedIssues( mo, true ) );
-        }
+        for ( ModelObject mo : queryService.list( ModelObject.class ) )
+            allUnwaivedIssues.addAll( listUnwaivedIssues( queryService, mo, true ) );
         for ( Segment segment : queryService.list( Segment.class ) ) {
             Iterator<Part> parts = segment.parts();
-            while ( parts.hasNext() ) {
-                allUnwaivedIssues.addAll( listUnwaivedIssues( parts.next(), true ) );
-            }
+            while ( parts.hasNext() )
+                allUnwaivedIssues.addAll( listUnwaivedIssues( queryService, parts.next(), true ) );
             Iterator<Flow> flows = segment.flows();
-            while ( flows.hasNext() ) {
-                allUnwaivedIssues.addAll( listUnwaivedIssues( flows.next(), true ) );
-            }
+            while ( flows.hasNext() )
+                allUnwaivedIssues.addAll( listUnwaivedIssues( queryService, flows.next(), true ) );
         }
         return allUnwaivedIssues;
     }
 
     @Override
-    public List<Issue> findAllWaivedIssues() {
+    public List<Issue> findAllWaivedIssues( QueryService queryService ) {
         List<Issue> allWaivedIssues = new ArrayList<Issue>();
         // allUnwaivedIssues.addAll( analyst.listUnwaivedIssues( getPlan(), true ) );
-        for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
-            allWaivedIssues.addAll( listWaivedIssues( mo, true ) );
-        }
+        for ( ModelObject mo : queryService.list( ModelObject.class ) )
+            allWaivedIssues.addAll( listWaivedIssues( queryService, mo, true ) );
         for ( Segment segment : queryService.list( Segment.class ) ) {
             Iterator<Part> parts = segment.parts();
-            while ( parts.hasNext() ) {
-                allWaivedIssues.addAll( listWaivedIssues( parts.next(), true ) );
-            }
+            while ( parts.hasNext() )
+                allWaivedIssues.addAll( listWaivedIssues( queryService, parts.next(), true ) );
             Iterator<Flow> flows = segment.flows();
-            while ( flows.hasNext() ) {
-                allWaivedIssues.addAll( listWaivedIssues( flows.next(), true ) );
-            }
+            while ( flows.hasNext() )
+                allWaivedIssues.addAll( listWaivedIssues( queryService, flows.next(), true ) );
         }
         return allWaivedIssues;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public SegmentRelationship findSegmentRelationship( Segment fromSegment, Segment toSegment ) {
+    @Override
+    public SegmentRelationship findSegmentRelationship( QueryService queryService, Segment fromSegment,
+                                                        Segment toSegment ) {
         List<ExternalFlow> externalFlows = new ArrayList<ExternalFlow>();
         List<Part> initiators = new ArrayList<Part>();
         List<Part> terminators = new ArrayList<Part>();
@@ -626,10 +535,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             Flow flow = flows.next();
             if ( flow.isExternal() ) {
                 ExternalFlow externalFlow = (ExternalFlow) flow;
-                if ( externalFlow.getConnector().getSegment() == toSegment
-                        && !externalFlow.isPartTargeted() ) {
+                if ( externalFlow.getConnector().getSegment() == toSegment && !externalFlow.isPartTargeted() )
                     externalFlows.add( externalFlow );
-                }
             }
         }
         flows = toSegment.flows();
@@ -637,24 +544,20 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             Flow flow = flows.next();
             if ( flow.isExternal() ) {
                 ExternalFlow externalFlow = (ExternalFlow) flow;
-                if ( externalFlow.getConnector().getSegment() == fromSegment
-                        && externalFlow.isPartTargeted() ) {
+                if ( externalFlow.getConnector().getSegment() == fromSegment && externalFlow.isPartTargeted() )
                     externalFlows.add( externalFlow );
-                }
             }
         }
-        for ( Part part : queryService.findInitiators( toSegment ) ) {
-            if ( part.getSegment().equals( fromSegment ) ) initiators.add( part );
-        }
-        for ( Part part : queryService.findExternalTerminators( toSegment ) ) {
-            if ( part.getSegment().equals( fromSegment ) ) terminators.add( part );
-        }
-        if ( externalFlows.isEmpty() && initiators.isEmpty() && terminators.isEmpty() ) {
+        for ( Part part : queryService.findInitiators( toSegment ) )
+            if ( part.getSegment().equals( fromSegment ) )
+                initiators.add( part );
+        for ( Part part : queryService.findExternalTerminators( toSegment ) )
+            if ( part.getSegment().equals( fromSegment ) )
+                terminators.add( part );
+        if ( externalFlows.isEmpty() && initiators.isEmpty() && terminators.isEmpty() )
             return null;
-        } else {
-            SegmentRelationship segmentRelationship = new SegmentRelationship(
-                    fromSegment,
-                    toSegment );
+        else {
+            SegmentRelationship segmentRelationship = new SegmentRelationship( fromSegment, toSegment );
             segmentRelationship.setExternalFlows( externalFlows );
             segmentRelationship.setInitiators( initiators );
             segmentRelationship.setTerminators( terminators );
@@ -662,83 +565,72 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship(
-            T fromEntity, T toEntity ) {
-        return findEntityRelationship( fromEntity, toEntity, null );
+    @Override
+    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( QueryService queryService,
+                                                                                 T fromEntity, T toEntity ) {
+        return findEntityRelationship( queryService, fromEntity, toEntity, null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship(
-            T fromEntity, T toEntity, Segment segment ) {
+    @Override
+    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( QueryService queryService,
+                                                                                 T fromEntity, T toEntity,
+                                                                                 Segment segment ) {
         List<Flow> entityFlows = new ArrayList<Flow>();
         List<Segment> segments = new ArrayList<Segment>();
-        if ( segment == null ) {
+        if ( segment == null )
             segments.addAll( queryService.list( Segment.class ) );
-        } else {
+        else
             segments.add( segment );
-        }
         for ( Segment seg : segments ) {
             for ( Flow flow : seg.getAllSharingFlows() ) {
                 Part sourcePart = (Part) flow.getSource();
                 Part targetPart = (Part) flow.getTarget();
-                if ( queryService.isExecutedBy( sourcePart, fromEntity )
-                        && queryService.isExecutedBy( targetPart, toEntity ) ) {
+                if ( queryService.isExecutedBy( sourcePart, fromEntity ) && queryService.isExecutedBy( targetPart,
+                                                                                                       toEntity ) )
                     entityFlows.add( flow );
-                }
             }
         }
-        if ( entityFlows.isEmpty() ) {
+        if ( entityFlows.isEmpty() )
             return null;
-        } else {
+        else {
             EntityRelationship<T> entityRel = new EntityRelationship<T>( fromEntity, toEntity );
             entityRel.setFlows( entityFlows );
             return entityRel;
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<EntityRelationship> findEntityRelationships(
-            Segment segment, Class<? extends ModelEntity> entityClass, ModelEntity.Kind kind ) {
+    @Override
+    public List<EntityRelationship> findEntityRelationships( QueryService queryService, Segment segment,
+                                                             Class<? extends ModelEntity> entityClass, Kind kind ) {
         List<ModelEntity> entities = queryService.findTaskedEntities( segment, entityClass, kind );
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
         for ( ModelEntity entity : entities ) {
             for ( ModelEntity otherEntity : entities ) {
                 if ( !entity.equals( otherEntity ) ) {
                     EntityRelationship<ModelEntity> sendRel =
-                            findEntityRelationship( entity, otherEntity, segment );
-                    if ( sendRel != null ) {
+                            findEntityRelationship( queryService, entity, otherEntity, segment );
+                    if ( sendRel != null )
                         rels.add( sendRel );
-                    }
                 }
             }
         }
         return rels;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity ) {
-        List<ModelEntity> otherEntities =
-                new ArrayList<ModelEntity>(
-                        queryService.findTaskedEntities( segment, entity.getClass(), entity.getKind() ) );
+    @Override
+    public List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity,
+                                                             QueryService queryService ) {
+        List<ModelEntity> otherEntities = new ArrayList<ModelEntity>( queryService.findTaskedEntities( segment,
+                                                                                                       entity.getClass(),
+                                                                                                       entity.getKind() ) );
         otherEntities.remove( entity );
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
         for ( ModelEntity otherEntity : otherEntities ) {
-            EntityRelationship<ModelEntity> sendRel =
-                    findEntityRelationship( entity, otherEntity );
+            EntityRelationship<ModelEntity> sendRel = findEntityRelationship( queryService, entity, otherEntity );
             if ( sendRel != null ) {
                 rels.add( sendRel );
             }
-            EntityRelationship<ModelEntity> receiveRel =
-                    findEntityRelationship( otherEntity, entity );
+            EntityRelationship<ModelEntity> receiveRel = findEntityRelationship( queryService, otherEntity, entity );
             if ( receiveRel != null ) {
                 rels.add( receiveRel );
             }
@@ -747,32 +639,29 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public Boolean isEffectivelyConceptual( Part part ) {
-        return !findConceptualCauses( part ).isEmpty();
+    public Boolean isEffectivelyConceptual( QueryService queryService, Part part ) {
+        return !findConceptualCauses( queryService, part ).isEmpty();
     }
 
     @Override
-    public List<String> findConceptualCauses( Part part ) {
+    public List<String> findConceptualCauses( QueryService queryService, Part part ) {
         List<String> causes = new ArrayList<String>();
-        if ( part.isProhibited() ) {
+        if ( part.isProhibited() )
             causes.add( "prohibited" );
-        }
-        List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
-        if ( assignments.isEmpty() ) {
+        List<Assignment> assignments = queryService.findAllAssignments( part, false );
+        if ( assignments.isEmpty() )
             causes.add( "no agent is assigned to the task" );
-        } else if ( noAvailability( assignments ) ) {
+        else if ( noAvailability( assignments ) )
             causes.add( "none of the assigned agents is ever available" );
-        }
         return causes;
     }
 
     @Override
-    public List<String> findConceptualRemediations( Part part ) {
+    public List<String> findConceptualRemediations( QueryService queryService, Part part ) {
         List<String> remediations = new ArrayList<String>();
-        if ( part.isProhibited() ) {
+        if ( part.isProhibited() )
             remediations.add( "remove the prohibition" );
-        }
-        List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
+        List<Assignment> assignments = queryService.findAllAssignments( part, false );
         if ( assignments.isEmpty() ) {
             remediations.add( "explicitly assign an agent to the task" );
             remediations.add( "profile an agent to match the task specifications" );
@@ -783,53 +672,45 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return remediations;
     }
 
-
     @Override
-    public Boolean isEffectivelyConceptual( Flow flow ) {
-        return !findConceptualCauses( flow ).isEmpty();
+    public Boolean isEffectivelyConceptual( QueryService queryService, Flow flow ) {
+        return !findConceptualCauses( queryService, flow ).isEmpty();
     }
 
     @Override
-    public List<String> findConceptualCauses( Flow flow ) {
+    public List<String> findConceptualCauses( QueryService queryService, Flow flow ) {
         List<String> causes = new ArrayList<String>();
-        if ( flow.isProhibited() ) {
+        if ( flow.isProhibited() )
             causes.add( "prohibited" );
-        }
-        if ( flow.isNeed() && isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
+        if ( flow.isNeed() && isEffectivelyConceptual( queryService, (Part) flow.getTarget() ) )
             causes.add( "this task can not be executed" );
-        } else if ( flow.isCapability() && isEffectivelyConceptual( (Part) flow.getSource() ) ) {
+        else if ( flow.isCapability() && isEffectivelyConceptual( queryService, (Part) flow.getSource() ) )
             causes.add( "this can not be executed" );
-        } else if ( flow.isSharing() ) {
-            if ( isEffectivelyConceptual( (Part) flow.getSource() ) ) {
-                causes.add( "the task \""
-                        + ( (Part) flow.getSource() ).getTask()
-                        + "\" can not be executed" );
-            }
-            if ( isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
-                causes.add( "the task \""
-                        + ( (Part) flow.getTarget() ).getTask()
-                        + "\" can not be executed" );
-            }
-            if ( flow.getEffectiveChannels().isEmpty() ) {
+        else if ( flow.isSharing() ) {
+            if ( isEffectivelyConceptual( queryService, (Part) flow.getSource() ) )
+                causes.add( "the task \"" + ( (Part) flow.getSource() ).getTask() + "\" can not be executed" );
+            if ( isEffectivelyConceptual( queryService, (Part) flow.getTarget() ) )
+                causes.add( "the task \"" + ( (Part) flow.getTarget() ).getTask() + "\" can not be executed" );
+            if ( flow.getEffectiveChannels().isEmpty() )
                 causes.add( "no channels is identified" );
-            } else {
-                List<Commitment> commitments = getQueryService().findAllCommitments( flow,
-                        false,
-                        queryService.getAssignments( false ) );
+            else {
+                List<Commitment> commitments =
+                        queryService.findAllCommitments( flow, false, queryService.getAssignments( false ) );
                 if ( commitments.isEmpty() ) {
                     causes.add( "there are no sharing commitments between any pair of agents" );
                 } else {
                     List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
                     StringBuilder sb = new StringBuilder();
-                    List<Commitment> availabilitiesCoincideIfRequired = availabilitiesCoincideIfRequiredFilter(
-                            commitments,
-                            mediaUsed,
-                            planLocale() );
+                    Plan plan = queryService.getPlan();
+                    Place locale = plan.getLocale();
+                    List<Commitment> availabilitiesCoincideIfRequired =
+                            availabilitiesCoincideIfRequiredFilter( commitments, mediaUsed, locale );
                     if ( availabilitiesCoincideIfRequired.isEmpty() ) {
                         sb.append( "in all sharing commitments, " );
                         sb.append( "agents are never available at the same time as they must to communicate" );
                     } else {
-                        List<Commitment> mediaDeployed = someMediaDeployedFilter( availabilitiesCoincideIfRequired, mediaUsed );
+                        List<Commitment> mediaDeployed =
+                                someMediaDeployedFilter( availabilitiesCoincideIfRequired, mediaUsed, locale );
                         if ( mediaDeployed.isEmpty() ) {
                             if ( sb.length() == 0 )
                                 sb.append( "in all sharing commitments, " );
@@ -837,7 +718,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                 sb.append( ", or " );
                             sb.append( "agents do not have access to required transmission media" );
                         } else {
-                            List<Commitment> reachable = reachableFilter( availabilitiesCoincideIfRequired, mediaUsed );
+                            List<Commitment> reachable =
+                                    reachableFilter( availabilitiesCoincideIfRequired, mediaUsed, locale );
                             if ( reachable.isEmpty() ) {
                                 if ( sb.length() == 0 )
                                     sb.append( "in all sharing commitments, " );
@@ -845,7 +727,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                     sb.append( ", or " );
                                 sb.append( "the agent to be contacted is not reachable (no contact info)" );
                             } else {
-                                List<Commitment> agentsQualified = agentsQualifiedFilter( reachable, mediaUsed );
+                                List<Commitment> agentsQualified =
+                                        agentsQualifiedFilter( reachable, mediaUsed, locale );
                                 if ( agentsQualified.isEmpty() ) {
                                     if ( sb.length() == 0 )
                                         sb.append( "in all sharing commitments, " );
@@ -853,7 +736,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                         sb.append( ", or " );
                                     sb.append( "both agents are not qualified to use a transmission medium" );
                                 } else {
-                                    List<Commitment> languageOverlap = commonLanguageFilter( agentsQualified );
+                                    List<Commitment> languageOverlap = commonLanguageFilter( plan, agentsQualified );
                                     if ( languageOverlap.isEmpty() ) {
                                         if ( sb.length() == 0 )
                                             sb.append( "in all sharing commitments, " );
@@ -875,64 +758,60 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public List<String> findConceptualRemediations( Flow flow ) {
+    public List<String> findConceptualRemediations( QueryService queryService, Flow flow ) {
         List<String> remediations = new ArrayList<String>();
-        if ( flow.isProhibited() ) {
+        if ( flow.isProhibited() )
             remediations.add( "remove the prohibition" );
-        }
-        if ( flow.isNeed() && isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
+        if ( flow.isNeed() && isEffectivelyConceptual( queryService, (Part) flow.getTarget() ) )
             remediations.add( "make this task executable" );
-        } else if ( flow.isCapability() && isEffectivelyConceptual( (Part) flow.getSource() ) ) {
+        else if ( flow.isCapability() && isEffectivelyConceptual( queryService, (Part) flow.getSource() ) )
             remediations.add( "make this task executable" );
-        } else if ( flow.isSharing() ) {
-            if ( isEffectivelyConceptual( (Part) flow.getSource() ) ) {
-                remediations.add( "make the task \""
-                        + ( (Part) flow.getSource() ).getTask()
-                        + "\" executable" );
-            }
-            if ( isEffectivelyConceptual( (Part) flow.getTarget() ) ) {
-                remediations.add( "make the task \""
-                        + ( (Part) flow.getTarget() ).getTask()
-                        + "\" executable" );
-            }
-            if ( flow.getEffectiveChannels().isEmpty() ) {
+        else if ( flow.isSharing() ) {
+            if ( isEffectivelyConceptual( queryService, (Part) flow.getSource() ) )
+                remediations.add( "make the task \"" + ( (Part) flow.getSource() ).getTask() + "\" executable" );
+            if ( isEffectivelyConceptual( queryService, (Part) flow.getTarget() ) )
+                remediations.add( "make the task \"" + ( (Part) flow.getTarget() ).getTask() + "\" executable" );
+            if ( flow.getEffectiveChannels().isEmpty() )
                 remediations.add( "add at least one channel to the flow" );
-            } else {
-                List<Commitment> commitments = getQueryService().findAllCommitments( flow );
+            else {
+                List<Commitment> commitments = queryService.findAllCommitments( flow );
                 if ( commitments.isEmpty() ) {
-                    remediations.add( "change the definitions of the source and/or target tasks so that agents are assigned to both" );
-                    remediations.add( "add jobs to relevant organizations so that agents can be assigned to source and/or target tasks" );
+                    remediations.add(
+                            "change the definitions of the source and/or target tasks so that agents are assigned to both" );
+                    remediations.add(
+                            "add jobs to relevant organizations so that agents can be assigned to source and/or target tasks" );
                 } else {
                     List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
-                    List<Commitment> availabilitcoincideIfRequired = availabilitiesCoincideIfRequiredFilter(
-                            commitments,
-                            mediaUsed,
-                            planLocale() );
+                    Plan plan = queryService.getPlan();
+                    Place locale = plan.getLocale();
+                    List<Commitment> availabilitcoincideIfRequired =
+                            availabilitiesCoincideIfRequiredFilter( commitments, mediaUsed, locale );
                     if ( availabilitcoincideIfRequired.isEmpty() ) {
                         remediations.add( "change agent availability to make them coincide" );
                         remediations.add( "add a channel that does not require synchronous communication" );
                     } else {
-                        List<Commitment> mediaDeployed = someMediaDeployedFilter( availabilitcoincideIfRequired, mediaUsed );
-                        if ( mediaDeployed.isEmpty() ) {
-                            remediations.add( "make sure that the agents that are available" +
-                                    " to each other also have access to required transmission media" );
-                        } else {
-                            List<Commitment> reachable = reachableFilter( availabilitcoincideIfRequired, mediaUsed );
-                            if ( reachable.isEmpty() ) {
-                                remediations.add( "make sure that the agents that are available" +
-                                        " to each other also have known contact information" );
-                            } else {
-                                List<Commitment> agentsQualified = agentsQualifiedFilter( reachable, mediaUsed );
+                        List<Commitment> mediaDeployed =
+                                someMediaDeployedFilter( availabilitcoincideIfRequired, mediaUsed, locale );
+                        if ( mediaDeployed.isEmpty() )
+                            remediations.add( "make sure that the agents that are available"
+                                              + " to each other also have access to required transmission media" );
+                        else {
+                            List<Commitment> reachable =
+                                    reachableFilter( availabilitcoincideIfRequired, mediaUsed, locale );
+                            if ( reachable.isEmpty() )
+                                remediations.add( "make sure that the agents that are available"
+                                                  + " to each other also have known contact information" );
+                            else {
+                                List<Commitment> agentsQualified =
+                                        agentsQualifiedFilter( reachable, mediaUsed, locale );
                                 if ( agentsQualified.isEmpty() ) {
-                                    remediations.add( "make sure that agents that are available to each other" +
-                                            " and reachable are also qualified to use the transmission media" );
+                                    remediations.add( "make sure that agents that are available to each other"
+                                                      + " and reachable are also qualified to use the transmission media" );
                                     remediations.add( "add channels with transmission media requiring no qualification" );
-                                } else {
-                                    if ( commonLanguageFilter( commitments ).isEmpty() ) {
-                                        remediations.add( "make sure that agents that are available to each other, " +
-                                                "reachable and qualified to use the transmission media " +
-                                                "can also speak a common language" );
-                                    }
+                                } else if ( commonLanguageFilter( plan, commitments ).isEmpty() ) {
+                                    remediations.add( "make sure that agents that are available to each other, "
+                                                      + "reachable and qualified to use the transmission media "
+                                                      + "can also speak a common language" );
                                 }
                             }
                         }
@@ -945,227 +824,162 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     // Filter commitments where agent availabilities coincide if required.
     @SuppressWarnings( "unchecked" )
-    private List<Commitment> availabilitiesCoincideIfRequiredFilter(
-            final List<Commitment> commitments,
-            final List<TransmissionMedium> mediaUsed,
-            final Place planLocale ) {
-        return (List<Commitment>) CollectionUtils.select(
-                commitments,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return isAvailabilitiesCoincideIfRequired( (Commitment) object, mediaUsed, planLocale );
-                    }
-                }
-        );
+    private List<Commitment> availabilitiesCoincideIfRequiredFilter( List<Commitment> commitments,
+                                                                     final List<TransmissionMedium> mediaUsed,
+                                                                     final Place planLocale ) {
+        return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return isAvailabilitiesCoincideIfRequired( (Commitment) object, mediaUsed, planLocale );
+            }
+        } );
     }
 
-    public boolean isAvailabilitiesCoincideIfRequired( final Commitment commitment,
-                                                       final List<TransmissionMedium> mediaUsed,
+    @Override
+    public boolean isAvailabilitiesCoincideIfRequired( Commitment commitment, List<TransmissionMedium> mediaUsed,
                                                        final Place planLocale ) {
         Actor committer = commitment.getCommitter().getActor();
         Actor beneficiary = commitment.getBeneficiary().getActor();
         boolean coincide = committer.getAvailability().equals( beneficiary.getAvailability() );
         // agent availabilities coincide or there is at least one medium used that is not synchronous
-        return !mediaUsed.isEmpty()
-                && ( coincide ||
-                CollectionUtils.exists(
-                        mediaUsed,
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return !( (TransmissionMedium) object ).isEffectiveSynchronous( planLocale );
-                            }
-                        }
-                ) );
+        return !mediaUsed.isEmpty() && ( coincide || CollectionUtils.exists( mediaUsed, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return !( (TransmissionMedium) object ).isEffectiveSynchronous( planLocale );
+            }
+        } ) );
     }
-
 
     // Filter commitments where agent have access to required transmission media.
     @SuppressWarnings( "unchecked" )
     private List<Commitment> someMediaDeployedFilter( List<Commitment> commitments,
-                                                      final List<TransmissionMedium> mediaUsed ) {
-        final Place planLocale = planLocale();
-        return (List<Commitment>) CollectionUtils.select(
-                commitments,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        final Commitment commitment = (Commitment) object;
-                        return isSomeMediaDeployed( commitment, mediaUsed, planLocale );
-                    }
-                }
-        );
+                                                      final List<TransmissionMedium> mediaUsed,
+                                                      final Place planLocale ) {
+        return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                Commitment commitment = (Commitment) object;
+                return isSomeMediaDeployed( commitment, mediaUsed, planLocale );
+            }
+        } );
     }
 
-    public boolean isSomeMediaDeployed( final Commitment commitment,
-                                        final List<TransmissionMedium> mediaUsed,
+    @Override
+    public boolean isSomeMediaDeployed( final Commitment commitment, List<TransmissionMedium> mediaUsed,
                                         final Place planLocale ) {
-        return CollectionUtils.exists(
-                mediaUsed,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        TransmissionMedium medium = (TransmissionMedium) object;
-                        return commitment.getCommitter().getOrganization().isMediumDeployed( medium, planLocale )
-                                && commitment.getBeneficiary().getOrganization().isMediumDeployed( medium, planLocale );
-                    }
-                }
-        );
+        return CollectionUtils.exists( mediaUsed, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                TransmissionMedium medium = (TransmissionMedium) object;
+                return commitment.getCommitter().getOrganization().isMediumDeployed( medium, planLocale )
+                       && commitment.getBeneficiary().getOrganization().isMediumDeployed( medium, planLocale );
+            }
+        } );
     }
 
     // Filter commitments where agent to eb contacted has known contact info.
     @SuppressWarnings( "unchecked" )
-    private List<Commitment> reachableFilter
-    ( List<Commitment> commitments, final List<TransmissionMedium> mediaUsed ) {
-        final Place planLocale = planLocale();
-        return (List<Commitment>) CollectionUtils.select(
-                commitments,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return isReachable( (Commitment) object, mediaUsed, planLocale );
-                    }
-                }
-        );
+    private List<Commitment> reachableFilter( List<Commitment> commitments, final List<TransmissionMedium> mediaUsed,
+                                              final Place planLocale ) {
+        return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return isReachable( (Commitment) object, mediaUsed, planLocale );
+            }
+        } );
     }
 
-    public boolean isReachable( final Commitment commitment,
-                                final List<TransmissionMedium> mediaUsed,
-                                final Place planLocale ) {
+    @Override
+    public boolean isReachable( Commitment commitment, List<TransmissionMedium> mediaUsed, final Place planLocale ) {
         boolean isRequest = commitment.getSharing().isAskedFor();
-        final Actor receiver = isRequest
-                ? commitment.getCommitter().getActor()
-                : commitment.getBeneficiary().getActor();
-        return CollectionUtils.exists(
-                mediaUsed,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        TransmissionMedium medium = (TransmissionMedium) object;
-                        return !medium.requiresAddress()
-                                || !medium.isUnicast()
-                                || receiver.hasChannelFor( medium, planLocale );
-                    }
-                }
-        );
+        final Actor receiver =
+                isRequest ? commitment.getCommitter().getActor() : commitment.getBeneficiary().getActor();
+        return CollectionUtils.exists( mediaUsed, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                TransmissionMedium medium = (TransmissionMedium) object;
+                return !medium.requiresAddress() || !medium.isUnicast() || receiver.hasChannelFor( medium, planLocale );
+            }
+        } );
     }
 
     // Filter commitments where both agents are qualified to use a transmission medium.
     @SuppressWarnings( "unchecked" )
-    private List<Commitment> agentsQualifiedFilter
-    ( List<Commitment> commitments,
-      final List<TransmissionMedium> mediaUsed ) {
-        final Place planLocale = planLocale();
-        return (List<Commitment>) CollectionUtils.select(
-                commitments,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return isAgentsQualified( (Commitment) object, mediaUsed, planLocale );
-                    }
-                }
-        );
+    private List<Commitment> agentsQualifiedFilter( List<Commitment> commitments,
+                                                    final List<TransmissionMedium> mediaUsed, final Place planLocale ) {
+        return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return isAgentsQualified( (Commitment) object, mediaUsed, planLocale );
+            }
+        } );
     }
 
-    public boolean isAgentsQualified( final Commitment commitment,
-                                      final List<TransmissionMedium> mediaUsed,
+    @Override
+    public boolean isAgentsQualified( final Commitment commitment, List<TransmissionMedium> mediaUsed,
                                       final Place planLocale ) {
-        return CollectionUtils.exists(
-                mediaUsed,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        TransmissionMedium medium = (TransmissionMedium) object;
-                        return medium.getQualification() == null
-                                || commitment.getCommitter().getActor()
-                                .narrowsOrEquals( medium.getQualification(), planLocale )
-                                && commitment.getBeneficiary()
-                                .getActor().narrowsOrEquals( medium.getQualification(), planLocale );
-                    }
-                }
-        );
+        return CollectionUtils.exists( mediaUsed, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                TransmissionMedium medium = (TransmissionMedium) object;
+                return medium.getQualification() == null
+                       || commitment.getCommitter().getActor().narrowsOrEquals( medium.getQualification(), planLocale )
+                          && commitment.getBeneficiary().getActor().narrowsOrEquals( medium.getQualification(),
+                                                                                     planLocale );
+            }
+        } );
     }
 
     // Filter commitments where agents can understand one another.
     @SuppressWarnings( "unchecked" )
-    private List<Commitment> commonLanguageFilter
-    ( List<Commitment> commitments ) {
-        return (List<Commitment>) CollectionUtils.select(
-                commitments,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return isCommonLanguage( (Commitment) object );
-                    }
-                }
-        );
+    private static List<Commitment> commonLanguageFilter( final Plan plan, List<Commitment> commitments ) {
+        return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ( (Commitment) object ).isCommonLanguage( plan );
+            }
+        } );
     }
 
-    public boolean isCommonLanguage( Commitment commitment ) {
-        final Plan plan = getPlan();
-        Actor committer = commitment.getCommitter().getActor();
-        Actor beneficiary = commitment.getBeneficiary().getActor();
-        return committer.canSpeakWith( beneficiary, plan );
+    @Override
+    public String realizability( Plan plan, Commitment commitment ) {
+        List<String> problems = findRealizabilityProblems( plan, commitment );
+        return problems.isEmpty() ?
+               "Yes" :
+               "No: " + StringUtils.capitalize( ChannelsUtils.listToString( problems, ", and " ) );
     }
 
-    public String realizability( Commitment commitment ) {
-        List<String> problems = findRealizabilityProblems( commitment );
-        return problems.size() == 0
-                ? "Yes"
-                : "No: " + StringUtils.capitalize( ChannelsUtils.listToString( problems, ", and " ) );
-    }
-
-    public List<String> findRealizabilityProblems( Commitment commitment ) {
+    @Override
+    public List<String> findRealizabilityProblems( Plan plan, Commitment commitment ) {
         List<String> problems = new ArrayList<String>();
         List<TransmissionMedium> mediaUsed = commitment.getSharing().transmissionMedia();
-        Place planLocale = getPlan().getLocale();
-        if ( !isAvailabilitiesCoincideIfRequired( commitment, mediaUsed, planLocale ) ) {
+        Place planLocale = plan.getLocale();
+        if ( !isAvailabilitiesCoincideIfRequired( commitment, mediaUsed, planLocale ) )
             problems.add( "availabilities do not coincide as they must" );
-        }
-        if ( !isCommonLanguage( commitment ) ) {
+        if ( !commitment.isCommonLanguage( plan ) )
             problems.add( "no common language" );
-        }
-        if ( commitment.getSharing().getEffectiveChannels().isEmpty() ) {
+        if ( commitment.getSharing().getEffectiveChannels().isEmpty() )
             problems.add( "no channel is identified" );
-        } else {
-            if ( !isSomeMediaDeployed( commitment, mediaUsed, planLocale ) ) {
+        else {
+            if ( !isSomeMediaDeployed( commitment, mediaUsed, planLocale ) )
                 problems.add( "no access to required transmission media" );
-            }
-            if ( !isAgentsQualified( commitment, mediaUsed, planLocale ) ) {
+            if ( !isAgentsQualified( commitment, mediaUsed, planLocale ) )
                 problems.add( "insufficient technical qualification" );
-            }
-            if ( !isReachable( commitment, mediaUsed, planLocale ) ) {
+            if ( !isReachable( commitment, mediaUsed, planLocale ) )
                 problems.add( "missing contact info" );
-            }
         }
         return problems;
     }
 
-    private Plan getPlan() {
-        return User.current().getPlan();
-    }
-
-
     // There is no assigned agent available at any time.
-    private boolean noAvailability( final List<Assignment> assignments ) {
-        boolean noAvailability = !CollectionUtils.exists(
-                assignments,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        Assignment assignment = (Assignment) object;
-                        return !assignment.getActor().getAvailability().isEmpty();
-                    }
-                }
-        );
+    private boolean noAvailability( List<Assignment> assignments ) {
+        boolean noAvailability = !CollectionUtils.exists( assignments, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                Assignment assignment = (Assignment) object;
+                return !assignment.getActor().getAvailability().isEmpty();
+            }
+        } );
         return !assignments.isEmpty() && noAvailability;
     }
-
-
-    private Place planLocale() {
-        return User.current().getPlan().getLocale();
-    }
-
-
 }

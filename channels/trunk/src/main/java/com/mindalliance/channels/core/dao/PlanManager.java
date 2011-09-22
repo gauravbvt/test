@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.dao;
 
 import com.mindalliance.channels.core.PersistentObjectDaoFactory;
@@ -62,7 +68,7 @@ public class PlanManager {
      */
     private List<TransmissionMedium> builtInMedia = new ArrayList<TransmissionMedium>();
 
-    private UserService userService;
+    private UserDao userDao;
 
     private ImportExportFactory importExportFactory;
     /**
@@ -109,12 +115,12 @@ public class PlanManager {
         listeners.removeListener( listener );
     }
 
-    public UserService getUserService() {
-        return userService;
+    public UserDao getUserDao() {
+        return userDao;
     }
 
-    public void setUserService( UserService userService ) {
-        this.userService = userService;
+    public void setUserDao( UserDao userDao ) {
+        this.userDao = userDao;
     }
 
     public PersistentObjectDaoFactory getDatabaseFactory() {
@@ -218,12 +224,12 @@ public class PlanManager {
     private PlanDao createDao( Version version ) {
         try {
             PlanDao dao = new PlanDao( version );
-            dao.setUserDetailsService( userService );
+            dao.setUserDetailsService( userDao );
             dao.setIdGenerator( definitionManager.getIdGenerator() );
             dao.resetPlan();
             dao.defineImmutableEntities( builtInMedia );
             if ( importExportFactory != null )
-                dao.load( importExportFactory.createImporter( dao ) );
+                dao.load( importExportFactory.createImporter( "daemon", dao ) );
             else
                 dao.validate();
 
@@ -239,7 +245,7 @@ public class PlanManager {
 
     private void createPersistentObjectDB( Plan plan ) {
         String planUri = plan.getUri();
-        databaseFactory.check( plan.urn() );
+        databaseFactory.check( plan.getUrn() );
     }
 
     public DefinitionManager getDefinitionManager() {
@@ -280,7 +286,7 @@ public class PlanManager {
         if ( command != null && command.isMemorable() )
             try {
                 PlanDao dao = getDao( plan );
-                Exporter exporter = importExportFactory.createExporter( dao );
+                Exporter exporter = importExportFactory.createExporter( "daemon", dao );
                 synchronized ( dao ) {
                     Journal journal = dao.getJournal();
                     if ( command.forcesSnapshot()
@@ -305,7 +311,7 @@ public class PlanManager {
     public void save( Plan plan ) {
         try {
             PlanDao dao = getDao( plan );
-            dao.save( importExportFactory.createExporter( dao ) );
+            dao.save( importExportFactory.createExporter( "daemon", dao ) );
 
         } catch ( IOException e ) {
             throw new RuntimeException( "Failed to save journal", e );
@@ -318,8 +324,8 @@ public class PlanManager {
     public synchronized void assignPlans() {
 
         // Assign default plan to users
-        if ( userService != null )
-            for ( User user : userService.getUsers() ) {
+        if ( userDao != null )
+            for ( User user : userDao.getUsers() ) {
                 Plan plan = user.getPlan();
                 if ( plan == null )
                     user.setPlan( getDefaultPlan( user ) );
@@ -353,7 +359,7 @@ public class PlanManager {
     }
 
     /**
-     * Get a specific plan
+     * Get a specific plan.
      * @param uri the plan uri
      * @param version the version
      * @return the plan or null if not found
@@ -373,20 +379,22 @@ public class PlanManager {
     /**
      * Import segment from browsed file.
      *
+     *
+     * @param userName who is doing the import
      * @param plan the plan to import into
      * @param inputStream where the segment lies
      * @return a segment, or null if not successful
      */
-    public Segment importSegment( Plan plan, InputStream inputStream ) {
+    public Segment importSegment( String userName, Plan plan, InputStream inputStream ) {
         // Import and switch to segment
         LOG.debug( "Importing segment" );
         try {
             PlanDao dao = getDao( plan );
 
-            Importer importer = importExportFactory.createImporter( dao );
+            Importer importer = importExportFactory.createImporter( userName, dao );
             Segment imported = importer.importSegment( inputStream );
 
-            dao.save( importExportFactory.createExporter( dao ) );
+            dao.save( importExportFactory.createExporter( userName, dao ) );
             LOG.info( "Imported segment {}", imported.getName() );
             return imported;
 
@@ -405,7 +413,7 @@ public class PlanManager {
     public void delete( Plan plan ) {
         String uri = plan.getUri();
 
-        for ( User user : userService.getUsers() )
+        for ( User user : userDao.getUsers() )
             user.getUserInfo().clearAuthority( uri );
 
         assignPlans();
@@ -532,7 +540,7 @@ public class PlanManager {
      */
     public boolean revalidateProducers( Plan plan ) {
         List<String> producers = plan.getProducers();
-        for ( User user : userService.getUsers() )
+        for ( User user : userDao.getUsers() )
             if ( user.isPlanner( plan.getUri() ) && !producers.contains( user.getUsername() ) )
                 return false;
 // TODO reenable production voting
@@ -546,32 +554,32 @@ public class PlanManager {
      * @param uri the plan's uri
      */
     public synchronized void setResyncRequired( String uri ) {
-        outOfSyncUsers.put( uri, userService.getUsernames() );
+        outOfSyncUsers.put( uri, userDao.getUsernames() );
     }
 
     /**
      * Signal that a user is now in sync with all plans versions.
      *
-     * @param user a user
+     * @param userName the user name
      */
-    public synchronized void resynced( User user ) {
+    public synchronized void resynced( String userName ) {
         for ( Entry<String, List<String>> stringListEntry : outOfSyncUsers.entrySet() ) {
             List<String> usernames = stringListEntry.getValue();
             if ( usernames != null )
-                usernames.remove( user.getUsername() );
+                usernames.remove( userName );
         }
     }
 
     /**
      * Whether a user is out of sync with a plan of given uri.
      *
-     * @param user a user
+     * @param userName the user name
      * @param uri  a string
      * @return a boolean
      */
-    public synchronized boolean isOutOfSync( User user, String uri ) {
+    public synchronized boolean isOutOfSync( String userName, String uri ) {
         List<String> usernames = outOfSyncUsers.get( uri );
-        return usernames != null && usernames.contains( user.getUsername() );
+        return usernames != null && usernames.contains( userName );
     }
 
     /**

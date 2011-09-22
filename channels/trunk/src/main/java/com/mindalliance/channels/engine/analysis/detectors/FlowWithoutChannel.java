@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.model.Channel;
@@ -7,84 +13,60 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.engine.analysis.DetectedIssue;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Detects issue where a flow has no defined channel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Nov 26, 2008
- * Time: 2:09:12 PM
  */
 public class FlowWithoutChannel extends AbstractIssueDetector {
 
     public FlowWithoutChannel() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
 
         Flow flow = (Flow) modelObject;
         if ( !flow.isToSelf() ) {
             // There is no channel in a flow that requires one
             List<Channel> flowChannels = flow.getEffectiveChannels();
-            if ( flowChannels.isEmpty() ) {
-                issues.add( createIssue( modelObject,
-                        getSeverity( flow ),
-                        "At least one channel is required.",
-                        "Add a channel" ) );
-
-            }
+            if ( flowChannels.isEmpty() )
+                issues.add( createIssue( queryService,
+                                         modelObject,
+                                         getSeverity( flow, queryService ),
+                                         "At least one channel is required.",
+                                         "Add a channel" ) );
         }
         return issues;
     }
 
-    private Level getSeverity( Flow flow ) {
-        if ( flow.isSharing() ) {
-            return computeSharingFailureSeverity( flow );
-        } else {
-            return Level.Low;
-        }
+    private static Level getSeverity( Flow flow, QueryService queryService ) {
+        return flow.isSharing() ? computeSharingFailureSeverity( queryService, flow ) : Level.Low;
     }
 
-
-    private DetectedIssue createIssue(
-            ModelObject modelObject, Level severity, String description,
-            String remediation ) {
-        DetectedIssue issue = makeIssue( Issue.COMPLETENESS, modelObject );
+    private DetectedIssue createIssue( QueryService queryService, ModelObject modelObject, Level severity,
+                                       String description, String remediation ) {
+        DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, modelObject );
         issue.setDescription( description );
         issue.setRemediation( remediation );
         issue.setSeverity( severity );
         return issue;
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Flow;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getTestedProperty() {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected String getKindLabel() {
         return "Flow without channel";
     }

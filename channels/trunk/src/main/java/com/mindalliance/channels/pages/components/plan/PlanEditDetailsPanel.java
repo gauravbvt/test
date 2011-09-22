@@ -1,6 +1,13 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.dao.DefinitionManager;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
@@ -35,11 +42,6 @@ import java.util.Set;
 
 /**
  * Plan edit details panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: May 7, 2009
- * Time: 5:31:25 AM
  */
 public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
@@ -109,7 +111,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
         );
 
         addOrReplace( createIssuePanel() );
-        
+
         adjustComponents();
     }
 
@@ -133,7 +135,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     }
 
     protected void adjustComponents() {
-        makeVisible( issuesPanel, getAnalyst().hasIssues( getPlan(), false ) );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( getQueryService(), getPlan(), false ) );
     }
 
     /**
@@ -147,7 +149,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     }
 
     /**
-     * Get the model object's name
+     * Get the model object's name.
      *
      * @return a string
      */
@@ -162,11 +164,12 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
      */
     public void setName( String name ) {
         if ( name != null && !isSame( getName(), name ) )
-            doCommand( new PlanRename( getPlan(), definitionManager.makeUniqueName( name ) ) );
+            doCommand( new PlanRename( User.current().getUsername(),
+                                       getPlan(), definitionManager.makeUniqueName( name ) ) );
     }
 
     /**
-     * Get the model object's default language
+     * Get the model object's default language.
      *
      * @return a string
      */
@@ -182,15 +185,14 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     public void setDefaultLanguage( String defaultLanguage ) {
         if ( defaultLanguage != null && !isSame( getDefaultLanguage(), defaultLanguage ) )
             doCommand(
-                    new UpdatePlanObject(
-                            getPlan(),
+                    new UpdatePlanObject( User.current().getUsername(), getPlan(),
                             "defaultLanguage",
                             defaultLanguage,
                             UpdateObject.Action.Set ) );
     }
 
     /**
-     * Get the model object's description
+     * Get the model object's description.
      *
      * @return a string
      */
@@ -206,8 +208,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     public void setDescription( String desc ) {
         if ( desc != null )
             doCommand(
-                    new UpdatePlanObject(
-                            getPlan(),
+                    new UpdatePlanObject( User.current().getUsername(), getPlan(),
                             "description",
                             desc,
                             UpdateObject.Action.Set ) );
@@ -220,8 +221,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     public void setTemplate( boolean val ) {
         if ( val != isTemplate() ) {
             doCommand(
-                    new UpdatePlanObject(
-                            getPlan(),
+                    new UpdatePlanObject( User.current().getUsername(), getPlan(),
                             "template",
                             val,
                             UpdateObject.Action.Set )

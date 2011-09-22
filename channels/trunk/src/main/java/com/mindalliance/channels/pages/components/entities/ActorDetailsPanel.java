@@ -282,12 +282,10 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 "deleteLanguage",
                 "Remove language?" ) {
             public void onClick( AjaxRequestTarget target ) {
-                doCommand( new UpdatePlanObject(
-                        getActor(),
+                doCommand( new UpdatePlanObject( User.current().getUsername(), getActor(),
                         "languages",
                         language,
-                        UpdateObject.Action.Remove
-                ) );
+                        UpdateObject.Action.Remove ) );
                 addLanguages();
                 target.addComponent( languagesContainer );
                 update( target,
@@ -317,12 +315,10 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
 
     public void setLanguage( String name ) {
         if ( name != null && !name.isEmpty() ) {
-            doCommand( new UpdatePlanObject(
-                    getActor(),
+            doCommand( new UpdatePlanObject( User.current().getUsername(), getActor(),
                     "languages",
                     name.toLowerCase(),
-                    UpdateObject.Action.Add
-            ) );
+                    UpdateObject.Action.Add ) );
         }
     }
 
@@ -718,7 +714,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     public void setSystem( boolean isSystem ) {
         Actor actor = getActor();
         if ( actor.isSystem() != isSystem )
-            doCommand( new UpdatePlanObject( actor, "system", isSystem ) );
+            doCommand( new UpdatePlanObject( User.current().getUsername(), actor, "system", isSystem ) );
     }
 
     /**
@@ -740,7 +736,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     public void setArchetype( boolean val ) {
-        doCommand( new UpdatePlanObject( getActor(), "archetype", val ) );
+        doCommand( new UpdatePlanObject( User.current().getUsername(), getActor(), "archetype", val ) );
     }
 
     /**
@@ -753,7 +749,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     public void setPlaceHolder( boolean val ) {
-        doCommand( new UpdatePlanObject( getActor(), "placeHolder", val ) );
+        doCommand( new UpdatePlanObject( User.current().getUsername(), getActor(), "placeHolder", val ) );
     }
 
     /**
@@ -766,7 +762,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     public void setPlaceHolderSingular( boolean val ) {
-        doCommand( new UpdatePlanObject( getActor(), "placeHolderSingular", val ) );
+        doCommand( new UpdatePlanObject( User.current().getUsername(), getActor(), "placeHolderSingular", val ) );
     }
 
 

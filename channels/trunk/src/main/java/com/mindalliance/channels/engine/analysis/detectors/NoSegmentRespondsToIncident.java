@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,19 +30,19 @@ public class NoSegmentRespondsToIncident extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Plan plan = (Plan) modelObject;
         for ( Event incident : plan.getIncidents() ) {
             boolean responded = false;
-            Iterator<Segment> segments = getQueryService().list( Segment.class ).iterator();
+            Iterator<Segment> segments = queryService.list( Segment.class ).iterator();
             while ( !responded && segments.hasNext() ) {
                 Segment segment = segments.next();
                 Event event = segment.getEvent();
                 if ( event != null && event.equals(incident) ) responded = true;
             }
             if ( !responded ) {
-                DetectedIssue issue = makeIssue( Issue.COMPLETENESS, plan );
+                DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, plan );
                 issue.setDescription( "No plan segment responds to incident \"" + incident.getName() + "\"." );
                 issue.setRemediation( "Define a plan segment that responds to it\n"
                         + "remove the event's incident status." );

@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -30,19 +31,19 @@ public class UntimelyNecessarySharing extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.isSharing()
                 && ( flow.isCritical() || flow.isTriggeringToTarget() || flow.isTerminatingToTarget() ) ) {
             Part target = (Part) flow.getTarget();
-            List<Flow> criticalNeeds = getMatchingCriticalNeeds( target, flow );
+            List<Flow> criticalNeeds = getMatchingCriticalNeeds( target, flow, queryService );
             if ( !criticalNeeds.isEmpty() ) {
                 Delay commitmentDelay = flow.getMaxDelay();
                 for ( Flow criticalNeed : criticalNeeds ) {
                     if ( criticalNeed.isTimeSensitive()
                             && commitmentDelay.compareTo( criticalNeed.getMaxDelay() ) > 0 ) {
-                        DetectedIssue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                        DetectedIssue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
                         issue.setDescription(
                                 "The needed information \""
                                         + criticalNeed.getName()
@@ -57,7 +58,7 @@ public class UntimelyNecessarySharing extends AbstractIssueDetector {
                                         + "\"\nor obtain a more timely sharing commitment for "
                                         + "\"" + criticalNeed.getName() + "\""
                         );
-                        issue.setSeverity( getQueryService().computePartPriority( target ) );
+                        issue.setSeverity( queryService.computePartPriority( target ) );
                         issues.add( issue );
                     }
                 }
@@ -67,7 +68,7 @@ public class UntimelyNecessarySharing extends AbstractIssueDetector {
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<Flow> getMatchingCriticalNeeds( Part target, final Flow sharing ) {
+    private List<Flow> getMatchingCriticalNeeds( Part target, final Flow sharing, final QueryService queryService ) {
         return (List<Flow>) CollectionUtils.select(
                 IteratorUtils.toList( target.receivesNamed( sharing.getName() ) ),
                 new Predicate() {
@@ -79,7 +80,7 @@ public class UntimelyNecessarySharing extends AbstractIssueDetector {
                                 && receive.isTriggeringToTarget() == sharing.isTriggeringToTarget()
                                 && receive.isTerminatingToTarget() == sharing.isTerminatingToTarget()
                                 && ( receive.getEois().isEmpty()
-                                || getQueryService().hasCommonEOIs( receive, sharing ) );
+                                || queryService.hasCommonEOIs( receive, sharing ) );
                     }
                 }
         );

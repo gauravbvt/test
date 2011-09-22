@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -15,11 +21,6 @@ import java.util.List;
 
 /**
  * No participation for placeholder actor.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 4/21/11
- * Time: 3:48 PM
  */
 public class ActorPlaceHolderWithoutParticipation extends AbstractIssueDetector {
 
@@ -27,24 +28,21 @@ public class ActorPlaceHolderWithoutParticipation extends AbstractIssueDetector 
     }
 
     @Override
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( final QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         final Actor actor = (Actor) modelObject;
         if ( actor.isActual() && actor.isPlaceHolder() ) {
-            final QueryService queryService = getQueryService();
-            boolean hasParticipation = CollectionUtils.exists(
-                    queryService.getUserService().getUsernames(),
-                    new Predicate() {
+            boolean hasParticipation =
+                    CollectionUtils.exists( queryService.getUserDao().getUsernames(), new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            Participation participation = queryService.findParticipation( (String)object );
+                            Participation participation = queryService.findParticipation( (String) object );
                             return participation != null && participation.hasActor( actor );
                         }
-                    }
-                    );
+                    } );
             if ( !hasParticipation ) {
-                Issue issue = makeIssue( Issue.COMPLETENESS, actor );
-                issue.setDescription( "Agent \"" + actor.getName() + "\" is a placeholder but with no user assigned.");
+                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, actor );
+                issue.setDescription( "Agent \"" + actor.getName() + "\" is a placeholder but with no user assigned." );
                 issue.setRemediation( "Assign a user to the agent\nor make the agent not a place holder." );
                 issue.setSeverity( Level.Medium );
                 issues.add( issue );

@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.engine.query.Assignments;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +27,13 @@ public class OrganizationWithoutAssignments extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Organization org = (Organization) modelObject;
-        if ( getQueryService().isInvolvementExpected( org ) ) {
-            Assignments assignments = getQueryService().getAssignments().with( org );
+        if ( queryService.isInvolvementExpected( org ) ) {
+            Assignments assignments = queryService.getAssignments().with( org );
             if ( assignments.isEmpty() ) {
-                Issue issue = makeIssue( Issue.COMPLETENESS, org );
+                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, org );
                 issue.setSeverity( Level.Low );
                 issue.setDescription( "Organization \""
                         + org.getName()

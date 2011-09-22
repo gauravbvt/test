@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +27,12 @@ public class UnsupervisedJob extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Organization organization = (Organization) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         for ( Job job : organization.getJobs() ) {
             if ( job.getSupervisor() == null ) {
-                Issue issue = makeIssue( Issue.COMPLETENESS, organization );
+                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, organization );
                 issue.setDescription( "No supervisor for " + job.getLabel() + "." );
                 issue.setRemediation( "Add a supervisor to the job\nor remove the job" );
                 issue.setSeverity( Level.Low );

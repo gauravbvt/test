@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -34,7 +35,7 @@ public class AgentUnqualifiedForMedium extends AbstractIssueDetector {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         List<TransmissionMedium> qualifiedMedia = (List<TransmissionMedium>) CollectionUtils.select(
@@ -54,7 +55,7 @@ public class AgentUnqualifiedForMedium extends AbstractIssueDetector {
                     }
                 } );
         if ( !qualifiedMedia.isEmpty() ) {
-            List<Commitment> commitments = getQueryService().findAllCommitments( flow );
+            List<Commitment> commitments = queryService.findAllCommitments( flow );
             Set<Actor> unqualified = new HashSet<Actor>();
             for ( Commitment commitment : commitments ) {
                 checkQualification(
@@ -63,7 +64,7 @@ public class AgentUnqualifiedForMedium extends AbstractIssueDetector {
                         issues,
                         flow,
                         true,
-                        unqualified );
+                        unqualified, queryService );
             }
             unqualified = new HashSet<Actor>();
             for ( Commitment commitment : commitments ) {
@@ -73,24 +74,19 @@ public class AgentUnqualifiedForMedium extends AbstractIssueDetector {
                         issues,
                         flow,
                         false,
-                        unqualified );
+                        unqualified, queryService );
             }
         }
         return issues;
     }
 
-    private void checkQualification(
-            Actor actor,
-            List<TransmissionMedium> qualifiedMedia,
-            List<Issue> issues,
-            Flow flow,
-            boolean isCommitter,
-            Set<Actor> unqualified ) {
-        Place planLocale = getPlan().getLocale();
+    private void checkQualification( Actor actor, List<TransmissionMedium> qualifiedMedia, List<Issue> issues, Flow flow,
+                                     boolean isCommitter, Set<Actor> unqualified, QueryService queryService ) {
+        Place planLocale = queryService.getPlan().getLocale();
         for ( TransmissionMedium medium : qualifiedMedia ) {
             Actor qualification = medium.getQualification();
             if ( !actor.narrowsOrEquals( qualification, planLocale ) && !unqualified.contains( actor ) ) {
-                Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
                 issue.setDescription( "Agent \"" + actor.getName() + "\" is not "
                         + ( ChannelsUtils.startsWithVowel( qualification.getName() ) ? "an " : "a " )
                         + qualification.getName().toLowerCase()
@@ -111,7 +107,7 @@ public class AgentUnqualifiedForMedium extends AbstractIssueDetector {
                         + "\nor modify the definition of the "
                         + ( isCommitter ? "source " : "target " )
                         + "task so that the unqualified \"" + actor.getName() + "\" is not assigned to it." );
-                issue.setSeverity( computeSharingFailureSeverity( flow ) );
+                issue.setSeverity( computeSharingFailureSeverity( queryService, flow ) );
                 issues.add( issue );
                 unqualified.add( actor );
             }

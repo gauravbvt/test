@@ -33,7 +33,7 @@ public interface ReportHelper {
 
     AttachmentManager getAttachmentManager();
 
-    PlanService getPlanService();
+    QueryService getPlanService();
 
     Assignment getAssignment();
 

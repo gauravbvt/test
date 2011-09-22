@@ -1,5 +1,12 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.segment;
 
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Event;
@@ -86,19 +93,21 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      */
     private static final String LOCATION_PROPERTY = "location";             // NON-NLS
 
-
     /**
      * The initiated event property.
      */
     private static final String INITIATED_EVENT_PROPERTY = "initiatedEvent";             // NON-NLS
 
-    private static String[] EntityProps = {LOCATION_PROPERTY, ACTOR_PROPERTY, ROLE_PROPERTY,
-            JURISDICTION_PROPERTY, ORG_PROPERTY, INITIATED_EVENT_PROPERTY};
+    private static String[] EntityProps = {
+            LOCATION_PROPERTY, ACTOR_PROPERTY, ROLE_PROPERTY, JURISDICTION_PROPERTY, ORG_PROPERTY,
+            INITIATED_EVENT_PROPERTY
+    };
 
     /**
      * The empty string.
      */
     private static final String EMPTY_STRING = "";
+
     /**
      * Null category
      */
@@ -122,11 +131,13 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * The part edited by this form.
      */
     private IModel<Part> model;
+
     /**
      * Entity reference fields.
      */
     private List<EntityReferencePanel<? extends ModelEntity>> entityFields =
             new ArrayList<EntityReferencePanel<? extends ModelEntity>>();
+
     /**
      * Part issues panel.
      */
@@ -141,50 +152,62 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * Task.
      */
     private TextField<String> taskField;
+
     /**
      * Initiated event.
      */
     private TextField<String> initiatedEventField;
+
     /**
      * Repetition.
      */
     private DelayPanel repeatsEveryPanel;
+
     /**
      * Completion.
      */
     private DelayPanel completionTimePanel;
+
     /**
      * Self-termination.
      */
     private CheckBox selfTerminatingCheckBox;
+
     /**
      * Whether repeating.
      */
     private CheckBox repeatingCheckBox;
+
     /**
      * Whether executed as team by assignees.
      */
     private CheckBox asTeamCheckBox;
+
     /**
      * Whether starts with segment.
      */
     private CheckBox startWithSegmentCheckBox;
+
     /**
      * Whether terminates event segment responds to.
      */
     private CheckBox terminatesSegmentCheckBox;
+
     /**
      * Goals achieved by part.
      */
     private Component taskGoalsPanel;
+
     /**
      * Part summary.
      */
     private PartSummaryPanel summaryPanel;
+
     /**
      * Attachments panel.
      */
     private AttachmentPanel attachmentsPanel;
+
     /**
      * Category choice.
      */
@@ -194,36 +217,42 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * Prohibited checkbox.
      */
     private CheckBox prohibitedCheckBox;
+
     /**
      * Whether the part was updated.
      */
     private boolean partUpdated = false;
+
     /**
      * Tags fields container.
      */
     private WebMarkupContainer tagsContainer;
+
     /**
      * Classification fields container.
      */
     private WebMarkupContainer classificationContainer;
+
     /**
      * Execution field container.
      */
     private WebMarkupContainer executionContainer;
+
     /**
      * Timing field container.
      */
     private WebMarkupContainer timingContainer;
+
     /**
      * Show simple vs advanced form label.
      */
     private Label simpleAdvanced;
-     /**
-     * The containing plan page;
+
+    /**
+     * The containing plan page.
      */
     private PlanPage planPage;
 
-    //====================================
     public ExpandedPartPanel( String id, IModel<Part> model, Set<Long> expansions, PlanPage planPage ) {
         super( id, model, expansions );
         super.setOutputMarkupPlaceholderTag( false );
@@ -255,7 +284,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     }
 
     private void setShowSimpleForm( boolean val ) {
-         getPlanPage().setShowSimpleForm( getPart(), val );
+        getPlanPage().setShowSimpleForm( getPart(), val );
     }
 
     private void addClassificationFields() {
@@ -264,7 +293,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         makeVisible( classificationContainer, !isShowSimpleForm() );
         add( classificationContainer );
         addCategoryField();
-        addProhibitedField( );
+        addProhibitedField();
     }
 
     private void addTagsPanel() {
@@ -275,6 +304,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getPart() ) );
         tagsContainer.add( tagsPanel );
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
+            @Override
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TAGS ) );
             }
@@ -287,6 +317,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         summaryPanel = new PartSummaryPanel( "partSummary", new PropertyModel<Part>( this, "part" ) );
         summaryPanel.setOutputMarkupId( true );
         summaryPanel.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Collapsed, getPart() ) );
             }
@@ -296,9 +327,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     }
 
     private void addSimpleAdvanced() {
-        simpleAdvanced = new Label(
-                "simpleAdvanced",
-                new Model<String>( isShowSimpleForm() ? "Show advanced form" : "Show simple form" ) );
+        simpleAdvanced = new Label( "simpleAdvanced",
+                                    new Model<String>( isShowSimpleForm() ?
+                                                       "Show advanced form" :
+                                                       "Show simple form" ) );
         simpleAdvanced.setOutputMarkupId( true );
         simpleAdvanced.add( new AjaxEventBehavior( "onclick" ) {
             @Override
@@ -315,14 +347,13 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void adjustSimpleAdvancedFields( AjaxRequestTarget target ) {
         boolean showSimpleForm = isShowSimpleForm();
         makeVisible( tagsContainer, !showSimpleForm );
-        target.addComponent(  tagsContainer );
+        target.addComponent( tagsContainer );
         makeVisible( classificationContainer, !showSimpleForm );
-        target.addComponent(  classificationContainer );
+        target.addComponent( classificationContainer );
         makeVisible( executionContainer, !showSimpleForm );
-        target.addComponent(  executionContainer );
+        target.addComponent( executionContainer );
         makeVisible( timingContainer, !showSimpleForm );
-        target.addComponent(  timingContainer );
-
+        target.addComponent( timingContainer );
     }
 
     private String getCssClasses() {
@@ -332,8 +363,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     private void addPartDescription() {
         partDescription = new TextArea<String>( "description",                            // NON-NLS
-                new PropertyModel<String>( this, "description" ) );
+                                                new PropertyModel<String>( this, "description" ) );
         partDescription.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "description" ) );
             }
@@ -342,21 +374,16 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         add( partDescription );
     }
 
-    private void addCategoryField(  ) {
-        categoryChoice = new DropDownChoice<String>(
-                "category",
-                new PropertyModel<String>( this, "categoryLabel" ),
-                getCategoryLabels() );
+    private void addCategoryField() {
+        categoryChoice = new DropDownChoice<String>( "category",
+                                                     new PropertyModel<String>( this, "categoryLabel" ),
+                                                     getCategoryLabels() );
         categoryChoice.setOutputMarkupId( true );
         Part.Category category = getPart().getCategory();
-        if ( category != null ) {
-            categoryChoice.add( new AttributeModifier(
-                    "title",
-                    true,
-                    new Model<String>( category.getHint() )
-            ) );
-        }
+        if ( category != null )
+            categoryChoice.add( new AttributeModifier( "title", true, new Model<String>( category.getHint() ) ) );
         categoryChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "category" ) );
             }
@@ -368,11 +395,11 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         prohibitedCheckBox = new CheckBox( "prohibited", new PropertyModel<Boolean>( this, "prohibited" ) );
         classificationContainer.add( prohibitedCheckBox );
         prohibitedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "prohibited" ) );
             }
         } );
-
     }
 
     private List<String> getCategoryLabels() {
@@ -428,97 +455,93 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     }
 
     private void adjustFields() {
-        taskField.setEnabled( isLockedByUser( getPart() ) );
-        categoryChoice.setEnabled( isLockedByUser( getPart() ) );
-        prohibitedCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        for ( EntityReferencePanel entityReferencePanel : entityFields ) {
-            entityReferencePanel.enable( isLockedByUser( getPart() ) );
-        }
-        repeatsEveryPanel.enable( getPart().isRepeating()
-                && isLockedByUser( getPart() ) );
-        completionTimePanel.enable( getPart().isSelfTerminating()
-                && isLockedByUser( getPart() ) );
-        selfTerminatingCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        repeatingCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        startWithSegmentCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        asTeamCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        terminatesSegmentCheckBox.setEnabled( isLockedByUser( getPart() ) );
-        initiatedEventField.setEnabled( isLockedByUser( getPart() ) );
-        partDescription.setEnabled( isLockedByUser( getPart() ) );
-        boolean partHasIssues = getAnalyst().hasIssues( getPart(), false );
+        Part part = getPart();
+        boolean lockedByUser = isLockedByUser( part );
+        taskField.setEnabled( lockedByUser );
+        categoryChoice.setEnabled( lockedByUser );
+        prohibitedCheckBox.setEnabled( lockedByUser );
+        for ( EntityReferencePanel entityReferencePanel : entityFields )
+            entityReferencePanel.enable( lockedByUser );
+        repeatsEveryPanel.enable( part.isRepeating() && lockedByUser );
+        completionTimePanel.enable( part.isSelfTerminating() && lockedByUser );
+        selfTerminatingCheckBox.setEnabled( lockedByUser );
+        repeatingCheckBox.setEnabled( lockedByUser );
+        startWithSegmentCheckBox.setEnabled( lockedByUser );
+        asTeamCheckBox.setEnabled( lockedByUser );
+        terminatesSegmentCheckBox.setEnabled( lockedByUser );
+        initiatedEventField.setEnabled( lockedByUser );
+        partDescription.setEnabled( lockedByUser );
+        boolean partHasIssues = getAnalyst().hasIssues( getQueryService(), part, false );
         makeVisible( partIssuesPanel, partHasIssues );
     }
 
     private void addActorField() {
-        EntityReferencePanel<Actor> field = new EntityReferencePanel<Actor>(
-                ACTOR_PROPERTY,
-                new PropertyModel<Part>( this, "part" ),
-                getAllActorNames(),
-                ACTOR_PROPERTY,
-                Actor.class );
+        EntityReferencePanel<Actor> field = new EntityReferencePanel<Actor>( ACTOR_PROPERTY,
+                                                                             new PropertyModel<Part>( this, "part" ),
+                                                                             getAllActorNames(),
+                                                                             ACTOR_PROPERTY,
+                                                                             Actor.class );
         addOrReplace( field );
         entityFields.add( field );
     }
 
     private void addRoleField() {
-        EntityReferencePanel<Role> field = new EntityReferencePanel<Role>(
-                ROLE_PROPERTY,
-                new PropertyModel<Part>( this, "part" ),
-                getAllRoleNames(),
-                ROLE_PROPERTY,
-                Role.class );
+        EntityReferencePanel<Role> field = new EntityReferencePanel<Role>( ROLE_PROPERTY,
+                                                                           new PropertyModel<Part>( this, "part" ),
+                                                                           getAllRoleNames(),
+                                                                           ROLE_PROPERTY,
+                                                                           Role.class );
         addOrReplace( field );
         entityFields.add( field );
     }
 
     private void addOrganizationField() {
-        EntityReferencePanel<Organization> field = new EntityReferencePanel<Organization>(
-                ORG_PROPERTY,
-                new PropertyModel<Part>( this, "part" ),
-                getAllOrganizationNames(),
-                ORG_PROPERTY,
-                Organization.class );
+        EntityReferencePanel<Organization> field = new EntityReferencePanel<Organization>( ORG_PROPERTY,
+                                                                                           new PropertyModel<Part>( this,
+                                                                                                                    "part" ),
+                                                                                           getAllOrganizationNames(),
+                                                                                           ORG_PROPERTY,
+                                                                                           Organization.class );
         addOrReplace( field );
         entityFields.add( field );
     }
 
     private void addJurisdictionField() {
-        EntityReferencePanel<Place> field = new EntityReferencePanel<Place>(
-                JURISDICTION_PROPERTY,
-                new PropertyModel<Part>( this, "part" ),
-                getAllPlaceNames(),
-                JURISDICTION_PROPERTY,
-                Place.class );
+        EntityReferencePanel<Place> field = new EntityReferencePanel<Place>( JURISDICTION_PROPERTY,
+                                                                             new PropertyModel<Part>( this, "part" ),
+                                                                             getAllPlaceNames(),
+                                                                             JURISDICTION_PROPERTY,
+                                                                             Place.class );
         addOrReplace( field );
         entityFields.add( field );
     }
 
     private void addLocationField() {
-        EntityReferencePanel<Place> field = new EntityReferencePanel<Place>(
-                LOCATION_PROPERTY,
-                new PropertyModel<Part>( this, "part" ),
-                getAllPlaceNames(),
-                LOCATION_PROPERTY,
-                Place.class );
+        EntityReferencePanel<Place> field = new EntityReferencePanel<Place>( LOCATION_PROPERTY,
+                                                                             new PropertyModel<Part>( this, "part" ),
+                                                                             getAllPlaceNames(),
+                                                                             LOCATION_PROPERTY,
+                                                                             Place.class );
         addOrReplace( field );
         entityFields.add( field );
     }
 
     private void addTaskField() {
         final PropertyModel<List<String>> choices = new PropertyModel<List<String>>( this, "allTasks" );
-        taskField = new AutoCompleteTextField<String>(
-                TASK_PROPERTY,
-                new PropertyModel<String>( this, TASK_PROPERTY ) ) {
-            protected Iterator<String> getChoices( String s ) {
-                List<String> candidates = new ArrayList<String>();
-                for ( String choice : choices.getObject() ) {
-                    if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
-                }
-                return candidates.iterator();
-
-            }
-        };
+        taskField =
+                new AutoCompleteTextField<String>( TASK_PROPERTY, new PropertyModel<String>( this, TASK_PROPERTY ) ) {
+                    @Override
+                    protected Iterator<String> getChoices( String s ) {
+                        List<String> candidates = new ArrayList<String>();
+                        for ( String choice : choices.getObject() ) {
+                            if ( getQueryService().likelyRelated( s, choice ) )
+                                candidates.add( choice );
+                        }
+                        return candidates.iterator();
+                    }
+                };
         taskField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "task" ) );
             }
@@ -528,19 +551,21 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     private void addEventInitiation() {
         final PropertyModel<List<String>> choices = new PropertyModel<List<String>>( this, "allEventNames" );
-        initiatedEventField = new AutoCompleteTextField<String>(
-                "initiatedEvent",
-                new PropertyModel<String>( this, "initiatedEventName" ) ) {
+        initiatedEventField = new AutoCompleteTextField<String>( "initiatedEvent",
+                                                                 new PropertyModel<String>( this,
+                                                                                            "initiatedEventName" ) ) {
+            @Override
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices.getObject() ) {
-                    if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
+                    if ( getQueryService().likelyRelated( s, choice ) )
+                        candidates.add( choice );
                 }
                 return candidates.iterator();
-
             }
         };
         initiatedEventField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "initiatedEvent" ) );
             }
@@ -556,15 +581,13 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     private ModelObjectLink addEntityLink( String prop ) {
         Part part = getPart();
-        ModelObjectLink moLink = new ModelObjectLink(
-                prop + "-link",
-                new PropertyModel<ModelEntity>( part, prop ),
-                new Model<String>(
-                        prop.equals( "initiatedEvent" )
-                                ? "Causes event"
-                                : WordUtils.capitalize( prop.equals( "actor" )
-                                ? "agent"
-                                : prop ) ) );
+        ModelObjectLink moLink = new ModelObjectLink( prop + "-link",
+                                                      new PropertyModel<ModelEntity>( part, prop ),
+                                                      new Model<String>( prop.equals( "initiatedEvent" ) ?
+                                                                         "Causes event" :
+                                                                         WordUtils.capitalize( prop.equals( "actor" ) ?
+                                                                                               "agent" :
+                                                                                               prop ) ) );
         moLink.setOutputMarkupId( true );
         entityLinks.put( prop, moLink );
         addOrReplace( moLink );
@@ -574,78 +597,72 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void addTimingFields() {
         timingContainer = new WebMarkupContainer( "timingContainer" );
         timingContainer.setOutputMarkupId( true );
-        makeVisible(  timingContainer, !isShowSimpleForm() );
-        add(  timingContainer );
-        repeatsEveryPanel = new DelayPanel(
-                "repeats-every",
-                new PropertyModel<ModelObject>( this, "part" ),
-                "repeatsEvery" );
+        makeVisible( timingContainer, !isShowSimpleForm() );
+        add( timingContainer );
+        repeatsEveryPanel =
+                new DelayPanel( "repeats-every", new PropertyModel<ModelObject>( this, "part" ), "repeatsEvery" );
         repeatsEveryPanel.setOutputMarkupId( true );
         timingContainer.add( repeatsEveryPanel );
-        completionTimePanel = new DelayPanel(
-                "completion-time",
-                new PropertyModel<ModelObject>( this, "part" ),
-                "completionTime" );
+        completionTimePanel =
+                new DelayPanel( "completion-time", new PropertyModel<ModelObject>( this, "part" ), "completionTime" );
         completionTimePanel.setOutputMarkupId( true );
         timingContainer.add( completionTimePanel );
-        selfTerminatingCheckBox = new CheckBox(
-                "self-terminating",
-                new PropertyModel<Boolean>( this, "selfTerminating" ) );
+        selfTerminatingCheckBox =
+                new CheckBox( "self-terminating", new PropertyModel<Boolean>( this, "selfTerminating" ) );
         selfTerminatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                completionTimePanel.enable( getPart().isSelfTerminating()
-                        && isLockedByUser( getPart() ) );
+                completionTimePanel.enable( getPart().isSelfTerminating() && isLockedByUser( getPart() ) );
                 target.addComponent( completionTimePanel );
                 update( target, new Change( Change.Type.Updated, getPart(), "selfTerminating" ) );
             }
         } );
         timingContainer.add( selfTerminatingCheckBox );
-        repeatingCheckBox = new CheckBox(
-                "repeating",
-                new PropertyModel<Boolean>( this, "repeating" ) );
+        repeatingCheckBox = new CheckBox( "repeating", new PropertyModel<Boolean>( this, "repeating" ) );
         timingContainer.add( repeatingCheckBox );
         repeatingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 repeatsEveryPanel.enable( getPart().isRepeating() );
                 target.addComponent( repeatsEveryPanel );
                 update( target, new Change( Change.Type.Updated, getPart(), "onclick" ) );
             }
         } );
-        startWithSegmentCheckBox = new CheckBox(
-                "startsWithSegment",
-                new PropertyModel<Boolean>( this, "startsWithSegment" ) );
+        startWithSegmentCheckBox =
+                new CheckBox( "startsWithSegment", new PropertyModel<Boolean>( this, "startsWithSegment" ) );
         timingContainer.add( startWithSegmentCheckBox );
         startWithSegmentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "startsWithSegment" ) );
             }
         } );
         timingContainer.add( new ModelObjectLink( "event-link",
-                new PropertyModel<Event>( this, "part.segment.event" ),
-                new PropertyModel<String>( this, "part.segment.event.name" ) ) );
+                                                  new PropertyModel<Event>( this, "part.segment.event" ),
+                                                  new PropertyModel<String>( this, "part.segment.event.name" ) ) );
         timingContainer.add( new ModelObjectLink( "phase-link",
-                new PropertyModel<Event>( this, "part.segment.phase" ),
-                new PropertyModel<String>( this, "part.segment.phase.name" ) ) );
-        terminatesSegmentCheckBox = new CheckBox(
-                "terminatesEventPhase",
-                new PropertyModel<Boolean>( this, "terminatesEventPhase" ) );
+                                                  new PropertyModel<Event>( this, "part.segment.phase" ),
+                                                  new PropertyModel<String>( this, "part.segment.phase.name" ) ) );
+        terminatesSegmentCheckBox =
+                new CheckBox( "terminatesEventPhase", new PropertyModel<Boolean>( this, "terminatesEventPhase" ) );
         timingContainer.add( terminatesSegmentCheckBox );
         terminatesSegmentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "terminatesEventPhase" ) );
             }
         } );
         WebMarkupContainer phaseEnding = new WebMarkupContainer( "phase-ending" );
         phaseEnding.add( new ModelObjectLink( "end-phase-link",
-                new PropertyModel<Event>( this, "part.segment.phase" ),
-                new PropertyModel<String>( this, "part.segment.phase.name" ) ) );
+                                              new PropertyModel<Event>( this, "part.segment.phase" ),
+                                              new PropertyModel<String>( this, "part.segment.phase.name" ) ) );
         phaseEnding.setVisible( getPart().getSegment().getPhase().isPostEvent() );
         timingContainer.add( phaseEnding );
         WebMarkupContainer eventEnding = new WebMarkupContainer( "event-ending" );
         eventEnding.add( new Label( "end-event-effect", getEventEndingEffect() ) );
         eventEnding.add( new ModelObjectLink( "end-event-link",
-                new PropertyModel<Event>( this, "part.segment.event" ),
-                new PropertyModel<String>( this, "part.segment.event.name" ) ) );
+                                              new PropertyModel<Event>( this, "part.segment.event" ),
+                                              new PropertyModel<String>( this, "part.segment.event.name" ) ) );
         timingContainer.add( eventEnding );
     }
 
@@ -655,11 +672,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     private String getEventEndingEffect() {
         Phase phase = getPhase();
-        return phase.isPreEvent()
-                ? "prevent event"
-                : phase.isConcurrent()
-                ? "end event"
-                : "of event";
+        return phase.isPreEvent() ? "prevent event" : phase.isConcurrent() ? "end event" : "of event";
     }
 
     private void addExecution() {
@@ -667,11 +680,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         executionContainer.setOutputMarkupId( true );
         makeVisible( executionContainer, !isShowSimpleForm() );
         add( executionContainer );
-        asTeamCheckBox = new CheckBox(
-                "asTeam",
-                new PropertyModel<Boolean>( this, "asTeam" ) );
+        asTeamCheckBox = new CheckBox( "asTeam", new PropertyModel<Boolean>( this, "asTeam" ) );
         executionContainer.add( asTeamCheckBox );
         asTeamCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getPart(), "asTeam" ) );
             }
@@ -682,21 +694,14 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         if ( getPart().getSegment().getGoals().isEmpty() ) {
             taskGoalsPanel = new Label( "goals", new Model<String>( "(No goals)" ) );
         } else {
-            taskGoalsPanel = new PartGoalsPanel(
-                    "goals",
-                    new PropertyModel<Part>( this, "part" ),
-                    getExpansions() );
+            taskGoalsPanel = new PartGoalsPanel( "goals", new PropertyModel<Part>( this, "part" ), getExpansions() );
         }
         taskGoalsPanel.setOutputMarkupId( true );
         addOrReplace( taskGoalsPanel );
         AjaxFallbackLink segmentGoalsLink = new AjaxFallbackLink( "segment-goals-link" ) {
+            @Override
             public void onClick( AjaxRequestTarget target ) {
-                update(
-                        target,
-                        new Change(
-                                Change.Type.Expanded,
-                                getPart().getSegment(),
-                                SegmentEditPanel.GOALS ) );
+                update( target, new Change( Change.Type.Expanded, getPart().getSegment(), SegmentEditPanel.GOALS ) );
             }
         };
         segmentGoalsLink.add( new AttributeModifier( "class", true, new Model<String>( "segment-link" ) ) );
@@ -775,7 +780,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldActor == null || !isSame( name, oldName ) )
                 newActor = getQueryService().findOrCreate( Actor.class, name );
         }
-        doCommand( new UpdateSegmentObject( getPart(), "actor", newActor ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "actor", newActor ) );
         getCommander().cleanup( Actor.class, oldName );
     }
 
@@ -794,7 +799,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldPlace == null || !isSame( name, oldName ) )
                 newPlace = getQueryService().findOrCreate( Place.class, name );
         }
-        doCommand( new UpdateSegmentObject( getPart(), "jurisdiction", newPlace ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "jurisdiction", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
     }
 
@@ -813,7 +818,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldPlace == null || !isSame( name, oldName ) )
                 newPlace = getQueryService().findOrCreate( Place.class, name );
         }
-        doCommand( new UpdateSegmentObject( getPart(), "location", newPlace ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "location", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
     }
 
@@ -832,7 +837,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldOrg == null || !isSame( name, oldName ) )
                 newOrg = getQueryService().findOrCreate( Organization.class, name );
         }
-        doCommand( new UpdateSegmentObject( getPart(), "organization", newOrg ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "organization", newOrg ) );
         getCommander().cleanup( Organization.class, oldName );
     }
 
@@ -851,7 +856,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldRole == null || !isSame( name, oldName ) )
                 newRole = getQueryService().findOrCreate( Role.class, name );
         }
-        doCommand( new UpdateSegmentObject( getPart(), "role", newRole ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "role", newRole ) );
         getCommander().cleanup( Role.class, oldName );
     }
 
@@ -861,7 +866,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param task the task
      */
     public void setTask( String task ) {
-        doCommand( new UpdateSegmentObject( getPart(), "task", task ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "task", task ) );
     }
 
     public Delay getRepeatsEvery() {
@@ -874,7 +879,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param delay a delay
      */
     public void setRepeatsEvery( Delay delay ) {
-        doCommand( new UpdateSegmentObject( getPart(), "repeatsEvery", delay ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "repeatsEvery", delay ) );
     }
 
     public Delay getCompletionTime() {
@@ -887,7 +892,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param delay a delay
      */
     public void setCompletionTime( Delay delay ) {
-        doCommand( new UpdateSegmentObject( getPart(), "completionTime", delay ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "completionTime", delay ) );
     }
 
     /**
@@ -905,7 +910,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setSelfTerminating( boolean val ) {
-        doCommand( new UpdateSegmentObject( getPart(), "selfTerminating", val ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "selfTerminating", val ) );
     }
 
     /**
@@ -923,7 +928,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setRepeating( boolean val ) {
-        doCommand( new UpdateSegmentObject( getPart(), "repeating", val ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "repeating", val ) );
     }
 
     /**
@@ -941,7 +946,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setStartsWithSegment( boolean val ) {
-        doCommand( new UpdateSegmentObject( getPart(), "startsWithSegment", val ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "startsWithSegment", val ) );
     }
 
     /**
@@ -959,7 +964,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setAsTeam( boolean val ) {
-        doCommand( new UpdateSegmentObject( getPart(), "asTeam", val ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "asTeam", val ) );
     }
 
     /**
@@ -977,7 +982,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setTerminatesEventPhase( boolean val ) {
-        doCommand( new UpdateSegmentObject( getPart(), "terminatesEventPhase", val ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "terminatesEventPhase", val ) );
     }
 
     /**
@@ -1014,7 +1019,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldEvent == null || !isSame( name, oldName ) )
                 newEvent = getQueryService().findOrCreateType( Event.class, name );
         }
-        doCommand( new UpdateSegmentObject( getPart(), "initiatedEvent", newEvent ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "initiatedEvent", newEvent ) );
         getCommander().cleanup( Event.class, oldName );
     }
 
@@ -1033,7 +1038,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a string
      */
     public void setDescription( String val ) {
-        doCommand( new UpdateSegmentObject( getPart(), "description", val ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "description", val ) );
     }
 
     /**
@@ -1055,7 +1060,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         if ( label != null ) {
             Part.Category category;
             category = label.equals( NO_CATEGORY ) ? null : Part.Category.valueOfLabel( label );
-            doCommand( new UpdateSegmentObject( getPart(), "category", category ) );
+            doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "category", category ) );
         }
     }
 
@@ -1065,7 +1070,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     public void setProhibited( boolean val ) {
         if ( val != isProhibited() ) {
-            doCommand( new UpdateSegmentObject( getPart(), "prohibited", val ) );
+            doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "prohibited", val ) );
         }
     }
 
@@ -1098,10 +1103,12 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
         refresh( target );
     }
 
+    @Override
     public void changed( Change change ) {
         if ( change.isUpdated() && change.isForInstanceOf( Part.class ) ) {
             partUpdated = true;
@@ -1112,6 +1119,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( !change.isNone() ) {
             if ( change.isUpdated() ) {
@@ -1133,8 +1141,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 target.addComponent( initiatedEventField );
             }
             if ( !change.isDisplay() && !change.isCopied() ) {
-                makeVisible( target, partIssuesPanel,
-                        getAnalyst().hasIssues( getPart(), false ) );
+                makeVisible( target,
+                             partIssuesPanel,
+                             getAnalyst().hasIssues( getQueryService(), getPart(), false ) );
                 target.addComponent( partIssuesPanel );
             }
         }
@@ -1148,6 +1157,4 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             target.addComponent( moLink );
         }
     }
-
-
 }

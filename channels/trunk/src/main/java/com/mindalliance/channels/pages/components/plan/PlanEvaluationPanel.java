@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.model.Identifiable;
@@ -13,39 +19,23 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.util.Set;
 
-/**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Sep 15, 2009
- * Time: 4:37:46 PM
- */
-public class PlanEvaluationPanel  extends AbstractCommandablePanel {
+public class PlanEvaluationPanel extends AbstractCommandablePanel {
 
     /**
-      * Test passed icon.
-      */
-     private static final String PASS_IMAGE = "images/pass.png";
-     /**
-      * Test failed icon.
-      */
-     private static final String FAIL_IMAGE = "images/fail.png";
+     * Test failed icon.
+     */
+    private static final String FAIL_IMAGE = "images/fail.png";
 
-    public PlanEvaluationPanel(
-            String id,
-            IModel<? extends Identifiable> iModel,
-            Set<Long> expansions ) {
-        super( id, iModel, expansions  );
+    /**
+     * Test passed icon.
+     */
+    private static final String PASS_IMAGE = "images/pass.png";
+
+    //-------------------------------
+    public PlanEvaluationPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
+        super( id, iModel, expansions );
         init();
     }
-
-    @Override
-    public void redisplay( AjaxRequestTarget target ) {
-        init();
-        super.redisplay( target );
-    }
-
-
 
     private void init() {
         addEvaluation();
@@ -68,7 +58,8 @@ public class PlanEvaluationPanel  extends AbstractCommandablePanel {
         // Completeness
         Image completenessImage = new Image( "completenessImage" );
         completenessImage.add( new AttributeModifier( "src", new PropertyModel<String>( this, "completenessImage" ) ) );
-        completenessImage.add( new AttributeModifier( "title", new PropertyModel<String>( this, "completenessTitle" ) ) );
+        completenessImage.add( new AttributeModifier( "title",
+                                                      new PropertyModel<String>( this, "completenessTitle" ) ) );
         completenessImage.setOutputMarkupId( true );
         evaluation.add( completenessImage );
         Label completenessLabel = new Label( "completeness", new PropertyModel<String>( this, "completenessLabel" ) );
@@ -86,57 +77,18 @@ public class PlanEvaluationPanel  extends AbstractCommandablePanel {
     }
 
     private void addIssuesSummary() {
-        add(  new IssuesSummaryTable( "issuesSummary" ) );
+        add( new IssuesSummaryTable( "issuesSummary" ) );
     }
 
-    /**
-     * Get image url for validity test.
-     *
-     * @return a string
-     */
-    public String getValidityImage() {
-        boolean isValid = getAnalyst().isValid( getPlan() );
-        return isValid ? PASS_IMAGE : FAIL_IMAGE;
-    }
-
-    /**
-     * Get image title for validity test.
-     *
-     * @return a string
-     */
-    public String getValidityTitle() {
-        boolean isValid = getAnalyst().isValid( getPlan() );
-        return isValid ? "Valid" : "Not valid";
-    }
-
-    /**
-     * Get label for validity test result.
-     *
-     * @return a string
-     */
-    public String getValidityLabel() {
-        int count = getAnalyst().countTestFailures( getPlan(), Issue.VALIDITY );
-        return count == 0 ? "Valid" : ( "Not yet valid (" + count + ( count == 1 ? " issue)" : " issues)" ) );
-    }
-
+    //-------------------------------
     /**
      * Get image url for completeness test.
      *
      * @return a string
      */
     public String getCompletenessImage() {
-        boolean isComplete = getAnalyst().isComplete( getPlan() );
+        boolean isComplete = getAnalyst().isComplete( getQueryService(), getPlan() );
         return isComplete ? PASS_IMAGE : FAIL_IMAGE;
-    }
-
-    /**
-     * Get image title for completeness test.
-     *
-     * @return a string
-     */
-    public String getCompletenessTitle() {
-        boolean isComplete = getAnalyst().isComplete( getPlan() );
-        return isComplete ? "Complete" : "Not complete";
     }
 
     /**
@@ -145,8 +97,18 @@ public class PlanEvaluationPanel  extends AbstractCommandablePanel {
      * @return a string
      */
     public String getCompletenessLabel() {
-        int count = getAnalyst().countTestFailures( getPlan(), Issue.COMPLETENESS );
+        int count = getAnalyst().countTestFailures( getQueryService(), getPlan(), Issue.COMPLETENESS );
         return count == 0 ? "Complete" : ( "Not yet complete (" + count + ( count == 1 ? " issue)" : " issues)" ) );
+    }
+
+    /**
+     * Get image title for completeness test.
+     *
+     * @return a string
+     */
+    public String getCompletenessTitle() {
+        boolean isComplete = getAnalyst().isComplete( getQueryService(), getPlan() );
+        return isComplete ? "Complete" : "Not complete";
     }
 
     /**
@@ -155,18 +117,8 @@ public class PlanEvaluationPanel  extends AbstractCommandablePanel {
      * @return a string
      */
     public String getRobustnessImage() {
-        boolean isRobust = getAnalyst().isRobust( getPlan() );
+        boolean isRobust = getAnalyst().isRobust( getQueryService(), getPlan() );
         return isRobust ? PASS_IMAGE : FAIL_IMAGE;
-    }
-
-    /**
-     * Get image title for robustness test.
-     *
-     * @return a string
-     */
-    public String getRobustnessTitle() {
-        boolean isRobust = getAnalyst().isRobust( getPlan() );
-        return isRobust ? "Robust" : "Not yet robust";
     }
 
     /**
@@ -175,11 +127,53 @@ public class PlanEvaluationPanel  extends AbstractCommandablePanel {
      * @return a string
      */
     public String getRobustnessLabel() {
-        int count = getAnalyst().countTestFailures( getPlan(), Issue.ROBUSTNESS );
+        int count = getAnalyst().countTestFailures( getQueryService(), getPlan(), Issue.ROBUSTNESS );
         return count == 0 ? "Robust" : ( "Not yet robust (" + count + ( count == 1 ? " issue)" : " issues)" ) );
     }
 
+    /**
+     * Get image title for robustness test.
+     *
+     * @return a string
+     */
+    public String getRobustnessTitle() {
+        boolean isRobust = getAnalyst().isRobust( getQueryService(), getPlan() );
+        return isRobust ? "Robust" : "Not yet robust";
+    }
 
+    /**
+     * Get image url for validity test.
+     *
+     * @return a string
+     */
+    public String getValidityImage() {
+        boolean isValid = getAnalyst().isValid( getQueryService(), getPlan() );
+        return isValid ? PASS_IMAGE : FAIL_IMAGE;
+    }
 
+    /**
+     * Get label for validity test result.
+     *
+     * @return a string
+     */
+    public String getValidityLabel() {
+        int count = getAnalyst().countTestFailures( getQueryService(), getPlan(), Issue.VALIDITY );
+        return count == 0 ? "Valid" : ( "Not yet valid (" + count + ( count == 1 ? " issue)" : " issues)" ) );
+    }
 
+    /**
+     * Get image title for validity test.
+     *
+     * @return a string
+     */
+    public String getValidityTitle() {
+        boolean isValid = getAnalyst().isValid( getQueryService(), getPlan() );
+        return isValid ? "Valid" : "Not valid";
+    }
+
+    @Override
+    public void redisplay( AjaxRequestTarget target ) {
+        init();
+        super.redisplay( target );
+    }
 }

@@ -2,14 +2,14 @@ package com.mindalliance.channels.core.command;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.core.command.commands.HelloCommand;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Segment;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+
+import static org.junit.Assert.*;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -33,15 +33,15 @@ public class TestDefaultCommander extends AbstractChannelsTest {
     public void testExecuteSimpleCommand() {
         AbstractCommand command = HelloCommand.makeCommand( "hello", commander );
         assertTrue( commander.canDo( command ) );
-        assertFalse( commander.canUndo() );
+        assertFalse( commander.canUndo( User.current().getUsername() ) );
 
         Change change = commander.doCommand( command );
         assertTrue( change.isUnknown() );
-        assertTrue( commander.canUndo() );
-        assertTrue( commander.undo().isUnknown() );
-        assertTrue( commander.canRedo() );
-        assertTrue( commander.redo().isUnknown() );
-        assertFalse( commander.canRedo() );
+        assertTrue( commander.canUndo( User.current().getUsername() ) );
+        assertTrue( commander.undo( User.current().getUsername() ).isUnknown() );
+        assertTrue( commander.canRedo( User.current().getUsername() ) );
+        assertTrue( commander.redo( User.current().getUsername() ).isUnknown() );
+        assertFalse( commander.canRedo( User.current().getUsername() ) );
         if ( change.isFailed() ) {
             fail();
         }
@@ -51,7 +51,7 @@ public class TestDefaultCommander extends AbstractChannelsTest {
     public void testCommandLocking() throws Exception {
         LockManager lockManager = getLockManager();
         AbstractCommand command = HelloCommand.makeCommand( "hello", commander );
-        Segment segment = wicketApplication.getQueryService().getDefaultSegment();
+        Segment segment = commander.getQueryService().getDefaultSegment();
         lockManager.lock( "bob", segment.getId() );
         command.needLockOn( segment );
         assertFalse( commander.canDo( command ) );
@@ -75,22 +75,22 @@ public class TestDefaultCommander extends AbstractChannelsTest {
         commander.doCommand( command );
         Thread.sleep( 10 );
         commander.doCommand( otherUserCommand );
-        assertFalse( commander.canUndo() );
+        assertFalse( commander.canUndo( User.current().getUsername() ) );
         Thread.sleep( 10 );
         commander.doCommand( command );
-        assertTrue( commander.canUndo() );
-        commander.undo();
-        assertFalse( commander.canUndo() );
-        assertTrue( commander.canRedo() );
-        commander.redo();
-        assertFalse( commander.canRedo() );
-        assertTrue( commander.canUndo() );
+        assertTrue( commander.canUndo( User.current().getUsername() ) );
+        commander.undo( User.current().getUsername() );
+        assertFalse( commander.canUndo( User.current().getUsername() ) );
+        assertTrue( commander.canRedo( User.current().getUsername() ) );
+        commander.redo( User.current().getUsername() );
+        assertFalse( commander.canRedo( User.current().getUsername() ) );
+        assertTrue( commander.canUndo( User.current().getUsername() ) );
         Thread.sleep( 10 );
-        commander.undo();
+        commander.undo( User.current().getUsername() );
         Thread.sleep( 10 );
         commander.doCommand( otherUserCommand );
-        assertFalse( commander.canRedo() );
-        if ( !commander.redo().isFailed() )
+        assertFalse( commander.canRedo( User.current().getUsername() ) );
+        if ( !commander.redo( User.current().getUsername() ).isFailed() )
             fail();
     }
 }

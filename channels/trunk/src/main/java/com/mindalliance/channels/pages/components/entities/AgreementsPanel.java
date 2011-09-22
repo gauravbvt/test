@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Organization;
@@ -276,14 +277,12 @@ public class AgreementsPanel extends AbstractCommandablePanel {
 
         public void setConfirmed( boolean confirmed ) {
             if ( confirmed ) {
-                doCommand( new UpdatePlanObject(
-                        organization,
+                doCommand( new UpdatePlanObject( User.current().getUsername(), organization,
                         "agreements",
                         agreement,
                         UpdateObject.Action.Add ) );
             } else {
-                doCommand( new UpdatePlanObject(
-                        organization,
+                doCommand( new UpdatePlanObject( User.current().getUsername(), organization,
                         "agreements",
                         agreement,
                         UpdateObject.Action.Remove ) );

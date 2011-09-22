@@ -65,7 +65,7 @@ public class PlanDao {
     /**
      * The user service.
      */
-    private UserService userService;
+    private UserDao userDao;
 
     /**
      * The plan version.
@@ -219,8 +219,8 @@ public class PlanDao {
         Participation.UNKNOWN.makeImmutable();
 
         // Make sure that there is one participation per user
-        if ( userService != null )
-            for ( String username : userService.getUsernames( plan.getUri() ) ) {
+        if ( userDao != null )
+            for ( String username : userDao.getUsernames( plan.getUri() ) ) {
                 Participation p = findOrCreate( Participation.class, username, null );
                 p.setActual();
             }
@@ -412,8 +412,8 @@ public class PlanDao {
         throw new NotFoundException();
     }
 
-    public UserService getUserDetailsService() {
-        return userService;
+    public UserDao getUserDetailsService() {
+        return userDao;
     }
 
     public synchronized boolean isLoaded() {
@@ -467,7 +467,7 @@ public class PlanDao {
             // Participations are not referenced per se but are not obsolete if they name a
             // registered user.
             Participation participation = (Participation) mo;
-            User user = userService.getUserNamed( participation.getUsername() );
+            User user = userDao.getUserNamed( participation.getUsername() );
             return user != null;
         } else if ( plan.references( mo ) )
             return true;
@@ -631,8 +631,8 @@ public class PlanDao {
         }
     }
 
-    public void setUserDetailsService( UserService userService ) {
-        this.userService = userService;
+    public void setUserDetailsService( UserDao userDao ) {
+        this.userDao = userDao;
     }
 
     public void update( ModelObject object ) {

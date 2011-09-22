@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.Matcher;
@@ -5,6 +11,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.RedirectFlow;
 import com.mindalliance.channels.core.command.commands.SatisfyNeed;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.ExternalFlow;
@@ -308,6 +315,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         makeVisible( tagsContainer, !isShowSimpleForm() );
         add( tagsContainer );
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
+            @Override
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TAGS ) );
             }
@@ -342,6 +350,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                     new Model<String>( intent.getHint() ) ) );
         }
         intentChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIntentField();
                 target.addComponent( intentChoice );
@@ -360,6 +369,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 "restricted",
                 new PropertyModel<Boolean>( this, "restricted" ) );
         restrictedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 restrictionChoice.setEnabled( isRestricted() );
                 target.addComponent( restrictionChoice );
@@ -375,6 +385,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 getAllRestrictionLabels()
         );
         restrictionChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getFlow(), "restriction" ) );
             }
@@ -400,6 +411,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     private void addEOIs() {
         AjaxFallbackLink editEOIsLink = new AjaxFallbackLink( "editEOIs" ) {
+            @Override
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.AspectViewed, getFlow(), EOIS ) );
             }
@@ -409,6 +421,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         ListView<String> eoisList = new ListView<String>(
                 "eois",
                 new PropertyModel<List<String>>( this, "eoiSummaries" ) ) {
+            @Override
             protected void populateItem( ListItem<String> item ) {
                 item.add( new Label( "summary", item.getModelObject() ) );
             }
@@ -458,16 +471,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         this.timingContainer.setVisible( f.canGetMaxDelay() );
         delayPanel.enable( lockedByUser && f.canSetMaxDelay() );
         significanceToSourceContainer.setVisible( f.canGetSignificanceToSource() );
-        triggersSourceContainer.setVisible(
-                ( !isSend() || f.isAskedFor() ) && f.canGetTriggersSource() );
+        triggersSourceContainer.setVisible( ( !isSend() || f.isAskedFor() ) && f.canGetTriggersSource() );
         triggersSourceCheckBox.setEnabled( lockedByUser && f.canSetTriggersSource() );
         terminatesSourceContainer.setVisible( f.canGetTerminatesSource() );
         terminatesSourceCheckBox.setEnabled( lockedByUser && f.canSetTerminatesSource() );
         otherChoice.setEnabled( lockedByUser );
         restrictedCheckBox.setEnabled( lockedByUser );
-        flowDescription.setEnabled( ( isSend() && f.isNotification() || !isSend() && f.isAskedFor() )
-                && isLockedByUser( getFlow() ) );
-        makeVisible( issuesPanel, getAnalyst().hasIssues( getFlow(), false ) );
+        flowDescription.setEnabled(
+                ( isSend() && f.isNotification() || !isSend() && f.isAskedFor() ) && isLockedByUser( getFlow() ) );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( getQueryService(), getFlow(), false ) );
         makeVisible( ifTaskFailsContainer, canGetIfTaskFails() );
         ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
         makeVisible( prohibitedContainer, f.canGetProhibited() );
@@ -490,10 +502,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         triggersSourceContainer.setVisible(
                 ( !isSend() || f.isAskedFor() ) && f.canGetTriggersSource() );
         target.addComponent( triggersSourceContainer );
-        flowDescription.setEnabled( ( isSend() && f.isNotification() || !isSend() && f.isAskedFor() )
-                && isLockedByUser( getFlow() ) );
+        flowDescription.setEnabled(
+                ( isSend() && f.isNotification() || !isSend() && f.isAskedFor() ) && isLockedByUser( getFlow() ) );
         target.addComponent( flowDescription );
-        makeVisible( issuesPanel, getAnalyst().hasIssues( getFlow(), false ) );
+        makeVisible( issuesPanel, getAnalyst().hasIssues( getQueryService(), getFlow(), false ) );
         target.addComponent( issuesPanel );
     }
 
@@ -514,12 +526,14 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         nameField = new AutoCompleteTextField<String>(
                 "name",
                 new PropertyModel<String>( this, "name" ) ) {
+            @Override
             protected Iterator<String> getChoices( String s ) {
                 return getFlowNameChoices( s );
             }
         };
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
 
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssuesAnnotation( nameField, getFlow(), "name" );
                 target.addComponent( nameField );
@@ -614,10 +628,12 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                         "significanceToTargetChoices" ),
                 new IChoiceRenderer<Flow.Significance>() {
 
+                    @Override
                     public Object getDisplayValue( Flow.Significance significance ) {
                         return significance.getLabel();
                     }
 
+                    @Override
                     public String getIdValue( Flow.Significance significance, int i ) {
                         return significance.toString();
                     }
@@ -656,6 +672,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 "triggers-source",
                 new PropertyModel<Boolean>( this, "triggeringToSource" ) );
         triggersSourceCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update(
                         target,
@@ -751,6 +768,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         flowDescription = new TextArea<String>( "description",
                 new PropertyModel<String>( this, "description" ) );
         flowDescription.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getFlow(), "description" ) );
             }
@@ -831,6 +849,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         // Add style classes
         titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses() ) ) );
         titlePanel.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Collapsed, getFlow() );
                 change.addQualifier( "updated", isFlowUpdated() );
@@ -872,8 +891,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         makeVisible( canBypassIntermediateContainer, !showSimpleForm
                 && f.canGetCanBypassIntermediate() );
         target.addComponent( canBypassIntermediateContainer );
-        makeVisible( receiptConfirmationRequestedContainer, !showSimpleForm
-                && f.canGetReceiptConfirmationRequested() );
+        makeVisible( receiptConfirmationRequestedContainer, !showSimpleForm && f.canGetReceiptConfirmationRequested() );
         target.addComponent( receiptConfirmationRequestedContainer );
         makeVisible( timingContainer, !showSimpleForm );
         target.addComponent( timingContainer );
@@ -936,10 +954,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 new PropertyModel<String>( this, "name" ),
                 new PropertyModel<List<Node>>( this, "firstChoices" ),
                 new PropertyModel<List<Node>>( this, "secondChoices" ) );
-        otherChoice.add( new AttributeModifier(
-                "title",
-                true,
-                new Model<String>( getOtherPart().displayString() ) ) );
+        otherChoice.add( new AttributeModifier( "title", true, new Model<String>( getOtherPart().displayString() ) ) );
         otherChoice.setOutputMarkupId( true );
         addOrReplace( otherChoice );
     }
@@ -1082,6 +1097,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             return CollectionUtils.exists(
                     IteratorUtils.toList( externalizedConnector.externalFlows() ),
                     new Predicate() {
+                        @Override
                         public boolean evaluate( Object object ) {
                             ExternalFlow externalFlow = (ExternalFlow) object;
                             return externalFlow.getPart()
@@ -1104,6 +1120,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         return CollectionUtils.exists(
                 needsOrCapabilities,
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         return !( (Flow) object ).isSharing();
                     }
@@ -1124,6 +1141,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         return (List<Node>) CollectionUtils.select(
                 IteratorUtils.toList( node.getSegment().parts() ),
                 new Predicate() {
+                    @Override
                     public boolean evaluate( Object object ) {
                         Part part = (Part) object;
                         return !part.equals( node )
@@ -1292,13 +1310,12 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             Connector connector = (Connector) other;
             Flow need = isSend() ? connector.getInnerFlow() : getFlow();
             Flow capability = isSend() ? getFlow() : connector.getInnerFlow();
-            change = doCommand( new SatisfyNeed(
-                    need,
+            change = doCommand( new SatisfyNeed( User.current().getUsername(), need,
                     capability,
                     SatisfyNeed.KEEP_CAPABILITY,
                     SatisfyNeed.KEEP_NEED ) );
         } else {
-            change = doCommand( new RedirectFlow( getFlow(), other, isSend() ) );
+            change = doCommand( new RedirectFlow( User.current().getUsername(), getFlow(), other, isSend() ) );
         }
         Flow newFlow = (Flow) change.getSubject( getQueryService() );
         assert newFlow != null; // TODO Find out why this has happened...
@@ -1320,16 +1337,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean isMarkedForDeletion() {
         return markedForDeletion;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void setMarkedForDeletion( boolean delete ) {
         markedForDeletion = delete;
     }
@@ -1349,7 +1360,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param name a string
      */
     public void setName( String name ) {
-        doCommand( new UpdateSegmentObject( getFlow(), "name", name ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "name", name ) );
     }
 
     /**
@@ -1367,7 +1378,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param val a string
      */
     public void setDescription( String val ) {
-        doCommand( new UpdateSegmentObject( getFlow(), "description", val ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "description", val ) );
     }
 
 
@@ -1381,7 +1392,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param val a boolean
      */
     public void setAskedFor( boolean val ) {
-        doCommand( new UpdateSegmentObject( getFlow(), "askedFor", val ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "askedFor", val ) );
     }
 
     public boolean isAll() {
@@ -1394,7 +1405,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param value a boolean
      */
     public void setAll( boolean value ) {
-        doCommand( new UpdateSegmentObject( getFlow(), "all", value ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "all", value ) );
     }
 
     public Flow.Significance getSignificanceToTarget() {
@@ -1407,7 +1418,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param val a flow significance
      */
     public void setSignificanceToTarget( Flow.Significance val ) {
-        doCommand( new UpdateSegmentObject( getFlow(), "significanceToTarget", val ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "significanceToTarget", val ) );
     }
 
     public Flow.Significance getSignificanceToSource() {
@@ -1420,7 +1431,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param val a flow significance
      */
     public void setSignificanceToSource( Flow.Significance val ) {
-        doCommand( new UpdateSegmentObject( getFlow(), "significanceToSource", val ) );
+        doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "significanceToSource", val ) );
     }
 
     /**
@@ -1485,7 +1496,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     public void setIntentLabel( String label ) {
         if ( label != null ) {
             Flow.Intent intent = label.equals( NO_INTENT ) ? null : Flow.Intent.valueOfLabel( label );
-            doCommand( new UpdateSegmentObject( getFlow(), "intent", intent ) );
+            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "intent", intent ) );
         }
     }
 
@@ -1506,7 +1517,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     public void setRestricted( boolean val ) {
         this.restricted = val;
         if ( !val && getFlow().getRestriction() != null ) {
-            doCommand( new UpdateSegmentObject( getFlow(), "restriction", null ) );
+            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "restriction", null ) );
         }
     }
 
@@ -1531,7 +1542,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             Flow.Restriction restriction = label.equals( NO_RESTRICTION )
                     ? null
                     : Flow.Restriction.valueOfLabel( label, isSend() );
-            doCommand( new UpdateSegmentObject( getFlow(), "restriction", restriction ) );
+            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "restriction", restriction ) );
         }
     }
 
@@ -1546,7 +1557,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     public void setIfTaskFails( boolean val ) {
         if ( val != getFlow().isIfTaskFails() ) {
-            doCommand( new UpdateSegmentObject( getFlow(), "ifTaskFails", val ) );
+            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "ifTaskFails", val ) );
         }
     }
 
@@ -1561,7 +1572,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     public void setProhibited( boolean val ) {
         if ( val != getFlow().isProhibited() ) {
-            doCommand( new UpdateSegmentObject( getFlow(), "prohibited", val ) );
+            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "prohibited", val ) );
         }
     }
 
@@ -1576,7 +1587,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     public void setReferencesEventPhase( boolean val ) {
         if ( val != getFlow().isReferencesEventPhase() ) {
-            doCommand( new UpdateSegmentObject( getFlow(), "referencesEventPhase", val ) );
+            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "referencesEventPhase", val ) );
         }
     }
 
@@ -1591,7 +1602,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     public void setCanBypassIntermediate( boolean val ) {
         if ( val != getFlow().isCanBypassIntermediate() ) {
-            doCommand( new UpdateSegmentObject( getFlow(), "canBypassIntermediate", val ) );
+            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "canBypassIntermediate", val ) );
         }
     }
 
@@ -1606,10 +1617,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     public void setReceiptConfirmationRequested( boolean val ) {
         if ( val != getFlow().isReceiptConfirmationRequested() ) {
-            doCommand( new UpdateSegmentObject( getFlow(), "receiptConfirmationRequested", val ) );
+            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "receiptConfirmationRequested", val ) );
         }
     }
 
+    @Override
     public void changed( Change change ) {
         // ignore selection of other node - don't propagate selection
         if ( !( change.isSelected()
@@ -1622,9 +1634,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         change.addQualifier( "updated", isFlowUpdated() );
         if ( change.isSelected()

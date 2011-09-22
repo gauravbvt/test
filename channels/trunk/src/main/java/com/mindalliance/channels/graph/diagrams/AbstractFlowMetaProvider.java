@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.slf4j.Logger;
@@ -106,23 +107,10 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
 
     private boolean hidingNoop;
 
-    protected AbstractFlowMetaProvider(
-            ModelObject modelObject,
-            String outputFormat,
-            Resource imageDirectory,
-            Analyst analyst ) {
-        this( modelObject, outputFormat, imageDirectory, analyst, false, false, false );
-    }
-
-    protected AbstractFlowMetaProvider(
-            ModelObject modelObject,
-            String outputFormat,
-            Resource imageDirectory,
-            Analyst analyst,
-            boolean showingGoals,
-            boolean showingConnectors,
-            boolean hidingNoop ) {
-        super( outputFormat, imageDirectory, analyst );
+    protected AbstractFlowMetaProvider( ModelObject modelObject, String outputFormat, Resource imageDirectory, Analyst analyst,
+                                        boolean showingGoals, boolean showingConnectors, boolean hidingNoop,
+                                        QueryService queryService ) {
+        super( outputFormat, imageDirectory, analyst, queryService );
         this.context = modelObject;
         this.showingGoals = showingGoals;
         this.showingConnectors = showingConnectors;
@@ -175,7 +163,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
     protected String getNodeLabel( Node node ) {
         if ( node.isPart() ) {
             Part part = (Part) node;
-            return getAnalyst().getQueryService().getFullTitle( "|", part );
+            return getQueryService().getFullTitle( "|", part );
         } else {
             return "c";
         }
@@ -217,7 +205,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
                     || flow.isCapability() && flow.isSatisfying();
 
             iconName = imagesDirName +
-                    ( hidingNoop && getAnalyst().isEffectivelyConceptual( flow ) ? "/connector_blank"
+                    ( hidingNoop && getAnalyst().isEffectivelyConceptual( getQueryService(), flow ) ? "/connector_blank"
                             : satisfaction ? "/connector"
                             : "/connector_red" );
         }
@@ -227,16 +215,17 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
             String[] lines = getNodeLabel( node ).split( "\\|" );
             numLines = Math.min( lines.length, 5 );
             Part part = (Part) node;
-            if ( hidingNoop && getAnalyst().isEffectivelyConceptual( part ) )
+            if ( hidingNoop && getAnalyst().isEffectivelyConceptual( getQueryService(), part ) )
                 iconName = "blank";
             else {
-                negated = !getPlan().isTemplate() && getAnalyst().isEffectivelyConceptual( part )
+                negated = !getPlan().isTemplate() && getAnalyst().isEffectivelyConceptual( getQueryService(),
+                                                                                           part )
                                         ? ImagingService.NEGATED
                                         : "";
                 iconName = imagingService.findIconName(
                         User.plan(),
                         part,
-                        getAnalyst().getQueryService().getAssignments() );
+                        getQueryService().getAssignments() );
             }
         }
         String name = iconName + ( numLines > 0 ? numLines : "" ) + negated + ".png";

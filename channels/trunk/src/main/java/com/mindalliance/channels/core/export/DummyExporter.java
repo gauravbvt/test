@@ -24,19 +24,23 @@ public class DummyExporter implements ImportExportFactory, Importer, Exporter {
 
     /**
      * Create an import context.
+     *
+     * @param userName
      * @param service the query service
      * @return an importer
      */
-    public Importer createImporter( PlanDao service ) {
+    public Importer createImporter( String userName, PlanDao service ) {
         return this;
     }
 
     /**
      * Create an export context.
+     *
+     * @param userName
      * @param planDao
      * @return an exporter
      */
-    public Exporter createExporter( PlanDao planDao ) {
+    public Exporter createExporter( String userName, PlanDao planDao ) {
         return this;
     }
 

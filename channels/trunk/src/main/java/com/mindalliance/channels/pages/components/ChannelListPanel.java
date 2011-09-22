@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
@@ -225,15 +226,13 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         private void doAction( Channelable channelable, UpdateObject.Action action ) {
             if ( channelable.isModifiableInProduction() ) {
                 doUnsafeCommand(
-                        UpdateObject.makeCommand(
-                                channelable,
+                        UpdateObject.makeCommand( User.current().getUsername(), channelable,
                                 "modifiableChannels",
                                 channel,
                                 action ) );
             } else {
                 doCommand( channelable,
-                        UpdateObject.makeCommand(
-                                channelable,
+                        UpdateObject.makeCommand( User.current().getUsername(), channelable,
                                 "modifiableChannels",
                                 channel,
                                 action ) );
@@ -277,8 +276,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 int index = channelable.getModifiableChannels().indexOf( channel );
                 if ( index >= 0 )
                     doCommand( channelable,
-                            UpdateObject.makeCommand(
-                            channelable,
+                            UpdateObject.makeCommand( User.current().getUsername(), channelable,
                             "modifiableChannels[" + index + "].address",
                             address == null ? "" : address.trim(),
                             UpdateObject.Action.Set ) );

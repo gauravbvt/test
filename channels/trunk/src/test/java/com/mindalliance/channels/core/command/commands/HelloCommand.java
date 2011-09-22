@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Segment;
 
 /**
@@ -17,9 +18,11 @@ import com.mindalliance.channels.core.model.Segment;
 public class HelloCommand extends AbstractCommand {
 
     public HelloCommand() {
+        super( User.current().getUsername() );
     }
 
     public HelloCommand( String greeting ) {
+        super( User.current().getUsername() );
         set( "greeting", greeting );
     }
 

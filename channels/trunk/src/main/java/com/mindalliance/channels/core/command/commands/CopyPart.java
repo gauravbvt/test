@@ -1,7 +1,14 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
@@ -11,61 +18,47 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 
 /**
  * Copy edited part.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Apr 20, 2009
- * Time: 1:05:15 PM
  */
 public class CopyPart extends AbstractCommand {
 
     public CopyPart() {
+        super( "daemon" );
     }
 
-    public CopyPart( Part part ) {
+    public CopyPart( String userName, Part part ) {
+        super( userName );
         set( "part", part.getId() );
         set( "segment", part.getSegment().getId() );
         needLockOn( part );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isMemorable() {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "copy task";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Part part = (Part) segment.getNode( (Long) get( "part" ) );
-        commander.setCopy( ChannelsUtils.getPartCopy( part ) );
-        Change change = new Change( Change.Type.None );
-        change.setMessage( "Task copied");
+        commander.setCopy( getUserName(), ChannelsUtils.getPartCopy( part ) );
+        Change change = new Change( Type.None );
+        change.setMessage( "Task copied" );
         return change;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         return null;
     }
-
 }

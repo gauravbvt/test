@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,25 +57,25 @@ public class FlowToSelf extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.getSource().isPart() && flow.getTarget().isPart() ) {
             Part source = (Part) flow.getSource();
             Part target = (Part) flow.getTarget();
             if ( ModelObject.areIdentical( source.getActor(), target.getActor() ) ) {
-                Issue issue = makeIssue( Issue.COMPLETENESS, flow );
+                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, flow );
                 issue.setDescription( source.getActor() + " is both the source and target." );
                 issue.setRemediation( " Change either the source\n or change target of this flow." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             } else {
-                List<Actor> possibleSourceActors = getQueryService().findAllActualActors( source.resourceSpec() );
-                List<Actor> possibleTargetActors = getQueryService().findAllActualActors( target.resourceSpec() );
+                List<Actor> possibleSourceActors = queryService.findAllActualActors( source.resourceSpec() );
+                List<Actor> possibleTargetActors = queryService.findAllActualActors( target.resourceSpec() );
                 if ( possibleSourceActors.size() == 1
                         && possibleTargetActors.size() == 1
                         && possibleSourceActors.get( 0 ) == possibleTargetActors.get( 0 ) ) {
-                    Issue issue = makeIssue( Issue.VALIDITY, flow );
+                    Issue issue = makeIssue( queryService, Issue.VALIDITY, flow );
                     issue.setDescription( possibleSourceActors.get( 0 )
                             + " is both the only potential source and target." );
                     issue.setRemediation( "Change the source"

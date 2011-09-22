@@ -1,29 +1,35 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.MultiCommand;
+import com.mindalliance.channels.core.command.commands.UpdateObject.Action;
 import com.mindalliance.channels.core.model.Goal;
+import com.mindalliance.channels.core.model.Goal.Category;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 
 /**
  * Remove a goal from a segment.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Aug 10, 2009
- * Time: 2:42:34 PM
  */
 public class RemoveGoal extends AbstractCommand {
 
     public RemoveGoal() {
+        super( "daemon" );
     }
 
-    public RemoveGoal( Segment segment, Goal goal ) {
+    public RemoveGoal( String userName, Segment segment, Goal goal ) {
+        super( userName );
         needLockOn( segment );
         set( "segment", segment.getId() );
         set( "organization", goal.getOrganization().getName() );
@@ -31,27 +37,21 @@ public class RemoveGoal extends AbstractCommand {
         set( "positive", goal.isPositive() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "remove goal";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
-        boolean positive = (Boolean)get("positive");
-        Goal.Category category = Goal.Category.valueOf( (String) get( "category" ) );
+        boolean positive = (Boolean) get( "positive" );
+        Category category = Category.valueOf( (String) get( "category" ) );
         Goal goal = segment.getGoal( category, positive, (String) get( "organization" ) );
         setTargetDescription( goal.getLabel() + " in segment " + segment.getName() );
         MultiCommand multi = (MultiCommand) get( "subCommands" );
@@ -61,15 +61,13 @@ public class RemoveGoal extends AbstractCommand {
         }
         // else this is a replay
         multi.execute( commander );
-        return new Change( Change.Type.Recomposed, segment );
+        return new Change( Type.Recomposed, segment );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "undelete goal" );
+        MultiCommand multi = new MultiCommand( getUserName(), "undelete goal" );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );
@@ -77,22 +75,10 @@ public class RemoveGoal extends AbstractCommand {
     }
 
     private MultiCommand makeSubCommands( Segment segment, Goal goal ) {
-        MultiCommand subCommands = new MultiCommand( "delete goal - internal" );
-        subCommands.addCommand( new UpdatePlanObject(
-                segment,
-                "goals",
-                goal,
-                UpdateObject.Action.Remove )
-        );
-        for ( Part part : segment.getAchievers( goal ) ) {
-            subCommands.addCommand( new UpdateSegmentObject(
-                    part,
-                    "goals",
-                    goal,
-                    UpdateObject.Action.Remove
-            ) );
-        }
+        MultiCommand subCommands = new MultiCommand( getUserName(), "delete goal - internal" );
+        subCommands.addCommand( new UpdatePlanObject( getUserName(), segment, "goals", goal, Action.Remove ) );
+        for ( Part part : segment.getAchievers( goal ) )
+            subCommands.addCommand( new UpdateSegmentObject( getUserName(), part, "goals", goal, Action.Remove ) );
         return subCommands;
     }
-
 }

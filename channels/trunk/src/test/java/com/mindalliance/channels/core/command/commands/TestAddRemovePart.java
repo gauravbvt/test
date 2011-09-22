@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
@@ -46,7 +47,7 @@ public class TestAddRemovePart extends AbstractChannelsTest {
         assertSame( 2, countParts() );
         assertSame( 2, countFlows() );
 
-        RemovePart removePart = new RemovePart( part );
+        RemovePart removePart = new RemovePart( User.current().getUsername(), part );
         assertTrue( getCommander().canDo( removePart ) );
         Change change = getCommander().doCommand( removePart );
         assertTrue( change.isRecomposed() );
@@ -54,24 +55,24 @@ public class TestAddRemovePart extends AbstractChannelsTest {
         assertSame( 1, countParts() );
         assertSame( 1, countFlows() );
 
-        assertTrue( getCommander().canUndo() );
-        assertTrue( getCommander().undo().isUnknown() );
+        assertTrue( getCommander().canUndo( User.current().getUsername() ) );
+        assertTrue( getCommander().undo( User.current().getUsername() ).isUnknown() );
         assertSame( 2, countParts() );
         assertSame( 2, countFlows() );
 
-        assertFalse( getCommander().canUndo() );
-        assertTrue( getCommander().canRedo() );
-        assertTrue( getCommander().redo().isUnknown() );
+        assertFalse( getCommander().canUndo( User.current().getUsername() ) );
+        assertTrue( getCommander().canRedo( User.current().getUsername() ) );
+        assertTrue( getCommander().redo( User.current().getUsername() ).isUnknown() );
         assertSame( 1, countParts() );
         assertSame( 1, countFlows() );
 
-        assertTrue( getCommander().canUndo() );
-        getCommander().undo();
+        assertTrue( getCommander().canUndo( User.current().getUsername() ) );
+        getCommander().undo( User.current().getUsername() );
         assertSame( 2, countParts() );
         assertSame( 2, countFlows() );
 
-        assertTrue( getCommander().canRedo() );
-        getCommander().redo();
+        assertTrue( getCommander().canRedo( User.current().getUsername() ) );
+        getCommander().redo( User.current().getUsername() );
         assertSame( 1, countParts() );
         assertSame( 1, countFlows() );
     }

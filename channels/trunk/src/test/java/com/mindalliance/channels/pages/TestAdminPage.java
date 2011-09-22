@@ -74,8 +74,8 @@ public class TestAdminPage extends AbstractChannelsTest {
     public void testUserCreation() {
         assertRendered( "admin", AdminPage.class );
         try {
-            User u = (User) userService.loadUserByUsername( "aaaa" );
-            userService.deleteUser( u );
+            User u = (User) userDao.loadUserByUsername( "aaaa" );
+            userDao.deleteUser( u );
             fail( "side-effect from previous run" );
         } catch ( UsernameNotFoundException ignored ) {
             // OK
@@ -86,7 +86,7 @@ public class TestAdminPage extends AbstractChannelsTest {
         form.submit();
         tester.assertNoErrorMessage();
 
-        User aaaa = (User) userService.loadUserByUsername( "aaaa" );
+        User aaaa = (User) userDao.loadUserByUsername( "aaaa" );
         assertNotNull( aaaa );
         assertEquals( "aaaa", aaaa.getUsername() );
         assertFalse( aaaa.isEnabled() );
@@ -155,14 +155,14 @@ public class TestAdminPage extends AbstractChannelsTest {
     @Test
     public void testDeleteUser() {
         // Note:  side-effect from testUserCreation()
-        User aaaa = (User) userService.loadUserByUsername( "aaaa" );
+        User aaaa = (User) userDao.loadUserByUsername( "aaaa" );
         assertNotNull( aaaa );
 
         try {
-            userService.loadUserByUsername( "aaaa2" );
+            userDao.loadUserByUsername( "aaaa2" );
             fail( "side-effect from previous run" );
         } catch ( UsernameNotFoundException ignored ) {
-            userService.createUser( "aaaa2" );
+            userDao.createUser( "aaaa2" );
         }
 
         assertRendered( "admin", AdminPage.class );
@@ -174,14 +174,14 @@ public class TestAdminPage extends AbstractChannelsTest {
 
         tester.assertNoErrorMessage();
         try {
-            userService.loadUserByUsername( "aaaa" );
+            userDao.loadUserByUsername( "aaaa" );
             fail();
         } catch ( UsernameNotFoundException ignored ) {
             // ok
             assertFalse( aaaa.isEnabled() );
         }
         try {
-            userService.loadUserByUsername( "aaaa2" );
+            userDao.loadUserByUsername( "aaaa2" );
             fail();
         } catch ( UsernameNotFoundException ignored ) {
             // ok
@@ -219,7 +219,7 @@ public class TestAdminPage extends AbstractChannelsTest {
     }
     @Test
     public void testProductize() {
-        User guest = userService.getUserNamed( "guest" );
+        User guest = userDao.getUserNamed( "guest" );
         planManager.setAuthorities( guest, "ROLE_USER", null  );
 
         assertRendered( "admin", AdminPage.class );

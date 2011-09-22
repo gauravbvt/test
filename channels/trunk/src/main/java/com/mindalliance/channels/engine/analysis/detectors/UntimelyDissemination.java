@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.model.Dissemination;
@@ -16,24 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Dissemination does not meet timing constraints
- * set by an information need.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jul 21, 2009
- * Time: 3:47:25 PM
+ * Dissemination does not meet timing constraints set by an information need.
  */
 public class UntimelyDissemination extends AbstractIssueDetector {
 
     public UntimelyDissemination() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
-        QueryService queryService = getQueryService();
+    @Override
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         final Flow flow = (Flow) modelObject;
         if ( flow.isNeed() ) {
@@ -42,30 +39,23 @@ public class UntimelyDissemination extends AbstractIssueDetector {
                 if ( eoi.isTimeSensitive() ) {
                     Subject subject = new Subject( flow.getName(), eoi.getContent() );
                     // dissemination from sources
-                    List<Dissemination> disseminations = queryService.findAllDisseminations(
-                            target,
-                            subject,
-                            false );
+                    List<Dissemination> disseminations = queryService.findAllDisseminations( target, subject, false );
                     if ( !disseminations.isEmpty() ) {
-                        boolean untimely = CollectionUtils.exists(
-                                disseminations,
-                                new Predicate() {
-                                    @Override
-                                    public boolean evaluate( Object object ) {
-                                        Dissemination d = (Dissemination) object;
-                                        return d.getDelay().compareTo( flow.getMaxDelay() ) > 0;
-                                    }
-                                } );
+                        boolean untimely = CollectionUtils.exists( disseminations, new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                Dissemination d = (Dissemination) object;
+                                return d.getDelay().compareTo( flow.getMaxDelay() ) > 0;
+                            }
+                        } );
                         if ( untimely ) {
-                            Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
-                            issue.setDescription( "The need for element \""
-                                    + eoi.getContent()
-                                    + "\" might not be satisfied in a timely manner." );
+                            Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
+                            issue.setDescription( "The need for element \"" + eoi.getContent()
+                                                  + "\" might not be satisfied in a timely manner." );
                             issue.setRemediation( "Increase the max delay of the information need"
-                                    + "\nor reduce the max delays of flows disseminating the element \""
-                                    + eoi.getContent()
-                                    + "\"." );
-                            issue.setSeverity( computeTaskFailureSeverity( target ) );
+                                                  + "\nor reduce the max delays of flows disseminating the element \""
+                                                  + eoi.getContent() + "\"." );
+                            issue.setSeverity( computeTaskFailureSeverity( queryService, target ) );
                             issues.add( issue );
                         }
                     }
@@ -75,30 +65,22 @@ public class UntimelyDissemination extends AbstractIssueDetector {
         return issues;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Flow;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getTestedProperty() {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getKindLabel() {
         return "Untimely dissemination";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canBeWaived() {
         return true;
     }

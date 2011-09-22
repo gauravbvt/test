@@ -9,8 +9,6 @@ import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,6 +20,8 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.*;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -97,7 +97,7 @@ public class TestExportImport extends AbstractChannelsTest {
         for ( String name : segmentNames ) {
             Segment segment = planDao.findSegment( name );
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            Exporter exporter = importExportFactory.createExporter( planDao );
+            Exporter exporter = importExportFactory.createExporter( "daemon", planDao );
             exporter.export( segment, out );
             String xml = out.toString();
             // System.out.println( xml );
@@ -116,7 +116,7 @@ public class TestExportImport extends AbstractChannelsTest {
         for ( String name : segmentNames ) {
             String xml = exported.get( name );
             ByteArrayInputStream in = new ByteArrayInputStream( xml.getBytes() );
-            Importer importer = importExportFactory.createImporter( planDao );
+            Importer importer = importExportFactory.createImporter( "daemon", planDao );
             Segment segment = importer.importSegment( in );
             assertEquals( name, segment.getName() );
         }

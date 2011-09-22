@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
@@ -13,32 +19,28 @@ import com.mindalliance.channels.engine.query.QueryService;
 import java.util.List;
 
 /**
- * Restore a delete segment.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 9, 2009
- * Time: 11:22:35 AM
+ * Restore a deleted segment.
  */
 public class RestoreSegment extends AbstractCommand {
 
     public RestoreSegment() {
+        super( "daemon" );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public RestoreSegment( String userName ) {
+        super( userName );
+    }
+
+    @Override
     public String getName() {
         return "restore plan segment";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
         ImportExportFactory importExportFactory = commander.getImportExportFactory();
-        Importer importer = importExportFactory.createImporter( commander.getPlanDao() );
+        Importer importer = importExportFactory.createImporter( getUserName(), commander.getPlanDao() );
         String xml = (String) get( "xml" );
         if ( xml != null ) {
             Long defaultSegmentId = (Long) get( "defaultSegment" );
@@ -50,32 +52,24 @@ public class RestoreSegment extends AbstractCommand {
                 defaultSegment = segments.get( 0 );
             }
             Segment segment = importer.restoreSegment( xml );
-            describeTarget( segment );            
+            describeTarget( segment );
             set( "segment", segment.getId() );
-            if ( defaultSegment != null ) queryService.remove( defaultSegment );
+            if ( defaultSegment != null )
+                queryService.remove( defaultSegment );
             return new Change( Change.Type.Added, segment );
         } else {
             throw new CommandException( "Can't restore plan segment." );
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        Segment segment = commander.resolve(
-                Segment.class,
-                (Long) get( "segment" ) );
-        return new RemoveSegment( segment );
+        Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
+        return new RemoveSegment( getUserName(), segment );
     }
-
-
 }

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
@@ -13,33 +19,30 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 
 /**
  * Insert an intermediate part in a flow.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: May 21, 2009
- * Time: 2:15:18 PM
  */
 public class AddIntermediate extends AbstractCommand {
 
     public AddIntermediate() {
+        this( "daemon" );
     }
 
-    public AddIntermediate( Flow flow ) {
+    public AddIntermediate( String userName ) {
+        super( userName );
+    }
+
+    public AddIntermediate( String userName, Flow flow ) {
+        this( userName );
         needLocksOn( ChannelsUtils.getLockingSetFor( flow ) );
         set( "flow", flow.getId() );
         set( "segment", flow.getSegment().getId() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "add intermediate";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canDo( Commander commander ) {
         return super.canDo( commander ) && canIntermediate( commander );
     }
@@ -60,9 +63,7 @@ public class AddIntermediate extends AbstractCommand {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
@@ -82,18 +83,14 @@ public class AddIntermediate extends AbstractCommand {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "disintermediate" );
+        MultiCommand multi = new MultiCommand( getUserName(), "disintermediate" );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );
@@ -102,13 +99,13 @@ public class AddIntermediate extends AbstractCommand {
 
     // Create a capability and/or need if not repetitive
     private MultiCommand makeSubCommands( Segment segment, Flow flow, Commander commander ) {
-        MultiCommand subCommands = new MultiCommand( "breakup flow - extra" );
+        MultiCommand subCommands = new MultiCommand( getUserName(), "breakup flow - extra" );
         subCommands.setMemorable( false );
         // make intermediate part
-        Command addPart = new AddPart( segment );
+        Command addPart = new AddPart( getUserName(), segment );
         subCommands.addCommand( addPart );
         // connect to intermediate
-        Command toIntermediate = new ConnectWithFlow();
+        Command toIntermediate = new ConnectWithFlow( getUserName() );
         toIntermediate.set( "isSend", true );
         toIntermediate.set( "part", flow.getSource().getId() );
         toIntermediate.set( "segment", segment.getId() );
@@ -118,7 +115,7 @@ public class AddIntermediate extends AbstractCommand {
         // The intermediate is the target of the new flow
         subCommands.addLink( addPart, "id", toIntermediate, "other" );
         // connect intermediate to new flow's target
-        Command toTarget = new ConnectWithFlow();
+        Command toTarget = new ConnectWithFlow( getUserName() );
         toTarget.set( "isSend", true );
         toTarget.set( "segment", segment.getId() );
         toTarget.set( "otherSegment", segment.getId() );
@@ -129,7 +126,7 @@ public class AddIntermediate extends AbstractCommand {
         // connect intermediate to new flow's source
         subCommands.addLink( addPart, "id", toTarget, "part" );
         // remove the flow
-        subCommands.addCommand( commander.makeRemoveFlowCommand( flow ));
+        subCommands.addCommand( commander.makeRemoveFlowCommand( getUserName(), flow ));
         return subCommands;
     }
 

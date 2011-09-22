@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,14 +25,14 @@ public class ActorWithTooManyParticipations extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>(  );
         Actor actor = (Actor)modelObject;
         if ( actor.isSingular() ) {
-            List<Participation> participations = getQueryService().findAllParticipationsFor( actor );
+            List<Participation> participations = queryService.findAllParticipationsFor( actor );
             int count = participations.size();
             if ( count > 1 ) {
-                Issue issue = makeIssue( Issue.VALIDITY, actor );
+                Issue issue = makeIssue( queryService, Issue.VALIDITY, actor );
                 issue.setDescription( count
                         + " users participate as agent \""
                         + actor.getName() + "\" when there should be at most one." );

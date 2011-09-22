@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.StrongConnectivityInspector;
 
@@ -32,7 +33,7 @@ public class CyclicTriggering extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         GraphBuilder<Part, Flow> graphBuilder = new TriggerGraphBuilder( segment );
@@ -45,7 +46,7 @@ public class CyclicTriggering extends AbstractIssueDetector {
             // collect all critical receives of nodes in the cycle.
             for ( Set<Part> cycle : cycles ) {
                 if ( cycle.size() > 1 ) {
-                    Issue issue = makeIssue( Issue.ROBUSTNESS, segment );
+                    Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, segment );
                     StringBuilder sb = new StringBuilder();
                     sb.append( "These tasks trigger each other in a loop: " );
                     int count = 0;

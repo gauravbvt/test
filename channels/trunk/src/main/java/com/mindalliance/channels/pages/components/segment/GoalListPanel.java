@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.RemoveGoal;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Level;
@@ -476,7 +477,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
         public void deleteGoal() {
             selectedGoal = null;
             if ( getSegment().getGoals().contains( goal ) ) {
-                doCommand( new RemoveGoal( getSegment(), goal ) );
+                doCommand( new RemoveGoal( User.current().getUsername(), getSegment(), goal ) );
             }
         }
 
@@ -484,12 +485,10 @@ public class GoalListPanel extends AbstractCommandablePanel {
             assert markedForCreation;
             if ( isComplete() ) {
                 if ( !getSegment().getGoals().contains( goal ) ) {
-                    doCommand( new UpdatePlanObject(
-                            getSegment(),
+                    doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(),
                             "goals",
                             goal,
-                            UpdateObject.Action.Add
-                    ) );
+                            UpdateObject.Action.Add ) );
                 }
             }
         }
@@ -508,12 +507,10 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 if ( value != goal.isPositive() ) {
                     int index = getSegment().getGoals().indexOf( goal );
                     if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject(
-                                getSegment(),
+                        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(),
                                 "goals[" + index + "].positive",
                                 value,
-                                UpdateObject.Action.Set
-                        ) );
+                                UpdateObject.Action.Set ) );
                     }
                 }
             }
@@ -531,12 +528,10 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 if ( value != goal.getLevel() ) {
                     int index = getSegment().getGoals().indexOf( goal );
                     if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject(
-                                getSegment(),
+                        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(),
                                 "goals[" + index + "].level",
                                 value,
-                                UpdateObject.Action.Set
-                        ) );
+                                UpdateObject.Action.Set ) );
                     }
                 }
             }
@@ -554,12 +549,10 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 if ( value != goal.getCategory() ) {
                     int index = getSegment().getGoals().indexOf( goal );
                     if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject(
-                                getSegment(),
+                        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(),
                                 "goals[" + index + "].category",
                                 value,
-                                UpdateObject.Action.Set
-                        ) );
+                                UpdateObject.Action.Set ) );
                     }
                 }
             }
@@ -577,12 +570,10 @@ public class GoalListPanel extends AbstractCommandablePanel {
             } else {
                 int index = getSegment().getGoals().indexOf( goal );
                 if ( index >= 0 ) {
-                    doCommand( new UpdatePlanObject(
-                            getSegment(),
+                    doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(),
                             "goals[" + index + "].organization",
                             org,
-                            UpdateObject.Action.Set
-                    ) );
+                            UpdateObject.Action.Set ) );
                 }
             }
             getCommander().cleanup( Organization.class, oldName );
@@ -599,12 +590,10 @@ public class GoalListPanel extends AbstractCommandablePanel {
             } else {
                 int index = getSegment().getGoals().indexOf( goal );
                 if ( index >= 0 ) {
-                    doCommand( new UpdatePlanObject(
-                            getSegment(),
+                    doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(),
                             "goals[" + index + "].endsWithSegment",
                             val,
-                            UpdateObject.Action.Set
-                    ) );
+                            UpdateObject.Action.Set ) );
                 }
             }
         }
@@ -656,12 +645,10 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 } else {
                     int index = getSegment().getGoals().indexOf( goal );
                     if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject(
-                                getSegment(),
+                        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(),
                                 "goals[" + index + "].description",
                                 value,
-                                UpdateObject.Action.Set
-                        ) );
+                                UpdateObject.Action.Set ) );
                     }
                 }
             }

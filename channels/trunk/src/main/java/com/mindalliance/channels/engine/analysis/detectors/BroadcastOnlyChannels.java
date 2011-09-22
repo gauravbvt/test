@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -27,7 +28,7 @@ public class BroadcastOnlyChannels extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         if ( flow.isSharing() ) {
@@ -44,10 +45,10 @@ public class BroadcastOnlyChannels extends AbstractIssueDetector {
                                     }
                             );
             if ( allBroadcast ) {
-                Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
                 issue.setDescription( "There is no guarantee the information will be received because sharing is done only over broadcast channels." );
                 issue.setRemediation( "Add an alternate, non-broadcast channel to the flow." );
-                issue.setSeverity( computeSharingFailureSeverity( flow ) );
+                issue.setSeverity( computeSharingFailureSeverity( queryService, flow ) );
                 issues.add( issue );
             }
         }

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
@@ -16,21 +22,16 @@ import java.util.List;
 
 /**
  * Transfer a list of jobs.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 16, 2010
- * Time: 4:00:20 PM
  */
 public class TransferJobs extends AbstractCommand {
 
     public TransferJobs() {
+        super( "daemon" );
     }
 
-    public TransferJobs( Organization fromOrganization,
-                         Organization toOrganization,
-                         List<Job> jobs,
-                         boolean copying) {
+    public TransferJobs( String userName, Organization fromOrganization, Organization toOrganization, List<Job> jobs,
+                         boolean copying ) {
+        super( userName );
         needLockOn( fromOrganization );
         needLockOn( toOrganization );
         set( "fromOrganization", fromOrganization.getId() );
@@ -39,88 +40,31 @@ public class TransferJobs extends AbstractCommand {
         set( "copying", copying );
     }
 
-    public TransferJobs( Organization fromOrganization,
-                         Organization toOrganization,
-                         List<Job> jobs ) {
-        this( fromOrganization, toOrganization, jobs, false );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getName() {
-        return "transfer jobs";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings( "unchecked" )
-    public Change execute( Commander commander ) throws CommandException {
-        QueryService queryService = commander.getQueryService();
-        Organization fromOrg = commander.resolve( Organization.class, (Long) get( "fromOrganization" ) );
-        Organization toOrg = commander.resolve( Organization.class, (Long) get( "toOrganization" ) );
-        boolean copying = (Boolean)get( "copying" );
-        List<Job> jobs = unmapJobs( (List<MappedObject>) get( "jobs" ), commander );
-        MultiCommand multi = (MultiCommand)get( "subCommands");
-        if (multi == null ) {
-            multi = makeSubCommands( fromOrg, toOrg, jobs, copying );
-            set("subCommands", multi);
-        }
-        multi.execute( commander );
-        describeTarget( toOrg );
-        return new Change( Change.Type.Updated, queryService.getPlan() );
-    }
-
-    private MultiCommand makeSubCommands(
-            Organization fromOrg,
-            Organization toOrg,
-            List<Job> jobs,
-            boolean copying ) {
-        MultiCommand subCommands = new MultiCommand( "transfer jobs - internal" );
-        for ( Job job : jobs ) {
-            if ( !copying )
-                subCommands.addCommand( new UpdatePlanObject (
-                        fromOrg,
-                        "jobs",
-                        job,
-                        UpdateObject.Action.Remove
-                ));
-            subCommands.addCommand( new UpdatePlanObject (
-                    toOrg,
-                    "jobs",
-                    copying ? new Job(job) : job,
-                    UpdateObject.Action.Add
-            ));
-        }
-        return subCommands;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isUndoable() {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "untransfer jobs" );
-        MultiCommand subCommands = (MultiCommand) get( "subCommands" );
-        subCommands.setMemorable( false );
-        multi.addCommand( subCommands.getUndoCommand( commander ) );
-        return multi;
-    }
-
     private List<MappedObject> mapJobs( List<Job> jobs ) {
         List<MappedObject> mappedJobs = new ArrayList<MappedObject>();
         for ( Job job : jobs )
             mappedJobs.add( new MappedObject( job ) );
 
         return mappedJobs;
+    }
+
+    //-------------------------------
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public Change execute( Commander commander ) throws CommandException {
+        QueryService queryService = commander.getQueryService();
+        Organization fromOrg = commander.resolve( Organization.class, (Long) get( "fromOrganization" ) );
+        Organization toOrg = commander.resolve( Organization.class, (Long) get( "toOrganization" ) );
+        boolean copying = (Boolean) get( "copying" );
+        List<Job> jobs = unmapJobs( (List<MappedObject>) get( "jobs" ), commander );
+        MultiCommand multi = (MultiCommand) get( "subCommands" );
+        if ( multi == null ) {
+            multi = makeSubCommands( fromOrg, toOrg, jobs, copying );
+            set( "subCommands", multi );
+        }
+        multi.execute( commander );
+        describeTarget( toOrg );
+        return new Change( Change.Type.Updated, queryService.getPlan() );
     }
 
     private List<Job> unmapJobs( List<MappedObject> mappedObjects, Commander commander ) throws CommandException {
@@ -132,4 +76,36 @@ public class TransferJobs extends AbstractCommand {
         return jobs;
     }
 
+    private MultiCommand makeSubCommands( Organization fromOrg, Organization toOrg, List<Job> jobs, boolean copying ) {
+        MultiCommand subCommands = new MultiCommand( getUserName(), "transfer jobs - internal" );
+        for ( Job job : jobs ) {
+            if ( !copying )
+                subCommands.addCommand( new UpdatePlanObject( getUserName(),
+                                                              fromOrg, "jobs", job, UpdateObject.Action.Remove ) );
+            subCommands.addCommand( new UpdatePlanObject( getUserName(), toOrg,
+                                                          "jobs",
+                                                          copying ? new Job( job ) : job,
+                                                          UpdateObject.Action.Add ) );
+        }
+        return subCommands;
+    }
+
+    @Override
+    public String getName() {
+        return "transfer jobs";
+    }
+
+    @Override
+    public boolean isUndoable() {
+        return true;
+    }
+
+    @Override
+    protected Command makeUndoCommand( Commander commander ) throws CommandException {
+        MultiCommand multi = new MultiCommand( getUserName(), "untransfer jobs" );
+        MultiCommand subCommands = (MultiCommand) get( "subCommands" );
+        subCommands.setMemorable( false );
+        multi.addCommand( subCommands.getUndoCommand( commander ) );
+        return multi;
+    }
 }

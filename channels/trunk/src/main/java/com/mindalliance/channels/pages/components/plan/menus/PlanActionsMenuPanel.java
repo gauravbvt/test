@@ -41,9 +41,6 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         super( s, model, expansions );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Component> getMenuItems() {
@@ -51,7 +48,8 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
             List<Component> menuItems = super.getMenuItems();
 
             // Move parts across segments
-            if ( getPlan().getSegmentCount() > 1 && getLockManager().isLockableByUser( getSegment() ) )
+            if ( getPlan().getSegmentCount() > 1 && getLockManager().isLockableByUser( User.current().getUsername(),
+                                                                                       getSegment() ) )
                 menuItems.add(
                         new LinkMenuItem(
                                 "menuItem",
@@ -83,22 +81,20 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected List<CommandWrapper> getCommandWrappers() {
         final Segment segment = getSegment();
 
+        String userName = User.current().getUsername();
         List<CommandWrapper> menuItems = new ArrayList<CommandWrapper>();
         menuItems.addAll( Arrays.asList(
-                newWrapper( new PastePart( segment ) ),
-                newWrapper( new PasteAttachment( segment ) ),
-                newWrapper( new AddPart( segment ) ),
-                newWrapper( new AddUserIssue( segment ) ),
-                newWrapper( new AddSegment() ) ) );
-        if ( getLockManager().isLockableByUser( getSegment() ) ) {
-            menuItems.add( new CommandWrapper( new DisconnectAndRemoveSegment( segment ), CONFIRM ) {
+                newWrapper( new PastePart( User.current().getUsername(), segment ) ),
+                newWrapper( new PasteAttachment( userName, segment ) ),
+                newWrapper( new AddPart( userName, segment ) ),
+                newWrapper( new AddUserIssue( userName, segment ) ),
+                newWrapper( new AddSegment( userName ) ) ) );
+        if ( getLockManager().isLockableByUser( User.current().getUsername(), segment ) ) {
+            menuItems.add( new CommandWrapper( new DisconnectAndRemoveSegment( User.current().getUsername(), segment ), CONFIRM ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );

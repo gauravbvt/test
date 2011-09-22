@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -18,11 +24,6 @@ import java.util.List;
 
 /**
  * A plan map diagram.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Apr 1, 2009
- * Time: 1:58:47 PM
  */
 public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship> {
 
@@ -30,18 +31,22 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
      * The segments mapped.
      */
     private List<Segment> segments;
+
     /**
      * Phase or event grouping segments.
      */
     private ModelObject selectedGroup;
+
     /**
      * Whether to group segments by phases.
      */
     private boolean groupByPhase;
+
     /**
      * Whether to group segments by events.
      */
     private boolean groupByEvent;
+
     /**
      * Selected vertex-segment.
      */
@@ -52,18 +57,14 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
      */
     private SegmentRelationship selectedSgRel;
 
-    /** Provider of imagemap links. */
+    /**
+     * Provider of imagemap links.
+     */
     private URLProvider<Segment, SegmentRelationship> uRLProvider;
 
-    public PlanMapDiagram(
-            List<Segment> segments,
-            boolean groupByPhase,
-            boolean groupByEvent,
-            ModelObject selectedGroup,
-            Segment segment,
-            SegmentRelationship scRel,
-            double[] diagramSize,
-            String orientation ) {
+    public PlanMapDiagram( List<Segment> segments, boolean groupByPhase, boolean groupByEvent,
+                           ModelObject selectedGroup, Segment segment, SegmentRelationship scRel, double[] diagramSize,
+                           String orientation ) {
 
         super( diagramSize, orientation );
         this.segments = segments;
@@ -74,20 +75,18 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
         selectedSgRel = scRel;
     }
 
-    /** {@inheritDoc} */
-    public void render(
-            String ticket, String outputFormat,
-            OutputStream outputStream,
-            Analyst analyst,
-            DiagramFactory diagramFactory ) {
+    @Override
+    public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
+                        DiagramFactory diagramFactory, QueryService queryService ) {
         GraphRenderer<Segment, SegmentRelationship> renderer = diagramFactory.getGraphRenderer();
 
         renderer.highlight( selectedSegment, selectedSgRel );
-        renderer.render(
-                createGraph( diagramFactory.getQueryService(), analyst ),
-                createExporter( outputFormat, diagramFactory.getImageDirectory(), analyst ), outputFormat,
-                ticket,
-                outputStream );
+        renderer.render( queryService,
+                         createGraph( queryService, analyst ),
+                         createExporter( outputFormat, diagramFactory.getImageDirectory(), analyst, queryService ),
+                         outputFormat,
+                         ticket,
+                         outputStream );
     }
 
     private DirectedGraph<Segment, SegmentRelationship> createGraph( QueryService queryService, Analyst analyst ) {
@@ -96,6 +95,7 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
 
     /**
      * Provide an overridable provider for imagemaps links.
+     *
      * @return the URL provider, or null to use the default one.
      */
     public URLProvider<Segment, SegmentRelationship> getURLProvider() {
@@ -106,10 +106,11 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
         this.uRLProvider = uRLProvider;
     }
 
-    private PlanMapDOTExporter createExporter( String outputFormat, Resource imageDirectory, Analyst analyst ) {
+    private PlanMapDOTExporter createExporter( String outputFormat, Resource imageDirectory, Analyst analyst,
+                                               QueryService queryService ) {
 
         PlanMapMetaProvider metaProvider =
-            new PlanMapMetaProvider( segments, outputFormat, imageDirectory, analyst );
+                new PlanMapMetaProvider( segments, outputFormat, imageDirectory, analyst, queryService );
         metaProvider.setGroupByPhase( groupByPhase );
         metaProvider.setGroupByEvent( groupByEvent );
         metaProvider.setSelectedGroup( selectedGroup );

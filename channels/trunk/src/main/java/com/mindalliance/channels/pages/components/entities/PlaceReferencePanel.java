@@ -200,7 +200,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
             placeReferenced = false;
             eventReferenced = false;
             getPlaceReference().setPlanReferenced( val );
-            doCommand( new UpdatePlanObject( getEntity(), property, getPlaceReference() ) );
+            doCommand( new UpdatePlanObject( User.current().getUsername(), getEntity(), property, getPlaceReference() ) );
         } else {
             resetPlaceReference();
         }
@@ -235,7 +235,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     }
 
     private void resetPlaceReference() {
-        doCommand( new UpdatePlanObject( getEntity(), property, new PlaceReference() ) );
+        doCommand( new UpdatePlanObject( User.current().getUsername(), getEntity(), property, new PlaceReference() ) );
         reset = true;
     }
 
@@ -245,7 +245,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
 
     public void setRefEvent( Event event ) {
         getPlaceReference().setEvent( event );
-        doCommand( new UpdatePlanObject( getEntity(), property, getPlaceReference() ) );
+        doCommand( new UpdatePlanObject( User.current().getUsername(), getEntity(), property, getPlaceReference() ) );
     }
 
     public Place getRefPlace() {

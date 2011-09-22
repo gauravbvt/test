@@ -1,9 +1,18 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.CommanderFactory;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
@@ -14,11 +23,8 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.engine.nlp.SemanticMatcher;
-import com.mindalliance.channels.engine.query.PlanService;
 import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
@@ -46,8 +52,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Abstract Channels Web Page Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved. Proprietary and
- * Confidential. User: jf Date: 3/3/11 Time: 12:27 PM
+ * Abstract Channels Web Page.
  */
 public class AbstractChannelsWebPage extends WebPage implements Updatable {
 
@@ -64,6 +69,9 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractChannelsWebPage.class );
+
+    @SpringBean
+    private CommanderFactory commanderFactory;
 
     @SpringBean
     ImagingService imagingService;
@@ -88,7 +96,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     private User user;
 
     @SpringBean
-    private UserService userService;
+    private UserDao userDao;
 
     //-------------------------------
     public AbstractChannelsWebPage() {
@@ -139,8 +147,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     }
 
     protected Commander getCommander() {
-        // return Channels.instance().getCommander();
-        return getApp().getCommander( getPlan() );
+        return commanderFactory.getCommander( getPlan() );
     }
 
     public static BookmarkablePageLink<? extends WebPage> getGuidelinesLink(
@@ -185,11 +192,6 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         if ( !samePage )
             infoNeedsLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return infoNeedsLink;
-    }
-
-    @Override
-    public QueryService getOwnQueryService() {
-        return getQueryService();
     }
 
     /**
@@ -259,10 +261,6 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
             throw new NotFoundException();
 
         return new ResourceSpec( participation.getActor(), null, null, null );
-    }
-
-    private PlanService getQueryService( Plan plan ) {
-        return new PlanService( planManager, semanticMatcher, userService, plan, attachmentManager );
     }
 
     protected String getSupportCommunity() {
@@ -407,8 +405,6 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
             LOG.warn( "PANIC: selecting first plan" );
             plan = plans.get( 0 );
         }
-        if ( !getPlans().contains( plan ) )
-            throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
         User.current().setPlan( plan );
         getQueryService();
     }
@@ -444,9 +440,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     }
 
     public Plan getPlan() {
-        if ( plan == null ) {
+        if ( plan == null )
             setPlanFromParameters( getPageParameters() );
-        }
         return plan;
     }
 
@@ -458,10 +453,10 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         this.planManager = planManager;
     }
 
+    @Override
     public final QueryService getQueryService() {
-        if ( queryService == null ) {
-            queryService = getQueryService( plan );
-        }
+        if ( queryService == null )
+            queryService = commanderFactory.getCommander( plan ).getQueryService();
         return queryService;
     }
 
@@ -489,11 +484,11 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         this.user = user;
     }
 
-    public UserService getUserService() {
-        return userService;
+    public UserDao getUserDao() {
+        return userDao;
     }
 
-    public void setUserService( UserService userService ) {
-        this.userService = userService;
+    public void setUserDao( UserDao userDao ) {
+        this.userDao = userDao;
     }
 }

@@ -1,11 +1,14 @@
-// Copyright (C) 2010 Mind-Alliance Systems LLC.
-// All rights reserved.
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
 
 package com.mindalliance.channels.engine.query;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.engine.nlp.SemanticMatcher;
 
@@ -16,11 +19,10 @@ public class PlanService extends DefaultQueryService {
 
     private final Plan plan;
 
-    public PlanService(
-            PlanManager planManager, SemanticMatcher semanticMatcher, UserService userService, Plan plan,
-            AttachmentManager attachmentManager ) {
+    public PlanService( PlanManager planManager, SemanticMatcher semanticMatcher, UserDao userDao, Plan plan,
+                        AttachmentManager attachmentManager ) {
 
-        super( planManager, attachmentManager, semanticMatcher, userService );
+        super( planManager, attachmentManager, semanticMatcher, userDao );
         this.plan = plan;
     }
 

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.dao.PlanDao;
@@ -10,6 +16,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +34,6 @@ import java.util.Map;
 
 /**
  * Scans all plans for issues in low priority threads to warm up the cache.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Aug 7, 2009
- * Time: 9:33:25 AM
  */
 public class IssueScanner implements Scanner, PlanListener {
 
@@ -56,10 +58,7 @@ public class IssueScanner implements Scanner, PlanListener {
      */
     private Analyst analyst;
 
-    /**
-     * Query service.
-     */
-    private QueryService queryService;
+    private PlanServiceFactory planServiceFactory;
 
     //-------------------------------
     public IssueScanner() {
@@ -68,10 +67,6 @@ public class IssueScanner implements Scanner, PlanListener {
     public void setAnalyst( Analyst analyst ) {
         this.analyst = analyst;
         analyst.setIssueScanner( this );
-    }
-
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
     }
 
  /*   public void scan() {
@@ -93,14 +88,14 @@ public class IssueScanner implements Scanner, PlanListener {
 
     @Override
     public void rescan( Plan plan ) {
-        LOG.debug( "Rescanning issue in " + plan.getName() );
+        LOG.debug( "Rescanning issue in {}", plan.getName() );
         terminate( plan.getUri() );
         scan( plan );
     }
 
     @Override
     public void scan( Plan plan ) {
-        Daemon daemon = new Daemon( plan );
+        Daemon daemon = new Daemon( planServiceFactory.getService( plan ) );
         daemons.put( plan.getUri(), daemon );
         daemon.activate();
     }
@@ -147,6 +142,10 @@ public class IssueScanner implements Scanner, PlanListener {
     public void productized( Plan plan ) {
     }
 
+    public void setPlanServiceFactory( PlanServiceFactory planServiceFactory ) {
+        this.planServiceFactory = planServiceFactory;
+    }
+
     //===============================================================
     /**
      * Background analysis daemon.
@@ -154,41 +153,39 @@ public class IssueScanner implements Scanner, PlanListener {
     public class Daemon extends Thread {
 
         /**
-         * Thread local variable holding the plan.
-         * Looked up by PlanManager when resolving current plan.
+         * The plan being analyzed.
          */
-        private ThreadLocal<Plan> planHolder;
+        private final Plan plan;
+
+        private final QueryService queryService;
 
         /**
          * Whether scan is active (else terminates).
          */
         private boolean active;
 
-        public Daemon( final Plan plan ) {
+        public Daemon( QueryService queryService ) {
+            this.queryService = queryService;
+            this.plan = queryService.getPlan();
+
             setDaemon( true );
             setPriority( Thread.NORM_PRIORITY - PRIORITY_REDUCTION );
-            planHolder = new ThreadLocal<Plan>() {
-                @Override
-                protected synchronized Plan initialValue() {
-                    return plan;
-                }
-            };
         }
 
         /**
-         * Get thread local plan.
+         * Get the plan.
          *
          * @return a plan
          */
         public Plan getPlan() {
-            return planHolder.get();
+            return plan;
         }
 
         /**
          * Activate scan.
          */
         public synchronized void activate() {
-            LOG.info( "Activating issue sweep on plan " + getPlan() );
+            LOG.info( "Activating issue sweep on plan {}", plan );
             active = true;
             super.start();
         }
@@ -197,7 +194,7 @@ public class IssueScanner implements Scanner, PlanListener {
          * Abort scan.
          */
         public synchronized void terminate() {
-            LOG.info( "Terminating issue sweep on plan " + getPlan() );
+            LOG.info( "Terminating issue sweep on plan {}", plan );
             active = false;
         }
 
@@ -206,9 +203,9 @@ public class IssueScanner implements Scanner, PlanListener {
          */
         @Override
         public void run() {
-            setupUser();
+            User user = setupUser();
             try {
-                LOG.debug( "Current user = {}, plan = {}", User.current(), User.plan() );
+                LOG.debug( "Current user = {}, plan = {}", user, plan );
                 long startTime = System.currentTimeMillis();
                 if ( !active ) return;
                 for ( ModelObject mo : queryService.list( ModelObject.class ) ) {
@@ -237,22 +234,23 @@ public class IssueScanner implements Scanner, PlanListener {
 //                if ( !active ) return;
 //                analyst.findAllIssues();
                 if ( !active ) return;
-                analyst.findAllUnwaivedIssues();
+
+                analyst.findAllUnwaivedIssues( queryService );
                 if ( !active ) return;
-                analyst.isValid( getPlan() );
+                analyst.isValid( queryService, plan );
                 if ( !active ) return;
-                analyst.isComplete( getPlan() );
+                analyst.isComplete( queryService, plan );
                 if ( !active ) return;
-                analyst.isRobust( getPlan() );
+                analyst.isRobust( queryService, plan );
                 if ( !active ) return;
-                analyst.countTestFailures( getPlan(), Issue.VALIDITY );
+                analyst.countTestFailures( queryService, plan, Issue.VALIDITY );
                 if ( !active ) return;
-                analyst.countTestFailures( getPlan(), Issue.COMPLETENESS );
+                analyst.countTestFailures( queryService, plan, Issue.COMPLETENESS );
                 if ( !active ) return;
-                analyst.countTestFailures( getPlan(), Issue.ROBUSTNESS );
+                analyst.countTestFailures( queryService, plan, Issue.ROBUSTNESS );
 
                 long endTime = System.currentTimeMillis();
-                LOG.info( "Issue sweep completed on " + getPlan() + " in "
+                LOG.info( "Issue sweep completed on " + plan + " in "
                           + ( endTime - startTime ) + " msecs" );
 
             } catch ( Throwable e ) {
@@ -261,13 +259,15 @@ public class IssueScanner implements Scanner, PlanListener {
             }
         }
 
-        private void setupUser() {
+        private User setupUser() {
             User principal = new User( new UserInfo( "daemon", "*,Issue Scanner,*,ROLE_ADMIN" ) );
-            principal.setPlan( getPlan() );
+            principal.setPlan( plan );
             List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
             authorities.add( new GrantedAuthorityImpl( "ROLE_ADMIN" ) );
             SecurityContextHolder.getContext().setAuthentication(
                 new AnonymousAuthenticationToken( "daemon", principal, authorities ) );
+
+            return principal;
         }
 
         private void scanIssues( ModelObject mo ) {
@@ -275,7 +275,7 @@ public class IssueScanner implements Scanner, PlanListener {
 
             // Model object can be null when deleted when scan was in progress
             if ( mo != null )
-                analyst.listIssues( mo, true );
+                analyst.listIssues( queryService, mo, true );
         }
     }
 }

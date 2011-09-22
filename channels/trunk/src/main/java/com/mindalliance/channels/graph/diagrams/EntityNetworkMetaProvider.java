@@ -1,7 +1,14 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -18,60 +25,61 @@ import java.util.List;
 
 /**
  * Entity network meta provider.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Apr 6, 2009
- * Time: 8:33:28 PM
  */
 public class EntityNetworkMetaProvider extends AbstractMetaProvider {
 
     /**
-     * Font for node labels
+     * Font for node labels.
      */
     private static final String ENTITY_FONT = "Arial";
+
     /**
      * Font size for node labels.
      */
     private static final String ENTITY_FONT_SIZE = "10";
 
-    public EntityNetworkMetaProvider(
-            String outputFormat,
-            Resource imageDirectory,
-            Analyst analyst ) {
-        super( outputFormat, imageDirectory, analyst );
+    public EntityNetworkMetaProvider( String outputFormat, Resource imageDirectory, Analyst analyst,
+                                      QueryService queryService ) {
+        super( outputFormat, imageDirectory, analyst, queryService );
     }
 
+    @Override
     public Object getContext() {
         return getPlan();
     }
 
+    @Override
     public URLProvider getURLProvider() {
         return new URLProvider<ModelEntity, EntityRelationship>() {
 
+            @Override
             public String getGraphURL( ModelEntity vertex ) {
                 return null;
             }
 
+            @Override
             public String getVertexURL( ModelEntity entity ) {
                 if ( entity.isUnknown() ) {
                     return null;
                 } else {
-                    Object[] args = {0, entity.getId()};
+                    Object[] args = { 0, entity.getId() };
                     return MessageFormat.format( VERTEX_URL_FORMAT, args );
                 }
             }
 
+            @Override
             public String getEdgeURL( EntityRelationship entityRelationship ) {
-                // Plan id = 0 for now sice there is only one plan
-                Object[] args = {0, entityRelationship.getId()};
+                // Plan id = 0 for now since there is only one plan
+                Object[] args = { 0, entityRelationship.getId() };
                 return MessageFormat.format( EDGE_URL_FORMAT, args );
             }
         };
     }
 
+    @Override
     public EdgeNameProvider getEdgeLabelProvider() {
         return new EdgeNameProvider<EntityRelationship>() {
+            @Override
             public String getEdgeName( EntityRelationship entityRelationship ) {
                 int count = entityRelationship.getFlows().size();
                 return count + ( count > 1 ? " flows" : " flow" );
@@ -79,8 +87,10 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
         };
     }
 
+    @Override
     public VertexNameProvider getVertexLabelProvider() {
         return new VertexNameProvider<ModelEntity>() {
+            @Override
             public String getVertexName( ModelEntity entity ) {
                 String label = getIdentifiableLabel( entity ).replaceAll( "\\|", "\\\\n" );
                 return sanitize( label );
@@ -88,19 +98,24 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
         };
     }
 
+    @Override
     public VertexNameProvider getVertexIDProvider() {
         return new VertexNameProvider<ModelEntity>() {
+            @Override
             public String getVertexName( ModelEntity entity ) {
-                return "" + entity.getId();
+                return String.valueOf( entity.getId() );
             }
         };
     }
 
+    @Override
     public DOTAttributeProvider getDOTAttributeProvider() {
         return new NetwordDOTAttributeProvider();
     }
 
     private class NetwordDOTAttributeProvider implements DOTAttributeProvider<ModelEntity, EntityRelationship> {
+
+        @Override
         public List<DOTAttribute> getGraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "rankdir", getGraphOrientation() ) );
@@ -112,11 +127,14 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             return list;
         }
 
+        @Override
         public List<DOTAttribute> getSubgraphAttributes( boolean highlighted ) {
             return DOTAttribute.emptyList();
         }
 
-        public List<DOTAttribute> getVertexAttributes( ModelEntity vertex, boolean highlighted ) {
+        @Override
+        public List<DOTAttribute> getVertexAttributes( QueryService queryService, ModelEntity vertex,
+                                                       boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
@@ -124,23 +142,26 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
                 list.add( new DOTAttribute( "shape", "box" ) );
                 list.add( new DOTAttribute( "style", "solid" ) );
                 list.add( new DOTAttribute( "color", "gray" ) );
-            } else {
+            } else
                 list.add( new DOTAttribute( "shape", "none" ) );
-            }
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-            if ( !getPlan().isTemplate() ) {
-                if ( getAnalyst().hasUnwaivedIssues( vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
-                    list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                    list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( vertex,
-                            Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
-                }
+            if ( !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( queryService,
+                                                                            vertex,
+                                                                            Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
+            {
+                list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
+                list.add( new DOTAttribute( "tooltip",
+                                            sanitize( getAnalyst().getIssuesSummary( queryService,
+                                                                                     vertex,
+                                                                                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
             return list;
         }
 
-
-        public List<DOTAttribute> getEdgeAttributes( EntityRelationship edge, boolean highlighted ) {
+        @Override
+        public List<DOTAttribute> getEdgeAttributes( QueryService queryService, EntityRelationship edge,
+                                                     boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "vee" ) );
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
@@ -149,16 +170,13 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
             list.add( new DOTAttribute( "len", "1.5" ) );
             list.add( new DOTAttribute( "weight", "2.0" ) );
-            if ( highlighted ) {
+            if ( highlighted )
                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
-            }
-            if ( !getPlan().isTemplate() ) {
-                // Issue coloring
-                if ( edge.hasIssues( getAnalyst() ) ) {
-                    list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                    list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                    list.add( new DOTAttribute( "tooltip", sanitize( edge.getIssuesSummary( getAnalyst() ) ) ) );
-                }
+            if ( !getPlan().isTemplate() && edge.hasIssues( getAnalyst(), queryService ) ) {
+                list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
+                list.add( new DOTAttribute( "color", COLOR_ERROR ) );
+                list.add( new DOTAttribute( "tooltip",
+                                            sanitize( edge.getIssuesSummary( getAnalyst(), queryService ) ) ) );
             }
             return list;
         }
@@ -177,6 +195,5 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             iconName = service.findIconName( getPlan(), entity );
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
-
     }
 }

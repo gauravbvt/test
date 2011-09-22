@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -258,7 +259,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     public void setCast( TransmissionMedium.Cast value ) {
         TransmissionMedium medium = getMedium();
         if ( medium.getCast() != value ) {
-            doCommand( new UpdatePlanObject( medium, "cast", value ) );
+            doCommand( new UpdatePlanObject( User.current().getUsername(), medium, "cast", value ) );
         }
     }
 
@@ -288,7 +289,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     public void setAddressPattern( String value ) {
         TransmissionMedium medium = getMedium();
         if ( !medium.getAddressPattern().equals( value ) ) {
-            doCommand( new UpdatePlanObject( getMedium(), "addressPattern", value ) );
+            doCommand( new UpdatePlanObject( User.current().getUsername(), getMedium(), "addressPattern", value ) );
         }
     }
 
@@ -309,7 +310,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     public void setSynchronous( boolean value ) {
         TransmissionMedium medium = getMedium();
         if ( medium.isSynchronous() != value ) {
-            doCommand( new UpdatePlanObject( medium, "synchronous", value ) );
+            doCommand( new UpdatePlanObject( User.current().getUsername(), medium, "synchronous", value ) );
         }
     }
 
@@ -335,8 +336,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
         if ( !isSame( oldName, newName ) ) {
             Actor newQualification = newName.isEmpty() ? null : doSafeFindOrCreateType( Actor.class, name );
             doCommand(
-                    new UpdatePlanObject(
-                            getEntity(),
+                    new UpdatePlanObject( User.current().getUsername(), getEntity(),
                             "qualification",
                             newQualification,
                             UpdateObject.Action.Set ) );

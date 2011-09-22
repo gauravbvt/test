@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,21 +33,21 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
         List<Classification> eoiClassifications = flow.getClassifications();
         if ( !eoiClassifications.isEmpty() ) {
             for ( Channel channel : flow.getEffectiveChannels() ) {
                 TransmissionMedium medium = channel.getMedium();
-                Plan plan = getPlan();
+                Plan plan = queryService.getPlan();
                 if ( !medium.isDirect() ) {
                     // under-secured immediate medium
                     List<Classification> mediumClassifications = medium.getEffectiveSecurity( plan );
                     if ( !Classification.encompass(
                             mediumClassifications,
                             eoiClassifications, plan ) ) {
-                        Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                        Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
                         issue.setDescription( "Classified information would be communicated "
                                 + "over unsecured or insufficiently secured channel \""
                                 + channel + "\"." );
@@ -66,7 +67,7 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
                         if ( !Classification.encompass(
                                 delegateClassifications,
                                 eoiClassifications, plan ) ) {
-                            Issue issue = makeIssue( Issue.ROBUSTNESS, flow );
+                            Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
                             issue.setDescription( "Classified information could be communicated "
                                     + "over unsecured or insufficiently secured delegated channel \""
                                     + delegate + "\"" );

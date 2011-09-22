@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.graph;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -12,23 +18,20 @@ import java.util.List;
 
 /**
  * Plan map graph builder.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Apr 2, 2009
- * Time: 10:16:21 AM
  */
 public class PlanMapGraphBuilder implements GraphBuilder<Segment, SegmentRelationship> {
+
     /**
      * All plan segments.
      */
-    private List<Segment> segments;
+    private final List<Segment> segments;
+
     /**
      * Query service.
      */
-    private QueryService queryService;
+    private final QueryService queryService;
 
-    private Analyst analyst;
+    private final Analyst analyst;
 
     public PlanMapGraphBuilder( List<Segment> segments, QueryService queryService, Analyst analyst ) {
         this.segments = segments;
@@ -36,36 +39,29 @@ public class PlanMapGraphBuilder implements GraphBuilder<Segment, SegmentRelatio
         this.analyst = analyst;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public DirectedGraph<Segment, SegmentRelationship> buildDirectedGraph() {
         DirectedGraph<Segment, SegmentRelationship> digraph =
-                new DirectedMultigraph<Segment, SegmentRelationship>(
-                        new EdgeFactory<Segment, SegmentRelationship>() {
-
-                            public SegmentRelationship createEdge( Segment segment, Segment otherSegment ) {
-                                return new SegmentRelationship( segment, otherSegment );
-                            }
-
-                        } );
-        populateGraph( digraph, segments );
+                new DirectedMultigraph<Segment, SegmentRelationship>( new EdgeFactory<Segment, SegmentRelationship>() {
+                    @Override
+                    public SegmentRelationship createEdge( Segment segment, Segment otherSegment ) {
+                        return new SegmentRelationship( segment, otherSegment );
+                    }
+                } );
+        populateGraph( digraph );
         return digraph;
     }
 
-    private void populateGraph(
-            DirectedGraph<Segment, SegmentRelationship> digraph,
-            List<Segment> segments ) {
-        for ( Segment segment : segments ) {
+    private void populateGraph( DirectedGraph<Segment, SegmentRelationship> digraph ) {
+        for ( Segment segment : segments )
             digraph.addVertex( segment );
-        }
+
         for ( Segment segment : segments ) {
             for ( Segment other : segments ) {
                 if ( segment != other ) {
-                    SegmentRelationship scRel = analyst.findSegmentRelationship( segment, other );
-                    if ( scRel != null ) {
+                    SegmentRelationship scRel = analyst.findSegmentRelationship( queryService, segment, other );
+                    if ( scRel != null )
                         digraph.addEdge( segment, other, scRel );
-                    }
                 }
             }
         }

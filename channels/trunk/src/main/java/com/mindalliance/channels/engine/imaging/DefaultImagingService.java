@@ -239,7 +239,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         try {
             File squareIconFile = getIconFile( modelObject, "_squared.png" );
             if ( squareIconFile.exists() ) {
-                String prefix = getIconFilePrefix();
+                String prefix = getIconFilePrefix( User.plan() );
 
                 String absolutePath = squareIconFile.getAbsolutePath();
                 String relPath = absolutePath.substring( prefix.length() );
@@ -259,15 +259,15 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return null;
     }
 
-    private String getIconFilePrefix() throws IOException {
+    private String getIconFilePrefix( Plan plan ) throws IOException {
         return iconDirectory.getFile().getAbsolutePath()
-                + File.separator + getFlattenedPlanUri( User.plan() ) + File.separator;
+                + File.separator + getFlattenedPlanUri( plan ) + File.separator;
     }
 
     @Override
-    public File findIcon( String encodedPath ) throws IOException {
+    public File findIcon( Plan plan, String encodedPath ) throws IOException {
         String decodedPath = encodedPath.replaceAll( "\\|\\|", File.separator );
-        return new File( getIconFilePrefix() + decodedPath );
+        return new File( getIconFilePrefix( plan ) + decodedPath );
     }
 
     private void createNumberedIcons( Plan plan, BufferedImage resized, int width, ModelObject modelObject )

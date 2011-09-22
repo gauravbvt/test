@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -14,24 +20,16 @@ import java.util.List;
 
 /**
  * Actor with no assignment and never beneficiary of commitments.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Nov 10, 2009
- * Time: 11:58:27 AM
  */
 public class UselessActor extends AbstractIssueDetector {
 
     public UselessActor() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    @Override
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Actor actor = (Actor) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        QueryService queryService = getQueryService();
         Assignments assignments = queryService.getAssignments().with( actor );
         if ( assignments.isEmpty() ) {
             List<Commitment> commitments = queryService.findAllCommitmentsTo(
@@ -39,7 +37,7 @@ public class UselessActor extends AbstractIssueDetector {
                     queryService.getAssignments( false ),
                     queryService.findAllFlows() );
             if ( commitments.isEmpty() ) {
-                Issue issue = makeIssue( Issue.COMPLETENESS, actor );
+                Issue issue = makeIssue( queryService, Issue.COMPLETENESS, actor );
                 issue.setDescription( actor.getName()
                         + " is not assigned any task "
                         + "nor is it the beneficiary of any sharing commitment" );
@@ -54,31 +52,23 @@ public class UselessActor extends AbstractIssueDetector {
         return issues;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean appliesTo( ModelObject modelObject ) {
         return Actor.class.isAssignableFrom( modelObject.getClass() )
                 && ((Actor)modelObject).isActual();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getTestedProperty() {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getKindLabel() {
         return "Agent is not assigned any task";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canBeWaived() {
         return true;
     }

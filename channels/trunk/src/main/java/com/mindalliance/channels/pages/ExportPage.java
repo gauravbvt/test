@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.MarkupStream;
@@ -36,12 +37,15 @@ public class ExportPage extends WebPage {
     private Plan plan;
 
     @SpringBean
+    private PlanServiceFactory planServiceFactory;
+
+    @SpringBean
     private ImportExportFactory importExportFactory;
 
     public ExportPage( PageParameters parameters ) {
         super( parameters );
 
-        final QueryService queryService = getQueryService();
+        QueryService queryService = getQueryService();
         if ( parameters.containsKey( PlanPage.SEGMENT_PARM ) )
             try {
                 segment = queryService.find( Segment.class,
@@ -61,11 +65,11 @@ public class ExportPage extends WebPage {
     }
 
     private QueryService getQueryService() {
-        return ( (Channels) getApplication() ).getQueryService();
+        return planServiceFactory.getService( plan );
     }
 
     private Exporter getExporter() {
-        return importExportFactory.createExporter( planManager.getDao( plan ) );
+        return importExportFactory.createExporter( "daemon", planManager.getDao( plan ) );
     }
 
     @Override

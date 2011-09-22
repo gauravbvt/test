@@ -121,8 +121,10 @@ public interface LockManager {
 
     /**
      * Whether identifiable could be locked by current user.
+     *
+     * @param userName
      * @param identifiable an identifiable
      * @return a boolean
      */
-    boolean isLockableByUser( Identifiable identifiable );
+    boolean isLockableByUser( String userName, Identifiable identifiable );
 }

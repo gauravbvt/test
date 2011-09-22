@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,26 +23,29 @@ public class StartedOrTerminatedTaskIsUnnamed extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.hasDefaultTask() ) {
             if ( part.isStartsWithSegment() || part.isTriggered() ) {
-                DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
+                DetectedIssue issue = makeIssue( queryService,
+                                                 DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task is started during the plan segment but is unnamed." );
                 issue.setRemediation( "Name the task." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
             if ( part.isTerminatesEventPhase() ) {
-                DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
+                DetectedIssue issue = makeIssue( queryService,
+                                                 DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task can terminate the plan segment but is unnamed." );
                 issue.setRemediation( "Name the task." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
             if ( part.isTerminated() ) {
-                DetectedIssue issue = makeIssue( DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
+                DetectedIssue issue = makeIssue( queryService,
+                                                 DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
                 issue.setDescription( "The task is terminated during plan segment but is unnamed." );
                 issue.setRemediation( "Name the task." );
                 issue.setSeverity( Level.Low );

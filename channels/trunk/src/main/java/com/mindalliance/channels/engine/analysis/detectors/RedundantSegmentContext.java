@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +26,15 @@ public class RedundantSegmentContext extends AbstractIssueDetector {
 
 
     @Override
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>(  );
         Segment segment = (Segment)modelObject;
         List<EventTiming> context = segment.getContext();
         for ( EventTiming eventTiming : context ) {
             for ( EventTiming other : context ) {
                 if ( !eventTiming.equals( other ) ) {
-                    if ( eventTiming.implies( other, getPlan().getLocale() ) ) {
-                        Issue issue = makeIssue( Issue.COMPLETENESS, segment );
+                    if ( eventTiming.implies( other, queryService.getPlan().getLocale() ) ) {
+                        Issue issue = makeIssue( queryService, Issue.COMPLETENESS, segment );
                         issue.setDescription( "Context \"" + eventTiming + "\" implies \"" + other + "\"." );
                         issue.setRemediation( "Remove  \""
                                 + eventTiming

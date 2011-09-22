@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -175,14 +176,14 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @return a menu item component
      */
     protected Component getUndoMenuItem( String id ) {
-        return getCommander().canUndo() ?
+        return getCommander().canUndo( User.current().getUsername() ) ?
                 new LinkMenuItem(
                         id,
-                        new Model<String>( getCommander().getUndoTitle() ),
+                        new Model<String>( getCommander().getUndoTitle( User.current().getUsername() ) ),
                         new AjaxFallbackLink( "link" ) {
                             @Override
                             public void onClick( AjaxRequestTarget target ) {
-                                update( target, getCommander().undo() );
+                                update( target, getCommander().undo( User.current().getUsername() ) );
                             }
                         } )
 
@@ -197,15 +198,15 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @return a menu item component
      */
     protected Component getRedoMenuItem( String id ) {
-        return getCommander().canRedo() ?
+        return getCommander().canRedo( User.current().getUsername() ) ?
                 new LinkMenuItem(
                         id,
-                        new Model<String>( getCommander().getRedoTitle() ),
+                        new Model<String>( getCommander().getRedoTitle( User.current().getUsername() ) ),
                         new AjaxFallbackLink( "link" ) {
                             @Override
                             public void onClick( AjaxRequestTarget target ) {
                                 update(
-                                        target, getCommander().redo() );
+                                        target, getCommander().redo( User.current().getUsername() ) );
                             }
                         } )
 

@@ -23,6 +23,22 @@ public class Commitment implements Serializable {
         sharing = flow;
     }
 
+    public Channelable getContactedEntity() {
+        return sharing.isAskedFor() ? committer.getChannelable() : beneficiary.getChannelable();
+    }
+
+    /**
+     * Whether a commitment could be met based on common language.
+     *
+     * @param plan the plan of concern
+     * @return a boolean
+     */
+    public boolean isCommonLanguage( Plan plan ) {
+        Actor committer = this.committer.getActor();
+        Actor beneficiary = this.beneficiary.getActor();
+        return committer.canSpeakWith( beneficiary, plan );
+    }
+
     public Assignment getCommitter() {
         return committer;
     }

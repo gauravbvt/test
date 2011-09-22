@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +33,12 @@ public class PartWithActorOrRoleButNoOrganization extends AbstractIssueDetector 
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( (part.hasActualRole() || part.hasActualActor() )
                 && part.getOrganization() == null ) {
-            Issue issue = makeIssue( Issue.VALIDITY, part );
+            Issue issue = makeIssue( queryService, Issue.VALIDITY, part );
             issue.setDescription( "The task names "
                     + (part.hasActualRole() ? "a role" : "")
                     + (part.hasActualRole() && part.hasActualActor() ? " and " : "")

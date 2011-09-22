@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.command.Change;
@@ -105,7 +111,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * The 'segment' parameter in the URL.
      */
-    static public final String SEGMENT_PARM = "segment";                                       // NON-NLS
+    public static final String SEGMENT_PARM = "segment";                                       // NON-NLS
 
     /**
      * The 'part' parameter in the URL.
@@ -118,17 +124,17 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private static final Logger LOG = LoggerFactory.getLogger( PlanPage.class );
 
     /**
-     * Length a segment name is abbreviated to
+     * Length a segment name is abbreviated to.
      */
     private static final int SEGMENT_NAME_MAX_LENGTH = 50;
 
     /**
-     * Length a plan name is abbreviated to
+     * Length a plan name is abbreviated to.
      */
     private static final int PLAN_NAME_MAX_LENGTH = 50;
 
     /**
-     * Length a segment title is abbreviated to
+     * Length a segment title is abbreviated to.
      */
     private static final int SEGMENT_DESCRIPTION_MAX_LENGTH = 94;
     /**
@@ -426,7 +432,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         setPart( p );
         expansions = expanded;
         for ( Long id : expansions ) {
-            commander.requestLockOn( id );
+            commander.requestLockOn( User.current().getUsername(), id );
         }
         setVersioned( false );
         expanded.add( Channels.SOCIAL_ID );
@@ -446,7 +452,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addHelp();
         addChangeMessagePanel();
         addGoBackAndForward();
-        commander.resynced();
+        commander.resynced( User.current().getUsername() );
         addPlanMenubar();
         addSegmentSelector();
         addSegmentPanel();
@@ -643,7 +649,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void addRefreshNow() {
         refreshNeededComponent = new AjaxFallbackLink( "refresh-needed" ) {
             public void onClick( AjaxRequestTarget target ) {
-                getCommander().clearTimeOut();
+                getCommander().clearTimeOut( User.current().getUsername() );
                 reacquireLocks();
                 lastRefreshed = System.currentTimeMillis();
                 refreshAll( target );
@@ -723,15 +729,15 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void doTimedUpdate( AjaxRequestTarget target ) {
-        if ( getCommander().isOutOfSync() ) {
+        if ( getCommander().isOutOfSync( User.current().getUsername() ) ) {
             if ( !dialogWindow.isShown() )
                 dialogWindow.show( target );
         }
         getCommander().keepAlive( User.current().getUsername(), REFRESH_DELAY );
         getCommander().processTimeOuts();
-        if ( getCommander().isTimedOut() ) {
+        if ( getCommander().isTimedOut( User.current().getUsername() ) ) {
             if ( getPlan().isDevelopment() ) refreshAll( target );
-            getCommander().clearTimeOut();
+            getCommander().clearTimeOut( User.current().getUsername() );
         } else {
             updateRefreshNowNotice();
             if ( getPlan().isDevelopment() ) {
@@ -775,7 +781,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
             // Find expansions that were locked and are not unlocked
             for ( ModelObject mo : getEditableModelObjects( expansions ) ) {
-                if ( !getCommander().isLockedByUser( mo ) ) {
+                if ( !getCommander().isLockedByUser( User.current().getUsername(), mo ) ) {
                     String aspect = getAspectShown( mo );
                     if ( aspect == null || aspectRequiresLock( mo, aspect ) )
                         if ( getCommander().isUnlocked( mo ) ) {
@@ -801,7 +807,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void annotateSegmentName() {
         Analyst analyst = getApp().getAnalyst();
-        String issue = analyst.getIssuesSummary( segment, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        String issue = analyst.getIssuesSummary( getQueryService(), segment, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         segmentNameLabel.add( new AttributeModifier( "class", true,// NON-NLS
                 new Model<String>( issue.isEmpty() ? "no-error pointer"
                         : "error pointer" ) ) );  // NON-NLS
@@ -1255,7 +1261,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     public Part getPart() {
         if ( isZombie( part ) ) {
             Part part = segment.getDefaultPart();
-            getCommander().requestLockOn( part );
+            getCommander().requestLockOn( User.current().getUsername(), part );
             return part;
         } else {
             return part;
@@ -1348,7 +1354,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void reacquireLocks() {
         // Part is always "expanded"
-        getCommander().requestLockOn( getPart() );
+        getCommander().requestLockOn( User.current().getUsername(), getPart() );
         for ( Long id : expansions ) {
             try {
                 ModelObject expanded = getQueryService().find( ModelObject.class, id );
@@ -1387,7 +1393,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         // Never lock anything in a production plan
         if ( getPlan().isDevelopment() && change.isForInstanceOf( ModelObject.class )
                 && getCommander().isLockable( change.getClassName() ) ) {
-            getCommander().requestLockOn( change.getId() );
+            getCommander().requestLockOn( User.current().getUsername(), change.getId() );
         }
     }
 
@@ -1430,7 +1436,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void tryReleasingLock( Change change ) {
-        getCommander().releaseAnyLockOn( change.getId() );
+        getCommander().releaseAnyLockOn( User.current().getUsername(), change.getId() );
     }
 
     private void tryAcquiringLockForAspect( Change change, String aspect ) {
@@ -1616,14 +1622,14 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * {@inheritDoc}
      */
     public void changed( Change change ) {
-        getCommander().clearTimeOut();
+        getCommander().clearTimeOut( User.current().getUsername() );
         if ( change.getMessage() != null ) {
             message = change.getMessage();
         }
         if ( change.isNone() )
             return;
         else
-            getCommander().updateUserActive();
+            getCommander().updateUserActive( User.current().getUsername() );
         if ( change.isUnknown() ) {
             if ( !getPlan().getSegments().contains( segment ) ) {
                 segment = getPlan().getDefaultSegment();

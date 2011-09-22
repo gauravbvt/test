@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -5,6 +11,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -14,66 +21,64 @@ import java.util.List;
 
 /**
  * Redundant place.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jun 24, 2009
- * Time: 11:56:44 AM
  */
 public class RedundantPlace extends AbstractIssueDetector {
+
     public RedundantPlace() {
     }
 
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    @Override
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Place place = (Place) modelObject;
-        List<Place> equivalentPlaces = findPlacesEquivalentTo( place );
+        List<Place> equivalentPlaces = findPlacesEquivalentTo( queryService, place );
         if ( !equivalentPlaces.isEmpty() ) {
-            Issue issue = makeIssue( Issue.COMPLETENESS, place );
+            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, place );
             issue.setSeverity( Level.Low );
             StringBuilder sb = new StringBuilder();
             Iterator<Place> iter = equivalentPlaces.iterator();
             while ( iter.hasNext() ) {
                 sb.append( iter.next().getName() );
-                if ( iter.hasNext() ) sb.append( ", " );
+                if ( iter.hasNext() )
+                    sb.append( ", " );
             }
             issue.setDescription( "This place has the same location as: " + sb.toString() );
-            issue.setRemediation( "Remove references to this place\n"
-                    +"or change its address\n"
-                    +"or change its geolocation." );
+            issue.setRemediation(
+                    "Remove references to this place\n" + "or change its address\n" + "or change its geolocation." );
             issues.add( issue );
         }
         return issues;
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<Place> findPlacesEquivalentTo( final Place place ) {
-        return (List<Place>) CollectionUtils.select(
-                getQueryService().list( Place.class ),
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        Place other = (Place) obj;
-                        return !other.equals( place )
-                                && ( place.getWithin() == null && other.getWithin() == null )
-                                && !place.getFullAddress().isEmpty()
-                                && !other.getFullAddress().isEmpty()
-                                && place.getFullAddress().equals( other.getFullAddress() );
-                    }
-                } );
+    private static List<Place> findPlacesEquivalentTo( QueryService queryService, final Place place ) {
+        return (List<Place>) CollectionUtils.select( queryService.list( Place.class ), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                Place other = (Place) object;
+                return !other.equals( place ) && ( place.getWithin() == null && other.getWithin() == null )
+                       && !place.getFullAddress().isEmpty() && !other.getFullAddress().isEmpty()
+                       && place.getFullAddress().equals( other.getFullAddress() );
+            }
+        } );
     }
 
+    @Override
     public boolean appliesTo( ModelObject modelObject ) {
         return modelObject instanceof Place;
     }
 
+    @Override
     public String getTestedProperty() {
         return null;
     }
 
+    @Override
     protected String getKindLabel() {
         return "Redundant place";
     }
 
+    @Override
     public boolean canBeWaived() {
         return true;
     }

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.model.Issue;
@@ -18,11 +24,6 @@ import java.util.Set;
 
 /**
  * A table summary of all issues in the plan.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 6/3/11
- * Time: 1:43 PM
  */
 public class IssuesSummaryTable extends AbstractUpdatablePanel {
 
@@ -140,7 +141,7 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
         double n = issues.size();
         double total = issuesCount();
         MessageFormat mf = new MessageFormat( "{0} {1} ({2,number,percent}) , {3} kinds" );
-        double percent = ( total == 0 ) ? 0.0 : ( n / total );
+        double percent = total == 0 ? 0.0 : n / total;
         Object[] args = {n, waived ? "waived" : "unresolved", Math.max( percent, percent > 0 ? 0.01 : 0.0 ), kinds.size()};
         return mf.format( args );
     }
@@ -159,20 +160,20 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
         ).size();
         MessageFormat mf = new MessageFormat( "{0} {1} ({2,number,percent})" );
         double total = issuesCount();
-        double percent = ( total == 0 ) ? 0.0 : ( count / total );
+        double percent = total == 0 ? 0.0 : count / total;
         Object[] args = {count, severity.getNegativeLabel().toLowerCase(), Math.max( percent, percent > 0 ? 0.01 : 0.0 )};
         return mf.format( args );
     }
 
     private List<Issue> getAllIssues( boolean waived ) {
-        if ( !waived ) {
-            if ( allUnwaivedIssues == null )
-                allUnwaivedIssues = getAnalyst().findAllUnwaivedIssues();
-            return allUnwaivedIssues;
-        } else {
+        if ( waived ) {
             if ( allWaivedIssues == null )
-                allWaivedIssues = getAnalyst().findAllWaivedIssues();
+                allWaivedIssues = getAnalyst().findAllWaivedIssues( getQueryService() );
             return allWaivedIssues;
+        } else {
+            if ( allUnwaivedIssues == null )
+                allUnwaivedIssues = getAnalyst().findAllUnwaivedIssues( getQueryService() );
+            return allUnwaivedIssues;
         }
     }
 

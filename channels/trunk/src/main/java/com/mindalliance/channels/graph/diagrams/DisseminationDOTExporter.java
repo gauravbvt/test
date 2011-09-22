@@ -1,6 +1,13 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.core.model.Dissemination;
+import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
@@ -15,23 +22,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Oct 22, 2010
- * Time: 8:50:35 PM
- */
 public class DisseminationDOTExporter extends AbstractDOTExporter<Node, Dissemination> {
 
     public DisseminationDOTExporter( MetaProvider<Node, Dissemination> metaProvider ) {
         super( metaProvider );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected void exportVertices( PrintWriter out, Graph<Node, Dissemination> g ) {
+    @Override
+    protected void exportVertices( QueryService queryService, PrintWriter out, Graph<Node, Dissemination> g ) {
         DisseminationMetaProvider metaProvider = (DisseminationMetaProvider) getMetaProvider();
         Map<Segment, Set<Node>> segmentNodes = new HashMap<Segment, Set<Node>>();
         for ( Node node : g.vertexSet() ) {
@@ -44,36 +42,29 @@ public class DisseminationDOTExporter extends AbstractDOTExporter<Node, Dissemin
             nodesInSegment.add( node );
         }
         for ( Segment segment : segmentNodes.keySet() ) {
-            if ( !segment.equals( getSegment() ) ) {
-                out.println( "subgraph cluster_"
-                        + segment.getName().replaceAll( "[^a-zA-Z0-9_]", "_" )
-                        + " {" );
-                List<DOTAttribute> attributes = new DOTAttribute( "label",
-                        "Segment: " + segment.getName() ).asList();
+            if ( segment.equals( getSegment() ) )
+                printoutVertices( queryService, out, segmentNodes.get( segment ) );
+            else {
+                out.println( "subgraph cluster_" + segment.getName().replaceAll( "[^a-zA-Z0-9_]", "_" ) + " {" );
+                List<DOTAttribute> attributes = new DOTAttribute( "label", "Segment: " + segment.getName() ).asList();
                 if ( metaProvider.getDOTAttributeProvider() != null ) {
-                    attributes.addAll(
-                            metaProvider.getDOTAttributeProvider().getSubgraphAttributes( false ) );
+                    attributes.addAll( metaProvider.getDOTAttributeProvider().getSubgraphAttributes( false ) );
                 }
                 if ( metaProvider.getURLProvider() != null ) {
                     String url = metaProvider.getURLProvider().
                             getGraphURL( segmentNodes.get( segment ).iterator().next() );
-                    if ( url != null ) attributes.add( new DOTAttribute( "URL", url ) );
+                    if ( url != null )
+                        attributes.add( new DOTAttribute( "URL", url ) );
                 }
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
-                printoutVertices( out, segmentNodes.get( segment ) );
+                printoutVertices( queryService, out, segmentNodes.get( segment ) );
                 out.println( "}" );
-            } else {
-                printoutVertices( out, segmentNodes.get( segment ) );
             }
         }
     }
 
-
     private Segment getSegment() {
         return (Segment) getMetaProvider().getContext();
     }
-
-
-
 }

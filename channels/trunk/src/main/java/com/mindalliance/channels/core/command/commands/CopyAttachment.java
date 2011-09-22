@@ -1,8 +1,15 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
@@ -12,18 +19,15 @@ import java.util.Map;
 
 /**
  * Take a copy of the attachment.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: May 17, 2009
- * Time: 10:50:33 AM
  */
 public class CopyAttachment extends AbstractCommand {
 
     public CopyAttachment() {
+        super( "daemon" );
     }
 
-    public CopyAttachment( Attachment attachment ) {
+    public CopyAttachment( String userName, Attachment attachment ) {
+        super( userName );
         setArguments( getAttachmentState( attachment ) );
     }
 
@@ -55,8 +59,8 @@ public class CopyAttachment extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         Map<String, Object> copy = new HashMap<String, Object>();
         copy.putAll( getArguments() );
-        commander.setCopy( copy );
-        Change change = new Change( Change.Type.None );
+        commander.setCopy( getUserName(), copy );
+        Change change = new Change( Type.None );
         change.setMessage( "Attachment copied" );
         return change;
     }

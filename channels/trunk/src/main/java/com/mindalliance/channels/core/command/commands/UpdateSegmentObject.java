@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.CommandException;
@@ -10,70 +16,42 @@ import com.mindalliance.channels.core.model.SegmentObject;
 
 /**
  * Command to update a model object contained in a segment.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 4, 2009
- * Time: 12:41:28 PM
  */
 public class UpdateSegmentObject extends UpdateObject {
 
     public UpdateSegmentObject() {
     }
 
-    public UpdateSegmentObject(
-            final Identifiable identifiable,
-            final String property,
-            final Object value ) {
-        this( identifiable, property, value, Action.Set );
+    public UpdateSegmentObject( String userName, Identifiable identifiable, String property, Object value ) {
+        this( userName, identifiable, property, value, Action.Set );
     }
 
-    public UpdateSegmentObject(
-            final Identifiable identifiable,
-            final String property,
-            final Object value,
-            final Action action ) {
-        super( identifiable, property, value, action );
+    public UpdateSegmentObject( String userName, Identifiable identifiable, String property, Object value,
+                                Action action ) {
+        super( userName, identifiable, property, value, action );
         set( "segment", ( (SegmentObject) identifiable ).getSegment().getId() );
         set( "isNode", identifiable instanceof Node );
     }
 
+    @Override
     protected String getObjectTypeName( String type ) {
-        if ( type.contains( "flow" ) )
-            return "flow";
-        else
-            return super.getObjectTypeName( type );
+        return type.contains( "flow" ) ? "flow" : super.getObjectTypeName( type );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Identifiable getIdentifiable( Commander commander ) throws CommandException {
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             boolean isNode = (Boolean) get( "isNode" );
-            SegmentObject segmentObject;
-            if ( isNode ) {
-                segmentObject = segment.getNode( (Long) get( "object" ) );
-            } else {
-                segmentObject = segment.findFlow( (Long) get( "object" ) );
-            }
-            return segmentObject;
+            return isNode ? segment.getNode( (Long) get( "object" ) ) : segment.findFlow( (Long) get( "object" ) );
         } catch ( NotFoundException e ) {
             throw new CommandException( "You need to refresh", e );
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected UpdateObject createUndoCommand(
-            Identifiable identifiable,
-            String property,
-            Object value,
-            Action action ) {
-        return new UpdateSegmentObject( identifiable, property, value, action );
+    @Override
+    protected UpdateObject createUndoCommand( Identifiable identifiable, String property, Object value,
+                                              Action action ) {
+        return new UpdateSegmentObject( getUserName(), identifiable, property, value, action );
     }
-
-
 }

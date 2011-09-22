@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
@@ -58,20 +59,20 @@ public class TestSatisfyNeed extends AbstractChannelsTest {
     public void testSatisfyNeed() {
         assertSame( 1, countFlows( source.sends() ) );
         assertSame( 1, countFlows( target.receives() ) );
-        Command satisfyNeed = new SatisfyNeed( need, capability, true, true );
+        Command satisfyNeed = new SatisfyNeed( User.current().getUsername(), need, capability, true, true );
         assertTrue( getCommander().canDo( satisfyNeed ) );
         assertTrue( getCommander().doCommand( satisfyNeed ).isAdded() );
         assertSame( 2, countFlows( source.sends() ) );
         assertSame( 2, countFlows( target.receives() ) );
-        assertTrue( getCommander().canUndo() );
-        assertTrue( getCommander().undo().isUnknown() );
+        assertTrue( getCommander().canUndo( User.current().getUsername() ) );
+        assertTrue( getCommander().undo( User.current().getUsername() ).isUnknown() );
         assertSame( 1, countFlows( source.sends() ) );
         assertSame( 1, countFlows( target.receives() ) );
-        assertTrue( getCommander().canRedo() );
-        assertTrue( getCommander().redo().isUnknown() );
+        assertTrue( getCommander().canRedo( User.current().getUsername() ) );
+        assertTrue( getCommander().redo( User.current().getUsername() ).isUnknown() );
         assertSame( 2, countFlows( source.sends() ) );
         assertSame( 2, countFlows( target.receives() ) );
-        assertTrue( getCommander().canUndo() );
+        assertTrue( getCommander().canUndo( User.current().getUsername() ) );
     }
 
     private int countFlows( Iterator<Flow> flows ) {

@@ -44,7 +44,7 @@ public class AcmeTest extends WalkthroughTest {
     public void verifyIssues() {
         Map<String, List<Issue>> issueMap = new HashMap<String, List<Issue>>();
         for ( ModelObject modelObject : planDao.list( ModelObject.class ) )
-            for ( Issue issue : analyst.listIssues( modelObject, true, false ) ) {
+            for ( Issue issue : analyst.listIssues( queryService, modelObject, true, false ) ) {
                 String kind = issue.getKind();
                 List<Issue> kindList = issueMap.get( kind );
                 if ( kindList == null ) {

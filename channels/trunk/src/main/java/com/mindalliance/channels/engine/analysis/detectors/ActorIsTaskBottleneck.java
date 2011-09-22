@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +27,22 @@ public class ActorIsTaskBottleneck extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
         if ( part.isUseful() ) {
-            List<Assignment> assignments = getQueryService().findAllAssignments( part, false );
+            List<Assignment> assignments = queryService.findAllAssignments( part, false );
             if ( assignments.size() == 1 ) {
                 Actor actor = assignments.get( 0 ).getActor();
                 if ( !actor.isArchetype() ) {
-                    Issue issue = makeIssue( Issue.ROBUSTNESS, part );
+                    Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
                     issue.setDescription( actor.getName()
                             + " is the only known agent assigned to critical task \""
                             + part.getTitle()
                             + "\"." );
                     issue.setRemediation( "Change the specification of the task to allow more agents to be assigned to it"
                             + "\nor add participating agents to the scope who will be assigned to the task." );
-                    issue.setSeverity( computeTaskFailureSeverity( part ) );
+                    issue.setSeverity( computeTaskFailureSeverity( queryService, part ) );
                     issues.add( issue );
                 }
             }

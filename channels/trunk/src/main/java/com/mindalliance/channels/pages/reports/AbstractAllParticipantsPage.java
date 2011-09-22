@@ -1,19 +1,24 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.command.commands.CreateEntityIfNew;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.pages.AbstractChannelsWebPage;
-import com.mindalliance.channels.engine.query.PlanService;
 import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -32,14 +37,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+import static javax.servlet.http.HttpServletResponse.*;
 
 /**
- * Abstract reports index page on participants and agents. Copyright (C) 2008 Mind-Alliance Systems. All Rights
- * Reserved. Proprietary and Confidential. User: jf Date: 7/28/11 Time: 9:54 AM
+ * Abstract reports index page on participants and agents.
  */
-abstract public class AbstractAllParticipantsPage extends WebPage {
+public abstract class AbstractAllParticipantsPage extends WebPage {
 
     protected static final String PLAN = "plan";
 
@@ -52,13 +55,10 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
     private PlanManager planManager;
 
     @SpringBean
-    private Commander commander;
-
-    @SpringBean
-    private LockManager lockManager;
-
-    @SpringBean
     private AttachmentManager attachmentManager;
+
+    @SpringBean
+    private CommanderFactory commanderFactory;
 
     private String uri;
 
@@ -98,7 +98,8 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
                 if ( !user.isPlanner( plan.getUri() ) )
                     throw new AbortWithWebErrorCodeException( SC_FORBIDDEN );
 
-                init( createService( plan ), plan );
+                Commander commander = getCommander( plan );
+                init( commander.getQueryService(), plan );
             }
         } catch ( StringValueConversionException ignored ) {
             throw new AbortWithWebErrorCodeException( SC_NOT_FOUND );
@@ -133,23 +134,11 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
         return planManager;
     }
 
-    protected Commander getCommander() {
-        return commander;
-    }
-
-    protected LockManager getLockManager() {
-        return lockManager;
-    }
-
-    protected PlanService createService( Plan plan ) {
-        return new PlanService( planManager, null, planManager.getUserService(), plan, attachmentManager );
-    }
-
-    private void init( PlanService service, final Plan plan ) {
+    private void init( QueryService service, Plan plan ) {
         uri = plan.getUri();
         version = plan.getVersion();
 
-        users = validate( planManager.getUserService(), service.list( Participation.class ) );
+        users = validate( planManager.getUserDao(), service.list( Participation.class ) );
 
         actors = findFreeActors( findAssignedActors( users ), service.getAssignments().getActualActors() );
 
@@ -157,7 +146,7 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
         initComponents( service, plan );
     }
 
-    abstract protected void initComponents( PlanService service, final Plan plan );
+    protected abstract void initComponents( QueryService service, Plan plan );
 
     protected void addChannelsLogo() {
         WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome" );
@@ -176,9 +165,9 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
         return user.getPlan();
     }
 
-    protected List<User> findUnassignedUsers( PlanService service ) {
+    protected List<User> findUnassignedUsers( QueryService service ) {
         String uri = service.getPlan().getUri();
-        Collection<User> inputCollection = service.getUserService().getUsers( uri );
+        Collection<User> inputCollection = service.getUserDao().getUsers( uri );
         List<User> answer = new ArrayList<User>( inputCollection.size() );
         for ( User u : inputCollection ) {
             Participation participation = service.findParticipation( u.getUsername() );
@@ -224,17 +213,17 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
     /**
      * Filter invalid participations.
      *
-     * @param userService to check if users are still valid
+     * @param userDao to check if users are still valid
      * @param participations the participations to check
      * @return filtered list
      */
     protected static List<Participation> validate(
-            UserService userService, Collection<Participation> participations ) {
+            UserDao userDao, Collection<Participation> participations ) {
 
         List<Participation> answer = new ArrayList<Participation>( participations.size() );
         for ( Participation item : participations ) {
             String userName = item.getUsername();
-            if ( item.getActor() != null && userName != null && userService.getUserNamed( userName ) != null )
+            if ( item.getActor() != null && userName != null && userDao.getUserNamed( userName ) != null )
                 answer.add( item );
         }
 
@@ -250,11 +239,8 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
     protected Commander getCommander( Plan plan ) {
         // Adjust so commander actually behave as expected
         user.setPlan( plan );
-        PlanService service = createService( plan );
-        commander.setPlanDao( service.getDao() );
-        commander.setLockManager( lockManager );
 
-        return commander;
+        return commanderFactory.getCommander( plan );
     }
 
     protected static Participation findParticipation( Commander cmdr, String username ) {
@@ -262,7 +248,8 @@ abstract public class AbstractAllParticipantsPage extends WebPage {
         Participation participation = planService.findParticipation( username );
         if ( participation == null ) {
             Participation newPart = (Participation) cmdr
-                    .doUnsafeCommand( new CreateEntityIfNew( Participation.class, username, ModelEntity.Kind.Actual ) )
+                    .doUnsafeCommand( new CreateEntityIfNew( User.current().getUsername(),
+                                                             Participation.class, username, ModelEntity.Kind.Actual ) )
                     .getSubject( planService );
 
             newPart.setActual();

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.model.GeoLocatable;
@@ -11,23 +17,17 @@ import java.util.List;
 
 /**
  * Geomap link panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jun 22, 2009
- * Time: 10:22:09 AM
  */
 public class GeomapLinkPanel extends AbstractUpdatablePanel {
 
     private List<? extends GeoLocatable> geoLocatables;
+
     private IModel<String> titleModel;
+
     private IModel<String> hintModel;
 
-    public GeomapLinkPanel(
-            String id,
-            IModel<String> titleModel,
-            List<? extends GeoLocatable> geoLocatables,
-            IModel<String> hintModel ) {
+    public GeomapLinkPanel( String id, IModel<String> titleModel, List<? extends GeoLocatable> geoLocatables,
+                            IModel<String> hintModel ) {
         super( id );
         this.geoLocatables = geoLocatables;
         this.titleModel = titleModel;
@@ -36,17 +36,13 @@ public class GeomapLinkPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        add(
-            GeoMapPage.makeLink( "mapLink", titleModel, geoLocatables, getQueryService() )
+        add( GeoMapPage.makeLink( "mapLink", titleModel, geoLocatables, getQueryService() )
                 .add( new AttributeModifier( "title", true, hintModel ) )
-                .setVisible(
-                    CollectionUtils.exists(
-                        geoLocatables, new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return ( (GeoLocatable) object ).getPlaceBasis() != null;
-                            }
-                        } ) ) );
+                .setVisible( CollectionUtils.exists( geoLocatables, new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (GeoLocatable) object ).getPlaceBasis() != null;
+                    }
+                } ) ) );
     }
-
 }

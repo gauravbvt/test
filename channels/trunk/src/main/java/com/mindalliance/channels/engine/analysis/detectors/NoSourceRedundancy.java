@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -59,7 +60,7 @@ public class NoSourceRedundancy extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         final Part part = (Part) modelObject;
         // Find all critical sourced receives of a part
@@ -93,11 +94,11 @@ public class NoSourceRedundancy extends AbstractIssueDetector {
                         }
                     } );
             if ( !alternates.hasNext() ) {
-                DetectedIssue issue = makeIssue( DetectedIssue.ROBUSTNESS, part );
+                DetectedIssue issue = makeIssue( queryService, DetectedIssue.ROBUSTNESS, part );
                 issue.setDescription( "Has a only one source task for critical \""
                         + name + "\"" );
                 issue.setRemediation( "Add alternate source\nor make the information non-critical." );
-                issue.setSeverity( getQueryService().computePartPriority( part ) );
+                issue.setSeverity( queryService.computePartPriority( part ) );
                 issues.add( issue );
             }
         }

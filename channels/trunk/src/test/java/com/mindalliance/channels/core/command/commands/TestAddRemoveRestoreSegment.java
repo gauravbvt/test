@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.command.commands;
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Segment;
 import org.junit.After;
 import static org.junit.Assert.assertFalse;
@@ -31,13 +32,13 @@ public class TestAddRemoveRestoreSegment extends AbstractChannelsTest {
     @Test
     public void testAddRemoveRestore() {
         int count = countSegments();
-        Command command = new AddSegment();
+        Command command = new AddSegment( User.current().getUsername() );
         assertTrue( getCommander().canDo( command ) );
         Change change = getCommander().doCommand( command );
         assertTrue( change.isAdded() );
         segment = (Segment) change.getSubject( getCommander().getQueryService() );
         assertSame( count + 1, countSegments() );
-        assertFalse( getCommander().canUndo() );
+        assertFalse( getCommander().canUndo( User.current().getUsername() ) );
     }
 
     @SuppressWarnings( {"UnusedDeclaration"} )

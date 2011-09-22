@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.analysis.graph;
 
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
@@ -19,28 +25,22 @@ import org.jgrapht.graph.DirectedMultigraph;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 2/9/11
- * Time: 12:47 PM
- */
 public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitment> {
 
-    private Segment segment;
+    private final Segment segment;
+
     private final boolean summarizeByOrgType;
-    private boolean summarizedByOrg;
-    private boolean summarizedByRole;
-    private ModelEntity focusEntity;
+
+    private final boolean summarizedByOrg;
+
+    private final boolean summarizedByRole;
+
+    private final ModelEntity focusEntity;
+
     private QueryService queryService;
 
-    public ProceduresGraphBuilder(
-            Segment segment,
-            boolean summarizeByOrgType,
-            boolean summarizedByOrg,
-            boolean summarizedByRole,
-            ModelEntity focusEntity ) {
+    public ProceduresGraphBuilder( Segment segment, boolean summarizeByOrgType, boolean summarizedByOrg,
+                                   boolean summarizedByRole, ModelEntity focusEntity ) {
         this.segment = segment;
         this.summarizeByOrgType = summarizeByOrgType;
         this.summarizedByOrg = summarizedByOrg;
@@ -50,17 +50,15 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
 
     @Override
     public DirectedGraph<Assignment, Commitment> buildDirectedGraph() {
-        DirectedGraph<Assignment, Commitment> digraph = new DirectedMultigraph<Assignment, Commitment>(
-                new EdgeFactory<Assignment, Commitment>() {
+        DirectedGraph<Assignment, Commitment> digraph =
+                new DirectedMultigraph<Assignment, Commitment>( new EdgeFactory<Assignment, Commitment>() {
 
+                    @Override
                     public Commitment createEdge( Assignment sourceAssignment, Assignment targetAssignment ) {
-                        InternalFlow flow = new InternalFlow(
-                                sourceAssignment.getPart(),
-                                targetAssignment.getPart(),
-                                "" );
+                        InternalFlow flow =
+                                new InternalFlow( sourceAssignment.getPart(), targetAssignment.getPart(), "" );
                         return new Commitment( sourceAssignment, targetAssignment, flow );
                     }
-
                 } );
         populateProceduresGraph( digraph );
         return digraph;
@@ -81,29 +79,20 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
 
     private List<Commitment> findCommitments() {
         List<Commitment> commitments = new ArrayList<Commitment>();
-        List<Flow> flows = findAllFlows();
-        for ( Flow flow : flows ) {
+        for ( Flow flow : findAllFlows() )
             commitments.addAll( queryService.findAllCommitments( flow, true ) );
-        }
+
         List<Commitment> results = new ArrayList<Commitment>();
-        for ( Commitment commitment : commitments ) {
-            if ( focusEntity != null ) {
-                if ( isFocusedOn( commitment ) ) {
-                    results.add( summarize( commitment ) );
-                }
-            } else {
-                results.add( summarize( commitment ) );
-            }
-        }
+        for ( Commitment commitment : commitments )
+            if ( focusEntity == null || isFocusedOn( commitment ) )
+                 results.add( summarize( commitment ) );
+
         return results;
     }
 
     private boolean isFocusedOn( Commitment commitment ) {
-        return focusEntity != null
-                && (
-                isFocusedOn( commitment.getCommitter() )
-                        || isFocusedOn( commitment.getBeneficiary() )
-        );
+        return focusEntity != null && ( isFocusedOn( commitment.getCommitter() )
+                                        || isFocusedOn( commitment.getBeneficiary() ) );
     }
 
     private boolean isFocusedOn( Assignment assignment ) {
@@ -111,14 +100,11 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
     }
 
     private boolean isFocusedOnAgent( Assignment assignment ) {
-        return focusEntity != null && assignment.getActor().equals( focusEntity );
+        return focusEntity != null && focusEntity.equals( assignment.getActor() );
     }
 
     private boolean isFocusedOnOrganization( Assignment assignment ) {
-        return focusEntity != null
-                && assignment.getOrganization().narrowsOrEquals(
-                focusEntity,
-                getQueryService().getPlan().getLocale() );
+        return focusEntity != null && assignment.getOrganization().narrowsOrEquals( focusEntity, queryService.getPlan().getLocale() );
     }
 
     private Commitment summarize( Commitment commitment ) {
@@ -126,40 +112,33 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
         Assignment beneficiary = new Assignment( commitment.getBeneficiary() );
         if ( summarizeByOrgType ) {
             if ( !isFocusedOnAgent( committer ) ) {
-                Organization org;
-                Role role;
-                org = isFocusedOnOrganization( committer )
-                        ? committer.getOrganization()
-                        : getOrganizationType( committer.getPart() );
-                role = summarizedByRole
-                        ? committer.getRole()
-                        : null;
+                Organization org = isFocusedOnOrganization( committer ) ?
+                                   committer.getOrganization() :
+                                   getOrganizationType( committer.getPart() );
+                Role role = summarizedByRole ? committer.getRole() : null;
                 if ( role != null )
                     committer.setEmployment( new Employment( org, role ) );
                 else
                     committer.setEmployment( new Employment( org ) );
             }
             if ( !isFocusedOnAgent( beneficiary ) ) {
-                Organization org;
-                Role role;
-                org = isFocusedOnOrganization( beneficiary )
-                        ? beneficiary.getOrganization()
-                        : getOrganizationType( beneficiary.getPart() );
-                role = summarizedByRole
-                        ? beneficiary.getRole()
-                        : null;
+                Organization org = isFocusedOnOrganization( beneficiary ) ?
+                                   beneficiary.getOrganization() :
+                                   getOrganizationType( beneficiary.getPart() );
+                Role role = summarizedByRole ? beneficiary.getRole() : null;
                 if ( role != null )
                     beneficiary.setEmployment( new Employment( org, role ) );
                 else
                     beneficiary.setEmployment( new Employment( org ) );
             }
 
- /*           if ( !isFocusedOnAgent( beneficiary ) )
-                if ( isFocusedOnOrganization( beneficiary ) )
-                    beneficiary.setEmployment( new Employment( beneficiary.getOrganization() ) );
-                else
-                    beneficiary.setEmployment( new Employment( beneficiaryOrg ) );
-*/        } else if ( summarizedByOrg ) {
+            /*           if ( !isFocusedOnAgent( beneficiary ) )
+                            if ( isFocusedOnOrganization( beneficiary ) )
+                                beneficiary.setEmployment( new Employment( beneficiary.getOrganization() ) );
+                            else
+                                beneficiary.setEmployment( new Employment( beneficiaryOrg ) );
+            */
+        } else if ( summarizedByOrg ) {
             Organization committerOrg = committer.getOrganization();
             Organization beneficiaryOrg = beneficiary.getOrganization();
             if ( !isFocusedOnAgent( committer ) )
@@ -187,23 +166,17 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
             if ( types.isEmpty() ) {
                 return Organization.getUniversalTypeFor( Organization.class );
             } else {
-                // get last one for now -- todo: something samrter?
+                // get last one for now -- todo: something smarter?
                 return (Organization) types.get( types.size() - 1 );
             }
         }
     }
 
-
     private List<Flow> findAllFlows() {
-        return getQueryService().findAllSharingFlows( segment );
-    }
-
-    public QueryService getQueryService() {
-        return queryService;
+        return queryService.findAllSharingFlows( segment );
     }
 
     public void setQueryService( QueryService queryService ) {
         this.queryService = queryService;
     }
-
 }

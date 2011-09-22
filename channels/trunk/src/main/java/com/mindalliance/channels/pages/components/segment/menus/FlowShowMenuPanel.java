@@ -1,6 +1,13 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.segment.menus;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
@@ -13,13 +20,6 @@ import org.apache.wicket.model.Model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: 9/16/11
- * Time: 2:32 PM
- */
 public class FlowShowMenuPanel extends MenuPanel {
 
     /**
@@ -138,7 +138,7 @@ public class FlowShowMenuPanel extends MenuPanel {
             }
 
 
-            if ( getCommander().isTimedOut() )
+            if ( getCommander().isTimedOut( User.current().getUsername() ) )
                 menuItems.add( timeOutLabel( "menuItem" ) );
             else if ( !( isLockedByUser( getFlow() ) || getLockOwner( flow ) == null ) )
                 menuItems.add( editedByLabel( "menuItem", flow, getLockOwner( flow ) ) );

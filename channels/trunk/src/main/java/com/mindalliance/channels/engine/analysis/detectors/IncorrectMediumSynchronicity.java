@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +23,13 @@ public class IncorrectMediumSynchronicity extends AbstractIssueDetector {
     public IncorrectMediumSynchronicity() {
     }
 
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         TransmissionMedium medium = (TransmissionMedium) modelObject;
         for ( ModelEntity type : medium.getAllTypes() ) {
             TransmissionMedium mediumType = (TransmissionMedium) type;
             if ( mediumType.isSynchronous() != medium.isSynchronous() ) {
-                Issue issue = makeIssue( Issue.VALIDITY, medium );
+                Issue issue = makeIssue( queryService, Issue.VALIDITY, medium );
                 issue.setDescription(
                         "\"" + medium.getName() + "\" is a kind of "
                                 + "\"" + mediumType.getName() + "\" but "

@@ -1,7 +1,14 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
@@ -9,45 +16,34 @@ import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.Iterator;
 
 /**
  * Command to remove a part from a segment after taking a copy.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 5, 2009
- * Time: 1:40:31 PM
  */
 public class RemovePart extends AbstractCommand {
 
-    /**
-     * Logger.
-     */
-    // private static final Logger LOG = LoggerFactory.getLogger( RemovePart.class );
     public RemovePart() {
+        super( "daemon" );
     }
 
-    public RemovePart( Part part ) {
+    public RemovePart( String userName, Part part ) {
+        super( userName );
         needLocksOn( ChannelsUtils.getLockingSetFor( part ) );
         addConflicting( part.getSegment() );
         set( "part", part.getId() );
         set( "segment", part.getSegment().getId() );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return "cut task";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean canDo( Commander commander ) {
         return super.canDo( commander ) && isNotDefaultPart( commander );
     }
@@ -61,10 +57,7 @@ public class RemovePart extends AbstractCommand {
         }
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
@@ -83,38 +76,32 @@ public class RemovePart extends AbstractCommand {
             set( "defaultPart", defaultPart.getId() );
         }
         commander.getPlanDao().removeNode( part, segment );
-        releaseAnyLockOn( part, commander );
+        releaseAnyLockOn( commander, part );
         ignoreLock( (Long) get( "part" ) );
-        return new Change( Change.Type.Recomposed, segment );
+        return new Change( Type.Recomposed, segment );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isUndoable() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings( "unchecked" )
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( "add new task" );
+        MultiCommand multi = new MultiCommand( getUserName(), "add new task" );
         // Reconstitute part
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
-        AddPart addPart = new AddPart( segment );
+        AddPart addPart = new AddPart( getUserName(), segment );
         addPart.set( "part", get( "part" ) );
-        if ( get( "defaultPart" ) != null ) {
+        if ( get( "defaultPart" ) != null )
             addPart.set( "defaultPart", get( "defaultPart" ) );
-        }
         addPart.set( "partState", get( "partState" ) );
         multi.addCommand( addPart );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );
         return multi;
-
     }
 
     /**
@@ -125,23 +112,19 @@ public class RemovePart extends AbstractCommand {
      * @return a multi command
      */
     private MultiCommand makeSubCommands( Part part, Commander commander ) {
-        MultiCommand subCommands = new MultiCommand( "cut task - extra" );
-        subCommands.addCommand( new CopyPart( part ) );
+        MultiCommand subCommands = new MultiCommand( getUserName(), "cut task - extra" );
+        subCommands.addCommand( new CopyPart( getUserName(), part ) );
         Iterator<Flow> ins = part.receives();
         while ( ins.hasNext() ) {
             Flow in = ins.next();
-            if ( in.isSharing() ) {
-                subCommands.addCommand( commander.makeRemoveFlowCommand( in ) );
-            }
-            else {
-                subCommands.addCommand( new RemoveNeed( in ));
-            }
+            if ( in.isSharing() )
+                subCommands.addCommand( commander.makeRemoveFlowCommand( getUserName(), in ) );
+            else
+                subCommands.addCommand( new RemoveNeed( getUserName(), in ) );
             // If the node to be removed is a part,
             // preserve the send of the source the flow represents
-            if ( in.isInternal()
-                    && in.getSource().isPart()
-                    && !in.getSource().hasMultipleSends( in.getName() ) ) {
-                Command addCapability = new AddCapability();
+            if ( in.isInternal() && in.getSource().isPart() && !in.getSource().hasMultipleSends( in.getName() ) ) {
+                Command addCapability = new AddCapability( getUserName() );
                 addCapability.set( "segment", in.getSource().getSegment().getId() );
                 addCapability.set( "part", in.getSource().getId() );
                 addCapability.set( "name", in.getName() );
@@ -152,18 +135,15 @@ public class RemovePart extends AbstractCommand {
         Iterator<Flow> outs = part.sends();
         while ( outs.hasNext() ) {
             Flow out = outs.next();
-            if ( out.isSharing() ) {
-                subCommands.addCommand( commander.makeRemoveFlowCommand( out ) );
-            }
-            else {
-                subCommands.addCommand( new RemoveCapability( out ));
-            }
+            if ( out.isSharing() )
+                subCommands.addCommand( commander.makeRemoveFlowCommand( getUserName(), out ) );
+            else
+                subCommands.addCommand( new RemoveCapability( getUserName(), out ) );
             // If the node to be removed is a part,
             // preserve the send of the source the flow represents
-            if ( out.isInternal()
-                    && out.getTarget().isPart()
-                    && !out.getSource().hasMultipleReceives( out.getName() ) ) {
-                Command addNeed = new AddNeed();
+            if ( out.isInternal() && out.getTarget().isPart()
+                 && !out.getSource().hasMultipleReceives( out.getName() ) ) {
+                Command addNeed = new AddNeed( getUserName() );
                 addNeed.set( "segment", out.getTarget().getSegment().getId() );
                 addNeed.set( "part", out.getTarget().getId() );
                 addNeed.set( "name", out.getName() );
@@ -172,7 +152,5 @@ public class RemovePart extends AbstractCommand {
             }
         }
         return subCommands;
-
     }
-
 }

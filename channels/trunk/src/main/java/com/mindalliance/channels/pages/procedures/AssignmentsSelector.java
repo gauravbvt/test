@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.procedures;
 
 import com.mindalliance.channels.core.AttachmentManager;
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Organization;
@@ -10,8 +9,9 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.engine.query.Assignments;
-import com.mindalliance.channels.engine.query.PlanService;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public interface AssignmentsSelector {
 
     AttachmentManager getAttachmentManager();
 
-    PlanService getPlanService();
+    QueryService getPlanService();
 
     ImagingService getImagingService();
 

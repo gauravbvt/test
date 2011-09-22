@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.query;
 
 import com.mindalliance.channels.core.AttachmentManager;
@@ -5,7 +11,7 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserService;
+import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
@@ -59,7 +65,6 @@ import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -73,7 +78,7 @@ import java.util.Set;
 /**
  * Query service instance.
  */
-public class DefaultQueryService implements QueryService, InitializingBean {
+public abstract class DefaultQueryService implements QueryService {
 
     /**
      * Class logger.
@@ -98,19 +103,14 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     /**
      * File user details service.
      */
-    private UserService userService;
+    private UserDao userDao;
 
-    //=============================================
-
-    public DefaultQueryService(
-            PlanManager planManager,
-            AttachmentManager attachmentManager,
-            SemanticMatcher semanticMatcher,
-            UserService userService ) {
+    protected DefaultQueryService( PlanManager planManager, AttachmentManager attachmentManager,
+                                   SemanticMatcher semanticMatcher, UserDao userDao ) {
         this.planManager = planManager;
         this.attachmentManager = attachmentManager;
         this.semanticMatcher = semanticMatcher;
-        this.userService = userService;
+        this.userDao = userDao;
     }
 
     /**
@@ -146,8 +146,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
         this.semanticMatcher = semanticMatcher;
     }
 
-    public void setUserService( UserService userService ) {
-        this.userService = userService;
+    public void setUserDao( UserDao userDao ) {
+        this.userDao = userDao;
     }
 
     /**
@@ -168,14 +168,6 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public void onDestroy() {
         // Do nothing
-    }
-
-    /**
-     * Make sure plans are valid initialized with some proper http://bit.ly/24Reg.
-     */
-    @Override
-    public void afterPropertiesSet() {
-        planManager.assignPlans();
     }
 
     @Override
@@ -1855,17 +1847,17 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @SuppressWarnings( "unchecked" )
     public List<String> findAllPlanners() {
         return (List<String>) CollectionUtils.collect(
-                userService.getPlanners( getPlan().getUri() ),
+                userDao.getPlanners( getPlan().getUri() ),
                 TransformerUtils.invokerTransformer( "getUsername" )
         );
     }
 
     @Override
     public String findUserFullName( String userName ) {
-        if ( userService == null ) {
+        if ( userDao == null ) {
             System.out.println( "OOPS!" );
         }
-        User user = userService.getUserNamed( userName );
+        User user = userDao.getUserNamed( userName );
         if ( user != null ) {
             return user.getFullName();
         } else {
@@ -1875,7 +1867,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     public String findUserEmail( String userName ) {
-        User user = userService.getUserNamed( userName );
+        User user = userDao.getUserNamed( userName );
         if ( user != null ) {
             return user.getEmail();
         } else {
@@ -1885,7 +1877,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     public String findUserRole( String userName ) {
-        User user = userService.getUserNamed( userName );
+        User user = userDao.getUserNamed( userName );
         if ( user != null ) {
             return user.getRole( user.getPlanUri() );
         } else {
@@ -1895,7 +1887,7 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     public String findUserNormalizedFullName( String userName ) {
-        User user = userService.getUserNamed( userName );
+        User user = userDao.getUserNamed( userName );
         if ( user != null ) {
             return user.getNormalizedFullName();
         } else {
@@ -2463,8 +2455,8 @@ public class DefaultQueryService implements QueryService, InitializingBean {
 
     @Override
     /** {@inheritDoc} */
-    public UserService getUserService() {
-        return userService;
+    public UserDao getUserDao() {
+        return userDao;
     }
 
     @Override
@@ -3309,10 +3301,10 @@ public class DefaultQueryService implements QueryService, InitializingBean {
     @Override
     public List<User> findUsersParticipatingAs( Actor actor ) {
         List<User> users = new ArrayList<User>();
-        for ( String userName : userService.getUsernames( getPlan().getUri() ) ) {
+        for ( String userName : userDao.getUsernames( getPlan().getUri() ) ) {
             Participation participation = findParticipation( userName );
             if ( participation != null && participation.getActor() != null && participation.getActor().equals( actor ) )
-                users.add( userService.getUserNamed( userName ) );
+                users.add( userDao.getUserNamed( userName ) );
         }
         return users;
     }

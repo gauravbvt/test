@@ -224,21 +224,17 @@ public class EventListPanel extends AbstractCommandablePanel {
             Plan plan = User.plan();
             if ( confirmed ) {
                 Event confirmedEvent = doSafeFindOrCreateType( Event.class, getName() );
-                doCommand( new UpdatePlanObject(
-                        plan,
+                doCommand( new UpdatePlanObject( User.current().getUsername(), plan,
                         "incidents",
                         confirmedEvent,
-                        UpdateObject.Action.Add
-                ) );
+                        UpdateObject.Action.Add ) );
 
             } else if ( !markedForCreation && getPlan().getIncidents().size() > 1 ) {
                 Event confirmedEvent = doSafeFindOrCreateType( Event.class, getName() );
-                doCommand( new UpdatePlanObject(
-                        plan,
+                doCommand( new UpdatePlanObject( User.current().getUsername(), plan,
                         "incidents",
                         confirmedEvent,
-                        UpdateObject.Action.Remove
-                ) );
+                        UpdateObject.Action.Remove ) );
                 getCommander().cleanup( Event.class, getName() );
             }
         }

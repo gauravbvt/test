@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command;
 
 import com.mindalliance.channels.core.dao.Exporter;
@@ -14,18 +20,12 @@ import com.mindalliance.channels.engine.query.QueryService;
 import java.util.Map;
 
 /**
- * A command execution controller.
- * A commander serializes command executions.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Feb 28, 2009
- * Time: 2:20:10 PM
+ * A command execution controller. A commander serializes command executions.
  */
 public interface Commander {
+
     /**
-     * Whether the command could be executed right now.
-     * The user is authorized and all required locks could be taken.
+     * Whether the command could be executed right now. The user is authorized and all required locks could be taken.
      *
      * @param command a command
      * @return a boolean
@@ -33,8 +33,7 @@ public interface Commander {
     boolean canDo( Command command );
 
     /**
-     * Executes a command on behalf of the user.
-     * Locks are grabbed
+     * Executes a command on behalf of the user. Locks are grabbed
      *
      * @param command a command
      * @return an change
@@ -42,8 +41,7 @@ public interface Commander {
     Change doCommand( Command command );
 
     /**
-     * Executes a command on behalf of the user, even in production.
-     * Locks are grabbed
+     * Executes a command on behalf of the user, even in production. Locks are grabbed
      *
      * @param command a command
      * @return an change
@@ -53,38 +51,42 @@ public interface Commander {
     /**
      * Whether user could undo a previous command right now.
      *
+     * @param userName the current user
      * @return a boolean
      */
-    boolean canUndo();
+    boolean canUndo( String userName );
 
     /**
      * Whether user could redo an undone command right now.
      *
+     * @param userName the user
      * @return a boolean
      */
-    boolean canRedo();
+    boolean canRedo( String userName );
 
     /**
      * Undo user's previous command.
      *
+     * @param userName the current user
      * @return a change
      */
-    Change undo();
+    Change undo( String userName );
 
     /**
      * Redo user's previous undone command.
      *
+     * @param userName the current user
      * @return a change
      */
-    Change redo();
+    Change redo( String userName );
 
     /**
-     * Resets commander
+     * Resets commander.
      */
     void reset();
 
     /**
-     * Get a query service
+     * Get a query service.
      *
      * @return a query service
      */
@@ -94,54 +96,36 @@ public interface Commander {
      * Resets history for current user.
      *
      * @param userName a string
-     * @param all      if true include segment-specific commands
+     * @param all if true include segment-specific commands
      */
     void resetUserHistory( String userName, boolean all );
 
     /**
      * Get label for undo command.
      *
+     * @param userName the current user
      * @return a string
      */
-    String getUndoTitle();
+    String getUndoTitle( String userName );
 
     /**
      * Get label for redo command.
      *
+     * @param userName the current user
      * @return a string
      */
-    String getRedoTitle();
-
+    String getRedoTitle( String userName );
 
     /**
      * Find a model object from its id, possibly resolving the id first with idMap.
      *
      * @param clazz a model object class
-     * @param id    a long or int
+     * @param id a long or int
      * @return a model object
      * @throws CommandException if not found
      */
 
     <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException;
-/**
- * Resolves an id.
- *
- * @param id a long
- * @return a long or int
- * @throws CommandException if resolution fails
- */
-/*
-    Long resolveId( Long id ) throws CommandException;
-
-    */
-/**
- * Map id translation for replay.
- * @param oldId a Long or null
- * @param newId a Long
- */
-/*
-    void mapId( Long oldId, Long newId );
-*/
 
     /**
      * Whether commander is in journal replay mode.
@@ -161,7 +145,7 @@ public interface Commander {
      * Remove entity with old name if not referenced and if not defined.
      *
      * @param clazz a model object class
-     * @param name  a string
+     * @param name a string
      * @return a boolean - true if the entity was deleted
      */
     boolean cleanup( Class<? extends ModelObject> clazz, String name );
@@ -169,42 +153,47 @@ public interface Commander {
     /**
      * Whether someone other than the user has a lock on the model object with given id.
      *
+     * @param userName the current user
      * @param identifiable an identifiable
      * @return a boolean
      */
-    boolean isLockedByUser( Identifiable identifiable );
+    boolean isLockedByUser( String userName, Identifiable identifiable );
 
     /**
-     * Attempt to get lock on identitifiable
+     * Attempt to get lock on identifiable.
      *
+     * @param userName the current user
      * @param identifiable an identifiable object
      * @return a boolean indiciating success (true) or failure (false)
      */
-    boolean requestLockOn( Identifiable identifiable );
+    boolean requestLockOn( String userName, Identifiable identifiable );
 
     /**
-     * Attempt to get lock on identitifiable
+     * Attempt to get lock on identifiable.
      *
+     * @param userName the current user
      * @param id an identifiable's id
-     * @return a boolean indiciating success (true) or failure (false)
+     * @return a boolean indicating success (true) or failure (false)
      */
-    boolean requestLockOn( Long id );
+    boolean requestLockOn( String userName, Long id );
 
     /**
      * Attempt to release lock on identifiable, failing silently.
      *
+     * @param userName the current user
      * @param identifiable an identifiable
      * @return a boolean - whether a lock was released
      */
-    boolean releaseAnyLockOn( Identifiable identifiable );
+    boolean releaseAnyLockOn( String userName, Identifiable identifiable );
 
     /**
      * Attempt to release lock on identifiable, failing silently.
      *
+     * @param userName the current user
      * @param id an identifiable's id
      * @return a boolean - whether a lock was released
      */
-    boolean releaseAnyLockOn( Long id );
+    boolean releaseAnyLockOn( String userName, Long id );
 
     /**
      * Release all locks held by named user.
@@ -230,15 +219,17 @@ public interface Commander {
     /**
      * Keep current user alive.
      *
-     * @param userName     a string
+     * @param userName a string
      * @param refreshDelay a number of seconds between pings
      */
     void keepAlive( String userName, int refreshDelay );
 
     /**
      * Mark current user as active.
+     *
+     * @param userName the current user
      */
-    void updateUserActive();
+    void updateUserActive( String userName );
 
     /**
      * Check for and process user inactivity timeouts.
@@ -248,14 +239,17 @@ public interface Commander {
     /**
      * Is current user timed out?
      *
+     * @param userName the current user
      * @return a boolean
      */
-    boolean isTimedOut();
+    boolean isTimedOut( String userName );
 
     /**
      * Clear timeout notice for current user.
+     *
+     * @param userName the current user
      */
-    void clearTimeOut();
+    void clearTimeOut( String userName );
 
     /**
      * Whether the model object is not locked.
@@ -268,52 +262,48 @@ public interface Commander {
     /**
      * Remember state of part or flow.
      *
+     * @param userName the current user
      * @param state a map
      */
-    void setCopy( Map<String, Object> state );
+    void setCopy( String userName, Map<String, Object> state );
 
     /**
-     * Get copied state of part or flow.
-     * Null if none copied.
+     * Get copied state of part or flow. Null if none copied.
      *
+     * @param userName the current user
      * @return a map
      */
-    Map<String, Object> getCopy();
+    Map<String, Object> getCopy( String userName );
 
     /**
      * Is a part copied?
      *
+     * @param userName the current user
      * @return a boolean
      */
-    boolean isPartCopied();
+    boolean isPartCopied( String userName );
 
     /**
      * Is a flow copied?
      *
+     * @param userName the current user
      * @return a boolean
      */
-    boolean isFlowCopied();
+    boolean isFlowCopied( String userName );
 
     /**
      * Is aan attachment copied?
      *
+     * @param userName the current user
      * @return a boolean
      */
-    boolean isAttachmentCopied();
-
-    /**
-     * Sets the commander's lock manager.
-     *
-     * @param lockManager a lock manager
-     */
-    void setLockManager( LockManager lockManager );
+    boolean isAttachmentCopied( String userName );
 
     /**
      * Replay all commands in a journal.
      *
      * @param journal the journal
-     * @throws com.mindalliance.channels.core.command.CommandException
-     *          on errors
+     * @throws CommandException on errors
      */
     void replay( Journal journal ) throws CommandException;
 
@@ -332,21 +322,25 @@ public interface Commander {
     /**
      * Whether the current user us out of sync with plan versions.
      *
+     * @param userName the current user
      * @return a boolean
      */
-    boolean isOutOfSync();
+    boolean isOutOfSync( String userName );
 
     /**
      * Signal that the current user is in sync with the plan versions.
+     *
+     * @param userName the current user
      */
-    void resynced();
+    void resynced( String userName );
 
     /**
      * Get a proper exporter.
      *
+     * @param userName the current user
      * @return an exporter
      */
-    Exporter getExporter();
+    Exporter getExporter( String userName );
 
     /**
      * Initialize the commander when ready to go.
@@ -354,8 +348,6 @@ public interface Commander {
     void initialize();
 
     PlanDao getPlanDao();
-
-    void setPlanDao( PlanDao planDao );
 
     /**
      * Whether instances of class of given name can be locked.
@@ -367,11 +359,10 @@ public interface Commander {
 
     ImportExportFactory getImportExportFactory();
 
-
     /**
      * Initialize a part from a preserved state.
      *
-     * @param part  a part
+     * @param part a part
      * @param state a map
      */
     void initPartFrom( Part part, Map<String, Object> state );
@@ -385,9 +376,16 @@ public interface Commander {
 
     /**
      * Make the appropriate command to remove a flow.
+     *
+     * @param userName the current user
      * @param flow a flow
      * @return a boolean
      */
-    Command makeRemoveFlowCommand( Flow flow );
+    Command makeRemoveFlowCommand( String userName, Flow flow );
 
+    /**
+     * Get the lock manager used by this commander.
+     * @return a lock manager
+     */
+    LockManager getLockManager();
 }

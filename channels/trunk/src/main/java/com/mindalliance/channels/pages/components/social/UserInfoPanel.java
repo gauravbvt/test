@@ -312,7 +312,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         }
         if ( canSave() ) {
             user.setUserInfo( temp );
-            getQueryService().getUserService().save();
+            getQueryService().getUserDao().save();
             return true;
         } else {
             return false;

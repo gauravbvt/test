@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +28,14 @@ public class SegmentEventNeverCaused extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         Event event = segment.getEvent();
-        Plan plan = getPlan();
+        Plan plan = queryService.getPlan();
         if ( !plan.isIncident( event )
-                && getQueryService().findCausesOf( event ).isEmpty() ) {
-            Issue issue = makeIssue( Issue.COMPLETENESS, segment );
+                && queryService.findCausesOf( event ).isEmpty() ) {
+            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, segment );
             issue.setDescription( "The plan segment is about an event that may never be caused." );
             issue.setRemediation( "Make the event in question an incident\n"
                     +"or make sure at least one task in any segment causes it." );

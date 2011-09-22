@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.InfoStandard;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -28,10 +29,10 @@ public class FlowEOIsNotStandardCompliant extends AbstractIssueDetector {
     }
 
     @Override
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
-        List<InfoStandard> infoStandards = flow.getInfoStandards( getPlan() );
+        List<InfoStandard> infoStandards = flow.getInfoStandards( queryService.getPlan() );
         for ( InfoStandard infoStandard : infoStandards ) {
             for ( final String eoiName : infoStandard.getEoiNames() ) {
                 boolean exists = CollectionUtils.exists(
@@ -43,7 +44,7 @@ public class FlowEOIsNotStandardCompliant extends AbstractIssueDetector {
                             }
                         } );
                 if ( !exists ) {
-                    Issue issue = makeIssue( Issue.COMPLETENESS, flow );
+                    Issue issue = makeIssue( queryService, Issue.COMPLETENESS, flow );
                     issue.setDescription( "Flow is tagged with info standard \""
                             + infoStandard.getName()
                             + "\" but is missing expected element of information \""

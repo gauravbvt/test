@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
@@ -262,7 +263,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         if ( selectedOrganization != null ) {
             if ( getQueryService().isInvolvementExpected( selectedOrganization ) ) {
                 doCommand(
-                        new UpdatePlanObject( getPlan(),
+                        new UpdatePlanObject( User.current().getUsername(), getPlan(),
                                 "organizations",
                                 selectedOrganization,
                                 UpdateObject.Action.Remove ) );
@@ -270,7 +271,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
                     selectedOrganization = null;
             } else {
                 doCommand(
-                        new UpdatePlanObject( getPlan(),
+                        new UpdatePlanObject( User.current().getUsername(), getPlan(),
                                 "organizations",
                                 selectedOrganization,
                                 UpdateObject.Action.Add ) );
@@ -285,7 +286,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
                     newInvolvedName );
             selectedOrganization = organization;
             doCommand(
-                    new UpdatePlanObject( getPlan(),
+                    new UpdatePlanObject( User.current().getUsername(), getPlan(),
                             "organizations",
                             organization,
                             UpdateObject.Action.Add ) );

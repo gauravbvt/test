@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -31,12 +32,12 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
         for ( Flow similar : getSimilarFlows( flow ) ) {
             if ( similar.isCritical() != flow.isCritical() ) {
-                DetectedIssue issue = makeIssue( Issue.VALIDITY, flow );
+                DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, flow );
                 issue.setDescription( "Inconsistent impacts: '"
                         + flow.getReceiveTitle()
                         + "' is critical but '"
@@ -46,7 +47,7 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             } else if ( similar.isTriggeringToTarget() != flow.isTriggeringToTarget() ) {
-                DetectedIssue issue = makeIssue( Issue.VALIDITY, flow );
+                DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, flow );
                 issue.setDescription( "Inconsistent impacts: '"
                         + flow.getReceiveTitle()
                         + "' triggers '"
@@ -58,7 +59,7 @@ public class InconsistentImpactOnTargetPart extends AbstractIssueDetector {
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
             } else if ( similar.isTerminatingToTarget() != flow.isTerminatingToTarget() ) {
-                DetectedIssue issue = makeIssue( Issue.VALIDITY, flow );
+                DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, flow );
                 issue.setDescription( "Inconsistent impacts: '"
                         + flow.getReceiveTitle()
                         + "' terminates '"

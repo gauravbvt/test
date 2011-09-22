@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -20,85 +26,61 @@ import java.util.List;
 
 /**
  * Entities network diagram.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Apr 6, 2010
- * Time: 8:53:44 PM
  */
 public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRelationship> {
 
     private Class entityClass;
+
     private Segment segment;
+
     private EntityRelationship selectedEntityRel;
 
-    public EntitiesNetworkDiagram(
-            Class entityClass,
-            Segment segment,
-            EntityRelationship selectedEntityRel,
-            double[] diagramSize,
-            String orientation ) {
+    public EntitiesNetworkDiagram( Class entityClass, Segment segment, EntityRelationship selectedEntityRel,
+                                   double[] diagramSize, String orientation ) {
         super( diagramSize, orientation );
         this.entityClass = entityClass;
         this.segment = segment;
         this.selectedEntityRel = selectedEntityRel;
     }
 
-    public void render( String ticket,
-                        String outputFormat,
-                        OutputStream outputStream,
-                        Analyst analyst,
-                        DiagramFactory diagramFactory ) {
-        QueryService queryService = diagramFactory.getQueryService();
+    @Override
+    public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
+                        DiagramFactory diagramFactory, QueryService queryService ) {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        GraphBuilder<ModelEntity, EntityRelationship> entitiesNetworkGraphBuilder =
-                new EntitiesNetworkGraphBuilder(
-                        getEntities( queryService ),
-                        getEntityRels( queryService, analyst ),
-                        diagramFactory.getQueryService() );
-        Graph<ModelEntity, EntityRelationship> graph =
-                entitiesNetworkGraphBuilder.buildDirectedGraph();
-        GraphRenderer<ModelEntity, EntityRelationship> graphRenderer =
-                diagramFactory.getGraphRenderer().cloneSelf();
+        GraphBuilder<ModelEntity, EntityRelationship> entitiesNetworkGraphBuilder = new EntitiesNetworkGraphBuilder(
+                getEntities( queryService ),
+                getEntityRels( queryService, analyst ),
+                queryService );
+        Graph<ModelEntity, EntityRelationship> graph = entitiesNetworkGraphBuilder.buildDirectedGraph();
+        GraphRenderer<ModelEntity, EntityRelationship> graphRenderer = diagramFactory.getGraphRenderer().cloneSelf();
         graphRenderer.setAlgo( "neato" );
         graphRenderer.resetHighlight();
-        if ( selectedEntityRel != null ) {
+        if ( selectedEntityRel != null )
             graphRenderer.highlightEdge( selectedEntityRel );
-        }
-        EntityNetworkMetaProvider metaProvider = new EntityNetworkMetaProvider(
-                outputFormat,
-                diagramFactory.getImageDirectory(),
-                analyst );
-        if ( diagramSize != null ) {
+        EntityNetworkMetaProvider metaProvider = new EntityNetworkMetaProvider( outputFormat,
+                                                                                diagramFactory.getImageDirectory(),
+                                                                                analyst,
+                                                                                queryService );
+        if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
-        }
-        if ( orientation != null ) {
+        if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
-        }
         EntityNetworkDOTExporter dotExporter = new EntityNetworkDOTExporter( metaProvider );
-        graphRenderer.render( graph,
-                dotExporter,
-                outputFormat,
-                ticket,
-                outputStream
-        );
+        graphRenderer.render( queryService, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 
     @SuppressWarnings( "unchecked" )
     private List<ModelEntity> getEntities( QueryService queryService ) {
-        if ( segment != null ) {
-            return queryService.listEntitiesTaskedInSegment( entityClass, segment, ModelEntity.Kind.Actual );
-        } else {
-            return (List<ModelEntity>) CollectionUtils.select(
-                    queryService.listActualEntities( entityClass ),
-                    new Predicate() {
-                        public boolean evaluate( Object object ) {
-                            return !( (ModelEntity) object ).isUnknown();
-                        }
-                    }
-            );
-        }
+        return segment == null ?
+               (List<ModelEntity>) CollectionUtils.select( queryService.listActualEntities( entityClass ),
+                                                           new Predicate() {
+                                                               @Override
+                                                               public boolean evaluate( Object object ) {
+                                                                   return !( (ModelEntity) object ).isUnknown();
+                                                               }
+                                                           } ) :
+               queryService.listEntitiesTaskedInSegment( entityClass, segment, ModelEntity.Kind.Actual );
     }
 
     private List<EntityRelationship> getEntityRels( QueryService queryService, Analyst analyst ) {
@@ -107,18 +89,19 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
         for ( ModelEntity entity : entities ) {
             for ( ModelEntity other : entities ) {
                 if ( entity != other ) {
-                    EntityRelationship<ModelEntity> entityRel;
-                    if ( segment != null ) {
-                        entityRel = analyst.findEntityRelationship( entity, other, segment );
-                    } else {
-                        entityRel = analyst.findEntityRelationship( entity, other );
-                    }
-                    if ( entityRel != null ) entityRels.add( entityRel );
+                    EntityRelationship<ModelEntity> entityRel = segment == null ?
+                                                                analyst.findEntityRelationship( queryService,
+                                                                                                entity,
+                                                                                                other ) :
+                                                                analyst.findEntityRelationship( queryService,
+                                                                                                entity,
+                                                                                                other,
+                                                                                                segment );
+                    if ( entityRel != null )
+                        entityRels.add( entityRel );
                 }
             }
         }
         return entityRels;
     }
-
-
 }

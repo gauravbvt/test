@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -29,11 +35,6 @@ import java.util.regex.Pattern;
 
 /**
  * Abstract Diagram Panel.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Apr 1, 2009
- * Time: 1:11:09 PM
  */
 public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
 
@@ -42,7 +43,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractDiagramPanel.class );
 
-    private static String[] STANDARD_ARGS = { "graph", "vertex", "edge", "width", "height" };
+    private static final String[] STANDARD_ARGS = { "graph", "vertex", "edge", "width", "height" };
 
     public static final String TICKET_PARM = "ticket";
 
@@ -52,6 +53,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     private Diagram diagram;
 
     private final String ticket;
+
     /**
      * Diagram generation settings.
      */
@@ -64,7 +66,6 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
 
     @SpringBean
     private Analyst analyst;
-
 
     @SpringBean
     private DiagramFactory diagramFactory;
@@ -118,24 +119,33 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
                         String edgeId = requestCycle.getRequest().getParameter( "edge" );
                         String width = requestCycle.getRequest().getParameter( "width" );
                         String height = requestCycle.getRequest().getParameter( "height" );
-                        Map<String, String>extras = new HashMap<String,String>();
+                        Map<String, String> extras = new HashMap<String, String>();
                         List<String> standardArgs = Arrays.asList( STANDARD_ARGS );
-                        for ( String argName : requestCycle.getRequest().getParameterMap().keySet() ) {
-                            if ( !standardArgs.contains( argName ) ) {
-                                extras.put( argName, requestCycle.getRequest().getParameter( argName ));
-                            }
-                        }
+                        for ( String argName : requestCycle.getRequest().getParameterMap().keySet() )
+                            if ( !standardArgs.contains( argName ) )
+                                extras.put( argName, requestCycle.getRequest().getParameter( argName ) );
+
                         if ( graphId != null ) {
-                            if ( vertexId == null && edgeId == null ) {
+                            if ( vertexId == null && edgeId == null )
                                 onSelectGraph( graphId, getDomIdentifier(), 0, 0, extras, target );
-                            } else if ( vertexId != null ) {
+                            else if ( vertexId != null ) {
                                 int[] scroll = calculateVertexScroll( vertexId, width, height );
-                                onSelectVertex( graphId, vertexId,
-                                        getDomIdentifier(), scroll[0], scroll[1], extras, target );
+                                onSelectVertex( graphId,
+                                                vertexId,
+                                                getDomIdentifier(),
+                                                scroll[0],
+                                                scroll[1],
+                                                extras,
+                                                target );
                             } else {
                                 int[] scroll = calculateEdgeScroll( imageMapHolder, edgeId, width, height );
-                                onSelectEdge( graphId, edgeId,
-                                        getDomIdentifier(), scroll[0], scroll[1], extras, target );
+                                onSelectEdge( graphId,
+                                              edgeId,
+                                              getDomIdentifier(),
+                                              scroll[0],
+                                              scroll[1],
+                                              extras,
+                                              target );
                             }
                         }
                     }
@@ -146,9 +156,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
-                String url = makeDiagramUrl()
-                        + makeSeed()
-                        + AbstractChannelsWebPage.queryParameters( getPlan() );
+                String url = makeDiagramUrl() + makeSeed() + AbstractChannelsWebPage.queryParameters( getPlan() );
                 tag.put( "src", url );
                 if ( isWithImageMap() ) {
                     // TODO may not be unique in the page but should be
@@ -183,13 +191,10 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         add( graph );
     }
 
-    private int[] calculateVertexScroll(
-            String vertexId, String swidth, String sheight ) {
+    private int[] calculateVertexScroll( String vertexId, String swidth, String sheight ) {
         int[] scroll = new int[2];
         String imageMap = imageMapHolder.toString();
-        String s = "<area.*?vertex="
-                + vertexId
-                + "&.*?coords=\"(\\d+),(\\d+),(\\d+),(\\d+)\"";
+        String s = "<area.*?vertex=" + vertexId + "&.*?coords=\"(\\d+),(\\d+),(\\d+),(\\d+)\"";
         Pattern pattern = Pattern.compile( s );
         Matcher matcher = pattern.matcher( imageMap );
         if ( matcher.find() ) {
@@ -207,16 +212,10 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         return scroll;
     }
 
-    private int[] calculateEdgeScroll(
-            StringBuilder imageMapHolder,
-            String edgeId,
-            String swidth,
-            String sheight ) {
+    private int[] calculateEdgeScroll( StringBuilder imageMapHolder, String edgeId, String swidth, String sheight ) {
         int[] scroll = new int[2];
         String imageMap = imageMapHolder.toString();
-        String s = "<area.*?edge="
-                + edgeId
-                + "&.*?coords=\"(\\d+),(\\d+),(\\d+),(\\d+)\"";
+        String s = "<area.*?edge=" + edgeId + "&.*?coords=\"(\\d+),(\\d+),(\\d+),(\\d+)\"";
         Pattern pattern = Pattern.compile( s );
         Matcher matcher = pattern.matcher( imageMap );
         if ( matcher.find() ) {
@@ -236,7 +235,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
 
     private StringBuilder createMapHolder( String ticket, Analyst analyst, DiagramFactory diagramFactory ) {
         StringBuilder builder = new StringBuilder();
-        String imageMap = diagram.makeImageMap( ticket, analyst, diagramFactory );
+        String imageMap = diagram.makeImageMap( ticket, analyst, diagramFactory, getQueryService() );
         // imageMap = imageMap.replace( "id=\"G\"", "id=\"" + getContainerId() + "\"" );
         imageMap = imageMap.replace( "id=\"G\"", "" );
         imageMap = imageMap.replace( "name=\"G\"", "name=\"" + getContainerId() + "\"" );
@@ -251,9 +250,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      */
     protected String makeSeed() {
         // LOG.info("***Seed = " + getCommander().getLastModified() );
-        return getPlan().isDevelopment()
-                ? "&_modified=" + getCommander().getLastModified()
-                : "";
+        return getPlan().isDevelopment() ? "&_modified=" + getCommander().getLastModified() : "";
     }
 
     /**
@@ -297,84 +294,58 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     /**
      * Graph selected event.
      *
-     * @param graphId       a string
+     * @param graphId a string
      * @param domIdentifier -- dom identifier of diagram container - can be null
-     * @param scrollTop     where to scroll to top
-     * @param scrollLeft    where to scroll to left
-     * @param extras        a map of string to string
-     * @param target        an ajax request target
+     * @param scrollTop where to scroll to top
+     * @param scrollLeft where to scroll to left
+     * @param extras a map of string to string
+     * @param target an ajax request target
      */
-    protected abstract void onSelectGraph(
-            String graphId,
-            String domIdentifier,
-            int scrollTop,
-            int scrollLeft,
-            Map<String,String> extras,
-            AjaxRequestTarget target );
+    protected abstract void onSelectGraph( String graphId, String domIdentifier, int scrollTop, int scrollLeft,
+                                           Map<String, String> extras, AjaxRequestTarget target );
 
     /**
      * Vertex selected event.
      *
-     * @param graphId       a string
-     * @param vertexId      a string
+     * @param graphId a string
+     * @param vertexId a string
      * @param domIdentifier -- dom identifier of diagram container - can be null
-     * @param scrollTop     where to scroll to top
-     * @param scrollLeft    where to scroll to left
-     * @param extras        a map of string to string
-     * @param target        an ajax request target
+     * @param scrollTop where to scroll to top
+     * @param scrollLeft where to scroll to left
+     * @param extras a map of string to string
+     * @param target an ajax request target
      */
-    protected abstract void onSelectVertex(
-            String graphId,
-            String vertexId,
-            String domIdentifier,
-            int scrollTop,
-            int scrollLeft,
-            Map<String,String> extras,
-            AjaxRequestTarget target );
+    protected abstract void onSelectVertex( String graphId, String vertexId, String domIdentifier, int scrollTop,
+                                            int scrollLeft, Map<String, String> extras, AjaxRequestTarget target );
 
     /**
      * Edge selected event.
      *
-     * @param graphId       a string
-     * @param edgeId        a string
+     * @param graphId a string
+     * @param edgeId a string
      * @param domIdentifier -- dom identifier of diagram container - can be null
-     * @param scrollTop     where to scroll to top
-     * @param scrollLeft    where to scroll to left
-     * @param extras        a map of string to string
-     * @param target        an ajax request target
+     * @param scrollTop where to scroll to top
+     * @param scrollLeft where to scroll to left
+     * @param extras a map of string to string
+     * @param target an ajax request target
      */
-    protected abstract void onSelectEdge(
-            String graphId,
-            String edgeId,
-            String domIdentifier,
-            int scrollTop,
-            int scrollLeft,
-            Map<String,String> extras,
-            AjaxRequestTarget target );
-
+    protected abstract void onSelectEdge( String graphId, String edgeId, String domIdentifier, int scrollTop,
+                                          int scrollLeft, Map<String, String> extras, AjaxRequestTarget target );
 
     /**
      * Append javascript to cause scrolling.
      *
      * @param domIdentifier a CSS path to a dom element
-     * @param scrollTop     an int
-     * @param scrollLeft    an int
+     * @param scrollTop an int
+     * @param scrollLeft an int
      * @return a script that will cause scrolling
      */
-    protected String scroll(
-            String domIdentifier,
-            int scrollTop,
-            int scrollLeft ) {
+    protected String scroll( String domIdentifier, int scrollTop, int scrollLeft ) {
         String script = null;
         if ( domIdentifier != null ) {
             // Timeout needed to let document fully update.
-            script = "{ setTimeout(\"$('"
-                    + domIdentifier
-                    + "').scrollTop("
-                    + scrollTop
-                    + ").scrollLeft("
-                    + scrollLeft
-                    + ")\", 500) }";
+            script = "{ setTimeout(\"$('" + domIdentifier + "').scrollTop(" + scrollTop + ").scrollLeft(" + scrollLeft
+                     + ")\", 500) }";
         }
         return script;
     }

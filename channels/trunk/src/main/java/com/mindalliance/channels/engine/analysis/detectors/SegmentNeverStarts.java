@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,20 +29,20 @@ public class SegmentNeverStarts extends AbstractIssueDetector {
     /**
      * {@inheritDoc}
      */
-    public List<Issue> detectIssues( ModelObject modelObject ) {
+    public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
-        Plan plan = getPlan();
+        Plan plan = queryService.getPlan();
         Event event = segment.getEvent();
         Phase phase = segment.getPhase();
         boolean isIncident = plan.isIncident( event );
         boolean canStart =  phase.isPreEvent()
                                 || isIncident && phase.isConcurrent()
-                                || getQueryService().isInitiated( segment )
+                                || queryService.isInitiated( segment )
                                 || phase.isPostEvent() && event.isSelfTerminating();
 
         if ( !canStart ) {
-            Issue issue = makeIssue( Issue.COMPLETENESS, segment );
+            Issue issue = makeIssue( queryService, Issue.COMPLETENESS, segment );
             String eventName = segment.getEvent().getName();
             String description = "The plan segment may never start";
             String remediation = "";

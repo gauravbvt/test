@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.core.command.commands;
 
 import com.mindalliance.channels.core.command.CommandException;
@@ -7,56 +13,41 @@ import com.mindalliance.channels.core.model.ModelObject;
 
 /**
  * Command to update a modelobject contained in a plan.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Mar 5, 2009
- * Time: 11:47:16 AM
  */
 public class UpdatePlanObject extends UpdateObject {
 
     public UpdatePlanObject() {
     }
 
-    public UpdatePlanObject(
-            final Identifiable identifiable,
-            final String property,
-            final Object value ) {
-        this( identifiable, property, value, Action.Set );
+    public UpdatePlanObject( String userName ) {
+        super( userName );
     }
 
-    public UpdatePlanObject(
-            final Identifiable identifiable,
-            final String property,
-            final Object value,
-            final Action action ) {
-        super( identifiable, property, value, action );
+    public UpdatePlanObject( String userName, Identifiable identifiable, String property, Object value ) {
+        this( userName, identifiable, property, value, Action.Set );
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public UpdatePlanObject( String userName, Identifiable identifiable, String property, Object value,
+                             Action action ) {
+        super( userName, identifiable, property, value, action );
+    }
+
     @Override
     @SuppressWarnings( "unchecked" )
     protected Identifiable getIdentifiable( Commander commander ) throws CommandException {
-        String className = (String)get( "class" );
+        String className = (String) get( "class" );
         Class<? extends ModelObject> clazz = null;
         try {
-            clazz = (Class<? extends ModelObject>)getClass().getClassLoader().loadClass( className );
+            clazz = (Class<? extends ModelObject>) getClass().getClassLoader().loadClass( className );
         } catch ( ClassNotFoundException e ) {
             throw new CommandException( "Invalid class name", e );
         }
         return commander.resolve( clazz, (Long) get( "object" ) );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected UpdateObject createUndoCommand(
-            Identifiable identifiable, String property, Object value, Action action ) {
-        return new UpdatePlanObject( identifiable, property, value, action );
+    protected UpdateObject createUndoCommand( Identifiable identifiable, String property, Object value,
+                                              Action action ) {
+        return new UpdatePlanObject( getUserName(), identifiable, property, value, action );
     }
-
-
 }
