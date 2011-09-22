@@ -13,7 +13,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.engine.geo.GeoService;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

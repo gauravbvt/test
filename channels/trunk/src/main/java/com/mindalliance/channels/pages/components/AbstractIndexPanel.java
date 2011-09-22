@@ -20,7 +20,7 @@ import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.util.NameRange;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;

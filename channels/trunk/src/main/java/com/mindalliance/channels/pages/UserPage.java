@@ -12,7 +12,7 @@ import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;

@@ -5,7 +5,7 @@ import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;

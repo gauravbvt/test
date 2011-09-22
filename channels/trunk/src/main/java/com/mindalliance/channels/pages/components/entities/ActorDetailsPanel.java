@@ -18,7 +18,7 @@ import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;

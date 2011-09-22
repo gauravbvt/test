@@ -17,7 +17,7 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;

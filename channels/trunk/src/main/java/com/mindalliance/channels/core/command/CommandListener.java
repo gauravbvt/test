@@ -25,7 +25,7 @@ public interface CommandListener {
      *
      * @param commander responsible of executing the command
      * @param command a Command
-     * @param change
+     * @param change the resulting change
      */
     void commandUndone( Commander commander, Command command, Change change );
 
@@ -34,7 +34,14 @@ public interface CommandListener {
      *
      * @param commander responsible of executing the command
      * @param command a Command
-     * @param change
+     * @param change the resulting change
      */
     void commandRedone( Commander commander, Command command, Change change );
+
+    /**
+     * Notification that a new commander was initialized.
+     * @param commander the commander
+     *
+     */
+    void started( Commander commander );
 }

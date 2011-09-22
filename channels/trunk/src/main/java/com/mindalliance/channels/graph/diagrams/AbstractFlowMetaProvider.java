@@ -9,7 +9,7 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.slf4j.Logger;

@@ -14,7 +14,7 @@ import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Transformation.Type;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Delay;

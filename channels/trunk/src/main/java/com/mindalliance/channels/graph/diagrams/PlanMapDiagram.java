@@ -15,7 +15,7 @@ import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.graph.URLProvider;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.springframework.core.io.Resource;
 

@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.pages.PlanPage;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

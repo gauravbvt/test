@@ -17,7 +17,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;

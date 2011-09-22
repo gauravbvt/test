@@ -10,7 +10,7 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.engine.query.Assignments;
+import com.mindalliance.channels.core.query.Assignments;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;

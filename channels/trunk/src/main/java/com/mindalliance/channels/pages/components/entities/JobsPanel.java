@@ -18,7 +18,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
-import com.mindalliance.channels.engine.query.Play;
+import com.mindalliance.channels.core.query.Play;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;

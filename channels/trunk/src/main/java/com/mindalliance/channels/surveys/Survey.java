@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.surveys;
 
 import com.mindalliance.channels.core.dao.User;
@@ -5,8 +11,8 @@ import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -31,17 +37,14 @@ import java.util.StringTokenizer;
 
 /**
  * A survey.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Aug 21, 2009
- * Time: 7:23:40 AM
  */
 abstract public class Survey implements Identifiable, Serializable {
+
     /**
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( Survey.class );
+
     /**
      * Max title length.
      */
@@ -51,43 +54,52 @@ abstract public class Survey implements Identifiable, Serializable {
      * The current status of the survey.
      */
     private Status status;
+
     /**
      * id of registered survey (launched or closed). Negative if not registered.
      */
     private long id = -1L;
+
     /**
      * Name of the user who created or last configured the survey.
      */
     private String userName;
+
     /**
      * Users included in the survey.
      */
     private Set<Contact> contacts = new HashSet<Contact>();
+
     /**
      * Date of creation
      */
     private Date creationDate;
+
     /**
      * Date when the survey was launched.
      */
     private Date launchDate;
+
     /**
      * Date of creation
      */
     private Date closedDate;
+
     /**
      * Time interval from launchDate to deadline.
      */
     private Long timeToDeadline;
+
     /**
      * Full name of issuer.
      */
     private String issuer;
+
     /**
      * Simple date format.
      */
-    private static SimpleDateFormat dateFormat =
-            new SimpleDateFormat( "EEE MMM dd HH:mm:ss zzz yyyy", Locale.US );
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat( "EEE MMM dd HH:mm:ss zzz yyyy", Locale.US );
+
     /**
      * Survey data.
      */
@@ -98,7 +110,8 @@ abstract public class Survey implements Identifiable, Serializable {
      */
     public static Survey UNKNOWN = UnknownSurvey.getInstance();
 
-    public abstract Identifiable findIdentifiable( Analyst analyst, QueryService queryService ) throws NotFoundException;
+    public abstract Identifiable findIdentifiable( Analyst analyst, QueryService queryService )
+        throws NotFoundException;
 
     public abstract boolean matches( Type type, Identifiable identifiable );
 
@@ -117,7 +130,6 @@ abstract public class Survey implements Identifiable, Serializable {
     public abstract Identifiable getAbout( Analyst analyst, QueryService queryService );
 
     public abstract String getSurveyType();
-
 
     /**
      * The status of a survey.
@@ -159,6 +171,7 @@ abstract public class Survey implements Identifiable, Serializable {
         userName = User.current().getUsername();
     }
 
+    @Override
     public long getId() {
         return id;
     }
@@ -235,23 +248,17 @@ abstract public class Survey implements Identifiable, Serializable {
         return surveyData;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getDescription() {
         return "Survey by " + userName + " about " + getTitle() + " with deadline " + getDeadlineText();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getName() {
         return getTitle();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getTypeName() {
         return "Survey";
     }
@@ -284,12 +291,12 @@ abstract public class Survey implements Identifiable, Serializable {
 
     public Contact getContact( final String username ) {
         return (Contact) CollectionUtils.find(
-                contacts,
-                new Predicate() {
-                    public boolean evaluate( Object obj ) {
-                        return ( (Contact) obj ).getUsername().equals( username );
-                    }
-                } );
+            contacts, new Predicate() {
+            @Override
+            public boolean evaluate( Object obj ) {
+                return ( (Contact) obj ).getUsername().equals( username );
+            }
+        } );
     }
 
     private void addContact( Contact contact ) {
@@ -323,9 +330,6 @@ abstract public class Survey implements Identifiable, Serializable {
         return !isLaunched() && !isClosed();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if ( isUnknown() ) {
@@ -389,8 +393,8 @@ abstract public class Survey implements Identifiable, Serializable {
                 contacts.add( Contact.fromString( tokenizer.nextToken() ) );
             }
             String specs = URLDecoder.decode( tokens.nextToken(), "UTF-8" );
-            Class<? extends Survey> clazz = (Class<? extends Survey>) Survey.class
-                    .getClassLoader().loadClass( surveyClassName );
+            Class<? extends Survey> clazz = (Class<? extends Survey>) Survey.class.getClassLoader()
+                                                                                  .loadClass( surveyClassName );
             Survey survey = clazz.newInstance();
             survey.setId( id );
             survey.setStatus( status );
@@ -426,7 +430,6 @@ abstract public class Survey implements Identifiable, Serializable {
         return status == Status.Closed;
     }
 
-
     /**
      * Get registration title for the survey (includes plan uri).
      *
@@ -454,21 +457,18 @@ abstract public class Survey implements Identifiable, Serializable {
         return new Date( creationDate.getTime() + timeToDeadline );
     }
 
-
     public String getFormattedCreationDate() {
         return dateFormat.format( creationDate );
     }
 
     public int getContactedCount() {
         return CollectionUtils.select(
-                contacts,
-                PredicateUtils.invokerPredicate( "isContacted" ) ).size();
+            contacts, PredicateUtils.invokerPredicate( "isContacted" ) ).size();
     }
 
     public int getToBeContactedCount() {
         return CollectionUtils.select(
-                contacts,
-                PredicateUtils.invokerPredicate( "isToBeContacted" ) ).size();
+            contacts, PredicateUtils.invokerPredicate( "isToBeContacted" ) ).size();
     }
 
     public boolean updateSurveyData( SurveyService surveyService, Plan plan ) {
@@ -515,17 +515,16 @@ abstract public class Survey implements Identifiable, Serializable {
             return dateFormat.format( creationDate );
     }
 
-    protected Map<String, Object> getSurveyContext( SurveyService surveyService, Plan plan, QueryService queryService ) {
+    protected Map<String, Object> getSurveyContext( SurveyService surveyService, Plan plan,
+                                                    QueryService queryService ) {
         User issuer = getIssuer( surveyService.getUserDao() );
         Map<String, Object> context = new HashMap<String, Object>();
         context.put( "plan", getPlanText() );
         context.put( "deadline", getDeadlineText() );
-        context.put( "issuer", issuer != null
-                ? issuer.getFullName()
-                : "(unknown)" );
-        context.put( "email", issuer != null
-                ? issuer.getEmail()
-                : surveyService.getDefaultEmailAddress( plan ) );
+        context.put(
+            "issuer", issuer != null ? issuer.getFullName() : "(unknown)" );
+        context.put(
+            "email", issuer != null ? issuer.getEmail() : surveyService.getDefaultEmailAddress( plan ) );
         context.put( "survey", getTitle() );
         return context;
     }
@@ -545,22 +544,16 @@ abstract public class Survey implements Identifiable, Serializable {
     }
 
     public String getSurveyLink( User user ) {
-        return getSurveyData().getPublishLink()
-                + "?sgUID="
-                + user.getEmail();
+        return getSurveyData().getPublishLink() + "?sgUID=" + user.getEmail();
     }
 
     public boolean hasContact( final String userName ) {
         return CollectionUtils.exists(
-                contacts,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Contact) object ).getUsername().equals( userName );
-                    }
-                }
-        );
+            contacts, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ( (Contact) object ).getUsername().equals( userName );
+            }
+        } );
     }
-
-
 }

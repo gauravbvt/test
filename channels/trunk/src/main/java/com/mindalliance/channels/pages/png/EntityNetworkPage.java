@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.png;
 
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;

@@ -8,7 +8,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;

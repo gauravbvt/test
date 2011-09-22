@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -53,7 +53,7 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                         parameters.put( "agent", actor.getId() );
                         String userName = p.getUsername();
                         parameters.put( "user", userName );
-                        User otherUser = getPlanManager().getUserDao().getUserNamed( userName );
+                        User otherUser = getUserDao().getUserNamed( userName );
                         item.add(
                             new BookmarkablePageLink<InfoNeedsPage>(
                                 "responder", InfoNeedsPage.class, parameters )

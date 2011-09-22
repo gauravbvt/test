@@ -15,7 +15,7 @@ import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelEntity.Kind;
 import com.mindalliance.channels.core.model.Role;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 
 /**
  * Create an entity if it does not already exist.

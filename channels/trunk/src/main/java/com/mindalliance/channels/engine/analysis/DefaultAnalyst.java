@@ -6,6 +6,9 @@
 
 package com.mindalliance.channels.engine.analysis;
 
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -27,8 +30,8 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
-import com.mindalliance.channels.engine.query.Play;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.Play;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -981,5 +984,26 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             }
         } );
         return !assignments.isEmpty() && noAvailability;
+    }
+
+    @Override
+    public void commandDone( Commander commander, Command command, Change change ) {
+        if ( !commander.isReplaying() && command.isTop() && !change.isNone() )
+            onAfterCommand( commander.getPlan() );
+    }
+
+    @Override
+    public void commandUndone( Commander commander, Command command, Change change ) {
+        commandDone( commander, command, change );
+    }
+
+    @Override
+    public void commandRedone( Commander commander, Command command, Change change ) {
+        commandDone( commander, command, change );
+    }
+
+    @Override
+    public void started( Commander commander ) {
+        onStart( commander.getPlan() );
     }
 }

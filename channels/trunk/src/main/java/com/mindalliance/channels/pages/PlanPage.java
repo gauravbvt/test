@@ -23,7 +23,7 @@ import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;

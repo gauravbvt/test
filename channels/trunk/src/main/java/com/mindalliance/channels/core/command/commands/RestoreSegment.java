@@ -14,7 +14,7 @@ import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Importer;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.List;
 

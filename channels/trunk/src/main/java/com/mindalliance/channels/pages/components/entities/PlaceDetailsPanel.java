@@ -18,7 +18,7 @@ import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;

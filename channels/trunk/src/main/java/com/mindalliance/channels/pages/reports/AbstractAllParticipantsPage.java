@@ -17,7 +17,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -59,6 +59,9 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
 
     @SpringBean
     private CommanderFactory commanderFactory;
+
+    @SpringBean
+    private UserDao userDao;
 
     private String uri;
 
@@ -134,11 +137,15 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
         return planManager;
     }
 
+    protected UserDao getUserDao() {
+        return userDao;
+    }
+
     private void init( QueryService service, Plan plan ) {
         uri = plan.getUri();
         version = plan.getVersion();
 
-        users = validate( planManager.getUserDao(), service.list( Participation.class ) );
+        users = validate( userDao, service.list( Participation.class ) );
 
         actors = findFreeActors( findAssignedActors( users ), service.getAssignments().getActualActors() );
 

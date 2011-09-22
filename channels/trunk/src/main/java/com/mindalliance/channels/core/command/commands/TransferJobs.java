@@ -15,7 +15,7 @@ import com.mindalliance.channels.core.command.MappedObject;
 import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,7 +9,7 @@ package com.mindalliance.channels.graph.diagrams;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.springframework.core.io.Resource;
 
 public class FailureImpactsMetaProvider extends FlowMapMetaProvider {

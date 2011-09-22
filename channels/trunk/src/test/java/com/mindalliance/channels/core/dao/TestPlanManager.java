@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanListener;
 import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.PlanManagerImpl;
 import com.mindalliance.channels.core.model.Plan;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class TestPlanManager {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks( this );        
-        planManager = new PlanManager( definitionManager );
+        planManager = new PlanManagerImpl( definitionManager );
     }
 
     @Test

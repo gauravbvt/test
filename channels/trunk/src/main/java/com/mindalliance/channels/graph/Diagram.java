@@ -1,7 +1,7 @@
 package com.mindalliance.channels.graph;
 
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 
 import java.io.OutputStream;
 import java.io.Serializable;

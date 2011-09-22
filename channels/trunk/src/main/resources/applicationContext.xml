@@ -43,9 +43,8 @@ CONFIGURATION NOTES:
         </property>
     </bean>
 
-    <bean id="planManager" class="com.mindalliance.channels.core.dao.PlanManager" lazy-init="true">
+    <bean id="planManager" class="com.mindalliance.channels.core.dao.PlanManagerImpl" lazy-init="true">
         <constructor-arg ref="definitionManager"/>
-        <property name="databaseFactory" ref="databaseFactory"/>
         <property name="defaultSupportCommunity" value="channels@mind-alliance.com"/>
         <property name="defaultCommunityCalendarHost" value="https://www.google.com/calendar/embed"/>
         <property name="defaultCommunityCalendar" value="channels.mindalliance@gmail.com"/>
@@ -98,7 +97,7 @@ CONFIGURATION NOTES:
         <property name="version" value="1.0"/>
     </bean>
 
-    <bean id="semanticMatcher" class="com.mindalliance.channels.engine.nlp.WordnetSemanticMatcher">
+    <bean id="semanticMatcher" class="com.mindalliance.channels.core.nlp.WordnetSemanticMatcher">
         <property name="wordnetDict"
                   value="WEB-INF${file.separator}data${file.separator}wordnet-2${file.separator}dict"/>
         <property name="simIndex" value="WEB-INF${file.separator}data${file.separator}jwsl${file.separator}wn_index"/>
@@ -118,10 +117,10 @@ CONFIGURATION NOTES:
         </property>
     </bean>
 
-    <bean id="planServiceFactory" class="com.mindalliance.channels.engine.query.PlanServiceFactoryImpl" destroy-method="destroy"/>
+    <bean id="planServiceFactory" class="com.mindalliance.channels.core.query.PlanServiceFactoryImpl" destroy-method="destroy"/>
 
     <!-- Note: don't use planService directly... Use through the factory... Here for proper aspect initialization. -->
-    <bean id="planService" class="com.mindalliance.channels.engine.query.PlanService" scope="prototype" autowire="no">
+    <bean id="planService" class="com.mindalliance.channels.core.query.PlanService" scope="prototype" autowire="no">
         <constructor-arg ref="planManager"/>
         <constructor-arg ref="semanticMatcher"/>
         <constructor-arg ref="userDao"/>

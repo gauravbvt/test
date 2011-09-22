@@ -12,7 +12,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.spring.injection.annot.SpringBean;

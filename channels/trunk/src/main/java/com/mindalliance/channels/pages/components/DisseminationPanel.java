@@ -9,7 +9,7 @@ import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.pages.components.diagrams.DisseminationDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;

@@ -471,7 +471,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * Note: this method should not be called directly.
      *
      * @param source the source node.
-     * @see com.mindalliance.channels.engine.query.QueryService#connect(Node, Node, String)
+     * @see com.mindalliance.channels.core.query.QueryService#connect(Node, Node, String)
      */
     abstract void setSource( Node source );
 
@@ -480,7 +480,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * Note: this method should not be called directly.
      *
      * @param target the target node.
-     * @see com.mindalliance.channels.engine.query.QueryService#connect(Node, Node, String)
+     * @see com.mindalliance.channels.core.query.QueryService#connect(Node, Node, String)
      */
     abstract void setTarget( Node target );
 

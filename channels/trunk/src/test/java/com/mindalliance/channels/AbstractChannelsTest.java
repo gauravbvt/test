@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels;
 
 import com.mindalliance.channels.core.AttachmentManager;
@@ -8,8 +14,8 @@ import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.query.QueryService;
 import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -68,10 +74,6 @@ import java.util.StringTokenizer;
 import static javax.servlet.http.HttpServletResponse.*;
 import static org.junit.Assert.*;
 
-/**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved. Proprietary and Confidential. User: jf Date: Dec 3,
- * 2008 Time: 8:24:56 PM
- */
 @ContextConfiguration(
         loader = AbstractChannelsTest.MyContextLoader.class,
         locations = {
@@ -261,7 +263,6 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         if ( userName != null )
             logout();
         RequestContextHolder.resetRequestAttributes();
-        planManager.onAfterCommand( null, null );   // clear cache
     }
 
     protected Analyst getAnalyst() {

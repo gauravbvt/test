@@ -25,9 +25,9 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.engine.query.Assignments;
-import com.mindalliance.channels.engine.query.Commitments;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.ReportSegment;
@@ -1299,19 +1299,19 @@ public class GuidelinesPage extends AbstractParticipantPage {
             StringBuilder sb = new StringBuilder( ); // "Bypass the intermediate if unreachable.";
             sb.append( "If unreachable, contact " );
             List<ContactSpec> directContacts = new ArrayList<ContactSpec>(  );
-            sb.append( ChannelsUtils.listToString( (List<String>)CollectionUtils.collect(
-                    basis.intermediatedTargets(),
-                    new Transformer() {
+            sb.append(
+                ChannelsUtils.listToString(
+                    (List<String>) CollectionUtils.collect(
+                        basis.intermediatedTargets(), new Transformer() {
                         @Override
                         public Object transform( Object input ) {
-                            Specable spec = ((Part)input).resourceSpec();
+                            Specable spec = ( (Part) input ).resourceSpec();
                             // todo deal with restriction (merging)
-                            ContactSpec contactSpec = new ContactSpec( null, ((Part)input).resourceSpec() );
+                            ContactSpec contactSpec = new ContactSpec( null, ( (Part) input ).resourceSpec() );
                             // todo set any vs every
                             return contactSpec.getLabel( "a " );
                         }
-                    }
-            ), " and" ) );
+                    } ), " and" ) );
             return sb.toString();
         }
     }

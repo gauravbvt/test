@@ -237,7 +237,7 @@ public final class UserInfo implements Serializable {
 
     /**
      * Grant proper authorities to a plan.
-     * @see PlanManager#setAuthorities
+     * @see PlanManagerImpl#setAuthorities
      *
      * @param role either ROLE_ADMIN, ROLE_PLANNER, ROLE_USER or null for none
      * @param uri the plan's uri or null for all

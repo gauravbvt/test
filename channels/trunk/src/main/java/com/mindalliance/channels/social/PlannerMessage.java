@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.

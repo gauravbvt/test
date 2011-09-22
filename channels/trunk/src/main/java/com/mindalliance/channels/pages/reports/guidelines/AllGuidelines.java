@@ -13,7 +13,7 @@ import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -35,8 +35,6 @@ import java.util.List;
 
 public class AllGuidelines extends AbstractAllParticipantsPage {
 
-
-
     public AllGuidelines() {
 
         super( GuidelinesPage.class );
@@ -48,7 +46,7 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
 
     protected void initComponents( QueryService service, final Plan plan ) {
         List<Plan> otherPlans = findOtherPlans( plan );
-        List<User> otherPlanners = findOtherPlanners( getPlanManager().getUserDao(), plan );
+        List<User> otherPlanners = findOtherPlanners( getUserDao(), plan );
         add(
             new Label( "userName", user.getUsername() ),
             new Label( "planName", plan.toString() ),
@@ -65,7 +63,7 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
                         parameters.put( "agent", actor.getId() );
                         String userName = p.getUsername();
                         parameters.put( "user", userName );
-                        User otherUser = getPlanManager().getUserDao().getUserNamed( userName );
+                        User otherUser = getUserDao().getUserNamed( userName );
                         item.add(
                             new BookmarkablePageLink<GuidelinesPage>(
                                 "responder", GuidelinesPage.class, parameters )

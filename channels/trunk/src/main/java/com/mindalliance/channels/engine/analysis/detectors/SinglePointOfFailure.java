@@ -16,7 +16,7 @@ import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.ActorsNetworkGraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.BlockCutpointGraph;
 import org.jgrapht.graph.AsUndirectedGraph;

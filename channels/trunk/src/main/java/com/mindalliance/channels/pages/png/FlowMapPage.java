@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.png;
 
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.pages.PlanPage;

@@ -10,9 +10,8 @@ import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.query.PlanService;
-import com.mindalliance.channels.engine.query.PlanServiceFactory;
+import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.PlanServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -30,15 +29,11 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
 
     private static final Logger LOG = LoggerFactory.getLogger( CommanderFactoryImpl.class );
 
-    private Analyst analyst;
-
     private final Map<Plan, Commander> commanders = new ConcurrentHashMap<Plan, Commander> ();
 
     private List<CommandListener> commonListeners = new ArrayList<CommandListener>();
 
     private ImportExportFactory importExportFactory;
-
-    private final CommandListener listener = new FactoryListener();
 
     private PlanManager planManager;
 
@@ -80,8 +75,6 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
             newCommander.setPresenceListeners( presenceListeners );
             newCommander.initialize();
 
-            analyst.onStart( plan );
-
             return newCommander;
         }
     }
@@ -92,8 +85,7 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
      * @param commonListeners command listeners
      */
     public void setCommonListeners( List<CommandListener> commonListeners ) {
-        this.commonListeners = new ArrayList<CommandListener>( commonListeners );
-        this.commonListeners.add( listener );
+        this.commonListeners = Collections.unmodifiableList( commonListeners );
     }
 
     /**
@@ -106,15 +98,6 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
     }
 
     //-------------------------------
-
-    /**
-     * Specify the common analyst for all commanders.
-     *
-     * @param analyst the analyst
-     */
-    public void setAnalyst( Analyst analyst ) {
-        this.analyst = analyst;
-    }
 
     /**
      * Specify the common import/export factory for all commanders.
@@ -150,36 +133,5 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
      */
     public void setTimeout( int timeout ) {
         this.timeout = timeout;
-    }
-
-    //===============================
-    /**
-     * Listener to all commander to notify other services.
-     */
-    private class FactoryListener implements CommandListener {
-
-        @Override
-        public void commandDone( Commander commander, Command command, Change change ) {
-            afterCommand( commander, command, change );
-        }
-
-        private void afterCommand( Commander commander, Command command, Change change ) {
-            if ( !commander.isReplaying() && command.isTop() && !change.isNone() ) {
-                LOG.debug( "***After command" );
-
-                planManager.onAfterCommand( commander.getPlan(), command );
-                analyst.onAfterCommand( commander.getPlan() );
-            }
-        }
-
-        @Override
-        public void commandRedone( Commander commander, Command command, Change change ) {
-            afterCommand( commander, command, change );
-        }
-
-        @Override
-        public void commandUndone( Commander commander, Command command, Change change ) {
-            afterCommand( commander, command, change );
-        }
     }
 }

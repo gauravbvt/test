@@ -31,7 +31,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Role;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -377,6 +377,9 @@ public class DefaultCommander implements Commander {
     @Override
     public void initialize() {
         replayJournal();
+
+        for ( CommandListener commandListener : commandListeners )
+            commandListener.started( this );
     }
 
     /**

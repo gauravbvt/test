@@ -16,7 +16,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 
 /**
  * Redirect a flow to a new target or from a new source.

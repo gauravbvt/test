@@ -5,7 +5,7 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.PlanManagerImpl;
 import com.mindalliance.channels.core.dao.SimpleIdGenerator;
 import com.mindalliance.channels.core.odb.ODBDaoFactory;
 import org.junit.Before;
@@ -74,7 +74,7 @@ public class TestResourceSpec {
         definitionManager.setIdGenerator( new SimpleIdGenerator() );
         definitionManager.getOrCreate( "test", "test", "MAS" );
 
-        PlanManager planManager = new PlanManager( definitionManager );
+        PlanManagerImpl planManager = new PlanManagerImpl( definitionManager );
         ODBDaoFactory databaseFactory = new ODBDaoFactory();
         databaseFactory.setOdbDir( new FileSystemResource( new File( "target/channel-test-data" ) ) );
         planManager.setDatabaseFactory( databaseFactory );

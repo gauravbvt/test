@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Specable;
-import com.mindalliance.channels.engine.query.Assignments;
+import com.mindalliance.channels.core.query.Assignments;
 
 import java.io.File;
 import java.io.IOException;

@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.engine.analysis;
 
+import com.mindalliance.channels.core.command.CommandListener;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
@@ -22,14 +23,14 @@ import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.List;
 
 /**
  * Analyzes the plan and individual model elements.
  */
-public interface Analyst {
+public interface Analyst extends CommandListener {
 
     /**
      * Whether to include issues that are property-specific.

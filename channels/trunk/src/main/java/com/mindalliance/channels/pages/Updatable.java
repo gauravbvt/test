@@ -8,7 +8,7 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 import java.util.List;

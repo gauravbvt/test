@@ -7,7 +7,7 @@ import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

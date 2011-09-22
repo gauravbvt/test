@@ -12,7 +12,7 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.engine.query.Assignments;
+import com.mindalliance.channels.core.query.Assignments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;

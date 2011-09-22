@@ -5,7 +5,7 @@ import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.surveys.Survey.Type;
 
 import java.util.List;

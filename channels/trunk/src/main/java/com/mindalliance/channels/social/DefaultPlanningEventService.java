@@ -76,6 +76,10 @@ public class DefaultPlanningEventService implements PlanningEventService {
     }
 
     @Override
+    public void started( Commander commander ) {
+    }
+
+    @Override
     public synchronized void killIfAlive( String username, String urn ) {
         if ( isAlive( username, urn ) )
             kill( username, urn );

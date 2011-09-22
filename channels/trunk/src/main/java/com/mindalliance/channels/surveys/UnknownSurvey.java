@@ -3,7 +3,7 @@ package com.mindalliance.channels.surveys;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.List;

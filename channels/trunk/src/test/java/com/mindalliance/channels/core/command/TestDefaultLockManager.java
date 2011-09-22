@@ -6,7 +6,7 @@ package com.mindalliance.channels.core.command;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

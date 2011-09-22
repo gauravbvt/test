@@ -1,4 +1,4 @@
-package com.mindalliance.channels.engine.export;
+package com.mindalliance.channels.core.export;
 
 import com.mindalliance.channels.AbstractChannelsTest;
 import com.mindalliance.channels.core.dao.Exporter;

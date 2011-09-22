@@ -10,8 +10,8 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.engine.imaging.ImagingService;
-import com.mindalliance.channels.engine.query.Assignments;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.List;
 

@@ -9,7 +9,7 @@ import com.mindalliance.channels.core.dao.UserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.engine.query.PlanService;
+import com.mindalliance.channels.core.query.PlanService;
 import org.junit.Test;
 import org.springframework.test.context.TestExecutionListeners;
 

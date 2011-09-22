@@ -2,7 +2,7 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.PlanManagerImpl;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.odb.ODBDaoFactory;
 import junit.framework.TestCase;
@@ -35,7 +35,7 @@ public class TestNode extends TestCase {
         DefinitionManager definitionManager = new DefinitionManager(
             new FileSystemResource( new File("target/channel-test-data" ) ), null );
         definitionManager.afterPropertiesSet();
-        PlanManager planManager = new PlanManager( definitionManager );
+        PlanManagerImpl planManager = new PlanManagerImpl( definitionManager );
         ODBDaoFactory databaseFactory = new ODBDaoFactory();
         databaseFactory.setOdbDir( new FileSystemResource( new File( "target/channel-test-data" ) ) );
         planManager.setDatabaseFactory( databaseFactory );

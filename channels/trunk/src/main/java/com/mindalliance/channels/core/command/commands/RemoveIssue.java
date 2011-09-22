@@ -14,7 +14,7 @@ import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.HashMap;
 import java.util.Map;

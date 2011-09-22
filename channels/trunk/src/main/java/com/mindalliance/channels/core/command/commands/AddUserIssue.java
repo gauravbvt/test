@@ -15,7 +15,7 @@ import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.Map;
 

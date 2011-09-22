@@ -10,7 +10,7 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.HierarchyGraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.HierarchyRelationship;
-import com.mindalliance.channels.engine.query.QueryService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphRenderer;
