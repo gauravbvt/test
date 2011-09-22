@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.geo;
 
 import com.mindalliance.channels.core.model.GeoLocation;
@@ -7,11 +13,6 @@ import java.util.List;
 
 /**
  * Geo service.
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jun 19, 2009
- * Time: 1:46:02 PM
  */
 public interface GeoService {
 
@@ -34,7 +35,7 @@ public interface GeoService {
     /**
      * Verify the postal code.
      *
-     * @param postalCode  a string
+     * @param postalCode a string
      * @param geoLocation a geo location
      * @return a boolean
      */
@@ -50,7 +51,7 @@ public interface GeoService {
     /**
      * Is a postal code nearby a geolocation?
      *
-     * @param postalCode  a string
+     * @param postalCode a string
      * @param geoLocation a geo location
      * @return a boolean
      */
@@ -69,10 +70,11 @@ public interface GeoService {
      *
      * @param place the place
      */
-    void validate( Place place);
+    void validate( Place place );
 
     /**
      * Query if this service is configured and ready to use.
+     *
      * @return true if configured
      */
     boolean isConfigured();

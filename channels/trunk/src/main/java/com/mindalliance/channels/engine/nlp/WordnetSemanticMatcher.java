@@ -222,7 +222,7 @@ public class WordnetSemanticMatcher implements SemanticMatcher, InitializingBean
     }
 
     @Override
-    public boolean matches( String text, String otherText, Proximity minLevel ) {
+    public Boolean matches( String text, String otherText, Proximity minLevel ) {
         try {
             Proximity level = semanticProximity( text, otherText );
             return level.getOrdinal() >= minLevel.getOrdinal();

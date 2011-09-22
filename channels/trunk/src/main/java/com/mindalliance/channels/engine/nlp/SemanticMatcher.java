@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2011 Mind-Alliance Systems LLC.
+ * All rights reserved.
+ * Proprietary and Confidential.
+ */
+
 package com.mindalliance.channels.engine.nlp;
 
 import net.didion.jwnl.JWNLException;
@@ -7,20 +13,20 @@ import net.didion.jwnl.data.POS;
 import java.util.List;
 
 /**
- * A semantic matcher. Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved. Proprietary and Confidential.
- * User: jf Date: Jul 10, 2009 Time: 9:43:47 AM
+ * A semantic matcher.
  */
 public interface SemanticMatcher {
 
     /**
      * Whether the semantic distance between two string is at least some given value.
      *
+     *
      * @param text a string
      * @param otherText a string
      * @param minLevel a proximity level
      * @return a boolean
      */
-    boolean matches( String text, String otherText, Proximity minLevel );
+    Boolean matches( String text, String otherText, Proximity minLevel );
 
     /**
      * Return the semantic proximity of the best match between one of a list of strings and another string.
