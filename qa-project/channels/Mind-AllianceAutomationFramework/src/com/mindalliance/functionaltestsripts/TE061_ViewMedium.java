@@ -16,6 +16,7 @@ public class TE061_ViewMedium
 {
 	public TE061_ViewMedium() {
 		try{
+			
 			GlobalVariables.sTestCaseId = "TE061_ViewMedium";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);

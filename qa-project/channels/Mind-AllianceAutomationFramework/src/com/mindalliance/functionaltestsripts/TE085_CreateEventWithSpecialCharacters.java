@@ -13,6 +13,7 @@ public class TE085_CreateEventWithSpecialCharacters
 {
 	public TE085_CreateEventWithSpecialCharacters(){
 		try {
+			
 			GlobalVariables.sTestCaseId = "TE085_CreateEventWithSpecialCharacters";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -31,7 +32,7 @@ public class TE085_CreateEventWithSpecialCharacters
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Clicks on 'About plan' link under show pop up menu option
 				GlobalVariables.iStepNo++ ;
@@ -43,7 +44,7 @@ public class TE085_CreateEventWithSpecialCharacters
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Click on 'All Event' under show pop up menu of About plan window
 				GlobalVariables.iStepNo++;
@@ -55,15 +56,13 @@ public class TE085_CreateEventWithSpecialCharacters
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Create an event
-				String event=")(*&^%$#!";
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription=")(*&^%$#!";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
+				GlobalVariables.sDescription="Event Created with Special Characters";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
-				GlobalVariables.oElement.sendKeys(event);
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -81,14 +80,14 @@ public class TE085_CreateEventWithSpecialCharacters
 				Thread.currentThread();
 				Thread.sleep(2000);					
 				// Assertion : verify that Event is added
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(event));
-				if(GlobalVariables.oElement.getText().equals(event)){
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get(")(*&^%$#!")));
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get(")(*&^%$#!"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else{
+				else {
 					GlobalVariables.sVerifyError ="Verification Failed "+"Expected ')(*&^%$#!' "+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
@@ -125,10 +124,11 @@ public class TE085_CreateEventWithSpecialCharacters
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

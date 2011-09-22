@@ -66,6 +66,11 @@ public class TE058_ShowLocaleIssueDetails
 				// View Locale Issue Details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Local Issue Details Displayed";
+				// Click on 'Details' Link under 'Show' pop up menu
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("Details"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLocale"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -75,7 +80,7 @@ public class TE058_ShowLocaleIssueDetails
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("details"))) {
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("issues"))) {
 	    			// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

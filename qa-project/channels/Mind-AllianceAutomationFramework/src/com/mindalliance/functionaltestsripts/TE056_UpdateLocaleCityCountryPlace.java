@@ -76,7 +76,7 @@ public class TE056_UpdateLocaleCityCountryPlace
 				
 				// Enter City, Country, State and Country
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="City, Country, State entered";
+				GlobalVariables.sDescription="City/Country/State Entered";
 				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:geonameContainer:geoname")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -89,17 +89,17 @@ public class TE056_UpdateLocaleCityCountryPlace
 				Thread.sleep(2000);
 				// Assertion: Verify that Locale's “City, county, state and/or country” details gets updated
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:geonameContainer:geoname"));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("India"))) {
+				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("India"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
