@@ -86,6 +86,7 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 			    else{
+			    	GlobalVariables.sVerifyError="Verifyication Failed. Expected New Medium Actual is "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

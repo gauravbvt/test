@@ -83,7 +83,7 @@ public class MAV0200_AddInfoReceiveSendTagLink
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion: Verify that 'Tags' Window gets Opened
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionTags")));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allTags"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -137,7 +137,7 @@ public class MAV0200_AddInfoReceiveSendTagLink
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion: Verify that 'Tags' Window gets Opened
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionTags")));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allTags"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

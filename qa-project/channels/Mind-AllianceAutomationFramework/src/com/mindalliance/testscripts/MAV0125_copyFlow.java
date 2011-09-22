@@ -41,7 +41,7 @@ public class MAV0125_copyFlow
 				// Click on add receive info
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Receives Informations";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(8000);
