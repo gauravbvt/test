@@ -12,7 +12,8 @@ import com.mindalliance.globallibrary.ReportFunctions;
 public class HP046_BlankName 
 {
 	public HP046_BlankName(){
-		try{			
+		try{
+			
 			GlobalVariables.sTestCaseId = "HP046_BlankName";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -31,17 +32,20 @@ public class HP046_BlankName
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000); 
+				Thread.sleep(2000); 
 				
 				// Click on name text filed and Edit it
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Enter blank name";
 				GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:fullName")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000); 
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:fullName"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion: 1. Verify that error message should be displayed as 'An email address is required'
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathEmailNameInvalidErrorMessageAssertion")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("The name is required")){
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("The name is required")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -56,21 +60,24 @@ public class HP046_BlankName
 			    }	
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000); 
+				Thread.sleep(2000); 
 				
 				// Click on Apply
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Apply";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathApplySocialPanel"))).click();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000); 
 				// Assertion: Verify that error message should be displayed as 'No changes were made'
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathErrorMessageSocialPanelAssertion")));
-			    if(GlobalVariables.oElement.getText().equalsIgnoreCase("No changes were made")){
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("change-message"));
+			    if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("No changes were made"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else{
+				else {
 					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'No changes were made' "+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
@@ -79,7 +86,7 @@ public class HP046_BlankName
 			    }	
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 			    GlobalVariables.iStepNo++ ;
@@ -90,6 +97,10 @@ public class HP046_BlankName
 			    LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
 			    LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			    System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			
