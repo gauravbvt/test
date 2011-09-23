@@ -107,6 +107,8 @@ CONFIGURATION NOTES:
         <property name="timeout" value="300"/>
         <property name="commonListeners">
             <list value-type="com.mindalliance.channels.core.command.CommandListener">
+                <ref bean="planManager"/>
+                <ref bean="analyst"/>
                 <ref bean="planningEventService"/>
             </list>
         </property>
