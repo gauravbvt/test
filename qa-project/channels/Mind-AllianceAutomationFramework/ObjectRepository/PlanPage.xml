@@ -217,8 +217,8 @@
 <xPathLegendLabel>/html/body/form/div[12]/div/div[2]/h1</xPathLegendLabel>
 <xPathReceivePanel>/html/body/form/span/div/div[3]/div[2]/div/h3/span</xPathReceivePanel>
 <xPathSendPanel>/html/body/form/span/div/div[3]/div[3]/div/h3/span</xPathSendPanel>
-<xPathAddInfoReceiveAssertion>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/span[2]/span</xPathAddInfoReceiveAssertion>
-<xPathAddInfoSendAssertion>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span[2]/span</xPathAddInfoSendAssertion>
+<xPathAddInfoReceiveAssertion>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/span/span</xPathAddInfoReceiveAssertion>
+<xPathAddInfoSendAssertion>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span/span</xPathAddInfoSendAssertion>
 <xPathEventAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathEventAttachmentAssertion>
 <xPathEventUrlAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathEventUrlAttachmentAssertion>
 </elements>
