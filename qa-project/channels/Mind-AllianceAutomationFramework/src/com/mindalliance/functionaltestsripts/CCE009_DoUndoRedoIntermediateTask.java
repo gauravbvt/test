@@ -17,6 +17,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 {
 	public CCE009_DoUndoRedoIntermediateTask() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "CCE009_DoUndoRedoIntermediateTask";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -35,7 +36,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(2000);
 					
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
@@ -47,15 +48,16 @@ public class CCE009_DoUndoRedoIntermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(2000);
 			
 					// Enter the details
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "New segment updated";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).clear();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
-					for (int i = 0; i <= 8; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Do Undo Redo Intermediate Task"));
 					// Click on 'done' button
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
@@ -65,19 +67,21 @@ public class CCE009_DoUndoRedoIntermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 
 					// Update the Information of the default task
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDefaultTask"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDefaultTask"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
+					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).clear();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-					for (int i = 0; i <= 15; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -85,7 +89,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 			
 					// Add info sends flow
 					GlobalVariables.iStepNo++ ;
@@ -120,12 +124,11 @@ public class CCE009_DoUndoRedoIntermediateTask
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Enter Task Name of Sender
-					GlobalVariables.oDriver.findElement
-					(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement
-					(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
-					for (int i = 0; i <= 17 ; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+					GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).clear();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Receiver"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
@@ -134,7 +137,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(2000);
 					
 					// Create Intermediate Flow
 					GlobalVariables.iStepNo++ ;
@@ -144,31 +147,31 @@ public class CCE009_DoUndoRedoIntermediateTask
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),GlobalVariables.viewElements.get("addIntermediate"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					// Click on Legend to minimize the information flow details
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					// Click on 'About plan segment' option under 'Show' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlanSegment"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(2000);
 					// Click on 'task mover' option under 'Shows' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAbtPlanSegShowMenu"),GlobalVariables.viewElements.get("taskMover"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					// ASSERTION: When clicked on 'Add intermediate' option, the task should be created between the selected task and its respective other task
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr/td[2]/span/a/span"));
-				    if(GlobalVariables.oElement.getText().equals("doing something")){
+				    if(GlobalVariables.oElement.getText().equals("doing something")) {
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 				    }
-				    else{
+				    else {
 				    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'doing something' "+" Actual " + GlobalVariables.oElement.getText();
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
@@ -185,14 +188,14 @@ public class CCE009_DoUndoRedoIntermediateTask
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoAddIntermediate"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					// ASSERTION: When clicked on 'Undo add intermediate' option, the intermediate task should be removed
 					GlobalVariables.bIsSuccess = Boolean.FALSE;
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
-					for (WebElement td: tds){
+					for (WebElement td: tds) {
 						GlobalVariables.sStrCheck=td.getText();
-						if (td.getText().equals("doing something")){
+						if (td.getText().equals("doing something")) {
 							GlobalVariables.bIsSuccess = Boolean.TRUE;
 							break;
 						}
@@ -218,16 +221,16 @@ public class CCE009_DoUndoRedoIntermediateTask
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("redoAddIntermediate"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					// ASSERTION: When clicked on 'Undo add intermediate' option, the intermediate task should be removed
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr/td[2]/span/a/span"));
-				    if(GlobalVariables.oElement.getText().equals("doing something")){
+				    if(GlobalVariables.oElement.getText().equals("doing something")) {
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 				    }
-				    else{
+				    else {
 				    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'doing something' "+" Actual " + GlobalVariables.oElement.getText();
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
@@ -237,16 +240,16 @@ public class CCE009_DoUndoRedoIntermediateTask
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
@@ -256,15 +259,20 @@ public class CCE009_DoUndoRedoIntermediateTask
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
 					
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+					
 				}
 				else
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 		} 
 		catch (Exception e) {
+			e.printStackTrace();
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

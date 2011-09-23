@@ -9,11 +9,12 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class HP045_BlankNameAndEmailId 
+public class HP047_BlankNameAndEmailId 
 {
-	public HP045_BlankNameAndEmailId(){
+	public HP047_BlankNameAndEmailId(){
 		try{			
-			GlobalVariables.sTestCaseId = "HP045_BlankNameAndEmailId";
+			
+			GlobalVariables.sTestCaseId = "HP047_BlankNameAndEmailId";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -31,23 +32,26 @@ public class HP045_BlankNameAndEmailId
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000); 
+				Thread.sleep(2000); 
 				
 				// Click on name text filed and Edit it
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Enter blank name";
 				GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:fullName")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000); 
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:fullName"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion: 1. Verify that error message should be displayed as 'An email address is required'
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathEmailNameInvalidErrorMessageAssertion")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("The name is required")){
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("The name is required")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else{
+				else {
 					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'The name is required' "+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
@@ -56,23 +60,26 @@ public class HP045_BlankNameAndEmailId
 			    }	
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000); 
+				Thread.sleep(2000); 
 				
 				// Click on Email id text filed and Edit it
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Enter blank email id";
 				GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000); 
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion: 1. Verify that error message should be displayed as 'An email address is required'
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathEmailNameInvalidErrorMessageAssertion")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("The name is required")){
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("The name is required")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else{
+				else {
 					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'The name is required' "+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
@@ -81,21 +88,21 @@ public class HP045_BlankNameAndEmailId
 			    }	
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000); 
+				Thread.sleep(2000); 
 				
 				// Click on Apply
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Apply";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathApplySocialPanel"))).click();
 				// Assertion: Verify that error message should be displayed as 'No changes were made'
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathErrorMessageSocialPanelAssertion")));
-			    if(GlobalVariables.oElement.getText().equalsIgnoreCase("No changes were made")){
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("change-message"));
+			    if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("No changes were made"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else{
+				else {
 					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'No changes were made' "+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
@@ -104,7 +111,7 @@ public class HP045_BlankNameAndEmailId
 			    }	
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 			    GlobalVariables.iStepNo++ ;
@@ -115,6 +122,10 @@ public class HP045_BlankNameAndEmailId
 			    LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000); 
+
 			    LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			    System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			
@@ -143,7 +154,7 @@ public class HP045_BlankNameAndEmailId
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new HP045_BlankNameAndEmailId();
+			new HP047_BlankNameAndEmailId();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 
