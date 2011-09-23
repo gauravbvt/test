@@ -1,13 +1,11 @@
 package com.mindalliance.functionaltestsripts;
 
 import java.util.List;
-
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -18,6 +16,7 @@ public class TFP005_CreateFlow
 {
 	public TFP005_CreateFlow(){
     	try {
+    		
     		GlobalVariables.sTestCaseId = "TFP005_CreateFlow";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -36,7 +35,7 @@ public class TFP005_CreateFlow
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Stretch Up Task Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
@@ -53,7 +52,7 @@ public class TFP005_CreateFlow
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Enter details in Add info Receive
 				GlobalVariables.iStepNo++;
