@@ -120,9 +120,9 @@
         <module name="MissingOverride"/>
         <module name="MissingSwitchDefault"/>
         <module name="ModifierOrder"/>
-        <module name="MultipleStringLiterals">
-            <property name="allowedDuplicates" value="2"/>
-        </module>
+        <!--<module name="MultipleStringLiterals">-->
+            <!--<property name="allowedDuplicates" value="2"/>-->
+        <!--</module>-->
         <module name="MultipleVariableDeclarations"/>
         <module name="MutableException"/>
         <module name="NPathComplexity"/>

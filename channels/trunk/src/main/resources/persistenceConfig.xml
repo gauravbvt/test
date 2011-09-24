@@ -76,8 +76,10 @@
                      advice-ref="cacheSet"/>
 
         <!-- Temporary caching trigger -->
-        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManagerImpl.onAfterCommand(..))"
-                     advice-ref="cacheClear"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandDone(..))" advice-ref="cacheClear"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandUndone(..))" advice-ref="cacheClear"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandRedone(..))" advice-ref="cacheClear"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.started(..))" advice-ref="cacheClear"/>
 
         <!-- Permanent caching -->
         <aop:advisor pointcut="execution(String com.mindalliance.channels.engine.geo.GeoService.*(..))"
