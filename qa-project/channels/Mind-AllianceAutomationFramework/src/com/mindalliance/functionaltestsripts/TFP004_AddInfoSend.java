@@ -37,7 +37,7 @@ public class TFP004_AddInfoSend
 				// Click on add info send link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add info send Clicked";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

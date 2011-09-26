@@ -124,7 +124,7 @@ public class CCE027_DoCopyFlow
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+					GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -162,7 +162,7 @@ public class CCE027_DoCopyFlow
 					// Click on copy flow option under more pop up menu
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Copy flow";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),GlobalVariables.viewElements.get("copyFlow"));
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("copyFlow"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -37,7 +37,7 @@ public class TFP003_AddInfoReceive
 				// Click on add info receive link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add info receive Clicked";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

@@ -103,7 +103,7 @@ public class CCE024_DoUndoRedoRemoveFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
@@ -146,7 +146,7 @@ public class CCE024_DoUndoRedoRemoveFlow
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Remove Flow";
 				// Click on Remove flow under more pop up menu
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),GlobalVariables.viewElements.get("removeFlow"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("removeFlow"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

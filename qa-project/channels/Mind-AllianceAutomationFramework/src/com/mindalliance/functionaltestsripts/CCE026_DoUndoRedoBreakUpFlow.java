@@ -87,7 +87,7 @@ public class CCE026_DoUndoRedoBreakUpFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
@@ -129,7 +129,7 @@ public class CCE026_DoUndoRedoBreakUpFlow
 				// Click on Break up flow under more pop up menu
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Break up flow";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveFlowMoreMenu"),GlobalVariables.viewElements.get("breakUpFlow"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("breakUpFlow"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
