@@ -1,8 +1,6 @@
 package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -49,7 +47,7 @@ public class TFP025_OngoingOrStartsWith
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 
 				// Click on Show Advance form link
 				GlobalVariables.iStepNo++ ;
@@ -61,19 +59,20 @@ public class TFP025_OngoingOrStartsWith
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Check Ongoing or Starts with Option
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Ongoing or Starts With option checked";
 				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:startsWithSegment")).click();
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				// Assertion : Verify that 'Ongoing or Starts with' is added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathOperationalNonOperational")));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("taskStart"))) {
+				Thread.currentThread();
+				Thread.sleep(2000);
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("taskStart"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -87,7 +86,7 @@ public class TFP025_OngoingOrStartsWith
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Un-check Ongoing or Starts with Option
 				GlobalVariables.iStepNo++;
@@ -98,7 +97,6 @@ public class TFP025_OngoingOrStartsWith
 				Thread.sleep(2000);
 				// Assertion : Verify that 'Ongoing or Starts with' is removed
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathOperationalNonOperational")));
-				System.out.println(GlobalVariables.oElement.getText());
 				if(GlobalVariables.oElement.getText().equals(".")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

@@ -61,7 +61,7 @@ public class TFP058_NotificationOption
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(4000);
 
 				// Click on Notification radio button Link 
 				GlobalVariables.iStepNo++ ;
@@ -152,6 +152,7 @@ public class TFP058_NotificationOption
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
     	} 
     	catch (Exception e) {
+    		e.printStackTrace();
     		if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
     			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
     					e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

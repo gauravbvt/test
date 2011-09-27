@@ -78,7 +78,6 @@ public class TFP037_TaskAttachmentAsURL
 				Thread.sleep(3000);
 				// Refresh Page
 				GlobalVariables.oDriver.navigate().refresh();
-				GlobalVariables.oDriver.navigate().refresh();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

@@ -69,15 +69,14 @@ public class TFP020_CausesEventOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				System.out.println(GlobalVariables.oElement.getText());
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("Event"))) {
+				if(GlobalVariables.oElement.getValue().contains(GlobalVariables.testData.get("Event"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else {
-					GlobalVariables.sVerifyError="Verification Failed Expected "+GlobalVariables.testData.get("Event")+" Actual is"+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError="Verification Failed Expected "+GlobalVariables.testData.get("Event")+" Actual is"+GlobalVariables.oElement.getValue();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
