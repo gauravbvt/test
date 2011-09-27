@@ -1,7 +1,8 @@
 package com.mindalliance.globallibrary;
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
@@ -18,8 +19,7 @@ public class ApplicationFunctionLibrary {
 			GlobalVariables.sDescription = "URL opened";
 			// Create Selenium Webdriver object
 			if (GlobalVariables.sBrowser.equals("Mozilla Firefox"))
-//				GlobalVariables.oDriver = new FirefoxDriver();
-				GlobalVariables.oDriver=new ChromeDriver();
+				GlobalVariables.oDriver = new FirefoxDriver();
 			else if (GlobalVariables.sBrowser.equals("Internet Explorer"))
 			{
 				try{
