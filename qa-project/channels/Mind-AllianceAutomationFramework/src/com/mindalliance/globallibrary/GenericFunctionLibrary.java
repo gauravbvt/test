@@ -604,6 +604,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("elementsOfInformation",oXmlEleViewElements.getElementsByTagName("elementsOfInformation").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("myInformationSharingGuidelines",oXmlEleViewElements.getElementsByTagName("myInformationSharingGuidelines").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("prohibited",oXmlEleViewElements.getElementsByTagName("prohibited").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("taskStart",oXmlEleViewElements.getElementsByTagName("taskStart").item(0).getChildNodes().item(0).getNodeValue());
 			
 		} catch(Exception e) {
 			System.out.println("Hie.....");
