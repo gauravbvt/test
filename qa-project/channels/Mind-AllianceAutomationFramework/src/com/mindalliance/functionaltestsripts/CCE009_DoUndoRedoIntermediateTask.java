@@ -6,6 +6,7 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
@@ -82,14 +83,28 @@ public class CCE009_DoUndoRedoIntermediateTask
 					Thread.sleep(1000);
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					// Click on hide details from action pop-menu bar
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 			
+					// Click on legend for maximize the graph
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					// Add info sends flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Send Flow added";
@@ -112,23 +127,28 @@ public class CCE009_DoUndoRedoIntermediateTask
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// To
-					GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:firstChoice")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:firstChoice"));
-					GlobalVariables.oElement.sendKeys("Other...");
+					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:firstChoice")));
+					List<WebElement> options = GlobalVariables.oDropDown.getOptions();
+				    for(WebElement option : options) {
+				    	if(GlobalVariables.viewElements.get("other").equals(option.getText())){
+				    			option.setSelected();
+				    			break;
+				    	}
+				    }
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oElement.sendKeys(Keys.ENTER);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					// Enter Task Name of Sender
-					GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).clear();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
+					GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
+					for (int i = 0; i <= 50; i++)
+						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(10000);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Receiver"));
+					 // WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(10000);
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

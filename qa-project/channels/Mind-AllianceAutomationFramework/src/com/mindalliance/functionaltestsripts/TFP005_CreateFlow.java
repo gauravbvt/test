@@ -37,6 +37,18 @@ public class TFP005_CreateFlow
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "New segment added";
+				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Create Flow"),"New");
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
 				// Stretch Up Task Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
@@ -106,34 +118,29 @@ public class TFP005_CreateFlow
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 			    }					
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
-				// Remove Break up flow
+				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),"Break up flow");
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
-			    // WebElement Synchronization
+				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Remove Information Sharing Capability
-				GlobalVariables.oDriver.findElement(By.className("info")).click();
-			    // WebElement Synchronization
+				// Remove Segment
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("info")).click();
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);				
-				// Remove Information Sharing Capability
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),"Remove info need");
+				// Get a handle to the open alert, prompt or confirmation
 				alert = GlobalVariables.oDriver.switchTo().alert();
-				// Click on 'OK" button of message box in order to confirm it
+				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
-			    // WebElement Synchronization
+				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				

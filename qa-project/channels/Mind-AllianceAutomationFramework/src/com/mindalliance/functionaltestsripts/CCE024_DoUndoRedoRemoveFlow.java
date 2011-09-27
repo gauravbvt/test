@@ -78,10 +78,6 @@ public class CCE024_DoUndoRedoRemoveFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 				// Click on hide details from action pop-menu bar
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 				// WebElement Synchronization
