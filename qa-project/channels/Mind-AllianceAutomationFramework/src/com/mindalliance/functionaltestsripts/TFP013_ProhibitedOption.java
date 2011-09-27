@@ -60,7 +60,7 @@ public class TFP013_ProhibitedOption
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click on Show Advance form link
 				GlobalVariables.iStepNo++ ;
@@ -72,7 +72,7 @@ public class TFP013_ProhibitedOption
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Check Prohibit Option to Prohibit the task
 				GlobalVariables.iStepNo++;
@@ -96,7 +96,10 @@ public class TFP013_ProhibitedOption
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				}
-
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
 				// Uncheck Prohibit Option to Permit the task
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Task Permitted";
