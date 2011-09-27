@@ -104,8 +104,6 @@ public class MAC0010_UndoIntermediateTask {
 					// Add info sends flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Send Flow added";
-//					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
-//					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
