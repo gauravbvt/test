@@ -178,7 +178,7 @@ public class TE164_CreateJurisdiction
 				    Thread.sleep(3000);
 					// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
 				    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
-					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Jurisdiction 1")))
+					if(GlobalVariables.oElement.getValue().equals(Jurisdiction))
 					{
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

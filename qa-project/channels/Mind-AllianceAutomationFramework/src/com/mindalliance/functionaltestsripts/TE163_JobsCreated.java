@@ -163,7 +163,7 @@ public class TE163_JobsCreated
 				    Thread.sleep(3000);
 					// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
 				    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(Agent));
-					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Agent 1"))){
+					if(GlobalVariables.oElement.getText().equals(Agent)){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

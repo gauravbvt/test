@@ -88,7 +88,7 @@ public class TE125_PhaseURL
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Click on Phase
 					GlobalVariables.iStepNo++;
@@ -100,7 +100,7 @@ public class TE125_PhaseURL
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Click on 'URL' radio button
 					GlobalVariables.iStepNo++;
@@ -122,7 +122,6 @@ public class TE125_PhaseURL
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
@@ -133,17 +132,27 @@ public class TE125_PhaseURL
 						}
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+				    // WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					GlobalVariables.oDriver.findElement(By.linkText(phase)).click();
+				    // WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
 					//Assertion : Verify that URL gets Attached
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseAttachmentAssertion")));
-					if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))){
+					System.out.println(GlobalVariables.oElement.getText());
+					System.out.println(GlobalVariables.testData.get("URLAssertion"));
+					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("URLAssertion"))){
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				    }
 			    	else{
-			    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("URL")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
+			    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("URLAssertion")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

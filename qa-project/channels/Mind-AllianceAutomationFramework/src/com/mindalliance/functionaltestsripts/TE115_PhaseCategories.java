@@ -90,8 +90,12 @@ public class TE115_PhaseCategories
 					Thread.currentThread();
 					Thread.sleep(1000);	
 					GlobalVariables.oDriver.findElement(By.linkText(phase)).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);	
 					// Assertion: Verify that categories has been added
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseCategoriesAssertion")));
+					System.out.println(GlobalVariables.oElement.getText());
 					if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("This is an Categories"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
