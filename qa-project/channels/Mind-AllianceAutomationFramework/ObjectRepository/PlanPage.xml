@@ -164,6 +164,7 @@
 <xPathTaskIssueURL>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathTaskIssueURL>
 <xPathCreateViewSurvey>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathCreateViewSurvey>
 <!-- Assertions -->
+<xPathTaskURLAssertion>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/a</xPathTaskURLAssertion>
 <xPathEmailNameInvalidErrorMessageAssertion>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div[2]/div/div/ul/li/span</xPathEmailNameInvalidErrorMessageAssertion>
 <xPathErrorMessageSocialPanelAssertion>/html/body/form/div[2]/div/div/div[2]/div/span/span</xPathErrorMessageSocialPanelAssertion>
 <xPathEventAssertion>/html/body/form/div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td/span/a/span</xPathEventAssertion>
