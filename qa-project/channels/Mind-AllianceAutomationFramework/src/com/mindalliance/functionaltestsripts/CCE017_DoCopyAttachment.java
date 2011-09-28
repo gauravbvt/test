@@ -136,11 +136,15 @@ public class CCE017_DoCopyAttachment
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+								GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				    }	
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCrossOnAttachmentCopiedMessage"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
@@ -158,6 +162,9 @@ public class CCE017_DoCopyAttachment
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
 									
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

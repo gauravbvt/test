@@ -69,7 +69,7 @@ public class TFP080_AddInfoReceiveSendNewIssue
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSendInfoAddNewIssue"))).click();
 				// Assertion: Verify that Issue has been created
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSendInfoIssueMenu")));
-				if(GlobalVariables.oElement.getText().equals("Menu")){
+				if(GlobalVariables.oElement.getText().equals("")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -104,7 +104,7 @@ public class TFP080_AddInfoReceiveSendNewIssue
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathReceiveInfoAddNewIssue"))).click();
 				// Assertion: Verify that Issue has been created
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathReceiveInfoIssueMenu")));
-				if(GlobalVariables.oElement.getText().equals("Menu")){
+				if(GlobalVariables.oElement.getText().equals("")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

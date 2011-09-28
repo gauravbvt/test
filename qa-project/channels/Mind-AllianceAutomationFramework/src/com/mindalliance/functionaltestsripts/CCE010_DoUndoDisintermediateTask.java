@@ -256,8 +256,7 @@ public class CCE010_DoUndoDisintermediateTask
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
-					else
-				    {
+					else{
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -278,7 +277,7 @@ public class CCE010_DoUndoDisintermediateTask
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//span[@class='menubar']/span[3]/span/ul"));
 					List<WebElement> list = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: list){
-						if (li.getText().equals("Redo disintermediate")){
+						if (li.getValue().equals("Redo")){
 							// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -297,6 +296,7 @@ public class CCE010_DoUndoDisintermediateTask
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
+					GlobalVariables.oDriver.navigate().refresh();
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();

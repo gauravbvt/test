@@ -51,7 +51,7 @@ public class TFP003_AddInfoReceive
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else {
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Sends' "+" Actual " + GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Sends' Actual " + GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

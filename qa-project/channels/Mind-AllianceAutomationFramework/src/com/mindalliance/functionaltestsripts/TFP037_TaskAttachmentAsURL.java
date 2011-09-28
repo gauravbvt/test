@@ -92,7 +92,7 @@ public class TFP037_TaskAttachmentAsURL
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that Attachment attached as a URL
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathTaskURLAssertion")));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
