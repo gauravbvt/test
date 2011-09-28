@@ -258,7 +258,7 @@ public class MAC0041_RedoDisintermediateTask {
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//span[@class='menubar']/span[3]/span/ul"));
 					list = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: list){
-						if (li.getValue().equals("Redo disintermediate")){
+						if (li.getValue().equals("Undo disintermediate")){
 							// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
