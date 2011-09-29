@@ -64,7 +64,7 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 
 				// Sends : Channels <option> List 
 				GlobalVariables.iStepNo++ ;
