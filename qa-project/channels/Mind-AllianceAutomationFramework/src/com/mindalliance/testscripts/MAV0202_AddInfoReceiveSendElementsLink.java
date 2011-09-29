@@ -90,6 +90,7 @@ public class MAV0202_AddInfoReceiveSendElementsLink
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else {
+					GlobalVariables.sVerifyError="Verification Failed Expected "+GlobalVariables.viewElements.get("elementsOfInformation")+"Actual is"+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

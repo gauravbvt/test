@@ -53,7 +53,7 @@ public class MAV0124_sendMessage
 			    // Clicks on "Send message" option under "more" pop up menu located on the "Receives" Pane
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="Send Message";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("sendMessage"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveShowMenu"),GlobalVariables.viewElements.get("sendMessage"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

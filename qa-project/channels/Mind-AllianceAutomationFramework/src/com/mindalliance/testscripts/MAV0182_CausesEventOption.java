@@ -63,7 +63,7 @@ public class MAV0182_CausesEventOption
 				Thread.sleep(3000);
 				// Assertion: Verify thatTask causes event
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("Event"))) {
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get(""))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
