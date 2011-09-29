@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core;
 
+import com.mindalliance.channels.core.model.Tag;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -7,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -142,4 +144,56 @@ public final class Matcher {
         String otherTrimmed = makeCanonical( otherString );
         return !trimmed.isEmpty() && !otherTrimmed.isEmpty() && COLLATOR.compare( trimmed, otherTrimmed ) == 0;
     }
+
+    /**
+     * Return whether two possible composed tags match.
+     * @param tag a tag
+     * @param other a tag
+     * @return a boolean
+     */
+    public static boolean matches( Tag tag, Tag other ) {
+        if ( tag.equals( other ) ) return true;
+        List<String> elements = tag.getElements();
+        List<String> otherElements = other.getElements();
+        Iterator<String> shorter = elements.size() < otherElements.size()
+                ? elements.iterator()
+                : otherElements.iterator();
+        Iterator<String> longer = elements.size() >= otherElements.size()
+                ? elements.iterator()
+                : otherElements.iterator();
+        boolean similar = true;
+        while ( similar && shorter.hasNext() ) {
+            similar = Matcher.matches( shorter.next(), longer.next() );
+        }
+        return similar;
+    }
+
+    /**
+     * Return whether all given tags are matched by other tags.
+     * @param tags a list of tags
+     * @param others  a list of tags
+     * @return a boolean
+     */
+    public static boolean matchesAll( List<Tag> tags, final List<Tag> others ) {
+        // There is no tag not matched by some other.
+        return !CollectionUtils.exists(
+                tags,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final Tag tag = (Tag)object;
+                        return !CollectionUtils.exists(
+                                others,
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        return matches( tag, (Tag)object );
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
+    }
+
 }

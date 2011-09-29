@@ -549,7 +549,6 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         return result;
     }
 
-
     //--------------------------------------
 
     /**

@@ -11646,22 +11646,24 @@
                 <entry><para>Yes</para></entry>
               </row>
               
+
               <row>
-                <entry><para>Task or flow is marked as proposed but no justification is given</para></entry>
+                <entry><para>There is no intermediate to bypass</para></entry>
                 
                 <entry><para>Low</para></entry>
                 
                 <entry><itemizedlist>
                   <listitem>
-                    <para>Provide a reason</para>
+                    <para>Disallow bypassing of intermediate</para>
                   </listitem>
                   <listitem>
-                    <para>or unmark as proposed.</para>
+                    <para> or make the target task an intermediate by having it re-send the same information.</para>
                   </listitem>
                 </itemizedlist></entry>
                 
                 <entry><para>No</para></entry>
               </row>
+              
 
             </tbody>
           </tgroup>

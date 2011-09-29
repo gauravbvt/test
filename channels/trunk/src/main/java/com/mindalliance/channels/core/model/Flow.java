@@ -807,11 +807,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public Part getLocalPart() {
         Node source = getSource();
-        if ( source.isPart() && source.getSegment() == getSegment() ) {
+        if ( source.isPart() && source.getSegment().equals( getSegment() ) ) {
             return (Part) source;
         } else {
             Node target = getTarget();
-            if ( target.isPart() && target.getSegment() == getSegment() ) {
+            if ( target.isPart() && target.getSegment().equals( getSegment() ) ) {
                 return (Part) target;
             } else {
                 // Should never happen?

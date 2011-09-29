@@ -33,18 +33,18 @@ public class PlanEditShowMenuPanel extends MenuPanel {
             return Arrays.asList(
                     newItem( "Details", PlanEditPanel.DETAILS ),
                     newItem( "All events", PlanEditPanel.EVENTS ),
-                    newItem( "Secrecy classifications", PlanEditPanel.CLASSIFICATIONS ),
                     newItem( "All organizations", PlanEditPanel.ORGANIZATIONS ),
-                    newItem( "All segments", PlanEditPanel.MAP ),
-                    newItem( "Procedure map", PlanEditPanel.PROCEDURES ),
-                    newItem( "Who's who", PlanEditPanel.WHOSWHO ),
+                    newItem( "Participations", PlanEditPanel.PARTICIPATIONS ),
+                    newItem( "Secrecy classifications", PlanEditPanel.CLASSIFICATIONS ),
+                    newItem( "Evaluation", PlanEditPanel.EVAL ),
                     newItem( "All issues", PlanEditPanel.ISSUES ),
-                    newItem( "Bibliography", PlanEditPanel.BIBLIOGRAPHY ),
+                    newItem( "All segments", PlanEditPanel.MAP ),
                     newItem( "Index", PlanEditPanel.INDEX ),
                     newItem( "All types", PlanEditPanel.TYPOLOGIES ),
                     newItem( "All tags", PlanEditPanel.TAGS ),
-                    newItem( "Evaluation", PlanEditPanel.EVAL ),
-                    newItem( "Participations", PlanEditPanel.PARTICIPATIONS ),
+                    newItem( "Assignments & commitments", PlanEditPanel.PROCEDURES ),
+                    newItem( "Who's who", PlanEditPanel.WHOSWHO ),
+                    newItem( "Bibliography", PlanEditPanel.BIBLIOGRAPHY ),
                     newItem( "Versions", PlanEditPanel.VERSIONS ) );
         }
     }

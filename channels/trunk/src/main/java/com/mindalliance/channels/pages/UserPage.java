@@ -17,7 +17,6 @@ import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
-import com.mindalliance.channels.pages.procedures.ProcedureMapPage;
 import com.mindalliance.channels.pages.reports.issues.IssuesPage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -374,11 +373,11 @@ public class UserPage extends AbstractChannelsWebPage {
                         .add( gotoModelLink )
                         .setVisible( planner || plan.isTemplate() ),
 
-                // Goto mapped procedures
+ /*               // Goto mapped procedures
                 new WebMarkupContainer( "procedures" )
                         .add( newTargetedLink( "gotoProcedures", "", ProcedureMapPage.class, null, plan ) ).
                                 setVisible( planner || plan.isTemplate() ),
-
+*/
                 // Goto guidelines
                 new WebMarkupContainer( "guidelines" )
                         .add( gotoGuidelinesLink )

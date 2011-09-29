@@ -22,8 +22,8 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
@@ -1705,19 +1705,19 @@ public final class PlanPage extends AbstractChannelsWebPage {
             if ( change.isUpdated() && change.isForProperty( "other" ) ) {
                 expandFlow( change );
             } else if ( change.isSelected() ) {
-                if ( flowMaximized ) {
+               /* if ( flowMaximized ) {
                     change.setType( Change.Type.Recomposed );
                 } else {
                     change.setType( Change.Type.Expanded );
-                }
+                }*/
                 flowMaximized = false;
-                if ( changedFlow.getSegment() != segment ) {
+                if ( !changedFlow.getSegment().equals( segment ) ) {
                     setSegment( changedFlow.getSegment() );
-                    change.setType( Change.Type.Recomposed );
+                   // change.setType( Change.Type.Recomposed );
                 }
                 if ( !changedFlow.hasPart( getPart() ) ) {
                     setPart( changedFlow.getLocalPart() );
-                    change.setType( Change.Type.Recomposed );
+//                    change.setType( Change.Type.Recomposed );
                 }
                 collapseSegmentObjects();
                 expandFlow( change );

@@ -424,4 +424,20 @@ public class ResourceSpec extends ModelObject implements Specable {
 
         return StringUtils.abbreviate( sb.toString(), maxLength );
     }
+
+    public void setActor( Actor actor ) {
+        this.actor = actor;
+    }
+
+    public void setRole( Role role ) {
+        this.role = role;
+    }
+
+    public void setOrganization( Organization organization ) {
+        this.organization = organization;
+    }
+
+    public void setJurisdiction( Place jurisdiction ) {
+        this.jurisdiction = jurisdiction;
+    }
 }

@@ -8,6 +8,7 @@ package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.IdGenerator;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
@@ -34,13 +35,13 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.core.command.AbstractCommand;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.io.xml.XppReader;
@@ -212,6 +213,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.registerConverter( new EventPhaseConverter( this ) );
             stream.registerConverter( new EventTimingConverter( this ) );
             stream.registerConverter( new AgreementConverter( this ) );
+            stream.registerConverter( new RequirementConverter( this ) );
             stream.registerConverter( new ExportConverter( this ) );
         }
 
@@ -244,6 +246,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "transformation", Transformation.class );
             stream.alias( "eventphase", EventPhase.class );
             stream.alias( "eventtiming", EventTiming.class );
+            stream.alias( "requirement", Requirement.class );
         }
 
         @Override

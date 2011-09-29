@@ -9,7 +9,7 @@
 <wicket:panel>
 	<div class="procedureMapContainer">
 	    <div class="filters">
-	        Display procedures from <select wicket:id="segment">
+	        From <select wicket:id="segment">
 	        <option>the entire plan</option>
 	        <option>segment A</option>
 	        <option>segment B</option>
@@ -26,8 +26,9 @@
 	            <option>organization</option>
 	            <option>agent</option>
 	        </select>
-	        <input wicket:id="focus" type="text" class="filter-small" title="Entering a space opens a list of choices">
-            <input wicket:id="displayButton" type="button" title="Click to display once focus is set" value="Go"/>
+            &nbsp;named&nbsp;
+	        <input wicket:id="focus" type="text" class="filter-small" title="Enter a name or space to see all">
+            <input wicket:id="displayButton" type="button" title="Click to display once focus is set" value="Show"/>
 	    </div>
 	    <div class="procedureMap" wicket:id="procedure-map">
 	        [procedure map diagram panel]

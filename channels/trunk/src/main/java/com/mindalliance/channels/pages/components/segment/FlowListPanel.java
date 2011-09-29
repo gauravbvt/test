@@ -313,6 +313,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
                         super.changed( change );
                     }
                 }
+            } else {
+                super.changed( change );
             }
         }
     }

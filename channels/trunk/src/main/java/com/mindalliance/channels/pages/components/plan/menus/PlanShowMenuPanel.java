@@ -76,6 +76,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                             newLink( "All issues", plan, PlanEditPanel.ISSUES ),
                             newLink( "All types", plan, PlanEditPanel.TYPOLOGIES ),
                             newLink( "Index", plan, PlanEditPanel.INDEX ),
+                            newLink( "Assignments & Commitments", plan, PlanEditPanel.PROCEDURES ),
                             newLink(
                                     "Help", newTargetedLink(
                                     "help", HelpPage.class, new PopupSettings(

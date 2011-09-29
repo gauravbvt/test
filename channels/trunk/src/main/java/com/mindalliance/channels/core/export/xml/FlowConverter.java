@@ -257,7 +257,7 @@ public class FlowConverter extends AbstractChannelsConverter {
                 String maxDelay = reader.getValue();
                 flow.setMaxDelay( Delay.parse( maxDelay ) );
             } else if ( nodeName.equals( "askedFor" ) ) {
-                boolean askedFor = reader.getValue().equals( "true" );
+                boolean askedFor = Boolean.valueOf( reader.getValue() );
                 flow.setAskedFor( askedFor );
             } else if ( nodeName.equals( "significanceToSource" ) ) {
                 Flow.Significance significance = Flow.Significance.valueOf( reader.getValue() );
@@ -266,7 +266,7 @@ public class FlowConverter extends AbstractChannelsConverter {
                 Flow.Significance significance = Flow.Significance.valueOf( reader.getValue() );
                 flow.setSignificanceToTarget( significance );
             } else if ( nodeName.equals( "all" ) ) {
-                boolean all = reader.getValue().equals( "true" );
+                boolean all = Boolean.valueOf( reader.getValue() );
                 flow.setAll( all );
             } else if ( nodeName.equals( "classificationsLinked" ) ) {
                 boolean classificationsLinked = reader.getValue().equals( "true" );
@@ -280,13 +280,13 @@ public class FlowConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "ifTaskFails" ) ) {
                 flow.setIfTaskFails( Boolean.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "prohibited" ) ) {
-                flow.setProhibited( reader.getValue().equals( "true" ) );
+                flow.setProhibited( Boolean.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "referencesEventPhase" ) ) {
-                flow.setReferencesEventPhase( reader.getValue().equals( "true" ) );
+                flow.setReferencesEventPhase( Boolean.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "canBypassIntermediate" ) ) {
-                flow.setCanBypassIntermediate( reader.getValue().equals( "true" ) );
+                flow.setCanBypassIntermediate( Boolean.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "receiptConfirmationRequested" ) ) {
-                flow.setReceiptConfirmationRequested( reader.getValue().equals( "true" ) );
+                flow.setReceiptConfirmationRequested( Boolean.valueOf( reader.getValue() ) );
             } else {
                 LOG.warn( "Unknown element " + nodeName );
             }

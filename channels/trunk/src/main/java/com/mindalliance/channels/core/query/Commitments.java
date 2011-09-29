@@ -11,6 +11,8 @@ import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Specable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -28,13 +30,27 @@ public class Commitments implements Serializable, Iterable<Commitment> {
 
     private final Set<Commitment> commitments = new HashSet<Commitment>();
 
+    private Place planLocale;
+
     public Commitments() {
     }
 
     public Commitments( QueryService queryService, Specable profile, Assignments assignments ) {
+        planLocale = queryService.getPlan().getLocale();
         List<Flow> sharingFlows = queryService.findAllFlows(); //assignments.getSharingFlows();
         commitments.addAll( queryService.findAllCommitmentsOf( profile, assignments, sharingFlows ) );
         commitments.addAll( queryService.findAllCommitmentsTo( profile, assignments, sharingFlows ) );
+    }
+
+    public Commitments( QueryService queryService, List<Flow> flows ) {
+        planLocale = queryService.getPlan().getLocale();
+        for (Flow flow : flows) {
+            commitments.addAll( queryService.findAllCommitments( flow ) );
+        }
+    }
+
+    public Commitments( Place planLocale ) {
+        this.planLocale = planLocale;
     }
 
     public Commitments of( Assignment assignment ) {
@@ -87,6 +103,17 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         return result;
     }
 
+    public Commitments satisfying( Requirement requirement ) {
+        Commitments result = new Commitments( planLocale );
+        Iterator<Commitment> iterator = iterator();
+        while( iterator.hasNext() ) {
+            Commitment commitment = iterator.next();
+            if ( requirement.satisfiedBy( commitment, planLocale ) )
+                result.add(  commitment );
+        }
+        return result;
+    }
+
     public void add( Commitment commitment ) {
         commitments.add( commitment );
     }
@@ -101,5 +128,6 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public Iterator<Commitment> iterator() {
         return commitments.iterator();
     }
+
 }
 

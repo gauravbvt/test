@@ -16,6 +16,7 @@ import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
@@ -162,13 +163,19 @@ public class PlanConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
 
-        // All segment
+        // All segments
         for ( Segment segment : plan.getSegments() ) {
             writer.startNode( "segment" );
             context.convertAnother( segment, new SegmentConverter( getContext() ) );
             writer.endNode();
         }
 
+        // All assignment requirements
+        for ( Requirement requirement : plan.getRequirements() ) {
+            writer.startNode( "requirement" );
+            context.convertAnother( requirement );
+            writer.endNode();
+        }
         // Export user issues
         exportUserIssues( plan, writer, context );
         Place locale = plan.getLocale();
@@ -282,11 +289,16 @@ public class PlanConverter extends AbstractChannelsConverter {
                 String kindName = reader.getAttribute( "kind" );
                 String name = reader.getValue();
                 Place locale = this.getEntity( Place.class,
-                                               name,
-                                               Long.getLong( placeId ),
-                                               ModelEntity.Kind.valueOf( kindName ),
-                                               context );
+                        name,
+                        Long.getLong( placeId ),
+                        ModelEntity.Kind.valueOf( kindName ),
+                        context );
                 plan.setLocale( locale );
+            } else if ( nodeName.equals( "requirement" ) ) {
+                // requirement always added to plan on creation by dao
+                context.convertAnother(
+                        plan,
+                        Requirement.class );
             } else {
                 LOG.warn( "Unknown element " + nodeName );
             }

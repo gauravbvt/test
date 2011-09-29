@@ -86,7 +86,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     /**
      * Procedures diagrammed.
      */
-    public static final String PROCEDURES = "Procedure Map";
+    public static final String PROCEDURES = "Assignments and commitments";
     /**
      * All types
      */
@@ -119,6 +119,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     @Override
     protected String getDefaultAspect() {
         return DETAILS;
+    }
+
+    protected int getWidth() {
+        return 930;
     }
 
     /**

@@ -5,8 +5,6 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.model.Phase.Timing;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,7 +26,7 @@ import java.util.Set;
 public class Plan extends ModelObject {
 
     /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger( Plan.class );
+   // private static final Logger LOG = LoggerFactory.getLogger( Plan.class );
 
     /** Name of the default phase of a plan. */
     public static final String DEFAULT_PHASE_NAME = "Responding";
@@ -125,6 +123,10 @@ public class Plan extends ModelObject {
     private String communityCalendarHost = "";
 
     private String communityCalendarPrivateTicket = "";
+    /**
+     * The plan's requirements.
+     */
+    private List<Requirement> requirements = new ArrayList<Requirement>(  );
 
     //-----------------------------
     public Plan() {
@@ -533,6 +535,18 @@ public class Plan extends ModelObject {
      */
     public void addPhase( Phase phase ) {
         phases.add( phase );
+    }
+
+    public List<Requirement> getRequirements() {
+        return requirements;
+    }
+
+    public void setRequirements( List<Requirement> requirements ) {
+        this.requirements = requirements;
+    }
+
+    public void addRequirement( Requirement requirement ) {
+        requirements.add( requirement );
     }
 
     @Override

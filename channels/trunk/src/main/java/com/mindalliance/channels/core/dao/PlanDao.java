@@ -3,7 +3,30 @@ package com.mindalliance.channels.core.dao;
 import com.mindalliance.channels.core.Attachable;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.dao.PlanDefinition.Version;
-import com.mindalliance.channels.core.model.*;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Agreement;
+import com.mindalliance.channels.core.model.Connector;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.ExternalFlow;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.InternalFlow;
+import com.mindalliance.channels.core.model.InvalidEntityKindException;
+import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Requirement;
+import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.UserIssue;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.IteratorChain;
@@ -133,6 +156,23 @@ public class PlanDao {
 
     public Part createPart( Segment segment, Long id ) {
         return segment.addNode( assignId( new Part(), id, idGenerator ) );
+    }
+
+    public <T extends Requirement>T createRequirement( Class<T> clazz, Long id ) {
+        try {
+            T requirement = clazz.getConstructor().newInstance();
+            add( requirement, id );
+            plan.addRequirement( assignId( requirement, id, idGenerator ) );
+            return requirement;
+        } catch ( InstantiationException e ) {
+            throw new RuntimeException( e );
+        } catch ( IllegalAccessException e ) {
+            throw new RuntimeException( e );
+        } catch ( InvocationTargetException e ) {
+            throw new RuntimeException( e );
+        } catch ( NoSuchMethodException e ) {
+            throw new RuntimeException( e );
+        }
     }
 
     /**
