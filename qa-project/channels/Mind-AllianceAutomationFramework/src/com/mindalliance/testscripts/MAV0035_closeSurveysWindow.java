@@ -102,6 +102,7 @@ public class MAV0035_closeSurveysWindow {
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 		} 
 		catch (Exception e) {
+			e.printStackTrace();
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
