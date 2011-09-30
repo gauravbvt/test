@@ -500,7 +500,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			// Call GenericFunctionLibrary.tearDownTestData()
 			GenericFunctionLibrary.tearDownTestData();
 			// Call ReportFunctions.generateAutomationReport()
-			ReportFunctions.generateAutomationReport();
+ 			ReportFunctions.generateAutomationReport();
 			// Enable Logs and Reports button
 			jButtonLogLink.setEnabled(true);
 			jButtonReportLink.setEnabled(true);
