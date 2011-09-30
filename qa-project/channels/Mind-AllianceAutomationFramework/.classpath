@@ -20,8 +20,10 @@
 	<classpathentry exported="true" kind="lib" path="Library/jna.jar"/>
 	<classpathentry exported="true" kind="lib" path="Library/commons-logging-1.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="Library/javacsv-2.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Program Files/Java/jre6/lib/rt.jar"/>
-	<classpathentry kind="lib" path="D:/Manohar/Mind-AllianceAutomationFramework/Library/selenium-server-standalone-2.0b3.jar"/>
-	<classpathentry kind="lib" path="D:/Manohar/Mind-AllianceAutomationFramework/Library/selenium-java-2.0b3-srcs.jar"/>
+	<classpathentry kind="lib" path="D:/ChannelsWorkspace/channels/Mind-AllianceAutomationFramework/Library/selenium-java-2.0b1.jar"/>
+	<classpathentry kind="lib" path="D:/ChannelsWorkspace/channels/Mind-AllianceAutomationFramework/Library/selenium-java-2.0b1-srcs.jar"/>
+	<classpathentry kind="lib" path="D:/ChannelsWorkspace/channels/Mind-AllianceAutomationFramework/Library/selenium-java-2.0b3.jar"/>
+	<classpathentry kind="lib" path="D:/ChannelsWorkspace/channels/Mind-AllianceAutomationFramework/Library/selenium-java-2.0b3-srcs.jar"/>
+	<classpathentry kind="lib" path="D:/ChannelsWorkspace/channels/Mind-AllianceAutomationFramework/Library/selenium-server-standalone-2.0b3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
