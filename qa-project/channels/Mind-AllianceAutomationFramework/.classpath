@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="Library/google-collect-1.0-rc2.jar"/>
 	<classpathentry exported="true" kind="lib" path="Library/google-io-extra.jar"/>
 	<classpathentry exported="true" kind="lib" path="Library/httpcore-4.0.1.jar"/>
@@ -18,13 +18,10 @@
 	<classpathentry exported="true" kind="con" path="org.dyno.visual.swing.VS_LIBRARY/layoutext"/>
 	<classpathentry exported="true" kind="lib" path="Library/httpclient-4.0.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="Library/jna.jar"/>
-	<classpathentry exported="true" kind="lib" path="Library/selenium-server-standalone-2.0b3.jar"/>
 	<classpathentry exported="true" kind="lib" path="Library/commons-logging-1.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="Library/javacsv-2.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Administrator/Desktop/javamail-1.4.4/lib/dsn.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Administrator/Desktop/javamail-1.4.4/lib/imap.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Administrator/Desktop/javamail-1.4.4/lib/mailapi.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Administrator/Desktop/javamail-1.4.4/lib/pop3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Administrator/Desktop/javamail-1.4.4/lib/smtp.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Program Files/Java/jre6/lib/rt.jar"/>
+	<classpathentry kind="lib" path="D:/Manohar/Mind-AllianceAutomationFramework/Library/selenium-server-standalone-2.0b3.jar"/>
+	<classpathentry kind="lib" path="D:/Manohar/Mind-AllianceAutomationFramework/Library/selenium-java-2.0b3-srcs.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
