@@ -121,7 +121,7 @@ public class AddIntermediate extends AbstractCommand {
         toTarget.set( "otherSegment", segment.getId() );
         toTarget.set( "other", flow.getTarget().getId() );
         toTarget.set( "name", flow.getName() );
-        toTarget.set( "attributes", ChannelsUtils.getFlowAttributes( flow ) );
+        toTarget.set( "attributes", flow.mapState() );
         subCommands.addCommand( toTarget );
         // connect intermediate to new flow's source
         subCommands.addLink( addPart, "id", toTarget, "part" );

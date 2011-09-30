@@ -207,10 +207,10 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
      *
      * @return a list of issues
      */
-    public List<Issue> getIssues() {
+    public List<? extends Issue> getIssues() {
         // Get issues by about and waived
         ModelObject about = getAbout();
-        List<Issue> issues = about != null ? getAnalyst().listIssues( getQueryService(), about, true, includeWaived ) :
+        List<? extends Issue> issues = about != null ? getAnalyst().listIssues( getQueryService(), about, true, includeWaived ) :
                              includeWaived ? getAnalyst().findAllIssues( getQueryService() )
                                            : getAnalyst().findAllUnwaivedIssues( getQueryService() );
 
@@ -223,7 +223,7 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<Issue> filterByType( List<Issue> issues, final String issueType ) {
+    private List<Issue> filterByType( List<? extends Issue> issues, final String issueType ) {
         return (List<Issue>) CollectionUtils.select(
                 issues,
                 new Predicate() {
@@ -236,8 +236,8 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<Issue> filterBySegment( List<Issue> issues ) {
-        return (List<Issue>) CollectionUtils.select(
+    private List<? extends Issue> filterBySegment( List<? extends Issue> issues ) {
+        return (List<? extends Issue>) CollectionUtils.select(
                 issues,
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
@@ -251,8 +251,8 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<Issue> filterBySeverity( List<Issue> issues ) {
-        return (List<Issue>) CollectionUtils.select(
+    private List<? extends Issue> filterBySeverity( List<? extends Issue> issues ) {
+        return (List<? extends Issue>) CollectionUtils.select(
                 issues,
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
@@ -264,7 +264,7 @@ public class PlanIssuesPanel extends AbstractIssueTablePanel {
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<Issue> filterByKind( List<Issue> issues ) {
+    private List<Issue> filterByKind( List<? extends Issue> issues ) {
         return (List<Issue>) CollectionUtils.select( issues, new Predicate() {
             public boolean evaluate( Object obj ) {
                 return kindHints == null || kindHints.isEmpty() || Matcher.matchesAll(

@@ -182,7 +182,7 @@ public class RequirementConverter extends AbstractChannelsConverter {
         Map<Long, Long> idMap = getIdMap( context );
         boolean importingPlan = isImportingPlan( context );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
-        Requirement requirement = makeInstance( id );
+        Requirement requirement = getPlanDao().createRequirement( id );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
@@ -195,11 +195,11 @@ public class RequirementConverter extends AbstractChannelsConverter {
             } else if ( "requiredTags".equals( nodeName ) ) {
                 requirement.addRequiredTags( reader.getValue() );
             } else if ( "minCount".equals( nodeName ) ) {
-                requirement.getCardinality().setMinCount( Integer.getInteger( reader.getValue() ) );
+                requirement.getCardinality().setMinCount( Integer.parseInt( reader.getValue() ) );
             } else if ( "maxCount".equals( nodeName ) ) {
-                requirement.getCardinality().setMaxCount( Integer.getInteger( reader.getValue() ) );
+                requirement.getCardinality().setMaxCount( Integer.parseInt( reader.getValue() ) );
             } else if ( "safeCount".equals( nodeName ) ) {
-                requirement.getCardinality().setSafeCount( Integer.getInteger( reader.getValue() ) );
+                requirement.getCardinality().setSafeCount( Integer.parseInt( reader.getValue() ) );
             } else if ( nodeName.equals( "committerSpec" ) ) {
                 requirement.setCommitterSpec( readAssignmentSpec( reader, context ) );
             } else if ( nodeName.equals( "beneficiarySpec" ) ) {
@@ -233,11 +233,11 @@ public class RequirementConverter extends AbstractChannelsConverter {
             } else if ( "requiredTags".equals( nodeName ) ) {
                 assignmentSpec.addRequiredTags( reader.getValue() );
             } else if ( "minCount".equals( nodeName ) ) {
-                assignmentSpec.getCardinality().setMinCount( Integer.getInteger( reader.getValue() ) );
+                assignmentSpec.getCardinality().setMinCount( Integer.parseInt( reader.getValue() ) );
             } else if ( "maxCount".equals( nodeName ) ) {
-                assignmentSpec.getCardinality().setMaxCount( Integer.getInteger( reader.getValue() ) );
+                assignmentSpec.getCardinality().setMaxCount( Integer.parseInt( reader.getValue() ) );
             } else if ( "safeCount".equals( nodeName ) ) {
-                assignmentSpec.getCardinality().setSafeCount( Integer.getInteger( reader.getValue() ) );
+                assignmentSpec.getCardinality().setSafeCount( Integer.parseInt( reader.getValue() ) );
             } else if ( nodeName.equals( "event" ) ) {
                 String idString = reader.getAttribute( "id" );
                 assignmentSpec.setEvent( getEntity(
@@ -285,10 +285,5 @@ public class RequirementConverter extends AbstractChannelsConverter {
         }
         return assignmentSpec;
     }
-
-    private Requirement makeInstance( long id ) {
-        return getPlanDao().createRequirement( Requirement.class, id );
-    }
-
 
 }

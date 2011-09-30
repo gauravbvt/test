@@ -171,7 +171,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         }
 
         // All assignment requirements
-        for ( Requirement requirement : plan.getRequirements() ) {
+        for ( Requirement requirement : planDao.list( Requirement.class ) ) {
             writer.startNode( "requirement" );
             context.convertAnother( requirement );
             writer.endNode();

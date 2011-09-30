@@ -20,7 +20,6 @@ import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Hierarchical;
-import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -41,6 +40,7 @@ import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.UserIssue;
 
 import java.util.List;
 import java.util.Map;
@@ -421,7 +421,7 @@ public interface QueryService {
      * @param identifiable an object with an id
      * @return list of issues
      */
-    List<Issue> findAllUserIssues( ModelObject identifiable );
+    List<UserIssue> findAllUserIssues( ModelObject identifiable );
 
     /**
      * Find all relevant channels for a given resource spec.

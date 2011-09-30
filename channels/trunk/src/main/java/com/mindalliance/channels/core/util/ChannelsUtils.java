@@ -10,7 +10,6 @@ import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
@@ -26,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -53,38 +51,6 @@ public final class ChannelsUtils {
 
     }
 
-    /**
-     * Captures the state of a flow minus the nodes
-     *
-     * @param flow a flow
-     * @return a map of attribute names and values
-     */
-    public static Map<String, Object> getFlowAttributes( final Flow flow ) {
-        Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put( "description", flow.getDescription() );
-        attributes.put( "tagsAsString", Tag.tagsToString( flow.getTags() ) );
-        attributes.put( "eois", flow.copyEois() );
-        attributes.put( "askedFor", flow.isAskedFor() );
-        attributes.put( "all", flow.isAll() );
-        attributes.put( "maxDelay", flow.getMaxDelay().copy() );
-        attributes.put( "channels", flow.getChannelsCopy() );
-        attributes.put( "attachments", new ArrayList<Attachment>( flow.getAttachments() ) );
-        attributes.put( "waivedIssueDetections", new ArrayList<String>( flow.getWaivedIssueDetections() ) );
-        attributes.put( "significanceToTarget", flow.getSignificanceToTarget() );
-        attributes.put( "significanceToSource", flow.getSignificanceToSource() );
-        attributes.put( "intent", flow.getIntent() );
-        attributes.put( "restriction", flow.getRestriction() );
-        attributes.put( "ifTaskFails", flow.isIfTaskFails() );
-        attributes.put( "referencesEventPhase", flow.isReferencesEventPhase() );
-        attributes.put( "canBypassIntermediate", flow.isCanBypassIntermediate() );
-        attributes.put( "receiptConfirmationRequested", flow.isReceiptConfirmationRequested() );
-        return attributes;
-    }
-
-    public static Map<String, Object> mergeFlowAttributes( Flow flow, Flow other ) {
-        return mergeFlowAttributes( getFlowAttributes( flow ), getFlowAttributes( other ) );
-    }
-
     @SuppressWarnings( "unchecked" )
     public static Map<String, Object> mergeFlowAttributes(
             Map<String, Object> attributes,
@@ -95,7 +61,7 @@ public final class ChannelsUtils {
         merged.put(
                 "description",
                 desc2.length() > desc1.length() ? desc2 : desc1 );
-        merged.put( "tagsAsString", attributes.get( "tagsAsString" ) + Tag.SEPARATOR + others.get( "tagsAsString" ) );
+        merged.put( "tags", attributes.get( "tags" ) + Tag.SEPARATOR + others.get( "tags" ) );
         merged.put( "eois", aggregateEOIs(
                 (List<ElementOfInformation>) attributes.get( "eois" ),
                 (List<ElementOfInformation>) others.get( "eois" ) ) );
@@ -263,14 +229,14 @@ public final class ChannelsUtils {
      * @param flow a flow
      * @return a map of attribute names and values
      */
-    public static Map<String, Object> getFlowState( final Flow flow ) {
+    public static Map<String, Object> getFlowConnectionState( final Flow flow ) {
         Part part;
         if ( flow.isInternal() ) {
             part = flow.getSource().isPart() ? (Part) flow.getSource() : (Part) flow.getTarget();
         } else {
             part = ( (ExternalFlow) flow ).getPart();
         }
-        return getFlowState( flow, part );
+        return getFlowConnectionState( flow, part );
     }
 
     /**
@@ -280,7 +246,7 @@ public final class ChannelsUtils {
      * @param part a part
      * @return a map of attribute names and values
      */
-    public static Map<String, Object> getFlowState( final Flow flow, final Part part ) {
+    public static Map<String, Object> getFlowConnectionState( final Flow flow, final Part part ) {
         final Node other;
         final boolean isSend;
         if ( flow.isInternal() ) {
@@ -292,9 +258,7 @@ public final class ChannelsUtils {
             other = externalFlow.getConnector();
         }
         Map<String, Object> state = new HashMap<String, Object>();
-        // state.put( "id", flow.getId() );
         state.put( "name", flow.getName() );
-        state.put( "tagsAsString", Tag.tagsToString( flow.getTags() ) );
         state.put( "isSend", isSend );
         state.put( "segment", part.getSegment().getId() );
         state.put( "part", part.getId() );
@@ -307,59 +271,7 @@ public final class ChannelsUtils {
         } else {
             state.put( "other", other.getId() );
         }
-        state.put( "attributes", getFlowAttributes( flow ) );
-        return state;
-    }
-
-    /**
-     * Capture the state of a part, minus its flows
-     *
-     * @param part a part.
-     * @return a map of attribute names and values
-     */
-    public static Map<String, Object> getPartState( final Part part ) {
-        Map<String, Object> state = new HashMap<String, Object>();
-        state.put( "description", part.getDescription() );
-        state.put( "tagsAsString", Tag.tagsToString( part.getTags() ) );
-        state.put( "task", part.getTask() );
-        state.put( "repeatsEvery", new Delay( part.getRepeatsEvery() ) );
-        state.put( "completionTime", new Delay( part.getCompletionTime() ) );
-        state.put( "attachments", new ArrayList<Attachment>( part.getAttachments() ) );
-        state.put( "waivedIssueDetections", new ArrayList<String>( part.getWaivedIssueDetections() ) );
-        state.put( "selfTerminating", part.isSelfTerminating() );
-        state.put( "repeating", part.isRepeating() );
-        state.put( "terminatesEventPhase", part.isTerminatesEventPhase() );
-        state.put( "startsWithSegment", part.isStartsWithSegment() );
-        state.put( "ongoing", part.isOngoing() );
-        state.put( "category", part.getCategory() );
-        List<Map<String, Object>> mappedGoals = new ArrayList<Map<String, Object>>();
-        for ( Goal goal : part.getGoals() ) {
-            mappedGoals.add( goal.toMap() );
-        }
-        state.put( "goals", mappedGoals );
-        if ( part.getInitiatedEvent() != null )
-            state.put(
-                    "initiatedEvent",
-                    part.getInitiatedEvent().getName() );
-        if ( part.getActor() != null )
-            state.put(
-                    "actor",
-                    Arrays.asList( part.getActor().getName(), part.getActor().isType() ) );
-        if ( part.getRole() != null )
-            state.put( "role",
-                    Arrays.asList( part.getRole().getName(), part.getRole().isType() ) );
-        if ( part.getOrganization() != null )
-            state.put(
-                    "organization",
-                    Arrays.asList( part.getOrganization().getName(), part.getOrganization().isType() ) );
-        if ( part.getJurisdiction() != null )
-            state.put(
-                    "jurisdiction",
-                    Arrays.asList( part.getJurisdiction().getName(), part.getJurisdiction().isType() ) );
-        if ( part.getLocation() != null )
-            state.put(
-                    "location",
-                    Arrays.asList( part.getLocation().getName(), part.getLocation().isType() ) );
+        state.put( "attributes", flow.mapState() );
         return state;
     }
 
@@ -475,10 +387,8 @@ public final class ChannelsUtils {
      */
     public static Map<String, Object> getPartCopy( Part part ) {
         Map<String, Object> copy = new HashMap<String, Object>();
-        // copy.put( "segment", part.getSegment().getId() );
-        copy.put( "partState", getPartState( part ) );
+        copy.put( "partState", part.mapState() );
         copy.put( "needs", getNeedStates( part ) );
-        Iterator<Flow> capabilities = part.sends();
         copy.put( "capabilities", getCapabilityStates( part ) );
         return copy;
     }
@@ -546,7 +456,7 @@ public final class ChannelsUtils {
      */
     @SuppressWarnings( "unchecked" )
     public static Map<String, Object> getSendState( Flow flow, Part part ) {
-        Map<String, Object> sendState = getFlowState( flow, part );
+        Map<String, Object> sendState = getFlowConnectionState( flow, part );
         Map<String, Object> attributes = (Map<String, Object>) sendState.get( "attributes" );
         attributes.remove( "significanceToTarget" );
         attributes.remove( "all" );
@@ -563,26 +473,12 @@ public final class ChannelsUtils {
      */
     @SuppressWarnings( "unchecked" )
     public static Map<String, Object> getReceiveState( Flow flow, Part part ) {
-        Map<String, Object> receiveState = getFlowState( flow, part );
+        Map<String, Object> receiveState = getFlowConnectionState( flow, part );
         Map<String, Object> attributes = (Map<String, Object>) receiveState.get( "attributes" );
         attributes.remove( "significanceToSource" );
         attributes.remove( "all" );
         if ( flow.isAskedFor() ) attributes.remove( "channels" );
         return receiveState;
-    }
-
-    /**
-     * Capture a flow's identity (id and state).
-     *
-     * @param flow a flow
-     * @param part a part
-     * @return a map
-     */
-    public static Map<String, Object> getFlowIdentity( Flow flow, Part part ) {
-        Map<String, Object> identity = new HashMap<String, Object>();
-        identity.put( "flow", flow.getId() );
-        identity.put( "state", getFlowState( flow, part ) );
-        return identity;
     }
 
     /**

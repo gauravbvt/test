@@ -16,8 +16,8 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;
@@ -158,11 +158,20 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     /**
+     * Get the user's name.
+     *
+     * @return a string
+     */
+    protected String getUsername() {
+        return User.current().getUsername();
+    }
+
+    /**
      * Set and update a component's visibility.
      *
-     * @param target an ajax request target
+     * @param target    an ajax request target
      * @param component a component
-     * @param visible a boolean
+     * @param visible   a boolean
      */
     protected static void makeVisible( AjaxRequestTarget target, Component component, boolean visible ) {
         makeVisible( component, visible );
@@ -173,7 +182,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * Set a component's visibility.
      *
      * @param component a component
-     * @param visible a boolean
+     * @param visible   a boolean
      */
     protected static void makeVisible( Component component, boolean visible ) {
         component.add( new AttributeModifier( "style", true, new Model<String>( visible ? "" : "display:none" ) ) );
@@ -247,7 +256,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     /**
      * Test if strings are equivalent.
      *
-     * @param name the new name
+     * @param name   the new name
      * @param target the original name
      * @return true if strings are equivalent
      */
@@ -287,28 +296,28 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * Add issues annotations to a component.
      *
      * @param component the component
-     * @param object the object of the issues
-     * @param property the property of concern. If null, get issues of object
+     * @param object    the object of the issues
+     * @param property  the property of concern. If null, get issues of object
      */
     protected void addIssues( FormComponent<?> component, ModelObject object, String property ) {
         String summary = property == null ?
-                         analyst.getIssuesSummary( getQueryService(), object, false ) :
-                         analyst.getIssuesSummary( getQueryService(), object, property );
+                analyst.getIssuesSummary( getQueryService(), object, false ) :
+                analyst.getIssuesSummary( getQueryService(), object, property );
 
         boolean hasIssues = property == null ?
-                            analyst.hasIssues( getQueryService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC ) :
-                            analyst.hasIssues( getQueryService(), object, property );
+                analyst.hasIssues( getQueryService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC ) :
+                analyst.hasIssues( getQueryService(), object, property );
 
         if ( summary.isEmpty() )
             component.add( new AttributeModifier( "class",
-                                                  true,
-                                                  new Model<String>( hasIssues ? "waived" : "no-error" ) ),
-                           new AttributeModifier( "title",
-                                                  true,
-                                                  new Model<String>( hasIssues ? "All issues waived" : "" ) ) );
+                    true,
+                    new Model<String>( hasIssues ? "waived" : "no-error" ) ),
+                    new AttributeModifier( "title",
+                            true,
+                            new Model<String>( hasIssues ? "All issues waived" : "" ) ) );
         else
             component.add( new AttributeModifier( "class", true, new Model<String>( "error" ) ),
-                           new AttributeModifier( "title", true, new Model<String>( summary ) ) );
+                    new AttributeModifier( "title", true, new Model<String>( summary ) ) );
     }
 
     /**
@@ -364,9 +373,9 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     /**
      * Return an actionalble label declaring that another user is editing.
      *
-     * @param id a string
+     * @param id           a string
      * @param identifiable an identifiable
-     * @param username a string
+     * @param username     a string
      * @return a label
      */
     protected Label editedByLabel( String id, final Identifiable identifiable, final String username ) {
@@ -411,8 +420,8 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * Add issues annotations to a component.
      *
      * @param component the component
-     * @param object the object of the issues
-     * @param property the property of concern. If null, get issues of object
+     * @param object    the object of the issues
+     * @param property  the property of concern. If null, get issues of object
      */
     protected void addIssuesAnnotation( FormComponent<?> component, ModelObject object, String property ) {
         addIssuesAnnotation( component, object, property, "error" );
@@ -422,15 +431,15 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * Add issues annotations to a component.
      *
      * @param component the component
-     * @param object the object of the issues
-     * @param property the property of concern. If null, get issues of object
+     * @param object    the object of the issues
+     * @param property  the property of concern. If null, get issues of object
      */
     protected void addIssuesAnnotation( FormComponent<?> component, ModelObject object, String property,
                                         String errorClass ) {
         Analyst analyst = ( (Channels) getApplication() ).getAnalyst();
         String summary = property == null ?
-                         analyst.getIssuesSummary( getQueryService(), object, false ) :
-                         analyst.getIssuesSummary( getQueryService(), object, property );
+                analyst.getIssuesSummary( getQueryService(), object, false ) :
+                analyst.getIssuesSummary( getQueryService(), object, property );
         boolean hasIssues = analyst.hasIssues( getQueryService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !summary.isEmpty() ) {
             component.add( new AttributeModifier( "class", true, new Model<String>( errorClass ) ) );

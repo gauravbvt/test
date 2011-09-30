@@ -14,7 +14,6 @@ import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.Map;
@@ -57,7 +56,7 @@ public class AddUserIssue extends AbstractCommand {
         Map<String, Object> state = (Map<String, Object>) get( "state" );
         issue.setReportedBy( getUserName() );
         if ( state != null )
-            ChannelsUtils.initialize( issue, state );
+            issue.initFromMap( state, queryService );
         queryService.add( issue, priorId );
         set( "issue", issue.getId() );
         describeTarget( issue );                

@@ -108,7 +108,7 @@ public class Disintermediate extends AbstractCommand {
             Command directConnect =
                     new ConnectWithFlow( getUserName(), receive.getSource(), send.getTarget(), receive.getName() );
             // Use eois of receive and other attributes of send
-            Map<String, Object> attributes = ChannelsUtils.getFlowAttributes( send );
+            Map<String, Object> attributes = send.mapState();
             attributes.put( "eois", send.copyEois() );
             directConnect.set( "attributes", attributes );
             subCommands.addCommand( directConnect );
@@ -121,7 +121,7 @@ public class Disintermediate extends AbstractCommand {
                 addNeed.set( "segment", get( "segment" ) );
                 addNeed.set( "part", get( "part" ) );
                 addNeed.set( "name", receive.getName() );
-                addNeed.set( "attributes", ChannelsUtils.getFlowAttributes( receive ) );
+                addNeed.set( "attributes", receive.mapState() );
                 subCommands.addCommand( addNeed );
                 subCommands.addCommand( commander.makeRemoveFlowCommand( getUserName(), receive ) );
             }
@@ -131,7 +131,7 @@ public class Disintermediate extends AbstractCommand {
                 addCapability.set( "segment", get( "segment" ) );
                 addCapability.set( "part", get( "part" ) );
                 addCapability.set( "name", send.getName() );
-                addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( send ) );
+                addCapability.set( "attributes", send.mapState() );
                 subCommands.addCommand( addCapability );
                 subCommands.addCommand( commander.makeRemoveFlowCommand( getUserName(), send ) );
             }

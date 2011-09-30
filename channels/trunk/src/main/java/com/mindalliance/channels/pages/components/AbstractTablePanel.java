@@ -1,13 +1,14 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.pages.FilterableModelObjectLink;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
@@ -200,9 +201,9 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     private Object callAnalyst( String methodName, Object argument ) {
         try {
             Analyst delegate = getAnalyst();
-            Class[] argTypes = { argument.getClass() };
+            Class[] argTypes = { argument.getClass(), QueryService.class };
             Method method = Analyst.class.getMethod( methodName, argTypes );
-            Object[] args = { argument };
+            Object[] args = { argument, getQueryService() };
             return method.invoke( delegate, args );
         } catch ( Exception e ) {
             LOG.warn( "Delegate method invocation failed.", e );

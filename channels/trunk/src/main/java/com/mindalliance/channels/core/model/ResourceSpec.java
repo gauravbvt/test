@@ -1,6 +1,11 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.lang.StringUtils;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A Resource is an actor in a role for an organization with a jurisdiction.
@@ -439,5 +444,39 @@ public class ResourceSpec extends ModelObject implements Specable {
 
     public void setJurisdiction( Place jurisdiction ) {
         this.jurisdiction = jurisdiction;
+    }
+
+    @Override
+    public Map<String, Object> mapState() {
+        Map<String,Object>state = new HashMap<String,Object>(  );
+        if ( getActor() != null )
+             state.put( "actor", Arrays.asList( getActor().getName(), getActor().isType() ) );
+         if ( getRole() != null )
+             state.put( "role", Arrays.asList( getRole().getName(), getRole().isType() ) );
+         if ( getOrganization() != null )
+             state.put( "organization", Arrays.asList( getOrganization().getName(), getOrganization().isType() ) );
+         if ( getJurisdiction() != null )
+             state.put( "jurisdiction", Arrays.asList( getJurisdiction().getName(), getJurisdiction().isType() ) );
+        return state;
+    }
+
+    @Override
+    public void initFromMap( Map<String,Object>state, QueryService queryService ) {
+        if ( state.get( "actor" ) != null )
+            setActor( queryService.retrieveEntity( Actor.class, state, "actor" ) );
+        else
+            setActor( null );
+        if ( state.get( "role" ) != null )
+            setRole( queryService.retrieveEntity( Role.class, state, "role" ) );
+        else
+            setRole( null );
+        if ( state.get( "organization" ) != null )
+            setOrganization( queryService.retrieveEntity( Organization.class, state, "organization" ) );
+        else
+            setOrganization( null );
+        if ( state.get( "jurisdiction" ) != null )
+            setJurisdiction( queryService.retrieveEntity( Place.class, state, "jurisdiction" ) );
+        else
+            setJurisdiction( null );
     }
 }

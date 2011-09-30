@@ -17,13 +17,14 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
-import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.List;
 
@@ -365,7 +366,7 @@ public interface Analyst extends CommandListener {
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return a list of issues detected
      */
-    List<Issue> listIssues( QueryService queryService, ModelObject modelObject, Boolean includingPropertySpecific );
+    List<? extends Issue> listIssues( QueryService queryService, ModelObject modelObject, Boolean includingPropertySpecific );
 
     /**
      * Use all applicable issue detectors to find issues about a model object's property.
@@ -375,7 +376,7 @@ public interface Analyst extends CommandListener {
      * @param property -- the name of a property of the model object
      * @return a list of issues detected
      */
-    List<Issue> listIssues( QueryService queryService, ModelObject modelObject, String property );
+    List<? extends Issue> listIssues( QueryService queryService, ModelObject modelObject, String property );
 
     /**
      * Use all applicable issue detectors to find issues about a model object.
@@ -386,7 +387,7 @@ public interface Analyst extends CommandListener {
      * @param includingWaived -- whether to also include waived issues
      * @return a list of issues detected
      */
-    List<Issue> listIssues( QueryService queryService, ModelObject modelObject, Boolean includingPropertySpecific,
+    List<? extends Issue> listIssues( QueryService queryService, ModelObject modelObject, Boolean includingPropertySpecific,
                             Boolean includingWaived );
 
     /**
@@ -397,7 +398,7 @@ public interface Analyst extends CommandListener {
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return a list of issues detected
      */
-    List<Issue> listUnwaivedIssues( QueryService queryService, ModelObject modelObject,
+    List<? extends Issue> listUnwaivedIssues( QueryService queryService, ModelObject modelObject,
                                     Boolean includingPropertySpecific );
 
     /**
@@ -408,7 +409,7 @@ public interface Analyst extends CommandListener {
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return a list of issues detected
      */
-    List<Issue> listUnwaivedIssues( QueryService queryService, Assignment assignment,
+    List<? extends Issue> listUnwaivedIssues( QueryService queryService, Assignment assignment,
                                     Boolean includingPropertySpecific );
 
     /**
@@ -419,7 +420,7 @@ public interface Analyst extends CommandListener {
      * @param property -- the name of a property of the model object
      * @return a list of issues detected
      */
-    List<Issue> listUnwaivedIssues( QueryService queryService, ModelObject modelObject, String property );
+    List<? extends Issue> listUnwaivedIssues( QueryService queryService, ModelObject modelObject, String property );
 
     /**
      * Use all waived issue detectors to find issues about a model object.
@@ -429,7 +430,7 @@ public interface Analyst extends CommandListener {
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return a list of issues detected
      */
-    List<Issue> listWaivedIssues( QueryService queryService, ModelObject modelObject,
+    List<? extends Issue> listWaivedIssues( QueryService queryService, ModelObject modelObject,
                                   Boolean includingPropertySpecific );
 
     /**
@@ -440,7 +441,7 @@ public interface Analyst extends CommandListener {
      * @param includingPropertySpecific -- all issues or only those that are not specific to a property
      * @return a list of issues detected
      */
-    List<Issue> listWaivedIssues( QueryService queryService, Assignment assignment, Boolean includingPropertySpecific );
+    List<? extends Issue> listWaivedIssues( QueryService queryService, Assignment assignment, Boolean includingPropertySpecific );
 
     /**
      * Use all waived issue detectors to find issues about a model object's property.
@@ -450,7 +451,7 @@ public interface Analyst extends CommandListener {
      * @param property -- the name of a property of the model object
      * @return a list of issues detected
      */
-    List<Issue> listWaivedIssues( QueryService queryService, ModelObject modelObject, String property );
+    List<? extends Issue> listWaivedIssues( QueryService queryService, ModelObject modelObject, String property );
 
     /**
      * Notification of command execution.
@@ -477,13 +478,22 @@ public interface Analyst extends CommandListener {
     void onStop();
 
     /**
-     * Disagnostic about whether a commitment can be realized or is conceptual.
+     * Diagnostic about whether a commitment can be realized or is conceptual.
      *
-     * @param plan a plan
      * @param commitment an info sharing commitment
+     * @param queryService a queryService
      * @return a string
      */
-    String realizability( Plan plan, Commitment commitment );
+    String realizability( Commitment commitment, QueryService queryService );
+
+    /**
+     * Number of unwaived issues on a requirement..
+     *
+     * @param requirement a requirement
+     * @param queryService a queryService
+     * @return a string
+     */
+    int unwaivedIssuesCount( Requirement requirement, QueryService queryService );
 
     /**
      * Sets issue scanner.

@@ -14,9 +14,9 @@ import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.List;
@@ -70,7 +70,7 @@ public class DisconnectAndRemoveSegment extends AbstractCommand {
         for ( Flow externalFlow : segment.listExternalFlows() )
             multi.addCommand( commander.makeRemoveFlowCommand( getUserName(), externalFlow ) );
         QueryService queryService = commander.getQueryService();
-        for ( Issue userIssue : queryService.findAllUserIssues( segment ) ) {
+        for ( UserIssue userIssue : queryService.findAllUserIssues( segment ) ) {
             RemoveIssue removeIssue = new RemoveIssue( getUserName(), userIssue );
             multi.addCommand( removeIssue );
         }

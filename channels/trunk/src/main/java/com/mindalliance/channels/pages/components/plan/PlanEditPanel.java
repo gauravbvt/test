@@ -91,6 +91,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      * All types
      */
     public static final String TYPOLOGIES = "All types";
+    /**
+     * Plan information sharing requirements.
+     */
+    public static final String REQUIREMENTS = "Information sharing requirements";
 
     /**
      * Actionable aspects.
@@ -209,15 +213,17 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
             return getPlanTagsPanel();
         }  else if ( aspect.equals( TYPOLOGIES ) ) {
             return getPlanTypologiesPanel();
-        }else if ( aspect.equals( PROCEDURES ) ) {
+        } else if ( aspect.equals( PROCEDURES ) ) {
             return getPlanProcedureMapPanel();
+        } else if ( aspect.equals( REQUIREMENTS ) ) {
+            return getPlanRequirementsPanel();
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
         }
     }
 
-    private Component getPlanDetailsPanel() {
+     private Component getPlanDetailsPanel() {
         return new PlanEditDetailsPanel( "aspect", getModel(), getExpansions() );
     }
 
@@ -276,6 +282,10 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     private Component getPlanProcedureMapPanel() {
         return new PlanProcedureMapPanel( "aspect" );
     }
+
+    private Component getPlanRequirementsPanel() {
+        return new PlanRequirementsPanel( "aspect", getModel(), getExpansions() );
+     }
 
     public Plan getPlan() {
         return (Plan) getModel().getObject();

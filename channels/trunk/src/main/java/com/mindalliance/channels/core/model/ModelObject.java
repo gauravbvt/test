@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -9,7 +10,9 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An object with name, id and description, comparable by its toString() values.
@@ -433,4 +436,24 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
     public static boolean isNullOrUnknown( ModelObject modelObject ) {
         return modelObject == null || modelObject.isUnknown();
     }
+
+    public Map<String, Object> mapState() {
+        Map<String,Object>state = new HashMap<String, Object>(  );
+        state.put( "name", getName() );
+        state.put( "description", getDescription() );
+        state.put( "tags", Tag.tagsToString( getTags() ) );
+        state.put( "attachments", new ArrayList<Attachment>( getAttachments() ) );
+        state.put( "waivedIssueDetections", new ArrayList<String>( getWaivedIssueDetections() ) );
+        return state;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public void initFromMap( Map<String, Object> state, QueryService queryService ) {
+        setName( (String)state.get( "name" ) );
+        setDescription( (String) state.get( "description" ) );
+        setTagsAsString( (String) state.get( "tags" ) );
+        setAttachments( new ArrayList<Attachment>( (List<Attachment>) state.get( "attachments" ) ) );
+        setWaivedIssueDetections( (ArrayList<String>)state.get( "waivedIssueDetections" ) );
+    }
+
 }

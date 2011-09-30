@@ -6,26 +6,16 @@
 
 package com.mindalliance.channels.core.command.commands;
 
-import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.AbstractCommand;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.dao.PlanDao;
-import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Delay;
-import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.QueryService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -82,7 +72,7 @@ public class AddPart extends AbstractCommand {
             planDao.removeNode( defaultPart, segment );
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );
         if ( partState != null )
-            initFromMap( part, partState, commander.getQueryService() );
+            part.initFromMap( partState, commander.getQueryService() );
         describeTarget( part );
         return new Change( Change.Type.Added, part );
     }
@@ -105,45 +95,4 @@ public class AddPart extends AbstractCommand {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
-    public static void initFromMap( Part part, Map<String, Object> state, QueryService queryService ) {
-        part.setDescription( (String) state.get( "description" ) );
-        part.setTask( (String) state.get( "task" ) );
-        part.setRepeating( (Boolean) state.get( "repeating" ) );
-        part.setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
-        part.setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
-        part.setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
-        part.setOngoing( (Boolean) state.get( "ongoing" ) );
-        part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
-        part.setCompletionTime( (Delay) state.get( "completionTime" ) );
-        part.setCategory( (Part.Category) state.get( "category" ) );
-        part.setAttachments( new ArrayList<Attachment>( (List<Attachment>) state.get( "attachments" ) ) );
-        for ( Map<String, Object> goalMap : (List<Map<String, Object>>) state.get( "goals" ) )
-            part.addGoal( queryService.goalFromMap( goalMap ) );
-        if ( state.get( "initiatedEvent" ) == null )
-            part.setInitiatedEvent( null );
-        else
-            part.setInitiatedEvent( queryService.findOrCreateType( Event.class,
-                                                                   (String) state.get( "initiatedEvent" ) ) );
-        if ( state.get( "actor" ) != null )
-            part.setActor( queryService.retrieveEntity( Actor.class, state, "actor" ) );
-        else
-            part.setActor( null );
-        if ( state.get( "role" ) != null )
-            part.setRole( queryService.retrieveEntity( Role.class, state, "role" ) );
-        else
-            part.setRole( null );
-        if ( state.get( "organization" ) != null )
-            part.setOrganization( queryService.retrieveEntity( Organization.class, state, "organization" ) );
-        else
-            part.setOrganization( null );
-        if ( state.get( "jurisdiction" ) != null )
-            part.setJurisdiction( queryService.retrieveEntity( Place.class, state, "jurisdiction" ) );
-        else
-            part.setJurisdiction( null );
-        if ( state.get( "location" ) != null )
-            part.setLocation( queryService.retrieveEntity( Place.class, state, "location" ) );
-        else
-            part.setLocation( null );
-    }
 }

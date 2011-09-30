@@ -51,7 +51,7 @@ public class DefaultDetective implements Detective {
     }
 
     @Override
-    public List<Issue> detectWaivedIssues( QueryService queryService, ModelObject modelObject,
+    public List<? extends Issue> detectWaivedIssues( QueryService queryService, ModelObject modelObject,
                                            Boolean propertySpecific ) {
         return detectIssues( queryService, getDetectors( modelObject, true, propertySpecific ), modelObject );
     }
@@ -61,7 +61,7 @@ public class DefaultDetective implements Detective {
         List<Issue> issues = new ArrayList<Issue>();
         for ( IssueDetector detector : detectors ) {
             LOG.debug( "Detecting: " + detector.getKind() );
-            List<Issue> detectedIssues = detector.detectIssues( queryService, modelObject );
+            List<? extends Issue> detectedIssues = detector.detectIssues( queryService, modelObject );
             if ( detectedIssues != null )
                 issues.addAll( detectedIssues );
         }

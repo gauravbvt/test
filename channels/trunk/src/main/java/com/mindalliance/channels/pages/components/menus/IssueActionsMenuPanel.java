@@ -142,7 +142,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         Issue issue = getIssue();
         if ( !issue.isDetected() ) {
-            commandWrappers.add( new CommandWrapper( new RemoveIssue( User.current().getUsername(), issue ) ) {
+            commandWrappers.add( new CommandWrapper( new RemoveIssue( User.current().getUsername(), (UserIssue)issue ) ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );

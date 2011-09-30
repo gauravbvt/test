@@ -26,11 +26,11 @@ public interface IssueDetector {
      * Detect an issue on a model object
      *
      *
-     * @param queryService
+     * @param queryService a query service
      * @param modelObject -- the ModelObject being analyzed
      * @return a list of Issues
      */
-    List<Issue> detectIssues( QueryService queryService, ModelObject modelObject );
+    List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject );
 
     /**
      * Tests whether the detector applies to the model object

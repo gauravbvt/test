@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -65,7 +66,7 @@ public class TestDefaultAnalyst extends AbstractChannelsTest {
     }
 
     private void collectIssues( ModelObject modelObject, List<Issue> collector ) {
-        Iterator<Issue> issues = analyst.listIssues( queryService, modelObject,
+        Iterator<? extends Issue> issues = analyst.listIssues( queryService, modelObject,
                 Analyst.INCLUDE_PROPERTY_SPECIFIC ).iterator();
         while ( issues.hasNext() ) {
             Issue issue = issues.next();

@@ -26,7 +26,7 @@ public class RemoveCapability extends AbstractCommand {
     public RemoveCapability( String userName, Flow flow ) {
         super( userName );
         needLocksOn( ChannelsUtils.getLockingSetFor( flow ) );
-        setArguments( ChannelsUtils.getFlowState( flow ) );
+        setArguments( ChannelsUtils.getFlowConnectionState( flow ) );
         set( "flow", flow.getId() );
     }
 

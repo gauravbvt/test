@@ -22,16 +22,17 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.query.Play;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
-import com.mindalliance.channels.core.query.Play;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -130,7 +131,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public List<Issue> listIssues( QueryService queryService, ModelObject modelObject,
+    public List<? extends Issue> listIssues( QueryService queryService, ModelObject modelObject,
                                    Boolean includingPropertySpecific, Boolean includingWaived ) {
         return includingWaived ?
                detectAllIssues( queryService, modelObject, null, includingPropertySpecific ) :
@@ -149,35 +150,35 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public List<Issue> listUnwaivedIssues( QueryService queryService, ModelObject modelObject,
+    public List<? extends Issue> listUnwaivedIssues( QueryService queryService, ModelObject modelObject,
                                            Boolean includingPropertySpecific ) {
         return detectUnwaivedIssues( queryService, modelObject, null, includingPropertySpecific );
     }
 
     @Override
-    public List<Issue> listUnwaivedIssues( QueryService queryService, ModelObject modelObject, String property ) {
+    public List<? extends Issue> listUnwaivedIssues( QueryService queryService, ModelObject modelObject, String property ) {
         return detectUnwaivedIssues( queryService, modelObject, property, true );
     }
 
     @Override
-    public List<Issue> listUnwaivedIssues( QueryService queryService, Assignment assignment,
+    public List<? extends Issue> listUnwaivedIssues( QueryService queryService, Assignment assignment,
                                            Boolean includingPropertySpecific ) {
         return detectUnwaivedIssues( queryService, assignment, includingPropertySpecific );
     }
 
     @Override
-    public List<Issue> listWaivedIssues( QueryService queryService, ModelObject modelObject,
+    public List<? extends Issue> listWaivedIssues( QueryService queryService, ModelObject modelObject,
                                          Boolean includingPropertySpecific ) {
         return detectWaivedIssues( queryService, modelObject, null, includingPropertySpecific );
     }
 
     @Override
-    public List<Issue> listWaivedIssues( QueryService queryService, ModelObject modelObject, String property ) {
+    public List<? extends Issue> listWaivedIssues( QueryService queryService, ModelObject modelObject, String property ) {
         return detectWaivedIssues( queryService, modelObject, property, true );
     }
 
     @Override
-    public List<Issue> listWaivedIssues( QueryService queryService, Assignment assignment,
+    public List<? extends Issue> listWaivedIssues( QueryService queryService, Assignment assignment,
                                          Boolean includingPropertySpecific ) {
         return detectWaivedIssues( queryService, assignment, includingPropertySpecific );
     }
@@ -212,20 +213,20 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     @Override
     public String getIssuesSummary( QueryService queryService, ModelObject modelObject,
                                     Boolean includingPropertySpecific ) {
-        List<Issue> issues = listUnwaivedIssues( queryService, modelObject, includingPropertySpecific );
+        List<? extends Issue> issues = listUnwaivedIssues( queryService, modelObject, includingPropertySpecific );
         return summarize( issues );
     }
 
     @Override
     public String getIssuesSummary( QueryService queryService, Assignment assignment,
                                     Boolean includingPropertySpecific ) {
-        List<Issue> issues = listUnwaivedIssues( queryService, assignment, includingPropertySpecific );
+        List<? extends Issue> issues = listUnwaivedIssues( queryService, assignment, includingPropertySpecific );
         return summarize( issues );
     }
 
     @Override
     public String getIssuesSummary( QueryService queryService, ModelObject modelObject, String property ) {
-        List<Issue> issues = listUnwaivedIssues( queryService, modelObject, property );
+        List<? extends Issue> issues = listUnwaivedIssues( queryService, modelObject, property );
         return summarize( issues );
     }
 
@@ -235,7 +236,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
      * @param issues -- an iterator on issues
      * @return a string summarizing the issues
      */
-    private String summarize( List<Issue> issues ) {
+    private String summarize( List<? extends Issue> issues ) {
         StringBuilder sb = new StringBuilder();
         for ( Issue issue : issues ) {
             sb.append( issue.getDescription() );
@@ -398,7 +399,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return issues;
     }
 
-    private List<Issue> detectUnwaivedIssues( QueryService queryService, ModelObject modelObject, String property,
+    private List<? extends Issue> detectUnwaivedIssues( QueryService queryService, ModelObject modelObject, String property,
                                               boolean includingPropertySpecific ) {
         if ( property == null ) {
             List<Issue> issues = new ArrayList<Issue>();
@@ -430,7 +431,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return issues;
     }
 
-    private List<Issue> detectWaivedIssues( QueryService queryService, ModelObject modelObject, String property,
+    private List<? extends Issue> detectWaivedIssues( QueryService queryService, ModelObject modelObject, String property,
                                             boolean includingPropertySpecific ) {
         if ( property == null ) {
             List<Issue> issues = new ArrayList<Issue>();
@@ -945,8 +946,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public String realizability( Plan plan, Commitment commitment ) {
-        List<String> problems = findRealizabilityProblems( plan, commitment );
+    public String realizability( Commitment commitment, QueryService queryService ) {
+        List<String> problems = findRealizabilityProblems( queryService.getPlan(), commitment );
         return problems.isEmpty() ?
                "Yes" :
                "No: " + StringUtils.capitalize( ChannelsUtils.listToString( problems, ", and " ) );
@@ -985,6 +986,13 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         } );
         return !assignments.isEmpty() && noAvailability;
     }
+
+    @Override
+     public int unwaivedIssuesCount( Requirement requirement, QueryService queryService ) {
+        return detectUnwaivedIssues( queryService, requirement, null, true ).size();
+    }
+
+
 
     @Override
     public void commandDone( Commander commander, Command command, Change change ) {

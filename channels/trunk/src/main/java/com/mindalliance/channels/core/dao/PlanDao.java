@@ -11,7 +11,6 @@ import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.InternalFlow;
 import com.mindalliance.channels.core.model.InvalidEntityKindException;
-import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
@@ -158,21 +157,15 @@ public class PlanDao {
         return segment.addNode( assignId( new Part(), id, idGenerator ) );
     }
 
-    public <T extends Requirement>T createRequirement( Class<T> clazz, Long id ) {
-        try {
-            T requirement = clazz.getConstructor().newInstance();
-            add( requirement, id );
-            plan.addRequirement( assignId( requirement, id, idGenerator ) );
-            return requirement;
-        } catch ( InstantiationException e ) {
-            throw new RuntimeException( e );
-        } catch ( IllegalAccessException e ) {
-            throw new RuntimeException( e );
-        } catch ( InvocationTargetException e ) {
-            throw new RuntimeException( e );
-        } catch ( NoSuchMethodException e ) {
-            throw new RuntimeException( e );
-        }
+    public Requirement createRequirement() {
+        return createRequirement( null );
+    }
+
+    public Requirement createRequirement( Long id ) {
+        Requirement requirement = new Requirement();
+        add( requirement, id );
+        assignId( requirement, id, idGenerator );
+        return requirement;
     }
 
     /**
@@ -317,7 +310,7 @@ public class PlanDao {
         }
     }
 
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
         return (T) find( id );
     }
@@ -349,18 +342,18 @@ public class PlanDao {
         }
         for ( Organization org : list( Organization.class ) )
             for ( Agreement agreement : org.getAgreements() )
-                    attachables.add( agreement );
+                attachables.add( agreement );
 
         Set<String> allAttachedUrls = new HashSet<String>();
         for ( Attachable attachable : attachables )
             for ( Attachment attachment : attachable.getAttachments() )
-                    allAttachedUrls.add( attachment.getUrl() );
+                allAttachedUrls.add( attachment.getUrl() );
 
         return new ArrayList<String>( allAttachedUrls );
     }
 
-    public List<Issue> findAllUserIssues( ModelObject modelObject ) {
-        List<Issue> foundIssues = new ArrayList<Issue>();
+    public List<UserIssue> findAllUserIssues( ModelObject modelObject ) {
+        List<UserIssue> foundIssues = new ArrayList<UserIssue>();
         for ( UserIssue userIssue : list( UserIssue.class ) ) {
             if ( userIssue.getAbout().getId() == modelObject.getId() )
                 foundIssues.add( userIssue );
@@ -460,7 +453,7 @@ public class PlanDao {
         return plan != null;
     }
 
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public Iterator<ModelEntity> iterateEntities() {
         Set<? extends ModelObject> referencers = getReferencingObjects();
         Class<?>[] classes = {
@@ -476,7 +469,7 @@ public class PlanDao {
         return (Iterator<ModelEntity>) new IteratorChain( iterators );
     }
 
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     public <T extends ModelObject> List<T> list( final Class<T> clazz ) {
         synchronized ( indexMap ) {
             return (List<T>) CollectionUtils.select( indexMap.values(), new Predicate() {
@@ -501,7 +494,7 @@ public class PlanDao {
         return answer;
     }
 
-    @SuppressWarnings( { "unchecked", "RawUseOfParameterizedType" } )
+    @SuppressWarnings( {"unchecked", "RawUseOfParameterizedType"} )
     private boolean isReferenced( ModelObject mo, Set<? extends ModelObject> referencingObjects ) {
         if ( mo instanceof Participation ) {
             // Participations are not referenced per se but are not obsolete if they name a
@@ -582,7 +575,7 @@ public class PlanDao {
     /**
      * Remove a node from this segment. Quietly succeeds if node is not part of the segment
      *
-     * @param node the node to remove.
+     * @param node    the node to remove.
      * @param segment the segment
      */
     public void removeNode( Node node, Segment segment ) {
@@ -761,7 +754,7 @@ public class PlanDao {
         return plan;
     }
 
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     private Set<? extends ModelObject> getReferencingObjects() {
         Set<? extends ModelObject> referencingObjects = new HashSet<ModelObject>();
         for ( Class refClass : ModelObject.referencingClasses() )
@@ -769,7 +762,7 @@ public class PlanDao {
         return referencingObjects;
     }
 
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings( {"unchecked"} )
     private <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
         List<T> domain;
         boolean isPart = Part.class.isAssignableFrom( clazz );

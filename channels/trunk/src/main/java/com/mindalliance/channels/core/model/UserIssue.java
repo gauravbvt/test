@@ -1,8 +1,10 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.MessageFormat;
+import java.util.Map;
 
 /**
  * A user provided issue
@@ -189,4 +191,22 @@ public class UserIssue extends ModelObject implements Issue {
                 && remediation.isEmpty();
     }
 
+    @Override
+    public Map<String, Object> mapState() {
+        Map<String, Object> state = super.mapState();
+        state.put( "type", getType() );
+        state.put( "remediation", getRemediation() );
+        state.put( "severity", getSeverity() );
+        state.put( "reportedBy", getReportedBy() );
+        return state;
+    }
+
+    @Override
+    public void initFromMap( Map<String, Object> state, QueryService queryService ) {
+        super.initFromMap( state, queryService );
+        setType( (String) state.get( "type" ) );
+        setRemediation( (String) state.get( "remediation" ) );
+        setSeverity( (Level) state.get( "severity" ) );
+        setReportedBy( (String) state.get( "reportedBy" ) );
+    }
 }

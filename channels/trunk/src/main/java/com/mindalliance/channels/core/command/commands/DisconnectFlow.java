@@ -44,7 +44,7 @@ public class DisconnectFlow extends AbstractCommand {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             assert get( "flow" ) != null;
             Flow flow = segment.findFlow( (Long) get( "flow" ) );
-            set( "flowState", ChannelsUtils.getFlowState( flow ) );
+            set( "flowState", ChannelsUtils.getFlowConnectionState( flow ) );
             describeTarget( flow );
             commander.getPlanDao().disconnect( flow );
             releaseAnyLockOn( commander, flow );

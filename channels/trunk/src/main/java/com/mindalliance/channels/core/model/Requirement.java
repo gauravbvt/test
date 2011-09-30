@@ -57,17 +57,17 @@ public class Requirement extends ModelObject {
     /**
      * Specification of committers.
      */
-    private AssignmentSpec committerSpec;
+    private AssignmentSpec committerSpec = new AssignmentSpec();
     /**
      * Specification of beneficiaries.
      */
-    private AssignmentSpec beneficiarySpec;
+    private AssignmentSpec beneficiarySpec = new AssignmentSpec();
     /**
      * Number of committers per beneficiary.
      */
-    private Cardinality cardinality;
+    private Cardinality cardinality = new Cardinality();
 
-    protected Requirement() {
+    public Requirement() {
         super( UNNAMED );
     }
 
@@ -124,7 +124,7 @@ public class Requirement extends ModelObject {
     }
 
     public void setCardinality( Cardinality cardinality ) {
-        this.cardinality = cardinality;
+        this.cardinality = cardinality == null ? new Cardinality() : cardinality;
     }
 
     public String toString() {
@@ -300,6 +300,30 @@ public class Requirement extends ModelObject {
                  && bSpec.narrowsOrEquals( beneficiarySpec.getResourceSpec(), planLocale );
      }
 
+    public Map<String, Object> mapState() {
+        Map<String, Object> state = super.mapState();
+        state.put( "information", getInformation() );
+        state.put( "requiredTags", Tag.tagsToString( getRequiredTags() ) );
+        state.put( "cardinality", getCardinality().mapState() );
+        state.put( "committerSpec", getCommitterSpec().mapState() );
+        state.put( "beneficiarySpec", getBeneficiarySpec().mapState() );
+        return state;
+    }
+
+    public void initFromMap( Map<String, Object> state, QueryService queryService ) {
+        super.initFromMap( state, queryService );
+        setInformation( (String) state.get( "information" ) );
+        setRequiredTags( Tag.tagsFromString( ( String )state.get( "requiredTags" ) ) );
+        Cardinality card = new Cardinality();
+        card.initFromMap( (Map<String, Object>) state.get( "cardinality" ) );
+        setCardinality( card );
+        AssignmentSpec cSpec = new AssignmentSpec();
+        cSpec.initFromMap( (Map<String, Object> )state.get( "committerSpec" ), queryService );
+        setCommitterSpec( cSpec );
+        AssignmentSpec bSpec = new AssignmentSpec();
+        bSpec.initFromMap( (Map<String, Object> )state.get( "beneficiarySpec" ), queryService );
+        setCommitterSpec( bSpec );
+    }
 
 
     /**
@@ -369,6 +393,19 @@ public class Requirement extends ModelObject {
         }
 
 
+        public Map<String, Object> mapState() {
+            Map<String, Object> state = new HashMap<String, Object>();
+            state.put( "minCount", getMinCount() );
+            state.put( "maxCount", getMaxCount() );
+            state.put( "safeCount", getSafeCount() );
+            return state;
+        }
+
+        public void initFromMap( Map<String, Object> state ) {
+            setMinCount( (Integer)state.get( "minCount" ) );
+            setMaxCount( (Integer) state.get( "maxCount" ) );
+            setSafeCount( (Integer) state.get( "safeCount" ) );
+        }
     }
 
     /**
@@ -400,7 +437,7 @@ public class Requirement extends ModelObject {
         /**
          * Number of committers/beneficiaries per specified organization.
          */
-        private Cardinality cardinality;
+        private Cardinality cardinality = new Cardinality();
 
         public AssignmentSpec() {
         }
@@ -460,7 +497,11 @@ public class Requirement extends ModelObject {
         }
 
         public void setCardinality( Cardinality cardinality ) {
-            this.cardinality = cardinality;
+            this.cardinality = cardinality == null ? new Cardinality() : cardinality;
+        }
+
+        public Organization getOrganization() {
+            return getResourceSpec().getOrganization();
         }
 
         private boolean inRequiredContext( Part part, Place planLocale ) {
@@ -485,6 +526,30 @@ public class Requirement extends ModelObject {
         public boolean appliesTo( Organization organization, Place planLocale ) {
             Organization orgSpec = getResourceSpec().getOrganization();
             return orgSpec == null || organization.narrowsOrEquals( orgSpec, planLocale );
+        }
+
+        public Map<String, Object> mapState() {
+            Map<String,Object>state = new HashMap<String, Object>(  );
+            state.put( "taskName", getTaskName() );
+            state.put( "requiredTags", Tag.tagsToString( getRequiredTags() ) );
+            state.put( "cardinality", getCardinality().mapState() );
+            if ( event != null )
+                state.put( "event", event.getName() );
+            if ( timing != null )
+                state.put( "timing", timing.name() );
+            state.put( "resourceSpec", getResourceSpec().mapState() );
+            return state;
+        }
+
+        @SuppressWarnings( "unchecked" )
+        public void initFromMap( Map<String, Object> state, QueryService queryService ) {
+           setTaskName( (String)state.get( "taskName" ) );
+            setRequiredTags( Tag.tagsFromString( (String)state.get( "requiredTags" ) ) );
+            Cardinality card = new Cardinality();
+            card.initFromMap( (Map<String,Object>)state.get( "cardinality" ));
+            setCardinality( card );
+            ResourceSpec spec = new ResourceSpec();
+            spec.initFromMap( (Map<String,Object>)state.get( "resourceSpec" ), queryService );
         }
     }
 }

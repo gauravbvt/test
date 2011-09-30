@@ -1,7 +1,7 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -875,18 +874,18 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      * @return a map of attribute names and values
      */
     public Map<String, Object> mapState() {
-        Map<String, Object> state = new HashMap<String, Object>();
-        state.put( "description", getDescription() );
+        Map<String, Object> state = super.mapState();
         state.put( "task", task );
         state.put( "repeatsEvery", new Delay( repeatsEvery ) );
         state.put( "completionTime", new Delay( completionTime ) );
-        state.put( "attachments", new ArrayList<Attachment>( getAttachments() ) );
-        state.put( "waivedIssueDetections", new ArrayList<String>( getWaivedIssueDetections() ) );
         state.put( "selfTerminating", selfTerminating );
         state.put( "repeating", repeating );
         state.put( "terminatesEventPhase", terminatesEventPhase );
         state.put( "startsWithSegment", startsWithSegment );
         state.put( "ongoing", ongoing );
+        state.put( "asTeam", asTeam );
+        state.put( "prohibited", asTeam );
+        state.put( "category", getCategory() );
         List<Map<String, Object>> goalMaps = new ArrayList<Map<String, Object>>();
         for ( Goal goal : goals ) {
             goalMaps.add( goal.toMap() );
@@ -906,6 +905,50 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
             state.put( "location", Arrays.asList( location.getName(), location.isType() ) );
         return state;
     }
+
+    @SuppressWarnings( "unchecked" )
+    public void initFromMap( Map<String, Object> state, QueryService queryService ) {
+        super.initFromMap( state, queryService );
+        setTask( (String) state.get( "task" ) );
+        setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
+        setCompletionTime( (Delay) state.get( "completionTime" ) );
+        setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
+        setRepeating( (Boolean) state.get( "repeating" ) );
+        setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
+        setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
+        setOngoing( (Boolean) state.get( "ongoing" ) );
+        setAsTeam( (Boolean) state.get( "asTeam" ) );
+        setProhibited( (Boolean) state.get( "prohibited" ) );
+        setCategory( (Category) state.get( "category" ) );
+        for ( Map<String, Object> goalMap : (List<Map<String, Object>>) state.get( "goals" ) )
+            addGoal( queryService.goalFromMap( goalMap ) );
+        if ( state.get( "initiatedEvent" ) == null )
+            setInitiatedEvent( null );
+        else
+            setInitiatedEvent( queryService.findOrCreateType( Event.class,
+                    (String) state.get( "initiatedEvent" ) ) );
+        if ( state.get( "actor" ) != null )
+            setActor( queryService.retrieveEntity( Actor.class, state, "actor" ) );
+        else
+            setActor( null );
+        if ( state.get( "role" ) != null )
+            setRole( queryService.retrieveEntity( Role.class, state, "role" ) );
+        else
+            setRole( null );
+        if ( state.get( "organization" ) != null )
+            setOrganization( queryService.retrieveEntity( Organization.class, state, "organization" ) );
+        else
+            setOrganization( null );
+        if ( state.get( "jurisdiction" ) != null )
+            setJurisdiction( queryService.retrieveEntity( Place.class, state, "jurisdiction" ) );
+        else
+            setJurisdiction( null );
+        if ( state.get( "location" ) != null )
+            setLocation( queryService.retrieveEntity( Place.class, state, "location" ) );
+        else
+            setLocation( null );
+    }
+
 
     /**
      * Get task with category, if any.

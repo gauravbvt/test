@@ -15,7 +15,6 @@ import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.query.QueryService;
 
 /**
@@ -73,12 +72,12 @@ public class RedirectFlow extends AbstractCommand {
                                                        flow.getSource(),
                                                        other,
                                                        flow.getName(),
-                                                       ChannelsUtils.getFlowAttributes( flow ) ) :
+                                                       flow.mapState() ) :
                                   new ConnectWithFlow( getUserName(),
                                                        other,
                                                        flow.getTarget(),
                                                        flow.getName(),
-                                                       ChannelsUtils.getFlowAttributes( flow ) );
+                                                       flow.mapState() );
         multi.addCommand( connect );
         // Remove prior flow. Don't carry over attributes to new flow.
         Command disconnect = commander.makeRemoveFlowCommand( getUserName(), flow );

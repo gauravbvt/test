@@ -16,7 +16,6 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.HashMap;
@@ -102,7 +101,7 @@ public class ConnectWithFlow extends AbstractCommand {
         Map<String, Object> attributes = (Map<String, Object>) get( "attributes" );
 
         if ( attributes != null )
-            ChannelsUtils.initialize( flow, attributes );
+            flow.initFromMap( attributes, queryService );
         describeTarget( flow );
         return new Change( Change.Type.Added, flow );
     }

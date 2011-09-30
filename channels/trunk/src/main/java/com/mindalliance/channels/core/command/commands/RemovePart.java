@@ -16,8 +16,8 @@ import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 
 import java.util.Iterator;
 
@@ -128,7 +128,7 @@ public class RemovePart extends AbstractCommand {
                 addCapability.set( "segment", in.getSource().getSegment().getId() );
                 addCapability.set( "part", in.getSource().getId() );
                 addCapability.set( "name", in.getName() );
-                addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( in ) );
+                addCapability.set( "attributes", in.mapState() );
                 subCommands.addCommand( addCapability );
             }
         }
@@ -147,7 +147,7 @@ public class RemovePart extends AbstractCommand {
                 addNeed.set( "segment", out.getTarget().getSegment().getId() );
                 addNeed.set( "part", out.getTarget().getId() );
                 addNeed.set( "name", out.getName() );
-                addNeed.set( "attributes", ChannelsUtils.getFlowAttributes( out ) );
+                addNeed.set( "attributes", out.mapState() );
                 subCommands.addCommand( addNeed );
             }
         }

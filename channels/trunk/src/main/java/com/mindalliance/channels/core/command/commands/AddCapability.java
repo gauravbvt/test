@@ -15,7 +15,6 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.Map;
@@ -62,7 +61,7 @@ public class AddCapability extends AbstractCommand {
             describeTarget( flow );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null )
-                ChannelsUtils.initialize( flow, flowAttributes );
+                flow.initFromMap( flowAttributes, queryService );
 
             set( "flow", flow.getId() );
             set( "connector", flow.getTarget().getId() );

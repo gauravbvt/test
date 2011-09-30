@@ -53,7 +53,7 @@ public class BreakUpFlow extends AbstractCommand {
             }
             // else this is a replay
             multi.execute( commander );
-            set( "flowState", ChannelsUtils.getFlowState( flow ) );
+            set( "flowState", ChannelsUtils.getFlowConnectionState( flow ) );
             describeTarget( flow );
             commander.getPlanDao().disconnect( flow );
             //            breakup( flow, commander );
@@ -96,7 +96,7 @@ public class BreakUpFlow extends AbstractCommand {
                     addCapability.set( "segment", source.getSegment().getId() );
                     addCapability.set( "part", source.getId() );
                     addCapability.set( "name", flow.getName() );
-                    addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( flow ) );
+                    addCapability.set( "attributes", flow.mapState() );
                     subCommands.addCommand( addCapability );
                 }
                 if ( !target.hasMultipleReceives( flow.getName() ) ) {
@@ -104,7 +104,7 @@ public class BreakUpFlow extends AbstractCommand {
                     addNeed.set( "segment", target.getSegment().getId() );
                     addNeed.set( "part", target.getId() );
                     addNeed.set( "name", flow.getName() );
-                    addNeed.set( "attributes", ChannelsUtils.getFlowAttributes( flow ) );
+                    addNeed.set( "attributes", flow.mapState() );
                     subCommands.addCommand( addNeed );
                 }
             }

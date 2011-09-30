@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.util.PeekAheadIterator;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.CommandEvent;
@@ -191,10 +190,6 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
 
     public void setOthersOnly( boolean othersOnly ) {
         this.othersOnly = othersOnly;
-    }
-
-    private String getUsername() {
-        return User.current().getUsername();
     }
 
 }

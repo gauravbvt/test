@@ -120,13 +120,13 @@ public class MovePart extends AbstractCommand {
             Command addCapability = new AddCapability( getUserName() );
             addCapability.set( "name", capability.getName() );
             addCapability.set( "segment", toSegment.getId() );
-            addCapability.set( "attributes", ChannelsUtils.getFlowAttributes( capability ) );
+            addCapability.set( "attributes", capability.mapState() );
             multi.addLink( addPart, "id", addCapability, "part" );
             multi.addCommand( addCapability );
             addCapabilityCommands.put( capability.getName(), addCapability );
         }
         for ( Flow send : partToMove.getAllSharingSends() ) {
-            Map<String, Object> attributes = ChannelsUtils.getFlowAttributes( send );
+            Map<String, Object> attributes = send.mapState();
             String name = send.getName();
             Command connect = new ConnectWithFlow( getUserName() );
             connect.set( "name", name );
@@ -166,7 +166,7 @@ public class MovePart extends AbstractCommand {
         Iterator<Flow> receives = partToMove.receives();
         while ( receives.hasNext() ) {
             Flow receive = receives.next();
-            Map<String, Object> attributes = ChannelsUtils.getFlowAttributes( receive );
+            Map<String, Object> attributes = receive.mapState();
             String name = receive.getName();
             if ( receive.isNeed() ) {
                 Command addNeed = new AddNeed( getUserName() );
@@ -206,7 +206,7 @@ public class MovePart extends AbstractCommand {
                         connect.set( "otherSegment", toSegment.getId() );
                     } else {
                         // external stays external
-                        Map<String, Object> state = ChannelsUtils.getFlowState( receive, partToMove );
+                        Map<String, Object> state = ChannelsUtils.getFlowConnectionState( receive, partToMove );
                         connect.set( "otherSegment", state.get( "otherSegment" ) );
                         connect.set( "other", state.get( "other" ) );
                     }

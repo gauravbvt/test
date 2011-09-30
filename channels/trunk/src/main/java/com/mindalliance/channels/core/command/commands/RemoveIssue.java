@@ -12,12 +12,8 @@ import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.QueryService;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Remove issue command.
@@ -28,18 +24,13 @@ public class RemoveIssue extends AbstractCommand {
         super( "daemon" );
     }
 
-    public RemoveIssue( String userName, Issue issue ) {
+    public RemoveIssue( String userName, UserIssue issue ) {
         super( userName );
         needLockOn( issue );
         needLockOn( issue.getAbout() );
         set( "issue", issue.getId() );
         set( "modelObject", issue.getAbout().getId() );
-        Map<String, Object> state = new HashMap<String, Object>();
-        state.put( "description", issue.getDescription() );
-        state.put( "remediation", issue.getRemediation() );
-        state.put( "severity", issue.getSeverity() );
-        state.put( "reportedBy", issue.getReportedBy() );
-        set( "state", state );
+        set( "state", issue.mapState() );
     }
 
     @Override

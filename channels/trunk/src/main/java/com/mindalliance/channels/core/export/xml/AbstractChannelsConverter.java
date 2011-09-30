@@ -7,13 +7,13 @@ import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.export.ConnectionSpecification;
 import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.model.Connector;
-import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Taggable;
+import com.mindalliance.channels.core.model.UserIssue;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -166,8 +166,8 @@ public abstract class AbstractChannelsConverter implements Converter {
             ModelObject modelObject,
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
-        List<Issue> issues = getPlanDao().findAllUserIssues( modelObject );
-       for ( Issue issue : issues ) {
+        List<UserIssue> issues = getPlanDao().findAllUserIssues( modelObject );
+       for ( UserIssue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );
            writer.endNode();

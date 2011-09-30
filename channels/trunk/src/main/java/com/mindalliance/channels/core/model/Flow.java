@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -1272,6 +1274,60 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 return !flow.getEois().contains( (ElementOfInformation) object );
             }
         } ) );
+    }
+
+    @Override
+    public Map<String, Object> mapState() {
+        Map<String, Object> state = super.mapState();
+        state.put( "eois", copyEois() );
+        state.put( "askedFor", isAskedFor() );
+        state.put( "all", isAll() );
+        state.put( "maxDelay", getMaxDelay().copy() );
+        state.put( "channels", getChannelsCopy() );
+        state.put( "significanceToTarget", getSignificanceToTarget() );
+        state.put( "significanceToSource", getSignificanceToSource() );
+        state.put( "intent", getIntent() );
+        state.put( "restriction", getRestriction() );
+        state.put( "prohibited", isProhibited() );
+        state.put( "ifTaskFails", isIfTaskFails() );
+        state.put( "referencesEventPhase", isReferencesEventPhase() );
+        state.put( "canBypassIntermediate", isCanBypassIntermediate() );
+        state.put( "receiptConfirmationRequested", isReceiptConfirmationRequested() );
+        return state;
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public void initFromMap( Map<String, Object> state, QueryService queryService ) {
+        super.initFromMap( state, queryService );
+        if ( state.containsKey( "eois" ) )
+            setEois( (List<ElementOfInformation>) state.get( "eois" ) );
+        if ( state.containsKey( "askedFor" ) )
+            setAskedFor( (Boolean) state.get( "askedFor" ) );
+        if ( state.containsKey( "all" ) )
+            setAll( (Boolean) state.get( "all" ) );
+        if ( state.containsKey( "maxDelay" ) )
+            setMaxDelay( (Delay) state.get( "maxDelay" ) );
+        if ( state.containsKey( "channels" ) )
+            setChannels( (List<Channel>) state.get( "channels" ) );
+        if ( state.containsKey( "significanceToTarget" ) )
+            setSignificanceToTarget( (Significance) state.get( "significanceToTarget" ) );
+        if ( state.containsKey( "significanceToSource" ) )
+            setSignificanceToSource( (Significance) state.get( "significanceToSource" ) );
+        if ( state.containsKey( "intent" ) )
+            setIntent( (Intent) state.get( "intent" ) );
+        if ( state.containsKey( "prohibited" ) )
+            setProhibited( (Boolean)state.get( "prohibited" ) );
+        if ( state.containsKey( "restriction" ) )
+            setRestriction( (Restriction) state.get( "restriction" ) );
+        if ( state.containsKey( "ifTaskFails" ) )
+            setIfTaskFails( (Boolean) state.get( "ifTaskFails" ) );
+        if ( state.containsKey( "referencesEventPhase" ) )
+            setReferencesEventPhase( (Boolean) state.get( "referencesEventPhase" ) );
+        if ( state.containsKey( "canBypassIntermediate" ) )
+            setCanBypassIntermediate( (Boolean) state.get( "canBypassIntermediate" ) );
+        if ( state.containsKey( "receiptConfirmationRequested" ) )
+            setReceiptConfirmationRequested( (Boolean) state.get( "receiptConfirmationRequested" ) );
     }
 
     /**

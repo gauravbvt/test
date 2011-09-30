@@ -24,7 +24,7 @@ public interface Detective {
      * @param propertySpecific - whether issues are property specific
      * @return a list of issues
      */
-    List<Issue> detectWaivedIssues( QueryService queryService, ModelObject modelObject, Boolean propertySpecific );
+    List<? extends Issue> detectWaivedIssues( QueryService queryService, ModelObject modelObject, Boolean propertySpecific );
 
     /**
       * Detect all waived issues on a model object .
@@ -34,7 +34,7 @@ public interface Detective {
    * @param propertySpecific - whether issues are property specific
     * @return a list of issues
       */
-    List<Issue> detectUnwaivedIssues( QueryService queryService, ModelObject modelObject, Boolean propertySpecific );
+    List<? extends Issue> detectUnwaivedIssues( QueryService queryService, ModelObject modelObject, Boolean propertySpecific );
 
     /**
      * Detect all waived property issues on a model object .
@@ -44,7 +44,7 @@ public interface Detective {
      * @param property a string - issues for this property if given
      * @return a list of issues
      */
-    List<Issue> detectWaivedPropertyIssues( QueryService queryService, ModelObject modelObject, String property );
+    List<? extends Issue> detectWaivedPropertyIssues( QueryService queryService, ModelObject modelObject, String property );
 
     /**
       * Detect all waived property issues on a model object .
@@ -54,6 +54,6 @@ public interface Detective {
    * @param property a string - issues for this property if given
     * @return a list of issues
       */
-    List<Issue> detectUnwaivedPropertyIssues( QueryService queryService, ModelObject modelObject, String property );
+    List<? extends Issue> detectUnwaivedPropertyIssues( QueryService queryService, ModelObject modelObject, String property );
 
 }

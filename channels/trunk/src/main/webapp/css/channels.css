@@ -1039,6 +1039,29 @@ div.aspect div.picture, div.aspect div.procedureMap {
 	overflow:auto;
 }
 
+/* --------- Buttons -------------*/
+
+a.button {
+	background: url("../images/button-bg.png") repeat-x scroll 0 0 transparent;
+	border: 1px solid #A7A9AC;
+	color: #666666;
+	cursor: pointer;
+	font-size: 11px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	padding: 5px 10px;
+}
+
+a.button {
+	margin:0 5px 0 0;
+}
+
+input.submit:hover,
+a.button:hover {
+	color:#000000;
+	border: 1px solid #000000;
+}
+
 
 /* ----- Floating Panels - Data Tables ----- */
 

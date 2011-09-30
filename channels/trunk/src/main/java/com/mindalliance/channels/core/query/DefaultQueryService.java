@@ -31,7 +31,6 @@ import com.mindalliance.channels.core.model.Flow.Restriction;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.InvalidEntityKindException;
-import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -53,6 +52,7 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.nlp.Proximity;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import org.apache.commons.collections.CollectionUtils;
@@ -1986,7 +1986,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public List<Issue> findAllUserIssues( ModelObject identifiable ) {
+    public List<UserIssue> findAllUserIssues( ModelObject identifiable ) {
         return getDao().findAllUserIssues( identifiable );
     }
 

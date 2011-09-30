@@ -12,8 +12,8 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.geo.GeoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +45,7 @@ public abstract class AbstractIssueDetector implements IssueDetector {
     private AttachmentManager attachmentManager;
 
     @Override
-    public abstract List<Issue> detectIssues( QueryService queryService, ModelObject modelObject );
+    public abstract List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject );
 
     @Override
     public abstract boolean appliesTo( ModelObject modelObject );

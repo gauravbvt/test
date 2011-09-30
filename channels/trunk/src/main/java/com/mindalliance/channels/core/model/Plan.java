@@ -123,10 +123,6 @@ public class Plan extends ModelObject {
     private String communityCalendarHost = "";
 
     private String communityCalendarPrivateTicket = "";
-    /**
-     * The plan's requirements.
-     */
-    private List<Requirement> requirements = new ArrayList<Requirement>(  );
 
     //-----------------------------
     public Plan() {
@@ -535,18 +531,6 @@ public class Plan extends ModelObject {
      */
     public void addPhase( Phase phase ) {
         phases.add( phase );
-    }
-
-    public List<Requirement> getRequirements() {
-        return requirements;
-    }
-
-    public void setRequirements( List<Requirement> requirements ) {
-        this.requirements = requirements;
-    }
-
-    public void addRequirement( Requirement requirement ) {
-        requirements.add( requirement );
     }
 
     @Override
