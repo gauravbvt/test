@@ -41,8 +41,7 @@ public class TE060_AddNewMedium
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				
+				Thread.sleep(2000);				
 				// Click on 'add info send' Link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Add info send Link clicked";
@@ -91,6 +90,9 @@ public class TE060_AddNewMedium
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
 			    // WebElement Synchronization
