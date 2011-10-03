@@ -119,15 +119,14 @@ public class TE072_DeleteMediumAttachment
 				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
 				// Assertion: verify that file is deleted
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathMediumDeleteAttachmentAssertion")));
-				if (GlobalVariables.oElement.getText().equals("")){
+				try {
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathMediumDeleteAttachmentAssertion")));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				} 
-				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual "+GlobalVariables.oElement.getText();
+				catch(Exception e) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -135,11 +134,7 @@ public class TE072_DeleteMediumAttachment
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);			
+				Thread.sleep(2000);
 				
 				// Click on done
 				GlobalVariables.iStepNo++;
@@ -152,13 +147,8 @@ public class TE072_DeleteMediumAttachment
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Close New Medium Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Remove Information Sharing Capability
-				ApplicationFunctionLibrary.MouseOverAndClick("/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span/span/span/span","Remove sharing capability");
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
 				alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
@@ -180,6 +170,7 @@ public class TE072_DeleteMediumAttachment
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

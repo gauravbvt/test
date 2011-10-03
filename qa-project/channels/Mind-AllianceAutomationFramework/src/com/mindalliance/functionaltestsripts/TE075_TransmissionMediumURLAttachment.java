@@ -1,13 +1,11 @@
 package com.mindalliance.functionaltestsripts;
 
 import java.util.List;
-
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -18,6 +16,7 @@ public class TE075_TransmissionMediumURLAttachment
 {
 	public TE075_TransmissionMediumURLAttachment() {
 		try{
+			
 			GlobalVariables.sTestCaseId = "TE075_TransmissionMediumURLAttachment";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -93,7 +92,7 @@ public class TE075_TransmissionMediumURLAttachment
 				//Attach Attachment as a URL
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Attachment attached as a URL";
-				GlobalVariables.oDriver.findElement(By.xpath("entity:mo:aspect:mo-details:attachments:container:controls:radios")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentsURLRadioButton"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -106,6 +105,10 @@ public class TE075_TransmissionMediumURLAttachment
 					GlobalVariables.oElement.click();
 						GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
 				}
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("Details"));
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
@@ -135,10 +138,6 @@ public class TE075_TransmissionMediumURLAttachment
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);				
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);			
 				
 				// Click on done
 				GlobalVariables.iStepNo++;
@@ -151,13 +150,8 @@ public class TE075_TransmissionMediumURLAttachment
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Close New Medium Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Remove Information Sharing Capability
-				ApplicationFunctionLibrary.MouseOverAndClick("/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span/span/span/span","Remove sharing capability");
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
 				alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
@@ -179,13 +173,13 @@ public class TE075_TransmissionMediumURLAttachment
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			}
 		catch (Exception e) {
-			System.out.println(e.getMessage()+"Hie.....");
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

@@ -78,18 +78,18 @@ public class TE061_ViewMedium
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Medium Window Opened";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSendNewMedium"))).click();
-			    // WebElement Synchronization
+				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that New Medium Window Opened/Viewed
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("newMedium"))){
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name"));
+				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.viewElements.get("newMedium"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
-				else{
+				else {
 					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("newMedium")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -105,7 +105,7 @@ public class TE061_ViewMedium
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),"Remove sharing capability");
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
@@ -124,15 +124,15 @@ public class TE061_ViewMedium
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.quit();
-			      
+				  
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-			}
+		}
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

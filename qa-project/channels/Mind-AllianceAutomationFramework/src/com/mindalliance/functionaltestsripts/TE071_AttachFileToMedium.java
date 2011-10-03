@@ -132,10 +132,6 @@ public class TE071_AttachFileToMedium
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
 				
 				// Close New Medium Window
 				GlobalVariables.iStepNo++;
@@ -147,15 +143,15 @@ public class TE071_AttachFileToMedium
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);		
+				Thread.sleep(3000);		
 				// Remove Information Sharing Capability
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),"Remove sharing capability");
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
 				alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -171,6 +167,7 @@ public class TE071_AttachFileToMedium
 			      
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

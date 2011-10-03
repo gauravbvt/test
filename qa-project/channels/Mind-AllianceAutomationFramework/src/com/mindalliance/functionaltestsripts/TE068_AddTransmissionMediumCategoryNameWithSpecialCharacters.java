@@ -96,17 +96,18 @@ public class TE068_AddTransmissionMediumCategoryNameWithSpecialCharacters
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion : Verify that Medium Category is added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentCategory")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get(")(*&^%$#!")))
-				{
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get(")(*&^%$#!"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else
-				{
+				else {
 					GlobalVariables.sVerifyError="Verification Failed. Expected '" + GlobalVariables.testData.get(")(*&^%$#!")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -137,7 +138,7 @@ public class TE068_AddTransmissionMediumCategoryNameWithSpecialCharacters
 				Thread.currentThread();
 				Thread.sleep(2000);		
 				// Remove Information Sharing Capability
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),"Remove sharing capability");
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
 				alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();

@@ -18,6 +18,7 @@ public class TE064_UpdateTransmissionMediumNameWithSpecialCharacters
 {
 	public TE064_UpdateTransmissionMediumNameWithSpecialCharacters() {
 		try{
+			
 			GlobalVariables.sTestCaseId = "TE064_UpdateTransmissionMediumNameWithSpecialCharacters";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -112,8 +113,8 @@ public class TE064_UpdateTransmissionMediumNameWithSpecialCharacters
 				Thread.currentThread();
 				Thread.sleep(2000);	
 				// Assertion: Verify that new medium is updated
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("sXpathAddInfoSendNewMedium"));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get(")(*&^%$#!"))){
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSendNewMedium")));
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get(")(*&^%$#!"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -130,7 +131,7 @@ public class TE064_UpdateTransmissionMediumNameWithSpecialCharacters
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendFlowMoreMenu"),"Remove sharing capability");
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
@@ -149,15 +150,15 @@ public class TE064_UpdateTransmissionMediumNameWithSpecialCharacters
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.quit();
-			      
+				  
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-			}
+		}
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
