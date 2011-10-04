@@ -11,11 +11,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
-//import javax.mail.Message;
-//import javax.mail.Session;
-//import javax.mail.Transport;
-//import javax.mail.internet.InternetAddress;
-//import javax.mail.internet.MimeMessage;
+
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -60,15 +61,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 	private JButton jButtonExit;
 	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel";
 	public EmailNotification() {
-		installLnF();
 		initComponents();
-		setDefaultCloseOperation(EmailNotification.EXIT_ON_CLOSE);
-		setTitle("Mind-Alliance Automation Framework");
-		//frame.getContentPane().setPreferredSize(frame.getSize());
-		pack();
-		setLocationRelativeTo(null);
-		setVisible(true);
-		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 	}
 
 	private void initComponents() {
@@ -280,15 +273,6 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 			String[] cc={"priyanka.gurav@afourtech.com"};
 			//This is for google
 			EmailNotification.sendMail(jTextFieldUserName.getText(),jTextFieldPassword.getText(),jTextFiledSMTPServer.getText(),jTextSMTPPort.getText(),"true","true",true,"javax.net.ssl.SSLSocketFactory","false",to,cc,"Mind-Alliance UI Automation Report");
-			
-			File file = new File(GlobalVariables.sReportDstDirectoryPath+"//index.htm");
-			Desktop desktop = Desktop.getDesktop();	
-			try {
-				desktop.open(file);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 		}
 	}
 		
@@ -321,23 +305,23 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 
         try
         {
-//        	Session session = Session.getDefaultInstance(props, null);
-//        	session.setDebug(debug);
-//        	MimeMessage msg = new MimeMessage(session);
-//            msg.setText("Mind Alliance UIAutomation Report");
-//            msg.setSubject(subject);
-//            msg.setFrom(new InternetAddress("mypriyancagurav@gmail.com"));
-//            for(int i=0;i<to.length;i++){
-//            	msg.addRecipient(Message.RecipientType.TO, new InternetAddress(to[i]));
-//            }
-//            for(int i=0;i<cc.length;i++){
-//            	msg.addRecipient(Message.RecipientType.CC, new InternetAddress(cc[i]));
-//            }
-//            msg.saveChanges();
-//            Transport transport = session.getTransport("smtp");
-//            transport.connect(host, userName, passWord);
-//            transport.sendMessage(msg, msg.getAllRecipients());
-//            transport.close();
+        	Session session = Session.getDefaultInstance(props, null);
+        	session.setDebug(debug);
+        	MimeMessage msg = new MimeMessage(session);
+            msg.setText("Mind Alliance UIAutomation Report");
+            msg.setSubject(subject);
+            msg.setFrom(new InternetAddress("mypriyancagurav@gmail.com"));
+            for(int i=0;i<to.length;i++){
+            	msg.addRecipient(Message.RecipientType.TO, new InternetAddress(to[i]));
+            }
+            for(int i=0;i<cc.length;i++){
+            	msg.addRecipient(Message.RecipientType.CC, new InternetAddress(cc[i]));
+            }
+            msg.saveChanges();
+            Transport transport = session.getTransport("smtp");
+            transport.connect(host, userName, passWord);
+            transport.sendMessage(msg, msg.getAllRecipients());
+            transport.close();
             return true;
         }
         catch (Exception mex)
@@ -355,20 +339,20 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 	 */
 	public static void main(String[] args) {
 		installLnF();
-//		SwingUtilities.invokeLater(new Runnable() {
-//			@Override
-//			public void run() {
-//				EmailNotification frame = new EmailNotification();
-//				frame.setDefaultCloseOperation(EmailNotification.EXIT_ON_CLOSE);
-//				frame.setTitle("Mind-Alliance Automation Framework");
-//				//frame.getContentPane().setPreferredSize(frame.getSize());
-//				frame.pack();
-//				frame.setLocationRelativeTo(null);
-//				frame.setVisible(true);
-//				frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-//			}
-//		});
-//		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				EmailNotification frame = new EmailNotification();
+				frame.setDefaultCloseOperation(EmailNotification.EXIT_ON_CLOSE);
+				frame.setTitle("Mind-Alliance Automation Framework");
+				//frame.getContentPane().setPreferredSize(frame.getSize());
+				frame.pack();
+				frame.setLocationRelativeTo(null);
+				frame.setVisible(true);
+				frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+			}
+		});
+		
 	}
 }
 
