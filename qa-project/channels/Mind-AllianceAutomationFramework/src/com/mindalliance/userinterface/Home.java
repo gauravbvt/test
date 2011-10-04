@@ -117,7 +117,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		if (jButtonSendMessage == null) {
 			jButtonSendMessage = new JButton();
 			jButtonSendMessage.setText("Send Email");
-//			jButtonSendMessage.setEnabled(false);
+			jButtonSendMessage.setEnabled(false);
 			jButtonSendMessage.setActionCommand("message");
 			jButtonSendMessage.addActionListener(this);
 		}
@@ -514,6 +514,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			// Enable Logs and Reports button
 			jButtonLogLink.setEnabled(true);
 			jButtonReportLink.setEnabled(true);
+			jButtonSendMessage.setEnabled(true);
 			// Clear TestCaseId label
 			jLabelTestCaseId.setText("");
 			jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
@@ -623,9 +624,6 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			}
 			else if ("message".equals(e.getActionCommand())){
 				EmailNotification emi=new EmailNotification();
-//				File file = new File(GlobalVariables.sReportDstDirectoryPath+"//index.htm");
-//				Desktop desktop = Desktop.getDesktop();	
-//				desktop.open(file);
 			}
 			else if ("exit".equals(e.getActionCommand())) { // when clicked on 'Exit' button
 				System.exit(0);
