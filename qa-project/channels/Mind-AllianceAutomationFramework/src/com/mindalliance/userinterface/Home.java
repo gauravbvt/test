@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
+
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -27,13 +28,16 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
 import org.dyno.visual.swing.layouts.Constraints;
 import org.dyno.visual.swing.layouts.GroupLayout;
 import org.dyno.visual.swing.layouts.Leading;
 import org.dyno.visual.swing.layouts.Trailing;
+
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.ReportFunctions;
+import com.mindalliance.userinterface.EmailNotification;
 
 //VS4E -- DO NOT REMOVE THIS LINE!
 public class Home extends JFrame implements ActionListener, ItemListener{
@@ -74,6 +78,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 	private JButton jButtonExit;
 	private JButton jButtonNewTest;
 	private JComboBox jComboBoxBrowser;
+	private JButton jButtonSendMessage;
 	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel";
 	public Home() {
 		initComponents();
@@ -104,8 +109,20 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		add(getJButton5(), new Constraints(new Leading(1239, 10, 10), new Leading(369, 12, 12)));
 		add(getJButton1(), new Constraints(new Leading(1153, 12, 12), new Leading(369, 12, 12)));
 		add(getJComboBox0(), new Constraints(new Leading(1023, 122, 10, 10), new Leading(369, 12, 12)));
+		add(getJButton6(), new Constraints(new Leading(1137, 112, 12, 12), new Leading(575, 12, 12)));
 		setSize(1356, 698);
 	}
+
+	private JButton getJButton6() {
+		if (jButtonSendMessage == null) {
+			jButtonSendMessage = new JButton();
+			jButtonSendMessage.setText("Send Email");
+			jButtonSendMessage.setActionCommand("message");
+			jButtonSendMessage.addActionListener(this);
+		}
+		return jButtonSendMessage;
+	}
+	
 
 	private JComboBox getJComboBox0() {
 		if (jComboBoxBrowser == null) {
@@ -319,18 +336,14 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 
 	private JList getJList2() {
 		try {
-//		if (jListCommand == null) {
 			jListCommand = new JList();
 			DefaultListModel listModel = new DefaultListModel();
 			arrayOfTestCaseId = null;
 			arrayOfTestCaseId = ReportFunctions.readTestCaseId(3);
 			for (int i = 0; i <GlobalVariables.iIndex; i++)
-//				if (arrayOfTestCaseId[i] != null) {
 						listModel.addElement(arrayOfTestCaseId[i]);
-//			}
 			jListCommand.setModel(listModel);
 			jListCommand.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-//		}
 		return jListCommand;
 		}
 		catch (Exception e) {
@@ -419,17 +432,13 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 
 	private JList getJList0() {
 		try {
-//		if (jListView == null) {
 			jListView = new JList();
 			DefaultListModel listModel = new DefaultListModel();
 			arrayOfTestCaseId = ReportFunctions.readTestCaseId(1);
 			for (int i=0;i<GlobalVariables.iIndex;i++)
-//				if(arrayOfTestCaseId[i] != null) {
 					listModel.addElement(arrayOfTestCaseId[i]);
-//			}
 			jListView.setModel(listModel);
 			jListView.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-//		}
 		return jListView;
 		}
 		catch (Exception e) {
@@ -551,6 +560,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 	}
 
 
+	@SuppressWarnings("unused")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -610,9 +620,13 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 				Desktop desktop = Desktop.getDesktop();	
 				desktop.open(file);
 			}
+			else if ("message".equals(e.getActionCommand())){
+				EmailNotification emi=new EmailNotification();
+			}
 			else if ("exit".equals(e.getActionCommand())) { // when clicked on 'Exit' button
 				System.exit(0);
 			}
+			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

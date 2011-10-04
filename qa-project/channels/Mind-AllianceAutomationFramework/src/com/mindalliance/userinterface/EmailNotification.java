@@ -1,17 +1,26 @@
 package com.mindalliance.userinterface;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
@@ -24,10 +33,7 @@ import org.dyno.visual.swing.layouts.Constraints;
 import org.dyno.visual.swing.layouts.GroupLayout;
 import org.dyno.visual.swing.layouts.Leading;
 
-import java.util.*;
-import javax.mail.*;
-import javax.mail.internet.*;
-import javax.activation.*;
+import com.mindalliance.globallibrary.GlobalVariables;
 
 //VS4E -- DO NOT REMOVE THIS LINE!
 public class EmailNotification extends JFrame implements ActionListener, ItemListener{
@@ -35,17 +41,16 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 //	private String arrayOfTestCaseId[] = new String[150];
 	private static int noOfSelectedTestCases;
 	private JPasswordField jTextFieldPassword;
-	private JTextField jTextFieldUserName;
-	private JTextField jTextFiledSMTPServer;
-	private JTextField jTextSMTPPort;
-	private JTextField jTextReceipentEmailId;
+	private static JTextField jTextFieldUserName;
+	private static JTextField jTextFiledSMTPServer;
+	private static JTextField jTextSMTPPort;
+	private static JTextField jTextReceipentEmailId;
 	private JLabel jLabel0;
 	private JLabel jLabel1;
 	private JLabel jLabel2;
 //	private String s;
 	private JButton jButtonExecute;
 	private JProgressBar jProgressBarStatus;
-	private JButton jButtonReportLink;
 	private JCheckBox jCheckBoxEnableServer;
 	private JLabel jLabelMultipleEmail;
 	private JLabel jLabelReceipentEmail;
@@ -62,7 +67,6 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 	private void initComponents() {
 		setTitle("Mind Alliance Automation Framework");
 		setLayout(new GroupLayout());
-		add(getJButton3(), new Constraints(new Leading(671, 10, 10), new Leading(466, 10, 10)));
 		add(getJPanel1(), new Constraints(new Leading(201, 371, 10, 10), new Leading(12, 100, 12, 12)));
 		add(getJProgressBar0(), new Constraints(new Leading(161, 298, 10, 10), new Leading(399, 10, 10)));
 		add(getJButtonSave(), new Constraints(new Leading(524, 10, 10), new Leading(393, 10, 10)));
@@ -152,7 +156,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jTextFiledSMTPServer == null) {
 			jTextFiledSMTPServer = new JTextField();
 			jTextFiledSMTPServer.setPreferredSize(jTextFiledSMTPServer.getPreferredSize());
-			jTextFiledSMTPServer.setText("smpt.gmail.com.");
+			jTextFiledSMTPServer.setText("smtp.gmail.com");
 			jTextFiledSMTPServer.addActionListener(this);
 		}
 		return jTextFiledSMTPServer;
@@ -196,17 +200,6 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		return jTextSMTPPort;
 	}
 	
-	private JButton getJButton3() {
-		if (jButtonReportLink == null) {
-			jButtonReportLink = new JButton();
-			jButtonReportLink.setText("Reports");
-			jButtonReportLink.setEnabled(false);
-			jButtonReportLink.setActionCommand("reports");
-			jButtonReportLink.addActionListener(this);
-		}
-		return jButtonReportLink;
-	}
-
 	private JProgressBar getJProgressBar0() {
 		if (jProgressBarStatus == null) {
 			jProgressBarStatus = new JProgressBar();
@@ -217,7 +210,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 	private JButton getJButtonSave() {
 		if (jButtonExecute == null) {
 			jButtonExecute = new JButton();
-			jButtonExecute.setText("Save");
+			jButtonExecute.setText("Send");
 			jButtonExecute.setActionCommand("save");
 			jButtonExecute.addActionListener(this);
 		}
@@ -268,6 +261,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub		
@@ -275,71 +269,19 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 			System.exit(0);
 		}
 		if("save".equals(e.getActionCommand())){
-			 boolean debug = false;
-			 System.out.println("SMTP Server:- "+jTextFiledSMTPServer.getText());
-			 System.out.println("Username:- "+jTextFieldUserName.getText());
-			 System.out.println("Password:- "+jTextFieldPassword.getPassword().toString());
-			 System.out.println("Receiptement Email:- "+jTextReceipentEmailId.getText());
-			 System.out.println("SMTP Port:- "+jTextSMTPPort.getText());
+			String[] to={"mypriyancagurav@gmail.com"};
+			String[] cc={"priyanka.gurav@afourtech.com"};
+			//This is for google
+			EmailNotification.sendMail(jTextFieldUserName.getText(),jTextFieldPassword.getText(),jTextFiledSMTPServer.getText(),jTextSMTPPort.getText(),"true","true",true,"javax.net.ssl.SSLSocketFactory","false",to,cc,"Mind-Alliance UI Automation Report");
 			
-			 String msgText1 = "Sending a file.\n";
-			 String subject = "Sending a file";
-		  
-			 // create some properties and get the default Session
-			 Properties props = System.getProperties();
-			 props.put("mail.smtp.host", "smtp.gmail.com");
-			 props.put("mail.smtp.port", "465");
-		  
-			 Session session = Session.getInstance(props, null);
-			 session.setDebug(debug);
-
-			 try {
-				 // create a message
-				 MimeMessage msg = new MimeMessage(session);
-				 InternetAddress addressFrom = new InternetAddress("priyanka.gurav@afourtech.com");
-				 msg.setFrom(addressFrom);
-		      
-				 InternetAddress[] addressTo = new InternetAddress[1];
-				 addressTo[0]=new InternetAddress("mypriyancagurav@gmail.com");
-				 msg.setRecipients(Message.RecipientType.TO, addressTo);
-				 msg.setSubject(subject);
-		    	  
-				 // create and fill the first message part
-				 MimeBodyPart mbp1 = new MimeBodyPart();
-				 mbp1.setText(msgText1);
-				 // create the second message part
-				 MimeBodyPart mbp2 = new MimeBodyPart();
-
-				 // attach the file to the message
-				 FileDataSource fds = new FileDataSource("c:\\abc.txt");
-				 mbp2.setDataHandler(new DataHandler(fds));
-				 mbp2.setFileName(fds.getName());
-
-				 // create the Multipart and add its parts to it
-				 Multipart mp = new MimeMultipart();
-				 mp.addBodyPart(mbp1);
-				 mp.addBodyPart(mbp2);
-				 // add the Multipart to the message
-				 msg.setContent(mp);
-				
-				 // set the Date: header
-				 msg.setSentDate(new Date());
-		      
-				 // send the message
-				 Transport.send(msg);
-				 JOptionPane.showMessageDialog(null,"Message send Successfully");
-			 } 
-			 catch (MessagingException mex) {
-				 mex.printStackTrace();
-				 Exception ex = null;
-				 if ((ex = mex.getNextException()) != null) {
-					 ex.printStackTrace();
-				 }
-			 }
-			 catch(Exception ex) {
-				 ex.printStackTrace();
-				 System.out.println(ex.getMessage());
-			 }
+			File file = new File(GlobalVariables.sReportDstDirectoryPath+"//index.htm");
+			Desktop desktop = Desktop.getDesktop();	
+			try {
+				desktop.open(file);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 		
@@ -348,6 +290,55 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public synchronized static boolean sendMail(String userName,String passWord,String host,String port,String starttls,String auth,boolean debug,String socketFactoryClass,String fallback,String[] to,String[] cc,String subject){
+        Properties props = new Properties();
+        props.put("mail.smtp.user", jTextFieldUserName.getText());
+        props.put("mail.smtp.host", jTextFiledSMTPServer.getText());
+        if(!"".equals(port))
+        	props.put("mail.smtp.port", jTextSMTPPort.getText());
+        if(!"".equals(starttls))
+        	props.put("mail.smtp.starttls.enable",starttls);
+        props.put("mail.smtp.auth", auth);
+        if(debug){
+        	props.put("mail.smtp.debug", "true");
+        }else{
+        	props.put("mail.smtp.debug", "false");         
+        }
+        if(!"".equals(jTextSMTPPort.getText()))
+        	props.put("mail.smtp.socketFactory.port", jTextSMTPPort.getText());
+        if(!"".equals(socketFactoryClass))
+        	props.put("mail.smtp.socketFactory.class",socketFactoryClass);
+        if(!"".equals(fallback))
+        	props.put("mail.smtp.socketFactory.fallback", fallback);
+
+        try
+        {
+        	Session session = Session.getDefaultInstance(props, null);
+        	session.setDebug(debug);
+        	MimeMessage msg = new MimeMessage(session);
+            msg.setText("Mind Alliance UIAutomation Report");
+            msg.setSubject(subject);
+            msg.setFrom(new InternetAddress("mypriyancagurav@gmail.com"));
+            for(int i=0;i<to.length;i++){
+            	msg.addRecipient(Message.RecipientType.TO, new InternetAddress(to[i]));
+            }
+            for(int i=0;i<cc.length;i++){
+            	msg.addRecipient(Message.RecipientType.CC, new InternetAddress(cc[i]));
+            }
+            msg.saveChanges();
+            Transport transport = session.getTransport("smtp");
+            transport.connect(host, userName, passWord);
+            transport.sendMessage(msg, msg.getAllRecipients());
+            transport.close();
+            return true;
+        }
+        catch (Exception mex)
+        {
+        	mex.printStackTrace();
+        	return false;
+        }
+	 }
 
 	/**
 	 * Main entry of the class.
@@ -370,6 +361,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 				frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 			}
 		});
-	}	
+		
+	}
 }
 
