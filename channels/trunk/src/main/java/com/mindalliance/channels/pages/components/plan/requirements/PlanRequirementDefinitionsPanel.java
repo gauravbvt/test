@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.plan;
+package com.mindalliance.channels.pages.components.plan.requirements;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AddRequirement;
@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
@@ -17,11 +18,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
@@ -39,7 +39,7 @@ import java.util.Set;
  * Date: 9/29/11
  * Time: 2:13 PM
  */
-public class PlanRequirementManagementPanel extends AbstractCommandablePanel implements Filterable {
+public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel implements Filterable {
 
     private Requirement selectedRequirement;
 
@@ -51,9 +51,10 @@ public class PlanRequirementManagementPanel extends AbstractCommandablePanel imp
      * Filters on flow attributes that are identifiable.
      */
     private Map<String, Identifiable> identifiableFilters = new HashMap<String, Identifiable>();
+    private AjaxLink<String> newButton;
 
 
-    public PlanRequirementManagementPanel( String id, Model<Plan> planModel, Set<Long> expansions ) {
+    public PlanRequirementDefinitionsPanel( String id, Model<Plan> planModel, Set<Long> expansions ) {
         super( id, planModel, expansions );
         init();
     }
@@ -77,7 +78,10 @@ public class PlanRequirementManagementPanel extends AbstractCommandablePanel imp
 
     private void addRequirementEditPanel() {
         if ( selectedRequirement != null ) {
-            requirementEditPanel = new RequirementEditPanel( "requirement", new Model<Requirement>( selectedRequirement ) );
+            requirementEditPanel = new RequirementEditPanel(
+                    "requirement",
+                    new Model<Requirement>( selectedRequirement ),
+                    getExpansions() );
         } else {
             requirementEditPanel = new Label( "requirement", "" );
             requirementEditPanel.setOutputMarkupId( true );
@@ -87,7 +91,7 @@ public class PlanRequirementManagementPanel extends AbstractCommandablePanel imp
     }
 
     private void addButtons() {
-        AjaxFallbackLink newButton = new AjaxFallbackLink<String>( "new", new Model<String>( "New" ) ) {
+        newButton = new AjaxLink<String>( "new", new Model<String>( "New" ) ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = doCommand( new AddRequirement( getUsername() ) );
@@ -98,9 +102,9 @@ public class PlanRequirementManagementPanel extends AbstractCommandablePanel imp
                 update( target, change );
             }
         };
-        newButton.setEnabled( this.isLockedByUser( getPlan() ) );
+        makeVisible( newButton, isLockedByUser( getPlan() ) );
         add( newButton );
-        removeButton = new ConfirmedAjaxFallbackLink<String>( "remove", "Remove..." ) {
+        removeButton = new ConfirmedAjaxFallbackLink<String>( "remove", "Remove requirement?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = doCommand( new RemoveRequirement(
@@ -122,7 +126,11 @@ public class PlanRequirementManagementPanel extends AbstractCommandablePanel imp
         addRequirementEditPanel();
         target.addComponent( requirementEditPanel );
         makeVisible( removeButton, selectedRequirement != null );
+        makeVisible( newButton, isLockedByUser( getPlan() ) );
+        target.addComponent( newButton );
         target.addComponent( removeButton );
+        target.addComponent( requirementsTable );
+        target.addComponent( this );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -166,6 +174,26 @@ public class PlanRequirementManagementPanel extends AbstractCommandablePanel imp
         return mo != null && mo.equals( identifiable );
     }
 
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        if ( change.isForInstanceOf( Requirement.class ) ) {
+            Requirement requirement = (Requirement) change.getSubject( getQueryService() );
+            if ( change.isAdded() || change.isExpanded() ) {
+                selectedRequirement = requirement;
+                updateComponents( target );
+            } else if ( change.isRemoved() ) {
+                selectedRequirement = null;
+                updateComponents( target );
+            } else if ( change.isUpdated() ) {
+                target.addComponent( requirementsTable );
+            }/* else if ( change.isForInstanceOf( Issue.class ) ) {
+                change.setType( Change.Type.Updated );
+                change.setSubject( selectedRequirement );
+                target.addComponent( requirementsTable );
+            }*/
+        }
+        super.updateWith( target, change, updated );
+    }
+
     /**
      * Requirements table.
      */
@@ -190,19 +218,25 @@ public class PlanRequirementManagementPanel extends AbstractCommandablePanel imp
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeColumn( "Name", "name", EMPTY ) );
             columns.add( makeFilterableLinkColumn(
-                    "Sending organization(s)",
+                    "Sender organization(s)",
                     "committerSpec.organization",
                     "committerSpec.organization.name",
                     EMPTY,
                     filterable ) );
             columns.add( makeFilterableLinkColumn(
-                    "Receiving organization(s)",
+                    "Receiver organization(s)",
                     "beneficiarySpec.organization",
                     "beneficiarySpec.organization.name",
                     EMPTY,
                     filterable ) );
-            columns.add( makeExpandLinkColumn( "", "", "more" ) );
+            columns.add( makeFilterableLinkColumn(
+                    "Event",
+                    "beneficiarySpec.event",
+                    "beneficiarySpec.event.name",
+                    EMPTY,
+                    filterable ) );
             columns.add( makeAnalysisColumn( "Issues", "unwaivedIssuesCount", "?" ) );
+            columns.add( makeExpandLinkColumn( "", "", "more" ) );
             // todo columns
             List<Requirement> requirements = requirementsModel.getObject();
             add( new AjaxFallbackDefaultDataTable( "requirements",
@@ -212,13 +246,5 @@ public class PlanRequirementManagementPanel extends AbstractCommandablePanel imp
         }
     }
 
-    /**
-     * Requirements edit panel.
-     */
-    private class RequirementEditPanel extends AbstractCommandablePanel {
 
-        private RequirementEditPanel( String id, IModel<? extends Identifiable> iModel ) {
-            super( id, iModel );
-        }
-    }
 }

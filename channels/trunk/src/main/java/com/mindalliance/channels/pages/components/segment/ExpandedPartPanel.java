@@ -1053,7 +1053,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldEvent == null || !isSame( name, oldName ) )
                 newEvent = getQueryService().findOrCreateType( Event.class, name );
         }
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "initiatedEvent", newEvent ) );
+        doCommand( new UpdateSegmentObject( getUsername(), getPart(), "initiatedEvent", newEvent ) );
         getCommander().cleanup( Event.class, oldName );
     }
 

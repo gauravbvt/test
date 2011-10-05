@@ -163,8 +163,8 @@ public class PlanDao {
 
     public Requirement createRequirement( Long id ) {
         Requirement requirement = new Requirement();
-        add( requirement, id );
         assignId( requirement, id, idGenerator );
+        add( requirement, id );
         return requirement;
     }
 

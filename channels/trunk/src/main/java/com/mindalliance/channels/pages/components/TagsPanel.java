@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -34,10 +35,18 @@ import java.util.Set;
 public class TagsPanel extends AbstractCommandablePanel {
 
     private AutoCompleteTextField<String> tagsField;
+    private String tagsProperty;
+
+
+    public TagsPanel( String id, IModel<? extends Taggable> iModel, String tagsProperty ) {
+        super( id, iModel );
+        this.tagsProperty = tagsProperty;
+        init();
+
+    }
 
     public TagsPanel( String id, IModel<? extends Taggable> iModel ) {
-        super( id, iModel );
-        init();
+        this( id, iModel, "tags" );
     }
 
     private void init() {
@@ -54,7 +63,7 @@ public class TagsPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 target.addComponent( tagsField );
-                update( target, new Change( Change.Type.Updated, getModel().getObject(), "tags" ) );
+                update( target, new Change( Change.Type.Updated, getModel().getObject(), tagsProperty ) );
             }
         } );
         tagsField.setEnabled( isLockedByUser( getTaggable() ) );
@@ -90,16 +99,17 @@ public class TagsPanel extends AbstractCommandablePanel {
         return choices.iterator();
     }
 
+    @SuppressWarnings( "unchecked" )
     public String getTagsString() {
-        return Tag.tagsToString( getTaggable().getTags() );
+        return Tag.tagsToString( (List<Tag>) ChannelsUtils.getProperty( getTaggable(), tagsProperty, null ) );
     }
 
     public void setTagsString( String s ) {
         String val = s == null ? "" : s;
         Identifiable mo = getModel().getObject();
         Command updateCommand = mo instanceof SegmentObject
-                ? new UpdateSegmentObject( User.current().getUsername(), mo, "tags", Tag.tagsFromString( val ) )
-                : new UpdatePlanObject( User.current().getUsername(), mo, "tags", Tag.tagsFromString( val ) );
+                ? new UpdateSegmentObject( User.current().getUsername(), mo, tagsProperty, Tag.tagsFromString( val ) )
+                : new UpdatePlanObject( User.current().getUsername(), mo, tagsProperty, Tag.tagsFromString( val ) );
         doCommand( updateCommand );
     }
 

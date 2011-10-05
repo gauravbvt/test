@@ -20,7 +20,7 @@ import java.util.Map;
  * Date: 9/20/11
  * Time: 9:50 AM
  */
-public class Requirement extends ModelObject {
+public class Requirement extends ModelObject implements Countable {
 
     private static String UNNAMED = "UNNAMED";
 
@@ -53,7 +53,7 @@ public class Requirement extends ModelObject {
     /**
      * Info tags.
      */
-    private List<Tag> requiredTags = new ArrayList<Tag>();
+    private List<Tag> infoTags = new ArrayList<Tag>();
     /**
      * Specification of committers.
      */
@@ -85,16 +85,16 @@ public class Requirement extends ModelObject {
         this.information = information;
     }
 
-    public List<Tag> getRequiredTags() {
-        return requiredTags;
+    public List<Tag> getInfoTags() {
+        return infoTags;
     }
 
-    public void setRequiredTags( List<Tag> requiredTags ) {
-        this.requiredTags = requiredTags;
+    public void setInfoTags( List<Tag> infoTags ) {
+        this.infoTags = infoTags;
     }
 
     public void addRequiredTag( Tag tag ) {
-        requiredTags.add( tag );
+        infoTags.add( tag );
     }
 
     public void addRequiredTags( String s ) {
@@ -281,7 +281,7 @@ public class Requirement extends ModelObject {
         return ( information.isEmpty()
                 || !Matcher.matches( flow.getName(), information ) )
                 // Match tags if required
-                && Matcher.matchesAll( getRequiredTags(), flow.getTags() );
+                && Matcher.matchesAll( getInfoTags(), flow.getTags() );
     }
 
     /**
@@ -303,7 +303,7 @@ public class Requirement extends ModelObject {
     public Map<String, Object> mapState() {
         Map<String, Object> state = super.mapState();
         state.put( "information", getInformation() );
-        state.put( "requiredTags", Tag.tagsToString( getRequiredTags() ) );
+        state.put( "requiredTags", Tag.tagsToString( getInfoTags() ) );
         state.put( "cardinality", getCardinality().mapState() );
         state.put( "committerSpec", getCommitterSpec().mapState() );
         state.put( "beneficiarySpec", getBeneficiarySpec().mapState() );
@@ -313,7 +313,7 @@ public class Requirement extends ModelObject {
     public void initFromMap( Map<String, Object> state, QueryService queryService ) {
         super.initFromMap( state, queryService );
         setInformation( (String) state.get( "information" ) );
-        setRequiredTags( Tag.tagsFromString( ( String )state.get( "requiredTags" ) ) );
+        setInfoTags( Tag.tagsFromString( (String) state.get( "requiredTags" ) ) );
         Cardinality card = new Cardinality();
         card.initFromMap( (Map<String, Object>) state.get( "cardinality" ) );
         setCardinality( card );
@@ -353,7 +353,7 @@ public class Requirement extends ModelObject {
             return minCount;
         }
 
-        public void setMinCount( int minCount ) {
+        public void setMinCount( Integer minCount ) {
             int val = Math.max( 0, minCount );
             if ( maxCount != null ) val = Math.min( val, maxCount );
             this.minCount = val;
@@ -364,7 +364,7 @@ public class Requirement extends ModelObject {
             return maxCount;
         }
 
-        public void setMaxCount( int maxCount ) {
+        public void setMaxCount( Integer maxCount ) {
             this.maxCount = Math.max( minCount, Math.max( 0, maxCount ) );
             safeCount = Math.min( this.maxCount, safeCount );
         }
@@ -411,7 +411,7 @@ public class Requirement extends ModelObject {
     /**
      * Assignment specification.
      */
-    public static class AssignmentSpec implements Serializable {
+    public static class AssignmentSpec implements Countable {
         /**
          * Task name.
          */
@@ -419,7 +419,7 @@ public class Requirement extends ModelObject {
         /**
          * Task tags.
          */
-        private List<Tag> requiredTags = new ArrayList<Tag>();
+        private List<Tag> taskTags = new ArrayList<Tag>();
 
         /**
          * Task resource spec.
@@ -458,16 +458,16 @@ public class Requirement extends ModelObject {
             this.resourceSpec = resourceSpec;
         }
 
-        public List<Tag> getRequiredTags() {
-            return requiredTags;
+        public List<Tag> getTaskTags() {
+            return taskTags;
         }
 
-        public void setRequiredTags( List<Tag> requiredTags ) {
-            this.requiredTags = requiredTags;
+        public void setTaskTags( List<Tag> taskTags ) {
+            this.taskTags = taskTags;
         }
 
         public void addRequiredTag( Tag tag ) {
-            requiredTags.add( tag );
+            taskTags.add( tag );
         }
 
         public void addRequiredTags( String s ) {
@@ -500,10 +500,6 @@ public class Requirement extends ModelObject {
             this.cardinality = cardinality == null ? new Cardinality() : cardinality;
         }
 
-        public Organization getOrganization() {
-            return getResourceSpec().getOrganization();
-        }
-
         private boolean inRequiredContext( Part part, Place planLocale ) {
             EventPhase partEventPhase = part.getSegment().getEventPhase();
             return ( getEvent() == null ||
@@ -519,7 +515,7 @@ public class Requirement extends ModelObject {
             return ( taskName.isEmpty()
                     || !Matcher.matches( taskName, part.getTask() ) )
                     // Match tags if required
-                    && Matcher.matchesAll( getRequiredTags(), part.getTags() )
+                    && Matcher.matchesAll( getTaskTags(), part.getTags() )
                     && inRequiredContext( part, planLocale );
         }
 
@@ -531,7 +527,7 @@ public class Requirement extends ModelObject {
         public Map<String, Object> mapState() {
             Map<String,Object>state = new HashMap<String, Object>(  );
             state.put( "taskName", getTaskName() );
-            state.put( "requiredTags", Tag.tagsToString( getRequiredTags() ) );
+            state.put( "requiredTags", Tag.tagsToString( getTaskTags() ) );
             state.put( "cardinality", getCardinality().mapState() );
             if ( event != null )
                 state.put( "event", event.getName() );
@@ -544,12 +540,46 @@ public class Requirement extends ModelObject {
         @SuppressWarnings( "unchecked" )
         public void initFromMap( Map<String, Object> state, QueryService queryService ) {
            setTaskName( (String)state.get( "taskName" ) );
-            setRequiredTags( Tag.tagsFromString( (String)state.get( "requiredTags" ) ) );
+            setTaskTags( Tag.tagsFromString( (String) state.get( "requiredTags" ) ) );
             Cardinality card = new Cardinality();
             card.initFromMap( (Map<String,Object>)state.get( "cardinality" ));
             setCardinality( card );
             ResourceSpec spec = new ResourceSpec();
             spec.initFromMap( (Map<String,Object>)state.get( "resourceSpec" ), queryService );
         }
+
+        public Actor getActor() {
+            return resourceSpec.getActor();
+        }
+
+        public void setActor( Actor actor ) {
+            resourceSpec.setActor( actor );
+        }
+
+        public Role getRole() {
+            return resourceSpec.getRole();
+        }
+
+        public void setRole( Role role ) {
+            resourceSpec.setRole( role );
+        }
+
+        public Place getJurisdiction() {
+            return resourceSpec.getJurisdiction();
+        }
+
+        public void setJurisdiction( Place place ) {
+            resourceSpec.setJurisdiction( place );
+        }
+
+        public Organization getOrganization() {
+             return resourceSpec.getOrganization();
+         }
+
+         public void setOrganization( Organization organization ) {
+             resourceSpec.setOrganization( organization );
+         }
+
+
     }
 }

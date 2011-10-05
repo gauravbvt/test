@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.plan;
+package com.mindalliance.channels.pages.components.plan.requirements;
 
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;

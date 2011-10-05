@@ -37,7 +37,7 @@ public class RemoveRequirement extends AbstractCommand {
         planDao.remove( requirement );
         releaseAnyLockOn( commander, requirement );
         ignoreLock( (Long) get( "requirement" ) );
-        return new Change( Change.Type.Updated, commander.getPlan() );
+        return new Change( Change.Type.Removed, requirement );
     }
 
     @Override

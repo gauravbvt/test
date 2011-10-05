@@ -992,6 +992,10 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return detectUnwaivedIssues( queryService, requirement, null, true ).size();
     }
 
+    @Override
+    public int allIssuesCount( Requirement requirement, QueryService queryService ) {
+        return detectAllIssues( queryService, requirement, null, true ).size();
+    }
 
 
     @Override

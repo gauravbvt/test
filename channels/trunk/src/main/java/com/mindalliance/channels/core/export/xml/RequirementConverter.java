@@ -62,9 +62,9 @@ public class RequirementConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         // required tags
-        if ( !requirement.getRequiredTags().isEmpty() ) {
-            writer.startNode( "requiredTags" );
-            writer.setValue( Tag.tagsToString( requirement.getRequiredTags() ) );
+        if ( !requirement.getInfoTags().isEmpty() ) {
+            writer.startNode( "infoTags" );
+            writer.setValue( Tag.tagsToString( requirement.getInfoTags() ) );
             writer.endNode();
         }
         // Cardinality
@@ -109,9 +109,9 @@ public class RequirementConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         // required tags
-        if ( !assignmentSpec.getRequiredTags().isEmpty() ) {
-            writer.startNode( "requiredTags" );
-            writer.setValue( Tag.tagsToString( assignmentSpec.getRequiredTags() ) );
+        if ( !assignmentSpec.getTaskTags().isEmpty() ) {
+            writer.startNode( "taskTags" );
+            writer.setValue( Tag.tagsToString( assignmentSpec.getTaskTags() ) );
             writer.endNode();
         }
         // Cardinality
@@ -192,7 +192,7 @@ public class RequirementConverter extends AbstractChannelsConverter {
                 requirement.setDescription( reader.getValue() );
             } else if ( nodeName.equals( "information" ) ) {
                 requirement.setInformation( reader.getValue() );
-            } else if ( "requiredTags".equals( nodeName ) ) {
+            } else if ( "infoTags".equals( nodeName ) ) {
                 requirement.addRequiredTags( reader.getValue() );
             } else if ( "minCount".equals( nodeName ) ) {
                 requirement.getCardinality().setMinCount( Integer.parseInt( reader.getValue() ) );
@@ -230,7 +230,7 @@ public class RequirementConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "taskName" ) ) {
                 assignmentSpec.setTaskName( reader.getValue() );
-            } else if ( "requiredTags".equals( nodeName ) ) {
+            } else if ( "taskTags".equals( nodeName ) ) {
                 assignmentSpec.addRequiredTags( reader.getValue() );
             } else if ( "minCount".equals( nodeName ) ) {
                 assignmentSpec.getCardinality().setMinCount( Integer.parseInt( reader.getValue() ) );

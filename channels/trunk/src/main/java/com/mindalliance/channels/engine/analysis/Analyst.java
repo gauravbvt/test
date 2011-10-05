@@ -496,9 +496,19 @@ public interface Analyst extends CommandListener {
     int unwaivedIssuesCount( Requirement requirement, QueryService queryService );
 
     /**
+     * Number of issues on a requirement..
+     *
+     * @param requirement a requirement
+     * @param queryService a queryService
+     * @return a string
+     */
+    int allIssuesCount( Requirement requirement, QueryService queryService );
+
+    /**
      * Sets issue scanner.
      *
      * @param issueScanner an issue scanner
      */
     void setIssueScanner( IssueScanner issueScanner );
+
 }

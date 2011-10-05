@@ -10,6 +10,7 @@ import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanEditActionsMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanEditShowMenuPanel;
+import com.mindalliance.channels.pages.components.plan.requirements.PlanRequirementsPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
@@ -296,7 +297,8 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      */
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isForInstanceOf( Issue.class ) )
+        if ( change.isForInstanceOf( Issue.class )
+                && change.getSubject( getQueryService() ) instanceof Plan )
             setAspectShown( target, DETAILS );
         if ( !( change.isSelected() && ( change.isForInstanceOf( Plan.class ) ) ) ) {
             super.updateWith( target, change, updated );

@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.plan;
+package com.mindalliance.channels.pages.components.plan.requirements;
 
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
@@ -37,10 +37,10 @@ public class PlanRequirementsPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        addTabPanel();
+        addTabsPanel();
     }
 
-    private void addTabPanel() {
+    private void addTabsPanel() {
         AjaxTabbedPanel tabbedPanel = new AjaxTabbedPanel( "tabs", getTabs() );
         tabbedPanel.setOutputMarkupId( true );
         addOrReplace( tabbedPanel );
@@ -50,7 +50,7 @@ public class PlanRequirementsPanel extends AbstractCommandablePanel {
          List<ITab> tabs = new ArrayList<ITab>();
          tabs.add( new AbstractTab( new Model<String>( "Definitions" ) ) {
              public Panel getPanel( String id ) {
-                 return new PlanRequirementManagementPanel( id, new Model<Plan>( getPlan() ), getExpansions() );
+                 return new PlanRequirementDefinitionsPanel( id, new Model<Plan>( getPlan() ), getExpansions() );
              }
          } );
         tabs.add( new AbstractTab( new Model<String>( "Required network" ) ) {

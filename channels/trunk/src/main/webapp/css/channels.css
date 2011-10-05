@@ -1050,10 +1050,8 @@ a.button {
 	font-weight: bold;
 	letter-spacing: 1px;
 	padding: 5px 10px;
-}
-
-a.button {
-	margin:0 5px 0 0;
+    margin:0 5px 0 0;
+    float: right;
 }
 
 input.submit:hover,
@@ -2375,4 +2373,50 @@ a.overridden:after {
 
 a.overriding:after {
     content:url( '../images/overriding.png');
+}
+
+/* requirements */
+
+.req {
+    clear: both;
+}
+
+.req-section {
+    width: 70%;
+}
+
+.req-sections {
+    position: relative;
+    margin-top: 10px;
+}
+
+.req-section-headers {
+    float:left;
+    width: 15em;
+}
+
+.req-section-headers ul {
+    list-style: none;
+}
+
+.req-section-headers li {
+    width: auto;
+    cursor: pointer;
+    padding: 1px 16px 1px 5px;
+	border:1px solid transparent;
+	color:#333333;
+}
+
+.req-section-headers li:hover, .req-section-headers li.selected {
+    background: url("../images/button-bg.png") repeat-x scroll 0 0 transparent;
+	border:1px solid #C7C8CA;
+	color:#000000;
+}
+
+.req-section {
+    float:left;
+    margin-top: 10px;
+}
+.req-defs .button {
+    clear: both;
 }

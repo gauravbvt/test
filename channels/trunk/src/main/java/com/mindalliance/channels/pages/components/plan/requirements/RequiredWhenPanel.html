@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+<table summary="When required">
+    <tr>
+        <th align="right"><label for="task">Task name:</label></th>
+        <td><input type="text" size="40" id="task" wicket:id="taskName"></td>
+    </tr>
+    <tr>
+        <th align="right"><label>
+            <a wicket:id="tagsLink" href="#" title="Click to see all tags">Task tags:</a>
+        </label></th>
+        <td><span wicket:id="taskTags">[Tags panel]</span></td>
+    </tr>
+    <tr>
+        <th align="right">
+            Situation:
+        </th>
+        <td>
+            <select wicket:id="phaseChoices">
+                <option>Before</option>
+            </select>
+            <span wicket:id="event-link" href="#">event</span>
+            <input type="text" size="40" wicket:id="event" class="entity-name" value="">
+        </td>
+    </tr>
+</table>
+
+</wicket:panel>
+</body>
+</html>

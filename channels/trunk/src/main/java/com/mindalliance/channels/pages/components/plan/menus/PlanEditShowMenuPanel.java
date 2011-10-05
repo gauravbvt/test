@@ -32,7 +32,7 @@ public class PlanEditShowMenuPanel extends MenuPanel {
         synchronized ( getCommander() ) {
             return Arrays.asList(
                     newItem( "Details", PlanEditPanel.DETAILS ),
-                   // newItem( "Requirements", PlanEditPanel.REQUIREMENTS ),
+                    newItem( "Requirements", PlanEditPanel.REQUIREMENTS ),
                     newItem( "All events", PlanEditPanel.EVENTS ),
                     newItem( "All organizations", PlanEditPanel.ORGANIZATIONS ),
                     newItem( "Participations", PlanEditPanel.PARTICIPATIONS ),

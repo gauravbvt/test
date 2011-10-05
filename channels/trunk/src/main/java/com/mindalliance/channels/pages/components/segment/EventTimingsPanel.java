@@ -137,7 +137,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
                 "delete",
                 "Remove from segment context?" ) {
             public void onClick( AjaxRequestTarget target ) {
-                doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(),
+                doCommand( new UpdatePlanObject( getUsername(), getSegment(),
                         "context",
                         eventTiming,
                         UpdateObject.Action.Remove ) );
