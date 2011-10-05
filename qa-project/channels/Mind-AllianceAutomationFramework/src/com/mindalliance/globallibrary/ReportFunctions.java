@@ -319,8 +319,7 @@ public class ReportFunctions {
 		xml.writeAttribute("style","border-style: none");
 		xml.writeEndElement();
 		xml.writeEndElement();
-		xml.writeEndDocument();
-		xml.close();		
+		xml.writeEndDocument();		
 		
 		xml.writeStartDocument();
 		xml.writeStartElement("html");
@@ -369,13 +368,10 @@ public class ReportFunctions {
 		xml.writeCharacters("Number of TestCases Passed: " + totalNoOfTestCasesPassed);
 		xml.writeEmptyElement("br");
 		xml.writeCharacters("Number of TestCases Failed: " + totalNoOfTestCasesFailed);
-		xml.writeEmptyElement("br");
-		xml.writeEndElement();
 		xml.writeEndElement();
 		xml.writeEndElement();
 		xml.writeEndElement();
 		xml.writeEndDocument();
-		xml.close();
 		
 		xml.writeStartDocument();
 		xml.writeStartElement("html");
@@ -387,7 +383,6 @@ public class ReportFunctions {
 		xml.writeEndElement();
 		xml.writeEndElement();
 		xml.writeStartElement("body");
-		xml.writeEmptyElement("br");
 		xml.writeEmptyElement("br");
 			xml.writeStartElement("table");
 			xml.writeAttribute("border", "0");
