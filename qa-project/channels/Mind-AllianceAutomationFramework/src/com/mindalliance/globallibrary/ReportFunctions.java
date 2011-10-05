@@ -344,7 +344,7 @@ public class ReportFunctions {
 		xml.writeStartElement("center");
 		xml.writeStartElement("img");
 		xml.writeAttribute("src","../../Images/Mind-Alliance_Logo.png");
-		xml.writeAttribute("style","border-style: none");
+		xml.writeAttribute("style","border-style: solid");
 		xml.writeEndElement();
 		xml.writeEndElement();
 		xml.writeEndElement();
@@ -365,12 +365,10 @@ public class ReportFunctions {
 		xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
 		xml.writeStartElement("head");
 		xml.writeStartElement("title");
-		xml.writeEmptyElement("br");
 		xml.writeCharacters("TestCaseId Index");
 		xml.writeEndElement();
 		xml.writeEndElement();
 		xml.writeStartElement("body");
-		xml.writeEmptyElement("br");
 			xml.writeStartElement("table");
 			xml.writeAttribute("border", "0");
 			xml.writeAttribute("width","100%");
@@ -415,7 +413,10 @@ public class ReportFunctions {
 						xml.writeStartElement("center");
 							xml.writeStartElement("font");
 								if (arrayOftestCaseResult[i].equals(GlobalVariables.sFailed))
-									xml.writeAttribute("color", "RED");
+									if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
+										xml.writeAttribute("color", "GREEN");
+									else
+										xml.writeAttribute("color", "RED");
 								xml.writeCharacters(arrayOftestCaseResult[i]);
 							xml.writeEndElement();
 						xml.writeEndElement();
