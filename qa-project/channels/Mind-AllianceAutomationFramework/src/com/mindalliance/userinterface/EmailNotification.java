@@ -22,6 +22,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -44,7 +45,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 	private static JTextField jTextFieldUserName;
 	private static JTextField jTextFiledSMTPServer;
 	private static JTextField jTextSMTPPort;
-	private static JTextField jTextReceipentEmailId;
+	private static JFormattedTextField jTextReceipentEmailId;
 	private JLabel jLabel0;
 	private JLabel jLabel1;
 	private JLabel jLabel2;
@@ -129,6 +130,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jLabelSMTPPort == null) {
 			jLabelSMTPPort = new JLabel();
 			jLabelSMTPPort.setText("SMTP Port");
+			jCheckBoxEnableServer.addItemListener(this);
 		}
 		return jLabelSMTPPort;
 	}
@@ -137,6 +139,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jLabelReceipentEmail == null) {
 			jLabelReceipentEmail = new JLabel();
 			jLabelReceipentEmail.setText("Receipent Email Id ");
+			jCheckBoxEnableServer.addItemListener(this);
 		}
 		return jLabelReceipentEmail;
 	}
@@ -163,7 +166,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jTextFiledSMTPServer == null) {
 			jTextFiledSMTPServer = new JTextField();
 			jTextFiledSMTPServer.setPreferredSize(jTextFiledSMTPServer.getPreferredSize());
-			jTextFiledSMTPServer.setText("smtp.gmail.com");
+			jTextFiledSMTPServer.setText("bizmail.securehostdns.com");
 			jTextFiledSMTPServer.addActionListener(this);
 		}
 		return jTextFiledSMTPServer;
@@ -173,7 +176,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jTextFieldUserName == null) {
 			jTextFieldUserName = new JTextField();
 			jTextFieldUserName.setPreferredSize(jTextFieldUserName.getPreferredSize());
-			jTextFieldUserName.setText("mypriyancagurav");
+			jTextFieldUserName.setText("priyanka.gurav@afourtech.com");
 			jTextFieldUserName.addActionListener(this);
 		}
 		return jTextFieldUserName;
@@ -191,7 +194,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 	
 	private JTextField getTextReceipentEmail(){
 		if (jTextReceipentEmailId == null) {
-			jTextReceipentEmailId = new JTextField();
+			jTextReceipentEmailId = new JFormattedTextField();
 			jTextReceipentEmailId.setPreferredSize(jTextReceipentEmailId.getPreferredSize());
 			jTextReceipentEmailId.setText("mypriyancagurav@gmail.com");
 		}
@@ -202,7 +205,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jTextSMTPPort == null) {
 			jTextSMTPPort = new JTextField();
 			jTextSMTPPort.setPreferredSize(jTextSMTPPort.getPreferredSize());
-			jTextSMTPPort.setText("465");
+			jTextSMTPPort.setText("25");
 		}
 		return jTextSMTPPort;
 	}
@@ -278,7 +281,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		}
 		if("save".equals(e.getActionCommand())){
 			String[] to={"priyanka.gurav@afourtech.com"};
-			String[] cc={"manohar.shimpi@afourtech.com"};
+			String[] cc={};
 			//This is for google
 			EmailNotification.sendMail(jTextFieldUserName.getText(),jTextFieldPassword.getText(),jTextFiledSMTPServer.getText(),jTextSMTPPort.getText(),"true","true",true,"javax.net.ssl.SSLSocketFactory","false",to,cc,"Mind-Alliance UI Automation Report");
 		}
@@ -294,22 +297,22 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
         Properties props = new Properties();
         props.put("mail.smtp.user", jTextFieldUserName.getText());
         props.put("mail.smtp.host", jTextFiledSMTPServer.getText());
-        if(!"".equals(port))
-        	props.put("mail.smtp.port", jTextSMTPPort.getText());
-        if(!"".equals(starttls))
-        	props.put("mail.smtp.starttls.enable",starttls);
-        props.put("mail.smtp.auth", auth);
-        if(debug){
-        	props.put("mail.smtp.debug", "true");
-        }else{
-        	props.put("mail.smtp.debug", "false");         
-        }
-        if(!"".equals(jTextSMTPPort.getText()))
-        	props.put("mail.smtp.socketFactory.port", jTextSMTPPort.getText());
-        if(!"".equals(socketFactoryClass))
-        	props.put("mail.smtp.socketFactory.class",socketFactoryClass);
-        if(!"".equals(fallback))
-        	props.put("mail.smtp.socketFactory.fallback", fallback);
+//        if(!"".equals(port))
+//        	props.put("mail.smtp.port", jTextSMTPPort.getText());
+//        if(!"".equals(starttls))
+//        	props.put("mail.smtp.starttls.enable",starttls);
+//        props.put("mail.smtp.auth", auth);
+//        if(debug){
+//        	props.put("mail.smtp.debug", "true");
+//        }else{
+//        	props.put("mail.smtp.debug", "false");         
+//        }
+//        if(!"".equals(jTextSMTPPort.getText()))
+//        	props.put("mail.smtp.socketFactory.port", jTextSMTPPort.getText());
+////        if(!"".equals(socketFactoryClass))
+//        	props.put("mail.smtp.socketFactory.class",socketFactoryClass);
+//        if(!"".equals(fallback))
+//        	props.put("mail.smtp.socketFactory.fallback", fallback);
 
         try
         {
@@ -321,8 +324,9 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
             for(int i=0;i<to.length;i++){
             	msg.addRecipient(Message.RecipientType.TO, new InternetAddress(to[i]));
             }
-            for(int i=0;i<cc.length;i++){
-            	msg.addRecipient(Message.RecipientType.CC, new InternetAddress(cc[i]));
+            for(int i=0;i<jTextReceipentEmailId.getText().length();){
+            	msg.addRecipient(Message.RecipientType.CC, new InternetAddress(jTextReceipentEmailId.getText()));
+            	break;
             }
             msg.saveChanges();
             // create the second message part
