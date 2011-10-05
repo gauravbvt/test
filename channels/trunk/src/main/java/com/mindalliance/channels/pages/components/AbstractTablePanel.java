@@ -43,11 +43,11 @@ import java.util.Set;
  * Abstract panel holding a table showing properties of a list of beans.
  *
  * @param <T> Class of item represented by the table's rows
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
- * Proprietary and Confidential.
- * User: jf
- * Date: Jan 13, 2009
- * Time: 10:25:30 AM
+ *            Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ *            Proprietary and Confidential.
+ *            User: jf
+ *            Date: Jan 13, 2009
+ *            Time: 10:25:30 AM
  */
 public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
 
@@ -184,26 +184,26 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
     protected AbstractColumn<T> makeAnalysisColumn( String name,
-                                                      final String methodName,
-                                                      final String defaultText) {
+                                                    final String methodName,
+                                                    final String defaultText ) {
         return new AbstractColumn<T>( new Model<String>( name ) ) {
 
-             public void populateItem( Item<ICellPopulator<T>> cellItem,
-                                       String id,
-                                       IModel<T> model ) {
-                 String text = "" + callAnalyst( methodName, model.getObject() );
-                 String labelText = ( text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
-                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
-             }
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      IModel<T> model ) {
+                String text = "" + callAnalyst( methodName, model.getObject() );
+                String labelText = ( text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
+                cellItem.add( new Label( id, new Model<String>( labelText ) ) );
+            }
         };
     }
 
     private Object callAnalyst( String methodName, Object argument ) {
         try {
             Analyst delegate = getAnalyst();
-            Class[] argTypes = { argument.getClass(), QueryService.class };
+            Class[] argTypes = {argument.getClass(), QueryService.class};
             Method method = Analyst.class.getMethod( methodName, argTypes );
-            Object[] args = { argument, getQueryService() };
+            Object[] args = {argument, getQueryService()};
             return method.invoke( delegate, args );
         } catch ( Exception e ) {
             LOG.warn( "Delegate method invocation failed.", e );
@@ -627,6 +627,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                     update( target, new Change( Change.Type.Expanded, (Identifiable) bean ) );
                 }
             };
+            link.add( new Label( "label", label ) );
             add( link );
         }
     }

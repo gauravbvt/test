@@ -218,26 +218,27 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeColumn( "Name", "name", EMPTY ) );
             columns.add( makeFilterableLinkColumn(
-                    "Sender organization(s)",
+                    "Organization(s)",
                     "committerSpec.organization",
                     "committerSpec.organization.name",
                     EMPTY,
                     filterable ) );
+            columns.add( makeColumn( "Shall share info", "information", EMPTY ) );
+            columns.add( makeColumn( "Tagged", "infoTagsAsString", EMPTY ) );
             columns.add( makeFilterableLinkColumn(
-                    "Receiver organization(s)",
+                    "With organization(s)",
                     "beneficiarySpec.organization",
                     "beneficiarySpec.organization.name",
                     EMPTY,
                     filterable ) );
             columns.add( makeFilterableLinkColumn(
-                    "Event",
+                    "In event",
                     "beneficiarySpec.event",
                     "beneficiarySpec.event.name",
                     EMPTY,
                     filterable ) );
             columns.add( makeAnalysisColumn( "Issues", "unwaivedIssuesCount", "?" ) );
-            columns.add( makeExpandLinkColumn( "", "", "more" ) );
-            // todo columns
+            columns.add( makeExpandLinkColumn( "", "", "edit" ) );
             List<Requirement> requirements = requirementsModel.getObject();
             add( new AjaxFallbackDefaultDataTable( "requirements",
                     columns,

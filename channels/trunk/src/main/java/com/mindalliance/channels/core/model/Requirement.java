@@ -89,6 +89,10 @@ public class Requirement extends ModelObject implements Countable {
         return infoTags;
     }
 
+    public String getInfoTagsAsString() {
+        return Tag.tagsToString( getInfoTags() );
+    }
+
     public void setInfoTags( List<Tag> infoTags ) {
         this.infoTags = infoTags;
     }

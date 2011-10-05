@@ -70,19 +70,17 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
     }
 
 
-
     public String getInformation() {
         return getRequirement().getInformation();
     }
 
     public void setInformation( String val ) {
-        if ( val != null && !val.trim().isEmpty() ) {
-            String info = val.trim();
-            doCommand( new UpdatePlanObject( getUsername(), getRequirement(), "information", info ) );
-        }
+        String info = val == null ? "" : val.trim();
+        doCommand( new UpdatePlanObject( getUsername(), getRequirement(), "information", info ) );
     }
+
     private Requirement getRequirement() {
-         return (Requirement) getModel().getObject();
-     }
+        return (Requirement) getModel().getObject();
+    }
 
 }
