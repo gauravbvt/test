@@ -89,6 +89,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	private JButton jButtonNewTest;
 	private JComboBox jComboBoxBrowser;
 	private static DefaultListModel listModel;
+	private JButton jButtonSendEmail;
 	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel";
 	public HomeForFunctionalTestCase() {
 		initComponents();
@@ -102,7 +103,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		add(getJScrollPane0(), new Constraints(new Leading(500, 350, 100, 50), new Leading(34, 317, 12, 12)));
 		add(getJButton2(), new Constraints(new Leading(1027, 12, 12), new Leading(525, 10, 10)));
 		add(getJLabel0(), new Constraints(new Leading(500, 200, 200), new Leading(16, 20, 20)));
-		add(getJCheckBox0(), new Constraints(new Leading(620, 300, 600), new Leading(10, 10,10)));
+		add(getJCheckBox0(), new Constraints(new Leading(620, 300, 600), new Leading(10, 10, 10)));
 		add(getJPanel0(), new Constraints(new Leading(43, 892, 10, 10), new Leading(363, 278, 10, 10)));
 		add(getJProgressBar0(), new Constraints(new Leading(1024, 298, 10, 10), new Leading(413, 12, 12)));
 		add(getJLabel3(), new Constraints(new Leading(1024, 12, 12), new Leading(453, 10, 10)));
@@ -113,22 +114,34 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		add(getJButton5(), new Constraints(new Leading(1239, 10, 10), new Leading(369, 12, 12)));
 		add(getJButton1(), new Constraints(new Leading(1153, 12, 12), new Leading(369, 12, 12)));
 		add(getJComboBox0(), new Constraints(new Leading(1023, 122, 10, 10), new Leading(369, 12, 12)));
-		add(getJCheckBox1(), new Constraints(new Leading(100,300,200), new Leading(30,10,10)));
-		add(getJCheckBox2(), new Constraints(new Leading(100,400,300), new Leading(50,10,10)));
-		add(getJCheckBox3(), new Constraints(new Leading(100,500,400), new Leading(70,10,10)));
-		add(getJCheckBox4(), new Constraints(new Leading(100,600,500), new Leading(90,10,10)));
-		add(getJCheckBox5(), new Constraints(new Leading(100,700,600), new Leading(110,10,10)));
-		add(getJCheckBox6(), new Constraints(new Leading(100,800,700), new Leading(130,10,10)));
-		add(getJCheckBox7(), new Constraints(new Leading(100,900,800), new Leading(150,10,10)));
-		add(getJCheckBox8(), new Constraints(new Leading(100,910,850), new Leading(170,10,10)));
-		add(getJCheckBox9(), new Constraints(new Leading(100,920,850), new Leading(190,10,10)));
-		add(getJCheckBox10(), new Constraints(new Leading(100,930,850), new Leading(210,10,10)));
-		add(getJCheckBox11(), new Constraints(new Leading(100,940,850), new Leading(230,10,10)));
-		add(getJCheckBox12(), new Constraints(new Leading(100,950,850), new Leading(250,10,10)));
-		add(getJCheckBox13(), new Constraints(new Leading(100,960,850), new Leading(270,10,10)));
-		add(getJCheckBox14(), new Constraints(new Leading(100,970,850), new Leading(290,10,10)));
-		add(getJCheckBox15(), new Constraints(new Leading(100,990,850), new Leading(310,10,10)));
+		add(getJCheckBox1(), new Constraints(new Leading(100, 300, 200), new Leading(30, 10, 10)));
+		add(getJCheckBox2(), new Constraints(new Leading(100, 400, 300), new Leading(50, 10, 10)));
+		add(getJCheckBox3(), new Constraints(new Leading(100, 500, 400), new Leading(70, 10, 10)));
+		add(getJCheckBox4(), new Constraints(new Leading(100, 600, 500), new Leading(90, 10, 10)));
+		add(getJCheckBox5(), new Constraints(new Leading(100, 700, 600), new Leading(110, 10, 10)));
+		add(getJCheckBox6(), new Constraints(new Leading(100, 800, 700), new Leading(130, 10, 10)));
+		add(getJCheckBox7(), new Constraints(new Leading(100, 900, 800), new Leading(150, 10, 10)));
+		add(getJCheckBox8(), new Constraints(new Leading(100, 910, 850), new Leading(170, 10, 10)));
+		add(getJCheckBox9(), new Constraints(new Leading(100, 920, 850), new Leading(190, 10, 10)));
+		add(getJCheckBox10(), new Constraints(new Leading(100, 930, 850), new Leading(210, 10, 10)));
+		add(getJCheckBox11(), new Constraints(new Leading(100, 940, 850), new Leading(230, 10, 10)));
+		add(getJCheckBox12(), new Constraints(new Leading(100, 950, 850), new Leading(250, 10, 10)));
+		add(getJCheckBox13(), new Constraints(new Leading(100, 960, 850), new Leading(270, 10, 10)));
+		add(getJCheckBox14(), new Constraints(new Leading(100, 970, 850), new Leading(290, 10, 10)));
+		add(getJCheckBox15(), new Constraints(new Leading(100, 990, 850), new Leading(310, 10, 10)));
+		add(getjButtonSendEmail(), new Constraints(new Leading(1126, 110, 10, 10), new Leading(525, 12, 12)));
 		setSize(1356, 698);
+	}
+
+	private JButton getjButtonSendEmail() {
+		if (jButtonSendEmail == null) {
+			jButtonSendEmail = new JButton();
+			jButtonSendEmail.setText("Send Email");
+			jButtonSendEmail.setEnabled(false);
+			jButtonSendEmail.setActionCommand("send");
+			jButtonSendEmail.addActionListener(this);
+		}
+		return jButtonSendEmail;
 	}
 
 	private JComboBox getJComboBox0() {
@@ -585,6 +598,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 			// Enable Logs and Reports button
 			jButtonLogLink.setEnabled(true);
 			jButtonReportLink.setEnabled(true);
+			jButtonSendEmail.setEnabled(true);
 			// Clear TestCaseId label
 			jLabelTestCaseId.setText("");
 			jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
@@ -632,6 +646,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	}
 
 
+	@SuppressWarnings("unused")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -672,6 +687,9 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				File file = new File(GlobalVariables.sReportDstDirectoryPath+"//index.htm");
 				Desktop desktop = Desktop.getDesktop();
 				desktop.open(file);
+			}
+			else if("send".equals(e.getActionCommand())){
+				EmailNotification emi=new EmailNotification();
 			}
 			else if ("exit".equals(e.getActionCommand())) { // when clicked on 'Exit' button
 				System.exit(0);
