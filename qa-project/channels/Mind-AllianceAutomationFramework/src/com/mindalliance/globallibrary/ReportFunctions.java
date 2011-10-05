@@ -313,19 +313,6 @@ public class ReportFunctions {
 		xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
 		xml.writeStartElement("head");
 		xml.writeStartElement("title");
-		xml.writeStartElement("center");
-		xml.writeStartElement("img");
-		xml.writeAttribute("src","../../Images/Mind-Alliance_Logo.png");
-		xml.writeAttribute("style","border-style: none");
-		xml.writeEndElement();
-		xml.writeEndElement();
-		xml.writeEndDocument();		
-		
-		xml.writeStartDocument();
-		xml.writeStartElement("html");
-		xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
-		xml.writeStartElement("head");
-		xml.writeStartElement("title");
 		xml.writeStartElement("h1");
 		xml.writeCharacters("TestCaseId Summary");
 		xml.writeEndElement();
