@@ -277,8 +277,8 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 			System.exit(0);
 		}
 		if("save".equals(e.getActionCommand())){
-			String[] to={"mypriyancagurav@gmail.com"};
-			String[] cc={"priyanka.gurav@afourtech.com"};
+			String[] to={"priyanka.gurav@afourtech.com"};
+			String[] cc={"manohar.shimpi@afourtech.com"};
 			//This is for google
 			EmailNotification.sendMail(jTextFieldUserName.getText(),jTextFieldPassword.getText(),jTextFiledSMTPServer.getText(),jTextSMTPPort.getText(),"true","true",true,"javax.net.ssl.SSLSocketFactory","false",to,cc,"Mind-Alliance UI Automation Report");
 		}
