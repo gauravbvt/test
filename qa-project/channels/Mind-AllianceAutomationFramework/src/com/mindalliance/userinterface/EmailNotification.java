@@ -7,13 +7,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
+import java.util.Date;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.Message;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -28,6 +34,7 @@ import javax.swing.border.SoftBevelBorder;
 import org.dyno.visual.swing.layouts.Constraints;
 import org.dyno.visual.swing.layouts.GroupLayout;
 import org.dyno.visual.swing.layouts.Leading;
+import com.mindalliance.globallibrary.GlobalVariables;
 
 //VS4E -- DO NOT REMOVE THIS LINE!
 public class EmailNotification extends JFrame implements ActionListener, ItemListener{
@@ -265,7 +272,8 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub		
-		if ("exit".equals(e.getActionCommand())) { // when clicked on 'Exit' button
+		if ("exit".equals(e.getActionCommand())) { 
+			// when clicked on 'Exit' button
 			System.exit(0);
 		}
 		if("save".equals(e.getActionCommand())){
@@ -308,7 +316,6 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
         	Session session = Session.getDefaultInstance(props, null);
         	session.setDebug(debug);
         	MimeMessage msg = new MimeMessage(session);
-            msg.setText("Mind Alliance UIAutomation Report");
             msg.setSubject(subject);
             msg.setFrom(new InternetAddress("mypriyancagurav@gmail.com"));
             for(int i=0;i<to.length;i++){
@@ -318,6 +325,19 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
             	msg.addRecipient(Message.RecipientType.CC, new InternetAddress(cc[i]));
             }
             msg.saveChanges();
+            // create the second message part
+            MimeBodyPart mbp2 = new MimeBodyPart();
+            // attach the file to the message
+            FileDataSource fds = new FileDataSource(GlobalVariables.sReportDstDirectoryPath + "\\TestCaseFailureList.htm");  
+            mbp2.setDataHandler(new DataHandler(fds));
+            // create the Multipart and add its parts to it
+            Multipart mp = new MimeMultipart();
+            mp.addBodyPart(mbp2);
+            // set the Date: header
+            msg.setSentDate(new Date());            
+            // add the Multipart to the message
+            msg.setContent(mp);
+            
             Transport transport = session.getTransport("smtp");
             transport.connect(host, userName, passWord);
             transport.sendMessage(msg, msg.getAllRecipients());
@@ -338,21 +358,6 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 	 * You can modify it as you like.
 	 */
 	public static void main(String[] args) {
-//		installLnF();
-//		SwingUtilities.invokeLater(new Runnable() {
-//			@Override
-//			public void run() {
-//				EmailNotification frame = new EmailNotification();
-//				frame.setDefaultCloseOperation(EmailNotification.EXIT_ON_CLOSE);
-//				frame.setTitle("Mind-Alliance Automation Framework");
-//				//frame.getContentPane().setPreferredSize(frame.getSize());
-//				frame.pack();
-//				frame.setLocationRelativeTo(null);
-//				frame.setVisible(true);
-//				frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-//			}
-//		});
-//		
 	}
 }
 
