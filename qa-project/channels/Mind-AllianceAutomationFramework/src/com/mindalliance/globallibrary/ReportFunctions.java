@@ -188,6 +188,7 @@ public class ReportFunctions {
 		generateTestCaseIndex();
 		generateTestCaseSummary();
 		generateFinalTestPassReport();
+		generateFailureReport();
 		System.out.println("Report generated successfully");
 	}
 
@@ -301,6 +302,152 @@ public class ReportFunctions {
 		destination.close();
 	}
 
+	private static void generateFailureReport() throws XMLStreamException, IOException
+	{
+		OutputStream destination = new FileOutputStream(GlobalVariables.sReportDstDirectoryPath + "\\TestCaseFailureList.htm");
+		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+		XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
+
+		xml.writeStartDocument();
+		xml.writeStartElement("html");
+		xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
+		xml.writeStartElement("head");
+		xml.writeStartElement("title");
+		xml.writeStartElement("center");
+		xml.writeStartElement("img");
+		xml.writeAttribute("src","../../Images/Mind-Alliance_Logo.png");
+		xml.writeAttribute("style","border-style: none");
+		xml.writeEndElement();
+		xml.writeEndElement();
+		xml.writeEndDocument();
+		xml.close();		
+		
+		xml.writeStartDocument();
+		xml.writeStartElement("html");
+		xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
+		xml.writeStartElement("head");
+		xml.writeStartElement("title");
+		xml.writeStartElement("h1");
+		xml.writeCharacters("TestCaseId Summary");
+		xml.writeEndElement();
+		xml.writeEndElement();
+		xml.writeStartElement("h1");
+		xml.writeStartElement("center");
+		xml.writeCharacters("Mind-Alliance Report");
+		xml.writeEndElement();
+		xml.writeEndElement();
+		xml.writeStartElement("body");
+		xml.writeStartElement("table");
+		xml.writeAttribute("border","0");
+		xml.writeAttribute("cellpadding","0");
+		xml.writeAttribute("cellspacing","0");
+		xml.writeAttribute("width","100%");
+		xml.writeStartElement("tr");
+		xml.writeAttribute("bgColor","#DDDDDD");
+		xml.writeStartElement("td");
+		xml.writeStartElement("center");
+		xml.writeCharacters("Start Datetime: " + GlobalVariables.sStartDateTime);
+		xml.writeEmptyElement("br");
+		xml.writeCharacters("End Datetime: " + GlobalVariables.sEndDateTime);
+		xml.writeEmptyElement("br");
+		xml.writeCharacters("Browser: " + GlobalVariables.sBrowser);
+		xml.writeEmptyElement("br");
+		xml.writeEndElement();
+		xml.writeEndElement();
+		xml.writeStartElement("td");
+		xml.writeStartElement("center");
+		xml.writeStartElement("img");
+		xml.writeAttribute("src","../../Images/Mind-Alliance_Logo.png");
+		xml.writeAttribute("style","border-style: none");
+		xml.writeEndElement();
+		xml.writeEndElement();
+		xml.writeEndElement();
+		xml.writeStartElement("td");
+		xml.writeStartElement("center");
+		xml.writeCharacters("Number of TestCases Executed: " + (totalNoOfTestCasesPassed + totalNoOfTestCasesFailed));
+		xml.writeEmptyElement("br");
+		xml.writeCharacters("Number of TestCases Passed: " + totalNoOfTestCasesPassed);
+		xml.writeEmptyElement("br");
+		xml.writeCharacters("Number of TestCases Failed: " + totalNoOfTestCasesFailed);
+		xml.writeEmptyElement("br");
+		xml.writeEndElement();
+		xml.writeEndElement();
+		xml.writeEndElement();
+		xml.writeEndElement();
+		xml.writeEndDocument();
+		xml.close();
+		
+		xml.writeStartDocument();
+		xml.writeStartElement("html");
+		xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
+		xml.writeStartElement("head");
+		xml.writeStartElement("title");
+		xml.writeEmptyElement("br");
+		xml.writeCharacters("TestCaseId Index");
+		xml.writeEndElement();
+		xml.writeEndElement();
+		xml.writeStartElement("body");
+		xml.writeEmptyElement("br");
+		xml.writeEmptyElement("br");
+			xml.writeStartElement("table");
+			xml.writeAttribute("border", "0");
+			xml.writeAttribute("width","100%");
+				xml.writeStartElement("th");
+					xml.writeStartElement("tr");
+						xml.writeStartElement("td");
+						xml.writeAttribute("bgColor","#BBBBBB");
+						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+						xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+								xml.writeStartElement("strong");
+									xml.writeCharacters("TestCaseId");
+								xml.writeEndElement();
+						xml.writeEndElement();
+						xml.writeStartElement("td");
+						xml.writeAttribute("bgColor","#BBBBBB");
+						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+						xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+							xml.writeStartElement("center");
+								xml.writeStartElement("strong");
+									xml.writeCharacters("Result");
+								xml.writeEndElement();
+							xml.writeEndElement();
+						xml.writeEndElement();
+					xml.writeEndElement();
+				xml.writeEndElement();
+		for (int i = 0; i < arrayOfTestCaseId.length ; i++) {
+			if(arrayOfTestCaseId[i] != null) {
+				xml.writeStartElement("tr");
+				xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
+				xml.writeAttribute("bgColor","#DDDDDD");
+				xml.writeAttribute("padding","");
+				xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+				xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+					xml.writeStartElement("td");
+							xml.writeStartElement("a");
+							xml.writeAttribute("href", arrayOfTestCaseId[i] + ".htm");
+							xml.writeAttribute("target", "targetframe");
+								xml.writeCharacters(arrayOfTestCaseId[i]);
+							xml.writeEndElement();
+					xml.writeEndElement();
+					xml.writeStartElement("td");
+						xml.writeStartElement("center");
+							xml.writeStartElement("font");
+								if (arrayOftestCaseResult[i].equals(GlobalVariables.sFailed))
+									xml.writeAttribute("color", "RED");
+								xml.writeCharacters(arrayOftestCaseResult[i]);
+							xml.writeEndElement();
+						xml.writeEndElement();
+					xml.writeEndElement();
+				xml.writeEndElement();
+			}
+		}
+		xml.writeEndElement();
+		xml.writeEndElement();
+		xml.writeEndDocument();
+		xml.close();
+		destination.close();
+		
+	}
 	/**
 	 * Generate TestCase Index
 	 * @throws XMLStreamException
@@ -699,6 +846,7 @@ public class ReportFunctions {
 		generateTestCaseIndex();
 		generateTestCaseSummary();
 		generateFinalTestPassReport();
+		generateFailureReport();
 		System.out.println("Report generated successfully");
 
 	}
