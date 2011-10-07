@@ -303,6 +303,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathSendInfoTagsLink",oXmlElePlanPage.getElementsByTagName("xPathSendInfoTagsLink").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathReceiveInfoTagsLink",oXmlElePlanPage.getElementsByTagName("xPathReceiveInfoTagsLink").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathURL",oXmlElePlanPage.getElementsByTagName("xPathURL").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathRemoveEvent",oXmlElePlanPage.getElementsByTagName("xPathRemoveEvent").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathTaskURLAssertion",oXmlElePlanPage.getElementsByTagName("xPathTaskURLAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathEmailNameInvalidErrorMessageAssertion",oXmlElePlanPage.getElementsByTagName("xPathEmailNameInvalidErrorMessageAssertion").item(0).getChildNodes().item(0).getNodeValue());
@@ -607,6 +608,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("myInformationSharingGuidelines",oXmlEleViewElements.getElementsByTagName("myInformationSharingGuidelines").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("prohibited",oXmlEleViewElements.getElementsByTagName("prohibited").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("taskStart",oXmlEleViewElements.getElementsByTagName("taskStart").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("taskEnd",oXmlEleViewElements.getElementsByTagName("taskEnd").item(0).getChildNodes().item(0).getNodeValue());
 			
 		} catch(Exception e) {
 			System.out.println("Hie.....");
