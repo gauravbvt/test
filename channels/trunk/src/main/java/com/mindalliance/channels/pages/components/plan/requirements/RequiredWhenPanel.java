@@ -40,10 +40,6 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
     private TextField<String> taskNameField;
     private TextField<String> eventField;
     private ModelObjectLink eventLink;
-    private static final String ANY_TIME = "During, before or after";
-    private static final String BEFORE = "Before";
-    private static final String DURING = "During";
-    private static final String AFTER = "After";
     private DropDownChoice<String> timingChoices;
 
     public RequiredWhenPanel( String id, Model<Requirement> requirementModel, boolean isBeneficiary ) {
@@ -125,35 +121,13 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
 
     private List<String> getTimingChoices() {
         List<String> timingChoices = new ArrayList<String>();
-        timingChoices.add( ANY_TIME );
+        timingChoices.add( Phase.Timing.ANY_TIME );
         if ( getAssignmentSpec().getEvent() != null ) {
             for ( Phase.Timing timing : Phase.Timing.values() ) {
-                timingChoices.add( translateTiming( timing ) );
+                timingChoices.add( Phase.Timing.translateTiming( timing ) );
             }
         }
         return timingChoices;
-    }
-
-    private String translateTiming( Phase.Timing timing ) {
-        if ( timing == null )
-            return ANY_TIME;
-        else
-            return timing == Phase.Timing.PreEvent
-                    ? BEFORE
-                    : timing == Phase.Timing.PostEvent
-                    ? AFTER
-                    : DURING;
-    }
-
-    private Phase.Timing translateTiming( String name ) {
-        if ( name.equals( ANY_TIME ) )
-            return null;
-        else
-            return name.equals( BEFORE )
-                    ? Phase.Timing.PreEvent
-                    : name.equals( AFTER )
-                    ? Phase.Timing.PostEvent
-                    : Phase.Timing.Concurrent;
     }
 
 
@@ -220,9 +194,9 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
      */
     public String getTimingName() {
         if ( getAssignmentSpec().getEvent() == null )
-            return ANY_TIME;
+            return Phase.Timing.ANY_TIME;
         else
-            return translateTiming( getAssignmentSpec().getTiming() );
+            return Phase.Timing.translateTiming( getAssignmentSpec().getTiming() );
     }
 
     /**
@@ -231,7 +205,7 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
      * @param name an event timing name
      */
     public void setTimingName( String name ) {
-        Phase.Timing timing = translateTiming( name );
+        Phase.Timing timing = Phase.Timing.translateTiming( name );
         doCommand( new UpdatePlanObject( User.current().getUsername(), getRequirement(), propertyPath( "timing" ), timing ) );
     }
 

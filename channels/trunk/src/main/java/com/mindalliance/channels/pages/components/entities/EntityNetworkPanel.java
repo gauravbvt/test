@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.pages.components.AbstractResizableDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.AbstractDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.EntityNetworkDiagramPanel;
@@ -48,7 +48,7 @@ public class EntityNetworkPanel<T extends ModelEntity> extends AbstractResizable
     protected void addDiagramPanel() {
         if ( getDiagramSize()[0] <= 0.0 || getDiagramSize()[1] <= 0.0 ) {
             entityNetworkDiagramPanel = new EntityNetworkDiagramPanel<T>(
-                    "diagram",
+                    WICKET_ID,
                     entityModel,
                     selectedEntityRel,
                     null,
@@ -56,7 +56,7 @@ public class EntityNetworkPanel<T extends ModelEntity> extends AbstractResizable
             );
         } else {
             entityNetworkDiagramPanel = new EntityNetworkDiagramPanel<T>(
-                    "diagram",
+                    WICKET_ID,
                     entityModel,
                     null,
                     getDiagramSize(),

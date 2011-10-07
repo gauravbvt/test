@@ -46,6 +46,8 @@ abstract public class AbstractResizableDiagramPanel extends AbstractUpdatablePan
      */
     private Label sizingLabel;
 
+    protected static String WICKET_ID = "diagram";
+
 
     public AbstractResizableDiagramPanel(
             String id,

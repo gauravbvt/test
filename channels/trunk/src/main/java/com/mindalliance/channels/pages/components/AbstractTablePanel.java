@@ -33,10 +33,13 @@ import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -453,7 +456,8 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     protected AbstractColumn<T> makeExpandLinkColumn(
             String name,
             final String identifiableProperty,
-            final String label
+            final String label,
+            final String... properties
     ) {
         return new AbstractColumn<T>( new Model<String>( name ), label ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
@@ -464,7 +468,20 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         bean,
                         identifiableProperty,
                         null );
-                ExpandLinkPanel<Identifiable> cellContent = new ExpandLinkPanel<Identifiable>( id, identifiable, label );
+                Map<String, Serializable> payload = new HashMap<String, Serializable>();
+                for ( String property : properties ) {
+                    payload.put(
+                            property,
+                            (Serializable)ChannelsUtils.getProperty(
+                                    bean,
+                                    property,
+                                    null ) );
+                }
+                ExpandLinkPanel<Identifiable> cellContent = new ExpandLinkPanel<Identifiable>(
+                        id,
+                        identifiable,
+                        label,
+                        payload );
                 cellItem.add( cellContent );
             }
 
@@ -621,10 +638,24 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 String id,
                 final T bean,
                 final String label ) {
+            this( id, bean, label, null );
+        }
+
+        public ExpandLinkPanel(
+                String id,
+                final T bean,
+                final String label,
+                final Map<String, Serializable> payload ) {
             super( id );
             AjaxLink link = new AjaxLink<String>( "link", new Model<String>( label ) ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    update( target, new Change( Change.Type.Expanded, (Identifiable) bean ) );
+                    Change change =  new Change( Change.Type.Expanded, (Identifiable) bean );
+                    if ( payload != null ) {
+                        for ( String prop : payload.keySet() ) {
+                            change.addQualifier( prop, payload.get( prop ) );
+                        }
+                    }
+                    update( target, change );
                 }
             };
             link.add( new Label( "label", label ) );

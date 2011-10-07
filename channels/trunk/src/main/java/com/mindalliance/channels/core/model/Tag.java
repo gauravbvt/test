@@ -106,4 +106,8 @@ public class Tag implements Nameable, Comparable<Tag> {
     public int compareTo( Tag other ) {
         return CollatorInstance.compare( name, other.getName() );
     }
+
+    public static List<Tag> copy( List<Tag> tags ) {
+        return tagsFromString( tagsToString( tags) );
+    }
 }

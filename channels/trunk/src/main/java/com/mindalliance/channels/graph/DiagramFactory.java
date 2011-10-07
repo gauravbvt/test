@@ -6,15 +6,18 @@
 
 package com.mindalliance.channels.graph;
 
+import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
-import com.mindalliance.channels.graph.diagrams.ProcedureMapDiagram;
 import org.springframework.core.io.Resource;
 
 import java.util.List;
@@ -185,7 +188,26 @@ public interface DiagramFactory<Vertex, Edge> {
      * @param orientation a string
      * @return a procedure map diagram
      */
-    ProcedureMapDiagram newProcedureMapDiagram( Segment segment, boolean summarizeByOrgType, boolean summarizeByOrg,
+    Diagram newProcedureMapDiagram( Segment segment, boolean summarizeByOrgType, boolean summarizeByOrg,
                                                 boolean summarizeByRole, ModelEntity focusEntity, double[] diagramSize,
                                                 String orientation );
+
+    /**
+      * Instantiates a requirement networking  diagram.
+      *
+      * @param timing a phase timing or null for all
+      * @param event an event or null for any event
+      * @param selectedOrganization an organization
+      * @param selectedRequirementRel a requirement relationship
+      * @param diagramSize an array of doubles
+      * @param orientation a string
+      * @return a procedure map diagram
+      */
+    Diagram newRequiredNetworkingDiagram(
+            Phase.Timing timing,
+            Event event,
+            Organization selectedOrganization,
+            RequirementRelationship selectedRequirementRel,
+            double[] diagramSize,
+            String orientation );
 }

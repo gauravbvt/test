@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
@@ -122,7 +121,7 @@ public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDi
     }
 
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, User.plan() ) );
+        update( target, new Change( Change.Type.Selected, getPlan() ) );
     }
 
     /**
@@ -152,7 +151,7 @@ public class EntityNetworkDiagramPanel<T extends ModelEntity> extends AbstractDi
             AjaxRequestTarget target ) {
         try {
             T entity = (T) getQueryService().find( ModelEntity.class, Long.valueOf( vertexId ) );
-            if ( entity != getEntity() ) {
+            if ( !entity.equals( getEntity() ) ) {
                 String js = scroll( domIdentifier, scrollTop, scrollLeft );
                 Change change = new Change( Change.Type.Selected, entity, "network" );
                 change.setScript( js );

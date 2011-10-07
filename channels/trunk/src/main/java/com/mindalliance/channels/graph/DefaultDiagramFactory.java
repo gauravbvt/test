@@ -6,14 +6,18 @@
 
 package com.mindalliance.channels.graph;
 
+import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.diagrams.DisseminationDiagram;
 import com.mindalliance.channels.graph.diagrams.EntitiesNetworkDiagram;
@@ -23,6 +27,7 @@ import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.HierarchyDiagram;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
 import com.mindalliance.channels.graph.diagrams.ProcedureMapDiagram;
+import com.mindalliance.channels.graph.diagrams.RequiredNetworkingDiagram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -155,7 +160,7 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     }
 
     @Override
-    public ProcedureMapDiagram newProcedureMapDiagram( Segment segment, boolean summarizeByOrgType,
+    public Diagram newProcedureMapDiagram( Segment segment, boolean summarizeByOrgType,
                                                        boolean summarizeByOrg, boolean summarizeByRole,
                                                        ModelEntity focusEntity, double[] diagramSize,
                                                        String orientation ) {
@@ -167,5 +172,24 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
                                         focusEntity,
                                         diagramSize,
                                         orientation );
+    }
+
+    @Override
+    public Diagram newRequiredNetworkingDiagram(
+            Phase.Timing timing,
+            Event event,
+            Organization selectedOrganization,
+            RequirementRelationship selectedRequirementRel,
+            double[] diagramSize,
+            String orientation ) {
+        LOG.debug( "Making required networking diagram" );
+        return new RequiredNetworkingDiagram(
+                timing,
+                event,
+                selectedOrganization,
+                selectedRequirementRel,
+                diagramSize,
+                orientation
+        );
     }
 }

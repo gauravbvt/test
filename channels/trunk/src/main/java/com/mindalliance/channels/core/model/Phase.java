@@ -147,6 +147,13 @@ public class Phase extends ModelEntity {
         /**
          * A label for the phase timing.
          */
+
+
+        public static final String ANY_TIME = "During, before or after";
+        public static final String BEFORE = "Before";
+        public static final String DURING = "During";
+        public static final String AFTER = "After";
+
         private String label;
 
         Timing( String label ) {
@@ -176,5 +183,32 @@ public class Phase extends ModelEntity {
             }
         }
 
+        public static String translateTiming( Phase.Timing timing ) {
+            if ( timing == null )
+                return ANY_TIME;
+            else
+                return timing == Phase.Timing.PreEvent
+                        ? BEFORE
+                        : timing == Phase.Timing.PostEvent
+                        ? AFTER
+                        : DURING;
+        }
+
+        public static Phase.Timing translateTiming( String name ) {
+            if ( name.equals( ANY_TIME ) )
+                return null;
+            else
+                return name.equals( BEFORE )
+                        ? Phase.Timing.PreEvent
+                        : name.equals( AFTER )
+                        ? Phase.Timing.PostEvent
+                        : Phase.Timing.Concurrent;
+        }
+
+
+        public static boolean areEqualOrNull( Timing timing, Timing otherTiming ) {
+            return timing == null && otherTiming == null
+                    || (timing != null && otherTiming != null && timing == otherTiming );
+        }
     }
 }

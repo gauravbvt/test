@@ -7,7 +7,24 @@
         lang="en">
 <body>
 <wicket:panel>
-    Under construction
+    <span class="req-networking">
+         <div class="controls">
+             Situation:
+             <select wicket:id="timing">
+                 <option>Before, during or after</option>
+             </select>
+             <select wicket:id="event">
+                 <option>Any event</option>
+             </select>
+         </div>
+        <span class="req-network" wicket:id="reqNetwork">[required network panel]</span>
+        <h3 wicket:id="appliedReqsTitle">Info sharing requirements of orgA toward orgB</h3>
+        <span wicket:id="appliedReqs">[organizational requirements panel]</span>
+        <div wicket:id="commitmentsContainer">
+            <h3>Commitments fulfilling requirement</h3>
+            <span wicket:id="commitments">[Commitments panel]</span>
+        </div>
+    </span>
 </wicket:panel>
 </body>
 </html>

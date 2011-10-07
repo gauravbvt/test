@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
@@ -20,6 +21,7 @@ import com.mindalliance.channels.core.model.ModelEntity.Kind;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
@@ -27,10 +29,12 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.Play;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
+import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import org.apache.commons.collections.CollectionUtils;
@@ -132,10 +136,10 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     @Override
     public List<? extends Issue> listIssues( QueryService queryService, ModelObject modelObject,
-                                   Boolean includingPropertySpecific, Boolean includingWaived ) {
+                                             Boolean includingPropertySpecific, Boolean includingWaived ) {
         return includingWaived ?
-               detectAllIssues( queryService, modelObject, null, includingPropertySpecific ) :
-               detectUnwaivedIssues( queryService, modelObject, null, includingPropertySpecific );
+                detectAllIssues( queryService, modelObject, null, includingPropertySpecific ) :
+                detectUnwaivedIssues( queryService, modelObject, null, includingPropertySpecific );
     }
 
     @Override
@@ -151,7 +155,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     @Override
     public List<? extends Issue> listUnwaivedIssues( QueryService queryService, ModelObject modelObject,
-                                           Boolean includingPropertySpecific ) {
+                                                     Boolean includingPropertySpecific ) {
         return detectUnwaivedIssues( queryService, modelObject, null, includingPropertySpecific );
     }
 
@@ -162,13 +166,13 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     @Override
     public List<? extends Issue> listUnwaivedIssues( QueryService queryService, Assignment assignment,
-                                           Boolean includingPropertySpecific ) {
+                                                     Boolean includingPropertySpecific ) {
         return detectUnwaivedIssues( queryService, assignment, includingPropertySpecific );
     }
 
     @Override
     public List<? extends Issue> listWaivedIssues( QueryService queryService, ModelObject modelObject,
-                                         Boolean includingPropertySpecific ) {
+                                                   Boolean includingPropertySpecific ) {
         return detectWaivedIssues( queryService, modelObject, null, includingPropertySpecific );
     }
 
@@ -179,7 +183,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     @Override
     public List<? extends Issue> listWaivedIssues( QueryService queryService, Assignment assignment,
-                                         Boolean includingPropertySpecific ) {
+                                                   Boolean includingPropertySpecific ) {
         return detectWaivedIssues( queryService, assignment, includingPropertySpecific );
     }
 
@@ -278,10 +282,10 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     private boolean test( QueryService queryService, ModelObject modelObject, String test ) {
         return modelObject instanceof Plan ?
-               passes( queryService, (Plan) modelObject, test ) :
-               modelObject instanceof Segment ?
-               passes( queryService, (Segment) modelObject, test ) :
-               hasNoTestedIssue( queryService, modelObject, test );
+                passes( queryService, (Plan) modelObject, test ) :
+                modelObject instanceof Segment ?
+                        passes( queryService, (Segment) modelObject, test ) :
+                        hasNoTestedIssue( queryService, modelObject, test );
     }
 
     private boolean passes( QueryService queryService, Plan plan, String test ) {
@@ -327,10 +331,10 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     @Override
     public Integer countTestFailures( QueryService queryService, ModelObject modelObject, String test ) {
         return modelObject instanceof Plan ?
-               countFailures( queryService, (Plan) modelObject, test ) :
-               modelObject instanceof Segment ?
-               countFailures( queryService, (Segment) modelObject, test ) :
-               countTestIssues( queryService, modelObject, test );
+                countFailures( queryService, (Plan) modelObject, test ) :
+                modelObject instanceof Segment ?
+                        countFailures( queryService, (Segment) modelObject, test ) :
+                        countTestIssues( queryService, modelObject, test );
     }
 
     private int countFailures( QueryService queryService, Plan plan, String test ) {
@@ -367,7 +371,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
      *
      * @param queryService the query service
      * @param resourceSpec a resource
-     * @param specific whether the match is "equals" or "narrows or equals"
+     * @param specific     whether the match is "equals" or "narrows or equals"
      * @return a list of issues
      */
     private List<Issue> findAllIssuesInPlays( QueryService queryService, ResourceSpec resourceSpec, boolean specific ) {
@@ -400,7 +404,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     private List<? extends Issue> detectUnwaivedIssues( QueryService queryService, ModelObject modelObject, String property,
-                                              boolean includingPropertySpecific ) {
+                                                        boolean includingPropertySpecific ) {
         if ( property == null ) {
             List<Issue> issues = new ArrayList<Issue>();
             if ( includingPropertySpecific )
@@ -415,9 +419,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     private List<Issue> detectUnwaivedIssues( QueryService queryService, Assignment assignment,
                                               boolean includingPropertySpecific ) {
         List<Issue> issues = new ArrayList<Issue>( detectUnwaivedIssues( queryService,
-                                                                         assignment.getPart(),
-                                                                         null,
-                                                                         includingPropertySpecific ) );
+                assignment.getPart(),
+                null,
+                includingPropertySpecific ) );
 
         Actor actor = assignment.getActor();
         if ( actor != null && !actor.isUnknown() )
@@ -432,7 +436,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     private List<? extends Issue> detectWaivedIssues( QueryService queryService, ModelObject modelObject, String property,
-                                            boolean includingPropertySpecific ) {
+                                                      boolean includingPropertySpecific ) {
         if ( property == null ) {
             List<Issue> issues = new ArrayList<Issue>();
             if ( includingPropertySpecific )
@@ -447,9 +451,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     private List<Issue> detectWaivedIssues( QueryService queryService, Assignment assignment,
                                             boolean includingPropertySpecific ) {
         List<Issue> issues = new ArrayList<Issue>( detectWaivedIssues( queryService,
-                                                                       assignment.getPart(),
-                                                                       null,
-                                                                       includingPropertySpecific ) );
+                assignment.getPart(),
+                null,
+                includingPropertySpecific ) );
 
         Actor actor = assignment.getActor();
         if ( actor != null && !actor.isUnknown() )
@@ -590,7 +594,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 Part sourcePart = (Part) flow.getSource();
                 Part targetPart = (Part) flow.getTarget();
                 if ( queryService.isExecutedBy( sourcePart, fromEntity ) && queryService.isExecutedBy( targetPart,
-                                                                                                       toEntity ) )
+                        toEntity ) )
                     entityFlows.add( flow );
             }
         }
@@ -622,11 +626,60 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
+    public List<RequirementRelationship> findRequirementRelationships(
+            Phase.Timing timing,
+            Event event,
+            QueryService queryService ) {
+        List<RequirementRelationship> rels = new ArrayList<RequirementRelationship>();
+        List<Organization> allOrgs = queryService.listActualEntities( Organization.class );
+        for ( Organization fromOrg : allOrgs ) {
+            for ( Organization toOrg : allOrgs ) {
+                if ( !fromOrg.isUnknown() && !toOrg.isUnknown() && !fromOrg.equals( toOrg ) ) {
+                    RequirementRelationship rel = findRequirementRelationship(
+                            queryService,
+                            fromOrg,
+                            toOrg,
+                            timing,
+                            event );
+                    if ( !rel.isEmpty() ) rels.add( rel );
+                }
+            }
+        }
+        return rels;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public RequirementRelationship findRequirementRelationship(
+            QueryService queryService,
+            final Organization fromOrg,
+            final Organization toOrg,
+            final Phase.Timing timing,
+            final Event event ) {
+        final Place planLocale = queryService.getPlan().getLocale();
+        List<Requirement> requirements = (List<Requirement>) CollectionUtils.select(
+                queryService.list( Requirement.class ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Requirement req = (Requirement) object;
+                        return req.appliesTo( timing )
+                                && req.appliesTo( event, planLocale )
+                                && req.getCommitterSpec().appliesTo( fromOrg, planLocale )
+                                && req.getBeneficiarySpec().appliesTo( toOrg, planLocale );
+                    }
+                }
+        );
+        RequirementRelationship rel = new RequirementRelationship( fromOrg, toOrg, timing, event );
+        rel.setRequirements( requirements );
+        return rel;
+    }
+
+    @Override
     public List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity,
                                                              QueryService queryService ) {
         List<ModelEntity> otherEntities = new ArrayList<ModelEntity>( queryService.findTaskedEntities( segment,
-                                                                                                       entity.getClass(),
-                                                                                                       entity.getKind() ) );
+                entity.getClass(),
+                entity.getKind() ) );
         otherEntities.remove( entity );
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
         for ( ModelEntity otherEntity : otherEntities ) {
@@ -798,24 +851,24 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                 someMediaDeployedFilter( availabilitcoincideIfRequired, mediaUsed, locale );
                         if ( mediaDeployed.isEmpty() )
                             remediations.add( "make sure that the agents that are available"
-                                              + " to each other also have access to required transmission media" );
+                                    + " to each other also have access to required transmission media" );
                         else {
                             List<Commitment> reachable =
                                     reachableFilter( availabilitcoincideIfRequired, mediaUsed, locale );
                             if ( reachable.isEmpty() )
                                 remediations.add( "make sure that the agents that are available"
-                                                  + " to each other also have known contact information" );
+                                        + " to each other also have known contact information" );
                             else {
                                 List<Commitment> agentsQualified =
                                         agentsQualifiedFilter( reachable, mediaUsed, locale );
                                 if ( agentsQualified.isEmpty() ) {
                                     remediations.add( "make sure that agents that are available to each other"
-                                                      + " and reachable are also qualified to use the transmission media" );
+                                            + " and reachable are also qualified to use the transmission media" );
                                     remediations.add( "add channels with transmission media requiring no qualification" );
                                 } else if ( commonLanguageFilter( plan, commitments ).isEmpty() ) {
                                     remediations.add( "make sure that agents that are available to each other, "
-                                                      + "reachable and qualified to use the transmission media "
-                                                      + "can also speak a common language" );
+                                            + "reachable and qualified to use the transmission media "
+                                            + "can also speak a common language" );
                                 }
                             }
                         }
@@ -876,7 +929,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             public boolean evaluate( Object object ) {
                 TransmissionMedium medium = (TransmissionMedium) object;
                 return commitment.getCommitter().getOrganization().isMediumDeployed( medium, planLocale )
-                       && commitment.getBeneficiary().getOrganization().isMediumDeployed( medium, planLocale );
+                        && commitment.getBeneficiary().getOrganization().isMediumDeployed( medium, planLocale );
             }
         } );
     }
@@ -927,9 +980,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             public boolean evaluate( Object object ) {
                 TransmissionMedium medium = (TransmissionMedium) object;
                 return medium.getQualification() == null
-                       || commitment.getCommitter().getActor().narrowsOrEquals( medium.getQualification(), planLocale )
-                          && commitment.getBeneficiary().getActor().narrowsOrEquals( medium.getQualification(),
-                                                                                     planLocale );
+                        || commitment.getCommitter().getActor().narrowsOrEquals( medium.getQualification(), planLocale )
+                        && commitment.getBeneficiary().getActor().narrowsOrEquals( medium.getQualification(),
+                        planLocale );
             }
         } );
     }
@@ -949,8 +1002,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     public String realizability( Commitment commitment, QueryService queryService ) {
         List<String> problems = findRealizabilityProblems( queryService.getPlan(), commitment );
         return problems.isEmpty() ?
-               "Yes" :
-               "No: " + StringUtils.capitalize( ChannelsUtils.listToString( problems, ", and " ) );
+                "Yes" :
+                "No: " + StringUtils.capitalize( ChannelsUtils.listToString( problems, ", and " ) );
     }
 
     @Override
@@ -988,7 +1041,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-     public int unwaivedIssuesCount( Requirement requirement, QueryService queryService ) {
+    public int unwaivedIssuesCount( Requirement requirement, QueryService queryService ) {
         return detectUnwaivedIssues( queryService, requirement, null, true ).size();
     }
 
@@ -996,6 +1049,25 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     public int allIssuesCount( Requirement requirement, QueryService queryService ) {
         return detectAllIssues( queryService, requirement, null, true ).size();
     }
+
+    @Override
+    public int commitmentsCount( Requirement requirement, QueryService queryService ) {
+        return Commitments.all( queryService).satisfying( requirement ).size();
+    }
+
+    @Override
+    public Requirement.Satisfaction committerSatisfaction( Requirement requirement, QueryService queryService ) {
+        Organization org = requirement.getCommitterSpec().getOrganization();
+        assert org.isActual();
+        return requirement.satisfaction( org, false, queryService  );
+    }
+
+    @Override
+    public Requirement.Satisfaction beneficiarySatisfaction( Requirement requirement, QueryService queryService ) {
+        Organization org = requirement.getBeneficiarySpec().getOrganization();
+         assert org.isActual();
+         return requirement.satisfaction( org, true, queryService  );
+     }
 
 
     @Override

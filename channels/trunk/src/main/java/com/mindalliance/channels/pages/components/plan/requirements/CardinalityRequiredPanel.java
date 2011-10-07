@@ -42,9 +42,9 @@ public class CardinalityRequiredPanel extends AbstractCommandablePanel {
     }
 
     private void adjustFields() {
-        minCountField.setEnabled(  isLockedByUser( getRequirement() ) );
-        safeCountField.setEnabled(  isLockedByUser( getRequirement() ) );
-        maxCountField.setEnabled(  isLockedByUser( getRequirement() ) );
+        minCountField.setEnabled( isLockedByUser( getRequirement() ) );
+        safeCountField.setEnabled( isLockedByUser( getRequirement() ) );
+        maxCountField.setEnabled( isLockedByUser( getRequirement() ) );
     }
 
     private void updateFields( AjaxRequestTarget target ) {
@@ -104,7 +104,7 @@ public class CardinalityRequiredPanel extends AbstractCommandablePanel {
 
     public void setMinCount( String val ) {
         try {
-            int minCount = Integer.parseInt( val );
+            int minCount = ( val == null || val.trim().isEmpty() ) ? 0 : Integer.parseInt( val );
             doCommand( new UpdatePlanObject(
                     getUsername(),
                     getRequirement(),
@@ -121,7 +121,7 @@ public class CardinalityRequiredPanel extends AbstractCommandablePanel {
 
     public void setSafeCount( String val ) {
         try {
-            Integer safeCount = val.trim().isEmpty() ? null : Integer.parseInt( val );
+            Integer safeCount = ( val == null || val.trim().isEmpty() ) ? 0 : Integer.parseInt( val );
             doCommand( new UpdatePlanObject(
                     getUsername(),
                     getRequirement(),
@@ -132,20 +132,20 @@ public class CardinalityRequiredPanel extends AbstractCommandablePanel {
     }
 
     public String getMaxCount() {
-         Integer maxCount = getCardinality().getMaxCount();
-         return maxCount == null ? "" : Integer.toString( maxCount );
-     }
+        Integer maxCount = getCardinality().getMaxCount();
+        return maxCount == null ? "" : Integer.toString( maxCount );
+    }
 
-     public void setMaxCount( String val ) {
-         try {
-             Integer maxCount = val.trim().isEmpty() ? null : Integer.parseInt( val );
-             doCommand( new UpdatePlanObject(
-                     getUsername(),
-                     getRequirement(),
-                     cardinalityProperty + ".maxCount", maxCount ) );
-         } catch ( NumberFormatException e ) {
-             // do nothing
-         }
+    public void setMaxCount( String val ) {
+        try {
+            Integer maxCount = ( val == null || val.trim().isEmpty() ) ? null : Integer.parseInt( val );
+            doCommand( new UpdatePlanObject(
+                    getUsername(),
+                    getRequirement(),
+                    cardinalityProperty + ".maxCount", maxCount ) );
+        } catch ( NumberFormatException e ) {
+            // do nothing
+        }
 
     }
 

@@ -137,7 +137,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
                 String sectionName = makeSectionName( item.getModelObject() );
                 Label sectionNameLabel = new Label(
                         "sectionName",
-                        sectionName);
+                        sectionName );
                 link.add( sectionNameLabel );
                 item.add( link );
                 if ( item.getModelObject().equals( selectedSection ) ) {
@@ -174,7 +174,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
     private void addSection() {
         Requirement requirement = getRequirement();
         if ( selectedSection.equals( INFO ) ) {
-            sectionPanel = new InfoRequiredPanel( "reqSection", new Model<Requirement>( requirement ));
+            sectionPanel = new InfoRequiredPanel( "reqSection", new Model<Requirement>( requirement ) );
         } else if ( selectedSection.equals( SENDERS ) ) {
             sectionPanel = new AssignmentSpecPanel(
                     "reqSection",
@@ -216,10 +216,8 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
     }
 
     public void setDescription( String val ) {
-        if ( val != null ) {
-            String description = val.trim();
-            doCommand( new UpdatePlanObject( getUsername(), getRequirement(), "description", description ) );
-        }
+        String description = val == null ? "" : val.trim();
+        doCommand( new UpdatePlanObject( getUsername(), getRequirement(), "description", description ) );
     }
 
     private Requirement getRequirement() {

@@ -19,6 +19,7 @@ import com.mindalliance.channels.pages.png.FlowMapPage;
 import com.mindalliance.channels.pages.png.HierarchyPage;
 import com.mindalliance.channels.pages.png.PlanMapPage;
 import com.mindalliance.channels.pages.png.ProceduresPage;
+import com.mindalliance.channels.pages.png.RequiredNetworkingPage;
 import com.mindalliance.channels.pages.procedures.AssignmentReportPage;
 import com.mindalliance.channels.pages.procedures.CommitmentReportPage;
 import com.mindalliance.channels.pages.procedures.ProcedureMapPage;
@@ -180,6 +181,7 @@ public class Channels extends WebApplication
         mount( new QueryStringUrlCodingStrategy( "essential.png", FailureImpactsPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "dissemination.png", DisseminationPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "procedures.png", ProceduresPage.class ) );
+        mount( new QueryStringUrlCodingStrategy( "required.png", RequiredNetworkingPage.class ) );
         mount( new QueryStringUrlCodingStrategy( "home", UserPage.class ) );
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );

@@ -18,6 +18,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +35,13 @@ public class Commitments implements Serializable, Iterable<Commitment> {
 
     public Commitments() {
     }
+
+    public static Commitments all( QueryService queryService ) {
+        Commitments allCommitments = new Commitments( queryService.getPlan().getLocale() );
+        allCommitments.addAll( queryService.findAllCommitments() );
+        return allCommitments;
+    }
+
 
     public Commitments( QueryService queryService, Specable profile, Assignments assignments ) {
         planLocale = queryService.getPlan().getLocale();
@@ -124,10 +132,27 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         }
     }
 
+    public void addAll( List<Commitment> others ) {
+         for ( Commitment commitment : others ) {
+             commitments.add( commitment );
+         }
+     }
+
     @Override
     public Iterator<Commitment> iterator() {
         return commitments.iterator();
     }
 
+    public boolean isEmpty() {
+        return commitments.isEmpty();
+    }
+
+    public int size() {
+        return commitments.size();
+    }
+
+    public List<Commitment> toList() {
+        return new ArrayList<Commitment>( commitments );
+    }
 }
 

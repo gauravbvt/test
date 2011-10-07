@@ -749,6 +749,15 @@ public abstract class DefaultQueryService implements QueryService {
         return results;
     }
 
+    @Override
+    public List<Commitment> findAllCommitments() {
+        List<Commitment> allCommitments = new ArrayList<Commitment>(  );
+        for ( Flow flow : findAllFlows() ) {
+            allCommitments.addAll( findAllCommitments( flow ) );
+        }
+        return allCommitments;
+    }
+
 
     @Override
     public List<Commitment> findAllCommitments( Flow flow ) {

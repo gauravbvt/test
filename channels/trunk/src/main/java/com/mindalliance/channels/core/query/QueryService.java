@@ -1032,6 +1032,12 @@ public interface QueryService {
     List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns, Boolean includeProhibited );
 
     /**
+     * Find all commitments in the plan.
+     * @return a list of commitments
+     */
+    List<Commitment> findAllCommitments();
+
+    /**
      * Find all commitments to others implied by a sharing flow.
      *
      * @param flow a flow

@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
@@ -66,7 +67,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
         addButtons();
     }
 
-    private void addRequirementsTable() {
+    private void  addRequirementsTable() {
         requirementsTable = new RequirementsTable(
                 "requirements",
                 new PropertyModel<List<Requirement>>( this, "requirements" ),
@@ -199,12 +200,12 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
      */
     private class RequirementsTable extends AbstractTablePanel<Requirement> {
 
-        private final PropertyModel<List<Requirement>> requirementsModel;
+        private final IModel<List<Requirement>> requirementsModel;
         private final Filterable filterable;
 
         private RequirementsTable(
                 String id,
-                PropertyModel<List<Requirement>> requirementsModel,
+                IModel<List<Requirement>> requirementsModel,
                 int pageSize,
                 Filterable filterable ) {
             super( id, pageSize );

@@ -141,6 +141,18 @@ public class Requirement extends ModelObject implements Countable {
         return sb.toString();
     }
 
+    public Requirement transientCopy() {
+        Requirement copy = new Requirement( getName() );
+        copy.setDescription( getDescription() );
+        copy.setId( getId() ); // requirement must never be persisted!
+        copy.setInformation( information );
+        copy.setInfoTags( Tag.copy( infoTags ) );
+        copy.setCardinality( cardinality.copy() );
+        copy.setCommitterSpec( committerSpec.copy() );
+        copy.setBeneficiarySpec( beneficiarySpec.copy() );
+        return copy;
+    }
+
     /**
      * Whether two resource specs are compatible.
      *
@@ -186,7 +198,7 @@ public class Requirement extends ModelObject implements Countable {
                 Satisfaction sourcesCountSatisfaction = getSourcesCountSatisfaction( groupedCommitments );
                 // return minimum satisfaction
                 return agentCountSatisfaction.compareTo( sourcesCountSatisfaction ) <= 0 ?
-                           agentCountSatisfaction
+                        agentCountSatisfaction
                         : sourcesCountSatisfaction;
 
             } else {
@@ -197,19 +209,19 @@ public class Requirement extends ModelObject implements Countable {
     }
 
     private Map<Actor, List<Commitment>> groupByActor( Commitments commitments, boolean asBeneficiary ) {
-        Map<Actor,List<Commitment>> groups = new HashMap<Actor, List<Commitment>>(  );
-         for ( Commitment commitment : commitments ) {
-             Actor actor = asBeneficiary
-                     ? commitment.getBeneficiary().getActor()
-                     : commitment.getCommitter().getActor();
-             List<Commitment> list = groups.get( actor );
-             if ( list == null ) {
-                 list = new ArrayList<Commitment>();
-                 groups.put( actor, list );
-             }
-             list.add( commitment );
-         }
-         return groups;
+        Map<Actor, List<Commitment>> groups = new HashMap<Actor, List<Commitment>>();
+        for ( Commitment commitment : commitments ) {
+            Actor actor = asBeneficiary
+                    ? commitment.getBeneficiary().getActor()
+                    : commitment.getCommitter().getActor();
+            List<Commitment> list = groups.get( actor );
+            if ( list == null ) {
+                list = new ArrayList<Commitment>();
+                groups.put( actor, list );
+            }
+            list.add( commitment );
+        }
+        return groups;
     }
 
     private Satisfaction getSourcesCountSatisfaction( Map<Actor, List<Commitment>> groupedCommitments ) {
@@ -241,7 +253,7 @@ public class Requirement extends ModelObject implements Countable {
             minCount = Math.min( minCount, list.size() );
         }
         return minCount;
-     }
+    }
 
     private int getMaxSourceCount( Map<Actor, List<Commitment>> groupedCommitments ) {
         int maxCount = 0;
@@ -272,6 +284,15 @@ public class Requirement extends ModelObject implements Countable {
         );
     }
 
+    public boolean appliesTo( Phase.Timing timing ) {
+        return timing == null || beneficiarySpec.getTiming() == timing;
+    }
+
+    public boolean appliesTo( Event event, Place planLocale ) {
+        return event == null || event.narrowsOrEquals( beneficiarySpec.getEvent(), planLocale );
+    }
+
+
     private boolean matchesOrganization(
             Organization organization,
             boolean asBeneficiary,
@@ -289,20 +310,20 @@ public class Requirement extends ModelObject implements Countable {
     }
 
     /**
-      * Whether a commitment satisfies this requirement.
-      *
-      * @param commitment a commitment
-      * @param planLocale the plan's locale
-      * @return a boolean
-      */
-     public boolean satisfiedBy( Commitment commitment, Place planLocale ) {
-         ResourceSpec cSpec = commitment.getCommitter().getResourceSpec();
-         ResourceSpec bSpec = commitment.getBeneficiary().getResourceSpec();
-         Flow flow = commitment.getSharing();
-         return matchesFlow( flow, planLocale )
-                 && cSpec.narrowsOrEquals( committerSpec.getResourceSpec(), planLocale )
-                 && bSpec.narrowsOrEquals( beneficiarySpec.getResourceSpec(), planLocale );
-     }
+     * Whether a commitment satisfies this requirement.
+     *
+     * @param commitment a commitment
+     * @param planLocale the plan's locale
+     * @return a boolean
+     */
+    public boolean satisfiedBy( Commitment commitment, Place planLocale ) {
+        ResourceSpec cSpec = commitment.getCommitter().getResourceSpec();
+        ResourceSpec bSpec = commitment.getBeneficiary().getResourceSpec();
+        Flow flow = commitment.getSharing();
+        return matchesFlow( flow, planLocale )
+                && cSpec.narrowsOrEquals( committerSpec.getResourceSpec(), planLocale )
+                && bSpec.narrowsOrEquals( beneficiarySpec.getResourceSpec(), planLocale );
+    }
 
     public Map<String, Object> mapState() {
         Map<String, Object> state = super.mapState();
@@ -322,13 +343,27 @@ public class Requirement extends ModelObject implements Countable {
         card.initFromMap( (Map<String, Object>) state.get( "cardinality" ) );
         setCardinality( card );
         AssignmentSpec cSpec = new AssignmentSpec();
-        cSpec.initFromMap( (Map<String, Object> )state.get( "committerSpec" ), queryService );
+        cSpec.initFromMap( (Map<String, Object>) state.get( "committerSpec" ), queryService );
         setCommitterSpec( cSpec );
         AssignmentSpec bSpec = new AssignmentSpec();
-        bSpec.initFromMap( (Map<String, Object> )state.get( "beneficiarySpec" ), queryService );
+        bSpec.initFromMap( (Map<String, Object>) state.get( "beneficiarySpec" ), queryService );
         setCommitterSpec( bSpec );
     }
 
+    public Organization getCommitterOrganization() {
+        return committerSpec.getOrganization();
+    }
+
+    public void setCommitterOrganization( Organization organization ) {
+        committerSpec.setOrganization( organization );
+    }
+
+    public Organization getBeneficiaryOrganization() {
+        return beneficiarySpec.getOrganization();
+    }
+    public void setBeneficiaryOrganization( Organization organization ) {
+        beneficiarySpec.setOrganization( organization );
+    }
 
     /**
      * Required count.
@@ -357,11 +392,11 @@ public class Requirement extends ModelObject implements Countable {
             return minCount;
         }
 
-        public void setMinCount( Integer minCount ) {
-            int val = Math.max( 0, minCount );
-            if ( maxCount != null ) val = Math.min( val, maxCount );
-            this.minCount = val;
-            safeCount = Math.max( this.minCount, safeCount );
+        public void setMinCount( int minCount ) {
+                int val = Math.max( 0, minCount );
+                if ( maxCount != null ) val = Math.min( val, maxCount );
+                this.minCount = val;
+                safeCount = Math.max( this.minCount, safeCount );
         }
 
         public Integer getMaxCount() {
@@ -369,8 +404,12 @@ public class Requirement extends ModelObject implements Countable {
         }
 
         public void setMaxCount( Integer maxCount ) {
-            this.maxCount = Math.max( minCount, Math.max( 0, maxCount ) );
-            safeCount = Math.min( this.maxCount, safeCount );
+            if ( maxCount != null ) {
+                this.maxCount = Math.max( minCount, Math.max( 0, maxCount ) );
+                safeCount = Math.min( this.maxCount, safeCount );
+            } else {
+                this.maxCount = null;
+            }
         }
 
         public void unsetMaxCount() {
@@ -406,9 +445,37 @@ public class Requirement extends ModelObject implements Countable {
         }
 
         public void initFromMap( Map<String, Object> state ) {
-            setMinCount( (Integer)state.get( "minCount" ) );
+            setMinCount( (Integer) state.get( "minCount" ) );
             setMaxCount( (Integer) state.get( "maxCount" ) );
             setSafeCount( (Integer) state.get( "safeCount" ) );
+        }
+
+        @Override
+        public boolean equals( Object object ) {
+            if ( object instanceof Cardinality ) {
+                Cardinality other = (Cardinality) object;
+                if ( minCount != other.getMinCount() ) return false;
+                if ( safeCount != other.getSafeCount() ) return false;
+                return ( maxCount == null ? 0 : maxCount ) == ( other.getMaxCount() == null ? 0 : other.getMaxCount() );
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            int result = minCount;
+            result = 31 * result + safeCount;
+            result = 31 * result + ( maxCount == null ? 0 : maxCount );
+            return result;
+        }
+
+        public Cardinality copy() {
+            Cardinality copy = new Cardinality();
+            copy.setMinCount( minCount );
+            copy.setSafeCount( safeCount );
+            if ( maxCount != null ) copy.setMaxCount( maxCount );
+            return copy;
         }
     }
 
@@ -529,7 +596,7 @@ public class Requirement extends ModelObject implements Countable {
         }
 
         public Map<String, Object> mapState() {
-            Map<String,Object>state = new HashMap<String, Object>(  );
+            Map<String, Object> state = new HashMap<String, Object>();
             state.put( "taskName", getTaskName() );
             state.put( "requiredTags", Tag.tagsToString( getTaskTags() ) );
             state.put( "cardinality", getCardinality().mapState() );
@@ -543,13 +610,13 @@ public class Requirement extends ModelObject implements Countable {
 
         @SuppressWarnings( "unchecked" )
         public void initFromMap( Map<String, Object> state, QueryService queryService ) {
-           setTaskName( (String)state.get( "taskName" ) );
+            setTaskName( (String) state.get( "taskName" ) );
             setTaskTags( Tag.tagsFromString( (String) state.get( "requiredTags" ) ) );
             Cardinality card = new Cardinality();
-            card.initFromMap( (Map<String,Object>)state.get( "cardinality" ));
+            card.initFromMap( (Map<String, Object>) state.get( "cardinality" ) );
             setCardinality( card );
             ResourceSpec spec = new ResourceSpec();
-            spec.initFromMap( (Map<String,Object>)state.get( "resourceSpec" ), queryService );
+            spec.initFromMap( (Map<String, Object>) state.get( "resourceSpec" ), queryService );
         }
 
         public Actor getActor() {
@@ -577,13 +644,46 @@ public class Requirement extends ModelObject implements Countable {
         }
 
         public Organization getOrganization() {
-             return resourceSpec.getOrganization();
-         }
+            return resourceSpec.getOrganization();
+        }
 
-         public void setOrganization( Organization organization ) {
-             resourceSpec.setOrganization( organization );
-         }
+        public void setOrganization( Organization organization ) {
+            resourceSpec.setOrganization( organization );
+        }
 
+        @Override
+        public boolean equals( Object object ) {
+            if ( object instanceof AssignmentSpec ) {
+                AssignmentSpec other = (AssignmentSpec) object;
+                return Phase.Timing.areEqualOrNull( timing, other.getTiming() )
+                        && ModelObject.areEqualOrNull( event, other.getEvent() )
+                        && Matcher.same( taskName, other.getTaskName() )
+                        && Matcher.same( Tag.tagsToString( taskTags ), Tag.tagsToString( other.getTaskTags() ) )
+                        && resourceSpec.equals( other.getResourceSpec() )
+                        && cardinality.equals( other.getCardinality() );
+            } else {
+                return false;
+            }
+        }
 
+        @Override
+        public int hashCode() {
+            int result = taskName.hashCode();
+            result = result * 31 + Tag.tagsToString( taskTags ).hashCode();
+            if ( event != null ) result = result * 31 + event.hashCode();
+            if ( timing != null ) result = result * 31 + timing.hashCode();
+            result = result * 31 + cardinality.hashCode();
+            result = result * 31 + resourceSpec.hashCode();
+            return result;
+        }
+
+        public AssignmentSpec copy() {
+            AssignmentSpec copy = new AssignmentSpec();
+            copy.setTaskName( taskName );
+            copy.setTaskTags( Tag.copy( taskTags ) );
+            copy.setCardinality( cardinality.copy() );
+            copy.setResourceSpec( new ResourceSpec( resourceSpec ) );
+            return copy;
+        }
     }
 }
