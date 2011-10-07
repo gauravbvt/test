@@ -83,6 +83,9 @@ public class MAV0188_EndEventUnnamed
 				Thread.sleep(2000);
 				// Assertion : Verify that 'Can end event unnamed' is added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathOperationalNonOperational")));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("taskEnd"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -154,6 +157,7 @@ public class MAV0188_EndEventUnnamed
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
     	} 
     	catch (Exception e) {
+    		e.printStackTrace();
     		if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
     			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
     					e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

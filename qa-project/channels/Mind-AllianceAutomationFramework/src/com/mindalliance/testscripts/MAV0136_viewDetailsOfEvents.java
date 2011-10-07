@@ -33,7 +33,7 @@ public class MAV0136_viewDetailsOfEvents
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(2000);  
 				
 				// Clicks on 'About plan' link under show pop up menu option
 				GlobalVariables.iStepNo++ ;
@@ -45,7 +45,7 @@ public class MAV0136_viewDetailsOfEvents
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 
 				// Clicks on 'All events' link under show pop up menu option on About plan window 
 				GlobalVariables.iStepNo++;
@@ -67,11 +67,11 @@ public class MAV0136_viewDetailsOfEvents
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Event"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -92,7 +92,7 @@ public class MAV0136_viewDetailsOfEvents
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Click on details under show pop up menu
 				GlobalVariables.iStepNo++;
@@ -104,7 +104,7 @@ public class MAV0136_viewDetailsOfEvents
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Assertion: Verify that "Event details" page loaded 
 			    GlobalVariables.iStepNo++;
@@ -125,8 +125,22 @@ public class MAV0136_viewDetailsOfEvents
 				}
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				
+				Thread.sleep(2000);
+				// Close Event Window
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Close AboutPlan Window
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
 			    // Call logout()
 			    GlobalVariables.iStepNo++ ;
 			    GlobalVariables.sDescription = "Logout is successful";
@@ -135,6 +149,10 @@ public class MAV0136_viewDetailsOfEvents
 			    LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
 			    LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			    System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			

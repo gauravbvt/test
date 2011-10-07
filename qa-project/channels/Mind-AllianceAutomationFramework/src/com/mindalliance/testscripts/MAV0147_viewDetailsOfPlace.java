@@ -118,13 +118,16 @@ public class MAV0147_viewDetailsOfPlace
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Assertion: Verify that "Places details" page loaded 
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Places details' page gets loaded";
-			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseAssertionDetails")));
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
+			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("floating"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				if (GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("details"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

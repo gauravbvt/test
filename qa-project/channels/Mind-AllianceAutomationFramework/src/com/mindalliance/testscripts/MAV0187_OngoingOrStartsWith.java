@@ -67,9 +67,12 @@ public class MAV0187_OngoingOrStartsWith
 				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:startsWithSegment")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				// Assertion : Verify that 'Ongoing or Starts with' is added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathOperationalNonOperational")));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("taskStart"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -95,7 +98,9 @@ public class MAV0187_OngoingOrStartsWith
 				Thread.sleep(2000);
 				// Assertion : Verify that 'Ongoing or Starts with' is removed
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathOperationalNonOperational")));
-				System.out.println(GlobalVariables.oElement.getText());
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				if(GlobalVariables.oElement.getText().equals(".")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
