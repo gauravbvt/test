@@ -148,7 +148,7 @@ public class MAC0052_RedoSetTaskFromCopy {
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Click on hide details from action pop-menu bar
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("showDetails"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("Details"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

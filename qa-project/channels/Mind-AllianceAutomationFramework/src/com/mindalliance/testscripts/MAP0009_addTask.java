@@ -23,6 +23,7 @@ public class MAP0009_addTask
 {
 	public MAP0009_addTask() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "MAP0009_addTask";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -48,7 +49,7 @@ public class MAP0009_addTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Click on 'Information Sharing Model' link
 					GlobalVariables.iStepNo++ ;
@@ -60,7 +61,7 @@ public class MAP0009_addTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(3000);
 					
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++;
@@ -72,7 +73,7 @@ public class MAP0009_addTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(3000);	
 					
 					// Details of Segment
 					GlobalVariables.iStepNo++;
@@ -89,7 +90,7 @@ public class MAP0009_addTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(3000);	
 					
 					// Select the Segment from 'Select Plan Segment' drop down, located on the top right corner
 					GlobalVariables.iStepNo++ ;
@@ -109,7 +110,7 @@ public class MAP0009_addTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Stretch Up Task Details
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
@@ -126,12 +127,15 @@ public class MAP0009_addTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Add details for New Task
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Add Details for Task";
 					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).clear();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is Task 121"));
 					// WebElement Synchronization
