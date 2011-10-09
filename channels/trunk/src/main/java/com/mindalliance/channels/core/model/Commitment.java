@@ -91,4 +91,14 @@ public class Commitment implements Serializable {
     public boolean isProhibited() {
         return sharing.isProhibited();
     }
+
+    public boolean isInSituation( Phase.Timing timing, Event event, Place planLocale ) {
+        EventPhase eventPhase = getEventPhase();
+        return !( timing != null && eventPhase.getPhase().getTiming() != timing )
+                && !( event != null && !eventPhase.getEvent().narrowsOrEquals( event, planLocale ) );
+    }
+
+    public EventPhase getEventPhase() {
+        return getSharing().getSegment().getEventPhase();
+    }
 }

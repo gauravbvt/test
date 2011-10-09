@@ -74,6 +74,7 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
     private Label appliedRequirementsLabel;
     private AppliedRequirementsTable appliedRequirementsTable;
     private WebMarkupContainer commitmentsContainer;
+    private RequiredNetworkingPanel requiredNetworkingPanel;
 
 
     public PlanRequiredNetworkingPanel( String id, Model<Plan> planModel, Set<Long> expansions ) {
@@ -97,13 +98,21 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
         );
         timingChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                selectedAppliedRequirement = null;
-                selectedOrganization = null;
-                selectedRequirementRel = null;
-                refreshAppliedRequirements( target );
+                refreshAll( target );
             }
         } );
         add( timingChoices );
+    }
+
+    private void refreshAll( AjaxRequestTarget target ) {
+        selectedAppliedRequirement = null;
+        selectedOrganization = null;
+        selectedRequirementRel = null;
+        refreshAppliedRequirements( target );
+        addRequiredNetworkPanel();
+        addRequiredCommitments();
+        target.addComponent( commitmentsContainer );
+        target.addComponent( requiredNetworkingPanel );
     }
 
     private List<String> getTimingChoices() {
@@ -124,7 +133,7 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
         );
         eventChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                refreshAppliedRequirements( target );
+                refreshAll( target );
             }
         } );
         add( eventChoices );
@@ -152,7 +161,7 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
     }
 
     private void addRequiredNetworkPanel() {
-        RequiredNetworkingPanel requiredNetworkingPanel = new RequiredNetworkingPanel(
+        requiredNetworkingPanel = new RequiredNetworkingPanel(
                 "reqNetwork",
                 new Model<Phase.Timing>( selectedTiming ),
                 new Model<Event>( selectedEvent ),
@@ -192,9 +201,8 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
             sb.append( " with " );
             sb.append( selectedRequirementRel.getToIdentifiable( getQueryService() ).getName() );
         } else if ( selectedOrganization != null ) {
-            sb.append( " by " );
+            sb.append( " involving " );
             sb.append( selectedOrganization.getName() );
-            sb.append( " with other organizations" );
         }
         sb.append( '.' );
         return sb.toString();
@@ -287,7 +295,9 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
 
     public List<Commitment> getCommitments() {
         if ( selectedAppliedRequirement != null ) {
-            return Commitments.all( getQueryService() ).satisfying( selectedAppliedRequirement ).toList();
+            return Commitments.all( getQueryService() )
+                    .inSituation( selectedTiming, selectedEvent, getQueryService().getPlan().getLocale() )
+                    .satisfying( selectedAppliedRequirement ).toList();
         } else {
             return new ArrayList<Commitment>();
         }
@@ -330,7 +340,6 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
                 selectedOrganization = (Organization) change.getSubject( getQueryService() );
                 selectedRequirementRel = null;
             } else if ( change.isForInstanceOf( RequirementRelationship.class ) ) {
-                // TODO - Must recreate APPLIED requirement - this gets non-applied requirement
                 selectedRequirementRel = (RequirementRelationship) change.getSubject( getQueryService() );
                 selectedOrganization = null;
             } else if ( change.isForInstanceOf( Plan.class ) ) {
@@ -374,6 +383,8 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
             if ( change.isForInstanceOf( Organization.class )
                     || change.isForInstanceOf( RequirementRelationship.class )
                     || change.isForInstanceOf( Plan.class ) ) {
+                addRequiredNetworkPanel();
+                target.addComponent( requiredNetworkingPanel );
                 refreshAppliedRequirements( target );
             } else {
                 super.updateWith( target, change, updated );
@@ -435,8 +446,18 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
                     "beneficiarySpec.event.name",
                     EMPTY,
                     filterable ) );
-            columns.add( makeAnalysisColumn( "Commitments", "commitmentsCount", "?" ) );
-            columns.add( makeExpandLinkColumn( "", "", "view", "committerOrganization.id", "beneficiaryOrganization.id" ) );
+            columns.add( makeAnalysisColumn(
+                    "Commitments",
+                    "commitmentsCount",
+                    "?",
+                    selectedTiming,
+                    selectedEvent) );
+            columns.add( makeExpandLinkColumn(
+                    "",
+                    "",
+                    "view",
+                    "committerOrganization.id",
+                    "beneficiaryOrganization.id") );
             List<Requirement> requirements = appliedRequirementsModel.getObject();
             add( new AjaxFallbackDefaultDataTable( "requirements",
                     columns,

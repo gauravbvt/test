@@ -28,14 +28,14 @@ import java.util.List;
 public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organization, RequirementRelationship> {
 
     /**
-      * Font for node labels.
-      */
-     private static final String ORG_FONT = "Arial";
+     * Font for node labels.
+     */
+    private static final String ORG_FONT = "Arial";
 
-     /**
-      * Font size for node labels.
-      */
-     private static final String ORG_FONT_SIZE = "10";
+    /**
+     * Font size for node labels.
+     */
+    private static final String ORG_FONT_SIZE = "10";
 
 
     private final Organization selectedOrganization;
@@ -68,14 +68,14 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
 
             @Override
             public String getVertexURL( Organization org ) {
-                Object[] args = { 0, org.getId() };
+                Object[] args = {0, org.getId()};
                 return MessageFormat.format( VERTEX_URL_FORMAT, args );
             }
 
             @Override
             public String getEdgeURL( RequirementRelationship reqRel ) {
-               // Plan id = 0 for now since there is only one plan
-                Object[] args = { 0, reqRel.getId() };
+                // Plan id = 0 for now since there is only one plan
+                Object[] args = {0, reqRel.getId()};
                 return MessageFormat.format( EDGE_URL_FORMAT, args );
             }
         };
@@ -139,27 +139,26 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
         @Override
         public List<DOTAttribute> getVertexAttributes( QueryService queryService, Organization vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-             list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), vertex ) ) );
-             list.add( new DOTAttribute( "labelloc", "b" ) );
-             if ( highlighted ) {
-                 list.add( new DOTAttribute( "shape", "box" ) );
-                 list.add( new DOTAttribute( "style", "solid" ) );
-                 list.add( new DOTAttribute( "color", "gray" ) );
-             } else
-                 list.add( new DOTAttribute( "shape", "none" ) );
-             list.add( new DOTAttribute( "fontsize", ORG_FONT_SIZE ) );
-             list.add( new DOTAttribute( "fontname", ORG_FONT ) );
-             if ( !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( queryService,
-                                                                             vertex,
-                                                                             Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
-             {
-                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                 list.add( new DOTAttribute( "tooltip",
-                                             sanitize( getAnalyst().getIssuesSummary( queryService,
-                                                                                      vertex,
-                                                                                      Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
-             }
-             return list;
+            list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), vertex ) ) );
+            list.add( new DOTAttribute( "labelloc", "b" ) );
+            if ( highlighted ) {
+                list.add( new DOTAttribute( "shape", "box" ) );
+                list.add( new DOTAttribute( "style", "solid" ) );
+                list.add( new DOTAttribute( "color", "gray" ) );
+            } else
+                list.add( new DOTAttribute( "shape", "none" ) );
+            list.add( new DOTAttribute( "fontsize", ORG_FONT_SIZE ) );
+            list.add( new DOTAttribute( "fontname", ORG_FONT ) );
+            if ( !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( queryService,
+                    vertex,
+                    Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+                list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
+                list.add( new DOTAttribute( "tooltip",
+                        sanitize( getAnalyst().getIssuesSummary( queryService,
+                                vertex,
+                                Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+            }
+            return list;
         }
 
         private String getIcon( ImagingService service, Organization org ) {
@@ -181,22 +180,22 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
         @Override
         public List<DOTAttribute> getEdgeAttributes( QueryService queryService, RequirementRelationship edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-             list.add( new DOTAttribute( "arrowhead", "vee" ) );
-             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
-             list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
-             list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
-             list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
-             list.add( new DOTAttribute( "len", "1.5" ) );
-             list.add( new DOTAttribute( "weight", "2.0" ) );
-             if ( highlighted )
-                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
-             if ( edge.hasUnfulfilledRequirements( queryService ) ) {
-                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                 list.add( new DOTAttribute( "tooltip",
-                                             sanitize( edge.getNonFulfillmentSummary( queryService ) ) ) );
-             }
-             return list;
+            list.add( new DOTAttribute( "arrowhead", "vee" ) );
+            list.add( new DOTAttribute( "arrowsize", "0.75" ) );
+            list.add( new DOTAttribute( "fontname", EDGE_FONT ) );
+            list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
+            list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
+            list.add( new DOTAttribute( "len", "1.5" ) );
+            list.add( new DOTAttribute( "weight", "2.0" ) );
+            if ( highlighted )
+                list.add( new DOTAttribute( "penwidth", "3.0" ) );
+            if ( edge.hasUnfulfilledRequirements( queryService ) ) {
+                list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
+                list.add( new DOTAttribute( "color", COLOR_ERROR ) );
+                list.add( new DOTAttribute( "tooltip",
+                        sanitize( edge.getNonFulfillmentSummary( queryService ) ) ) );
+            }
+            return list;
         }
     }
 }

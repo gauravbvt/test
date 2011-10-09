@@ -544,7 +544,7 @@ public interface Analyst extends CommandListener {
      * @param queryService a query service
      * @return an int
      */
-    int commitmentsCount( Requirement requirement, QueryService queryService);
+    int commitmentsCount( Requirement requirement, Object[] extras, QueryService queryService);
 
     /**
      * The level of satisfaction of a requirement by committer organization.

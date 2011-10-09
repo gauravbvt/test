@@ -10,7 +10,9 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ElementOfInformation;
+import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Specable;
@@ -111,6 +113,16 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         return result;
     }
 
+    public Commitments inSituation( Phase.Timing timing, Event event, Place planLocale ) {
+        Commitments result = new Commitments();
+        for ( Commitment commitment : commitments ) {
+            if ( commitment.isInSituation( timing, event, planLocale ) )
+            result.add(  commitment );
+        }
+        return result;
+     }
+
+
     public Commitments satisfying( Requirement requirement ) {
         Commitments result = new Commitments( planLocale );
         Iterator<Commitment> iterator = iterator();
@@ -154,5 +166,6 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public List<Commitment> toList() {
         return new ArrayList<Commitment>( commitments );
     }
+
 }
 

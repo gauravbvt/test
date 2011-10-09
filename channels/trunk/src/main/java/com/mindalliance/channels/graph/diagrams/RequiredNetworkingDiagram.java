@@ -57,6 +57,11 @@ public class RequiredNetworkingDiagram extends AbstractDiagram<Organization, Req
         graphBuilder.setAnalyst( analyst );
         Graph<Organization, RequirementRelationship> graph = graphBuilder.buildDirectedGraph();
         GraphRenderer<Organization, RequirementRelationship> graphRenderer = diagramFactory.getGraphRenderer();
+        graphRenderer.resetHighlight();
+        if ( selectedOrganization != null )
+            graphRenderer.highlightVertex( selectedOrganization );
+        if ( selectedRequirementRel != null )
+            graphRenderer.highlightEdge( selectedRequirementRel );
         RequiredNetworkingMetaProvider metaProvider = new RequiredNetworkingMetaProvider(
                 selectedOrganization,
                 selectedRequirementRel,

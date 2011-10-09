@@ -188,26 +188,34 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
 
     protected AbstractColumn<T> makeAnalysisColumn( String name,
                                                     final String methodName,
-                                                    final String defaultText ) {
+                                                    final String defaultText,
+                                                    final Object... extras ) {
         return new AbstractColumn<T>( new Model<String>( name ) ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       IModel<T> model ) {
-                String text = "" + callAnalyst( methodName, model.getObject() );
+                String text = "" + callAnalyst( methodName, model.getObject(), extras );
                 String labelText = ( text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
             }
         };
     }
 
-    private Object callAnalyst( String methodName, Object argument ) {
+    private Object callAnalyst( String methodName, Object argument, Object[] extras ) {
         try {
             Analyst delegate = getAnalyst();
-            Class[] argTypes = {argument.getClass(), QueryService.class};
-            Method method = Analyst.class.getMethod( methodName, argTypes );
-            Object[] args = {argument, getQueryService()};
-            return method.invoke( delegate, args );
+            if ( extras.length > 0 ) {
+                Class[] argTypes = {argument.getClass(), extras.getClass(), QueryService.class};
+                Method method = Analyst.class.getMethod( methodName, argTypes );
+                Object[] args = {argument, extras, getQueryService()};
+                return method.invoke( delegate, args );
+            } else {
+                Class[] argTypes = {argument.getClass(), QueryService.class};
+                Method method = Analyst.class.getMethod( methodName, argTypes );
+                Object[] args = {argument, getQueryService()};
+                return method.invoke( delegate, args );
+            }
         } catch ( Exception e ) {
             LOG.warn( "Delegate method invocation failed.", e );
             return "";
@@ -472,7 +480,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 for ( String property : properties ) {
                     payload.put(
                             property,
-                            (Serializable)ChannelsUtils.getProperty(
+                            (Serializable) ChannelsUtils.getProperty(
                                     bean,
                                     property,
                                     null ) );
@@ -649,7 +657,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             super( id );
             AjaxLink link = new AjaxLink<String>( "link", new Model<String>( label ) ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    Change change =  new Change( Change.Type.Expanded, (Identifiable) bean );
+                    Change change = new Change( Change.Type.Expanded, (Identifiable) bean );
                     if ( payload != null ) {
                         for ( String prop : payload.keySet() ) {
                             change.addQualifier( prop, payload.get( prop ) );

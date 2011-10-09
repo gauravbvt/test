@@ -289,7 +289,9 @@ public class Requirement extends ModelObject implements Countable {
     }
 
     public boolean appliesTo( Event event, Place planLocale ) {
-        return event == null || event.narrowsOrEquals( beneficiarySpec.getEvent(), planLocale );
+        return event == null
+                || beneficiarySpec.getEvent() == null
+                || beneficiarySpec.getEvent().narrowsOrEquals( event , planLocale );
     }
 
 
@@ -317,12 +319,14 @@ public class Requirement extends ModelObject implements Countable {
      * @return a boolean
      */
     public boolean satisfiedBy( Commitment commitment, Place planLocale ) {
-        ResourceSpec cSpec = commitment.getCommitter().getResourceSpec();
-        ResourceSpec bSpec = commitment.getBeneficiary().getResourceSpec();
+        ResourceSpec committer = commitment.getCommitter().getResourceSpec();
+        ResourceSpec beneficiary = commitment.getBeneficiary().getResourceSpec();
         Flow flow = commitment.getSharing();
+        EventPhase commitmentEventPhase = commitment.getEventPhase();
         return matchesFlow( flow, planLocale )
-                && cSpec.narrowsOrEquals( committerSpec.getResourceSpec(), planLocale )
-                && bSpec.narrowsOrEquals( beneficiarySpec.getResourceSpec(), planLocale );
+                && beneficiarySpec.appliesTo( commitmentEventPhase, planLocale )
+                && committer.narrowsOrEquals( committerSpec.getResourceSpec(), planLocale )
+                && beneficiary.narrowsOrEquals( beneficiarySpec.getResourceSpec(), planLocale );
     }
 
     public Map<String, Object> mapState() {
@@ -683,7 +687,14 @@ public class Requirement extends ModelObject implements Countable {
             copy.setTaskTags( Tag.copy( taskTags ) );
             copy.setCardinality( cardinality.copy() );
             copy.setResourceSpec( new ResourceSpec( resourceSpec ) );
+            copy.setTiming( timing );
+            copy.setEvent( event );
             return copy;
+        }
+
+        public boolean appliesTo( EventPhase eventPhase, Place planLocale ) {
+            return !( timing != null && eventPhase.getPhase().getTiming() != timing )
+                    && !( event != null && !eventPhase.getEvent().narrowsOrEquals( event, planLocale ) );
         }
     }
 }

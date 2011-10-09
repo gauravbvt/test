@@ -1051,8 +1051,14 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public int commitmentsCount( Requirement requirement, QueryService queryService ) {
-        return Commitments.all( queryService).satisfying( requirement ).size();
+    public int commitmentsCount( Requirement requirement, Object[] extras, QueryService queryService ) {
+        Phase.Timing timing = (Phase.Timing)extras[0];
+        Event event = (Event)extras[1];
+        return Commitments.all( queryService).inSituation(
+                timing,
+                event,
+                queryService.getPlan().getLocale() )
+                .satisfying( requirement ).size();
     }
 
     @Override
