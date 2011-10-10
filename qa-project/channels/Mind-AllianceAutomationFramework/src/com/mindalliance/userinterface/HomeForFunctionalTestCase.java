@@ -722,6 +722,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
 		jButtonLogLink.setEnabled(false);
 		jButtonReportLink.setEnabled(false);
+		jButtonSendEmail.setEnabled(false);
 		// Clear startDateTime label
 		jLabelStartDateTime.setText("Start DateTime: ");
 		jLabelStartDateTime.setSize(jLabelStartDateTime.getPreferredSize());
