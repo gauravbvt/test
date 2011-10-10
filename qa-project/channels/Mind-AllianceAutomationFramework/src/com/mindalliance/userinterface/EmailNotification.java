@@ -318,6 +318,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
         {
         	Session session = Session.getDefaultInstance(props, null);
         	session.setDebug(debug);
+        	
         	MimeMessage msg = new MimeMessage(session);
             msg.setSubject(subject);
             msg.setFrom(new InternetAddress("mypriyancagurav@gmail.com"));
@@ -328,7 +329,9 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
             	msg.addRecipient(Message.RecipientType.CC, new InternetAddress(jTextReceipentEmailId.getText()));
             	break;
             }
+            
             msg.saveChanges();
+            
             // create the second message part
             MimeBodyPart mbp2 = new MimeBodyPart();
             // attach the file to the message

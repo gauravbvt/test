@@ -657,6 +657,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
 		jButtonLogLink.setEnabled(false);
 		jButtonReportLink.setEnabled(false);
+		jButtonSendMessage.setEnabled(false);
 		// Clear startDateTime label
 		jLabelStartDateTime.setText("Start DateTime: ");
 		jLabelStartDateTime.setSize(jLabelStartDateTime.getPreferredSize());
