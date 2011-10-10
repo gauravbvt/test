@@ -409,13 +409,16 @@ public class ReportFunctions {
 								xml.writeCharacters(arrayOfTestCaseId[i]);
 							xml.writeEndElement();
 					xml.writeEndElement();
+					/*xml.writeStartElement("td");
+						xml.writeCharacters(arrayOftestCaseSummary[i]);
+					xml.writeEndElement();*/
 					xml.writeStartElement("td");
 						xml.writeStartElement("center");
 							xml.writeStartElement("font");
-							if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
-								xml.writeAttribute("color", "GREEN");
-							else
-								xml.writeAttribute("color", "RED");
+								if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
+									xml.writeAttribute("color", "GREEN");
+								else
+									xml.writeAttribute("color", "RED");
 								xml.writeCharacters(arrayOftestCaseResult[i]);
 							xml.writeEndElement();
 						xml.writeEndElement();
