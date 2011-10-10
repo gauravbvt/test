@@ -313,13 +313,7 @@ public class ReportFunctions {
 		xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
 		xml.writeStartElement("head");
 		xml.writeStartElement("title");
-		xml.writeStartElement("h1");
-		xml.writeCharacters("TestCaseId Summary");
-		xml.writeEndElement();
-		xml.writeEndElement();
-		xml.writeStartElement("h1");
-		xml.writeStartElement("center");
-		xml.writeCharacters("Mind-Alliance Report");
+		xml.writeCharacters("Mind-alliance Failure Report");
 		xml.writeEndElement();
 		xml.writeEndElement();
 		xml.writeStartElement("body");
@@ -391,47 +385,77 @@ public class ReportFunctions {
 									xml.writeCharacters("Result");
 								xml.writeEndElement();
 							xml.writeEndElement();
+							xml.writeStartElement("td");
+			 			    xml.writeAttribute("bgColor","#BBBBBB");
+							xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+							xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+								xml.writeStartElement("center");
+									xml.writeStartElement("strong");
+										xml.writeCharacters("Script Exception");
+									xml.writeEndElement();
+								xml.writeEndElement();
+							xml.writeEndElement();
+							 xml.writeStartElement("td");
+				 			    xml.writeAttribute("bgColor","#BBBBBB");
+								xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+								xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+									xml.writeStartElement("center");
+										xml.writeStartElement("strong");
+											xml.writeCharacters("Error Report");
+										xml.writeEndElement();
+									xml.writeEndElement();
+								xml.writeEndElement();
 						xml.writeEndElement();
 					xml.writeEndElement();
 				xml.writeEndElement();
-		for (int i = 0; i < arrayOfTestCaseId.length ; i++) {
-			if(arrayOfTestCaseId[i] != null) {
-				xml.writeStartElement("tr");
-				xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
-				xml.writeAttribute("bgColor","#DDDDDD");
-				xml.writeAttribute("padding","");
-				xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
-				xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
-					xml.writeStartElement("td");
-							xml.writeStartElement("a");
-							xml.writeAttribute("href", arrayOfTestCaseId[i] + ".htm");
-							xml.writeAttribute("target", "targetframe");
-								xml.writeCharacters(arrayOfTestCaseId[i]);
+				for (int i = 0; i < arrayOfTestCaseId.length ; i++) {
+					if(arrayOfTestCaseId[i] != null) {
+						xml.writeStartElement("tr");
+						xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
+						xml.writeAttribute("bgColor","#DDDDDD");
+						xml.writeAttribute("padding","");
+						xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+						xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+							xml.writeStartElement("td");
+							xml.writeStartElement("left");
+									xml.writeCharacters(arrayOfTestCaseId[i]);
+								xml.writeEndElement();
 							xml.writeEndElement();
-					xml.writeEndElement();
-					/*xml.writeStartElement("td");
-						xml.writeCharacters(arrayOftestCaseSummary[i]);
-					xml.writeEndElement();*/
-					xml.writeStartElement("td");
-						xml.writeStartElement("center");
-							xml.writeStartElement("font");
-								if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
-									xml.writeAttribute("color", "GREEN");
-								else
-									xml.writeAttribute("color", "RED");
-								xml.writeCharacters(arrayOftestCaseResult[i]);
+							xml.writeStartElement("td");
+								xml.writeStartElement("center");
+									xml.writeStartElement("font");
+										if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
+											xml.writeAttribute("color", "GREEN");
+										else
+											xml.writeAttribute("color", "RED");
+										xml.writeCharacters(arrayOftestCaseResult[i]);
+									xml.writeEndElement();
+								xml.writeEndElement();
+							xml.writeStartElement("td");
+								xml.writeStartElement("center");
+									xml.writeStartElement("font");
+//										Script Exception
+								
+										xml.writeCharacters(arrayOftestCaseSummary[i]);
+									xml.writeEndElement();
+								xml.writeEndElement();
+								xml.writeStartElement("td");
+								xml.writeStartElement("center");
+									xml.writeStartElement("font");
+//										Exception
+										xml.writeCharacters(arrayOftestCaseSummary[i]);
+									xml.writeEndElement();
+								xml.writeEndElement();
+								
 							xml.writeEndElement();
 						xml.writeEndElement();
+					}
+				}
 					xml.writeEndElement();
 				xml.writeEndElement();
-			}
-		}
-		xml.writeEndElement();
-		xml.writeEndElement();
-		xml.writeEndDocument();
-		xml.close();
-		destination.close();
-		
+				xml.writeEndDocument();
+				xml.close();
+				destination.close();		
 	}
 	/**
 	 * Generate TestCase Index
