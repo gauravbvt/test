@@ -293,7 +293,8 @@ public class Requirement extends ModelObject implements Countable {
     public boolean appliesTo( Event event, Place planLocale ) {
         return event == null
                 || beneficiarySpec.getEvent() == null
-                || beneficiarySpec.getEvent().narrowsOrEquals( event , planLocale );
+                || beneficiarySpec.getEvent().narrowsOrEquals( event , planLocale )
+                || event.narrowsOrEquals( beneficiarySpec.getEvent() , planLocale );
     }
 
 
