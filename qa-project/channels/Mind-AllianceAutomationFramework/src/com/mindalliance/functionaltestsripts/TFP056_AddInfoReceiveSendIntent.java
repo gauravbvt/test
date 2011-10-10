@@ -136,11 +136,11 @@ public class TFP056_AddInfoReceiveSendIntent
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:classificationContainer:intent")));
 				options = GlobalVariables.oDropDown.getOptions();
 				if(options.get(0).getText().equals(GlobalVariables.viewElements.get("unspecified")) &&
-				   options.get(1).getText().equals(GlobalVariables.viewElements.get("alarm")) &&
-				   options.get(2).getText().equals(GlobalVariables.viewElements.get("announcement")) &&
-				   options.get(3).getText().equals(GlobalVariables.viewElements.get("command")) &&
-				   options.get(4).getText().equals(GlobalVariables.viewElements.get("feedback")) &&
-				   options.get(5).getText().equals(GlobalVariables.viewElements.get("report"))){
+						options.get(1).getText().equals(GlobalVariables.viewElements.get("alarm")) &&
+						options.get(2).getText().equals(GlobalVariables.viewElements.get("announcement")) &&
+						options.get(3).getText().equals(GlobalVariables.viewElements.get("command")) &&
+						options.get(4).getText().equals(GlobalVariables.viewElements.get("feedback")) &&
+						options.get(5).getText().equals(GlobalVariables.viewElements.get("report"))) {
 					options.get(5).setSelected();
 					if(options.get(5).isSelected()){
 						// 	Write Results
