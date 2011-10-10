@@ -285,7 +285,9 @@ public class Requirement extends ModelObject implements Countable {
     }
 
     public boolean appliesTo( Phase.Timing timing ) {
-        return timing == null || beneficiarySpec.getTiming() == timing;
+        return timing == null
+                || beneficiarySpec.getTiming() == null
+                || beneficiarySpec.getTiming() == timing;
     }
 
     public boolean appliesTo( Event event, Place planLocale ) {
@@ -392,7 +394,7 @@ public class Requirement extends ModelObject implements Countable {
         public Cardinality() {
         }
 
-        public Integer getMinCount() {
+        public int getMinCount() {
             return minCount;
         }
 

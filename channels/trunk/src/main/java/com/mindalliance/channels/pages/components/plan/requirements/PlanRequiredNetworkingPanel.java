@@ -10,7 +10,6 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
-import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
@@ -295,7 +294,7 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
 
     public List<Commitment> getCommitments() {
         if ( selectedAppliedRequirement != null ) {
-            return Commitments.all( getQueryService() )
+            return getQueryService().getAllCommitments()
                     .inSituation( selectedTiming, selectedEvent, getQueryService().getPlan().getLocale() )
                     .satisfying( selectedAppliedRequirement ).toList();
         } else {
@@ -339,12 +338,15 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
             if ( change.isForInstanceOf( Organization.class ) ) {
                 selectedOrganization = (Organization) change.getSubject( getQueryService() );
                 selectedRequirementRel = null;
+                selectedAppliedRequirement = null;
             } else if ( change.isForInstanceOf( RequirementRelationship.class ) ) {
                 selectedRequirementRel = (RequirementRelationship) change.getSubject( getQueryService() );
                 selectedOrganization = null;
+                selectedAppliedRequirement = null;
             } else if ( change.isForInstanceOf( Plan.class ) ) {
                 selectedRequirementRel = null;
                 selectedOrganization = null;
+                selectedAppliedRequirement = null;
             } else {
                 super.changed( change );
             }

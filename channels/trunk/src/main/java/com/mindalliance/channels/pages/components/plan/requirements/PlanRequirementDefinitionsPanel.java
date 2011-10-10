@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AddRequirement;
 import com.mindalliance.channels.core.command.commands.RemoveRequirement;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
@@ -67,7 +68,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
         addButtons();
     }
 
-    private void  addRequirementsTable() {
+    private void addRequirementsTable() {
         requirementsTable = new RequirementsTable(
                 "requirements",
                 new PropertyModel<List<Requirement>>( this, "requirements" ),
@@ -186,11 +187,10 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
                 updateComponents( target );
             } else if ( change.isUpdated() ) {
                 target.addComponent( requirementsTable );
-            }/* else if ( change.isForInstanceOf( Issue.class ) ) {
-                change.setType( Change.Type.Updated );
-                change.setSubject( selectedRequirement );
-                target.addComponent( requirementsTable );
-            }*/
+            }
+        } else if ( change.isExists() && change.isForInstanceOf( Issue.class ) ) {
+            addRequirementsTable();
+            target.addComponent( requirementsTable );
         }
         super.updateWith( target, change, updated );
     }

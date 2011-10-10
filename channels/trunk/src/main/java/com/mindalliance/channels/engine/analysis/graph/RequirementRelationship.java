@@ -73,7 +73,7 @@ public class RequirementRelationship extends Relationship<Organization> {
 
     public String getNonFulfillmentSummary( QueryService queryService ) {
         StringBuilder sb =new StringBuilder(  );
-        Commitments allCommitments = Commitments.all( queryService );
+        Commitments allCommitments = queryService.getAllCommitments();
         List<Requirement> unfulfilled = new ArrayList<Requirement>(  );
         for ( Requirement req : getRequirements() ) {
             if ( allCommitments.satisfying( req ).isEmpty() )

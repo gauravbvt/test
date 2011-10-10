@@ -56,6 +56,8 @@
                        advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(com.mindalliance.channels.core.query.Assignments com.mindalliance.channels.core.query.QueryService.*(..))"
                        advice-ref="cacheSet"/>
+        <aop:advisor pointcut="execution(com.mindalliance.channels.core.query.Commitments com.mindalliance.channels.core.query.QueryService.*(..))"
+                       advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(com.mindalliance.channels.core.model.Level com.mindalliance.channels.core.query.QueryService.*(..))"
                      advice-ref="cacheSet"/>
         <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.core.query.QueryService.*(..))"

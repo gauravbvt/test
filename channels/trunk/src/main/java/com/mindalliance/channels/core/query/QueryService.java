@@ -1468,4 +1468,10 @@ public interface QueryService {
      * @return a string
      */
     String getFullTitle( String sep, Part part );
+
+    /**
+     * Get all commitments in the plan.
+     * @return commitments
+     */
+    Commitments getAllCommitments();
 }

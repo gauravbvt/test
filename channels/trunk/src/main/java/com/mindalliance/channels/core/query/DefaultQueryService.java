@@ -2835,6 +2835,12 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
+    public Commitments getAllCommitments() {
+        return Commitments.all(  this );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
     public Actor getKnownActualActor( Part part ) {
         List<Actor> knownActors = (List<Actor>) CollectionUtils.collect( findAllAssignments( part, false ),
                 new Transformer() {

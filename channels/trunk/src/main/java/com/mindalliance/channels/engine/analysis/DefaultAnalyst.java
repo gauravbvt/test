@@ -29,7 +29,6 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.Play;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -1054,7 +1053,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     public int commitmentsCount( Requirement requirement, Object[] extras, QueryService queryService ) {
         Phase.Timing timing = (Phase.Timing)extras[0];
         Event event = (Event)extras[1];
-        return Commitments.all( queryService).inSituation(
+        return queryService.getAllCommitments().inSituation(
                 timing,
                 event,
                 queryService.getPlan().getLocale() )
