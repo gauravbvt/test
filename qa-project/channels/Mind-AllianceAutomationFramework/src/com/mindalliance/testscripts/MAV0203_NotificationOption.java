@@ -60,7 +60,7 @@ public class MAV0203_NotificationOption
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(5000);
 
 				// Click on Notification radio button Link 
 				GlobalVariables.iStepNo++ ;
@@ -74,7 +74,6 @@ public class MAV0203_NotificationOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				System.out.println(GlobalVariables.oElement.isEnabled()+" Hie......");
 				if(GlobalVariables.oElement.isEnabled()) {
 						// 	Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -101,12 +100,15 @@ public class MAV0203_NotificationOption
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 
 				// Click on Notification radio button Link 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Notification Radio Button Clicked";				
+				GlobalVariables.sDescription = "Notification Radio Button Clicked";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathReceiveInfoNotification"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that Instruction text filed is disable				
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:description"));
 				if(GlobalVariables.oElement.isEnabled()==false) {
