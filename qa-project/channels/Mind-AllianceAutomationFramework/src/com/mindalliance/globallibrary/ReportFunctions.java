@@ -323,6 +323,10 @@ public class ReportFunctions {
 		xml.writeAttribute("cellpadding","0");
 		xml.writeAttribute("cellspacing","0");
 		xml.writeAttribute("width","100%");
+		xml.writeStartElement("caption");
+		xml.writeStartElement("strong");
+		xml.writeCharacters("Mind-Alliance Test scripts Failure Report");
+		xml.writeEndElement();
 		xml.writeStartElement("tr");
 		xml.writeAttribute("bgColor","#DDDDDD");
 		xml.writeStartElement("td");
@@ -417,11 +421,15 @@ public class ReportFunctions {
 						xml.writeAttribute("bgColor","#DDDDDD");
 						xml.writeAttribute("padding","");
 						xml.writeStartElement("td");
+						xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+						xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
 							xml.writeStartElement("left");
 								xml.writeCharacters(arrayOfTestCaseId[i]);
 							xml.writeEndElement();
 						xml.writeEndElement();
 						xml.writeStartElement("td");
+						xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+						xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
 							xml.writeStartElement("center");
 								xml.writeStartElement("font");
 									if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
@@ -431,9 +439,9 @@ public class ReportFunctions {
 								xml.writeCharacters(arrayOftestCaseResult[i]);
 								xml.writeEndElement();
 							xml.writeStartElement("td");
-								xml.writeStartElement("left");
-									xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
-									xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+							xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+							xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+								xml.writeStartElement("center");
 									while(csvTestCase.readRecord()) {
 										if(csvTestCase.get("ScriptException")!= GlobalVariables.sBlank) {
 											xml.writeCharacters(csvTestCase.get("ScriptException"));
@@ -441,6 +449,9 @@ public class ReportFunctions {
 										}
 										if(csvTestCase.get("ErrorReport")!= GlobalVariables.sBlank) {
 											xml.writeStartElement("td");
+											xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+											xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+											xml.writeStartElement("center");
 											xml.writeCharacters(csvTestCase.get("ErrorReport"));
 											xml.writeEndElement();
 										}
