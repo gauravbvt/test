@@ -410,55 +410,50 @@ public class ReportFunctions {
 					xml.writeEndElement();
 				xml.writeEndElement();
 				csvTestCase.readHeaders();
-				while(csvTestCase.readRecord())
-				 {
-					for (int i = 0; i < arrayOfTestCaseId.length ;) {
-						if(arrayOfTestCaseId[i] != null) {
-							xml.writeStartElement("tr");
-							xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
-							xml.writeAttribute("bgColor","#DDDDDD");
-							xml.writeAttribute("padding","");
-							xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
-							xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+				for (int i = 0; i < arrayOfTestCaseId.length ;i++) {
+					if(arrayOfTestCaseId[i] != null) {
+						xml.writeStartElement("tr");
+						xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
+						xml.writeAttribute("bgColor","#DDDDDD");
+						xml.writeAttribute("padding","");
+						xml.writeStartElement("td");
+							xml.writeStartElement("left");
+								xml.writeCharacters(arrayOfTestCaseId[i]);
+							xml.writeEndElement();
+						xml.writeEndElement();
+						xml.writeStartElement("td");
+							xml.writeStartElement("center");
+								xml.writeStartElement("font");
+									if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
+										xml.writeAttribute("color", "GREEN");
+									else
+										xml.writeAttribute("color", "RED");
+								xml.writeCharacters(arrayOftestCaseResult[i]);
+								xml.writeEndElement();
 							xml.writeStartElement("td");
 								xml.writeStartElement("left");
-									xml.writeCharacters(arrayOfTestCaseId[i]);
-								xml.writeEndElement();
-							xml.writeEndElement();
-								xml.writeStartElement("td");
-									xml.writeStartElement("center");
-											xml.writeStartElement("font");
-												if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
-													xml.writeAttribute("color", "GREEN");
-												else
-													xml.writeAttribute("color", "RED");
-												xml.writeCharacters(arrayOftestCaseResult[i]);
-											xml.writeEndElement();
-									xml.writeStartElement("td");
-										xml.writeStartElement("left");
+									xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+									xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+									while(csvTestCase.readRecord()) {
+										if(csvTestCase.get("ScriptException")!= GlobalVariables.sBlank) {
 											xml.writeCharacters(csvTestCase.get("ScriptException"));
-										xml.writeEndElement();
-									if (csvTestCase.get("ErrorReport") != GlobalVariables.sBlank) {
-										xml.writeStartElement("td");
+											xml.writeEndElement();
+										}
+										if(csvTestCase.get("ErrorReport")!= GlobalVariables.sBlank) {
+											xml.writeStartElement("td");
 											xml.writeCharacters(csvTestCase.get("ErrorReport"));
-										xml.writeEndElement();
-									}
-									else{
-										xml.writeStartElement("td");
-										xml.writeEndElement();
+											xml.writeEndElement();
+										}
 									}
 						}
-						break;
-					 }
-				 }
+				}
 				
-				 xml.writeEndElement();
-				 xml.writeEndElement();
-				 xml.writeEndDocument();
-				 xml.close();
-				 destination.close();
-				 csvTestCase.close();
-				 
+				xml.writeEndElement();
+				xml.writeEndElement();
+				xml.writeEndDocument();
+				xml.close();
+				destination.close();
+				csvTestCase.close();
 		}
 		
 	/**
