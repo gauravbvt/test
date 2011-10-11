@@ -18,6 +18,7 @@ public class TE109_ViewPhase
 {
 	public TE109_ViewPhase(){
 		try {
+			
 			GlobalVariables.sTestCaseId = "TE109_ViewPhase";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -48,14 +49,13 @@ public class TE109_ViewPhase
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				//Enter the new phase in text box for the plan inside 'Phase' section
-				String phase="Phase 1";
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Phase added successfully";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-				GlobalVariables.oElement.sendKeys(phase);
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -63,7 +63,7 @@ public class TE109_ViewPhase
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Click on Index under show pop up menu
 				GlobalVariables.iStepNo++;
@@ -75,7 +75,7 @@ public class TE109_ViewPhase
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Select Phase from index pop up menu
 				GlobalVariables.iStepNo++;
@@ -94,21 +94,21 @@ public class TE109_ViewPhase
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click on Phase
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Phase is present";
 				// Assertion: Verify that event is present
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span"));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Phase 1")){
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("Phase 1"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else{
-					GlobalVariables.sVerifyError="Verification Failed. Expected 'Phase 1' Actual is "+GlobalVariables.oElement.getText();
+				else {
+					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("Phase 1")+"' Actual is "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -116,12 +116,12 @@ public class TE109_ViewPhase
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Click on 'done' button
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Plan closed";
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -132,7 +132,7 @@ public class TE109_ViewPhase
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				//delete an phase
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
@@ -140,7 +140,7 @@ public class TE109_ViewPhase
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -152,10 +152,11 @@ public class TE109_ViewPhase
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

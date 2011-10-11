@@ -14,6 +14,7 @@ public class TE113_PhaseTagLink
 {
 	public TE113_PhaseTagLink() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "TE113_PhaseTagLink";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -32,7 +33,7 @@ public class TE113_PhaseTagLink
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(3000);
 				    
 					//Click on 'About Plan' under show pop-up menu
 					GlobalVariables.iStepNo++;
@@ -44,14 +45,13 @@ public class TE113_PhaseTagLink
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					//Enter the new phase in text box for the plan inside 'Phase' section
-					String phase="Phase 1";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-					GlobalVariables.oElement.sendKeys(phase);
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -59,19 +59,19 @@ public class TE113_PhaseTagLink
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Click on Phase
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase name updated";
-					GlobalVariables.oDriver.findElement(By.linkText(phase)).click();
+					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Phase 1"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Click on Tags Link
 					GlobalVariables.iStepNo++;
@@ -83,27 +83,15 @@ public class TE113_PhaseTagLink
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Click on Done
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Done";
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAllSegmentShowMenu"),GlobalVariables.viewElements.get("Details"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);	
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);	
+					Thread.sleep(2000);	
 					// Delete an Phase
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
@@ -111,20 +99,16 @@ public class TE113_PhaseTagLink
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
-										
-					// Click on 'done' button
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Plan closed";
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					Thread.sleep(2000);
+					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);;
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
-					
+					Thread.sleep(2000);	
+										
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Logout is successful";
@@ -135,16 +119,18 @@ public class TE113_PhaseTagLink
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 				
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+					
 				}
 				else
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			} 
 			catch (Exception e) {
+				e.printStackTrace();
 				if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

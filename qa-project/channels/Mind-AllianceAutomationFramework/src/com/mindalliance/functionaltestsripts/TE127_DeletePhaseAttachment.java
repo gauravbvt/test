@@ -3,7 +3,6 @@ package com.mindalliance.functionaltestsripts;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -14,6 +13,7 @@ public class TE127_DeletePhaseAttachment
 {
 	public TE127_DeletePhaseAttachment() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "TE127_DeletePhaseAttachment";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -32,7 +32,7 @@ public class TE127_DeletePhaseAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(3000);
 				    
 					//Click on 'About Plan' under show pop-up menu
 					GlobalVariables.iStepNo++;
@@ -44,14 +44,13 @@ public class TE127_DeletePhaseAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					//Enter the new phase in text box for the plan inside 'Phase' section
-					String phase="This is phase";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-					GlobalVariables.oElement.sendKeys(phase);
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -59,19 +58,19 @@ public class TE127_DeletePhaseAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Click on Phase
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase categories added";
-					GlobalVariables.oDriver.findElement(By.linkText(phase)).click();
+					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Phase 1"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Attach File to an phase
 					GlobalVariables.iStepNo++;
@@ -82,7 +81,7 @@ public class TE127_DeletePhaseAttachment
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:submit")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -90,7 +89,7 @@ public class TE127_DeletePhaseAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Delete Attachment
 					GlobalVariables.iStepNo++;
@@ -98,22 +97,22 @@ public class TE127_DeletePhaseAttachment
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhaseAttachment"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// And acknowledge the alert (equivalent to clicking "OK")
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					// Assertion: Verify that phase attachment can be deleted
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathDeletePhaseAttachmentAssertion")));
-					if (GlobalVariables.oElement.getText().equals("")){
+					if (GlobalVariables.oElement.getText().equals("")) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					} 
-					else{
+					else {
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual "+GlobalVariables.oElement.getText();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -122,7 +121,7 @@ public class TE127_DeletePhaseAttachment
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Click on Done
 					GlobalVariables.iStepNo++;
@@ -134,7 +133,7 @@ public class TE127_DeletePhaseAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);			
+					Thread.sleep(2000);			
 					// Delete an Phase
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
 					alert = GlobalVariables.oDriver.switchTo().alert();
@@ -142,7 +141,7 @@ public class TE127_DeletePhaseAttachment
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 										
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
@@ -154,7 +153,7 @@ public class TE127_DeletePhaseAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);;
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 				
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
@@ -166,10 +165,11 @@ public class TE127_DeletePhaseAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);	
+					Thread.sleep(2000);	
 				
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+					
 				}
 				else
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -190,7 +190,7 @@ public class TE127_DeletePhaseAttachment
 				}
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 			}
-		}
+	}
 	public static void main(String args[]) {
 		try {
 			GenericFunctionLibrary.initializeTestData();

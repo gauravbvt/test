@@ -18,6 +18,7 @@ public class TE120_PhaseAttachmentAsPolicy
 {
 	public TE120_PhaseAttachmentAsPolicy() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "TE120_PhaseAttachmentAsPolicy";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -36,7 +37,7 @@ public class TE120_PhaseAttachmentAsPolicy
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(2000);
 				    
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++;
@@ -53,12 +54,13 @@ public class TE120_PhaseAttachmentAsPolicy
 					// Details of Segment
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Details of Segment enetered";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).clear();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);	
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
-					for (int i = 0; i <= 8; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Phase Attachment As Policy"));
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -77,14 +79,13 @@ public class TE120_PhaseAttachmentAsPolicy
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					//Enter the new phase in text box for the plan inside 'Phase' section
-					String phase="This is phase";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-					GlobalVariables.oElement.sendKeys(phase);
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -92,15 +93,15 @@ public class TE120_PhaseAttachmentAsPolicy
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Click on Phase
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase Attach option";
-					GlobalVariables.oDriver.findElement(By.linkText(phase)).click();
+					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Phase 1"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					// Click on Attach option
 				    GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:type")));
 				    List <WebElement> options = GlobalVariables.oDropDown.getOptions();
@@ -121,14 +122,14 @@ public class TE120_PhaseAttachmentAsPolicy
 					// Click on Done
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Done";
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);			
+					Thread.sleep(2000);			
 					// Delete an Phase
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
@@ -136,19 +137,19 @@ public class TE120_PhaseAttachmentAsPolicy
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 										
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Plan closed";
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					GlobalVariables.sDescription = "Plan float-bar-closed";
+					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);;
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));					
 					// Get a handle to the open alert, prompt or confirmation
@@ -156,7 +157,7 @@ public class TE120_PhaseAttachmentAsPolicy
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
@@ -168,10 +169,11 @@ public class TE120_PhaseAttachmentAsPolicy
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);	
+					Thread.sleep(2000);	
 				
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+					
 				}
 				else
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

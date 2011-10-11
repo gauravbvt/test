@@ -3,7 +3,6 @@ package com.mindalliance.functionaltestsripts;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -14,6 +13,7 @@ public class TE111_UpdatePhaseName
 {
 	public TE111_UpdatePhaseName() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "TE111_UpdatePhaseName";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -32,7 +32,7 @@ public class TE111_UpdatePhaseName
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(3000);
 				    
 					//Click on 'About Plan' under show pop-up menu
 					GlobalVariables.iStepNo++;
@@ -44,14 +44,13 @@ public class TE111_UpdatePhaseName
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					//Enter the new phase in text box for the plan inside 'Phase' section
-					String phase="Phase 1";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-					GlobalVariables.oElement.sendKeys(phase);
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -59,19 +58,20 @@ public class TE111_UpdatePhaseName
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					
 					// Click on Phase
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase name updated";
-					GlobalVariables.oDriver.findElement(By.linkText(phase)).click();
+					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Phase 1"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name")).clear();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name"));
-					for(int i=0;i<15;i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 2"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -84,20 +84,19 @@ public class TE111_UpdatePhaseName
 					// Click on Done
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Done";
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Assertion: Verify that Phase has been updated
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseCreatedAssertion")));
-					System.out.print(GlobalVariables.oElement.getText());
-					if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("Phase 2"))){
+					if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("Phase 2"))) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
-					else{
+					else {
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Phase 2' "+" Actual "+GlobalVariables.oElement.getText();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -107,14 +106,14 @@ public class TE111_UpdatePhaseName
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);		
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);	
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);	
+					Thread.sleep(2000);	
 					// Delete an Phase
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
@@ -123,7 +122,7 @@ public class TE111_UpdatePhaseName
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -138,17 +137,17 @@ public class TE111_UpdatePhaseName
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);	
+					Thread.sleep(2000);	
 				
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+					
 				}
 				else
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			} 
 			catch (Exception e) {
-				e.printStackTrace();
 				if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

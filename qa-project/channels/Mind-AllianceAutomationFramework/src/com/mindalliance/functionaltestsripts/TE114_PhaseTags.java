@@ -33,7 +33,7 @@ public class TE114_PhaseTags
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 				    
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++;
@@ -45,15 +45,16 @@ public class TE114_PhaseTags
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);	
+					Thread.sleep(2000);	
 					
 					// Details of Segment
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Details of Segment enetered";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).clear();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
-					for (int i = 0; i <= 8; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Phase Tags"));
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// Write Results
@@ -62,7 +63,7 @@ public class TE114_PhaseTags
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);	
+					Thread.sleep(2000);	
 					
 					//Click on 'About Plan' under show pop-up menu
 					GlobalVariables.iStepNo++;
@@ -77,11 +78,10 @@ public class TE114_PhaseTags
 					Thread.sleep(2000);
 					
 					//Enter the new phase in text box for the plan inside 'Phase' section
-					String phase="Phase 1";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-					GlobalVariables.oElement.sendKeys(phase);
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -94,14 +94,15 @@ public class TE114_PhaseTags
 					// Click on Phase
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase tags added";
-					GlobalVariables.oDriver.findElement(By.linkText(phase)).click();
+					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Phase 1"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags")).clear();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags"));
-					for(int i=0;i<15;i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an tags"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -114,7 +115,7 @@ public class TE114_PhaseTags
 					// Click on Done
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Done";
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -134,7 +135,7 @@ public class TE114_PhaseTags
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan closed";
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -172,7 +173,6 @@ public class TE114_PhaseTags
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			} 
 			catch (Exception e) {
-				e.printStackTrace();
 				if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
