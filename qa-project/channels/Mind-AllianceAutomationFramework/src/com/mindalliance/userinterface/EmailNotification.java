@@ -1,7 +1,9 @@
 package com.mindalliance.userinterface;
 
 import java.awt.Color;
-import java.awt.Rectangle;
+import java.awt.Font;
+import java.awt.Frame;
+//import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -21,26 +23,27 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
+
 import org.dyno.visual.swing.layouts.Constraints;
 import org.dyno.visual.swing.layouts.GroupLayout;
 import org.dyno.visual.swing.layouts.Leading;
+
 import com.mindalliance.globallibrary.GlobalVariables;
 
 //VS4E -- DO NOT REMOVE THIS LINE!
 public class EmailNotification extends JFrame implements ActionListener, ItemListener{
 	private static final long serialVersionUID = 1L;
-	private static int noOfSelectedTestCases;
+//	private static int noOfSelectedTestCases;
 	private JPasswordField jTextFieldPassword;
 	private static JTextField jTextFieldUserName;
 	private static JTextField jTextFiledSMTPServer;
@@ -50,8 +53,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 	private JLabel jLabel1;
 	private JLabel jLabel2;
 	private JButton jButtonExecute;
-	private JProgressBar jProgressBarStatus;
-	private JCheckBox jCheckBoxEnableServer;
+	//	private JCheckBox jCheckBoxEnableServer;
 	private JLabel jLabelMultipleEmail;
 	private JLabel jLabelReceipentEmail;
 	private JLabel jLabelSMTPPort;
@@ -73,14 +75,17 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 	}
 
 	private void initComponents() {
-		setTitle("Mind Alliance Automation Framework");
+		setTitle("Mind-Alliance Automation Framework");
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setFont(new Font("Dialog", Font.PLAIN, 12));
+		setExtendedState(Frame.MAXIMIZED_BOTH);
+		setForeground(Color.black);
 		setLayout(new GroupLayout());
 		add(getJPanel1(), new Constraints(new Leading(201, 371, 10, 10), new Leading(12, 100, 12, 12)));
-		add(getJProgressBar0(), new Constraints(new Leading(161, 298, 10, 10), new Leading(399, 10, 10)));
 		add(getJButtonSave(), new Constraints(new Leading(524, 10, 10), new Leading(393, 10, 10)));
 		add(getJButton4(), new Constraints(new Leading(615, 57, 10, 10), new Leading(393, 12, 12)));
-		add(getJPanel0(), new Constraints(new Leading(108, 626, 10, 10), new Leading(121, 10, 10)));
-		setSize(1356, 698);
+		add(getJPanel0(), new Constraints(new Leading(108, 626, 10, 10), new Leading(121, 233, 10, 10)));
+		setSize(1366, 720);
 	}
 
 	private JButton getJButton4() {
@@ -110,18 +115,17 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 			jPanelReport = new JPanel();
 			jPanelReport.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 			jPanelReport.setLayout(new GroupLayout());
-			jPanelReport.add(getJLabelPassword(), new Constraints(new Leading(28, 30, 130), new Leading(99, 29, 12, 12)));
-			jPanelReport.add(getJCheckBoxEnableServer(), new Constraints(new Leading(163, 10, 10), new Leading(170, 8, 8)));
-			jPanelReport.add(getJLabelReceiptmentEmail(), new Constraints(new Leading(26, 10, 10), new Leading(144, 12, 12)));
-			jPanelReport.add(getJLabelMultipleEmail(), new Constraints(new Leading(125, 10, 10), new Leading(202, 12, 12)));
-			jPanelReport.add(getJLabelUsername(), new Constraints(new Leading(30, 30, 130), new Leading(73, 12, 12)));
 			jPanelReport.add(getJLabelSMTPServer(), new Constraints(new Leading(26, 30, 130), new Leading(39, 12, 12)));
 			jPanelReport.add(getTextSMTPServerName(), new Constraints(new Leading(147, 149, 10, 10), new Leading(41, 12, 12)));
 			jPanelReport.add(getTextUserName(), new Constraints(new Leading(147, 148, 12, 12), new Leading(75, 10, 10)));
-			jPanelReport.add(getTextPassword(), new Constraints(new Leading(147, 148, 12, 12), new Leading(105, 12, 12)));
-			jPanelReport.add(getTextReceipentEmail(), new Constraints(new Leading(149, 245, 12, 12), new Leading(142, 12, 12)));
-			jPanelReport.add(getJLabelSMTPPort(), new Constraints(new Leading(421, 10, 10), new Leading(30, 12, 12)));
-			jPanelReport.add(getTextSMTPPort(), new Constraints(new Leading(506, 52, 10, 10), new Leading(28, 12, 12)));
+			jPanelReport.add(getJLabelMultipleEmail(), new Constraints(new Leading(130, 10, 10), new Leading(184, 10, 10)));
+			jPanelReport.add(getTextReceipentEmail(), new Constraints(new Leading(147, 245, 12, 12), new Leading(143, 12, 12)));
+			jPanelReport.add(getJLabelReceiptmentEmail(), new Constraints(new Leading(28, 12, 12), new Leading(143, 12, 12)));
+			jPanelReport.add(getJLabelUsername(), new Constraints(new Leading(26, 12, 12), new Leading(77, 12, 12)));
+			jPanelReport.add(getTextPassword(), new Constraints(new Leading(148, 148, 12, 12), new Leading(111, 12, 12)));
+			jPanelReport.add(getJLabelPassword(), new Constraints(new Leading(28, 12, 12), new Leading(105, 29, 12, 12)));
+			jPanelReport.add(getJLabelSMTPPort(), new Constraints(new Leading(419, 10, 10), new Leading(41, 12, 12)));
+			jPanelReport.add(getTextSMTPPort(), new Constraints(new Leading(507, 52, 10, 10), new Leading(39, 12, 12)));
 		}
 		return jPanelReport;
 	}
@@ -130,7 +134,6 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jLabelSMTPPort == null) {
 			jLabelSMTPPort = new JLabel();
 			jLabelSMTPPort.setText("SMTP Port");
-			jCheckBoxEnableServer.addItemListener(this);
 		}
 		return jLabelSMTPPort;
 	}
@@ -139,7 +142,6 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jLabelReceipentEmail == null) {
 			jLabelReceipentEmail = new JLabel();
 			jLabelReceipentEmail.setText("Receipent Email Id ");
-			jCheckBoxEnableServer.addItemListener(this);
 		}
 		return jLabelReceipentEmail;
 	}
@@ -153,14 +155,14 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		return jLabelMultipleEmail;
 	}
 
-	private JCheckBox getJCheckBoxEnableServer() {
-		if (jCheckBoxEnableServer == null) {
-			jCheckBoxEnableServer = new JCheckBox();
-			jCheckBoxEnableServer.setText("Enable SMTP Server");
-			jCheckBoxEnableServer.addItemListener(this);
-		}
-		return jCheckBoxEnableServer;
-	}
+//	private JCheckBox getJCheckBoxEnableServer() {
+//		if (jCheckBoxEnableServer == null) {
+//			jCheckBoxEnableServer = new JCheckBox();
+//			jCheckBoxEnableServer.setText("Enable SMTP Server");
+//			jCheckBoxEnableServer.addItemListener(this);
+//		}
+//		return jCheckBoxEnableServer;
+//	}
 
 	private JTextField getTextSMTPServerName(){
 		if (jTextFiledSMTPServer == null) {
@@ -206,17 +208,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 			jTextSMTPPort = new JTextField();
 			jTextSMTPPort.setPreferredSize(jTextSMTPPort.getPreferredSize());
 			jTextSMTPPort.setText("25");
+			jTextSMTPPort.addActionListener(this);
 		}
 		return jTextSMTPPort;
 	}
 	
-	private JProgressBar getJProgressBar0() {
-		if (jProgressBarStatus == null) {
-			jProgressBarStatus = new JProgressBar();
-		}
-		return jProgressBarStatus;
-	}
-
 	private JButton getJButtonSave() {
 		if (jButtonExecute == null) {
 			jButtonExecute = new JButton();
@@ -251,15 +247,15 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		return jLabel0;
 	}
 
-	public void updateProgressBar(int percent) {
-		jProgressBarStatus.setValue(percent);
-		jProgressBarStatus.setString("Completed: " + Integer.toString(percent) + "/" + noOfSelectedTestCases);
-		jProgressBarStatus.setStringPainted(true);
-		Rectangle progressRect = jProgressBarStatus.getBounds();
-		progressRect.x = 0;
-		progressRect.y = 0;
-		jProgressBarStatus.paintImmediately(progressRect);
-	}
+//	public void updateProgressBar(int percent) {
+//		jProgressBarStatus.setValue(percent);
+//		jProgressBarStatus.setString("Completed: " + Integer.toString(percent) + "/" + noOfSelectedTestCases);
+//		jProgressBarStatus.setStringPainted(true);
+//		Rectangle progressRect = jProgressBarStatus.getBounds();
+//		progressRect.x = 0;
+//		progressRect.y = 0;
+//		jProgressBarStatus.paintImmediately(progressRect);
+//	}
 	
 	private static void installLnF() {
 		try {
