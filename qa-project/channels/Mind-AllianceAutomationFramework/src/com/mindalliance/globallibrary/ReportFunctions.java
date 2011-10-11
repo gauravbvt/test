@@ -302,8 +302,9 @@ public class ReportFunctions {
 		destination.close();
 	}
 
-	private static void generateFailureReport() throws XMLStreamException, IOException
+	private static void generateFailureReport()
 	{
+		try {
 		csvTestCase = new CsvReader(GlobalVariables.sLogDirectoryPath + "\\Results.csv");
 		OutputStream destination = new FileOutputStream(GlobalVariables.sReportDstDirectoryPath + "\\TestCaseFailureList.htm");
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
@@ -467,14 +468,19 @@ public class ReportFunctions {
 						 xml.writeEndElement();
 					 }
 
-					 xml.writeEndElement();
+					 //xml.writeEndElement();
 				 }
 				
 				 xml.writeEndElement();
 				 xml.writeEndElement();
 				 xml.writeEndDocument();
 				 xml.close();
-				 destination.close();		
+				 destination.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * Generate TestCase Index
