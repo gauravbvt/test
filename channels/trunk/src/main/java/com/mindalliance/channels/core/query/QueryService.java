@@ -1474,4 +1474,10 @@ public interface QueryService {
      * @return commitments
      */
     Commitments getAllCommitments();
+
+    /**
+     * Find all eoi names used in the plan.
+     * @return a sorted list of strings
+     */
+    List<String> findAllEoiNames();
 }

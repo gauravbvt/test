@@ -55,6 +55,7 @@ import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.nlp.Proximity;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -2926,6 +2927,19 @@ public abstract class DefaultQueryService implements QueryService {
                                 } );
                     }
                 } );
+    }
+
+    @Override
+    public List<String> findAllEoiNames() {
+        Set<String> eoiNames = new HashSet<String>(  );
+        for ( Flow flow : findAllFlows() ) {
+            for ( ElementOfInformation eoi : flow.getEois() ) {
+                eoiNames.add( ChannelsUtils.smartUncapitalize( eoi.getContent() ) );
+            }
+        }
+        List<String> result = new ArrayList<String>( eoiNames );
+        Collections.sort( result );
+        return result;
     }
 
     @Override

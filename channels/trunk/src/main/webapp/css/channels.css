@@ -2415,8 +2415,32 @@ a.overriding:after {
 
 .req-section {
     float:left;
-    margin-top: 10px;
+    padding: 5px 10px;
 }
 .req-defs .button {
     clear: both;
+}
+
+.req h3 {
+ border-bottom: 2px solid #CCCCCC;
+    text-transform: uppercase;
+}
+
+div.aspect .req table {
+ width:65%;
+}
+
+div.req-sections{
+    border-top: 2px solid #CCCCCC;
+    margin-top: 15px;
+}
+
+div.req-section-headers {
+ border-right:1px solid #cccccc;
+ padding:10px;
+}
+
+div.req-section-headers ul {
+ margin:0;
+ padding:0;
 }

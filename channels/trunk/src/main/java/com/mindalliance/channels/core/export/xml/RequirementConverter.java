@@ -67,6 +67,12 @@ public class RequirementConverter extends AbstractChannelsConverter {
             writer.setValue( Tag.tagsToString( requirement.getInfoTags() ) );
             writer.endNode();
         }
+        // eois
+        for ( String eoi : requirement.getEois() ) {
+            writer.startNode( "eoi" );
+            writer.setValue( eoi );
+            writer.endNode();
+        }
         // Cardinality
         Requirement.Cardinality cardinality = requirement.getCardinality();
         writer.startNode( "minCount" );
@@ -193,7 +199,9 @@ public class RequirementConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "information" ) ) {
                 requirement.setInformation( reader.getValue() );
             } else if ( "infoTags".equals( nodeName ) ) {
-                requirement.addRequiredTags( reader.getValue() );
+                requirement.addInfoTags( reader.getValue() );
+            } else if ( nodeName.equals(  "eoi" )) {
+                requirement.addEoi( reader.getValue() );
             } else if ( "minCount".equals( nodeName ) ) {
                 requirement.getCardinality().setMinCount( Integer.parseInt( reader.getValue() ) );
             } else if ( "maxCount".equals( nodeName ) ) {

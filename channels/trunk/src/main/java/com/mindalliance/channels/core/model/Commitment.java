@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * A commitment to share information. Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved. Proprietary and
@@ -8,13 +9,19 @@ import java.io.Serializable;
  */
 public class Commitment implements Serializable {
 
-    /** Assignment committed. */
+    /**
+     * Assignment committed.
+     */
     private final Assignment committer;
 
-    /** Beneficiary assignment. */
+    /**
+     * Beneficiary assignment.
+     */
     private final Assignment beneficiary;
 
-    /** Flow that implies the commitment. */
+    /**
+     * Flow that implies the commitment.
+     */
     private final Flow sharing;
 
     public Commitment( Assignment committer, Assignment beneficiary, Flow flow ) {
@@ -67,8 +74,8 @@ public class Commitment implements Serializable {
 
         Commitment other = (Commitment) obj;
         return committer.equals( other.getCommitter() )
-            && beneficiary.equals( other.getBeneficiary() )
-            && sharing.equals( other.getSharing() );
+                && beneficiary.equals( other.getBeneficiary() )
+                && sharing.equals( other.getSharing() );
     }
 
     public int hashCode() {
@@ -81,24 +88,56 @@ public class Commitment implements Serializable {
 
     /**
      * Commitment crosses organization boundaries.
+     *
      * @return a boolean
      */
     public boolean isBetweenUnrelatedOrganizations() {
         return !committer.getOrganization().getTopOrganization()
-                .equals(  beneficiary.getOrganization().getTopOrganization() );
+                .equals( beneficiary.getOrganization().getTopOrganization() );
     }
 
     public boolean isProhibited() {
         return sharing.isProhibited();
     }
 
+    /**
+     * Whether timing and event specifications (null means any) apply to the commitments event phase or context.
+     *
+     * @param timing     a phase timing or null
+     * @param event      an event or null
+     * @param planLocale a plan locale
+     * @return a boolean
+     */
     public boolean isInSituation( Phase.Timing timing, Event event, Place planLocale ) {
-        EventPhase eventPhase = getEventPhase();
-        return !( timing != null && eventPhase.getPhase().getTiming() != timing )
-                && !( event != null && !eventPhase.getEvent().narrowsOrEquals( event, planLocale ) );
+        EventPhase eventPhase = getSegment().getEventPhase();
+        List<EventTiming> context = getSegment().getContext();
+        // matches event phase
+        if ( matchesEventTiming( timing,
+                event,
+                new EventTiming( eventPhase ),
+                planLocale ) ) {
+            return true;
+        } else {
+            // matches any of the event timings in context
+            for ( EventTiming eventTiming : context ) {
+                if ( matchesEventTiming( timing, event, eventTiming, planLocale ) ) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
-    public EventPhase getEventPhase() {
-        return getSharing().getSegment().getEventPhase();
+    private boolean matchesEventTiming(
+            Phase.Timing timing,
+            Event event,
+            EventTiming eventTiming,
+            Place planLocale ) {
+        return ( timing == null || eventTiming.getTiming() == timing )
+                && ( event == null || eventTiming.getEvent().narrowsOrEquals( event, planLocale ) );
+    }
+
+    public Segment getSegment() {
+        return getSharing().getSegment();
     }
 }

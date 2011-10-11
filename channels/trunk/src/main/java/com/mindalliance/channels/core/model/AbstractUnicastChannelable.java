@@ -4,7 +4,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
     }
 
     public List<Channel> getChannels() {
-        return Collections.unmodifiableList( channels );
+        return channels;
     }
 
     @Override

@@ -28,10 +28,18 @@ public class EventTiming implements Serializable {
     public EventTiming() {
     }
 
+    public EventTiming( Timing timing, Event event ) {
+        this( timing, event, null );
+    }
+
     public EventTiming( Timing timing, Event event, Level eventLevel ) {
         this.timing = timing;
         this.event = event;
         this.eventLevel = eventLevel;
+    }
+
+    public EventTiming( EventPhase eventPhase ) {
+        this( eventPhase.getPhase().getTiming(), eventPhase.getEvent() );
     }
 
     //-------------------------------

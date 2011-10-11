@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.Attachment.Type;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,7 +24,7 @@ public class AbstractAttachable implements Attachable {
 
     @Override
     public List<Attachment> getAttachments() {
-        return Collections.unmodifiableList( attachments );
+        return attachments;
     }
 
     @Override

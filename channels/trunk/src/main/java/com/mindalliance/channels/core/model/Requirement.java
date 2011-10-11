@@ -3,9 +3,11 @@ package com.mindalliance.channels.core.model;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -56,6 +58,12 @@ public class Requirement extends ModelObject implements Countable {
      */
     private List<Tag> infoTags = new ArrayList<Tag>();
     /**
+     * Required elements of information.
+     * Meaningful only if information is named.
+     * Empty list means required eois unspecified.
+     */
+    private List<String> eois = new ArrayList<String>();
+    /**
      * Specification of committers.
      */
     private AssignmentSpec committerSpec = new AssignmentSpec();
@@ -98,14 +106,26 @@ public class Requirement extends ModelObject implements Countable {
         this.infoTags = infoTags;
     }
 
-    public void addRequiredTag( Tag tag ) {
+    public void addInfoTags( Tag tag ) {
         infoTags.add( tag );
     }
 
-    public void addRequiredTags( String s ) {
+    public void addInfoTags( String s ) {
         for ( Tag tag : Tag.tagsFromString( s ) ) {
-            addRequiredTag( tag );
+            addInfoTags( tag );
         }
+    }
+
+    public List<String> getEois() {
+        return eois;
+    }
+
+    public void setEois( List<String> eois ) {
+        this.eois = eois;
+    }
+
+    public void addEoi( String eoi ) {
+        eois.add( eoi );
     }
 
     public AssignmentSpec getCommitterSpec() {
@@ -148,6 +168,7 @@ public class Requirement extends ModelObject implements Countable {
         copy.setId( getId() ); // requirement must never be persisted!
         copy.setInformation( information );
         copy.setInfoTags( Tag.copy( infoTags ) );
+        copy.setEois( new ArrayList<String>( eois ) );
         copy.setCardinality( cardinality.copy() );
         copy.setCommitterSpec( committerSpec.copy() );
         copy.setBeneficiarySpec( beneficiarySpec.copy() );
@@ -413,9 +434,35 @@ public class Requirement extends ModelObject implements Countable {
 
     private boolean matchesFlow( Flow flow, Place planLocale ) {
         return ( information.isEmpty()
-                || !Matcher.matches( flow.getName(), information ) )
+                || Matcher.matches( flow.getName(), information ) )
                 // Match tags if required
-                && Matcher.matchesAll( getInfoTags(), flow.getTags() );
+                && Matcher.matchesAll( getInfoTags(), flow.getTags() )
+                && matchesEois( flow );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private boolean matchesEois( Flow flow ) {
+        if ( information.isEmpty() || eois.isEmpty() ) return true;
+        final List<String> flowEoiNames = (List<String>) CollectionUtils.collect(
+                flow.getEois(),
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ( (ElementOfInformation) input ).getContent();
+                    }
+                }
+        );
+        // none of the required eois is not to be found in the flow's eois
+        return !CollectionUtils.exists(
+                eois,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        // todo - deal with transformations?
+                        return !Matcher.contains( flowEoiNames, (String) object );
+                    }
+                }
+        );
     }
 
     /**
@@ -429,9 +476,8 @@ public class Requirement extends ModelObject implements Countable {
         ResourceSpec committer = commitment.getCommitter().getResourceSpec();
         ResourceSpec beneficiary = commitment.getBeneficiary().getResourceSpec();
         Flow flow = commitment.getSharing();
-        EventPhase commitmentEventPhase = commitment.getEventPhase();
         return matchesFlow( flow, planLocale )
-                && beneficiarySpec.appliesTo( commitmentEventPhase, planLocale )
+                && beneficiarySpec.appliesToSituation( commitment, planLocale )
                 && committerSpec.appliesTo( committer, planLocale )
                 && beneficiarySpec.appliesTo( beneficiary, planLocale );
     }
@@ -439,6 +485,7 @@ public class Requirement extends ModelObject implements Countable {
     public Map<String, Object> mapState() {
         Map<String, Object> state = super.mapState();
         state.put( "information", getInformation() );
+        state.put( "eois", new ArrayList<String>( getEois() ) );
         state.put( "requiredTags", Tag.tagsToString( getInfoTags() ) );
         state.put( "cardinality", getCardinality().mapState() );
         state.put( "committerSpec", getCommitterSpec().mapState() );
@@ -446,10 +493,12 @@ public class Requirement extends ModelObject implements Countable {
         return state;
     }
 
+    @SuppressWarnings( "unchecked" )
     public void initFromMap( Map<String, Object> state, QueryService queryService ) {
         super.initFromMap( state, queryService );
         setInformation( (String) state.get( "information" ) );
         setInfoTags( Tag.tagsFromString( (String) state.get( "requiredTags" ) ) );
+        setEois( (List<String>)state.get( "eois" ) );
         Cardinality card = new Cardinality();
         card.initFromMap( (Map<String, Object>) state.get( "cardinality" ) );
         setCardinality( card );
@@ -479,6 +528,17 @@ public class Requirement extends ModelObject implements Countable {
 
     public void setSituationIfAppropriate( Phase.Timing timing, Event event, Place planLocale ) {
         beneficiarySpec.setSituationIfAppropriate( timing, event, planLocale );
+    }
+
+    public String getInformationAndEois() {
+        StringBuilder sb = new StringBuilder( );
+        sb.append( getInformation() );
+        if ( !getEois().isEmpty() ) {
+            sb.append( " [" );
+            sb.append( ChannelsUtils.listToString( getEois(), ", ", ", and " ) );
+            sb.append( ']' );
+        }
+        return sb.toString();
     }
 
 
@@ -821,10 +881,6 @@ public class Requirement extends ModelObject implements Countable {
             return copy;
         }
 
-        public boolean appliesTo( EventPhase eventPhase, Place planLocale ) {
-            return !( timing != null && eventPhase.getPhase().getTiming() != timing )
-                    && !( event != null && !eventPhase.getEvent().narrowsOrEquals( event, planLocale ) );
-        }
 
         public boolean appliesTo( ResourceSpec spec, Place planLocale ) {
             return resourceSpec.isAnyone() || spec.narrowsOrEquals( resourceSpec, planLocale );
@@ -835,6 +891,10 @@ public class Requirement extends ModelObject implements Countable {
                 timing = t;
             if ( e != null && ( event == null || e.narrowsOrEquals( event, planLocale ) ) )
                 event = e;
+        }
+
+        public boolean appliesToSituation( Commitment commitment, Place planLocale ) {
+             return commitment.isInSituation( timing, event, planLocale );
         }
     }
 }

@@ -224,7 +224,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
                     "committerSpec.organization.name",
                     EMPTY,
                     filterable ) );
-            columns.add( makeColumn( "Shall share info", "information", EMPTY ) );
+            columns.add( makeColumn( "Shall share info", "informationAndEois", EMPTY ) );
             columns.add( makeColumn( "Tagged", "infoTagsAsString", EMPTY ) );
             columns.add( makeFilterableLinkColumn(
                     "With organization(s)",

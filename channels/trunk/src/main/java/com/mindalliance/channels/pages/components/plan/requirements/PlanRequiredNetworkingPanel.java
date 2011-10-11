@@ -437,7 +437,7 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
         private void init() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeColumn( "Requirement", "name", EMPTY ) );
-            columns.add( makeColumn( "to share info", "information", EMPTY ) );
+            columns.add( makeColumn( "to share info", "informationAndEois", EMPTY ) );
             columns.add( makeColumn( "Tagged", "infoTagsAsString", EMPTY ) );
             columns.add( makeFilterableLinkColumn(
                     "By organization",
