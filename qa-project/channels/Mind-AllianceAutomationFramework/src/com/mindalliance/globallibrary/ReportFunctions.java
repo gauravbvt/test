@@ -304,6 +304,7 @@ public class ReportFunctions {
 
 	private static void generateFailureReport() throws XMLStreamException, IOException
 	{
+		csvTestCase = new CsvReader(GlobalVariables.sLogDirectoryPath + "\\Results.csv");
 		OutputStream destination = new FileOutputStream(GlobalVariables.sReportDstDirectoryPath + "\\TestCaseFailureList.htm");
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
@@ -431,7 +432,7 @@ public class ReportFunctions {
 										xml.writeCharacters(arrayOftestCaseResult[i]);
 									xml.writeEndElement();
 								xml.writeEndElement();
-							xml.writeStartElement("td");
+							/*xml.writeStartElement("td");
 								xml.writeStartElement("center");
 									xml.writeStartElement("font");
 //										Script Exception
@@ -445,17 +446,35 @@ public class ReportFunctions {
 //										Exception
 										xml.writeCharacters(arrayOftestCaseSummary[i]);
 									xml.writeEndElement();
-								xml.writeEndElement();
-								
+								xml.writeEndElement();*/	
 							xml.writeEndElement();
 						xml.writeEndElement();
 					}
 				}
-					xml.writeEndElement();
-				xml.writeEndElement();
-				xml.writeEndDocument();
-				xml.close();
-				destination.close();		
+				 csvTestCase.readHeaders();
+				 while(csvTestCase.readRecord())
+				 {
+					 xml.writeStartElement("td");
+					 xml.writeCharacters(csvTestCase.get("ScriptException"));
+					 xml.writeEndElement();
+					 if (csvTestCase.get("ErrorReport") != GlobalVariables.sBlank) {
+						 xml.writeStartElement("td");
+						 xml.writeCharacters(csvTestCase.get("ErrorReport"));
+						 xml.writeEndElement();
+					 }
+					 else{
+						 xml.writeStartElement("td");
+						 xml.writeEndElement();
+					 }
+
+					 xml.writeEndElement();
+				 }
+				
+				 xml.writeEndElement();
+				 xml.writeEndElement();
+				 xml.writeEndDocument();
+				 xml.close();
+				 destination.close();		
 	}
 	/**
 	 * Generate TestCase Index
@@ -561,11 +580,11 @@ public class ReportFunctions {
 		//csvTestCase = new CsvReader("C:\\Users\\admin\\workspace\\Mind-AllianceAutomationFramework\\Logs\\2011_02_22_14_34_49\\Results.csv");
 		OutputStream destination = new FileOutputStream(GlobalVariables.sReportDstDirectoryPath + "\\" + testName + ".htm");
 		//OutputStream destination = new FileOutputStream("C:\\Users\\admin\\workspace\\Mind-AllianceAutomationFramework\\Reports\\2011_02_22_14_34_49\\" + testName + ".html");
-		 XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-		 XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
+		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+		XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
-		 xml.writeStartDocument();
-		 xml.writeStartElement("html");
+		xml.writeStartDocument();
+		xml.writeStartElement("html");
 		 xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
 		 xml.writeStartElement("head");
 		 xml.writeStartElement("title");
