@@ -446,14 +446,16 @@ public class ReportFunctions {
 										if(csvTestCase.get("ScriptException")!= GlobalVariables.sBlank) {
 											xml.writeCharacters(csvTestCase.get("ScriptException"));
 											xml.writeEndElement();
+											break;
 										}
-										if(csvTestCase.get("ErrorReport")!= GlobalVariables.sBlank) {
+										else if(csvTestCase.get("ErrorReport")!= GlobalVariables.sBlank) {
 											xml.writeStartElement("td");
 											xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
 											xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
 											xml.writeStartElement("center");
 											xml.writeCharacters(csvTestCase.get("ErrorReport"));
 											xml.writeEndElement();
+											break;
 										}
 									}
 						}
@@ -696,7 +698,6 @@ public class ReportFunctions {
 	}
 
 	public static void generateAutomationReportForFunctionalTestCases() throws IOException, XMLStreamException {
-		// TODO Auto-generated method stub
 		// Initialize the variables
 		index = 0;
 		Arrays.fill(arrayOfTestCaseId, null);
@@ -739,7 +740,7 @@ public class ReportFunctions {
 		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
 		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
 
-		// TestCase sheet: Channels Admin
+		// TestCase sheet: Channels Administration
 		sheet = sheet.getSpreadSheet().getSheet(6);
 		updateTestCaseExecutionResult(sheet);
 		// Generate Summary Sheet
