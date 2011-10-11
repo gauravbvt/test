@@ -1061,17 +1061,27 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public Requirement.Satisfaction committerSatisfaction( Requirement requirement, QueryService queryService ) {
+    public Requirement.Satisfaction committerSatisfaction(
+            Requirement requirement,
+            Object[] extras,
+            QueryService queryService ) {
+        Phase.Timing timing = (Phase.Timing)extras[0];
+        Event event = (Event)extras[1];
         Organization org = requirement.getCommitterSpec().getOrganization();
         assert org.isActual();
-        return requirement.satisfaction( org, false, queryService  );
+        return requirement.satisfaction( org, false, timing, event, queryService, this  );
     }
 
     @Override
-    public Requirement.Satisfaction beneficiarySatisfaction( Requirement requirement, QueryService queryService ) {
+    public Requirement.Satisfaction beneficiarySatisfaction(
+            Requirement requirement,
+            Object[] extras,
+            QueryService queryService ) {
+        Phase.Timing timing = (Phase.Timing)extras[0];
+        Event event = (Event)extras[1];
         Organization org = requirement.getBeneficiarySpec().getOrganization();
          assert org.isActual();
-         return requirement.satisfaction( org, true, queryService  );
+         return requirement.satisfaction( org, true, timing, event, queryService, this  );
      }
 
 

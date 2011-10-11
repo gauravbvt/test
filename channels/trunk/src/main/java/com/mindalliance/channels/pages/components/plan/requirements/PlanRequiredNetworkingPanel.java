@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.query.QueryService;
@@ -39,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -267,17 +267,19 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
                         }
                     } ) );
         }
-        Set<Requirement> applierRequirements = new HashSet<Requirement>();
+        List<Requirement> applierRequirements = new ArrayList<Requirement>();
         QueryService queryService = getQueryService();
+        Place planLocale = queryService.getPlan().getLocale();
         for ( RequirementRelationship reqRel : reqRels ) {
             for ( Requirement req : reqRel.getRequirements() ) {
                 Requirement appliedReq = req.transientCopy();
                 appliedReq.setCommitterOrganization( (Organization) reqRel.getFromIdentifiable( queryService ) );
                 appliedReq.setBeneficiaryOrganization( (Organization) reqRel.getToIdentifiable( queryService ) );
+                appliedReq.setSituationIfAppropriate( selectedTiming, selectedEvent, planLocale );
                 applierRequirements.add( appliedReq );
             }
         }
-        return new ArrayList<Requirement>( applierRequirements );
+        return applierRequirements;
     }
 
     private void addRequiredCommitments() {
@@ -372,6 +374,15 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
                 Organization beneficiaryOrg = getQueryService().find( Organization.class, id );
                 appliedReq.setBeneficiaryOrganization( beneficiaryOrg );
             }
+            if ( qualifiers.containsKey( "timing" ) ) {
+                Phase.Timing timing = (Phase.Timing) qualifiers.get( "timing" );
+                appliedReq.setSituationIfAppropriate( timing, null, getQueryService().getPlan().getLocale() );
+            }
+            if ( qualifiers.containsKey( "event" ) ) {
+                Long id = (Long) qualifiers.get( "event" );
+                Event event = getQueryService().find( Event.class, id );
+                appliedReq.setSituationIfAppropriate( null, event, getQueryService().getPlan().getLocale() );
+            }
             return appliedReq;
         } catch ( NotFoundException e ) {
             LOG.warn( "Organization to which requirement is applied was not found" );
@@ -434,14 +445,24 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
                     "committerSpec.organization.name",
                     EMPTY,
                     filterable ) );
-            columns.add( makeAnalysisColumn( "Satisfied?", "committerSatisfaction", "?" ) );
+            columns.add( makeAnalysisColumn(
+                    "Satisfied?",
+                    "committerSatisfaction",
+                    "?",
+                    selectedTiming,
+                    selectedEvent ) );
             columns.add( makeFilterableLinkColumn(
                     "With organization",
                     "beneficiarySpec.organization",
                     "beneficiarySpec.organization.name",
                     EMPTY,
                     filterable ) );
-            columns.add( makeAnalysisColumn( "Satisfied?", "beneficiarySatisfaction", "?" ) );
+            columns.add( makeAnalysisColumn(
+                    "Satisfied?",
+                    "beneficiarySatisfaction",
+                    "?",
+                    selectedTiming,
+                    selectedEvent ) );
             columns.add( makeFilterableLinkColumn(
                     "In event",
                     "beneficiarySpec.event",
@@ -453,13 +474,15 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
                     "commitmentsCount",
                     "?",
                     selectedTiming,
-                    selectedEvent) );
+                    selectedEvent ) );
             columns.add( makeExpandLinkColumn(
                     "",
                     "",
                     "view",
                     "committerOrganization.id",
-                    "beneficiaryOrganization.id") );
+                    "beneficiaryOrganization.id",
+                    "beneficiarySpec.timing",
+                    "beneficiarySpec.event" ) );
             List<Requirement> requirements = appliedRequirementsModel.getObject();
             add( new AjaxFallbackDefaultDataTable( "requirements",
                     columns,

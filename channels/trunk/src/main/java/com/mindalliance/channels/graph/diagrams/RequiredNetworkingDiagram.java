@@ -65,6 +65,8 @@ public class RequiredNetworkingDiagram extends AbstractDiagram<Organization, Req
         RequiredNetworkingMetaProvider metaProvider = new RequiredNetworkingMetaProvider(
                 selectedOrganization,
                 selectedRequirementRel,
+                timing,
+                event,
                 outputFormat,
                 diagramFactory.getImageDirectory(),
                 analyst,

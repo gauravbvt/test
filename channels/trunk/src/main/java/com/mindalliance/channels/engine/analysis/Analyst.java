@@ -541,6 +541,7 @@ public interface Analyst extends CommandListener {
     /**
      * Number of commitments that fulfill a given requirement.
      * @param requirement a requirement
+     * @param extras extra parameters
      * @param queryService a query service
      * @return an int
      */
@@ -549,18 +550,26 @@ public interface Analyst extends CommandListener {
     /**
      * The level of satisfaction of a requirement by committer organization.
      * @param requirement a requirement
+     * @param extras extra parameters
      * @param queryService a query service
      * @return a requirement satisfaction
      */
-    Requirement.Satisfaction committerSatisfaction( Requirement requirement, QueryService queryService);
+    Requirement.Satisfaction committerSatisfaction(
+            Requirement requirement,
+            Object[] extras,
+            QueryService queryService);
 
     /**
      * The level of satisfaction of a requirement by beneficiary organization.
      * @param requirement a requirement
+     * @param extras extra parameters
      * @param queryService a query service
      * @return a requirement satisfaction
      */
-    Requirement.Satisfaction beneficiarySatisfaction( Requirement requirement, QueryService queryService);
+    Requirement.Satisfaction beneficiarySatisfaction(
+            Requirement requirement,
+            Object[] extras,
+            QueryService queryService);
 
     /**
      * Sets issue scanner.

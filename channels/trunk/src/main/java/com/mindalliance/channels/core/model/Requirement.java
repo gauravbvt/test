@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.model;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -172,40 +173,112 @@ public class Requirement extends ModelObject implements Countable {
                 || ModelEntity.implies( other.getOrganization(), spec.getOrganization(), planLocale ) );
     }
 
-
     /**
-     * Evaluate the satisfaction of the requirement by an organization as committer or beneficiary.
+     * Evaluate the satisfaction of the requirement by an organization as committer or beneficiary in any situation.
      *
      * @param organization  an organization
      * @param asBeneficiary a boolean
      * @param queryService  a query service
+     * @param analyst       an analyst
      * @return a satisfaction rating
      */
     public Satisfaction satisfaction(
             Organization organization,
             boolean asBeneficiary,
-            QueryService queryService ) {
+            QueryService queryService,
+            Analyst analyst ) {
+        return satisfaction( organization, asBeneficiary, null, null, queryService, analyst );
+    }
+
+
+    /**
+     * Evaluate the satisfaction of the requirement by an organization as committer or beneficiary
+     * in a given situation (if timing and/or event are not null).
+     *
+     * @param organization  an organization
+     * @param asBeneficiary a boolean
+     * @param timing        a phase timing
+     * @param event         an event
+     * @param queryService  a query service
+     * @param analyst       an analyst
+     * @return a satisfaction rating
+     */
+    public Satisfaction satisfaction(
+            Organization organization,
+            boolean asBeneficiary,
+            Phase.Timing timing,
+            Event event,
+            QueryService queryService,
+            Analyst analyst ) {
         List<Flow> candidateFlows = findCandidateFlows( organization, asBeneficiary, queryService );
         if ( candidateFlows.isEmpty() ) {
             return Satisfaction.Impossible;
         } else {
             Commitments commitments = new Commitments( queryService, candidateFlows )
-                    .satisfying( this );
+                    .satisfying( this )
+                    .inSituation( timing, event, queryService.getPlan().getLocale() )
+                    .realizable( analyst, queryService.getPlan() );
             Map<Actor, List<Commitment>> groupedCommitments = groupByActor( commitments, asBeneficiary );
             if ( asBeneficiary ) {
                 Satisfaction agentCountSatisfaction = getAgentCountSatisfaction(
                         groupedCommitments, getBeneficiarySpec().getCardinality() );
-                Satisfaction sourcesCountSatisfaction = getSourcesCountSatisfaction( groupedCommitments );
+                Satisfaction sourcesPerReceiverCountSatisfaction =
+                        getSourcesPerReceiverCountSatisfaction( groupedCommitments );
                 // return minimum satisfaction
-                return agentCountSatisfaction.compareTo( sourcesCountSatisfaction ) <= 0 ?
+                return agentCountSatisfaction.compareTo( sourcesPerReceiverCountSatisfaction ) <= 0 ?
                         agentCountSatisfaction
-                        : sourcesCountSatisfaction;
+                        : sourcesPerReceiverCountSatisfaction;
 
             } else {
                 return getAgentCountSatisfaction(
                         groupedCommitments, getCommitterSpec().getCardinality() );
             }
         }
+    }
+
+    /**
+     * Return the reason a requirement is not satisfied by an organization as committer or beneficiary.
+     *
+     * @param organization  an organization
+     * @param asBeneficiary a boolean
+     * @param queryService  a query service
+     * @return a string
+     */
+    public String dissatisfactionSummary(
+            Organization organization,
+            boolean asBeneficiary,
+            QueryService queryService,
+            Analyst analyst ) {
+        List<Flow> candidateFlows = findCandidateFlows( organization, asBeneficiary, queryService );
+        String dissatisfaction = "";
+        if ( candidateFlows.isEmpty() ) {
+            dissatisfaction = "No flow in the plan could possibly have " + organization.getName() + " satisfy the requirement";
+        } else {
+            Commitments commitments = new Commitments( queryService, candidateFlows )
+                    .satisfying( this ).realizable( analyst, queryService.getPlan() );
+            Map<Actor, List<Commitment>> groupedCommitments = groupByActor( commitments, asBeneficiary );
+            if ( asBeneficiary ) {
+                Satisfaction agentCountSatisfaction = getAgentCountSatisfaction(
+                        groupedCommitments, getBeneficiarySpec().getCardinality() );
+                Satisfaction sourcesCountSatisfaction = getSourcesPerReceiverCountSatisfaction( groupedCommitments );
+                // return minimum satisfaction
+                dissatisfaction = agentCountSatisfaction.compareTo( sourcesCountSatisfaction ) <= 0 ?
+                        getAgentCountDissatisfaction(
+                                groupedCommitments,
+                                getBeneficiarySpec().getCardinality(),
+                                asBeneficiary,
+                                organization )
+                        : getSourcesCountDissatisfaction( groupedCommitments, organization );
+
+            } else {
+                dissatisfaction = getAgentCountDissatisfaction(
+                        groupedCommitments,
+                        getCommitterSpec().getCardinality(),
+                        asBeneficiary,
+                        organization );
+            }
+        }
+        return dissatisfaction;
     }
 
     private Map<Actor, List<Commitment>> groupByActor( Commitments commitments, boolean asBeneficiary ) {
@@ -224,17 +297,6 @@ public class Requirement extends ModelObject implements Countable {
         return groups;
     }
 
-    private Satisfaction getSourcesCountSatisfaction( Map<Actor, List<Commitment>> groupedCommitments ) {
-        int minSourceCount = getMinSourceCount( groupedCommitments );
-        int maxSourceCount = getMaxSourceCount( groupedCommitments );
-        Cardinality cardinality = getCardinality();
-        return cardinality.isRequiredCount( minSourceCount ) && cardinality.isRequiredCount( maxSourceCount ) ?
-                cardinality.isSafeCount( minSourceCount ) && cardinality.isSafeCount( maxSourceCount )
-                        ? Satisfaction.Strong
-                        : Satisfaction.Weak
-                : Satisfaction.Negative;
-    }
-
     private Satisfaction getAgentCountSatisfaction(
             Map<Actor, List<Commitment>> groupedCommitments,
             Cardinality cardinality ) {
@@ -244,6 +306,48 @@ public class Requirement extends ModelObject implements Countable {
                         ? Satisfaction.Strong
                         : Satisfaction.Weak
                 : Satisfaction.Negative;
+    }
+
+    private String getAgentCountDissatisfaction(
+            Map<Actor, List<Commitment>> groupedCommitments,
+            Cardinality cardinality,
+            boolean asBeneficiary,
+            Organization org ) {
+        int agentCount = groupedCommitments.keySet().size();
+        return cardinality.isRequiredCount( agentCount ) ?
+                ""
+                : "There is not "
+                + cardinality.toString()
+                + " agent(s) in "
+                + org.getName()
+                + ( asBeneficiary ? " receiving " : " sharing " )
+                + "the specified info";
+    }
+
+    private Satisfaction getSourcesPerReceiverCountSatisfaction( Map<Actor, List<Commitment>> groupedByActorCommitments ) {
+        int minSourceCount = getMinSourceCount( groupedByActorCommitments );
+        int maxSourceCount = getMaxSourceCount( groupedByActorCommitments );
+        Cardinality cardinality = getCardinality();
+        return cardinality.isRequiredCount( minSourceCount ) && cardinality.isRequiredCount( maxSourceCount ) ?
+                cardinality.isSafeCount( minSourceCount ) && cardinality.isSafeCount( maxSourceCount )
+                        ? Satisfaction.Strong
+                        : Satisfaction.Weak
+                : Satisfaction.Negative;
+    }
+
+    private String getSourcesCountDissatisfaction(
+            Map<Actor, List<Commitment>> groupedByActorCommitments,
+            Organization org ) {
+        int minSourceCount = getMinSourceCount( groupedByActorCommitments );
+        int maxSourceCount = getMaxSourceCount( groupedByActorCommitments );
+        Cardinality cardinality = getCardinality();
+        return cardinality.isRequiredCount( minSourceCount ) && cardinality.isRequiredCount( maxSourceCount ) ?
+                ""
+                : "Not all receiving agents in "
+                + org.getName()
+                + " have "
+                + cardinality.toString()
+                + " alternate source(s) as required";
     }
 
     private int getMinSourceCount( Map<Actor, List<Commitment>> groupedCommitments ) {
@@ -278,7 +382,7 @@ public class Requirement extends ModelObject implements Countable {
                         Flow flow = (Flow) object;
                         return flow.isSharing()
                                 && matchesFlow( (Flow) object, planLocale )
-                                && matchesOrganization( organization, asBeneficiary, planLocale );
+                                && appliesTo( organization, asBeneficiary, planLocale );
                     }
                 }
         );
@@ -293,12 +397,12 @@ public class Requirement extends ModelObject implements Countable {
     public boolean appliesTo( Event event, Place planLocale ) {
         return event == null
                 || beneficiarySpec.getEvent() == null
-                || beneficiarySpec.getEvent().narrowsOrEquals( event , planLocale )
-                || event.narrowsOrEquals( beneficiarySpec.getEvent() , planLocale );
+                || beneficiarySpec.getEvent().narrowsOrEquals( event, planLocale )
+                || event.narrowsOrEquals( beneficiarySpec.getEvent(), planLocale );
     }
 
 
-    private boolean matchesOrganization(
+    public boolean appliesTo(
             Organization organization,
             boolean asBeneficiary,
             Place planLocale ) {
@@ -328,8 +432,8 @@ public class Requirement extends ModelObject implements Countable {
         EventPhase commitmentEventPhase = commitment.getEventPhase();
         return matchesFlow( flow, planLocale )
                 && beneficiarySpec.appliesTo( commitmentEventPhase, planLocale )
-                && committer.narrowsOrEquals( committerSpec.getResourceSpec(), planLocale )
-                && beneficiary.narrowsOrEquals( beneficiarySpec.getResourceSpec(), planLocale );
+                && committerSpec.appliesTo( committer, planLocale )
+                && beneficiarySpec.appliesTo( beneficiary, planLocale );
     }
 
     public Map<String, Object> mapState() {
@@ -368,9 +472,15 @@ public class Requirement extends ModelObject implements Countable {
     public Organization getBeneficiaryOrganization() {
         return beneficiarySpec.getOrganization();
     }
+
     public void setBeneficiaryOrganization( Organization organization ) {
         beneficiarySpec.setOrganization( organization );
     }
+
+    public void setSituationIfAppropriate( Phase.Timing timing, Event event, Place planLocale ) {
+        beneficiarySpec.setSituationIfAppropriate( timing, event, planLocale );
+    }
+
 
     /**
      * Required count.
@@ -400,10 +510,10 @@ public class Requirement extends ModelObject implements Countable {
         }
 
         public void setMinCount( int minCount ) {
-                int val = Math.max( 0, minCount );
-                if ( maxCount != null ) val = Math.min( val, maxCount );
-                this.minCount = val;
-                safeCount = Math.max( this.minCount, safeCount );
+            int val = Math.max( 0, minCount );
+            if ( maxCount != null ) val = Math.min( val, maxCount );
+            this.minCount = val;
+            safeCount = Math.max( this.minCount, safeCount );
         }
 
         public Integer getMaxCount() {
@@ -483,6 +593,22 @@ public class Requirement extends ModelObject implements Countable {
             copy.setSafeCount( safeCount );
             if ( maxCount != null ) copy.setMaxCount( maxCount );
             return copy;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append( "at least " );
+            sb.append( minCount );
+            if ( safeCount != minCount ) {
+                sb.append( " and preferably more than " );
+                sb.append( safeCount - 1 );
+            }
+            if ( maxCount != null ) {
+                sb.append( " but at most " );
+                sb.append( maxCount );
+            }
+            return sb.toString();
         }
     }
 
@@ -698,6 +824,17 @@ public class Requirement extends ModelObject implements Countable {
         public boolean appliesTo( EventPhase eventPhase, Place planLocale ) {
             return !( timing != null && eventPhase.getPhase().getTiming() != timing )
                     && !( event != null && !eventPhase.getEvent().narrowsOrEquals( event, planLocale ) );
+        }
+
+        public boolean appliesTo( ResourceSpec spec, Place planLocale ) {
+            return resourceSpec.isAnyone() || spec.narrowsOrEquals( resourceSpec, planLocale );
+        }
+
+        public void setSituationIfAppropriate( Phase.Timing t, Event e, Place planLocale ) {
+            if ( t != null && timing == null )
+                timing = t;
+            if ( e != null && ( event == null || e.narrowsOrEquals( event, planLocale ) ) )
+                event = e;
         }
     }
 }

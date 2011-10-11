@@ -14,8 +14,10 @@ import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -129,6 +131,17 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         while( iterator.hasNext() ) {
             Commitment commitment = iterator.next();
             if ( requirement.satisfiedBy( commitment, planLocale ) )
+                result.add(  commitment );
+        }
+        return result;
+    }
+
+    public Commitments realizable( Analyst analyst, Plan plan ) {
+        Commitments result = new Commitments( planLocale );
+        Iterator<Commitment> iterator = iterator();
+        while( iterator.hasNext() ) {
+            Commitment commitment = iterator.next();
+            if ( analyst.findRealizabilityProblems( plan, commitment ).isEmpty() )
                 result.add(  commitment );
         }
         return result;

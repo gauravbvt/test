@@ -3,6 +3,7 @@ package com.mindalliance.channels.engine.analysis.graph;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.Commitments;
@@ -67,23 +68,40 @@ public class RequirementRelationship extends Relationship<Organization> {
         }
     }
 
-    public boolean hasUnfulfilledRequirements( QueryService queryService ) {
-        return getNonFulfillmentSummary( queryService ).isEmpty();
+    public boolean hasUnfulfilledRequirements(
+            Phase.Timing timing,
+            Event event,
+            QueryService queryService,
+            Analyst analyst ) {
+        return !getNonFulfillmentSummary( timing, event, queryService, analyst ).isEmpty();
     }
 
-    public String getNonFulfillmentSummary( QueryService queryService ) {
+    public String getNonFulfillmentSummary(
+            Phase.Timing timing,
+            Event event,
+            QueryService queryService,
+            Analyst analyst ) {
         StringBuilder sb =new StringBuilder(  );
-        Commitments allCommitments = queryService.getAllCommitments();
+        Commitments allCommitments = Commitments.all( queryService );
         List<Requirement> unfulfilled = new ArrayList<Requirement>(  );
-        for ( Requirement req : getRequirements() ) {
-            if ( allCommitments.satisfying( req ).isEmpty() )
+        Plan plan = queryService.getPlan();
+        for ( Requirement requirement : getRequirements() ) {
+            Requirement req = requirement.transientCopy();
+            req.setCommitterOrganization( (Organization) getFromIdentifiable( queryService ) );
+            req.setBeneficiaryOrganization( (Organization) getToIdentifiable( queryService ) );
+            if ( allCommitments.satisfying( req )
+                    .inSituation( timing, event, plan.getLocale() )
+                    .realizable( analyst, plan ).isEmpty() )
                 unfulfilled.add( req );
         }
-        if (!unfulfilled.isEmpty() ) {
-            sb.append( "Unfulfilled requirements: " );
+        if ( !unfulfilled.isEmpty() ) {
+            sb.append( "Unfulfilled " );
+            sb.append( unfulfilled.size() == 1 ? "requirement: " : "requirements: " );
             Iterator<Requirement> iter = unfulfilled.iterator();
             while( iter.hasNext() ) {
+                sb.append( '"' );
                 sb.append( iter.next().getName() );
+                sb.append( '"' );
                 if ( iter.hasNext() ) sb.append( ", " );
             }
         }

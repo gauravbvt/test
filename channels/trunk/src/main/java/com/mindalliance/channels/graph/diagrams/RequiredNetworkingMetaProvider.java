@@ -1,6 +1,8 @@
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
@@ -40,10 +42,14 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
 
     private final Organization selectedOrganization;
     private final RequirementRelationship selectedRequirementRel;
+    private final Phase.Timing timing;
+    private final Event event;
 
     public RequiredNetworkingMetaProvider(
             Organization selectedOrganization,
             RequirementRelationship selectedRequirementRel,
+            Phase.Timing timing,
+            Event event,
             String outputFormat,
             Resource imageDirectory,
             Analyst analyst,
@@ -51,6 +57,8 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
         super( outputFormat, imageDirectory, analyst, queryService );
         this.selectedOrganization = selectedOrganization;
         this.selectedRequirementRel = selectedRequirementRel;
+        this.timing = timing;
+        this.event = event;
     }
 
     @Override
@@ -189,11 +197,11 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
             list.add( new DOTAttribute( "weight", "2.0" ) );
             if ( highlighted )
                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
-            if ( edge.hasUnfulfilledRequirements( queryService ) ) {
+            if ( edge.hasUnfulfilledRequirements( timing, event, queryService, getAnalyst() ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                        sanitize( edge.getNonFulfillmentSummary( queryService ) ) ) );
+                        sanitize( edge.getNonFulfillmentSummary( timing, event, queryService, getAnalyst() ) ) ) );
             }
             return list;
         }
