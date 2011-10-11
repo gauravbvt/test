@@ -73,10 +73,10 @@ public class MAV0012_viewAllOrganizationForm
 			  }
 			  else{
 				  GlobalVariables.sVerifyError ="Verification Failed "+"Expected " + GlobalVariables.viewElements.get("organizationsInPlan")+" Actual "+GlobalVariables.oElement.getText();
-				  // Write Results
-				  LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						  GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);	    
 			  }
 			  // WebElement Synchronization
 			  Thread.currentThread();
