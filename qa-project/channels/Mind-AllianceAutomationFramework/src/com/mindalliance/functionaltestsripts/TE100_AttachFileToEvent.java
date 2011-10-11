@@ -14,7 +14,7 @@ public class TE100_AttachFileToEvent
 {
 	public TE100_AttachFileToEvent(){
 		try {
-			GlobalVariables.sTestCaseId = "TE092_RemoveCategoriesOfEvents";
+			GlobalVariables.sTestCaseId = "TE100_AttachFileToEvent";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);

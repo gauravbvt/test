@@ -121,7 +121,7 @@ public class TFP056_AddInfoReceiveSendIntent
 				// Click on Show Advance form link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Advance form";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormSendInfo"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormReceiveInfo"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -150,10 +150,11 @@ public class TFP056_AddInfoReceiveSendIntent
 					}
 				}
 				else {
+					GlobalVariables.sVerifyError="Assertion Failed Expected Reports Actual "+GlobalVariables.oDropDown.getAllSelectedOptions();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
