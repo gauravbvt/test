@@ -412,10 +412,10 @@ public class MAC0012_UndoMoveTask {
 						else
 					    {
 							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task 2' "+" Actual " + GlobalVariables.sStrCheck;	
-					    	// Write Results
-							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-									GlobalVariables.sBlank, GlobalVariables.sBlank);
+									GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 					    }
 					}
 					GlobalVariables.oDriver.findElement(By.className("close")).click();

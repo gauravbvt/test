@@ -104,9 +104,9 @@ public class MAC0016_UndoRemoveIssue {
 				else{
 					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Menu' "+" Actual " + GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 				}
 				// WebElement Synchronization
 				Thread.currentThread();

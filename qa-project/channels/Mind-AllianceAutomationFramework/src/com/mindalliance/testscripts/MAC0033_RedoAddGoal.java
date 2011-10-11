@@ -176,10 +176,10 @@ public class MAC0033_RedoAddGoal {
 					}
 					else{
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Redo Add Goal' "+" Actual " + GlobalVariables.oElement.getValue();
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();

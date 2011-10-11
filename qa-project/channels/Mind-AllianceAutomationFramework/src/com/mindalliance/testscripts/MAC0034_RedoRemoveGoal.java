@@ -193,9 +193,6 @@ public class MAC0034_RedoRemoveGoal {
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
-						// WebElement Synchronization
-						Thread.currentThread();
-						Thread.sleep(3000);
 					}
 					else
 				    {

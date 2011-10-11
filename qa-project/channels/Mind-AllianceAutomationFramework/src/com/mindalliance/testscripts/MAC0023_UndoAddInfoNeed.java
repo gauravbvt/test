@@ -139,10 +139,10 @@ public class MAC0023_UndoAddInfoNeed {
 						GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
 					}
 					catch (WebDriverException e) {
-								// Write Results
-								LogFunctions.writeLogs(GlobalVariables.sDescription);
-								LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-										GlobalVariables.sBlank, GlobalVariables.sBlank);
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 					}
 					// WebElement Synchronization
 					Thread.currentThread();

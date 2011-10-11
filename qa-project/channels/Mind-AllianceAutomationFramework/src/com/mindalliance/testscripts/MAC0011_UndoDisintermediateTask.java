@@ -233,7 +233,7 @@ public class MAC0011_UndoDisintermediateTask {
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					// ASSERTION:When clicked on 'Undo disintermediate' option, the disintermediated task should be intermediate again
+					// ASSERTION: When clicked on 'Undo disintermediate' option, the disintermediated task should be intermediate again
 					GlobalVariables.bIsSuccess = Boolean.FALSE;
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("flow-map"));
 					List<WebElement> areas = GlobalVariables.oElement.findElements(By.tagName("area"));

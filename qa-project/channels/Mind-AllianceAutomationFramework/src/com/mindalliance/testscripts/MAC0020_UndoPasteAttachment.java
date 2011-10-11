@@ -203,10 +203,10 @@ public class MAC0020_UndoPasteAttachment {
 					else
 				    {
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Attachment copied' "+" Actual " + GlobalVariables.oElement.getText();
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -261,10 +261,10 @@ public class MAC0020_UndoPasteAttachment {
 						else
 					    {
 							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
-					    	// Write Results
-							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-									GlobalVariables.sBlank, GlobalVariables.sBlank);
+									GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 							break;
 					    }
 					}
@@ -299,10 +299,10 @@ public class MAC0020_UndoPasteAttachment {
 					else
 				    {
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + GlobalVariables.sStrCheck;
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();

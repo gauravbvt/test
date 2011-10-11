@@ -192,9 +192,9 @@ public class MAP0021_deleteFileOfEvent
 					else{
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual "+GlobalVariables.oElement.getText();
 						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();

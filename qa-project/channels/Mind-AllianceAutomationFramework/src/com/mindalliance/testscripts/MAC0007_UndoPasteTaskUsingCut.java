@@ -181,9 +181,9 @@ public class MAC0007_UndoPasteTaskUsingCut {
 				    else{
 				    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task 1' "+" Actual " + GlobalVariables.oElement.getText();
 				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -216,10 +216,10 @@ public class MAC0007_UndoPasteTaskUsingCut {
 					else
 				    {
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task 1' "+" Actual " + GlobalVariables.sStrCheck;
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();

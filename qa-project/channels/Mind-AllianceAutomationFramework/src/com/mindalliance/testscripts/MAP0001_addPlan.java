@@ -89,8 +89,7 @@ public class MAP0001_addPlan
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.testData.get("New Plan v.1 (dev)").equals(option.getText())){
 			    		// Write Results
-			    		System.out.println("If Part");
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
+			    		LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    		option.setSelected();

@@ -132,8 +132,8 @@ public class MAP0003_addNewUserToPlan
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'AfourTech' "+" Actual "+td.getText();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 						break;
 					}
 				}
