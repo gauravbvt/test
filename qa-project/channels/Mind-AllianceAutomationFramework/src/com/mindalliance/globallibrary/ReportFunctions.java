@@ -302,9 +302,8 @@ public class ReportFunctions {
 		destination.close();
 	}
 
-	private static void generateFailureReport()
+	private static void generateFailureReport() throws XMLStreamException, IOException
 	{
-		try {
 		csvTestCase = new CsvReader(GlobalVariables.sLogDirectoryPath + "\\Results.csv");
 		OutputStream destination = new FileOutputStream(GlobalVariables.sReportDstDirectoryPath + "\\TestCaseFailureList.htm");
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
@@ -410,65 +409,47 @@ public class ReportFunctions {
 						xml.writeEndElement();
 					xml.writeEndElement();
 				xml.writeEndElement();
-				for (int i = 0; i < arrayOfTestCaseId.length ; i++) {
-					if(arrayOfTestCaseId[i] != null) {
-						xml.writeStartElement("tr");
-						xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
-						xml.writeAttribute("bgColor","#DDDDDD");
-						xml.writeAttribute("padding","");
-						xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
-						xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+				csvTestCase.readHeaders();
+				while(csvTestCase.readRecord())
+				 {
+					for (int i = 0; i < arrayOfTestCaseId.length ;) {
+						if(arrayOfTestCaseId[i] != null) {
+							xml.writeStartElement("tr");
+							xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
+							xml.writeAttribute("bgColor","#DDDDDD");
+							xml.writeAttribute("padding","");
+							xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+							xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
 							xml.writeStartElement("td");
-							xml.writeStartElement("left");
+								xml.writeStartElement("left");
 									xml.writeCharacters(arrayOfTestCaseId[i]);
 								xml.writeEndElement();
 							xml.writeEndElement();
-							xml.writeStartElement("td");
-								xml.writeStartElement("center");
-									xml.writeStartElement("font");
-										if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
-											xml.writeAttribute("color", "GREEN");
-										else
-											xml.writeAttribute("color", "RED");
-										xml.writeCharacters(arrayOftestCaseResult[i]);
-									xml.writeEndElement();
-								xml.writeEndElement();
-							/*xml.writeStartElement("td");
-								xml.writeStartElement("center");
-									xml.writeStartElement("font");
-//										Script Exception
-								
-										xml.writeCharacters(arrayOftestCaseSummary[i]);
-									xml.writeEndElement();
-								xml.writeEndElement();
 								xml.writeStartElement("td");
-								xml.writeStartElement("center");
-									xml.writeStartElement("font");
-//										Exception
-										xml.writeCharacters(arrayOftestCaseSummary[i]);
-									xml.writeEndElement();
-								xml.writeEndElement();*/	
-							xml.writeEndElement();
-						xml.writeEndElement();
-					}
-				}
-				 csvTestCase.readHeaders();
-				 while(csvTestCase.readRecord())
-				 {
-					 xml.writeStartElement("td");
-					 xml.writeCharacters(csvTestCase.get("ScriptException"));
-					 xml.writeEndElement();
-					 if (csvTestCase.get("ErrorReport") != GlobalVariables.sBlank) {
-						 xml.writeStartElement("td");
-						 xml.writeCharacters(csvTestCase.get("ErrorReport"));
-						 xml.writeEndElement();
+									xml.writeStartElement("center");
+											xml.writeStartElement("font");
+												if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
+													xml.writeAttribute("color", "GREEN");
+												else
+													xml.writeAttribute("color", "RED");
+												xml.writeCharacters(arrayOftestCaseResult[i]);
+											xml.writeEndElement();
+									xml.writeStartElement("td");
+										xml.writeStartElement("left");
+											xml.writeCharacters(csvTestCase.get("ScriptException"));
+										xml.writeEndElement();
+									if (csvTestCase.get("ErrorReport") != GlobalVariables.sBlank) {
+										xml.writeStartElement("td");
+											xml.writeCharacters(csvTestCase.get("ErrorReport"));
+										xml.writeEndElement();
+									}
+									else{
+										xml.writeStartElement("td");
+										xml.writeEndElement();
+									}
+						}
+						break;
 					 }
-					 else{
-						 xml.writeStartElement("td");
-						 xml.writeEndElement();
-					 }
-
-					 //xml.writeEndElement();
 				 }
 				
 				 xml.writeEndElement();
@@ -476,12 +457,10 @@ public class ReportFunctions {
 				 xml.writeEndDocument();
 				 xml.close();
 				 destination.close();
+				 csvTestCase.close();
+				 
 		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+		
 	/**
 	 * Generate TestCase Index
 	 * @throws XMLStreamException
@@ -515,16 +494,6 @@ public class ReportFunctions {
 									xml.writeCharacters("TestCaseId");
 								xml.writeEndElement();
 						xml.writeEndElement();
-						/*xml.writeStartElement("td");
-						xml.writeAttribute("bgColor","#BBBBBB");
-						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
-						xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
-							xml.writeStartElement("center");
-								xml.writeStartElement("strong");
-									xml.writeCharacters("Title");
-								xml.writeEndElement();
-							xml.writeEndElement();
-						xml.writeEndElement();*/
 						xml.writeStartElement("td");
 						xml.writeAttribute("bgColor","#BBBBBB");
 						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
@@ -552,9 +521,6 @@ public class ReportFunctions {
 								xml.writeCharacters(arrayOfTestCaseId[i]);
 							xml.writeEndElement();
 					xml.writeEndElement();
-					/*xml.writeStartElement("td");
-						xml.writeCharacters(arrayOftestCaseSummary[i]);
-					xml.writeEndElement();*/
 					xml.writeStartElement("td");
 						xml.writeStartElement("center");
 							xml.writeStartElement("font");
@@ -583,9 +549,7 @@ public class ReportFunctions {
 	 */
 	public static void generateAutomationReportInHtml(String testName) throws IOException, XMLStreamException {
 		csvTestCase = new CsvReader(GlobalVariables.sLogDirectoryPath + "\\Results.csv");
-		//csvTestCase = new CsvReader("C:\\Users\\admin\\workspace\\Mind-AllianceAutomationFramework\\Logs\\2011_02_22_14_34_49\\Results.csv");
 		OutputStream destination = new FileOutputStream(GlobalVariables.sReportDstDirectoryPath + "\\" + testName + ".htm");
-		//OutputStream destination = new FileOutputStream("C:\\Users\\admin\\workspace\\Mind-AllianceAutomationFramework\\Reports\\2011_02_22_14_34_49\\" + testName + ".html");
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
