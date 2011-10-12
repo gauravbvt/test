@@ -438,6 +438,7 @@ public class ReportFunctions {
 										xml.writeAttribute("color", "RED");
 									xml.writeCharacters(arrayOftestCaseResult[i]);
 								xml.writeEndElement();
+							xml.writeEndElement();
 							xml.writeStartElement("td");
 							xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
 							xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
@@ -446,17 +447,15 @@ public class ReportFunctions {
 										if(csvTestCase.get("ScriptException")!= GlobalVariables.sBlank) {
 											xml.writeCharacters(csvTestCase.get("ScriptException"));
 											xml.writeEndElement();
-											break;
 										}
 										if(csvTestCase.get("ErrorReport")!= GlobalVariables.sBlank) {
+//											xml.writeStartElement("tr");
 											xml.writeStartElement("td");
-											xml.writeStartElement("tr");
 											xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
 											xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
 											xml.writeStartElement("center");
 											xml.writeCharacters(csvTestCase.get("ErrorReport"));
 											xml.writeEndElement();
-											break;
 										}
 									}
 						}
