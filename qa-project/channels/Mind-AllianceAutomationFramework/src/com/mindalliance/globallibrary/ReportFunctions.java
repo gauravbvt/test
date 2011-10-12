@@ -365,6 +365,7 @@ public class ReportFunctions {
 		xml.writeEndElement();
 		xml.writeEndElement();
 		xml.writeStartElement("body");
+		xml.writeEmptyElement("br");
 			xml.writeStartElement("table");
 			xml.writeAttribute("border", "0");
 			xml.writeAttribute("width","100%");
@@ -416,8 +417,7 @@ public class ReportFunctions {
 						while(csvTestCase.readRecord()) {
 							if(csvTestCase.get("TestCaseId").equals(arrayOfTestCaseId[i])) {
 								if(csvTestCase.get("ScriptException")!= GlobalVariables.sBlank || 
-								   csvTestCase.get("ErrorReport")!= GlobalVariables.sBlank	|| 
-								   arrayOftestCaseResult[i].equals(GlobalVariables.sPassed )) { 
+								   csvTestCase.get("ErrorReport")!= GlobalVariables.sBlank) { 
 										xml.writeStartElement("tr");
 											xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
 											xml.writeAttribute("bgColor","#DDDDDD");
