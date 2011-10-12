@@ -448,7 +448,7 @@ public class ReportFunctions {
 											xml.writeEndElement();
 											break;
 										}
-										else if(csvTestCase.get("ErrorReport")!= GlobalVariables.sBlank) {
+										if(csvTestCase.get("ErrorReport")!= GlobalVariables.sBlank) {
 											xml.writeStartElement("td");
 											xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
 											xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
