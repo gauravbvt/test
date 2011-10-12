@@ -5,14 +5,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
-
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
-
 import com.csvreader.CsvReader;
 
 public class ReportFunctions {
@@ -416,59 +413,74 @@ public class ReportFunctions {
 				csvTestCase.readHeaders();
 				for (int i = 0; i < arrayOfTestCaseId.length ;i++) {
 					if(arrayOfTestCaseId[i] != null) {
-						xml.writeStartElement("tr");
-						xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
-						xml.writeAttribute("bgColor","#DDDDDD");
-						xml.writeAttribute("padding","");
-						xml.writeStartElement("td");
-						xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
-						xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
-							xml.writeStartElement("left");
-								xml.writeCharacters(arrayOfTestCaseId[i]);
-							xml.writeEndElement();
-						xml.writeEndElement();
-						xml.writeStartElement("td");
-						xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
-						xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
-							xml.writeStartElement("center");
-								xml.writeStartElement("font");
-									if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
-										xml.writeAttribute("color", "GREEN");
-									else
-										xml.writeAttribute("color", "RED");
-									xml.writeCharacters(arrayOftestCaseResult[i]);
-								xml.writeEndElement();
-							xml.writeEndElement();
-							xml.writeStartElement("td");
-							xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
-							xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
-								xml.writeStartElement("center");
-									while(csvTestCase.readRecord()) {
-										if(csvTestCase.get("ScriptException")!= GlobalVariables.sBlank) {
-											xml.writeCharacters(csvTestCase.get("ScriptException"));
-											xml.writeEndElement();
-										}
-										if(csvTestCase.get("ErrorReport")!= GlobalVariables.sBlank) {
-//											xml.writeStartElement("tr");
-											xml.writeStartElement("td");
-											xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
-											xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
-											xml.writeStartElement("center");
-											xml.writeCharacters(csvTestCase.get("ErrorReport"));
-											xml.writeEndElement();
-										}
+						while(csvTestCase.readRecord()) {
+							if(csvTestCase.get("TestCaseId").equals(arrayOfTestCaseId[i])) {
+								if(csvTestCase.get("ScriptException")!= GlobalVariables.sBlank || 
+								   csvTestCase.get("ErrorReport")!= GlobalVariables.sBlank	|| 
+								   arrayOftestCaseResult[i].equals(GlobalVariables.sPassed )) { 
+										xml.writeStartElement("tr");
+											xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
+											xml.writeAttribute("bgColor","#DDDDDD");
+											xml.writeAttribute("padding","");
+												xml.writeStartElement("td");
+													xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+													xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+														xml.writeStartElement("left");
+															xml.writeCharacters(arrayOfTestCaseId[i]);
+														xml.writeEndElement();
+												xml.writeEndElement();
+												xml.writeStartElement("td");
+													xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+													xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+														xml.writeStartElement("center");
+															xml.writeStartElement("font");
+															if(arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
+																xml.writeAttribute("color", "GREEN");
+															else
+																xml.writeAttribute("color", "RED");
+																xml.writeCharacters(arrayOftestCaseResult[i]);
+															xml.writeEndElement();
+														xml.writeEndElement();
+														xml.writeStartElement("td");
+															xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+															xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+																xml.writeStartElement("center");
+																if(csvTestCase.get("ScriptException")!= GlobalVariables.sBlank) {
+																	xml.writeCharacters(csvTestCase.get("ScriptException"));
+																	xml.writeEndElement();
+																}
+																if(csvTestCase.get("ErrorReport")!= GlobalVariables.sBlank) {
+																	xml.writeStartElement("td");
+																		xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+																		xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+																			xml.writeStartElement("center");
+																				xml.writeCharacters(csvTestCase.get("ErrorReport"));
+																			xml.writeEndElement();
+																	xml.writeEndElement();
+																}
+																else
+																{
+																	xml.writeStartElement("td");
+																		xml.writeAttribute("bgColor","#DDDDDD");
+																		xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+																		xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+																	xml.writeEndElement();
+																}
+															xml.writeEndElement();
+												xml.writeEndElement();
+										xml.writeEndElement();
 									}
-						}
+							}
+							else 
+								i++;
+					}
 				}
-				
-				xml.writeEndElement();
-				xml.writeEndElement();
-				xml.writeEndDocument();
-				xml.close();
-				destination.close();
-				csvTestCase.close();
-		}
-		
+			}
+			xml.writeEndDocument();
+			xml.close();
+			destination.close();
+			csvTestCase.close();
+		}		
 	/**
 	 * Generate TestCase Index
 	 * @throws XMLStreamException
