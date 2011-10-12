@@ -42,7 +42,7 @@ public class TFP088_AddInfoReceiveSentAttachmentAsReference
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New segment added";
-				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Receive Send Attachment As Reference"), "New");
+				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Receive Send Reference"), "New");
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -103,27 +103,20 @@ public class TFP088_AddInfoReceiveSentAttachmentAsReference
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<15;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(file));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
+					GlobalVariables.sVerifyError="Verification Failed Actual 'This is File 1' Expected "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -152,11 +145,20 @@ public class TFP088_AddInfoReceiveSentAttachmentAsReference
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				// Scroll Down
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("flow-details"));
+				GlobalVariables.oElement.click();
+				for(int i=0;i<30;i++)
+					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				// Enter Attachment as reference
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Attachment As Reference Of Receive Panel Entered";
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:type")));
+				options = GlobalVariables.oDropDown.getOptions();
 				for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("reference").equals(option.getText())){
 			    		option.setSelected();
@@ -174,17 +176,9 @@ public class TFP088_AddInfoReceiveSentAttachmentAsReference
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
-				GlobalVariables.oElement.click();
-				for(int i=0;i<15;i++)
-					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(file));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

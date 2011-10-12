@@ -112,6 +112,11 @@ public class TFP025_OngoingOrStartsWith
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				// 	Call Logout
 				GlobalVariables.iStepNo++;

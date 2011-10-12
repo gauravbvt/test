@@ -64,11 +64,14 @@ public class TFP059_ReplyThatOption
 
 				// Click on Reply that option radio button Link 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Replu that option clicked";				
+				GlobalVariables.sDescription = "Reply that option clicked";				
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSendReplyThatOption"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that Instruction text filed is disable				
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:description"));
-				if(GlobalVariables.oElement.isEnabled()==false) {
+				if(GlobalVariables.oElement.isEnabled()!=true) {
 						// 	Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -94,12 +97,15 @@ public class TFP059_ReplyThatOption
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
 				// Click on Notification radio button Link 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Notification Radio Button Clicked";				
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathReceiveInfoNotification"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that Instruction text filed is disable				
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:description"));
 				if(GlobalVariables.oElement.isEnabled()) {

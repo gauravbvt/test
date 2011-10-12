@@ -120,10 +120,11 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
+					GlobalVariables.sVerifyError="Verification Failed Actual 'This is File 1' Expected "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -157,6 +158,7 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Attachment As Reference Of Receive Panel Entered";
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:type")));
+				options = GlobalVariables.oDropDown.getOptions();
 				for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("policy").equals(option.getText())){
 			    		option.setSelected();
@@ -191,10 +193,11 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
+					GlobalVariables.sVerifyError="Verification Failed Actual 'This is File 1' Expected "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();

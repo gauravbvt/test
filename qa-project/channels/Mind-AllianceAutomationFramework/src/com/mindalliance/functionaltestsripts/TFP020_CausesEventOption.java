@@ -91,6 +91,14 @@ public class TFP020_CausesEventOption
 				Thread.currentThread();
 				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				// Stretch Up Task Details
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

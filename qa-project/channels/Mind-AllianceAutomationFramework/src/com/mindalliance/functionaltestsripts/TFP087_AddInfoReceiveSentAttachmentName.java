@@ -88,7 +88,14 @@ public class TFP087_AddInfoReceiveSentAttachmentName
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}				
+				}	
+				else{
+					GlobalVariables.sVerifyError="Verification Failed Actual 'This is File 1' Expected "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}					
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -130,7 +137,14 @@ public class TFP087_AddInfoReceiveSentAttachmentName
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}				
+				}
+				else{
+					GlobalVariables.sVerifyError="Verification Failed Actual 'This is File 1' Expected "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
