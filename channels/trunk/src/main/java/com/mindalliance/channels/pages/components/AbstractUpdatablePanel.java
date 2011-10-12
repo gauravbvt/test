@@ -74,6 +74,11 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     private Set<Long> expansions;
 
     /**
+     * The change that caused this panel to open.
+     */
+    private Change change;
+
+    /**
      * Name pattern.
      */
     private final Pattern namePattern = Pattern.compile( "^.*?(\\(\\d+\\))?$" );
@@ -165,6 +170,21 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     protected String getUsername() {
         return User.current().getUsername();
     }
+
+    protected Change getChange() {
+        return change;
+    }
+
+    protected void setChange( Change change ) {
+        this.change = change;
+    }
+
+    protected Change getChangeOnce() {
+        Change once = getChange();
+        setChange( null );
+        return once;
+    }
+
 
     /**
      * Set and update a component's visibility.

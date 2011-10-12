@@ -11664,7 +11664,58 @@
                 <entry><para>No</para></entry>
               </row>
               
+              <row>
+                <entry><para>Requirement can not possibly be fulfilled by organization</para></entry>
+                
+                <entry><para>High</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Add flows to the plan to make satisfaction possible</para>
+                  </listitem>
+                  <listitem>
+                    <para>or change the definition of the requirement.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
 
+              <row>
+                <entry><para>Organization does not have the required number of sending/receiving agents</para></entry>
+                
+                <entry><para>Medium</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Modify the plan to achieve the preferred number of required commitments for agents in the organization</para>
+                  </listitem>
+                  <listitem>
+                    <para>or change the definition of the requirement.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
+
+              <row>
+                <entry><para>Requirement is only weakly satisfied by the organization</para></entry>
+                
+                <entry><para>Medium</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Modify the plan to achieve the preferred number of required commitments for agents in the organization</para>
+                  </listitem>
+                  <listitem>
+                    <para>or change the definition of the requirement.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
+              
+              
             </tbody>
           </tgroup>
         </informaltable>
@@ -12075,6 +12126,23 @@
                 </itemizedlist></entry>
                 
                 <entry><para>No</para></entry>
+              </row>
+ 
+              <row>
+                <entry><para>Requirement is only weakly satisfied by organization</para></entry>
+                
+                <entry><para>Medium</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Modify the plan to achieve the preferred number of required commitments for agents in the organization</para>
+                  </listitem>
+                  <listitem>
+                    <para>or change the definition of the requirement.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
               </row>
               
               

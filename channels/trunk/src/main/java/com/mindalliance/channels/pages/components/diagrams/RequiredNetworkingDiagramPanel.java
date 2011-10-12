@@ -89,14 +89,18 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
     @Override
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "required.png?timing=" );
-        sb.append( getTiming() == null ? "ALL" : getTiming().name() );
-        sb.append( "&event=" );
-        sb.append( getEvent() == null ? "ALL" : getEvent().getId() );
-        sb.append( "&organization=" );
+        sb.append( "required.png?organization=" );
         sb.append( selectedOrganization == null ? "NONE" : selectedOrganization.getId() );
         sb.append("&connection=");
         sb.append( selectedRequirementRel == null ? "NONE" : selectedRequirementRel.getId() );
+        if ( getTiming() != null ) {
+            sb.append( "&timing=" );
+            sb.append( getTiming().name() );
+        }
+        if ( getEvent() != null ) {
+            sb.append( "&event=" );
+            sb.append( getEvent().getId() );
+        }
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null ) {
             sb.append( "&size=" );

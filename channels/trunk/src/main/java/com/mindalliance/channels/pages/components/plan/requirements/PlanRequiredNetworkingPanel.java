@@ -58,7 +58,7 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
      */
     private static final Logger LOG = LoggerFactory.getLogger( PlanRequiredNetworkingPanel.class );
     private static String ANY_EVENT = "Any event";
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 6;
     private static final String DOM_PREFIX_IDENTIFIER = ".req-network";
 
     private Phase.Timing selectedTiming;

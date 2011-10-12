@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
@@ -34,7 +35,8 @@ public class PlanIndexPanel extends AbstractIndexPanel {
      * Indexing choices.
      */
     private static final String[] indexingChoices =
-            {ALL, ACTORS, EOIS, EVENTS, FLOWS, MEDIA, PHASES, PLACES, ORGANIZATIONS, ROLES, SEGMENTS, TASKS};
+            {ALL, ACTORS, EOIS, EVENTS, FLOWS, MEDIA, PHASES,
+                    PLACES, ORGANIZATIONS, ROLES, REQUIREMENTS, SEGMENTS, TASKS};
 
 
     public PlanIndexPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
@@ -131,5 +133,9 @@ public class PlanIndexPanel extends AbstractIndexPanel {
         return getQueryService().list( Segment.class );
     }
 
+    @Override
+    protected List<Requirement> findIndexedRequirements() {
+        return getQueryService().list( Requirement.class );
+    }
 
-}
+ }

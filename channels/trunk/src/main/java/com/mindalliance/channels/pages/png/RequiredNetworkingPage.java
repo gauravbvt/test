@@ -37,7 +37,7 @@ public class RequiredNetworkingPage extends PngWebPage {
     public RequiredNetworkingPage( PageParameters parameters ) {
         super( parameters );
         QueryService queryService = getQueryService();
-        if ( parameters.containsKey( "timing" ) && !parameters.getString( "timing" ).equals( "NONE" ) ) {
+        if ( parameters.containsKey( "timing" ) ) {
             String name = parameters.getString( "timing" );
             try {
                 timing = Phase.Timing.valueOf( parameters.getString( "timing" ) );
@@ -45,7 +45,7 @@ public class RequiredNetworkingPage extends PngWebPage {
                 LOG.warn( "Invalid timing name: " + name );
             }
         }
-        if ( parameters.containsKey( "event" ) && !parameters.getString( "event" ).equals( "ALL" ) ) {
+        if ( parameters.containsKey( "event" ) ) {
             Long eventId = Long.valueOf( parameters.getString( "event" ) );
             try {
                 event = queryService.find( Event.class, eventId );

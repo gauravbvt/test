@@ -108,8 +108,8 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     }
 
     public PlanEditPanel( String id, IModel<? extends Identifiable> iModel,
-                          Set<Long> expansions, String aspect ) {
-        super( id, iModel, expansions, aspect );
+                          Set<Long> expansions, String aspect, Change change ) {
+        super( id, iModel, expansions, aspect, change );
     }
 
 /*
@@ -185,7 +185,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
      * {@inheritDoc}
      */
     @Override
-    protected Component makeAspectPanel( String aspect ) {
+    protected Component makeAspectPanel( String aspect, Change change ) {
         if ( aspect.equals( DETAILS ) ) {
             return getPlanDetailsPanel();
         } else if ( aspect.equals( MAP ) ) {
@@ -217,7 +217,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
         } else if ( aspect.equals( PROCEDURES ) ) {
             return getPlanProcedureMapPanel();
         } else if ( aspect.equals( REQUIREMENTS ) ) {
-            return getPlanRequirementsPanel();
+            return getPlanRequirementsPanel( change );
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
@@ -284,8 +284,8 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
         return new PlanProcedureMapPanel( "aspect" );
     }
 
-    private Component getPlanRequirementsPanel() {
-        return new PlanRequirementsPanel( "aspect", getModel(), getExpansions() );
+    private Component getPlanRequirementsPanel( Change change ) {
+        return new PlanRequirementsPanel( "aspect", getModel(), getExpansions(), change );
      }
 
     public Plan getPlan() {

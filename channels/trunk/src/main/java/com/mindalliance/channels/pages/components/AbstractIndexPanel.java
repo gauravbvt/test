@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Tag;
@@ -110,6 +111,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * Indexing choice.
      */
     protected static final String MEDIA = "Media";
+    /**
+     * Indexing choice.
+     */
+    protected static final String REQUIREMENTS = "Requirements";
     /**
      * Maximum number of rows shown in table at a time.
      */
@@ -427,6 +432,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             taggables = new ArrayList<Taggable>();
         } else if ( indexedOn.equals( SEGMENTS ) ) {
             taggables = findIndexedSegments();
+        } else if ( indexedOn.equals( REQUIREMENTS ) ) {
+            taggables = findIndexedRequirements();
         } else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
@@ -477,6 +484,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             names = indexNamesFor( findIndexedEOIs() );
         } else if ( indexedOn.equals( SEGMENTS ) ) {
             names = indexNamesFor( findIndexedSegments() );
+        } else if ( indexedOn.equals( REQUIREMENTS ) ) {
+            names = indexNamesFor( findIndexedRequirements() );
         } else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
@@ -507,6 +516,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         names.addAll( indexNamesFor( findIndexedEOIs() ) );
         names.addAll( indexNamesFor( findIndexedParts() ) );
         names.addAll( indexNamesFor( findIndexedSegments() ) );
+        names.addAll( indexNamesFor( findIndexedRequirements() ) );
         return new ArrayList<String>( names );
     }
 
@@ -523,6 +533,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         taggables.addAll( findIndexedFlows() );
         taggables.addAll( findIndexedParts() );
         taggables.addAll( findIndexedSegments() );
+        taggables.addAll( findIndexedRequirements() );
         return taggables;
     }
 
@@ -646,6 +657,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                         : indicesFor( new ArrayList<Modelable>() );
             } else if ( indexedOn.equals( SEGMENTS ) ) {
                 indices = indicesFor( findIndexedSegments() );
+            } else if ( indexedOn.equals( REQUIREMENTS ) ) {
+                indices = indicesFor( findIndexedRequirements() );
             } else {
                 throw new IllegalStateException( "Can't index on " + indexedOn );
             }
@@ -667,6 +680,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         indexEntries.addAll( indicesFor( findIndexedFlows() ) );
         if ( isFilteredByName() ) indexEntries.addAll( indicesFor( findIndexedEOIs() ) );
         indexEntries.addAll( indicesFor( findIndexedSegments() ) );
+        indexEntries.addAll( indicesFor( findIndexedRequirements() ) );
         return indexEntries;
     }
 
@@ -1029,6 +1043,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         if ( !findIndexedFlows().isEmpty() ) choices.add( FLOWS );
         if ( !findIndexedEOIs().isEmpty() ) choices.add( EOIS );
         if ( !findIndexedSegments().isEmpty() ) choices.add( SEGMENTS );
+        if ( !findIndexedRequirements().isEmpty() ) choices.add( REQUIREMENTS );
         return choices;
     }
 
@@ -1129,6 +1144,15 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      */
     protected List<Segment> findIndexedSegments() {
         return new ArrayList<Segment>();
+    }
+
+    /**
+     * Find all requirements to index.
+     *
+     * @return a list of requirements
+     */
+    protected List<Requirement> findIndexedRequirements() {
+        return new ArrayList<Requirement>();
     }
 
     /**

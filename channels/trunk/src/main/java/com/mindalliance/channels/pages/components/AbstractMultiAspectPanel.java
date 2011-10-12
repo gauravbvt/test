@@ -6,12 +6,12 @@
 
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.Updatable;
@@ -114,11 +114,19 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         this( id, model, expansions, DETAILS );
     }
 
-    protected AbstractMultiAspectPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions,
+    protected AbstractMultiAspectPanel( String id,
+                                        IModel<? extends Identifiable> model,
+                                        Set<Long> expansions,
                                         String aspect ) {
+        this( id, model, expansions, aspect, null );
+    }
+
+    protected AbstractMultiAspectPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions,
+                                        String aspect, Change change ) {
         super( id, model, expansions );
         aspectShown = aspect;
-        init();
+        setChange( change );
+        init( );
     }
 
     @Override
@@ -174,7 +182,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
 
         if ( aspectShown == null )
             aspectShown = getDefaultAspect();
-        showAspect( aspectShown );
+        showAspect( aspectShown, getChange() );
         addShowMenu();
         addActionsMenu();
         addDoneButton();
@@ -296,7 +304,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         if ( change.isCollapsed() ) {
             redisplay( target );
         } else {
-            showAspect( aspect );
+            showAspect( aspect, change );
         }
         target.addComponent( aspectPanel );
     }
@@ -308,10 +316,10 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         }
     }
 
-    private void showAspect( String aspect ) {
+    private void showAspect( String aspect, Change change ) {
         String aspectToShow = aspect == null ? getDefaultAspect() : aspect;
         addHeaderTitle();
-        aspectPanel = makeAspectPanel( aspectToShow );
+        aspectPanel = makeAspectPanel( aspectToShow, change );
         aspectPanel.setOutputMarkupId( true );
         moContainer.addOrReplace( aspectPanel );
     }
@@ -326,9 +334,10 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      * Make the aspect sub-panel.
      *
      * @param aspect a string
+     * @param change a change
      * @return a component
      */
-    protected abstract Component makeAspectPanel( String aspect );
+    protected abstract Component makeAspectPanel( String aspect, Change change );
 
     @Override
     protected String getTitle() {

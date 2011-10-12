@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.segment;
 
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
@@ -88,7 +89,7 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
     }
 
 
-    protected Component makeAspectPanel( String aspect ) {
+    protected Component makeAspectPanel( String aspect, Change change ) {
         if ( aspect.equals( DETAILS ) ) {
             return getSegmentDetailsPanel();
         } else if ( aspect.equals( GOALS ) ) {

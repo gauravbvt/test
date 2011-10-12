@@ -75,7 +75,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
     private void adjustFields() {
         Requirement requirement = getRequirement();
         nameField.setEnabled( isLockedByUser( requirement ) );
-        descField.setEnabled( isLockedByUserIfNeeded( getRequirement() ) );
+        descField.setEnabled( isLockedByUserIfNeeded( requirement ) );
     }
 
     private void addName() {

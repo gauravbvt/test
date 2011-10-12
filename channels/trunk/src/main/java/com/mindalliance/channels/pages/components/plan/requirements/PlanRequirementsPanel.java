@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.plan.requirements;
 
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -25,8 +26,13 @@ import java.util.Set;
  */
 public class PlanRequirementsPanel extends AbstractCommandablePanel {
 
-    public PlanRequirementsPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
+    public PlanRequirementsPanel(
+            String id,
+            IModel<? extends Identifiable> model,
+            Set<Long> expansions,
+            Change change ) {
         super( id, model, expansions );
+        setChange( change );
         init();
     }
 
@@ -47,18 +53,23 @@ public class PlanRequirementsPanel extends AbstractCommandablePanel {
     }
 
     private List<ITab> getTabs() {
-         List<ITab> tabs = new ArrayList<ITab>();
-         tabs.add( new AbstractTab( new Model<String>( "Definitions" ) ) {
-             public Panel getPanel( String id ) {
-                 return new PlanRequirementDefinitionsPanel( id, new Model<Plan>( getPlan() ), getExpansions() );
-             }
-         } );
+        List<ITab> tabs = new ArrayList<ITab>();
+        tabs.add( new AbstractTab( new Model<String>( "Definitions" ) ) {
+            public Panel getPanel( String id ) {
+                return new PlanRequirementDefinitionsPanel(
+                        id,
+                        new Model<Plan>( getPlan() ),
+                        getExpansions(),
+                        getChangeOnce() );
+            }
+        } );
         tabs.add( new AbstractTab( new Model<String>( "Required network" ) ) {
             public Panel getPanel( String id ) {
                 return new PlanRequiredNetworkingPanel( id, new Model<Plan>( getPlan() ), getExpansions() );
             }
         } );
-         return tabs;
-     }
+        return tabs;
+    }
+
 
 }

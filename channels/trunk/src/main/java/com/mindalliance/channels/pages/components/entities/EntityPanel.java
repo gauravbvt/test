@@ -127,7 +127,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     /**
      * {@inheritDoc}
      */
-    protected Component makeAspectPanel( String aspect ) {
+    protected Component makeAspectPanel( String aspect, Change change ) {
         if ( aspect.equals( DETAILS ) ) {
             return getEntityDetailsPanel();
         } else if ( aspect.equals( NETWORK ) ) {

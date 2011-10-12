@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.command.commands.RemoveRequirement;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -26,6 +27,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,12 +46,17 @@ import java.util.Set;
  */
 public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel implements Filterable {
 
+    /**
+     * The logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( PlanRequirementDefinitionsPanel.class );
+
     private Requirement selectedRequirement;
 
     private RequirementsTable requirementsTable;
     private Component requirementEditPanel;
     private ConfirmedAjaxFallbackLink removeButton;
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 6;
     /**
      * Filters on flow attributes that are identifiable.
      */
@@ -56,15 +64,26 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
     private AjaxLink<String> newButton;
 
 
-    public PlanRequirementDefinitionsPanel( String id, Model<Plan> planModel, Set<Long> expansions ) {
+    public PlanRequirementDefinitionsPanel(
+            String id,
+            Model<Plan> planModel,
+            Set<Long> expansions,
+            Change change ) {
         super( id, planModel, expansions );
-        init();
+        init( change );
     }
 
-    private void init() {
+    private void init( Change change ) {
+        if ( change != null && change.hasQualifier( "requirement" ) ) {
+            try {
+                selectedRequirement = (Requirement)getQueryService().find(
+                        Requirement.class, (Long)change.getQualifier( "requirement" ) );
+            } catch ( NotFoundException e ) {
+                LOG.warn( "Requirement to initially open not found in " + change );
+            }
+        }
         addRequirementsTable();
-        addRequirementEditPanel();
-        makeVisible( requirementEditPanel, false );
+        addRequirementEditPanel( );
         addButtons();
     }
 
@@ -78,7 +97,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
         addOrReplace( requirementsTable );
     }
 
-    private void addRequirementEditPanel() {
+    private void addRequirementEditPanel( ) {
         if ( selectedRequirement != null ) {
             requirementEditPanel = new RequirementEditPanel(
                     "requirement",

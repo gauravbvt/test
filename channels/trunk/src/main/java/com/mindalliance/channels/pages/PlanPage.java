@@ -18,6 +18,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
@@ -464,7 +465,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addDisseminationPanel( null, false );
         addOverridesPanel();
         addSegmentEditPanel();
-        addPlanEditPanel();
+        addPlanEditPanel( null );
         addSurveysPanel( Survey.UNKNOWN );
         addFlowLegendPanel();
 
@@ -1032,14 +1033,15 @@ public final class PlanPage extends AbstractChannelsWebPage {
         return aspectShown;
     }
 
-    private void addPlanEditPanel() {
+    private void addPlanEditPanel( Change change ) {
         Plan plan = getPlan();
         boolean showPlanEdit = expansions.contains( plan.getId() );
         if ( showPlanEdit ) {
             planEditPanel = new PlanEditPanel( "plan",
                     new Model<Plan>( plan ),
                     getReadOnlyExpansions(),
-                    getAspectShown( plan ) );
+                    getAspectShown( plan ),
+                    change );
         } else {
             planEditPanel = new Label( "plan", "" );
             planEditPanel.setOutputMarkupId( true );
@@ -1623,6 +1625,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
      */
     public void changed( Change change ) {
         getCommander().clearTimeOut( User.current().getUsername() );
+        translateChange( change );
         if ( change.getMessage() != null ) {
             message = change.getMessage();
         }
@@ -1730,6 +1733,15 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         }
         rememberState();
+    }
+
+    private void translateChange( Change change ) {
+        if ( change.isForInstanceOf( Requirement.class ) && change.isSelected() ) {
+            change.setType( Change.Type.Expanded );
+            change.addQualifier( "requirement", change.getId() );
+            change.setSubject(  getPlan() );
+            change.setProperty( PlanEditPanel.REQUIREMENTS );
+        }
     }
 
     /**
@@ -1986,7 +1998,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         Plan plan = getPlan();
         if ( change.isUnknown() ||
                 change.isDisplay() && identifiable instanceof Plan ) {
-            addPlanEditPanel();
+            addPlanEditPanel( change );
             target.addComponent( planEditPanel );
         } else if ( planEditPanel instanceof PlanEditPanel ) {
             ( (PlanEditPanel) planEditPanel ).refresh( target,
