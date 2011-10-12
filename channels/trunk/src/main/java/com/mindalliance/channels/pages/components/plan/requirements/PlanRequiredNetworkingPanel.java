@@ -105,8 +105,6 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
 
     private void refreshAll( AjaxRequestTarget target ) {
         selectedAppliedRequirement = null;
-        selectedOrganization = null;
-        selectedRequirementRel = null;
         refreshAppliedRequirements( target );
         addRequiredNetworkPanel();
         addRequiredCommitments();
