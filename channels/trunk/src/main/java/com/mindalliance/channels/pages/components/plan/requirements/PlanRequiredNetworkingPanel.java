@@ -192,8 +192,8 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
         sb.append( "All requirements to share information " );
         sb.append( Phase.Timing.translateTiming( selectedTiming ).toLowerCase() );
         sb.append( selectedEvent == null
-                ? " in any event"
-                : ( " in event " + ChannelsUtils.smartUncapitalize( selectedEvent.getName() ) ) );
+                ? " any event"
+                : ( " event " + ChannelsUtils.smartUncapitalize( selectedEvent.getName() ) ) );
         if ( selectedRequirementRel != null ) {
             sb.append( " by " );
             sb.append( selectedRequirementRel.getFromIdentifiable( getQueryService() ).getName() );
