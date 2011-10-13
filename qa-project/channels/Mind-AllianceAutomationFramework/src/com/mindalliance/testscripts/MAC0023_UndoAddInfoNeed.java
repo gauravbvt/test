@@ -71,7 +71,7 @@ public class MAC0023_UndoAddInfoNeed {
 					Thread.currentThread();
 					Thread.sleep(3000);
 
-					// Update the Information of the default task
+					/*// Update the Information of the default task
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDefaultTask"))).click();
@@ -98,7 +98,7 @@ public class MAC0023_UndoAddInfoNeed {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(3000);*/
 			
 					// Add info need flow
 					GlobalVariables.iStepNo++ ;

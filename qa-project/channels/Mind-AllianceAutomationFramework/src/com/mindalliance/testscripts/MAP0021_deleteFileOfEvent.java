@@ -183,7 +183,7 @@ public class MAP0021_deleteFileOfEvent
 					alert.accept();
 					// Assertion: verify that file is deleted
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td"));
-					if (GlobalVariables.oElement.getText().equals("")){
+					if (GlobalVariables.oElement.getText().equals("Attach:")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

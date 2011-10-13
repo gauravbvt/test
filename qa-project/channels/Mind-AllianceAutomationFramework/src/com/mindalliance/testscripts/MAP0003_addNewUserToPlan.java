@@ -121,7 +121,7 @@ public class MAP0003_addNewUserToPlan
 				tds = GlobalVariables.oElement.findElements(By.tagName("td"));
 				for(WebElement td: tds)
 				{
-					if(td.getText().equals(GlobalVariables.testData.get("AfourTech"))){
+					if(td.getText().equals(GlobalVariables.testData.get("New Plan URI:"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
