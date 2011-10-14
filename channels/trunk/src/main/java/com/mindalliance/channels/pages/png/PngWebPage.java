@@ -21,6 +21,13 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 /**
  * Abstract superclass for all PNG-generating pages.
  */
@@ -124,9 +131,34 @@ public abstract class PngWebPage extends AbstractChannelsWebPage {
                             getQueryService() );
         } catch ( DiagramException e ) {
             LOG.error( "Error while generating diagram", e );
-            // Don't do anything else --> empty png
+            writeErrorImage( getResponse().getOutputStream() );
         }
     }
+
+    private void writeErrorImage( OutputStream output ) throws DiagramException {
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+         try {
+             File file = new File( getImagingService().tooComplexImagePath() );
+             LOG.debug( "Reading too complex from " + file.getAbsolutePath() );
+             BufferedInputStream in = new BufferedInputStream( new FileInputStream( file ) );
+             int available;
+             while ( ( available = in.available() ) > 0 ) {
+                 byte[] bytes = new byte[available];
+                 int n = in.read( bytes );
+                 assert n == available;
+                 if ( n > 0 )
+                     baos.write( bytes, 0, n );
+             }
+             baos.writeTo( output );
+             baos.flush();
+             baos.close();
+         } catch ( IOException e ) {
+             LOG.warn( "Failed to render 'too complex' warning" );
+             throw new DiagramException( "Diagram generation failed", e );
+         }
+     }
+
+
 
     /**
      * Create the diagram.

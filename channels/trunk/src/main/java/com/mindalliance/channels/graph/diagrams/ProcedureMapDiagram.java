@@ -6,16 +6,17 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.analysis.graph.ProceduresGraphBuilder;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.graph.AbstractDiagram;
-import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.graph.ProceduresGraphBuilder;
+import com.mindalliance.channels.graph.AbstractDiagram;
+import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.graph.GraphRenderer;
 import org.jgrapht.Graph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,7 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
 
     @Override
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, QueryService queryService ) {
+                        DiagramFactory diagramFactory, QueryService queryService ) throws DiagramException {
 
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();

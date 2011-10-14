@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.util.Set;
 
 /**
+ * Styled DOT exporter.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -19,6 +20,6 @@ public interface StyledDOTExporter<V,E> {
 
     void setHighlightedEdges( Set<E> edges);
 
-    void export( QueryService queryService, Writer writer, Graph<V, E> graph );
+    void export( QueryService queryService, Writer writer, Graph<V, E> graph ) throws InterruptedException;
 
 }

@@ -1,16 +1,16 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.graph.AbstractDOTExporter;
-import com.mindalliance.channels.graph.AbstractMetaProvider;
-import com.mindalliance.channels.graph.DOTAttribute;
-import com.mindalliance.channels.graph.MetaProvider;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.graph.AbstractDOTExporter;
+import com.mindalliance.channels.graph.AbstractMetaProvider;
+import com.mindalliance.channels.graph.DOTAttribute;
+import com.mindalliance.channels.graph.MetaProvider;
 import org.jgrapht.Graph;
 
 import java.io.IOException;
@@ -230,7 +230,10 @@ public class FailureImpactsDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
 
-    protected void exportEdges( QueryService queryService, PrintWriter out, Graph<Node, Flow> g ) {
+    protected void exportEdges(
+            QueryService queryService,
+            PrintWriter out,
+            Graph<Node, Flow> g ) throws InterruptedException {
         super.exportEdges( queryService, out, g );
         if ( !terminators.isEmpty() )
             exportTerminations( out, g );

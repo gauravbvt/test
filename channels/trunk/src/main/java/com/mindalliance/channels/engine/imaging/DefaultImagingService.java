@@ -519,6 +519,11 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
+    public String tooComplexImagePath() {
+        return imageDirPath() + '/' + "too_complex.png";
+    }
+
+    @Override
     public void afterPropertiesSet() {
         if ( iconDirectory == null || imageDirectory == null || attachmentManager == null )
             throw new IllegalStateException( "Need attachmentManager, icon and image directories" );

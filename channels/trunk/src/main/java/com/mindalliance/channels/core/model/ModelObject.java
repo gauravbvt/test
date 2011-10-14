@@ -376,7 +376,7 @@ public abstract class ModelObject extends AbstractAttachable implements Comparab
         Class[] classes = {
                 Actor.class, Event.class, Organization.class, Phase.class, Place.class, Phase.class,
                 Role.class, Segment.class, Part.class, Flow.class, TransmissionMedium.class,
-                Participation.class
+                Participation.class, Requirement.class
         };
         return Arrays.asList( classes );
     }

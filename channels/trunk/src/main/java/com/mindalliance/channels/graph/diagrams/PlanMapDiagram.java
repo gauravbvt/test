@@ -6,16 +6,17 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.PlanMapGraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
+import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.QueryService;
 import org.jgrapht.DirectedGraph;
 import org.springframework.core.io.Resource;
 
@@ -77,7 +78,7 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
 
     @Override
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, QueryService queryService ) {
+                        DiagramFactory diagramFactory, QueryService queryService ) throws DiagramException {
         GraphRenderer<Segment, SegmentRelationship> renderer = diagramFactory.getGraphRenderer();
 
         renderer.highlight( selectedSegment, selectedSgRel );

@@ -6,17 +6,18 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.analysis.graph.DisseminationGraphBuilder;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.graph.AbstractDiagram;
-import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.graph.GraphRenderer;
 import com.mindalliance.channels.core.model.Dissemination;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.graph.DisseminationGraphBuilder;
+import com.mindalliance.channels.graph.AbstractDiagram;
+import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.graph.GraphRenderer;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
@@ -43,7 +44,7 @@ public class DisseminationDiagram extends AbstractDiagram<Node, Dissemination> {
     @Override
     @SuppressWarnings( "unchecked" )
     public void render( String outputFormat, String ticket, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, QueryService queryService ) {
+                        DiagramFactory diagramFactory, QueryService queryService ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         DisseminationGraphBuilder graphBuilder = new DisseminationGraphBuilder( segmentObject, subject, showTargets,

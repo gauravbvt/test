@@ -43,6 +43,7 @@ import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
@@ -56,6 +57,8 @@ import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.nlp.Proximity;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -943,7 +946,7 @@ public abstract class DefaultQueryService implements QueryService {
     public List<Hierarchical> findAllDescendants( Hierarchical hierarchical ) {
         Set<Hierarchical> descendants = new HashSet<Hierarchical>();
         for ( ModelObject mo : findAllModelObjects() ) {
-            if ( mo instanceof Hierarchical && hasAncestor(
+            if ( !mo.isUnknown() && mo instanceof Hierarchical && hasAncestor(
                     (Hierarchical) mo,
                     hierarchical,
                     new HashSet<Hierarchical>() ) ) {
@@ -2940,6 +2943,39 @@ public abstract class DefaultQueryService implements QueryService {
         List<String> result = new ArrayList<String>( eoiNames );
         Collections.sort( result );
         return result;
+    }
+
+    @Override
+    public String getRequirementNonFulfillmentSummary(
+            RequirementRelationship requirementRelationship,
+            Phase.Timing timing,
+            Event event,
+            Analyst analyst ) {
+            StringBuilder sb =new StringBuilder(  );
+            Commitments allCommitments = getAllCommitments();
+            List<Requirement> unfulfilled = new ArrayList<Requirement>(  );
+            Plan plan = getPlan();
+            for ( Requirement requirement : requirementRelationship.getRequirements() ) {
+                Requirement req = requirement.transientCopy();
+                req.setCommitterOrganization( (Organization) requirementRelationship.getFromIdentifiable( this ) );
+                req.setBeneficiaryOrganization( (Organization) requirementRelationship.getToIdentifiable( this ) );
+                if ( allCommitments.satisfying( req )
+                        .inSituation( timing, event, plan.getLocale() )
+                        .realizable( analyst, plan ).isEmpty() )
+                    unfulfilled.add( req );
+            }
+            if ( !unfulfilled.isEmpty() ) {
+                sb.append( "Unfulfilled " );
+                sb.append( unfulfilled.size() == 1 ? "requirement: " : "requirements: " );
+                Iterator<Requirement> iter = unfulfilled.iterator();
+                while( iter.hasNext() ) {
+                    sb.append( '"' );
+                    sb.append( iter.next().getName() );
+                    sb.append( '"' );
+                    if ( iter.hasNext() ) sb.append( ", " );
+                }
+            }
+            return sb.toString();
     }
 
     @Override

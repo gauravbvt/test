@@ -1,8 +1,10 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Segment;
@@ -26,7 +28,7 @@ public class RequirementRelationship extends Relationship<Organization> {
     /**
      * Requirements for an organization to share information with another.
      */
-    private List<Requirement> requirements = new ArrayList<Requirement>(  );
+    private List<Requirement> requirements = new ArrayList<Requirement>();
     private Phase.Timing timing = null;
     private Event event = null;
 
@@ -58,11 +60,11 @@ public class RequirementRelationship extends Relationship<Organization> {
     public void setId( long id, Segment segment, QueryService queryService, Analyst analyst ) {
         setId( id, queryService );
         RequirementRelationship reqRel =
-                                       analyst.findRequirementRelationship( queryService,
-                                               getFromIdentifiable( queryService ),
-                                               getToIdentifiable( queryService ),
-                                               timing,
-                                               event);
+                analyst.findRequirementRelationship( queryService,
+                        getFromIdentifiable( queryService ),
+                        getToIdentifiable( queryService ),
+                        timing,
+                        event );
         if ( reqRel != null ) {
             requirements = reqRel.getRequirements();
         }
@@ -73,6 +75,8 @@ public class RequirementRelationship extends Relationship<Organization> {
             Event event,
             QueryService queryService,
             Analyst analyst ) {
+        /*String summary = queryService.getRequirementNonFulfillmentSummary( this, timing, event, analyst );
+        return !summary.isEmpty();*/
         return !getNonFulfillmentSummary( timing, event, queryService, analyst ).isEmpty();
     }
 
@@ -81,24 +85,31 @@ public class RequirementRelationship extends Relationship<Organization> {
             Event event,
             QueryService queryService,
             Analyst analyst ) {
-        StringBuilder sb =new StringBuilder(  );
-        Commitments allCommitments = Commitments.all( queryService );
-        List<Requirement> unfulfilled = new ArrayList<Requirement>(  );
+        StringBuilder sb = new StringBuilder();
+        Commitments allCommitments = queryService.getAllCommitments();
+        List<Requirement> unfulfilled = new ArrayList<Requirement>();
         Plan plan = queryService.getPlan();
         for ( Requirement requirement : getRequirements() ) {
             Requirement req = requirement.transientCopy();
             req.setCommitterOrganization( (Organization) getFromIdentifiable( queryService ) );
             req.setBeneficiaryOrganization( (Organization) getToIdentifiable( queryService ) );
-            if ( allCommitments.satisfying( req )
-                    .inSituation( timing, event, plan.getLocale() )
-                    .realizable( analyst, plan ).isEmpty() )
+            Iterator<Commitment> commitmentIterator = allCommitments.iterator();
+            Place planLocale = plan.getLocale();
+            boolean fulfilled = false;
+            while ( !fulfilled && commitmentIterator.hasNext() ) {
+                Commitment commitment = commitmentIterator.next();
+                fulfilled = commitment.isInSituation( timing, event, planLocale )
+                        && req.satisfiedBy( commitment, planLocale )
+                        && analyst.canBeRealized( commitment, plan );
+            }
+            if ( !fulfilled )
                 unfulfilled.add( req );
         }
         if ( !unfulfilled.isEmpty() ) {
             sb.append( "Unfulfilled " );
             sb.append( unfulfilled.size() == 1 ? "requirement: " : "requirements: " );
             Iterator<Requirement> iter = unfulfilled.iterator();
-            while( iter.hasNext() ) {
+            while ( iter.hasNext() ) {
                 sb.append( '"' );
                 sb.append( iter.next().getName() );
                 sb.append( '"' );
@@ -107,4 +118,5 @@ public class RequirementRelationship extends Relationship<Organization> {
         }
         return sb.toString();
     }
+
 }

@@ -674,6 +674,11 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
+    public Boolean canBeRealized( Commitment commitment, Plan plan ) {
+        return findRealizabilityProblems( plan, commitment ).isEmpty();
+    }
+
+    @Override
     public List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity,
                                                              QueryService queryService ) {
         List<ModelEntity> otherEntities = new ArrayList<ModelEntity>( queryService.findTaskedEntities( segment,

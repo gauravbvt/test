@@ -117,4 +117,10 @@ public interface ImagingService {
      * @throws java.io.IOException if fails
      */
     File findIcon( Plan plan, String encodedPath ) throws IOException;
+
+    /**
+     * Return path to "too_complex" image.
+     * @return a string
+     */
+    String tooComplexImagePath();
 }

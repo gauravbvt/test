@@ -9,12 +9,13 @@ package com.mindalliance.channels.graph.diagrams;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.DirectedMultiGraphWithProperties;
 import com.mindalliance.channels.engine.analysis.graph.FlowMapGraphBuilder;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.graph.AbstractDiagram;
+import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphRenderer;
 import org.jgrapht.Graph;
@@ -68,7 +69,7 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
     @Override
     @SuppressWarnings( "unchecked" )
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, QueryService queryService ) {
+                        DiagramFactory diagramFactory, QueryService queryService ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         GraphBuilder flowMapGraphBuilder =

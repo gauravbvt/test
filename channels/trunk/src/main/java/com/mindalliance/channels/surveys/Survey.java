@@ -544,7 +544,9 @@ abstract public class Survey implements Identifiable, Serializable {
     }
 
     public String getSurveyLink( User user ) {
-        return getSurveyData().getPublishLink() + "?sgUID=" + user.getEmail();
+        return getSurveyData() == null
+                ? ""
+                : getSurveyData().getPublishLink() + "?sgUID=" + user.getEmail();
     }
 
     public boolean hasContact( final String userName ) {

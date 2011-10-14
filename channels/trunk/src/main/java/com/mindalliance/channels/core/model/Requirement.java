@@ -6,12 +6,14 @@ import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -211,7 +213,6 @@ public class Requirement extends ModelObject implements Countable {
         return satisfaction( organization, asBeneficiary, null, null, queryService, analyst );
     }
 
-
     /**
      * Evaluate the satisfaction of the requirement by an organization as committer or beneficiary
      * in a given situation (if timing and/or event are not null).
@@ -231,30 +232,88 @@ public class Requirement extends ModelObject implements Countable {
             Event event,
             QueryService queryService,
             Analyst analyst ) {
+        Satisfaction[] satisfactions = getSatisfactions(
+                organization,
+                asBeneficiary,
+                timing,
+                event,
+                queryService,
+                analyst );
+        Satisfaction agentCountSatisfaction = satisfactions[0];
+        Satisfaction sourcesPerReceiverSatisfaction = asBeneficiary ? satisfactions[1] : null;
+        if ( asBeneficiary ) {
+            if ( agentCountSatisfaction == Satisfaction.Impossible )
+                return agentCountSatisfaction;
+            else {
+                assert agentCountSatisfaction != null;
+                assert sourcesPerReceiverSatisfaction != null;
+                return agentCountSatisfaction.compareTo( sourcesPerReceiverSatisfaction ) <= 0
+                        ? agentCountSatisfaction
+                        : sourcesPerReceiverSatisfaction;
+            }
+        } else {
+            return agentCountSatisfaction;
+        }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private Satisfaction[] getSatisfactions(
+            Organization organization,
+            boolean asBeneficiary,
+            final Phase.Timing timing,
+            final Event event,
+            QueryService queryService,
+            final Analyst analyst ) {
+        Satisfaction[] satisfactions = new Satisfaction[2];
         List<Flow> candidateFlows = findCandidateFlows( organization, asBeneficiary, queryService );
         if ( candidateFlows.isEmpty() ) {
-            return Satisfaction.Impossible;
+            satisfactions[0] = Satisfaction.Impossible;
         } else {
-            Commitments commitments = new Commitments( queryService, candidateFlows )
-                    .satisfying( this )
-                    .inSituation( timing, event, queryService.getPlan().getLocale() )
-                    .realizable( analyst, queryService.getPlan() );
-            Map<Actor, List<Commitment>> groupedCommitments = groupByActor( commitments, asBeneficiary );
-            if ( asBeneficiary ) {
-                Satisfaction agentCountSatisfaction = getAgentCountSatisfaction(
-                        groupedCommitments, getBeneficiarySpec().getCardinality() );
-                Satisfaction sourcesPerReceiverCountSatisfaction =
-                        getSourcesPerReceiverCountSatisfaction( groupedCommitments );
-                // return minimum satisfaction
-                return agentCountSatisfaction.compareTo( sourcesPerReceiverCountSatisfaction ) <= 0 ?
-                        agentCountSatisfaction
-                        : sourcesPerReceiverCountSatisfaction;
-
-            } else {
-                return getAgentCountSatisfaction(
-                        groupedCommitments, getCommitterSpec().getCardinality() );
+            Commitments commitments = new Commitments( queryService, candidateFlows );
+            Satisfaction agentCountSatisfaction = null;
+            Satisfaction sourcesPerReceiverSatisfaction = null;
+            final Plan plan = queryService.getPlan();
+            final Place planLocale = plan.getLocale();
+            Iterator<Commitment> commitmentIterator = (Iterator<Commitment>) IteratorUtils.filteredIterator(
+                    commitments.iterator(),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            Commitment commitment = (Commitment) object;
+                            return commitment.isInSituation( timing, event, plan.getLocale() )
+                                    && satisfiedBy( commitment, planLocale )
+                                    && analyst.canBeRealized( commitment, plan );
+                        }
+                    }
+            );
+            Map<Actor, List<Commitment>> groupedCommitments = new HashMap<Actor, List<Commitment>>();
+            while ( commitmentIterator.hasNext()
+                    && ( agentCountSatisfaction == null
+                    || ( asBeneficiary && sourcesPerReceiverSatisfaction == null ) ) ) {
+                Commitment commitment = commitmentIterator.next();
+                groupByActor( groupedCommitments, commitment, asBeneficiary );
+                if ( asBeneficiary ) {
+                    agentCountSatisfaction = getAgentCountSatisfaction(
+                            groupedCommitments,
+                            getBeneficiarySpec().getCardinality(),
+                            commitmentIterator.hasNext() );
+                    sourcesPerReceiverSatisfaction =
+                            getSourcesPerReceiverCountSatisfaction(
+                                    groupedCommitments,
+                                    commitmentIterator.hasNext() );
+                } else {
+                    agentCountSatisfaction = getAgentCountSatisfaction(
+                            groupedCommitments,
+                            getCommitterSpec().getCardinality(),
+                            commitmentIterator.hasNext() );
+                }
             }
+            satisfactions[0] = agentCountSatisfaction;
+            satisfactions[1] = sourcesPerReceiverSatisfaction;
+            assert ( agentCountSatisfaction == Satisfaction.Impossible
+                    || !(asBeneficiary && sourcesPerReceiverSatisfaction == null) );
         }
+        return satisfactions;
     }
 
     /**
@@ -263,6 +322,7 @@ public class Requirement extends ModelObject implements Countable {
      * @param organization  an organization
      * @param asBeneficiary a boolean
      * @param queryService  a query service
+     * @param analyst       an analyst
      * @return a string
      */
     public String dissatisfactionSummary(
@@ -270,105 +330,102 @@ public class Requirement extends ModelObject implements Countable {
             boolean asBeneficiary,
             QueryService queryService,
             Analyst analyst ) {
-        List<Flow> candidateFlows = findCandidateFlows( organization, asBeneficiary, queryService );
         String dissatisfaction = "";
-        if ( candidateFlows.isEmpty() ) {
-            dissatisfaction = "No flow in the plan could possibly have " + organization.getName() + " satisfy the requirement";
+        Satisfaction[] satisfactions = getSatisfactions(
+                organization,
+                asBeneficiary,
+                null,
+                null,
+                queryService,
+                analyst );
+        Satisfaction agentCountSatisfaction = satisfactions[0];
+        Satisfaction sourcesPerReceiverSatisfaction = asBeneficiary ? satisfactions[1] : null;
+        if ( agentCountSatisfaction == Satisfaction.Impossible ) {
+            dissatisfaction = "No flow in the plan could possibly have "
+                    + organization.getName()
+                    + " satisfy the requirement";
         } else {
-            Commitments commitments = new Commitments( queryService, candidateFlows )
-                    .satisfying( this ).realizable( analyst, queryService.getPlan() );
-            Map<Actor, List<Commitment>> groupedCommitments = groupByActor( commitments, asBeneficiary );
-            if ( asBeneficiary ) {
-                Satisfaction agentCountSatisfaction = getAgentCountSatisfaction(
-                        groupedCommitments, getBeneficiarySpec().getCardinality() );
-                Satisfaction sourcesCountSatisfaction = getSourcesPerReceiverCountSatisfaction( groupedCommitments );
-                // return minimum satisfaction
-                dissatisfaction = agentCountSatisfaction.compareTo( sourcesCountSatisfaction ) <= 0 ?
-                        getAgentCountDissatisfaction(
-                                groupedCommitments,
-                                getBeneficiarySpec().getCardinality(),
-                                asBeneficiary,
-                                organization )
-                        : getSourcesCountDissatisfaction( groupedCommitments, organization );
+            if ( agentCountSatisfaction != Satisfaction.Negative
+                    && ( !asBeneficiary || sourcesPerReceiverSatisfaction != Satisfaction.Negative ) )
+                return dissatisfaction;
+            else if ( asBeneficiary ) {
+                if ( agentCountSatisfaction == Satisfaction.Negative ) {
+                    dissatisfaction = "There is not "
+                            + cardinality.toString()
+                            + " agent(s) in "
+                            + organization.getName()
+                            + " receiving "
+                            + "the specified info";
+                } else {
+                    dissatisfaction = "Not all receiving agents in "
+                            + organization.getName()
+                            + " have "
+                            + cardinality.toString()
+                            + " alternate source(s) as required";
+                }
 
             } else {
-                dissatisfaction = getAgentCountDissatisfaction(
-                        groupedCommitments,
-                        getCommitterSpec().getCardinality(),
-                        asBeneficiary,
-                        organization );
+                dissatisfaction = "There is not "
+                        + cardinality.toString()
+                        + " agent(s) in "
+                        + organization.getName()
+                        + " sharing "
+                        + "the specified info";
             }
+
         }
         return dissatisfaction;
     }
 
-    private Map<Actor, List<Commitment>> groupByActor( Commitments commitments, boolean asBeneficiary ) {
-        Map<Actor, List<Commitment>> groups = new HashMap<Actor, List<Commitment>>();
-        for ( Commitment commitment : commitments ) {
-            Actor actor = asBeneficiary
-                    ? commitment.getBeneficiary().getActor()
-                    : commitment.getCommitter().getActor();
-            List<Commitment> list = groups.get( actor );
-            if ( list == null ) {
-                list = new ArrayList<Commitment>();
-                groups.put( actor, list );
-            }
-            list.add( commitment );
+    private void groupByActor( Map<Actor,
+            List<Commitment>> groupedCommitments,
+                               Commitment commitment,
+                               boolean asBeneficiary ) {
+        Actor actor = asBeneficiary
+                ? commitment.getBeneficiary().getActor()
+                : commitment.getCommitter().getActor();
+        List<Commitment> list = groupedCommitments.get( actor );
+        if ( list == null ) {
+            list = new ArrayList<Commitment>();
+            groupedCommitments.put( actor, list );
         }
-        return groups;
+        list.add( commitment );
     }
 
-    private Satisfaction getAgentCountSatisfaction(
-            Map<Actor, List<Commitment>> groupedCommitments,
-            Cardinality cardinality ) {
+    private Satisfaction getAgentCountSatisfaction( Map<Actor, List<Commitment>> groupedCommitments,
+                                                    Cardinality cardinality,
+                                                    boolean more ) {
         int agentCount = groupedCommitments.keySet().size();
-        return cardinality.isRequiredCount( agentCount ) ?
-                cardinality.isSafeCount( agentCount )
+        Satisfaction result = cardinality.isRequiredCount( agentCount )
+                ? cardinality.isSafeCount( agentCount )
                         ? Satisfaction.Strong
-                        : Satisfaction.Weak
-                : Satisfaction.Negative;
+                        : more
+                            ? null
+                            : Satisfaction.Weak
+                : more
+                    ? null
+                    : Satisfaction.Negative;
+        assert result != null || more;
+        return result;
     }
 
-    private String getAgentCountDissatisfaction(
+    private Satisfaction getSourcesPerReceiverCountSatisfaction(
             Map<Actor, List<Commitment>> groupedCommitments,
-            Cardinality cardinality,
-            boolean asBeneficiary,
-            Organization org ) {
-        int agentCount = groupedCommitments.keySet().size();
-        return cardinality.isRequiredCount( agentCount ) ?
-                ""
-                : "There is not "
-                + cardinality.toString()
-                + " agent(s) in "
-                + org.getName()
-                + ( asBeneficiary ? " receiving " : " sharing " )
-                + "the specified info";
-    }
-
-    private Satisfaction getSourcesPerReceiverCountSatisfaction( Map<Actor, List<Commitment>> groupedByActorCommitments ) {
-        int minSourceCount = getMinSourceCount( groupedByActorCommitments );
-        int maxSourceCount = getMaxSourceCount( groupedByActorCommitments );
+            boolean more ) {
+        int minSourceCount = getMinSourceCount( groupedCommitments );
+        int maxSourceCount = getMaxSourceCount( groupedCommitments );
         Cardinality cardinality = getCardinality();
-        return cardinality.isRequiredCount( minSourceCount ) && cardinality.isRequiredCount( maxSourceCount ) ?
-                cardinality.isSafeCount( minSourceCount ) && cardinality.isSafeCount( maxSourceCount )
-                        ? Satisfaction.Strong
+        Satisfaction result = cardinality.isRequiredCount( minSourceCount ) && cardinality.isRequiredCount( maxSourceCount )
+                ? cardinality.isSafeCount( minSourceCount ) && cardinality.isSafeCount( maxSourceCount )
+                    ? Satisfaction.Strong
+                    : more
+                        ? null
                         : Satisfaction.Weak
-                : Satisfaction.Negative;
-    }
-
-    private String getSourcesCountDissatisfaction(
-            Map<Actor, List<Commitment>> groupedByActorCommitments,
-            Organization org ) {
-        int minSourceCount = getMinSourceCount( groupedByActorCommitments );
-        int maxSourceCount = getMaxSourceCount( groupedByActorCommitments );
-        Cardinality cardinality = getCardinality();
-        return cardinality.isRequiredCount( minSourceCount ) && cardinality.isRequiredCount( maxSourceCount ) ?
-                ""
-                : "Not all receiving agents in "
-                + org.getName()
-                + " have "
-                + cardinality.toString()
-                + " alternate source(s) as required";
+                : more
+                    ? null
+                    : Satisfaction.Negative;
+        assert result != null || more;
+        return result;
     }
 
     private int getMinSourceCount( Map<Actor, List<Commitment>> groupedCommitments ) {
@@ -498,7 +555,7 @@ public class Requirement extends ModelObject implements Countable {
         super.initFromMap( state, queryService );
         setInformation( (String) state.get( "information" ) );
         setInfoTags( Tag.tagsFromString( (String) state.get( "requiredTags" ) ) );
-        setEois( (List<String>)state.get( "eois" ) );
+        setEois( (List<String>) state.get( "eois" ) );
         Cardinality card = new Cardinality();
         card.initFromMap( (Map<String, Object>) state.get( "cardinality" ) );
         setCardinality( card );
@@ -531,7 +588,7 @@ public class Requirement extends ModelObject implements Countable {
     }
 
     public String getInformationAndEois() {
-        StringBuilder sb = new StringBuilder( );
+        StringBuilder sb = new StringBuilder();
         sb.append( getInformation() );
         if ( !getEois().isEmpty() ) {
             sb.append( " [" );
@@ -539,6 +596,13 @@ public class Requirement extends ModelObject implements Countable {
             sb.append( ']' );
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean references( ModelObject mo ) {
+        return super.references( mo )
+                || committerSpec.references( mo )
+                || beneficiarySpec.references( mo );
     }
 
 
@@ -894,7 +958,11 @@ public class Requirement extends ModelObject implements Countable {
         }
 
         public boolean appliesToSituation( Commitment commitment, Place planLocale ) {
-             return commitment.isInSituation( timing, event, planLocale );
+            return commitment.isInSituation( timing, event, planLocale );
+        }
+
+        private boolean references( ModelObject mo ) {
+            return ModelObject.areIdentical( mo, event ) || resourceSpec.references( mo );
         }
     }
 }

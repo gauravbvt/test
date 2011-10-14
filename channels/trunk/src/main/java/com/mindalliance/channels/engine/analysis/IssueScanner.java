@@ -250,7 +250,7 @@ public class IssueScanner implements Scanner, PlanListener {
                 analyst.countTestFailures( queryService, plan, Issue.ROBUSTNESS );
                 if ( !active ) return;
                 // Find all commitments
-                queryService.findAllCommitments();
+                // queryService.findAllCommitments();
                 long endTime = System.currentTimeMillis();
                 LOG.info( "Issue sweep completed on " + plan + " in "
                           + ( endTime - startTime ) + " msecs" );

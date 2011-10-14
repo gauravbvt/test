@@ -8,6 +8,7 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.RequiredNetworkingGraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.graph.AbstractDiagram;
+import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.graph.GraphRenderer;
 import org.jgrapht.Graph;
@@ -48,7 +49,7 @@ public class RequiredNetworkingDiagram extends AbstractDiagram<Organization, Req
             OutputStream outputStream,
             Analyst analyst,
             DiagramFactory diagramFactory,
-            QueryService queryService ) {
+            QueryService queryService ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         RequiredNetworkingGraphBuilder graphBuilder =

@@ -18,11 +18,11 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.ReportSegment;
@@ -72,7 +72,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
     private static Commitments realizable( Commitments allCommitments, Analyst analyst, Plan plan ) {
         Commitments result = new Commitments();
         for ( Commitment commitment : allCommitments )
-            if ( analyst.findRealizabilityProblems( plan, commitment ).isEmpty() )
+            if ( analyst.canBeRealized( commitment, plan ) )
                 result.add( commitment );
 
         return result;

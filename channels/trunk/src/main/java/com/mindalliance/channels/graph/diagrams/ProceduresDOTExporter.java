@@ -244,7 +244,10 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
     }
 
     @Override
-    protected void exportEdges( QueryService queryService, PrintWriter out, Graph<Assignment, Commitment> g ) {
+    protected void exportEdges(
+            QueryService queryService,
+            PrintWriter out,
+            Graph<Assignment, Commitment> g ) throws InterruptedException {
         if ( !initiators.isEmpty() )
             exportInitiations( out, g );
         if ( !autoStarters.isEmpty() )

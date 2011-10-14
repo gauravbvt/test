@@ -45,7 +45,6 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      * The formats to generate.
      */
     private static final List<String> FORMATS = Arrays.asList( DiagramFactory.IMAGE_MAP, DiagramFactory.PNG );
-
     /**
      * Where temporary files are created.
      */
@@ -64,7 +63,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     /**
      * Maximum time allocated to graphviz process before it is interrupted and forcibly terminated.
      */
-    private long timeout = 60000L;
+    private long timeout = 10000L;
 
     /**
      * The vertices to highlight.
@@ -79,7 +78,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     /**
      * Max attempts at rendering.
      */
-    private static final int MAX_ATTEMPTS = 5;
+    private static final int MAX_ATTEMPTS = 2;
 
     public GraphvizRenderer() {
         resetHighlight();
@@ -141,8 +140,13 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     }
 
     @Override
-    public void render( QueryService queryService, Graph<V, E> graph, StyledDOTExporter<V, E> dotExporter, String format, String ticket,
-                        OutputStream output ) throws DiagramException {
+    public void render(
+            QueryService queryService,
+            Graph<V, E> graph,
+            StyledDOTExporter<V, E> dotExporter,
+            String format,
+            String ticket,
+            OutputStream output ) throws DiagramException {
         assert ticket != null;
         dotExporter.setHighlightedVertices( highlightedVertices );
         dotExporter.setHighlightedEdges( highlightedEdges );
@@ -150,41 +154,52 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         boolean success = false;
         int attempts = 0;
         String name = sanitize( ticket );
+        Timer timer = null;
+        ByteArrayOutputStream baos = null;
         while ( !success && attempts < MAX_ATTEMPTS ) {
-            ByteArrayOutputStream baos = null;
             try {
                 baos = new ByteArrayOutputStream();
                 // try to get it from file
                 success = loadFromFile( name, format, baos );
                 // if not there, generate it to file and load from it
                 if ( !success ) {
+                    timer = new Timer();
+                    // will interrupt this thread if external process does not terminate before timeout
+                    timer.schedule( new InterruptScheduler( Thread.currentThread() ), this.timeout );
                     String dot = getDOT( queryService, graph, dotExporter );
                     baos = new ByteArrayOutputStream();
                     doRender( dot, name, format, baos );
+                    // Stop the timer
+                    timer.cancel();
                     success = loadFromFile( name, format, baos );
                 }
-                if ( success )
-                    baos.writeTo( output );
             } catch ( IOException e ) {
+                LOG.warn( "Failed to render", e );
                 attempts++;
             } catch ( InterruptedException e ) {
+                LOG.warn( "GraphViz rendering interrupted. Diagram may be too large." );
                 attempts++;
             } finally {
-                if ( baos != null ) {
-                    try {
-                        baos.flush();
-                        baos.close();
-                    } catch ( IOException e ) {
-                        LOG.warn( "Error closing ", e );
-                    }
-                }
+                if ( timer != null ) timer.cancel();
             }
         }
-        if ( !success )
-            throw new DiagramException( "Diagram generation failed" );
+        try {
+            if ( success )
+                baos.writeTo( output );
+            else {
+                throw new DiagramException( "Diagram may be too complex" );
+            }
+        } catch ( IOException e ) {
+            try {
+                baos.flush();
+                baos.close();
+            } catch ( IOException exc ) {
+                LOG.warn( "Error closing ", e );
+            }
+        }
     }
 
-    private boolean loadFromFile( String name, String format, ByteArrayOutputStream baos ) {
+     private boolean loadFromFile( String name, String format, ByteArrayOutputStream baos ) {
         BufferedInputStream in = null;
         File file = null;
         try {
@@ -241,21 +256,20 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     /**
      * Renders a graph specified in DOT in a given format.
      *
-     * @param dot Graph description in DOT language
-     * @param name a file name without extension
+     * @param dot    Graph description in DOT language
+     * @param name   a file name without extension
      * @param format a Grpahviz output format ("png", "svg", "imap" etc.)
      * @param output the rendered graph
-     * @throws IOException if generation fails
+     * @throws IOException          if generation fails
      * @throws InterruptedException if generation fails
      */
     private void doRender( String dot, String name, String format, OutputStream output )
             throws IOException, InterruptedException {
         assert FORMATS.contains( format );
         String command = dotPath + System.getProperty( "file.separator" ) + algo + " -Gcharset=latin1"
-                         + getFormatAndOutputParameters( name );
+                + getFormatAndOutputParameters( name );
         Process p = null;
         int exitValue;
-        Timer timer = new Timer();
         try {
             // start process
             p = Runtime.getRuntime().exec( command );
@@ -268,8 +282,6 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
             }
             input.flush();
             input.close();
-            // will interrupt this thread if external process does not terminate before timeout
-            timer.schedule( new InterruptScheduler( Thread.currentThread() ), this.timeout );
             // wait for process to complete
             // transfer from process input stream to output stream
             int maxbytes = 1024;
@@ -282,8 +294,6 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                     output.write( bytes, 0, count );
             } while ( count >= 0 );
             exitValue = p.waitFor();
-            // Stop the timer
-            timer.cancel();
             if ( exitValue != 0 ) {
                 // grab error if any
                 BufferedInputStream error = new BufferedInputStream( p.getErrorStream() );
@@ -299,13 +309,6 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         } catch ( IOException e ) {
             LOG.error( "Diagram generation failed on IO", e );
             throw e;
-        } catch ( InterruptedException e ) {
-            p.destroy();
-            LOG.error( "Diagram generation interrupted" );
-            throw e;
-        } finally {
-            // Stop the timer
-            timer.cancel();
         }
     }
 
@@ -333,11 +336,15 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      * Produces a description of a graph in DOT format.
      *
      * @param queryService a query service
-     * @param graph -- the graph to be converted to DOT format
-     * @param dotExporter -- a DOT generator
+     * @param graph        -- the graph to be converted to DOT format
+     * @param dotExporter  -- a DOT generator
      * @return a String in DOT format
+     * @throws InterruptedException an interrupted exception
      */
-    public String getDOT( QueryService queryService, Graph<V, E> graph, StyledDOTExporter<V, E> dotExporter ) {
+    public String getDOT(
+            QueryService queryService,
+            Graph<V, E> graph,
+            StyledDOTExporter<V, E> dotExporter ) throws InterruptedException {
         StringWriter writer = new StringWriter();
         dotExporter.export( queryService, writer, graph );
         // System.out.println( writer.toString() );

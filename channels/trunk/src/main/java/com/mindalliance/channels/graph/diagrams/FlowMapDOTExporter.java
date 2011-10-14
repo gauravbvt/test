@@ -263,7 +263,10 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     @Override
-    protected void exportEdges( QueryService queryService, PrintWriter out, Graph<Node, Flow> g ) {
+    protected void exportEdges(
+            QueryService queryService,
+            PrintWriter out,
+            Graph<Node, Flow> g ) throws InterruptedException {
         FlowMapMetaProvider metaProvider = (FlowMapMetaProvider) getMetaProvider();
         if ( !( initiators.isEmpty() && contextInitiators.isEmpty() ) ) exportInitiations( out, g );
         if ( !autoStarters.isEmpty() ) exportAutoStarts( out, g );

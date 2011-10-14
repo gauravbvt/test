@@ -202,6 +202,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
                         sanitize( edge.getNonFulfillmentSummary( timing, event, queryService, getAnalyst() ) ) ) );
+       //         sanitize( queryService.getRequirementNonFulfillmentSummary( edge, timing, event, getAnalyst() ) ) ) );
             }
             return list;
         }

@@ -141,7 +141,7 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         Iterator<Commitment> iterator = iterator();
         while( iterator.hasNext() ) {
             Commitment commitment = iterator.next();
-            if ( analyst.findRealizabilityProblems( plan, commitment ).isEmpty() )
+            if ( analyst.canBeRealized( commitment, plan ) )
                 result.add(  commitment );
         }
         return result;

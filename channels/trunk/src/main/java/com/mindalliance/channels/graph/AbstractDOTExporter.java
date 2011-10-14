@@ -94,7 +94,7 @@ public abstract class AbstractDOTExporter<V, E> implements StyledDOTExporter<V, 
      * @param writer -- where to export
      * @param g -- the graph being exported
      */
-    public void export( QueryService queryService, Writer writer, Graph<V, E> g ) {
+    public void export( QueryService queryService, Writer writer, Graph<V, E> g ) throws InterruptedException {
         beforeExport( queryService, g );
         PrintWriter out = new PrintWriter( writer );
         // Graph declaration
@@ -120,11 +120,13 @@ public abstract class AbstractDOTExporter<V, E> implements StyledDOTExporter<V, 
      * @param queryService a query service
      * @param out a print writer
      * @param g a graph
+     * @throws InterruptedException an interrupted exception
      */
-    protected void exportEdges( QueryService queryService, PrintWriter out, Graph<V, E> g ) {
+    protected void exportEdges( QueryService queryService, PrintWriter out, Graph<V, E> g ) throws InterruptedException {
         MetaProvider<V, E> metaProvider = this.metaProvider;
         String arrow = getArrow( g );
         for ( E e : g.edgeSet() ) {
+            Thread.sleep(0);
             List<DOTAttribute> attributes = DOTAttribute.emptyList();
             if ( metaProvider.getEdgeLabelProvider() != null ) {
                 String label = metaProvider.getEdgeLabelProvider().getEdgeName( e );

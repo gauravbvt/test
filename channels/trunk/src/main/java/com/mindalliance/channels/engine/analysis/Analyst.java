@@ -200,6 +200,14 @@ public interface Analyst extends CommandListener {
             Event event );
 
     /**
+     * Whether a commitment can be realized.
+     * @param commitment a commitment
+     * @param plan a plan
+     * @return a Boolean
+     */
+    Boolean canBeRealized( Commitment commitment, Plan plan );
+
+    /**
      * Find problem impeding realization of a commitment.
      *
      * @param plan       a plan
