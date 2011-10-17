@@ -1,5 +1,7 @@
 <?xml version="1.0"?>	
 <elements>
+<xPathSentElementInformation>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[4]/th/a</xPathSentElementInformation>
+<xPathReceiveElementInformation>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[4]/th/a</xPathReceiveElementInformation>
 <xPathAddInfoSendAttachment>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[13]/td/ul/span/li/a</xPathAddInfoSendAttachment>
 <xPathAddInfoReceiveAttachment>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[12]/td/ul/span/li/a</xPathAddInfoReceiveAttachment>
 <xPathAddInfoSendCreateSurvey>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoSendCreateSurvey>
@@ -165,6 +167,7 @@
 <xPathTaskIssueURL>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathTaskIssueURL>
 <xPathCreateViewSurvey>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathCreateViewSurvey>
 <!-- Assertions -->
+<xPathAssertionCopyCapability>html/body/form/div[14]/span/span</xPathAssertionCopyCapability>
 <xPathTaskURLAssertion>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/a</xPathTaskURLAssertion>
 <xPathEmailNameInvalidErrorMessageAssertion>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div[2]/div/div/ul/li/span</xPathEmailNameInvalidErrorMessageAssertion>
 <xPathErrorMessageSocialPanelAssertion>/html/body/form/div[2]/div/div/div[2]/div/span/span</xPathErrorMessageSocialPanelAssertion>
