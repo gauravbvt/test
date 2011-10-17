@@ -91,7 +91,17 @@ public class ReportFunctions {
 			    GlobalVariables.iIndex++;
   			}
 		}
-//     	System.out.println(GlobalVariables.iIndex);
+     	if(sheetNumber==1) {
+     		file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet_V2.ods");
+     		sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
+     		for (int i = 2; i <= sheet.getRowCount() ; i++) {
+     			stestName = sheet.getCellAt("A"+i).getValue().toString();
+     			if (sheet.getCellAt("I"+i).getValue().toString().toUpperCase().equals(GlobalVariables.sAutomatesYes)) {
+     				arrayOfTestCaseId[GlobalVariables.iIndex] = stestName;
+     				GlobalVariables.iIndex++;
+     			}
+     		}
+     	}
      	sheet.detach();
 		return arrayOfTestCaseId;
 	}
