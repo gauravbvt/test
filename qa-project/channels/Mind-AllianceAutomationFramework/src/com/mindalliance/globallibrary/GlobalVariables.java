@@ -3,6 +3,9 @@ package com.mindalliance.globallibrary;
 import java.io.File;
 import java.util.Date;
 import java.util.Hashtable;
+
+import javax.swing.JList;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -63,6 +66,7 @@ public class GlobalVariables {
 	public static boolean thursday=true;
 	public static boolean friday=true;
 	public static boolean saturday=true;
+	public static JList jListExecute;
 	// Extra
 	public static String sInternalErrorPageTitle="Internal Error";
 	public static String sAboutPlanPageSubTitle="About Plan: ";

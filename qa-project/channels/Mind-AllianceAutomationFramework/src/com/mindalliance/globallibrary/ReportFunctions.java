@@ -36,38 +36,44 @@ public class ReportFunctions {
 	 * @throws IOException
 	 * @throws XMLStreamException
 	 */
-	public static void updateTestCaseExecutionResult(Sheet sheet) throws IOException, XMLStreamException {
+	public static void updateTestCaseExecutionResult(Sheet sheet) {
+		try {
 		 testCasesPassed = 0;
 		 testCasesFailed = 0;
-		for (int i = 2; i < sheet.getRowCount() ; i++){
-			   stestName = sheet.getCellAt("A"+i).getValue().toString();
+		for (int i = 0; i <GlobalVariables.jListExecute.getModel().getSize() ; i++){
+			   stestName = GlobalVariables.jListExecute.getModel().getElementAt(i).toString();
 			   if (stestName != GlobalVariables.sBlank) {
 				   // Call readCsvFile
 				   String sResult = readCsvFile(stestName);
 				   if (sResult == GlobalVariables.sFailed) {
-					   sheet.getCellAt("J"+i).setValue(GlobalVariables.sFailed);
-					   sheet.getCellAt("K"+i).setValue(sCsvScriptException);
-					   sheet.getCellAt("L"+i).setValue(sCsvErrorReport);
+					   sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sFailed);
+					   sheet.getCellAt("K"+(i+2)).setValue(sCsvScriptException);
+					   sheet.getCellAt("L"+(i+2)).setValue(sCsvErrorReport);
 					   // Call generateAutomationReportInHtml()
 					   generateAutomationReportInHtml(stestName);
 					   testCasesFailed ++;
 					   arrayOfTestCaseId[index] = stestName;
 					   arrayOftestCaseResult[index] = GlobalVariables.sFailed;
-					   arrayOftestCaseSummary[index++] = sheet.getCellAt("B"+i).getValue().toString();
+					   arrayOftestCaseSummary[index++] = sheet.getCellAt("B"+(i+2)).getValue().toString();
 				   }
 				   else if (sResult == GlobalVariables.sPassed) {
-					   sheet.getCellAt("J"+i).setValue(GlobalVariables.sPassed);
+					   sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sPassed);
 					   // Call generateAutomationReportInHtml()
 					   generateAutomationReportInHtml(stestName);
 					   testCasesPassed ++;
 					   arrayOfTestCaseId[index] = stestName;
 					   arrayOftestCaseResult[index] = GlobalVariables.sPassed;
-					   arrayOftestCaseSummary[index++] = sheet.getCellAt("B"+i).getValue().toString();
+					   arrayOftestCaseSummary[index++] = sheet.getCellAt("B"+(i+2)).getValue().toString();
 				   }
 				   else if (sResult == GlobalVariables.sNotRun)
-					   sheet.getCellAt("J"+i).setValue(GlobalVariables.sNotRun);
+					   sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sNotRun);
 			   }
 			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("Hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+		}
 	}
 
 	/**
@@ -129,7 +135,7 @@ public class ReportFunctions {
 		csvTestCase = new CsvReader(GlobalVariables.sLogDirectoryPath + "\\Results.csv");
 		if (isAvailable == 1) {
 			csvTestCase.readHeaders();
-		while (csvTestCase.readRecord()) {
+			while (csvTestCase.readRecord()) {
 				if (sTestCaseId.equals(csvTestCase.get("TestCaseId"))) {
 					sCsvResult = csvTestCase.get("Result");
 					sCsvScriptException = csvTestCase.get("ScriptException");
@@ -138,7 +144,7 @@ public class ReportFunctions {
 				if (sCsvResult.equals(GlobalVariables.sFailed))
 					return GlobalVariables.sFailed;
 			}
-		return GlobalVariables.sPassed;
+			return GlobalVariables.sPassed;
 		}
 		else
 			return GlobalVariables.sNotRun;
@@ -149,7 +155,8 @@ public class ReportFunctions {
 	 * @throws IOException
 	 * @throws XMLStreamException
 	 */
-	public static void generateAutomationReport() throws IOException, XMLStreamException {
+	public static void generateAutomationReport() {
+		try {
 		// Initialize the variables
 		index = 0;
 		Arrays.fill(arrayOfTestCaseId, null);
@@ -166,28 +173,28 @@ public class ReportFunctions {
 		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
 		totalNoOfTestCasesPassed = testCasesPassed;
 		totalNoOfTestCasesFailed = testCasesFailed;
-		// TestCase sheet: Plan
-		sheet = sheet.getSpreadSheet().getSheet(2);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G9").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H9").setValue(testCasesPassed);
-		sheet.getCellAt("I9").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-		// TestCase sheet: Command_Execution_Undo_and_Redo
-		sheet = sheet.getSpreadSheet().getSheet(3);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
+//		// TestCase sheet: Plan
+//		sheet = sheet.getSpreadSheet().getSheet(2);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("G9").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("H9").setValue(testCasesPassed);
+//		sheet.getCellAt("I9").setValue(testCasesFailed);
+//		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+//		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
+//		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
+//		// TestCase sheet: Command_Execution_Undo_and_Redo
+//		sheet = sheet.getSpreadSheet().getSheet(3);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("H10").setValue(testCasesPassed);
+//		sheet.getCellAt("I10").setValue(testCasesFailed);
+//		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+//		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
+//		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
 
 		File outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet.ods");
 		sheet.getSpreadSheet().saveAs(outputFile);
@@ -197,6 +204,10 @@ public class ReportFunctions {
 		generateFinalTestPassReport();
 		generateFailureReport();
 		System.out.println("Report generated successfully");
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -496,80 +507,85 @@ public class ReportFunctions {
 	 * @throws XMLStreamException
 	 * @throws IOException
 	 */
-	private static void generateTestCaseIndex() throws XMLStreamException, IOException {
-		OutputStream destination = new FileOutputStream(GlobalVariables.sReportDstDirectoryPath + "\\TestCaseList.htm");
+	private static void generateTestCaseIndex() {
+		try {
+			OutputStream destination = new FileOutputStream(GlobalVariables.sReportDstDirectoryPath + "\\TestCaseList.htm");
 		//OutputStream destination = new FileOutputStream("C:\\Users\\admin\\workspace\\Mind-AllianceAutomationFramework\\Reports\\2011_02_22_14_34_49\\TestCaseIndex.html");
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
 		xml.writeStartDocument();
-		xml.writeStartElement("html");
-		xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
-		xml.writeStartElement("head");
-		xml.writeStartElement("title");
-		xml.writeCharacters("TestCaseId Index");
-		xml.writeEndElement();
-		xml.writeEndElement();
-		xml.writeStartElement("body");
-			xml.writeStartElement("table");
-			xml.writeAttribute("border", "0");
-			xml.writeAttribute("width","100%");
-				xml.writeStartElement("th");
-					xml.writeStartElement("tr");
-						xml.writeStartElement("td");
-						xml.writeAttribute("bgColor","#BBBBBB");
-						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
-						xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+			xml.writeStartElement("html");
+				xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
+				xml.writeStartElement("head");
+					xml.writeStartElement("title");
+						xml.writeCharacters("TestCaseId Index");
+					xml.writeEndElement();
+				xml.writeEndElement();
+			xml.writeStartElement("body");
+				xml.writeStartElement("table");
+					xml.writeAttribute("border", "0");
+					xml.writeAttribute("width","100%");
+					xml.writeStartElement("th");
+						xml.writeStartElement("tr");
+							xml.writeStartElement("td");
+								xml.writeAttribute("bgColor","#BBBBBB");
+								xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+								xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
 								xml.writeStartElement("strong");
 									xml.writeCharacters("TestCaseId");
 								xml.writeEndElement();
-						xml.writeEndElement();
-						xml.writeStartElement("td");
-						xml.writeAttribute("bgColor","#BBBBBB");
-						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
-						xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
-							xml.writeStartElement("center");
-								xml.writeStartElement("strong");
-									xml.writeCharacters("Result");
+							xml.writeEndElement();
+							xml.writeStartElement("td");
+								xml.writeAttribute("bgColor","#BBBBBB");
+								xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+								xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+								xml.writeStartElement("center");
+									xml.writeStartElement("strong");
+										xml.writeCharacters("Result");
+									xml.writeEndElement();
 								xml.writeEndElement();
 							xml.writeEndElement();
 						xml.writeEndElement();
 					xml.writeEndElement();
-				xml.writeEndElement();
-		for (int i = 0; i < arrayOfTestCaseId.length ; i++) {
-			if(arrayOfTestCaseId[i] != null) {
-				xml.writeStartElement("tr");
-				xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
-				xml.writeAttribute("bgColor","#DDDDDD");
-				xml.writeAttribute("padding","");
-				xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
-				xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
-					xml.writeStartElement("td");
-							xml.writeStartElement("a");
-							xml.writeAttribute("href", arrayOfTestCaseId[i] + ".htm");
-							xml.writeAttribute("target", "targetframe");
-								xml.writeCharacters(arrayOfTestCaseId[i]);
+					for (int i = 0; i < GlobalVariables.jListExecute.getModel().getSize() ; i++) {
+						if(GlobalVariables.jListExecute.getModel().getElementAt(i) != null) {
+							xml.writeStartElement("tr");
+								xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
+								xml.writeAttribute("bgColor","#DDDDDD");
+								xml.writeAttribute("padding","");
+								xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+								xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+								xml.writeStartElement("td");
+									xml.writeStartElement("a");
+										xml.writeAttribute("href", GlobalVariables.jListExecute.getModel().getElementAt(i) + ".htm");
+										xml.writeAttribute("target", "targetframe");
+										xml.writeCharacters(GlobalVariables.jListExecute.getModel().getElementAt(i).toString());
+									xml.writeEndElement();
+								xml.writeEndElement();
+								xml.writeStartElement("td");
+									xml.writeStartElement("center");
+										xml.writeStartElement("font");
+											if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
+												xml.writeAttribute("color", "GREEN");
+											else
+												xml.writeAttribute("color", "RED");
+											xml.writeCharacters(arrayOftestCaseResult[i]);
+										xml.writeEndElement();
+									xml.writeEndElement();
+								xml.writeEndElement();
 							xml.writeEndElement();
-					xml.writeEndElement();
-					xml.writeStartElement("td");
-						xml.writeStartElement("center");
-							xml.writeStartElement("font");
-								if (arrayOftestCaseResult[i].equals(GlobalVariables.sPassed))
-									xml.writeAttribute("color", "GREEN");
-								else
-									xml.writeAttribute("color", "RED");
-								xml.writeCharacters(arrayOftestCaseResult[i]);
-							xml.writeEndElement();
-						xml.writeEndElement();
-					xml.writeEndElement();
+						}
+					}
 				xml.writeEndElement();
-			}
-		}
 			xml.writeEndElement();
-		xml.writeEndElement();
 		xml.writeEndDocument();
 		xml.close();
 		destination.close();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -577,7 +593,8 @@ public class ReportFunctions {
 	 * @throws IOException
 	 * @throws XMLStreamException
 	 */
-	public static void generateAutomationReportInHtml(String testName) throws IOException, XMLStreamException {
+	public static void generateAutomationReportInHtml(String testName) {
+		try {
 		csvTestCase = new CsvReader(GlobalVariables.sLogDirectoryPath + "\\Results.csv");
 		OutputStream destination = new FileOutputStream(GlobalVariables.sReportDstDirectoryPath + "\\" + testName + ".htm");
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
@@ -699,6 +716,10 @@ public class ReportFunctions {
 		 xml.close();
 		 destination.close();
 		 csvTestCase.close();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static String[] readTestCaseIdForFunctional(int sheetNumber) throws IOException {
@@ -719,7 +740,9 @@ public class ReportFunctions {
 		return arrayOfTestCaseId;
 	}
 
-	public static void generateAutomationReportForFunctionalTestCases() throws IOException, XMLStreamException {
+	public static void generateAutomationReportForFunctionalTestCases() {
+		try
+		{
 		// Initialize the variables
 		index = 0;
 		Arrays.fill(arrayOfTestCaseId, null);
@@ -727,7 +750,7 @@ public class ReportFunctions {
 		File file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
 
 		// TestCase sheet: Tree_Navigation_Views
-		Sheet sheet = SpreadSheet.createFromFile(file).getSheet(1);
+		Sheet sheet = SpreadSheet.createFromFile(file).getSheet(8);
 		updateTestCaseExecutionResult(sheet);
 		// Generate Summary Sheet
 		sheet = sheet.getSpreadSheet().getSheet(0);
@@ -738,143 +761,146 @@ public class ReportFunctions {
 		totalNoOfTestCasesPassed = testCasesPassed;
 		totalNoOfTestCasesFailed = testCasesFailed;
 
-		// TestCase sheet: Plan
-		sheet = sheet.getSpreadSheet().getSheet(2);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G9").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H9").setValue(testCasesPassed);
-		sheet.getCellAt("I9").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-
-		// TestCase sheet: Command_Execution_Undo_and_Redo
-		sheet = sheet.getSpreadSheet().getSheet(3);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-
-		// TestCase sheet: Channels Administration
-		sheet = sheet.getSpreadSheet().getSheet(6);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-		
-		// TestCase sheet: Channels Command Execution
-		sheet = sheet.getSpreadSheet().getSheet(7);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet 
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-		
-		// TestCase sheet: Collaboration Panel
-		sheet = sheet.getSpreadSheet().getSheet(8);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet 
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		
-		// TestCase sheet: Task and Flow Panel
-		sheet = sheet.getSpreadSheet().getSheet(10);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet 
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-
-		// TestCase sheet: Plan and Segment Bar 
-		sheet = sheet.getSpreadSheet().getSheet(9);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet 
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-		
-		// TestCase sheet : Entities
-		sheet = sheet.getSpreadSheet().getSheet(11);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet 
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-		
-		// TestCase sheet : Issue Summary Report
-		sheet = sheet.getSpreadSheet().getSheet(17);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet 
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-		
-		// TestCase sheet : Information Sharing Guidelines
-		sheet = sheet.getSpreadSheet().getSheet(13);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet 
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
-		
-		// TestCase sheet : Information Sharing Guidelines(User)
-		sheet = sheet.getSpreadSheet().getSheet(16);
-		updateTestCaseExecutionResult(sheet);
-		// Generate Summary Sheet 
-		sheet = sheet.getSpreadSheet().getSheet(0);
-		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
-		sheet.getCellAt("H10").setValue(testCasesPassed);
-		sheet.getCellAt("I10").setValue(testCasesFailed);
-		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
-		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
+//		// TestCase sheet: Plan
+//		sheet = sheet.getSpreadSheet().getSheet(2);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("G9").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("H9").setValue(testCasesPassed);
+//		sheet.getCellAt("I9").setValue(testCasesFailed);
+//		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+//		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
+//		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
+//
+//		// TestCase sheet: Command_Execution_Undo_and_Redo
+//		sheet = sheet.getSpreadSheet().getSheet(3);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("H10").setValue(testCasesPassed);
+//		sheet.getCellAt("I10").setValue(testCasesFailed);
+//		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+//		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
+//		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
+//
+//		// TestCase sheet: Channels Administration
+//		sheet = sheet.getSpreadSheet().getSheet(6);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("E18").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("F18").setValue(testCasesPassed);
+//		sheet.getCellAt("G18").setValue(testCasesFailed);
+//		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+//		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
+//		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
+//		
+//		// TestCase sheet: Channels Command Execution
+//		sheet = sheet.getSpreadSheet().getSheet(7);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet 
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("H10").setValue(testCasesPassed);
+//		sheet.getCellAt("I10").setValue(testCasesFailed);
+//		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+//		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
+//		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
+//		
+//		// TestCase sheet: Collaboration Panel
+//		sheet = sheet.getSpreadSheet().getSheet(8);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet 
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("H10").setValue(testCasesPassed);
+//		sheet.getCellAt("I10").setValue(testCasesFailed);
+//		
+//		// TestCase sheet: Task and Flow Panel
+//		sheet = sheet.getSpreadSheet().getSheet(10);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet 
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("H10").setValue(testCasesPassed);
+//		sheet.getCellAt("I10").setValue(testCasesFailed);
+//		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+//		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
+//		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
+//
+//		// TestCase sheet: Plan and Segment Bar 
+//		sheet = sheet.getSpreadSheet().getSheet(9);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet 
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("H10").setValue(testCasesPassed);
+//		sheet.getCellAt("I10").setValue(testCasesFailed);
+//		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+//		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
+//		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
+//		
+//		// TestCase sheet : Entities
+//		sheet = sheet.getSpreadSheet().getSheet(11);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet 
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("H10").setValue(testCasesPassed);
+//		sheet.getCellAt("I10").setValue(testCasesFailed);
+//		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+//		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
+//		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
+//		
+//		// TestCase sheet : Issue Summary Report
+//		sheet = sheet.getSpreadSheet().getSheet(17);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet 
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("H10").setValue(testCasesPassed);
+//		sheet.getCellAt("I10").setValue(testCasesFailed);
+//		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+//		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
+//		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
+//		
+//		// TestCase sheet : Information Sharing Guidelines
+//		sheet = sheet.getSpreadSheet().getSheet(13);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet 
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("H10").setValue(testCasesPassed);
+//		sheet.getCellAt("I10").setValue(testCasesFailed);
+//		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+//		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
+//		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
+//		
+//		// TestCase sheet : Information Sharing Guidelines(User)
+//		sheet = sheet.getSpreadSheet().getSheet(16);
+//		updateTestCaseExecutionResult(sheet);
+//		// Generate Summary Sheet 
+//		sheet = sheet.getSpreadSheet().getSheet(0);
+//		sheet.getCellAt("G10").setValue((testCasesPassed + testCasesFailed));
+//		sheet.getCellAt("H10").setValue(testCasesPassed);
+//		sheet.getCellAt("I10").setValue(testCasesFailed);
+//		// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+//		totalNoOfTestCasesPassed = totalNoOfTestCasesPassed + testCasesPassed;
+//		totalNoOfTestCasesFailed = totalNoOfTestCasesFailed + testCasesFailed;
 
 		File outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\FunctionalTestCase.ods");
 		sheet.getSpreadSheet().saveAs(outputFile);
 
 		generateTestCaseIndex();
 		generateTestCaseSummary();
-		generateFinalTestPassReport();
+//		generateFinalTestPassReport();
 		generateFailureReport();
 		System.out.println("Report generated successfully");
-
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
