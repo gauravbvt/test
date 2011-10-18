@@ -106,6 +106,8 @@
 <redoUpdateSegment>Redo update segment</redoUpdateSegment>
 <undoRemoveThisSegment>Undo remove this segment</undoRemoveThisSegment>
 <redoRemoveThisSegment>Redo remove this segment</redoRemoveThisSegment>
+<removeInfoNeed>Remove info need</removeInfoNeed>
+<removeSharingCapability>Remove sharing capability</removeSharingCapability>
 <taskMover>Task mover</taskMover>
 <undoUpdateTask>Undo update task</undoUpdateTask>
 <undoAddNewTask>Undo add new task</undoAddNewTask>
