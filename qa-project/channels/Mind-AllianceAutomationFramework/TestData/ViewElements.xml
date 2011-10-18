@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <elements>
 <adminPageTitle>Channels - Administration</adminPageTitle>
+<requirements>Requirements</requirements>
+<informationSharingRequirements>Information sharing requirements</informationSharingRequirements>
 <homePageTitle>Channels</homePageTitle>
 <loginPageTitle>Channels - Sign in</loginPageTitle>
 <planPageSubTitle>Channels:</planPageSubTitle>
