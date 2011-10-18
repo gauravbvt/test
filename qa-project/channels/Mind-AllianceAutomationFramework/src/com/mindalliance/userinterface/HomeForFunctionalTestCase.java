@@ -575,7 +575,6 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 					jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
 					jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
 					//Execute current TestCaseId
-					System.out.println(testCaseId);
 					cls = Class.forName("com.mindalliance.functionaltestsripts." + testCaseId);
 					cls.newInstance();
 					//Update progressBar
