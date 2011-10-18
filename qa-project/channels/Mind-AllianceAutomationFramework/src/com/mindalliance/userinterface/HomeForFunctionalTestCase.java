@@ -1,5 +1,6 @@
 package com.mindalliance.userinterface;
 
+
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Rectangle;
@@ -11,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
-
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -29,21 +29,20 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
 import org.dyno.visual.swing.layouts.Constraints;
 import org.dyno.visual.swing.layouts.GroupLayout;
 import org.dyno.visual.swing.layouts.Leading;
 import org.dyno.visual.swing.layouts.Trailing;
-
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.ReportFunctions;
 
 //VS4E -- DO NOT REMOVE THIS LINE!
-public class HomeForFunctionalTestCase extends JFrame implements ActionListener, ItemListener{
+public class HomeForFunctionalTestCase extends JFrame implements ActionListener, ItemListener {
 	boolean clFlag=true,hpFlag=true,caFlag=true,dcFlag=true,ceFlag=true,cpFlag=true,psFlag=true,tfFlag=true,teFlag=true,isgFlag=true,ifmFlag=true,acFlag=true,lfFlag=true,misgFlag=true,isrFlag=true;
 	private static final long serialVersionUID = 1L;
 	private static int jListCount=0;
+	private static int cnt;
 	private JList jListFunctional;
 	private JScrollPane jScrollPane0;
 	private String arrayOfTestCaseIdOld[];
@@ -52,12 +51,10 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	private JButton jButtonAdd;
 	private JTextField jTextField0;
 	private JLabel jLabel0;
-	private JList jListExecute;
 	private JScrollPane jScrollPane3;
 	private JButton jButtonExecute;
 	private JProgressBar jProgressBarStatus;
 	private JLabel jLabelStatus;
-	private static int cnt;
 	private JLabel jLabelTestCaseId;
 	private JButton jButtonLogLink;
 	private JButton jButtonReportLink;
@@ -84,13 +81,13 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	private JLabel jLabelNumberOfTestCasesFailed;
 	private JPanel jPanelReport;
 	private JPanel jPanelLogo;
-	BufferedImage image;
 	private JButton jButtonExit;
 	private JButton jButtonNewTest;
 	private JComboBox jComboBoxBrowser;
 	private static DefaultListModel listModel;
 	private JButton jButtonSendEmail;
 	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel";
+	BufferedImage image;
 	public HomeForFunctionalTestCase() {
 		initComponents();
 	}
@@ -182,12 +179,13 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	private JPanel getJPanel1() {
 		if (jPanelLogo == null) {
 			jPanelLogo = new JPanel();
-			try {
-		          image = ImageIO.read(new File(GlobalVariables.fCurrentDir + "//Images//Mind-Alliance_Logo.png"));
-		       } catch (IOException ex) {
-		            // handle exception...
-		       }
-		       jPanelLogo.setLayout(new GroupLayout());
+			try	{
+				image = ImageIO.read(new File(GlobalVariables.fCurrentDir + "//Images//Mind-Alliance_Logo.png"));
+			} 
+			catch (IOException ex)	{
+				ex.printStackTrace();
+			}
+			jPanelLogo.setLayout(new GroupLayout());
 		}
 		return jPanelLogo;
 	}
@@ -454,12 +452,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	}
 
 	private JList getJList3() {
-		if (jListExecute == null) {
-			jListExecute = new JList();
+		if (GlobalVariables.jListExecute == null) {
+			GlobalVariables.jListExecute = new JList();
 			DefaultListModel listModel = new DefaultListModel();
-			jListExecute.setModel(listModel);
+			GlobalVariables.jListExecute.setModel(listModel);
 		}
-		return jListExecute;
+		return GlobalVariables.jListExecute;
 	}
 
 	private JLabel getJLabel0() {
@@ -546,8 +544,8 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		int totalExecute;
 		try {
 			Class<?> cls;
-			cnt = 0;
 			// Call GenericFunctionLibrary.initializeTestData()
+			cnt = 0;
 			GenericFunctionLibrary.initializeTestData();
 			// Get Browser Name
 			GlobalVariables.sBrowser = jComboBoxBrowser.getSelectedItem().toString();
@@ -577,6 +575,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 					jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
 					jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
 					//Execute current TestCaseId
+					System.out.println(testCaseId);
 					cls = Class.forName("com.mindalliance.functionaltestsripts." + testCaseId);
 					cls.newInstance();
 					//Update progressBar
@@ -657,17 +656,17 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				arrayOfListObject = jListFunctional.getSelectedValues();
 				for (Object listObject : arrayOfListObject)
 					listModel.addElement(listObject);
-				jListExecute.setModel(listModel);
+				GlobalVariables.jListExecute.setModel(listModel);
 			}
 			else if ("execute".equals(e.getActionCommand())) { // when clicked on 'Execute' button
-				if (jListExecute.getModel().getSize() > 0) {
+				if (GlobalVariables.jListExecute.getModel().getSize() > 0) {
 					jButtonExecute.setEnabled(false);
 					Vector<Object> vc = new Vector<Object>();
 				    //;Object o[] = new Object[200];
 					noOfSelectedTestCases = 0;
-					for (int i = 0; i < jListExecute.getModel().getSize(); i++) {
+					for (int i = 0; i < GlobalVariables.jListExecute.getModel().getSize(); i++) {
 						noOfSelectedTestCases ++;
-						vc.add(jListExecute.getModel().getElementAt(i));
+						vc.add(GlobalVariables.jListExecute.getModel().getElementAt(i));
 					}
 					executeTestCases(vc);
 					jButtonExecute.setEnabled(true);
@@ -704,7 +703,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		// TODO Auto-generated method stub
 		DefaultListModel listModel = new DefaultListModel();
 		listModel.removeAllElements();
-		jListExecute.setModel(listModel);
+		GlobalVariables.jListExecute.setModel(listModel);
 		// Clear progressBar Values
 		jProgressBarStatus.setMinimum(0);
 		jProgressBarStatus.setMaximum(0);

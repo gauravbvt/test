@@ -55,7 +55,6 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 	private JLabel jLabel2;
 	private JList jListCommand;
 	private JScrollPane jScrollPane2;
-	private JList jListExecute;
 	private JScrollPane jScrollPane3;
 	private JButton jButtonExecute;
 	private JProgressBar jProgressBarStatus;
@@ -319,12 +318,12 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 	}
 
 	private JList getJList3() {
-		if (jListExecute == null) {
-			jListExecute = new JList();
+		if (GlobalVariables.jListExecute == null) {
+			GlobalVariables.jListExecute = new JList();
 			DefaultListModel listModel = new DefaultListModel();
-			jListExecute.setModel(listModel);
+			GlobalVariables.jListExecute.setModel(listModel);
 		}
-		return jListExecute;
+		return GlobalVariables.jListExecute;
 	}
 
 	private JScrollPane getJScrollPane2() {
@@ -570,38 +569,38 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			if ("add".equals(e.getActionCommand())) {// when clicked on '>' button
 				Object[] arrayOfListObject;
 				DefaultListModel listModel = new DefaultListModel();
-				int cnt1=0,cnt2=0,cnt3=0;
+				int cnt=0;
 				arrayOfListObject = jListView.getSelectedValues();
 				for (Object listObject : arrayOfListObject){ 
 					listModel.addElement(listObject);
-					cnt1++;
+					cnt++;
 				}
-				jListExecute.setModel(listModel);
+				GlobalVariables.jListExecute.setModel(listModel);
 				
 				arrayOfListObject = jListPlan.getSelectedValues();
 				for (Object listObject : arrayOfListObject){ 
 					listModel.addElement(listObject);
-					cnt2++;
+					cnt++;
 				}
-				jListExecute.setModel(listModel);
+				GlobalVariables.jListExecute.setModel(listModel);
 				
 				arrayOfListObject = jListCommand.getSelectedValues();
 				for (Object listObject : arrayOfListObject){ 
 					listModel.addElement(listObject);
-					cnt3++;
+					cnt++;
 				}
-				System.out.println("Total Count : " +(cnt1+cnt2+cnt3));
-				jListExecute.setModel(listModel);
+				System.out.println("Total Count : " +cnt);
+				GlobalVariables.jListExecute.setModel(listModel);
 			}
 			else if ("execute".equals(e.getActionCommand())) { // when clicked on 'Execute' button
-				if (jListExecute.getModel().getSize() > 0) {
+				if (GlobalVariables.jListExecute.getModel().getSize() > 0) {
 					jButtonExecute.setEnabled(false);
 					Vector<Object> vc = new Vector<Object>();
 				    //;Object o[] = new Object[200];
 					noOfSelectedTestCases = 0;
-					for (int i = 0; i < jListExecute.getModel().getSize(); i++) {
+					for (int i = 0; i < GlobalVariables.jListExecute.getModel().getSize(); i++) {
 						noOfSelectedTestCases ++;
-						vc.add(jListExecute.getModel().getElementAt(i));
+						vc.add(GlobalVariables.jListExecute.getModel().getElementAt(i));
 					}
 					executeTestCases(vc);
 					jButtonExecute.setEnabled(true);
@@ -639,7 +638,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		// TODO Auto-generated method stub
 		DefaultListModel listModel = new DefaultListModel();
 		listModel.removeAllElements();
-		jListExecute.setModel(listModel);
+		GlobalVariables.jListExecute.setModel(listModel);
 		// Clear progressBar Values
 		jProgressBarStatus.setMinimum(0);
 		jProgressBarStatus.setMaximum(0);
