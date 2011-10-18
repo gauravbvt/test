@@ -169,7 +169,6 @@ public class MAP0011_addEventToPlan
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
-					
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
