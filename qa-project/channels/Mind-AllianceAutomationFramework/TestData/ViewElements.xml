@@ -58,6 +58,7 @@
 <undoAddNewIssue>Undo add new issue</undoAddNewIssue>
 <redoAddNewIssue>Redo add new issue</redoAddNewIssue>
 <sendMessage>Send message</sendMessage>
+<copyCapability>Copy capability</copyCapability>
 <to>To:</to>
 <events>Events</events>
 <addNewTask>Add new task</addNewTask>
