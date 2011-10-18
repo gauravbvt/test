@@ -52,8 +52,8 @@ public class MAV0224_AddInfoReceiveCopyNeed
 				Thread.sleep(2000);
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
-				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+				GlobalVariables.sDescription = "'Add Info Receive' Link Clicked";
+				GlobalVariables.oDriver.findElement(By.linkText("Add info receive")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -65,10 +65,10 @@ public class MAV0224_AddInfoReceiveCopyNeed
 				// Copy Capability
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Sent Info Copy Capilibility";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"), GlobalVariables.viewElements.get("copyCapability"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"), GlobalVariables.viewElements.get("copyNeed"));
 				// Assertion: Verify that Elements of Information is Present
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionCopyCapability")));
-				if(GlobalVariables.oElement.getText().equals("Capability copied")){
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionCopyNeed")));
+				if(GlobalVariables.oElement.getText().equals("Need copied")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
