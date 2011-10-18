@@ -166,6 +166,7 @@
 <xPathApplySocialPanel>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div[2]/div/div[2]/input</xPathApplySocialPanel>
 <xPathTaskIssueURL>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathTaskIssueURL>
 <xPathCreateViewSurvey>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathCreateViewSurvey>
+<xPathRequirementDefinition>/html/body/form/div[4]/div/div[2]/div[2]/div/div/ul/li/a/span</xPathRequirementDefinition>
 <!-- Assertions -->
 <xPathAssertionCopyCapability>html/body/form/div[14]/span/span</xPathAssertionCopyCapability>
 <xPathAssertionCopyNeed>html/body/form/div[14]/span/span</xPathAssertionCopyNeed>
