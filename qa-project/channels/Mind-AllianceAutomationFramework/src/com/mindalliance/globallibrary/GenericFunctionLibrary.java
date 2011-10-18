@@ -307,6 +307,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathURL",oXmlElePlanPage.getElementsByTagName("xPathURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathRemoveEvent",oXmlElePlanPage.getElementsByTagName("xPathRemoveEvent").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
+			GlobalVariables.assertion.put("sXpathAssertionCopyNeed",oXmlElePlanPage.getElementsByTagName("xPathAssertionCopyNeed").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionCopyCapability",oXmlElePlanPage.getElementsByTagName("xPathAssertionCopyCapability").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathTaskURLAssertion",oXmlElePlanPage.getElementsByTagName("xPathTaskURLAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathEmailNameInvalidErrorMessageAssertion",oXmlElePlanPage.getElementsByTagName("xPathEmailNameInvalidErrorMessageAssertion").item(0).getChildNodes().item(0).getNodeValue());
@@ -366,6 +367,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathAddInfoSendAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendAssertion").item(0).getChildNodes().item(0).getNodeValue());	
 			GlobalVariables.assertion.put("sXpathEventAssertion",oXmlElePlanPage.getElementsByTagName("xPathEventAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			// View Elements
+			GlobalVariables.viewElements.put("removeSharingCapability",oXmlEleViewElements.getElementsByTagName("removeSharingCapability").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("removeInfoNeed",oXmlEleViewElements.getElementsByTagName("removeInfoNeed").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("copyCapability",oXmlEleViewElements.getElementsByTagName("copyCapability").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("showSimpleForm",oXmlEleViewElements.getElementsByTagName("showSimpleForm").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("showAdvanceForm",oXmlEleViewElements.getElementsByTagName("showAdvanceForm").item(0).getChildNodes().item(0).getNodeValue());
