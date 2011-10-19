@@ -139,6 +139,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.home.put("sXpathFeedbackSend",oXmlEleHomePage.getElementsByTagName("xPathFeedbackSend").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathHideShowAllSurvey",oXmlEleHomePage.getElementsByTagName("xPathHideShowAllSurvey").item(0).getChildNodes().item(0).getNodeValue());
 			//Channels Plan Page
+			GlobalVariables.plan.put("sXpathNewRequirement",oXmlElePlanPage.getElementsByTagName("xPathNewRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathRequirementNetwork",oXmlElePlanPage.getElementsByTagName("xPathRequirementNetwork").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathReceiveElementInformation",oXmlElePlanPage.getElementsByTagName("xPathReceiveElementInformation").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathSentElementInformation",oXmlElePlanPage.getElementsByTagName("xPathSentElementInformation").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAddInfoSendAttachment",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendAttachment").item(0).getChildNodes().item(0).getNodeValue());
@@ -307,7 +309,9 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathURL",oXmlElePlanPage.getElementsByTagName("xPathURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathRemoveEvent",oXmlElePlanPage.getElementsByTagName("xPathRemoveEvent").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathRequirementDefinition",oXmlElePlanPage.getElementsByTagName("xPathRequirementDefinition").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathRemoveRequirement",oXmlElePlanPage.getElementsByTagName("xPathRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
+			GlobalVariables.assertion.put("sXpathNewRequirementDefinitionAssertion",oXmlElePlanPage.getElementsByTagName("xPathNewRequirementDefinitionAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionCopyNeed",oXmlElePlanPage.getElementsByTagName("xPathAssertionCopyNeed").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionCopyCapability",oXmlElePlanPage.getElementsByTagName("xPathAssertionCopyCapability").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathTaskURLAssertion",oXmlElePlanPage.getElementsByTagName("xPathTaskURLAssertion").item(0).getChildNodes().item(0).getNodeValue());
