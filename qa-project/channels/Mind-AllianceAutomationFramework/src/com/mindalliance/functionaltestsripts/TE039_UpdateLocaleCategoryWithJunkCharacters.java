@@ -104,16 +104,6 @@ public class TE039_UpdateLocaleCategoryWithJunkCharacters
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close 'About Plan' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);				
-				//Select Locale to add Category
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);		
 				//Assertion : Verify that Locale's Category is added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentCategory")));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get(")(*&^%$#!"))) {

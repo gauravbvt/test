@@ -91,9 +91,9 @@ public class TE009_RemoveAgentCategory
 				//Add Agent Category
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Category Added";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Category 1"));
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

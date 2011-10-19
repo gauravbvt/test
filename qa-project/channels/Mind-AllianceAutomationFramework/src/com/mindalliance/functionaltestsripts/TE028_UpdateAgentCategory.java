@@ -128,25 +128,25 @@ public class TE028_UpdateAgentCategory
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close Agent Category Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				//Assertion : Verify that Agent Category Description & Tags Updated
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				//Click on 'Agent'
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentCategory"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
+//				//Close Agent Category Window
+//				GlobalVariables.oDriver.findElement(By.className("close")).click();
+//			    // WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(2000);
+//				//Assertion : Verify that Agent Category Description & Tags Updated
+//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(2000);
+//				//Click on 'Agent'
+//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(2000);
+//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentCategory"))).click();
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
 				if(GlobalVariables.oElement.getValue().contains(GlobalVariables.viewElements.get("description"))) {
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags"));
@@ -169,6 +169,7 @@ public class TE028_UpdateAgentCategory
 				//Close Agent Category Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				//Assertion : Verify that Agent Category Description & Tags Updated
+				//Click on 'Agent' Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();

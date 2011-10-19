@@ -66,7 +66,7 @@ public class TE037_UpdateLocaleTags
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Close 'About Plan' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -105,16 +105,6 @@ public class TE037_UpdateLocaleTags
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close 'Locale' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				//Assertion : Verify that Locale Description is Updated
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				//Update Locale Tags
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags"));
 				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("This is a Tag"))) {
@@ -131,12 +121,12 @@ public class TE037_UpdateLocaleTags
 							GlobalVariables.sVerifyError, GlobalVariables.sBlank);					
 				}
 				//Close 'Locale' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Close 'About Plan' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

@@ -107,16 +107,6 @@ public class TE040_RemoveLocaleCategory
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close 'About Plan' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);				
-				//Select Locale to add Category
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);		
 				
 				// Remove Locale's Category
 				GlobalVariables.iStepNo++ ;
@@ -174,6 +164,7 @@ public class TE040_RemoveLocaleCategory
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			}
 		catch (Exception e) {
+			e.printStackTrace();
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

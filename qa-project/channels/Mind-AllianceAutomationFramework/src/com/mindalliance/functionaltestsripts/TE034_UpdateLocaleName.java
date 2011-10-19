@@ -66,7 +66,7 @@ public class TE034_UpdateLocaleName
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Close 'About Plan' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -106,7 +106,7 @@ public class TE034_UpdateLocaleName
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Close 'Locale' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -131,12 +131,12 @@ public class TE034_UpdateLocaleName
 							GlobalVariables.sVerifyError, GlobalVariables.sBlank);					
 				}
 				//Close 'Locale' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Close 'About Plan' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

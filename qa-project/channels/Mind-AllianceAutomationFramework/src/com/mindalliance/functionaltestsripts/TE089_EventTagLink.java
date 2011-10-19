@@ -111,7 +111,11 @@ public class TE089_EventTagLink
 				// Click on 'done' button
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Event details window closed";
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -119,15 +123,11 @@ public class TE089_EventTagLink
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// About Plan
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// All events
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allEvents"));
 				// WebElement Synchronization

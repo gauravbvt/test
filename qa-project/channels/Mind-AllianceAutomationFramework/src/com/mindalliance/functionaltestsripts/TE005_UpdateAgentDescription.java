@@ -97,22 +97,6 @@ public class TE005_UpdateAgentDescription
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close Agent Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
-				// Click on Contacts
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				//Click on 'Agent'
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				//Assertion : Verify that Description name gets updated
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
 				if(GlobalVariables.oElement.getValue().contains(GlobalVariables.viewElements.get("description"))){
@@ -133,12 +117,12 @@ public class TE005_UpdateAgentDescription
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Close Agent Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Close About Plan Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

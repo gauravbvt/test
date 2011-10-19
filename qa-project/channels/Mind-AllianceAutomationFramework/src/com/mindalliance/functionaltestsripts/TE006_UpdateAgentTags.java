@@ -97,21 +97,6 @@ public class TE006_UpdateAgentTags
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close Agent Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				//Assertion : Verify that tags gets updated
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				//Click on 'Agent'
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags")).click();
 				// WebElement Synchronization
 				Thread.currentThread();

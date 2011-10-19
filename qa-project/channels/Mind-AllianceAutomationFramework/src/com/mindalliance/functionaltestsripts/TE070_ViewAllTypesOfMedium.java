@@ -105,7 +105,7 @@ public class TE070_ViewAllTypesOfMedium
 				// Click on done
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Done";
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div/div/a")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -114,7 +114,7 @@ public class TE070_ViewAllTypesOfMedium
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Close New Medium Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div/div/a")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
