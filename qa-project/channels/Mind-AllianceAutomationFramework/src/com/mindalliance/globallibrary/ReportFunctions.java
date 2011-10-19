@@ -895,7 +895,7 @@ public class ReportFunctions {
 
 		generateTestCaseIndex();
 		generateTestCaseSummary();
-//		generateFinalTestPassReport();
+		generateFinalTestPassReport();
 		generateFailureReport();
 		System.out.println("Report generated successfully");
 		}
