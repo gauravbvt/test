@@ -309,6 +309,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathURL",oXmlElePlanPage.getElementsByTagName("xPathURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathRemoveEvent",oXmlElePlanPage.getElementsByTagName("xPathRemoveEvent").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathRequirementDefinition",oXmlElePlanPage.getElementsByTagName("xPathRequirementDefinition").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathDeleteEventAttachment",oXmlElePlanPage.getElementsByTagName("xPathDeleteEventAttachment").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathCopyEventAttachment",oXmlElePlanPage.getElementsByTagName("xPathCopyEventAttachment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathRemoveRequirement",oXmlElePlanPage.getElementsByTagName("xPathRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXpathNewRequirementDefinitionAssertion",oXmlElePlanPage.getElementsByTagName("xPathNewRequirementDefinitionAssertion").item(0).getChildNodes().item(0).getNodeValue());
@@ -623,6 +625,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("prohibited",oXmlEleViewElements.getElementsByTagName("prohibited").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("taskStart",oXmlEleViewElements.getElementsByTagName("taskStart").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("taskEnd",oXmlEleViewElements.getElementsByTagName("taskEnd").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("attachmentCopied",oXmlEleViewElements.getElementsByTagName("attachmentCopied").item(0).getChildNodes().item(0).getNodeValue());
 			
 		} catch(Exception e) {
 			System.out.println("Hie.....");
