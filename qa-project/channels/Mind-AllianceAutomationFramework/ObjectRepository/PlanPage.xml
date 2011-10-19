@@ -191,7 +191,7 @@
 <xPathPhaseCreatedAssertion>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathPhaseCreatedAssertion>
 <xPathMediumDeleteAttachmentAssertion>/html/body/form/div[3]/div/div2/div[2]/div/table/tbody/tr[6]/td</xPathMediumDeleteAttachmentAssertion>
 <xPathDeleteEventAttachmentAssertion>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td</xPathDeleteEventAttachmentAssertion>
-<xPathCopyAttachmentAssertion>//div[@class='change-message']/span/span</xPathCopyAttachmentAssertion>
+<xPathCopyAttachmentAssertion>/html/body/form/div[14]/span/span</xPathCopyAttachmentAssertion>
 <xPathAssertionPhaseDetails>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathAssertionPhaseDetails>
 <xPathAssertionDetails>/html/body/form/div[4]/div/div[2]/div/div/h1</xPathAssertionDetails>
 <xPathPhaseAssertionDetails>/html/body/form/div[3]/div/div[2]/div/div/h1</xPathPhaseAssertionDetails>
