@@ -1,5 +1,7 @@
 <?xml version="1.0"?>	
 <elements>
+<xPathRequirementNetwork>/html/body/form/div[4]/div/div[2]/div[2]/div/div/ul/li[2]/a/span</xPathRequirementNetwork>
+<xPathNewRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/a</xPathNewRequirement>
 <xPathSentElementInformation>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[4]/th/a</xPathSentElementInformation>
 <xPathReceiveElementInformation>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[4]/th/a</xPathReceiveElementInformation>
 <xPathAddInfoSendAttachment>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[13]/td/ul/span/li/a</xPathAddInfoSendAttachment>
@@ -167,7 +169,9 @@
 <xPathTaskIssueURL>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathTaskIssueURL>
 <xPathCreateViewSurvey>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathCreateViewSurvey>
 <xPathRequirementDefinition>/html/body/form/div[4]/div/div[2]/div[2]/div/div/ul/li/a/span</xPathRequirementDefinition>
+<xPathRemoveRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/a[2]</xPathRemoveRequirement>
 <!-- Assertions -->
+<xPathNewRequirementDefinitionAssertion>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/h3</xPathNewRequirementDefinitionAssertion>
 <xPathAssertionCopyCapability>html/body/form/div[14]/span/span</xPathAssertionCopyCapability>
 <xPathAssertionCopyNeed>html/body/form/div[14]/span/span</xPathAssertionCopyNeed>
 <xPathTaskURLAssertion>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/a</xPathTaskURLAssertion>
