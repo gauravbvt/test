@@ -34,18 +34,6 @@ public class TE103_DelteEventAttachment
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
-				// Click on 'done' button
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Segment updated";
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
 				// Clicks on 'About plan' link under show pop up menu option
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "About plan section opened";
@@ -110,18 +98,6 @@ public class TE103_DelteEventAttachment
 				Thread.currentThread();
 				Thread.sleep(2000);
 
-				// Click on 'URL' radio button
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="URL radio button clicked";			
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathURL"))).click();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
 				// Attach File to an event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Attach File to event";
@@ -173,6 +149,31 @@ public class TE103_DelteEventAttachment
 				// Click on 'done' button
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Event details window closed";
+				// Close 'Event' Window
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Close 'Event' Window
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// About Plan
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// All events
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allEvents"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Click on check-box to delete the event 
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -180,16 +181,7 @@ public class TE103_DelteEventAttachment
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);							
-				// Click on Check-box to delete the event 
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(2000);	
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

@@ -62,6 +62,7 @@ public class TE090_EventTags
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add Event";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
+				System.out.println(GlobalVariables.testData.get("This is tag"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Event To The Plan"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
@@ -70,7 +71,7 @@ public class TE090_EventTags
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Select check box
 				GlobalVariables.iStepNo++;
