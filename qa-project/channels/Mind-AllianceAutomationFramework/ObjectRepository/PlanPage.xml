@@ -1,5 +1,6 @@
 <?xml version="1.0"?>	
 <elements>
+<xPathEditRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tbody/tr/td[8]/span/a</xPathEditRequirement>
 <xPathRequirementNetwork>/html/body/form/div[4]/div/div[2]/div[2]/div/div/ul/li[2]/a/span</xPathRequirementNetwork>
 <xPathNewRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/a</xPathNewRequirement>
 <xPathSentElementInformation>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[4]/th/a</xPathSentElementInformation>
