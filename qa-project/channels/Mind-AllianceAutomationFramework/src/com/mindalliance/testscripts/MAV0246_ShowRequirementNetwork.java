@@ -10,7 +10,7 @@ import com.mindalliance.globallibrary.ReportFunctions;
 
 public class MAV0246_ShowRequirementNetwork 
 {
-public MAV0246_ShowRequirementNetwork(){
+	public MAV0246_ShowRequirementNetwork(){
 		
 		try {
 			GlobalVariables.sTestCaseId = "MAV0246_ShowRequirementNetwork";

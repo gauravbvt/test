@@ -11,7 +11,7 @@ import com.mindalliance.globallibrary.ReportFunctions;
 
 public class MAV0248_RemoveRequirement 
 {
-public MAV0248_RemoveRequirement(){
+	public MAV0248_RemoveRequirement(){
 		
 		try {
 			GlobalVariables.sTestCaseId = "MAV0248_RemoveRequirement";
