@@ -167,11 +167,11 @@ public class MAV0227_OrganizationContactInfo {
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					// Click on Organization
-					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
+//					// Click on Organization
+//					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+//					// WebElement Synchronization
+//					Thread.currentThread();
+//					Thread.sleep(3000);
 					// Remove Organization
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
 					// WebElement Synchronization
