@@ -3,9 +3,7 @@ package com.mindalliance.globallibrary;
 import java.io.File;
 import java.util.Date;
 import java.util.Hashtable;
-
 import javax.swing.JList;
-
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -71,5 +69,4 @@ public class GlobalVariables {
 	public static String sInternalErrorPageTitle="Internal Error";
 	public static String sAboutPlanPageSubTitle="About Plan: ";
 	public static String sAboutHomePage="Channels by Mind-Alliance Systems";
-	
 }

@@ -2,7 +2,6 @@ package com.mindalliance.globallibrary;
 
 import java.io.File;
 import java.util.Date;
-
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -49,5 +48,4 @@ public class GlobalStatic {
 	public static String sPlanName="New Plan";
 	public static String sAboutPlanPageSubTitle="About Plan: "+sPlanName;
 	public static String sPlanPageShowPopUpMenuXPath="/html/body/form/div[12]/span/span[2]/span/span"; 
-	
 }

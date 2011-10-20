@@ -7,8 +7,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 public class LogFunctions {
+	
 	/**
 	 * Get Current DateTime
 	 * @return
@@ -24,18 +24,19 @@ public class LogFunctions {
 	 * @param logString
 	 */
 	public static void writeLogs(String sLog) {
-		  try {
-		   FileWriter fileWriter = new FileWriter(GlobalVariables.sLogFile, true);
-		   BufferedWriter out = new BufferedWriter(fileWriter);
-		   out.write(getDateTime() + ":" + sLog);
-		   out.newLine();
-		   out.flush();
-		   out.close();
-		   }
-		  catch (IOException e) {
-			  System.out.println(e.getMessage());
-		   }
-		 }
+		try {
+			FileWriter fileWriter = new FileWriter(GlobalVariables.sLogFile, true);
+			BufferedWriter out = new BufferedWriter(fileWriter);
+		    out.write(getDateTime() + ":" + sLog);
+		    out.newLine();
+		    out.flush();
+		    out.close();
+		}
+		catch (IOException e) {
+			System.out.println("Error Occured in writeLogs() function. \n");
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Result File Logger
@@ -53,15 +54,16 @@ public class LogFunctions {
 				sScriptException = sScriptException.replaceAll("\n", " ");
 				// sScriptException = sScriptException.substring(0, sScriptException.indexOf("}") + 1);	
 			}
-			 FileWriter fileWriter = new FileWriter(GlobalVariables.sResultCsvFile, true);
-			 BufferedWriter out = new BufferedWriter(fileWriter);
-			 out.write(sTestCaseId + "," + iVerifyStepNo + "," + sDescription + "," + sResult + "," + sScriptException + "," + sErrorReport);
-			 out.newLine();
-			 out.flush();
-			 out.close();
-			}
+			FileWriter fileWriter = new FileWriter(GlobalVariables.sResultCsvFile, true);
+			BufferedWriter out = new BufferedWriter(fileWriter);
+			out.write(sTestCaseId + "," + iVerifyStepNo + "," + sDescription + "," + sResult + "," + sScriptException + "," + sErrorReport);
+			out.newLine();
+			out.flush();
+			out.close();
+		}
 		catch (IOException e) {
-			}
+			System.out.println("Error Occured in writeResults() function.\n");
+		}
 	}
 	
 	/**
@@ -69,15 +71,16 @@ public class LogFunctions {
 	 * @param logString
 	 */
 	public static void writeErrorLogs(String sLog) {
-		  try {
-		   FileWriter fileWriter = new FileWriter(GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs", true);
-		   BufferedWriter out = new BufferedWriter(fileWriter);
-		   out.write(getDateTime() + ":" + sLog);
-		   out.newLine();
-		   out.flush();
-		   out.close();
-		   }
-		  catch (IOException e) {
-		   }
-		}	
+		try {
+			FileWriter fileWriter = new FileWriter(GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs", true);
+		    BufferedWriter out = new BufferedWriter(fileWriter);
+		    out.write(getDateTime() + ":" + sLog);
+		    out.newLine(); 
+		    out.flush();
+		    out.close();
+		}
+		catch (IOException e) {
+			System.out.println("Error Occured in writeErrorLogs() function.\n");
+		}
+	}	
 }
