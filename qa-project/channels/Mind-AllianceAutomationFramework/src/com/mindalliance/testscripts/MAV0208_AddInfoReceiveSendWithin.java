@@ -66,17 +66,29 @@ public class MAV0208_AddInfoReceiveSendWithin
 				Thread.currentThread();
 				Thread.sleep(2000);
 
+				// Click on Show Advance form link
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Navigated to Advance form";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormSendInfo"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
 				// Sends : Enter within details 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Within details entered";
 				// Within time entered
-				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:max-delay-row:max-delay:delay-amount")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:max-delay-row:max-delay:delay-amount"));
+				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:timing:max-delay:delay-amount")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:timing:max-delay:delay-amount"));
 				GlobalVariables.oElement.sendKeys("10");
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:max-delay-row:max-delay:delay-unit")));
+				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:timing:max-delay:delay-unit")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				options.get(1).setSelected();
 				// WebElement Synchronization
