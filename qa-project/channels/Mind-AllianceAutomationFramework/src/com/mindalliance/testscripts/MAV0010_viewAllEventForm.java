@@ -67,7 +67,7 @@ public class MAV0010_viewAllEventForm
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'All events' get renders";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionEventWindow")));
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allEventsInPlan"))) {
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("Untitled"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
