@@ -31,5 +31,6 @@
 	<classpathentry kind="lib" path="D:/ChannelsWorkspace/channels/Mind-AllianceAutomationFramework/Library/selenium-server-standalone-2.0b3.jar"/>
 	<classpathentry kind="lib" path="D:/ChannelsWorkspace/channels/Mind-AllianceAutomationFramework/Library/smtp.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files (x86)/Java/jre6/lib/rt.jar"/>
+	<classpathentry kind="con" path="org.dyno.visual.swing.VS_LIBRARY/layoutext"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
