@@ -36,6 +36,46 @@ public class ReportFunctions {
 	 * @throws IOException
 	 * @throws XMLStreamException
 	 */
+	public static void updateTestCaseExecutionResultForFunctionalTestCases(Sheet sheet) {
+//		try {
+//			testCasesPassed = 0;
+//			testCasesFailed = 0;
+//			for (int i = 0; i < GlobalVariables.jListExecute.getModel().getSize() ; i++)	{
+//				stestName = GlobalVariables.jListExecute.getModel().getElementAt(i).toString();
+//				System.out.println(GlobalVariables.jListExecute.getModel().getSize()+ "\t" + stestName);
+//				if (stestName != GlobalVariables.sBlank) {
+//				   // Call readCsvFile
+//					String sResult = readCsvFile(stestName);
+//					if (sResult == GlobalVariables.sFailed) {
+//						sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sFailed);
+//					    sheet.getCellAt("K"+(i+2)).setValue(sCsvScriptException);
+//					    sheet.getCellAt("L"+(i+2)).setValue(sCsvErrorReport);
+//					    // Call generateAutomationReportInHtml()
+//					    generateAutomationReportInHtml(stestName);
+//					    testCasesFailed ++;
+//					    arrayOfTestCaseId[index] = stestName;
+//					    arrayOftestCaseResult[index] = GlobalVariables.sFailed;
+//					    arrayOftestCaseSummary[index++] = sheet.getCellAt("B"+(i+2)).getValue().toString();
+//				    }
+//				    else if (sResult == GlobalVariables.sPassed) {
+//					    sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sPassed);
+//					    // Call generateAutomationReportInHtml()
+//					    generateAutomationReportInHtml(stestName);
+//					    testCasesPassed ++;
+//					    arrayOfTestCaseId[index] = stestName;
+//					    arrayOftestCaseResult[index] = GlobalVariables.sPassed;
+//					    arrayOftestCaseSummary[index++] = sheet.getCellAt("B"+(i+2)).getValue().toString();
+//				    }
+//				    else if (sResult == GlobalVariables.sNotRun)
+//					    sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sNotRun);
+//			    }
+//			}
+//		}
+//		catch(Exception e) {
+//			System.out.println("Error in updateTestCaseExecutionResult() function.\n");
+//			e.printStackTrace();
+//		}		
+	}
 	public static void updateTestCaseExecutionResult(Sheet sheet) {
 		try {
 			testCasesPassed = 0;
@@ -47,6 +87,7 @@ public class ReportFunctions {
 				   // Call readCsvFile
 					String sResult = readCsvFile(stestName);
 					if (sResult == GlobalVariables.sFailed) {
+//						sheet.getSpreadSheet().getSheet(1).getCellAt(arg0)
 						sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sFailed);
 					    sheet.getCellAt("K"+(i+2)).setValue(sCsvScriptException);
 					    sheet.getCellAt("L"+(i+2)).setValue(sCsvErrorReport);
@@ -165,6 +206,7 @@ public class ReportFunctions {
 			Arrays.fill(arrayOfTestCaseId, null);
 			// Load the ODF document from the path
 			File file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
+			
 			// TestCase sheet: Tree_Navigation_Views
 			Sheet sheet = SpreadSheet.createFromFile(file).getSheet(1);
 			updateTestCaseExecutionResult(sheet);
@@ -176,6 +218,34 @@ public class ReportFunctions {
 			// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
 			totalNoOfTestCasesPassed = testCasesPassed;
 			totalNoOfTestCasesFailed = testCasesFailed;
+
+			// TestCase sheet: Plan
+			sheet = SpreadSheet.createFromFile(file).getSheet(2);
+			updateTestCaseExecutionResult(sheet);
+			// Generate Summary Sheet
+			sheet = sheet.getSpreadSheet().getSheet(0);
+			sheet.getCellAt("G9").setValue((testCasesPassed + testCasesFailed));
+			sheet.getCellAt("H9").setValue(testCasesPassed);
+			sheet.getCellAt("I9").setValue(testCasesFailed);
+			// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+			totalNoOfTestCasesPassed = testCasesPassed;
+			totalNoOfTestCasesFailed = testCasesFailed;
+			
+			// TestCase sheet: Tree_Navigation_Views
+			sheet = SpreadSheet.createFromFile(file).getSheet(3);
+			updateTestCaseExecutionResult(sheet);
+			// Generate Summary Sheet
+			sheet = sheet.getSpreadSheet().getSheet(0);
+			sheet.getCellAt("G9").setValue((testCasesPassed + testCasesFailed));
+			sheet.getCellAt("H9").setValue(testCasesPassed);
+			sheet.getCellAt("I9").setValue(testCasesFailed);
+			// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+			totalNoOfTestCasesPassed = testCasesPassed;
+			totalNoOfTestCasesFailed = testCasesFailed;
+
+			System.out.println("Hie...............");
+			System.out.println(totalNoOfTestCasesPassed +"\t"+totalNoOfTestCasesFailed);
+			System.out.println(testCasesPassed +"\t"+testCasesFailed);
 			
 			File outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet.ods");
 			sheet.getSpreadSheet().saveAs(outputFile);
