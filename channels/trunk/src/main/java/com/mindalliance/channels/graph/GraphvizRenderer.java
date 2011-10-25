@@ -78,7 +78,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     /**
      * Max attempts at rendering.
      */
-    private static final int MAX_ATTEMPTS = 2;
+    private int maxAttempts = 2;
 
     public GraphvizRenderer() {
         resetHighlight();
@@ -99,6 +99,14 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
 
     public void setTimeout( long timeout ) {
         this.timeout = timeout;
+    }
+
+    public int getMaxAttempts() {
+        return maxAttempts;
+    }
+
+    public void setMaxAttempts( int maxAttempts ) {
+        this.maxAttempts = maxAttempts;
     }
 
     /**
@@ -156,7 +164,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
         String name = sanitize( ticket );
         Timer timer = null;
         ByteArrayOutputStream baos = null;
-        while ( !success && attempts < MAX_ATTEMPTS ) {
+        while ( !success && attempts < maxAttempts ) {
             try {
                 baos = new ByteArrayOutputStream();
                 // try to get it from file

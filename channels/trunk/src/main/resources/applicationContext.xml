@@ -80,6 +80,7 @@ CONFIGURATION NOTES:
         <property name="dotPath" value="/usr/bin"/>
         <property name="algo" value="dot"/>
         <property name="timeout" value="10000"/>
+        <property name="maxAttempts" value="2"/>
         <property name="tempDir" value="${channels.home}${file.separator}temp"/>
     </bean>
 

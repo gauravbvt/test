@@ -241,11 +241,11 @@ public class Requirement extends ModelObject implements Countable {
                 analyst );
         Satisfaction agentCountSatisfaction = satisfactions[0];
         Satisfaction sourcesPerReceiverSatisfaction = asBeneficiary ? satisfactions[1] : null;
+        assert agentCountSatisfaction != null;
         if ( asBeneficiary ) {
             if ( agentCountSatisfaction == Satisfaction.Impossible )
                 return agentCountSatisfaction;
             else {
-                assert agentCountSatisfaction != null;
                 assert sourcesPerReceiverSatisfaction != null;
                 return agentCountSatisfaction.compareTo( sourcesPerReceiverSatisfaction ) <= 0
                         ? agentCountSatisfaction
@@ -265,13 +265,16 @@ public class Requirement extends ModelObject implements Countable {
             QueryService queryService,
             final Analyst analyst ) {
         Satisfaction[] satisfactions = new Satisfaction[2];
+        Satisfaction agentCountSatisfaction = null;
+        Satisfaction sourcesPerReceiverSatisfaction = null;
         List<Flow> candidateFlows = findCandidateFlows( organization, asBeneficiary, queryService );
         if ( candidateFlows.isEmpty() ) {
             satisfactions[0] = Satisfaction.Impossible;
+            if ( asBeneficiary ) {
+                satisfactions[1] = Satisfaction.Impossible;
+            }
         } else {
             Commitments commitments = new Commitments( queryService, candidateFlows );
-            Satisfaction agentCountSatisfaction = null;
-            Satisfaction sourcesPerReceiverSatisfaction = null;
             final Plan plan = queryService.getPlan();
             final Place planLocale = plan.getLocale();
             Iterator<Commitment> commitmentIterator = (Iterator<Commitment>) IteratorUtils.filteredIterator(
@@ -308,11 +311,13 @@ public class Requirement extends ModelObject implements Countable {
                             commitmentIterator.hasNext() );
                 }
             }
-            satisfactions[0] = agentCountSatisfaction;
-            satisfactions[1] = sourcesPerReceiverSatisfaction;
-            assert ( agentCountSatisfaction == Satisfaction.Impossible
-                    || !(asBeneficiary && sourcesPerReceiverSatisfaction == null) );
         }
+        if ( agentCountSatisfaction == null )
+            agentCountSatisfaction = Satisfaction.Negative;
+        if ( asBeneficiary && sourcesPerReceiverSatisfaction == null )
+            sourcesPerReceiverSatisfaction = Satisfaction.Negative;
+        satisfactions[0] = agentCountSatisfaction;
+        satisfactions[1] = sourcesPerReceiverSatisfaction;
         return satisfactions;
     }
 
@@ -396,7 +401,25 @@ public class Requirement extends ModelObject implements Countable {
                                                     Cardinality cardinality,
                                                     boolean more ) {
         int agentCount = groupedCommitments.keySet().size();
-        Satisfaction result = cardinality.isRequiredCount( agentCount )
+        if ( cardinality.isRequiredCount( agentCount ) ) {
+            if ( cardinality.isSafeCount( agentCount ) ) {
+                return Satisfaction.Strong;
+            } else {
+                if ( more ) {
+                    return null;
+                } else {
+                    return Satisfaction.Weak;
+                }
+            }
+        } else {
+            if ( more ) {
+                return null;
+            } else {
+                return Satisfaction.Negative;
+            }
+
+        }
+      /*  return cardinality.isRequiredCount( agentCount )
                 ? cardinality.isSafeCount( agentCount )
                         ? Satisfaction.Strong
                         : more
@@ -404,9 +427,7 @@ public class Requirement extends ModelObject implements Countable {
                             : Satisfaction.Weak
                 : more
                     ? null
-                    : Satisfaction.Negative;
-        assert result != null || more;
-        return result;
+                    : Satisfaction.Negative;*/
     }
 
     private Satisfaction getSourcesPerReceiverCountSatisfaction(
@@ -415,7 +436,26 @@ public class Requirement extends ModelObject implements Countable {
         int minSourceCount = getMinSourceCount( groupedCommitments );
         int maxSourceCount = getMaxSourceCount( groupedCommitments );
         Cardinality cardinality = getCardinality();
-        Satisfaction result = cardinality.isRequiredCount( minSourceCount ) && cardinality.isRequiredCount( maxSourceCount )
+        if ( cardinality.isRequiredCount( minSourceCount ) && cardinality.isRequiredCount( maxSourceCount ) ) {
+            if ( cardinality.isSafeCount( minSourceCount ) && cardinality.isSafeCount( maxSourceCount ) ) {
+                return Satisfaction.Strong;
+            } else {
+                if ( more ) {
+                    return null;
+                } else {
+                    return Satisfaction.Weak;
+                }
+            }
+        } else {
+            if ( more ) {
+                return null;
+            } else {
+                return Satisfaction.Negative;
+            }
+        }
+
+/*
+        return cardinality.isRequiredCount( minSourceCount ) && cardinality.isRequiredCount( maxSourceCount )
                 ? cardinality.isSafeCount( minSourceCount ) && cardinality.isSafeCount( maxSourceCount )
                     ? Satisfaction.Strong
                     : more
@@ -424,8 +464,7 @@ public class Requirement extends ModelObject implements Countable {
                 : more
                     ? null
                     : Satisfaction.Negative;
-        assert result != null || more;
-        return result;
+*/
     }
 
     private int getMinSourceCount( Map<Actor, List<Commitment>> groupedCommitments ) {
