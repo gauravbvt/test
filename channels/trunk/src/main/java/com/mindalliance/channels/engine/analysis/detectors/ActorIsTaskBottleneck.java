@@ -5,8 +5,8 @@ import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class ActorIsTaskBottleneck extends AbstractIssueDetector {
             List<Assignment> assignments = queryService.findAllAssignments( part, false );
             if ( assignments.size() == 1 ) {
                 Actor actor = assignments.get( 0 ).getActor();
-                if ( !actor.isArchetype() ) {
+                if ( !( actor.isArchetype() || actor.isPlaceHolder() ) ) {
                     Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
                     issue.setDescription( actor.getName()
                             + " is the only known agent assigned to critical task \""

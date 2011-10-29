@@ -57,7 +57,6 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
     private Component sectionPanel;
     private WebMarkupContainer sectionHeadersContainer;
 
-
     public RequirementEditPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
@@ -230,4 +229,5 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
         }
         super.updateWith( target, change, updated );
     }
+
 }

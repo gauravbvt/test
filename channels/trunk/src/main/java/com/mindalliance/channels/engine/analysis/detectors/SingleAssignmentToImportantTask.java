@@ -1,12 +1,13 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,9 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
         Part part = (Part) modelObject;
         List<Assignment> assignments = queryService.findAllAssignments( part, false );
         if ( assignments.size() == 1 ) {
-            if ( !assignments.get( 0 ).getActor().isArchetype() ) {
-                Level importance = this.computeTaskFailureSeverity( queryService, part );
+            Actor actor = assignments.get( 0 ).getActor();
+            if ( !( actor.isArchetype() || actor.isPlaceHolder() ) ) {
+                Level importance = computeTaskFailureSeverity( queryService, part );
                 if ( importance.compareTo( Level.Low ) >= 1 ) {
                     Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
                     issue.setDescription( "Task \""

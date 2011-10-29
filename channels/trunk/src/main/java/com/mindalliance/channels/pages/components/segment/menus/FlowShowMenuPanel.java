@@ -65,7 +65,7 @@ public class FlowShowMenuPanel extends MenuPanel {
             menuItems.add(
                     new LinkMenuItem(
                             "menuItem",
-                            new Model<String>( isCollapsed ? "Show details" : "Hide details" ),
+                            new Model<String>( isCollapsed ? "Details" : "Hide details" ),
                             new AjaxFallbackLink( "link" ) {
                                 @Override
                                 public void onClick( AjaxRequestTarget target ) {
@@ -84,7 +84,7 @@ public class FlowShowMenuPanel extends MenuPanel {
                 menuItems.add(
                         new LinkMenuItem(
                                 "menuItem",
-                                new Model<String>( "Show elements" ),
+                                new Model<String>( "Elements" ),
                                 new AjaxFallbackLink( "link" ) {
                                     @Override
                                     public void onClick( AjaxRequestTarget target ) {
@@ -98,7 +98,7 @@ public class FlowShowMenuPanel extends MenuPanel {
                 menuItems.add(
                         new LinkMenuItem(
                                 "menuItem",
-                                new Model<String>( "Show commitments" ),
+                                new Model<String>( "Commitments" ),
                                 new AjaxFallbackLink( "link" ) {
                                     @Override
                                     public void onClick( AjaxRequestTarget target ) {
@@ -111,7 +111,7 @@ public class FlowShowMenuPanel extends MenuPanel {
                 menuItems.add(
                         new LinkMenuItem(
                                 "menuItem",
-                                new Model<String>( "Show failure impacts" ),
+                                new Model<String>( "Failure impacts" ),
                                 new AjaxFallbackLink( "link" ) {
                                     @Override
                                     public void onClick( AjaxRequestTarget target ) {
@@ -125,7 +125,7 @@ public class FlowShowMenuPanel extends MenuPanel {
                     menuItems.add(
                             new LinkMenuItem(
                                     "menuItem",
-                                    new Model<String>( "Show dissemination" ),
+                                    new Model<String>( "Dissemination" ),
                                     new AjaxFallbackLink( "link" ) {
                                         @Override
                                         public void onClick( AjaxRequestTarget target ) {
