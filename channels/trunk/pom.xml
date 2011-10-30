@@ -434,9 +434,9 @@
                   <webResources>
                     <resource>
                         <directory>src/docbkx</directory>
-                        <targetPath>doc/channels_planner_guide</targetPath>
+                        <targetPath>doc/channels_user_guide</targetPath>
                         <excludes>
-                            <exclude>channels_planner_guide.xml</exclude>
+                            <exclude>channels_user_guide.xml</exclude>
                         </excludes>
                     </resource>
                   </webResources>
