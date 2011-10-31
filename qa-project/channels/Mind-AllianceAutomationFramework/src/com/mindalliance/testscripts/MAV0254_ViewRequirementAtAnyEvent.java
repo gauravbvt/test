@@ -80,6 +80,9 @@ public class MAV0254_ViewRequirementAtAnyEvent
 				Thread.currentThread();
 				Thread.sleep(1000);
 				
+				// Assertion: Verify that any event is selected
+//				GlobalVariables.oElement=GlobalVariables.
+				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

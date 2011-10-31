@@ -35,7 +35,7 @@ public class MAV0253_ViewRequirementDuring
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(1000);
 				  
 				// Clicks on About Plan link under show pop up menu option
 				GlobalVariables.iStepNo++ ;
@@ -79,6 +79,9 @@ public class MAV0253_ViewRequirementDuring
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
+				
+//				// Assertion: Verify that Situation as during is present
+//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:timing"));
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
