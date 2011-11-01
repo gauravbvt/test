@@ -361,3 +361,9 @@ This is tag,This is a Tag
 Before,Before
 After,After
 During,During
+Requirement,Requirement
+Requirement Description,Requirement Description
+Requirement Tags,Requirement Tags
+UNNAMED,UNNAMED
+Segment For Undo Redo Add New Requirement,Segment For Undo Redo Add New Requirement
+Segment For Undo Redo Remove Requirement,Segment For Undo Redo Remove Requirement
