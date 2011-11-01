@@ -137,7 +137,7 @@ public class ReportFunctions {
 					GlobalVariables.iIndex++;
 				}
 			}
-			if(sheetNumber==1) {
+			if(sheetNumber==1||sheetNumber==2||sheetNumber==3) {
 				file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet_V2.ods");
 				sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
 				for (int i = 2; i <= sheet.getRowCount() ; i++) {
