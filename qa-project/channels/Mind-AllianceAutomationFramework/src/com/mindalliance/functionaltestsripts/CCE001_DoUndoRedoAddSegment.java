@@ -85,6 +85,7 @@ public class CCE001_DoUndoRedoAddSegment
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
+					// Assertion: Verify that Segment can be undo
 					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
