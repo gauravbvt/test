@@ -171,7 +171,11 @@
 <xPathCreateViewSurvey>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathCreateViewSurvey>
 <xPathRequirementDefinition>/html/body/form/div[4]/div/div[2]/div[2]/div/div/ul/li/a/span</xPathRequirementDefinition>
 <xPathRemoveRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/a[2]</xPathRemoveRequirement>
+<xPathInfoTabOfRequirment>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div/ul/li</xPathInfoTabOfRequirment>
 <!-- Assertions -->
+<xPathAssertionRemoveRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRemoveRequirement>
+<xPathAssertionRequirementUndo>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRequirementUndo>
+<xPathAssertionRequirementName>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tbody/tr/td/span</xPathAssertionRequirementName>
 <xPathNewRequirementDefinitionAssertion>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/h3</xPathNewRequirementDefinitionAssertion>
 <xPathAssertionCopyCapability>html/body/form/div[14]/span/span</xPathAssertionCopyCapability>
 <xPathAssertionCopyNeed>html/body/form/div[14]/span/span</xPathAssertionCopyNeed>
