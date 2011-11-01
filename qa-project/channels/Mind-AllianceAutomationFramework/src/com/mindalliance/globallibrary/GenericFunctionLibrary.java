@@ -313,7 +313,11 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathDeleteEventAttachment",oXmlElePlanPage.getElementsByTagName("xPathDeleteEventAttachment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathCopyEventAttachment",oXmlElePlanPage.getElementsByTagName("xPathCopyEventAttachment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathRemoveRequirement",oXmlElePlanPage.getElementsByTagName("xPathRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathInfoTabOfRequirment",oXmlElePlanPage.getElementsByTagName("xPathInfoTabOfRequirment").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
+			GlobalVariables.assertion.put("sXPathAssertionRemoveRequirement",oXmlElePlanPage.getElementsByTagName("xPathAssertionRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.assertion.put("sXpathAssertionRequirementUndo",oXmlElePlanPage.getElementsByTagName("xPathAssertionRequirementUndo").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.assertion.put("sXpathAssertionRequirementName",oXmlElePlanPage.getElementsByTagName("xPathAssertionRequirementName").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathNewRequirementDefinitionAssertion",oXmlElePlanPage.getElementsByTagName("xPathNewRequirementDefinitionAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionCopyNeed",oXmlElePlanPage.getElementsByTagName("xPathAssertionCopyNeed").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionCopyCapability",oXmlElePlanPage.getElementsByTagName("xPathAssertionCopyCapability").item(0).getChildNodes().item(0).getNodeValue());
@@ -375,6 +379,11 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathAddInfoSendAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendAssertion").item(0).getChildNodes().item(0).getNodeValue());	
 			GlobalVariables.assertion.put("sXpathEventAssertion",oXmlElePlanPage.getElementsByTagName("xPathEventAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			// View Elements
+			GlobalVariables.viewElements.put("redoRemoveRequirement",oXmlEleViewElements.getElementsByTagName("redoRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("undoRemoveRequirement",oXmlEleViewElements.getElementsByTagName("undoRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("redoAddNewRequirement",oXmlEleViewElements.getElementsByTagName("redoAddNewRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("undoAddNewRequirement",oXmlEleViewElements.getElementsByTagName("undoAddNewRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("info",oXmlEleViewElements.getElementsByTagName("info").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("informationSharingRequirements",oXmlEleViewElements.getElementsByTagName("informationSharingRequirements").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("requirements",oXmlEleViewElements.getElementsByTagName("requirements").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("removeSharingCapability",oXmlEleViewElements.getElementsByTagName("removeSharingCapability").item(0).getChildNodes().item(0).getNodeValue());

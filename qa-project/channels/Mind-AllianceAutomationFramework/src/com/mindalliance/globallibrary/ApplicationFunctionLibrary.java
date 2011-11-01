@@ -14,7 +14,6 @@ public class ApplicationFunctionLibrary {
 	 */
 	public static boolean login() {
 		try {
-
 			GlobalVariables.iStepNo = 0;
 			GlobalVariables.iStepNo++ ;
 			GlobalVariables.sDescription = "URL opened";
