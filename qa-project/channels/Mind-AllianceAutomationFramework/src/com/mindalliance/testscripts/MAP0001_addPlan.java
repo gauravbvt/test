@@ -5,8 +5,6 @@ import java.util.List;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
@@ -29,19 +27,6 @@ public class MAP0001_addPlan
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
-			// Class level Driver
-			if (GlobalVariables.sBrowser.equals("Mozilla Firefox"))
-				GlobalVariables.oDriver = new FirefoxDriver();
-			else if (GlobalVariables.sBrowser.equals("Internet Explorer"))
-			{
-				try{
-					GlobalVariables.oDriver = new InternetExplorerDriver();
-				}
-				catch (Exception e){
-					GlobalVariables.oDriver = new InternetExplorerDriver();
-				}
-			}
-						
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
