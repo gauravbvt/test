@@ -172,7 +172,20 @@
 <xPathRequirementDefinition>/html/body/form/div[4]/div/div[2]/div[2]/div/div/ul/li/a/span</xPathRequirementDefinition>
 <xPathRemoveRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/a[2]</xPathRemoveRequirement>
 <xPathInfoTabOfRequirment>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div/ul/li</xPathInfoTabOfRequirment>
+<xPathSourcesTabOfRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div/ul/li[2]/a/span</xPathSourcesTabOfRequirement>
+<xPathReceiversTabOfRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div/ul/li[3]/a/span</xPathReceiversTabOfRequirement>
+<xPathSourcesPerReceiversTabOfRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div/ul/li[4]/a/span</xPathSourcesPerReceiversTabOfRequirement>
+<xPathAttactmentTabOfRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div/ul/li[5]/a/span</xPathAttactmentTabOfRequirement>
+<xPathIssuesTabOfRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div/ul/li[6]/a/span</xPathIssuesTabOfRequirement>
+<xPathWhoTabOfSourcesOfRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li/a/span</xPathWhoTabOfSourcesOfRequirement>
+<xPathWhenTabOfSourcesOfRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[2]/a/span</xPathWhenTabOfSourcesOfRequirement>
+<xPathHowManyOfSourcesOfRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[3]/a/span</xPathHowManyOfSourcesOfRequirement>
+<xPathWhoTabOfReceiversOfRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li/a/span</xPathWhoTabOfReceiversOfRequirement>
+<xPathWhenTabOfReceiversOfRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[2]/a/span</xPathWhenTabOfReceiversOfRequirement>
+<xPathHowManyOfReceiversOfRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[3]/a/span</xPathHowManyOfReceiversOfRequirement>
 <!-- Assertions -->
+<xPathAssertionInfoTagsRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tbody/tr/td[4]/span</xPathAssertionInfoTagsRequirement>
+<xPathAssertionInfoNameRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tbody/tr/td[3]/span</xPathAssertionInfoNameRequirement>
 <xPathAssertionRemoveRequirement>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRemoveRequirement>
 <xPathAssertionRequirementUndo>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRequirementUndo>
 <xPathAssertionRequirementName>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tbody/tr/td/span</xPathAssertionRequirementName>
