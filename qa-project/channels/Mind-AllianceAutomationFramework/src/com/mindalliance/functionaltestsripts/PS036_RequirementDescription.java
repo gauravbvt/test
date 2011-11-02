@@ -2,6 +2,7 @@ package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
@@ -65,7 +66,12 @@ public class PS036_RequirementDescription
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:description")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:description"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Requirement Description"));
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				// Assertion: Verify that Requirement name has been entered
+				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:description")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:description"));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Requirement Description"))){
 					// Write Results

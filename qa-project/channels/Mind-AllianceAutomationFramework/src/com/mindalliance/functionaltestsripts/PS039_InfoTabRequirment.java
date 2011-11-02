@@ -63,13 +63,23 @@ public class PS039_InfoTabRequirment
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Info tab of requirement";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathInfoTabOfRequirment"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				// Assertion: Verify that Info tab is present
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathInfoTabOfRequirment")));
-				if(GlobalVariables.oElement.getText().equals("Info")){
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Info"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.testData.get("Info") + " Actual "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
