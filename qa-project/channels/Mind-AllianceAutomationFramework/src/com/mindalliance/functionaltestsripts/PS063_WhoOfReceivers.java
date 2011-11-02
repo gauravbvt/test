@@ -45,8 +45,8 @@ public class PS063_WhoOfReceivers
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
-				  
+				Thread.sleep(1000);
+				
 				// Click on New Button to Add Requirement
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Requirement";
@@ -57,7 +57,7 @@ public class PS063_WhoOfReceivers
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000); 
+				Thread.sleep(1000);
 				
 				// Receivers tab of Requirement
 				GlobalVariables.iStepNo++;
@@ -69,7 +69,7 @@ public class PS063_WhoOfReceivers
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000); 
+				Thread.sleep(1000);
 				
 				// Click on Who's Tab of Receivers
 				GlobalVariables.iStepNo++;
@@ -77,11 +77,11 @@ public class PS063_WhoOfReceivers
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathWhoTabOfReceiversOfRequirement"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);				
+				Thread.sleep(1000);	
 				// Assertion: Verify that Info tab is present
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathWhoTabOfReceiversOfRequirement")));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Who"))){
-					// Write Results
+					// Write Results	
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
@@ -118,7 +118,7 @@ public class PS063_WhoOfReceivers
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);	
+				Thread.sleep(1000);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
