@@ -314,6 +314,17 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathCopyEventAttachment",oXmlElePlanPage.getElementsByTagName("xPathCopyEventAttachment").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathRemoveRequirement",oXmlElePlanPage.getElementsByTagName("xPathRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathInfoTabOfRequirment",oXmlElePlanPage.getElementsByTagName("xPathInfoTabOfRequirment").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathSourcesTabOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathSourcesTabOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathReceiversTabOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathReceiversTabOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathSourcesPerReceiversTabOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathSourcesPerReceiversTabOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathAttactmentTabOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathAttactmentTabOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathIssuesTabOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathIssuesTabOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathWhoTabOfSourcesOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathWhoTabOfSourcesOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathWhenTabOfSourcesOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathWhenTabOfSourcesOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathHowManyOfSourcesOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathHowManyOfSourcesOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathWhoTabOfReceiversOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathWhoTabOfReceiversOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathWhenTabOfReceiversOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathWhenTabOfReceiversOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathHowManyOfReceiversOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathHowManyOfReceiversOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
 			GlobalVariables.assertion.put("sXPathAssertionRemoveRequirement",oXmlElePlanPage.getElementsByTagName("xPathAssertionRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionRequirementUndo",oXmlElePlanPage.getElementsByTagName("xPathAssertionRequirementUndo").item(0).getChildNodes().item(0).getNodeValue());
@@ -378,7 +389,10 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathAddInfoReceiveAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoReceiveAssertion").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAddInfoSendAssertion",oXmlElePlanPage.getElementsByTagName("xPathAddInfoSendAssertion").item(0).getChildNodes().item(0).getNodeValue());	
 			GlobalVariables.assertion.put("sXpathEventAssertion",oXmlElePlanPage.getElementsByTagName("xPathEventAssertion").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.assertion.put("sXpathAssertionInfoNameRequirement",oXmlElePlanPage.getElementsByTagName("xPathAssertionInfoNameRequirement").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.assertion.put("sXpathAssertionInfoTagsRequirement",oXmlElePlanPage.getElementsByTagName("xPathAssertionInfoTagsRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			// View Elements
+			GlobalVariables.viewElements.put("definitions",oXmlEleViewElements.getElementsByTagName("definitions").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("redoRemoveRequirement",oXmlEleViewElements.getElementsByTagName("redoRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("undoRemoveRequirement",oXmlEleViewElements.getElementsByTagName("undoRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("redoAddNewRequirement",oXmlEleViewElements.getElementsByTagName("redoAddNewRequirement").item(0).getChildNodes().item(0).getNodeValue());
