@@ -69,17 +69,16 @@ public class PS037_RequirmentTags
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				// Assertion: Verify that Requirement name has been entered
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:tags:tags")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:tags:tags"));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Requirement Tags"))){
+				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("Requirement Tags"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else{
+				else {
 					GlobalVariables.sVerifyError="Verification Failed Expected '"+GlobalVariables.testData.get("Requirement Tags")+"' Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -97,7 +96,11 @@ public class PS037_RequirmentTags
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

@@ -11,9 +11,9 @@ import com.mindalliance.globallibrary.ReportFunctions;
 
 public class TFP003_AddInfoReceive
 {
-	public TFP003_AddInfoReceive(){
+	public TFP003_AddInfoReceive(){	
     	try {
-    		
+  	
     		GlobalVariables.sTestCaseId = "TFP003_AddInfoReceive";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -43,7 +43,9 @@ public class TFP003_AddInfoReceive
 				Thread.sleep(2000);
 				// Assertion: Verify that When click on add info receive info need panel opens
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAddInfoReceiveAssertion")));
-				System.out.println(GlobalVariables.oElement.getText());
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("Needs to be notified of"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

@@ -69,7 +69,7 @@ public class TFP037_TaskAttachmentAsURL
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathTaskAttachmentURL"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:url"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
@@ -93,6 +93,9 @@ public class TFP037_TaskAttachmentAsURL
 				Thread.sleep(2000);
 				// Assertion : Verify that Attachment attached as a URL
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathTaskURLAssertion")));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

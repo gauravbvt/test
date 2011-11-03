@@ -173,23 +173,49 @@ public class PS019_AboutPlanShowComponents
 				Thread.currentThread();
 				Thread.sleep(3000);
 
-				// Click on 'procedure map' option Under 'Show' Pop up Menu 
+				// Click on 'Assignments & Commitments' option Under 'Show' Pop up Menu 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Procedure map";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("procedureMap"));
+				GlobalVariables.sDescription = "Assignments & Commitments";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("assignmentsAndCommitments"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionProcedureMap")));
-				// Assertion: Verify that "Procedures map" page loaded 
-				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("proceduremMap1"))) {
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("float-header"));
+				// Assertion: Verify that "Assignments & commitments" page loaded
+				if (GlobalVariables.oElement.getText().contains("Assignments and commitments")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank); 	    	    	     
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("procedureMap")+" Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Assignments and commitments'"+ " Actual "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+
+				// Click on 'Requirements' option Under 'Show' Pop up Menu 
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Requirements";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("requirements"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("float-header"));
+				// Assertion: Verify that "Assignments & commitments" page loaded 
+				if (GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("informationSharingRequirements"))) {
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank); 	    	    	     
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.viewElements.get("informationSharingRequirements")+ "' Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

@@ -15,13 +15,13 @@ public class PS041_InfoTagsOfRequirement
 	public PS041_InfoTagsOfRequirement(){
 		
 		try {
+			
 			GlobalVariables.sTestCaseId = "PS041_InfoTagsOfRequirement";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
 			// Call login()
-			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
-			  
+			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();  
 			if (GlobalVariables.bIsSuccess) {
 				
 				// Click on 'Information Sharing Model' link
@@ -76,22 +76,22 @@ public class PS041_InfoTagsOfRequirement
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Info tags entred";
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:reqSection:information")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:reqSection:information"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Info Tags"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:reqSection:infoTags:tags"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("infoTags"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				// Assertion: Verify that Info tab is present
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionInfoTagsRequirement")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Info Tags"))){
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("infoTags"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.testData.get("Info Tags") + " Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.testData.get("infoTags") + " Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -111,7 +111,11 @@ public class PS041_InfoTagsOfRequirement
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

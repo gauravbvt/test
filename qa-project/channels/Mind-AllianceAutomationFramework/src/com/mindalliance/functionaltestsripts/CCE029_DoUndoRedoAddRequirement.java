@@ -56,22 +56,28 @@ public class CCE029_DoUndoRedoAddRequirement
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(2000);  
 				  
 				// Click on New Button to Add Requirement
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Requirement";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewRequirement"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);  
 				// Assertion: Verify that New Requirement can be added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathNewRequirementDefinitionAssertion")));
-				if(GlobalVariables.oElement.getText().equals("Requirement definition")){
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);  
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Requirement definition"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.viewElements.get("informationSharingRequirements") + " Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.testData.get("Requirement definition") + " Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -79,7 +85,7 @@ public class CCE029_DoUndoRedoAddRequirement
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);			
+				Thread.sleep(2000);			
 				
 				// Click on Undo add new Requirement under Action pop up menu
 				GlobalVariables.iStepNo++;
@@ -90,6 +96,9 @@ public class CCE029_DoUndoRedoAddRequirement
 				Thread.sleep(3000);
 				// Assertion: Verify that new requirement can be undo 
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionRequirementUndo")));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);			
 				if(GlobalVariables.oElement.getText().equals("No Records Found")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -105,7 +114,7 @@ public class CCE029_DoUndoRedoAddRequirement
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);	
+				Thread.sleep(2000);	
 				
 				// Click on Redo add new requirement under Action pop up menu
 				GlobalVariables.iStepNo++;
@@ -115,7 +124,10 @@ public class CCE029_DoUndoRedoAddRequirement
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that new requirement can be undo 
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("xPathAssertionRequirementName")));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionRequirementName")));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("UNNAMED"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -131,18 +143,26 @@ public class CCE029_DoUndoRedoAddRequirement
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);	
+				Thread.sleep(2000);	
 				// Remove Requirement
+				GlobalVariables.oDriver.findElement(By.className("more")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);	
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathRemoveRequirement"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				// Get a handle to the open alert, prompt or confirmation
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization
@@ -166,7 +186,7 @@ public class CCE029_DoUndoRedoAddRequirement
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);	
+				Thread.sleep(2000);	
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

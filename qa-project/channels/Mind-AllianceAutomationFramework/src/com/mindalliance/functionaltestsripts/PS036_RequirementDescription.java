@@ -21,7 +21,6 @@ public class PS036_RequirementDescription
 			System.out.println(GlobalVariables.sDescription);
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
-			  
 			if (GlobalVariables.bIsSuccess) {
 				
 				// Click on 'Information Sharing Model' link
@@ -69,11 +68,10 @@ public class PS036_RequirementDescription
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				// Assertion: Verify that Requirement name has been entered
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:description")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:description"));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Requirement Description"))){
+				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("Requirement Description"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -96,7 +94,11 @@ public class PS036_RequirementDescription
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

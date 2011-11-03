@@ -110,6 +110,21 @@ public class TE034_UpdateLocaleName
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("index"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")));
+				options = GlobalVariables.oDropDown.getOptions();
+			    for(WebElement option : options) {
+			    	if(option.getText().equals(GlobalVariables.viewElements.get("places"))){
+			    			option.setSelected();
+			    			break;
+			    	}
+			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				//Assertion : Verify that Locale Name is Updated
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
 				// WebElement Synchronization

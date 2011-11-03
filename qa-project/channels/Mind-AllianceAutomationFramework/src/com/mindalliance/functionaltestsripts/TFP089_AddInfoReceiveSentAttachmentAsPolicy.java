@@ -90,10 +90,9 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 			    		option.setSelected();
 			    	}
 			    }
-				String file="This is File 1";
 				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name")).clear();
 				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name"));
-				GlobalVariables.oElement.sendKeys("This is File 1");
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
 				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:upload"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 				// WebElement Synchronization
@@ -112,7 +111,7 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(file));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("This is File 1")));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -185,7 +184,7 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(file));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("This is File 1")));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

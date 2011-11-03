@@ -15,13 +15,13 @@ public class PS040_InfoNameOfRequirement
 	public PS040_InfoNameOfRequirement(){
 		
 		try {
+			
 			GlobalVariables.sTestCaseId = "PS040_InfoNameOfRequirement";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
 			// Call login()
-			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
-			  
+			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();  
 			if (GlobalVariables.bIsSuccess) {
 				
 				// Click on 'Information Sharing Model' link
@@ -77,21 +77,21 @@ public class PS040_InfoNameOfRequirement
 				GlobalVariables.sDescription="Info name entred";
 				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:reqSection:information")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:reqSection:information"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Info Name"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("infoName"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				// Assertion: Verify that Info tab is present
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionInfoNameRequirement")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Info Name"))){
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("infoName"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.testData.get("Info Name") + " Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.testData.get("infoName") + " Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -110,7 +110,11 @@ public class PS040_InfoNameOfRequirement
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
+				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

@@ -81,9 +81,12 @@ public class TFP087_AddInfoReceiveSentAttachmentName
 				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Attachment Name"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that Issue details can be entered
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name"));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Attachment Name"))){
+				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("Attachment Name"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -130,9 +133,12 @@ public class TFP087_AddInfoReceiveSentAttachmentName
 				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Attachment Name"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that Issue details can be entered
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name"));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Attachment Name"))){
+				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("Attachment Name"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

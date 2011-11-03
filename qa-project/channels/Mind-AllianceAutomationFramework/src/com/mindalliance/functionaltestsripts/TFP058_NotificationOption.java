@@ -61,15 +61,18 @@ public class TFP058_NotificationOption
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(4000);
+				Thread.sleep(2000);
 
 				// Click on Notification radio button Link 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Notification Radio Button Clicked";				
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSendInfoNotification"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that Instruction text filed is disable				
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:description"));
-				if(GlobalVariables.oElement.isEnabled()==false) {
+				if(GlobalVariables.oElement.isEnabled()) {
 						// 	Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -101,9 +104,12 @@ public class TFP058_NotificationOption
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Notification Radio Button Clicked";				
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathReceiveInfoNotification"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that Instruction text filed is disable				
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:description"));
-				if(GlobalVariables.oElement.isEnabled()) {
+				if(GlobalVariables.oElement.isEnabled()==false) {
 						// 	Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -152,7 +158,6 @@ public class TFP058_NotificationOption
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
     	} 
     	catch (Exception e) {
-    		e.printStackTrace();
     		if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
     			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
     					e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

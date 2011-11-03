@@ -94,6 +94,9 @@ public class HP047_BlankNameAndEmailId
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Apply";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathApplySocialPanel"))).click();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000); 
 				// Assertion: Verify that error message should be displayed as 'No changes were made'
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("change-message"));
 			    if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("No changes were made"))) {

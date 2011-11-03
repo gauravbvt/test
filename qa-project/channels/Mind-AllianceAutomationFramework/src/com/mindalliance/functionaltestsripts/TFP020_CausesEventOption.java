@@ -57,7 +57,7 @@ public class TFP020_CausesEventOption
 				GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Event"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
