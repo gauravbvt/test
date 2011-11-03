@@ -392,6 +392,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathAssertionInfoNameRequirement",oXmlElePlanPage.getElementsByTagName("xPathAssertionInfoNameRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionInfoTagsRequirement",oXmlElePlanPage.getElementsByTagName("xPathAssertionInfoTagsRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			// View Elements
+			GlobalVariables.viewElements.put("elements",oXmlEleViewElements.getElementsByTagName("elements").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.viewElements.put("allEventsInThePlan",oXmlEleViewElements.getElementsByTagName("allEventsInThePlan").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("definitions",oXmlEleViewElements.getElementsByTagName("definitions").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("redoRemoveRequirement",oXmlEleViewElements.getElementsByTagName("redoRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("undoRemoveRequirement",oXmlEleViewElements.getElementsByTagName("undoRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
