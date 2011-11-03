@@ -15,9 +15,9 @@
 <xPathReceiveInfoIssueMenu>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li[2]/span/span/span/span/span</xPathReceiveInfoIssueMenu>
 <xPathSendInfoIssueMenu>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li[2]/span/span/span/span/span</xPathSendInfoIssueMenu>
 <xPathSendReplyThatOption>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label[2]</xPathSendReplyThatOption>
-<xPathReceivedReplyThatOption>/html/body/form/span/div/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/lable[2]/input</xPathReceivedReplyThatOption>
-<xPathSendInfoNotification>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/lable/input</xPathSendInfoNotification>
-<xPathReceiveInfoNotification>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/lable[2]/input</xPathReceiveInfoNotification>
+<xPathReceivedReplyThatOption>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label[2]/input</xPathReceivedReplyThatOption>
+<xPathSendInfoNotification>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</xPathSendInfoNotification>
+<xPathReceiveInfoNotification>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</xPathReceiveInfoNotification>
 <xPathActionsPopUpMenu>/html/body/form/div[13]/span/span[3]/span/span</xPathActionsPopUpMenu>
 <xPathAboutPlanShowMenu>/html/body/form/div[4]/div/div[2]/div/div/span/span/span/span</xPathAboutPlanShowMenu>
 <xPathAbtPlanSegShowMenu>/html/body/form/div[5]/div/div[2]/div/div/span/span/span/span</xPathAbtPlanSegShowMenu>
