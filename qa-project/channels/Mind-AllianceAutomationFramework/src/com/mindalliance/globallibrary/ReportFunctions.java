@@ -788,6 +788,7 @@ public class ReportFunctions {
 			File file1 = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
 			// TestCase sheet: Tree_Navigation_Views
 			Sheet sheet1 = SpreadSheet.createFromFile(file1).getSheet(sheetNumber);
+			System.out.println(sheet1.getHeaderRowCount());
 			String[] arrayOfTestCaseId = new String[600];
 			stestName = null;
 			GlobalVariables.iIndex=0;
