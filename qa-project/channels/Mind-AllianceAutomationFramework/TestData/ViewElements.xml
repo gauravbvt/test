@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <elements>
+<elements>Elements</elements>
+<allEventsInThePlan>All events in the plan</allEventsInThePlan>
 <undoRemoveRequirement>Undo remove requirement</undoRemoveRequirement>
 <redoRemoveRequirement>Redo remove requirement</redoRemoveRequirement>
 <undoAddNewRequirement>Undo add new requirement</undoAddNewRequirement>
