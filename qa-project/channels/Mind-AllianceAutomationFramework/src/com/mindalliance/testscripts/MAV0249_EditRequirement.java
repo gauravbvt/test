@@ -63,6 +63,9 @@ public class MAV0249_EditRequirement
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Edit Requirement";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathEditRequirement"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				// Assertion: Verify that New Requirement can be added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathNewRequirementDefinitionAssertion")));
 				if(GlobalVariables.oElement.getText().equals("Requirement definition")){

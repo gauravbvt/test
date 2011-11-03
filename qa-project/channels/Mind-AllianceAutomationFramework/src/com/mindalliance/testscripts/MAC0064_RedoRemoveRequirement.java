@@ -61,6 +61,9 @@ public class MAC0064_RedoRemoveRequirement
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Requirement";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewRequirement"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				// Assertion: Verify that New Requirement can be added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathNewRequirementDefinitionAssertion")));
 				if(GlobalVariables.oElement.getText().equals("Requirement definition")){

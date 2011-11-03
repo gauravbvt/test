@@ -53,7 +53,7 @@ public class MAV0225_AddInfoReceiveRemoveInfoNeeds
 				// Click 'Add Info Receive' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Receive' Link Clicked";
-				GlobalVariables.oDriver.findElement(By.linkText("Add info receive")).click();
+				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

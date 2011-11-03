@@ -67,14 +67,13 @@ public class MAV0010_viewAllEventForm
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'All events' get renders";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionEventWindow")));
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("Untitled"))) {
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("allEventsInThePlan"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 	            }
-			    else
-				{
+			    else{
 			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+ GlobalVariables.viewElements.get("allEventsInPlan") +" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
