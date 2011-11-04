@@ -12,6 +12,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.openqa.selenium.By;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -816,5 +818,45 @@ public class GenericFunctionLibrary {
 //		System.runFinalization();
 //		System.gc();
 		System.out.println("TestData cleanup completed");
+	}
+	
+	public static void findElement(String value,String method) {
+		try {
+			int i=0;
+			do 
+			{
+				if(method.equals("name")) {
+					try {
+						GlobalVariables.oDriver.findElement(By.name(value)).clear();
+						Thread.currentThread();	
+						Thread.sleep(1000);
+						break;
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+						continue;
+					}
+				}
+				else if(method.equals("xpath"))
+				{
+					try {
+						GlobalVariables.oDriver.findElement(By.xpath(value)).click();
+						Thread.currentThread();
+						Thread.sleep(1000);
+						break;
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+						continue;
+					}
+				}
+				i++;
+			}while (i!=3);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
