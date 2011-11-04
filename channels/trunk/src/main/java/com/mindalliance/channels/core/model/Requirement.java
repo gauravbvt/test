@@ -419,15 +419,15 @@ public class Requirement extends ModelObject implements Countable {
             }
 
         }
-      /*  return cardinality.isRequiredCount( agentCount )
-                ? cardinality.isSafeCount( agentCount )
-                        ? Satisfaction.Strong
-                        : more
-                            ? null
-                            : Satisfaction.Weak
-                : more
-                    ? null
-                    : Satisfaction.Negative;*/
+        /*  return cardinality.isRequiredCount( agentCount )
+   ? cardinality.isSafeCount( agentCount )
+           ? Satisfaction.Strong
+           : more
+               ? null
+               : Satisfaction.Weak
+   : more
+       ? null
+       : Satisfaction.Negative;*/
     }
 
     private Satisfaction getSourcesPerReceiverCountSatisfaction(
@@ -888,7 +888,10 @@ public class Requirement extends ModelObject implements Countable {
 
         public boolean appliesTo( Organization organization, Place planLocale ) {
             Organization orgSpec = getResourceSpec().getOrganization();
-            return orgSpec == null || organization.narrowsOrEquals( orgSpec, planLocale );
+            return orgSpec == null
+                    // when the required organization is actual, use equality only, to avoid "within" match
+                    || ( orgSpec.isActual() && orgSpec.equals( organization ) )
+                    || ( orgSpec.isType() && organization.narrowsOrEquals( orgSpec, planLocale ) );
         }
 
         public Map<String, Object> mapState() {

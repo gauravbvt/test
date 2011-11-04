@@ -62,7 +62,7 @@ public class RequiredNetworkingGraphBuilder implements GraphBuilder<Organization
     private void populateRequiredNetworkingGraph( DirectedGraph<Organization, RequirementRelationship> graph ) {
         if ( selectedOrganization == null && selectedRequirementRel == null ) {
             for ( Organization org : queryService.listActualEntities( Organization.class ) ) {
-                if ( !org.isUnknown() )
+                if ( !org.isUnknown() && queryService.isReferenced( org ) )
                     graph.addVertex( org );
             }
         }
