@@ -54,7 +54,8 @@ public class TFP020_CausesEventOption
 				// Click on Causes Event Field
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Causes Event ( Event Created )";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent")).clear();
+				GenericFunctionLibrary.findElement("segment:part:initiatedEvent","name");
+//				GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
