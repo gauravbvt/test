@@ -80,7 +80,13 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 	private JButton jButtonSendMessage;
 	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel";
 	public Home() {
+		try {
 		initComponents();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+			System.out.println("In Home() Constructor.");
+		}
 	}
 
 	private void initComponents() {
