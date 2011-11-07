@@ -36,7 +36,7 @@ public class MAV0254_ViewRequirementAtAnyEvent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);  
-				  
+				
 				// Clicks on About Plan link under show pop up menu option
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Requirement";
