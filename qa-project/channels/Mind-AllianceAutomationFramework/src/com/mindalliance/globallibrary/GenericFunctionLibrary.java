@@ -24,10 +24,9 @@ public class GenericFunctionLibrary {
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-//	public static BufferedReader br=null;
 	public static StringTokenizer st=null;
 	public static void createResultFiles() {
-		try{
+		try {
 			// Get Current Date
 			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 			GlobalVariables.dCurrentDate = new Date();
@@ -59,9 +58,9 @@ public class GenericFunctionLibrary {
 			oBWriter.flush();
 			oBWriter.close();
 		}
-		catch(Exception e)
-		{
-			System.out.println(e.getMessage());
+		catch(Exception e) {
+			System.out.println("\nError occured in CreateResultFiles Function.");
+			System.out.println("\n" + e.getMessage());
 		}
 	}
 	/**
@@ -655,9 +654,10 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("taskEnd",oXmlEleViewElements.getElementsByTagName("taskEnd").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("attachmentCopied",oXmlEleViewElements.getElementsByTagName("attachmentCopied").item(0).getChildNodes().item(0).getNodeValue());
 			
-		} catch(Exception e) {
-			System.out.println("Hie.....");
-			System.out.println(e.getMessage());
+		} 
+		catch(Exception e) {
+			System.out.println("\nError Occured in LoadObjectRepository Function");
+			System.out.println("\n" + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -667,29 +667,29 @@ public class GenericFunctionLibrary {
 	 * @throws InterruptedException
 	 * @throws IOException
 	 */
-	public static void initializeTestData() throws InterruptedException, IOException {
+	public static void initializeTestData() {
 		System.out.println("Initializing  TestData...");
 		GlobalVariables.sStartDateTime = LogFunctions.getDateTime();
 		createResultFiles();
-		try{
+		try {
 			//csv file containing data
 			GlobalVariables.sTestDataDirectoryPath= GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestData\\";
 			File testDataFile=new File(GlobalVariables.sTestDataDirectoryPath+"TestData.csv");
 			BufferedReader testData = new BufferedReader( new FileReader(testDataFile));
 			String strLine = "",key="",value="";
-			while((strLine=testData.readLine())!=null)
-			{
+			while((strLine=testData.readLine())!=null) {
 				st = new StringTokenizer(strLine, ",");
-				while(st.hasMoreTokens())
-				{
+				while(st.hasMoreTokens()) {
 					key=st.nextToken();
 					value=st.nextToken();
 					GlobalVariables.testData.put(key,value);
 				}
 			}
+			System.out.println("TestData initialization completed");
 		}
 		catch(Exception e){
-			System.out.println("Exception while reading csv file: " + e.getMessage());
+			System.out.println("\nError Occured in InitializeTestData Function");
+			System.out.println("\n" + e.getMessage());
 		}
 		/*GlobalStatic.oDriver = new FirefoxDriver();
 		// URL
@@ -766,97 +766,103 @@ public class GenericFunctionLibrary {
 		ApplicationFunctionLibrary.addSegment("Segment 2", "New");
 		// Call logout
 		ApplicationFunctionLibrary.logout();*/
-		System.out.println("TestData initialization completed");
 	}
 
 	/**
 	 * Initialize Automation Scripts
 	 * @throws InterruptedException
 	 */
-	public static void tearDownTestData() throws InterruptedException {
-		System.out.println("Performing cleanup TestData...");
-		/*GlobalStatic.oDriver = new FirefoxDriver();
-		// URL
-		GlobalStatic.oDriver.get(GlobalStatic.sLoginURL);
-		// Username
-		GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("j_username"));
-		GlobalStatic.oElement.sendKeys(GlobalStatic.sUsername);
-		// Password
-		GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("j_password"));
-		GlobalStatic.oElement.sendKeys(GlobalStatic.sPassword);
-		// Sign in
-		GlobalStatic.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/div[6]/input")).click();
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(3000);
-		GlobalStatic.oDriver.findElement(By.linkText("Channels administration")).click();
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(3000);
-		// Select Plan
-		GlobalStatic.oDriver.findElement(By.name("plan-sel")).click();
-		GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("plan-sel"));
-		GlobalStatic.oElement.sendKeys("Automation Test Plan");
-		GlobalStatic.oElement.sendKeys(Keys.ENTER);
-		// Delete Plan
-		GlobalStatic.oDriver.findElement(By.linkText("Delete plan")).click();
-		Alert alert = GlobalStatic.oDriver.switchTo().alert();
-		Thread.currentThread();
-		Thread.sleep(2000);
-		// And acknowledge the alert (equivalent to clicking "OK")
-		alert.accept();
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(3000);
-		// Logout
-		GlobalStatic.oDriver.findElement(By.partialLinkText("Logout ")).click();
-		// Webdriver close
-		GlobalStatic.oDriver.close();*/
-		GlobalVariables.sEndDateTime = LogFunctions.getDateTime();
-//		Runtime r = Runtime.getRuntime();
-//		r.gc();
-//		System.runFinalization();
-//		System.gc();
-		System.out.println("TestData cleanup completed");
+	public static void tearDownTestData() {
+		try { 
+			System.out.println("Performing cleanup TestData...");
+			/*GlobalStatic.oDriver = new FirefoxDriver();
+			// URL
+			GlobalStatic.oDriver.get(GlobalStatic.sLoginURL);
+			// Username
+			GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("j_username"));
+			GlobalStatic.oElement.sendKeys(GlobalStatic.sUsername);
+			// Password
+			GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("j_password"));
+			GlobalStatic.oElement.sendKeys(GlobalStatic.sPassword);
+			// Sign in
+			GlobalStatic.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/div[6]/input")).click();
+			// Thread sleep
+			Thread.currentThread();
+			Thread.sleep(3000);
+			GlobalStatic.oDriver.findElement(By.linkText("Channels administration")).click();
+			// Thread sleep
+			Thread.currentThread();
+			Thread.sleep(3000);
+			// Select Plan
+			GlobalStatic.oDriver.findElement(By.name("plan-sel")).click();
+			GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("plan-sel"));
+			GlobalStatic.oElement.sendKeys("Automation Test Plan");
+			GlobalStatic.oElement.sendKeys(Keys.ENTER);
+			// Delete Plan
+			GlobalStatic.oDriver.findElement(By.linkText("Delete plan")).click();
+			Alert alert = GlobalStatic.oDriver.switchTo().alert();
+			Thread.currentThread();
+			Thread.sleep(2000);
+			// And acknowledge the alert (equivalent to clicking "OK")
+			alert.accept();
+			// Thread sleep
+			Thread.currentThread();
+			Thread.sleep(3000);
+			// Logout
+			GlobalStatic.oDriver.findElement(By.partialLinkText("Logout ")).click();
+			// Webdriver close
+			GlobalStatic.oDriver.close();*/
+			GlobalVariables.sEndDateTime = LogFunctions.getDateTime();
+			Runtime r = Runtime.getRuntime();
+			r.gc();
+			System.runFinalization();
+			System.gc();
+			System.out.println("TestData cleanup completed");
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in TearDownTestData Function.");
+			System.out.println("\n" + e.getMessage());
+		}
 	}
+	
 	
 	public static void findElement(String value,String method) {
 		try {
 			int i=0;
-			do 
-			{
+			do {
 				if(method.equals("name")) {
 					try {
+//						System.out.print("\nHie.......1");
 						GlobalVariables.oDriver.findElement(By.name(value)).clear();
 						Thread.currentThread();	
 						Thread.sleep(1000);
 						break;
 					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
+					catch (Exception e) {
+						i++;
+						System.out.println(e.getMessage());
 						continue;
 					}
 				}
-				else if(method.equals("xpath"))
-				{
+				else if(method.equals("xpath")) {
 					try {
+//						System.out.print("\nHie.......2");
 						GlobalVariables.oDriver.findElement(By.xpath(value)).click();
 						Thread.currentThread();
 						Thread.sleep(1000);
 						break;
 					}
-					catch(Exception e)
-					{
-						e.printStackTrace();
+					catch(Exception e) {
+						i++;
+						System.out.println("\n"+e.getMessage());
 						continue;
 					}
 				}
-				i++;
-			}while (i!=3);
+			} while (i!=3);
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			System.out.println("\nError Occured in FindElement Function.");
+			System.out.println("\n" + e.getMessage());
 		}
 	}
 }

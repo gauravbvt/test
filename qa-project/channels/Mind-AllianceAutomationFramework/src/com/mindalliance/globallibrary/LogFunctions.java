@@ -14,9 +14,16 @@ public class LogFunctions {
 	 * @return
 	 */
 	public static String getDateTime() {
-	    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-	    Date date = new Date();
-	    return dateFormat.format(date);
+		try {
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			Date date = new Date();
+			return dateFormat.format(date);
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in GetDateTime Function.");
+			System.out.println("\n" +e.getMessage());
+			return null;
+		}
 	} 
 	
 	/**
@@ -33,8 +40,8 @@ public class LogFunctions {
 		    out.close();
 		}
 		catch (IOException e) {
-			System.out.println("Error Occured in writeLogs() function. \n");
-			e.printStackTrace();
+			System.out.println("\nError Occured in writeLogs() function. \n");
+			System.out.println("\n" + e.getMessage());
 		}
 	}
 	
@@ -62,8 +69,8 @@ public class LogFunctions {
 			out.close();
 		}
 		catch (IOException e) {
-			System.out.println("Error Occured in writeResults() function.\n");
-			e.printStackTrace();
+			System.out.println("\nError Occured in writeResults() function.\n");
+			System.out.println("\n" + e.getMessage());
 		}
 	}
 	
@@ -81,8 +88,8 @@ public class LogFunctions {
 		    out.close();
 		}
 		catch (IOException e) {
-			System.out.println("Error Occured in writeErrorLogs() function.\n");
-			e.printStackTrace();
+			System.out.println("\nError Occured in writeErrorLogs() function.\n");
+			System.out.println("\n" + e.getMessage());
 		}
 	}	
 }

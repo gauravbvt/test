@@ -20,20 +20,19 @@ public class ApplicationFunctionLibrary {
 			// Create Selenium Webdriver object
 			if (GlobalVariables.sBrowser.equals("Mozilla Firefox"))
 				GlobalVariables.oDriver = new FirefoxDriver();
-			else if (GlobalVariables.sBrowser.equals("Internet Explorer"))
-			{
-				try{
+			else if (GlobalVariables.sBrowser.equals("Internet Explorer")) {
+				try {
 					GlobalVariables.oDriver = new InternetExplorerDriver();
 				}
 				catch (Exception e){
 					GlobalVariables.oDriver = new InternetExplorerDriver();
 				}
 			}
-//			// Maximize Browser Window
-//			((JavascriptExecutor) GlobalVariables.oDriver).executeScript("if (window.screen) {window.moveTo(0, 0);window.resizeTo(window.screen.availWidth, window.screen.availHeight);};");
-//			// WebElement Synchronization
-//			Thread.currentThread();
-//			Thread.sleep(2000);
+			// Maximize Browser Window
+			((JavascriptExecutor) GlobalVariables.oDriver).executeScript("if (window.screen) {window.moveTo(0, 0);window.resizeTo(window.screen.availWidth, window.screen.availHeight);};");
+			// WebElement Synchronization
+			Thread.currentThread();
+			Thread.sleep(2000);
 			
 			// Enter the URL
 			GlobalVariables.oDriver.get(GlobalVariables.login.get("sChannelURL"));
@@ -41,25 +40,20 @@ public class ApplicationFunctionLibrary {
 			Thread.currentThread();
 			Thread.sleep(2000);
 			String title=GlobalVariables.oDriver.getTitle();
-			if (GlobalVariables.sBrowser.equals("Internet Explorer")){
-				if(title.equalsIgnoreCase(GlobalVariables.viewElements.get("planPageSubTitle")))
-				{
+			if (GlobalVariables.sBrowser.equals("Internet Explorer")) {
+				if(title.equalsIgnoreCase(GlobalVariables.viewElements.get("planPageSubTitle"))) {
 					ApplicationFunctionLibrary.logout();
 				}
-				else if(title.equalsIgnoreCase("Channels - Information Sharing Planning"))
-				{
+				else if(title.equalsIgnoreCase("Channels - Information Sharing Planning")) {
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
 				}
-				else if(title.equalsIgnoreCase("Channels - Administration"))
-				{
+				else if(title.equalsIgnoreCase("Channels - Administration")) {
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
 				}
-				else if(title.equalsIgnoreCase("Channels - All procedures in Automation Test Plan"))
-				{
+				else if(title.equalsIgnoreCase("Channels - All procedures in Automation Test Plan")) {
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathSignoutOnAssignmentsCommitments"))).click();
 				}
-				else if(title.equalsIgnoreCase("Channels - Participants Pages"))
-				{
+				else if(title.equalsIgnoreCase("Channels - Participants Pages")) {
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sSignoutOnParticipantsPage"))).click();
 				}
 			}
@@ -93,7 +87,8 @@ public class ApplicationFunctionLibrary {
 			// Returns TRUE
 			return Boolean.TRUE;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("\nError Occured in Login Function.");
+			System.out.println("\n" + e.getMessage());
 			// Returns FALSE
 			return Boolean.FALSE;
 		}
@@ -115,12 +110,14 @@ public class ApplicationFunctionLibrary {
 			// Returns TRUE
 			GlobalVariables.oDriver.quit();
 			return Boolean.TRUE;
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
+			System.out.println("\nError Occured in Logout Function.");
+			System.out.println("\n" + e.getMessage());
 			// Returns FALSE
-			if(GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle))
-			{
-			GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathStackTrace"))).click();
-			ApplicationFunctionLibrary.logout();
+			if(GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathStackTrace"))).click();
+				ApplicationFunctionLibrary.logout();
 			}
 			GlobalVariables.oDriver.quit();
 			return Boolean.FALSE;
@@ -133,13 +130,14 @@ public class ApplicationFunctionLibrary {
 	 * @param optionName
 	 * @throws InterruptedException
 	 */
-	public static void MouseOverAndClick(String popUpMenu, String optionName) throws InterruptedException {
-		if (popUpMenu != null && optionName != null) {
-		// Mouse hover on popUpMenu
-		GlobalVariables.oDriver.findElement(By.xpath(popUpMenu)).click();
-		// Click on optionName option under xPath
-		GlobalVariables.oDriver.findElement(By.partialLinkText(optionName)).click();
-		}
+	public static void MouseOverAndClick(String popUpMenu, String optionName) {
+		try {
+			if (popUpMenu != null && optionName != null) {
+				// Mouse hover on popUpMenu
+				GlobalVariables.oDriver.findElement(By.xpath(popUpMenu)).click();
+				// Click on optionName option under xPath
+				GlobalVariables.oDriver.findElement(By.partialLinkText(optionName)).click();
+			}
 			/*GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(xPath));
 			// Mouseover on xPath
 			((RenderedWebElement) GlobalVariables.oElement).hover();*/
@@ -150,6 +148,11 @@ public class ApplicationFunctionLibrary {
 			((HasInputDevices) GlobalVariables.oDriver).getMouse().click(result1.getCoordinates());*/
 			//GlobalVariables.oDriver.findElement(By.linkText(optionName)).click();
 			//GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[13]/span/span[3]/span/ul/li[8]/span/a/span")).click();
+		}
+		catch (Exception e) {
+			System.out.println("\nError Occured in MouseOverAndClick Function.");
+			System.out.println("\n" + e.getMessage());
+		}
 	}
 
 	/**
@@ -157,32 +160,33 @@ public class ApplicationFunctionLibrary {
 	 * @param segmentName
 	 * @throws InterruptedException
 	 */
-	public static void addSegment(String segmentName, String segmentType) throws InterruptedException {
-		if (segmentType.equals("Default"))
-			MouseOverAndClick(
-					"//span[@class='menubar']/span[2]/span/span",
-					"About plan segment");
-		else
-			MouseOverAndClick(
-					"//span[@class='menubar']/span[3]/span/span",
-					"Add new segment");
-		// WebElement Synchronization
-		Thread.currentThread();
-		Thread.sleep(2000);
-		// Enter the details for new segment
-		GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-		GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+	public static void addSegment(String segmentName, String segmentType) {
+		try {
+			if (segmentType.equals("Default"))
+				MouseOverAndClick("//span[@class='menubar']/span[2]/span/span","About plan segment");
+			else
+				MouseOverAndClick("//span[@class='menubar']/span[3]/span/span","Add new segment");
+			// WebElement Synchronization
+			Thread.currentThread();
+			Thread.sleep(2000);
+			// Enter the details for new segment
+			GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
+			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
 			for (int i = 0; i <= 8; i++)
 				GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-		GlobalVariables.oElement.sendKeys(segmentName);
-		// WebElement Synchronization
-		Thread.currentThread();
-		Thread.sleep(2000);
-		// Click on 'done' button
-		GlobalVariables.oDriver.findElement(By.className("close")).click();
-		// WebElement Synchronization
-		Thread.currentThread();
-		Thread.sleep(2000);
+			GlobalVariables.oElement.sendKeys(segmentName);
+			// WebElement Synchronization
+			Thread.currentThread();
+			Thread.sleep(2000);
+			// Click on 'done' button
+			GlobalVariables.oDriver.findElement(By.className("close")).click();
+			// WebElement Synchronization
+			Thread.currentThread();
+			Thread.sleep(2000);
+		}
+		catch (Exception e) {
+			System.out.println("\nError Occured in AddSegment Function.");
+			System.out.println("\n" + e.getMessage());
+		}
 	}
-
 }

@@ -25,9 +25,9 @@ public class ReportFunctions {
 	static String sCsvResult;
 	static String sCsvScriptException;
 	static String sCsvErrorReport;
-	static String arrayOfTestCaseId[] = new String[500];
-	static String arrayOftestCaseSummary[] = new String[400];
-	static String arrayOftestCaseResult[] = new String[400];
+	static String arrayOfTestCaseId[] = new String[600];
+	static String arrayOftestCaseSummary[] = new String[600];
+	static String arrayOftestCaseResult[] = new String[600];
 	static String stestName;
 
 	/**
@@ -72,8 +72,8 @@ public class ReportFunctions {
 //			}
 //		}
 //		catch(Exception e) {
-//			System.out.println("Error in updateTestCaseExecutionResult() function.\n");
-//			e.printStackTrace();
+//			System.out.println("\nError in updateTestCaseExecutionResult() function.\n");
+//			System.out.println("\n" + e.getMessage());
 //		}		
 	}
 	public static void updateTestCaseExecutionResult(Sheet sheet) {
@@ -110,8 +110,8 @@ public class ReportFunctions {
 			}
 		}
 		catch(Exception e) {
-			System.out.println("Error in updateTestCaseExecutionResult() function.\n");
-			e.printStackTrace();
+			System.out.println("\nError in updateTestCaseExecutionResult() function.\n");
+			System.out.println("\n" + e.getMessage());
 		}
 	}
 
@@ -152,8 +152,8 @@ public class ReportFunctions {
 			return arrayOfTestCaseId;
 		}
 		catch(Exception e) {
-			System.out.println("Error Occured in readTestCaseId() function. \n");
-			e.printStackTrace();
+			System.out.println("\nError Occured in readTestCaseId() function. \n");
+			System.out.println("\n" + e.getMessage());
 			return null;
 		}
 	}
@@ -185,8 +185,8 @@ public class ReportFunctions {
 				return GlobalVariables.sNotRun;
 		}
 		catch(Exception e) {
-			System.out.println("Error in readCsvFile() Function.\n");
-			e.printStackTrace();
+			System.out.println("\nError in readCsvFile() Function.\n");
+			System.out.println("\n" + e.getMessage());
 			return "Error";
 		}
 	}
@@ -250,8 +250,8 @@ public class ReportFunctions {
 			System.out.println("Report generated successfully");
 		}
 		catch(Exception e) {
-			System.out.println("Error Occured in generateAutomationReport() function.\n");
-			e.printStackTrace();
+			System.out.println("\nError Occured in generateAutomationReport() function.\n");
+			System.out.println("\n" + e.getMessage());
 		}
 	}
 
@@ -296,8 +296,8 @@ public class ReportFunctions {
 			destination.close();
 		}
 		catch(Exception e) {
-			System.out.println("Error Occured in generateFinalTestPassReport() function. \n");
-			e.printStackTrace();
+			System.out.println("\nError Occured in generateFinalTestPassReport() function. \n");
+			System.out.println("\n" + e.getMessage());
 		}
 	}
 
@@ -364,114 +364,114 @@ public class ReportFunctions {
 			destination.close();
 		}
 		catch(Exception e) {
-			System.out.println("Error Occured in generateTestCaseSummary() function. \n");
-			e.printStackTrace();
+			System.out.println("\nError Occured in generateTestCaseSummary() function. \n");
+			System.out.println("\n" + e.getMessage());
 		}
 	}
 
 	private static void generateFailureReport() {
 		try {
-		csvTestCase = new CsvReader(GlobalVariables.sLogDirectoryPath + "\\Results.csv");
-		OutputStream destination = new FileOutputStream(GlobalVariables.sReportDstDirectoryPath + "\\TestCaseFailureList.htm");
-		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-		XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
+			csvTestCase = new CsvReader(GlobalVariables.sLogDirectoryPath + "\\Results.csv");
+			OutputStream destination = new FileOutputStream(GlobalVariables.sReportDstDirectoryPath + "\\TestCaseFailureList.htm");
+			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
-		xml.writeStartDocument();
-		xml.writeStartElement("html");
-		xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
-		xml.writeStartElement("head");
-		xml.writeStartElement("title");
-		xml.writeCharacters("Mind-alliance Failure Report");
-		xml.writeEndElement();
-		xml.writeEndElement();
-		xml.writeStartElement("body");
-		xml.writeStartElement("table");
-		xml.writeAttribute("border","0");
-		xml.writeAttribute("cellpadding","0");
-		xml.writeAttribute("cellspacing","0");
-		xml.writeAttribute("width","100%");
-		xml.writeStartElement("caption");
-		xml.writeStartElement("strong");
-		xml.writeCharacters("Mind-Alliance Test scripts Failure Report");
-		xml.writeEndElement();
-		xml.writeStartElement("tr");
-		xml.writeAttribute("bgColor","#DDDDDD");
-		xml.writeStartElement("td");
-		xml.writeStartElement("center");
-		xml.writeCharacters("Start Datetime: " + GlobalVariables.sStartDateTime);
-		xml.writeEmptyElement("br");
-		xml.writeCharacters("End Datetime: " + GlobalVariables.sEndDateTime);
-		xml.writeEmptyElement("br");
-		xml.writeCharacters("Browser: " + GlobalVariables.sBrowser);
-		xml.writeEmptyElement("br");
-		xml.writeEndElement();
-		xml.writeEndElement();
-		xml.writeStartElement("td");
-		xml.writeStartElement("center");
-		xml.writeStartElement("img");
-		xml.writeAttribute("src","../../Images/Mind-Alliance_Logo.png");
-		xml.writeAttribute("style","border-style: solid");
-		xml.writeEndElement();
-		xml.writeEndElement();
-		xml.writeEndElement();
-		xml.writeStartElement("td");
-		xml.writeStartElement("center");
-		xml.writeCharacters("Number of TestCases Executed: " + (totalNoOfTestCasesPassed + totalNoOfTestCasesFailed));
-		xml.writeEmptyElement("br");
-		xml.writeCharacters("Number of TestCases Passed: " + totalNoOfTestCasesPassed);
-		xml.writeEmptyElement("br");
-		xml.writeCharacters("Number of TestCases Failed: " + totalNoOfTestCasesFailed);
-		xml.writeEndElement();
-		xml.writeEndElement();
-		xml.writeEndElement();
-		xml.writeEndDocument();
-		
-		xml.writeStartDocument();
-		xml.writeStartElement("html");
-		xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
-		xml.writeStartElement("head");
-		xml.writeStartElement("title");
-		xml.writeCharacters("TestCaseId Index");
-		xml.writeEndElement();
-		xml.writeEndElement();
-		xml.writeStartElement("body");
-		xml.writeEmptyElement("br");
-			xml.writeStartElement("table");
-			xml.writeAttribute("border", "0");
-			xml.writeAttribute("width","100%");
-				xml.writeStartElement("th");
-					xml.writeStartElement("tr");
-						xml.writeStartElement("td");
-						xml.writeAttribute("bgColor","#BBBBBB");
-						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
-						xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
-								xml.writeStartElement("strong");
-									xml.writeCharacters("TestCaseId");
-								xml.writeEndElement();
-						xml.writeEndElement();
-						xml.writeStartElement("td");
-						xml.writeAttribute("bgColor","#BBBBBB");
-						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
-						xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
-							xml.writeStartElement("center");
-								xml.writeStartElement("strong");
-									xml.writeCharacters("Result");
+			xml.writeStartDocument();
+			xml.writeStartElement("html");
+				xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
+				xml.writeStartElement("head");
+					xml.writeStartElement("title");
+						xml.writeCharacters("Mind-alliance Failure Report");
+					xml.writeEndElement();
+				xml.writeEndElement();
+				xml.writeStartElement("body");
+					xml.writeStartElement("table");
+						xml.writeAttribute("border","0");
+						xml.writeAttribute("cellpadding","0");
+						xml.writeAttribute("cellspacing","0");
+						xml.writeAttribute("width","100%");
+						xml.writeStartElement("caption");
+							xml.writeStartElement("strong");
+								xml.writeCharacters("Mind-Alliance Test scripts Failure Report");
+							xml.writeEndElement();
+							xml.writeStartElement("tr");
+								xml.writeAttribute("bgColor","#DDDDDD");
+								xml.writeStartElement("td");
+								xml.writeStartElement("center");
+									xml.writeCharacters("Start Datetime: " + GlobalVariables.sStartDateTime);
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("End Datetime: " + GlobalVariables.sEndDateTime);
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("Browser: " + GlobalVariables.sBrowser);
+									xml.writeEmptyElement("br");
 								xml.writeEndElement();
 							xml.writeEndElement();
 							xml.writeStartElement("td");
-			 			    xml.writeAttribute("bgColor","#BBBBBB");
-							xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
-							xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
 								xml.writeStartElement("center");
-									xml.writeStartElement("strong");
-										xml.writeCharacters("Script Exception");
+									xml.writeStartElement("img");
+										xml.writeAttribute("src","../../Images/Mind-Alliance_Logo.png");
+										xml.writeAttribute("style","border-style: solid");
 									xml.writeEndElement();
 								xml.writeEndElement();
 							xml.writeEndElement();
-							 xml.writeStartElement("td");
-				 			    xml.writeAttribute("bgColor","#BBBBBB");
+							xml.writeStartElement("td");
+								xml.writeStartElement("center");
+									xml.writeCharacters("Number of TestCases Executed: " + (totalNoOfTestCasesPassed + totalNoOfTestCasesFailed));
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("Number of TestCases Passed: " + totalNoOfTestCasesPassed);
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("Number of TestCases Failed: " + totalNoOfTestCasesFailed);
+								xml.writeEndElement();
+							xml.writeEndElement();
+						xml.writeEndElement();
+					xml.writeEndDocument();
+		
+		xml.writeStartDocument();
+		xml.writeStartElement("html");
+			xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
+			xml.writeStartElement("head");
+				xml.writeStartElement("title");
+					xml.writeCharacters("TestCaseId Index");
+				xml.writeEndElement();
+			xml.writeEndElement();
+			xml.writeStartElement("body");
+				xml.writeEmptyElement("br");
+				xml.writeStartElement("table");
+					xml.writeAttribute("border", "0");
+					xml.writeAttribute("width","100%");
+					xml.writeStartElement("th");
+						xml.writeStartElement("tr");
+							xml.writeStartElement("td");
+								xml.writeAttribute("bgColor","#BBBBBB");
 								xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
 								xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+								xml.writeStartElement("strong");
+									xml.writeCharacters("TestCaseId");
+								xml.writeEndElement();
+							xml.writeEndElement();
+							xml.writeStartElement("td");
+								xml.writeAttribute("bgColor","#BBBBBB");
+								xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+								xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+								xml.writeStartElement("center");
+									xml.writeStartElement("strong");
+										xml.writeCharacters("Result");
+									xml.writeEndElement();
+								xml.writeEndElement();
+								xml.writeStartElement("td");
+									xml.writeAttribute("bgColor","#BBBBBB");
+									xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+									xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+									xml.writeStartElement("center");
+										xml.writeStartElement("strong");
+											xml.writeCharacters("Script Exception");
+										xml.writeEndElement();
+									xml.writeEndElement();
+								xml.writeEndElement();
+								xml.writeStartElement("td");
+									xml.writeAttribute("bgColor","#BBBBBB");
+									xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+									xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
 									xml.writeStartElement("center");
 										xml.writeStartElement("strong");
 											xml.writeCharacters("Error Report");
@@ -552,8 +552,8 @@ public class ReportFunctions {
 			csvTestCase.close();
 		}
 		catch(Exception e){
-			System.out.println("Error Occured in generateFailureReport() function.\n");
-			e.printStackTrace();
+			System.out.println("\nError Occured in generateFailureReport() function.\n");
+			System.out.println("\n" + e.getMessage());
 		}
 		}		
 	
@@ -638,8 +638,8 @@ public class ReportFunctions {
 			destination.close();
 		}
 		catch(Exception e) {
-			System.out.println("Error Occured in generateTestCaseIndex() function. \n");
-			e.printStackTrace();
+			System.out.println("\nError Occured in generateTestCaseIndex() function. \n");
+			System.out.println("\n" + e.getMessage());
 		}
 	}
 
@@ -778,8 +778,8 @@ public class ReportFunctions {
 		csvTestCase.close();
 	}
 	catch(Exception e) {
-		System.out.println("Error in generateAutomationReportInHtml() function. \n");
-		e.printStackTrace();
+		System.out.println("\nError in generateAutomationReportInHtml() function. \n");
+		System.out.println("\n" + e.getMessage());
 	}
 	}
 
@@ -803,8 +803,8 @@ public class ReportFunctions {
 			return arrayOfTestCaseId;
 		}
 		catch(Exception e) {
-			System.out.println("Error Occured in readTestCaseIdForFunctional() function.\n");
-			e.printStackTrace();
+			System.out.println("\nError Occured in readTestCaseIdForFunctional() function.\n");
+			System.out.println("\n" + e.getMessage());
 			return null;
 		}
 	}
@@ -839,8 +839,8 @@ public class ReportFunctions {
 			System.out.println("Report generated successfully");
 		}
 		catch(Exception e) {
-			System.out.println("Error Occured in generateAutomationReportForFunctionalTestCases() function.");
-			e.printStackTrace();
+			System.out.println("\nError Occured in generateAutomationReportForFunctionalTestCases() function.");
+			System.out.println("\n" + e.getMessage());
 		}
 	}
 }

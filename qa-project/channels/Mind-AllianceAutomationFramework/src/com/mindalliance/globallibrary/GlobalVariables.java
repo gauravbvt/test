@@ -9,7 +9,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
 public class GlobalVariables {
-
 	// Selenium Objects
 	public static WebDriver oDriver = null;
 	public static WebElement oElement = null;
