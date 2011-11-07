@@ -502,9 +502,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 					jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
 					//Execute current TestCaseId
 					cls = Class.forName("com.mindalliance.testscripts." + testCaseId);
-					System.out.println("\n");
 					cls.newInstance();
-					System.out.println("\n");
 					//Update progressBar
 					cnt = cnt + 1;
 					updateProgressBar(cnt);
