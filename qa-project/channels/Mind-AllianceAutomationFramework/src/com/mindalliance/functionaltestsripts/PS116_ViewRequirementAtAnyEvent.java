@@ -64,18 +64,28 @@ public class PS116_ViewRequirementAtAnyEvent
 				// Click on drop down of Event and select Any Event
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Any event";
+				GlobalVariables.bIsSuccess=Boolean.FALSE;
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:event")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.testData.get("Any event").equals(option.getText())){
-			    			option.setSelected();
-			    			break;
+			    		GlobalVariables.bIsSuccess=Boolean.TRUE;
+			    		option.setSelected();
+			    		break;
 			    	}
 			    }
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
