@@ -99,8 +99,7 @@ public class MAC0008_UndoPasteTaskUsingCopy {
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
-					else
-				    {
+					else{
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task copied' "+" Actual " + GlobalVariables.oElement.getText();
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
