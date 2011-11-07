@@ -42,8 +42,7 @@ public class TFP020_CausesEventOption
 				// Click on default task
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Task";
-				GenericFunctionLibrary.findElement(GlobalVariables.plan.get("sXpathDoingSomeThingLink"),"xpath");
-//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -55,8 +54,7 @@ public class TFP020_CausesEventOption
 				// Click on Causes Event Field
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Causes Event ( Event Created )";
-				GenericFunctionLibrary.findElement("segment:part:initiatedEvent","name");
-//				GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent")).clear();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
