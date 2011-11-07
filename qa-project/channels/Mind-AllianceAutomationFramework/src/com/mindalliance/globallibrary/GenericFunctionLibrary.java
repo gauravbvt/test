@@ -12,8 +12,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.openqa.selenium.By;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -658,7 +656,6 @@ public class GenericFunctionLibrary {
 		catch(Exception e) {
 			System.out.println("\nError Occured in LoadObjectRepository Function");
 			System.out.println("\n" + e.getMessage());
-			e.printStackTrace();
 		}
 	}
 
@@ -826,43 +823,43 @@ public class GenericFunctionLibrary {
 	}
 	
 	
-	public static void findElement(String value,String method) {
-		try {
-			int i=0;
-			do {
-				if(method.equals("name")) {
-					try {
-//						System.out.print("\nHie.......1");
-						GlobalVariables.oDriver.findElement(By.name(value)).clear();
-						Thread.currentThread();	
-						Thread.sleep(1000);
-						break;
-					}
-					catch (Exception e) {
-						i++;
-						System.out.println(e.getMessage());
-						continue;
-					}
-				}
-				else if(method.equals("xpath")) {
-					try {
-//						System.out.print("\nHie.......2");
-						GlobalVariables.oDriver.findElement(By.xpath(value)).click();
-						Thread.currentThread();
-						Thread.sleep(1000);
-						break;
-					}
-					catch(Exception e) {
-						i++;
-						System.out.println("\n"+e.getMessage());
-						continue;
-					}
-				}
-			} while (i!=3);
-		}
-		catch(Exception e) {
-			System.out.println("\nError Occured in FindElement Function.");
-			System.out.println("\n" + e.getMessage());
-		}
-	}
+//	public static void findElement(String value,String method) {
+//		try {
+//			int i=0;
+//			do {
+//				if(method.equals("name")) {
+//					try {
+////						System.out.print("\nHie.......1");
+//						GlobalVariables.oDriver.findElement(By.name(value)).clear();
+//						Thread.currentThread();	
+//						Thread.sleep(1000);
+//						break;
+//					}
+//					catch (Exception e) {
+//						i++;
+//						System.out.println(e.getMessage());
+//						continue;
+//					}
+//				}
+//				else if(method.equals("xpath")) {
+//					try {
+////						System.out.print("\nHie.......2");
+//						GlobalVariables.oDriver.findElement(By.xpath(value)).click();
+//						Thread.currentThread();
+//						Thread.sleep(1000);
+//						break;
+//					}
+//					catch(Exception e) {
+//						i++;
+//						System.out.println("\n"+e.getMessage());
+//						continue;
+//					}
+//				}
+//			} while (i!=3);
+//		}
+//		catch(Exception e) {
+//			System.out.println("\nError Occured in FindElement Function.");
+//			System.out.println("\n" + e.getMessage());
+//		}
+//	}
 }
