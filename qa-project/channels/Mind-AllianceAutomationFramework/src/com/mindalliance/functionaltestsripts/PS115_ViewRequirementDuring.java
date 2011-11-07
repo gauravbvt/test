@@ -80,9 +80,6 @@ public class PS115_ViewRequirementDuring
 				Thread.currentThread();
 				Thread.sleep(1000);
 				
-//				// Assertion: Verify that Situation as during is present
-//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:timing"));
-				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

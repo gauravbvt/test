@@ -35,7 +35,7 @@ public class PS116_ViewRequirementAtAnyEvent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(1000);
 				  
 				// Clicks on About Plan link under show pop up menu option
 				GlobalVariables.iStepNo++ ;
@@ -79,9 +79,6 @@ public class PS116_ViewRequirementAtAnyEvent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				
-				// Assertion: Verify that any event is selected
-//				GlobalVariables.oElement=GlobalVariables.
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
