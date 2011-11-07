@@ -688,8 +688,8 @@ public class GenericFunctionLibrary {
 			System.out.println("TestData initialization completed");
 		}
 		catch(Exception e){
-			System.out.println("\nError Occured in InitializeTestData Function");
-			System.out.println("\n" + e.getMessage());
+			System.out.println("Error Occured in InitializeTestData Function");
+			System.out.println(e.getMessage());
 		}
 		/*GlobalStatic.oDriver = new FirefoxDriver();
 		// URL
@@ -820,8 +820,8 @@ public class GenericFunctionLibrary {
 			System.out.println("TestData cleanup completed");
 		}
 		catch(Exception e) {
-			System.out.println("\nError Occured in TearDownTestData Function.");
-			System.out.println("\n" + e.getMessage());
+			System.out.println("Error Occured in TearDownTestData Function.");
+			System.out.println(e.getMessage());
 		}
 	}
 	
