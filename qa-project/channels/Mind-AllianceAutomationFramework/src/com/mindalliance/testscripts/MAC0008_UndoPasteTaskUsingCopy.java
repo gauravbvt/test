@@ -181,10 +181,10 @@ public class MAC0008_UndoPasteTaskUsingCopy {
 						}
 					}
 					if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
-						        // Write Results
-								LogFunctions.writeLogs(GlobalVariables.sDescription);
-								LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-										GlobalVariables.sBlank, GlobalVariables.sBlank);
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
 						}
 					else{
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task 1' "+" Actual " + GlobalVariables.sStrCheck;
