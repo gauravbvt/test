@@ -89,7 +89,13 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel";
 	BufferedImage image;
 	public HomeForFunctionalTestCase() {
-		initComponents();
+		try {
+			initComponents();
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in InitComponents Function.");
+			System.out.println("\n" + e.getMessage());
+		}
 	}
 
 	private void initComponents() {
@@ -521,11 +527,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				jListFunctional.setModel(listModel);
 				jListFunctional.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			}
-			System.out.println("Total Count : "+jListCount);
+//			System.out.println("Total Count : "+jListCount);
 			return jListFunctional;
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("\nError Occured in getJList0 Function.");
+			System.out.println("\n" + e.getMessage());
 		}
 		return jListFunctional;
 	}
@@ -564,8 +571,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 			GenericFunctionLibrary.loadObjectRepository();
 			// Execution of selected TestCases
 			for (Object testCaseId: arrayOfTestCaseId) {
-				try
-				{
+				try {
 					//Clear TestCaseId label
 					jLabelTestCaseId.removeAll();
 					jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
@@ -576,13 +582,14 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 					jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
 					//Execute current TestCaseId
 					cls = Class.forName("com.mindalliance.functionaltestsripts." + testCaseId);
+					System.out.println("\n");
 					cls.newInstance();
+					System.out.println("\n");
 					//Update progressBar
 					cnt = cnt + 1;
 					updateProgressBar(cnt);
 				}
-				catch(Exception e)
-				{
+				catch(Exception e) {
 					//Update progressBar
 					cnt = cnt + 1;
 					updateProgressBar(cnt);
@@ -628,18 +635,18 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 			jLabelNumberOfTestCasesFailed.paintImmediately(jLabelNumberOfTestCasesFailed.getVisibleRect());
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("\nError Occured in ExecuteTestCases Function.");
+			System.out.println("\n" + e.getMessage());
 		}
-
 	}
 
 	private static void installLnF() {
 		try {
 			String lnfClassname = PREFERRED_LOOK_AND_FEEL;
 			UIManager.setLookAndFeel(lnfClassname);
-		} catch (Exception e) {
-			System.err.println("Cannot install " + PREFERRED_LOOK_AND_FEEL
-					+ " on this platform:" + e.getMessage());
+		} 
+		catch (Exception e) {
+			System.err.println("Cannot install " + PREFERRED_LOOK_AND_FEEL + " on this platform:" + e.getMessage());
 		}
 	}
 
@@ -692,223 +699,236 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 			else if ("exit".equals(e.getActionCommand())) { // when clicked on 'Exit' button
 				System.exit(0);
 			}
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} 
+		catch (IOException ex) {
+			System.out.println("\nError Occured in ActionPerformed Function.");
+			System.out.println("\n" + ex.getMessage());
 		}
 	}
 
 	private void clearTestPlanResult() {
-		// TODO Auto-generated method stub
-		DefaultListModel listModel = new DefaultListModel();
-		listModel.removeAllElements();
-		GlobalVariables.jListExecute.setModel(listModel);
-		// Clear progressBar Values
-		jProgressBarStatus.setMinimum(0);
-		jProgressBarStatus.setMaximum(0);
-		// Clear Status label
-		jLabelStatus.setText("Status: ");
-        jLabelStatus.setSize(jLabelStatus.getPreferredSize());
-		jLabelStatus.paintImmediately(jLabelStatus.getVisibleRect());
-		// Clear TestCaseId label
-		jLabelTestCaseId.setText("");
-		jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
-		jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
-		// Clear TestCaseId label
-		jLabelTestCaseId.setText("TestCaseId: ");
-		jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
-		jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
-		jButtonLogLink.setEnabled(false);
-		jButtonReportLink.setEnabled(false);
-		jButtonSendEmail.setEnabled(false);
-		// Clear startDateTime label
-		jLabelStartDateTime.setText("Start DateTime: ");
-		jLabelStartDateTime.setSize(jLabelStartDateTime.getPreferredSize());
-		jLabelStartDateTime.paintImmediately(jLabelStartDateTime.getVisibleRect());
-		// Clear endDateTime label
-		jLabelEndDateTime.setText("End DateTime: ");
-		jLabelEndDateTime.setSize(jLabelEndDateTime.getPreferredSize());
-		jLabelEndDateTime.paintImmediately(jLabelEndDateTime.getVisibleRect());
-		// Clear totalExecuted TestCaseId
-		jLabelNumberOfTestCasesExecuted.setText("Number of TestCases Executed: ");
-		jLabelNumberOfTestCasesExecuted.setSize(jLabelNumberOfTestCasesExecuted.getPreferredSize());
-		jLabelNumberOfTestCasesExecuted.paintImmediately(jLabelNumberOfTestCasesExecuted.getVisibleRect());
-		// Clear totalTestCasesPassed
-		jLabelNumberOfTestCasesPassed.setText("Number of TestCases Passed: ");
-		jLabelNumberOfTestCasesPassed.setSize(jLabelNumberOfTestCasesPassed.getPreferredSize());
-		jLabelNumberOfTestCasesPassed.paintImmediately(jLabelNumberOfTestCasesPassed.getVisibleRect());
-		// Clear totalTestCasesFailed
-		jLabelNumberOfTestCasesFailed.setText("Number of TestCases Failed: ");
-		jLabelNumberOfTestCasesFailed.setSize(jLabelNumberOfTestCasesFailed.getPreferredSize());
-		jLabelNumberOfTestCasesFailed.paintImmediately(jLabelNumberOfTestCasesFailed.getVisibleRect());
-		// Clear progressBar String
-		jProgressBarStatus.setString("");
-		jProgressBarStatus.setStringPainted(true);
-		Rectangle progressRect = jProgressBarStatus.getBounds();
-		progressRect.x = 0;
-		progressRect.y = 0;
-		jProgressBarStatus.paintImmediately(progressRect);
+		try {
+			// TODO Auto-generated method stub
+			DefaultListModel listModel = new DefaultListModel();
+			listModel.removeAllElements();
+			GlobalVariables.jListExecute.setModel(listModel);
+			// Clear progressBar Values
+			jProgressBarStatus.setMinimum(0);
+			jProgressBarStatus.setMaximum(0);
+			// Clear Status label
+			jLabelStatus.setText("Status: ");
+			jLabelStatus.setSize(jLabelStatus.getPreferredSize());
+			jLabelStatus.paintImmediately(jLabelStatus.getVisibleRect());
+			// Clear TestCaseId label
+			jLabelTestCaseId.setText("");
+			jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
+			jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
+			// Clear TestCaseId label
+			jLabelTestCaseId.setText("TestCaseId: ");
+			jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
+			jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
+			jButtonLogLink.setEnabled(false);
+			jButtonReportLink.setEnabled(false);
+			jButtonSendEmail.setEnabled(false);
+			// Clear startDateTime label
+			jLabelStartDateTime.setText("Start DateTime: ");
+			jLabelStartDateTime.setSize(jLabelStartDateTime.getPreferredSize());
+			jLabelStartDateTime.paintImmediately(jLabelStartDateTime.getVisibleRect());
+			// Clear endDateTime label
+			jLabelEndDateTime.setText("End DateTime: ");
+			jLabelEndDateTime.setSize(jLabelEndDateTime.getPreferredSize());
+			jLabelEndDateTime.paintImmediately(jLabelEndDateTime.getVisibleRect());
+			// Clear totalExecuted TestCaseId
+			jLabelNumberOfTestCasesExecuted.setText("Number of TestCases Executed: ");
+			jLabelNumberOfTestCasesExecuted.setSize(jLabelNumberOfTestCasesExecuted.getPreferredSize());
+			jLabelNumberOfTestCasesExecuted.paintImmediately(jLabelNumberOfTestCasesExecuted.getVisibleRect());
+			// Clear totalTestCasesPassed
+			jLabelNumberOfTestCasesPassed.setText("Number of TestCases Passed: ");
+			jLabelNumberOfTestCasesPassed.setSize(jLabelNumberOfTestCasesPassed.getPreferredSize());
+			jLabelNumberOfTestCasesPassed.paintImmediately(jLabelNumberOfTestCasesPassed.getVisibleRect());
+			// Clear totalTestCasesFailed
+			jLabelNumberOfTestCasesFailed.setText("Number of TestCases Failed: ");
+			jLabelNumberOfTestCasesFailed.setSize(jLabelNumberOfTestCasesFailed.getPreferredSize());
+			jLabelNumberOfTestCasesFailed.paintImmediately(jLabelNumberOfTestCasesFailed.getVisibleRect());
+			// Clear progressBar String
+			jProgressBarStatus.setString("");
+			jProgressBarStatus.setStringPainted(true);
+			Rectangle progressRect = jProgressBarStatus.getBounds();
+			progressRect.x = 0;
+			progressRect.y = 0;
+			jProgressBarStatus.paintImmediately(progressRect);
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in ClearTestPlanResult Function.");
+			System.out.println("\n" + e.getMessage());
+		}
 	}
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		JCheckBox chk=(JCheckBox)e.getSource();
-		if(chk.getText().equalsIgnoreCase("Channels Login")) {
-			if(chk.isSelected() && clFlag==true) {
-				jScrollPane0.setViewportView(getJList0(1));
-				clFlag=false;
+		try {
+			JCheckBox chk=(JCheckBox)e.getSource();
+			if(chk.getText().equalsIgnoreCase("Channels Login")) {
+				if(chk.isSelected() && clFlag==true) {
+					jScrollPane0.setViewportView(getJList0(1));
+					clFlag=false;
+				}
+				else{
+					jScrollPane0.setViewportView(getJListModified0("CL"));
+					clFlag=true;
+				}
 			}
-			else{
-				jScrollPane0.setViewportView(getJListModified0("CL"));
-				clFlag=true;
+			else if(chk.getText().equalsIgnoreCase("Home Page")) {
+				if(chk.isSelected() && hpFlag==true) {
+					jScrollPane0.setViewportView(getJList0(2));
+					hpFlag=false;
+				}
+				else{
+					jScrollPane0.setViewportView(getJListModified0("HP"));
+					hpFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("Channels Administration")) {
+				if(chk.isSelected() && caFlag==true) {
+					jScrollPane0.setViewportView(getJList0(3));
+					caFlag=false;
+				}
+				else {
+					jScrollPane0.setViewportView(getJListModified0("CA"));
+					caFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("Display Controls")) {
+				if(chk.isSelected() && dcFlag==true) {
+					jScrollPane0.setViewportView(getJList0(6));
+					dcFlag=false;
+				}
+				else {
+					jScrollPane0.setViewportView(getJListModified0("DC"));
+					dcFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("Channels Commands")) {
+				if(chk.isSelected() && ceFlag==true) {
+					jScrollPane0.setViewportView(getJList0(7));
+					ceFlag=false;
+				}
+				else {
+					jScrollPane0.setViewportView(getJListModified0("CC"));
+					ceFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("Collaboration Panel")) {
+				if(chk.isSelected() && cpFlag==true) {
+					jScrollPane0.setViewportView(getJList0(8));
+					cpFlag=false;
+				}
+				else {
+					jScrollPane0.setViewportView(getJListModified0("CP"));
+					cpFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("Plan and Segment")) {
+				if(chk.isSelected() && psFlag==true){
+					jScrollPane0.setViewportView(getJList0(9));
+					psFlag=false;
+				}
+				else{
+					jScrollPane0.setViewportView(getJListModified0("PS"));
+					psFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("Task and Flow Panel")){
+				if(chk.isSelected() && tfFlag==true){
+					jScrollPane0.setViewportView(getJList0(10));
+					tfFlag=false;
+				}
+				else{
+					jScrollPane0.setViewportView(getJListModified0("TF"));
+					tfFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("Entities")){
+				if(chk.isSelected() && teFlag==true){
+					jScrollPane0.setViewportView(getJList0(11));
+					teFlag=false;
+				}
+				else{
+					jScrollPane0.setViewportView(getJListModified0("TE"));
+					teFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("Information Flow Map")){
+				if(chk.isSelected() && ifmFlag==true){
+					jScrollPane0.setViewportView(getJList0(12));
+					ifmFlag=false;
+				}
+				else{
+					jScrollPane0.setViewportView(getJListModified0("IF"));
+					ifmFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("Information Sharing Guidelines")) {
+				if(chk.isSelected() && isgFlag==true){
+					jScrollPane0.setViewportView(getJList0(13));
+					isgFlag=false;
+				}
+				else{
+					jScrollPane0.setViewportView(getJListModified0("PP"));
+					isgFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("Assignments and Commitments")){
+				if(chk.isSelected() && acFlag==true){
+					jScrollPane0.setViewportView(getJList0(14));
+					acFlag=false;
+				}
+				else{
+					jScrollPane0.setViewportView(getJListModified0("PE"));
+					acFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("Lock Functionality")){
+				if(chk.isSelected() && lfFlag==true){
+					jScrollPane0.setViewportView(getJList0(15));
+					lfFlag=false;
+				}
+				else{
+					jScrollPane0.setViewportView(getJListModified0("LF"));
+					lfFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("My Information Sharing Guidelines(User)")){
+				if(chk.isSelected() && misgFlag==true){
+					jScrollPane0.setViewportView(getJList0(16));
+					misgFlag=false;
+				}
+				else{
+					jScrollPane0.setViewportView(getJListModified0("SG"));
+					misgFlag=true;
+				}
+			}
+			else if(chk.getText().equalsIgnoreCase("Issue Summary Report")){
+				if(chk.isSelected() && isrFlag==true){
+					jScrollPane0.setViewportView(getJList0(17));
+					isrFlag=false;
+				}
+				else{
+					jScrollPane0.setViewportView(getJListModified0("IS"));
+					isrFlag=true;
+				}
+			}
+
+			if (e.getSource() == jCheckBoxFunctionalTestCase) {
+				if (e.getStateChange() == 1)
+					jListFunctional.setSelectionInterval(0, jListFunctional.getModel().getSize() - 1);	
+				else	
+					jListFunctional.clearSelection();
 			}
 		}
-		else if(chk.getText().equalsIgnoreCase("Home Page")) {
-			if(chk.isSelected() && hpFlag==true) {
-				jScrollPane0.setViewportView(getJList0(2));
-				hpFlag=false;
-			}
-			else{
-				jScrollPane0.setViewportView(getJListModified0("HP"));
-				hpFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Channels Administration")) {
-			if(chk.isSelected() && caFlag==true) {
-				jScrollPane0.setViewportView(getJList0(3));
-				caFlag=false;
-			}
-			else {
-				jScrollPane0.setViewportView(getJListModified0("CA"));
-				caFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Display Controls")) {
-			if(chk.isSelected() && dcFlag==true) {
-				jScrollPane0.setViewportView(getJList0(6));
-				dcFlag=false;
-			}
-			else {
-				jScrollPane0.setViewportView(getJListModified0("DC"));
-				dcFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Channels Commands")) {
-			if(chk.isSelected() && ceFlag==true) {
-				jScrollPane0.setViewportView(getJList0(7));
-				ceFlag=false;
-			}
-			else {
-				jScrollPane0.setViewportView(getJListModified0("CC"));
-				ceFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Collaboration Panel")) {
-			if(chk.isSelected() && cpFlag==true) {
-				jScrollPane0.setViewportView(getJList0(8));
-				cpFlag=false;
-			}
-			else {
-				jScrollPane0.setViewportView(getJListModified0("CP"));
-				cpFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Plan and Segment")) {
-			if(chk.isSelected() && psFlag==true){
-				jScrollPane0.setViewportView(getJList0(9));
-				psFlag=false;
-			}
-			else{
-				jScrollPane0.setViewportView(getJListModified0("PS"));
-				psFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Task and Flow Panel")){
-			if(chk.isSelected() && tfFlag==true){
-				jScrollPane0.setViewportView(getJList0(10));
-				tfFlag=false;
-			}
-			else{
-				jScrollPane0.setViewportView(getJListModified0("TF"));
-				tfFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Entities")){
-			if(chk.isSelected() && teFlag==true){
-				jScrollPane0.setViewportView(getJList0(11));
-				teFlag=false;
-			}
-			else{
-				jScrollPane0.setViewportView(getJListModified0("TE"));
-				teFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Information Flow Map")){
-			if(chk.isSelected() && ifmFlag==true){
-				jScrollPane0.setViewportView(getJList0(12));
-				ifmFlag=false;
-			}
-			else{
-				jScrollPane0.setViewportView(getJListModified0("IF"));
-				ifmFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Information Sharing Guidelines")) {
-			if(chk.isSelected() && isgFlag==true){
-				jScrollPane0.setViewportView(getJList0(13));
-				isgFlag=false;
-			}
-			else{
-				jScrollPane0.setViewportView(getJListModified0("PP"));
-				isgFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Assignments and Commitments")){
-			if(chk.isSelected() && acFlag==true){
-				jScrollPane0.setViewportView(getJList0(14));
-				acFlag=false;
-			}
-			else{
-				jScrollPane0.setViewportView(getJListModified0("PE"));
-				acFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Lock Functionality")){
-			if(chk.isSelected() && lfFlag==true){
-				jScrollPane0.setViewportView(getJList0(15));
-				lfFlag=false;
-			}
-			else{
-				jScrollPane0.setViewportView(getJListModified0("LF"));
-				lfFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("My Information Sharing Guidelines(User)")){
-			if(chk.isSelected() && misgFlag==true){
-				jScrollPane0.setViewportView(getJList0(16));
-				misgFlag=false;
-			}
-			else{
-				jScrollPane0.setViewportView(getJListModified0("SG"));
-				misgFlag=true;
-			}
-		}
-		else if(chk.getText().equalsIgnoreCase("Issue Summary Report")){
-			if(chk.isSelected() && isrFlag==true){
-				jScrollPane0.setViewportView(getJList0(17));
-				isrFlag=false;
-			}
-			else{
-				jScrollPane0.setViewportView(getJListModified0("IS"));
-				isrFlag=true;
-			}
-		}
-		// TODO Auto-generated method stub
-		if (e.getSource() == jCheckBoxFunctionalTestCase) {
-			if (e.getStateChange() == 1)
-				jListFunctional.setSelectionInterval(0, jListFunctional.getModel().getSize() - 1);
-			else
-				jListFunctional.clearSelection();
+		catch(Exception ex) {
+			System.out.println("Error Occured in ItemStateChanged Function.");
+			System.out.println("\n" + ex.getMessage());
 		}
 	}
 

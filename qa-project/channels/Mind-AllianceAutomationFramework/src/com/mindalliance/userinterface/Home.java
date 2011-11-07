@@ -83,9 +83,9 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		try {
 		initComponents();
 		}
-		catch (Exception e){
-			e.printStackTrace();
-			System.out.println("In Home() Constructor.");
+		catch (Exception e) {
+			System.out.println("\nIn InitComponents Function.");
+			System.out.println("\n" + e.getMessage());
 		}
 	}
 
@@ -353,7 +353,8 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jListCommand;
 		}
 		catch (Exception e) {
-			
+			System.out.println("\nError Occured in getJList2 Function.");
+			System.out.println("\n" + e.getMessage());
 		}
 		return jListCommand;
 	}
@@ -390,7 +391,8 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jListPlan;
 		}
 		catch (Exception e) {
-			
+			System.out.println("\nError Occured in getJList1 Function.");
+			System.out.println("\n" + e.getMessage());
 		}
 		return jListPlan;
 	}
@@ -448,7 +450,8 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jListView;
 		}
 		catch (Exception e) {
-			
+			System.out.println("\nError Occured in getJList0 Function.");
+			System.out.println("\n" + e.getMessage());
 		}
 		return jListView;
 	}
@@ -499,7 +502,9 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 					jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
 					//Execute current TestCaseId
 					cls = Class.forName("com.mindalliance.testscripts." + testCaseId);
+					System.out.println("\n");
 					cls.newInstance();
+					System.out.println("\n");
 					//Update progressBar
 					cnt = cnt + 1;
 					updateProgressBar(cnt);
@@ -551,18 +556,18 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			jLabelNumberOfTestCasesFailed.paintImmediately(jLabelNumberOfTestCasesFailed.getVisibleRect());
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("\nError Occured in ExecuteTestCases Function.");
+			System.out.println("\n" + e.getMessage());
 		}
-		
 	}
 
 	private static void installLnF() {
 		try {
 			String lnfClassname = PREFERRED_LOOK_AND_FEEL;
 			UIManager.setLookAndFeel(lnfClassname);
-		} catch (Exception e) {
-			System.err.println("Cannot install " + PREFERRED_LOOK_AND_FEEL
-					+ " on this platform:" + e.getMessage());
+		} 
+		catch (Exception e) {
+			System.err.println("Cannot install " + PREFERRED_LOOK_AND_FEEL + " on this platform:" + e.getMessage());
 		}
 	}
 
@@ -634,84 +639,94 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 				System.exit(0);
 			}
 			
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (IOException ex) {
+			System.out.println("\nError Occured in ActionPerformed Function.");
+			System.out.println("\n" + ex.getMessage());
 		}
 	}
 
 	private void clearTestPlanResult() {
-		// TODO Auto-generated method stub
-		DefaultListModel listModel = new DefaultListModel();
-		listModel.removeAllElements();
-		GlobalVariables.jListExecute.setModel(listModel);
-		// Clear progressBar Values
-		jProgressBarStatus.setMinimum(0);
-		jProgressBarStatus.setMaximum(0);
-		// Clear Status label
-		jLabelStatus.setText("Status: ");
-        jLabelStatus.setSize(jLabelStatus.getPreferredSize());
-		jLabelStatus.paintImmediately(jLabelStatus.getVisibleRect());
-		// Clear TestCaseId label
-		jLabelTestCaseId.setText("");
-		jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
-		jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
-		// Clear TestCaseId label
-		jLabelTestCaseId.setText("TestCaseId: ");
-		jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
-		jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
-		jButtonLogLink.setEnabled(false);
-		jButtonReportLink.setEnabled(false);
-		jButtonSendMessage.setEnabled(false);
-		// Clear startDateTime label
-		jLabelStartDateTime.setText("Start DateTime: ");
-		jLabelStartDateTime.setSize(jLabelStartDateTime.getPreferredSize());
-		jLabelStartDateTime.paintImmediately(jLabelStartDateTime.getVisibleRect());
-		// Clear endDateTime label
-		jLabelEndDateTime.setText("End DateTime: ");
-		jLabelEndDateTime.setSize(jLabelEndDateTime.getPreferredSize());
-		jLabelEndDateTime.paintImmediately(jLabelEndDateTime.getVisibleRect());
-		// Clear totalExecuted TestCaseId
-		jLabelNumberOfTestCasesExecuted.setText("Number of TestCases Executed: ");
-		jLabelNumberOfTestCasesExecuted.setSize(jLabelNumberOfTestCasesExecuted.getPreferredSize());
-		jLabelNumberOfTestCasesExecuted.paintImmediately(jLabelNumberOfTestCasesExecuted.getVisibleRect());
-		// Clear totalTestCasesPassed
-		jLabelNumberOfTestCasesPassed.setText("Number of TestCases Passed: ");
-		jLabelNumberOfTestCasesPassed.setSize(jLabelNumberOfTestCasesPassed.getPreferredSize());
-		jLabelNumberOfTestCasesPassed.paintImmediately(jLabelNumberOfTestCasesPassed.getVisibleRect());
-		// Clear totalTestCasesFailed
-		jLabelNumberOfTestCasesFailed.setText("Number of TestCases Failed: ");
-		jLabelNumberOfTestCasesFailed.setSize(jLabelNumberOfTestCasesFailed.getPreferredSize());
-		jLabelNumberOfTestCasesFailed.paintImmediately(jLabelNumberOfTestCasesFailed.getVisibleRect());
-		// Clear progressBar String
-		jProgressBarStatus.setString("");
-		jProgressBarStatus.setStringPainted(true);
-		Rectangle progressRect = jProgressBarStatus.getBounds();
-		progressRect.x = 0;
-		progressRect.y = 0;
-		jProgressBarStatus.paintImmediately(progressRect);
+		try {
+			DefaultListModel listModel = new DefaultListModel();
+			listModel.removeAllElements();
+			GlobalVariables.jListExecute.setModel(listModel);
+			// Clear progressBar Values
+			jProgressBarStatus.setMinimum(0);
+			jProgressBarStatus.setMaximum(0);
+			// Clear Status label
+			jLabelStatus.setText("Status: ");
+			jLabelStatus.setSize(jLabelStatus.getPreferredSize());
+			jLabelStatus.paintImmediately(jLabelStatus.getVisibleRect());
+			// Clear TestCaseId label
+			jLabelTestCaseId.setText("");
+			jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
+			jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
+			// Clear TestCaseId label
+			jLabelTestCaseId.setText("TestCaseId: ");
+			jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
+			jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
+			jButtonLogLink.setEnabled(false);
+			jButtonReportLink.setEnabled(false);
+			jButtonSendMessage.setEnabled(false);
+			// Clear startDateTime label
+			jLabelStartDateTime.setText("Start DateTime: ");
+			jLabelStartDateTime.setSize(jLabelStartDateTime.getPreferredSize());
+			jLabelStartDateTime.paintImmediately(jLabelStartDateTime.getVisibleRect());
+			// Clear endDateTime label
+			jLabelEndDateTime.setText("End DateTime: ");
+			jLabelEndDateTime.setSize(jLabelEndDateTime.getPreferredSize());
+			jLabelEndDateTime.paintImmediately(jLabelEndDateTime.getVisibleRect());
+			// Clear totalExecuted TestCaseId
+			jLabelNumberOfTestCasesExecuted.setText("Number of TestCases Executed: ");
+			jLabelNumberOfTestCasesExecuted.setSize(jLabelNumberOfTestCasesExecuted.getPreferredSize());
+			jLabelNumberOfTestCasesExecuted.paintImmediately(jLabelNumberOfTestCasesExecuted.getVisibleRect());
+			// Clear totalTestCasesPassed
+			jLabelNumberOfTestCasesPassed.setText("Number of TestCases Passed: ");
+			jLabelNumberOfTestCasesPassed.setSize(jLabelNumberOfTestCasesPassed.getPreferredSize());
+			jLabelNumberOfTestCasesPassed.paintImmediately(jLabelNumberOfTestCasesPassed.getVisibleRect());
+			// Clear totalTestCasesFailed
+			jLabelNumberOfTestCasesFailed.setText("Number of TestCases Failed: ");
+			jLabelNumberOfTestCasesFailed.setSize(jLabelNumberOfTestCasesFailed.getPreferredSize());
+			jLabelNumberOfTestCasesFailed.paintImmediately(jLabelNumberOfTestCasesFailed.getVisibleRect());
+			// Clear progressBar String
+			jProgressBarStatus.setString("");
+			jProgressBarStatus.setStringPainted(true);
+			Rectangle progressRect = jProgressBarStatus.getBounds();
+			progressRect.x = 0;
+			progressRect.y = 0;
+			jProgressBarStatus.paintImmediately(progressRect);
+		}
+		catch (Exception e) {
+			System.out.println("\nError Occured in ClearTestPlanResult Function.");
+			System.out.println("\n" + e.getMessage());
+		}
 	}
-
+	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getSource() == jCheckBoxView) {
-			if (e.getStateChange() == 1)
-				jListView.setSelectionInterval(0, jListView.getModel().getSize() - 1);
-			else
-				jListView.clearSelection();
+		try {
+			if (e.getSource() == jCheckBoxView) {
+				if (e.getStateChange() == 1)
+					jListView.setSelectionInterval(0, jListView.getModel().getSize() - 1);
+				else
+					jListView.clearSelection();
+			}
+			else if (e.getSource() == jCheckBoxPlan) {
+				if (e.getStateChange() == 1)
+					jListPlan.setSelectionInterval(0, jListPlan.getModel().getSize() - 1);
+				else
+					jListPlan.clearSelection();
+			}
+			else if (e.getSource() == jCheckBoxCommand) {
+				if (e.getStateChange() == 1)
+					jListCommand.setSelectionInterval(0, jListCommand.getModel().getSize() - 1);
+				else
+					jListCommand.clearSelection();
+			}
 		}
-		else if (e.getSource() == jCheckBoxPlan) {
-			if (e.getStateChange() == 1)
-				jListPlan.setSelectionInterval(0, jListPlan.getModel().getSize() - 1);
-			else
-				jListPlan.clearSelection();
-		}
-		else if (e.getSource() == jCheckBoxCommand) {
-			if (e.getStateChange() == 1)
-				jListCommand.setSelectionInterval(0, jListCommand.getModel().getSize() - 1);
-			else
-				jListCommand.clearSelection();
+		catch(Exception ex) {
+			System.out.println("\nError Occured in ItemStateChanged Function.");
+			System.out.println("\n" + ex.getMessage());
 		}
 	}
 
