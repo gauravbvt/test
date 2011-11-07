@@ -122,7 +122,7 @@ public class TFP005_CreateFlow
 			    }					
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),"Break up flow");
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
@@ -161,7 +161,6 @@ public class TFP005_CreateFlow
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
     	} 
     	catch (Exception e) {
-    		e.printStackTrace();
     		if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
     			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
     					e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
