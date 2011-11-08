@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
-
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -28,12 +27,10 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
 import org.dyno.visual.swing.layouts.Constraints;
 import org.dyno.visual.swing.layouts.GroupLayout;
 import org.dyno.visual.swing.layouts.Leading;
 import org.dyno.visual.swing.layouts.Trailing;
-
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.ReportFunctions;
@@ -55,7 +52,6 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 	private JLabel jLabel2;
 	private JList jListCommand;
 	private JScrollPane jScrollPane2;
-	private JList jListExecute;
 	private JScrollPane jScrollPane3;
 	private JButton jButtonExecute;
 	private JProgressBar jProgressBarStatus;
@@ -81,7 +77,13 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 	private JButton jButtonSendMessage;
 	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel";
 	public Home() {
+		try {
 		initComponents();
+		}
+		catch (Exception e) {
+			System.out.println("\nIn InitComponents Function.");
+			System.out.println("\n" + e.getMessage());
+		}
 	}
 
 	private void initComponents() {
@@ -319,12 +321,12 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 	}
 
 	private JList getJList3() {
-		if (jListExecute == null) {
-			jListExecute = new JList();
+		if (GlobalVariables.jListExecute == null) {
+			GlobalVariables.jListExecute = new JList();
 			DefaultListModel listModel = new DefaultListModel();
-			jListExecute.setModel(listModel);
+			GlobalVariables.jListExecute.setModel(listModel);
 		}
-		return jListExecute;
+		return GlobalVariables.jListExecute;
 	}
 
 	private JScrollPane getJScrollPane2() {
@@ -348,7 +350,8 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jListCommand;
 		}
 		catch (Exception e) {
-			
+			System.out.println("\nError Occured in getJList2 Function.");
+			System.out.println("\n" + e.getMessage());
 		}
 		return jListCommand;
 	}
@@ -385,7 +388,8 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jListPlan;
 		}
 		catch (Exception e) {
-			
+			System.out.println("\nError Occured in getJList1 Function.");
+			System.out.println("\n" + e.getMessage());
 		}
 		return jListPlan;
 	}
@@ -443,7 +447,8 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jListView;
 		}
 		catch (Exception e) {
-			
+			System.out.println("\nError Occured in getJList0 Function.");
+			System.out.println("\n" + e.getMessage());
 		}
 		return jListView;
 	}
@@ -494,7 +499,9 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 					jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
 					//Execute current TestCaseId
 					cls = Class.forName("com.mindalliance.testscripts." + testCaseId);
+					System.out.println("\n");
 					cls.newInstance();
+					System.out.println("\n");
 					//Update progressBar
 					cnt = cnt + 1;
 					updateProgressBar(cnt);
@@ -546,18 +553,18 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			jLabelNumberOfTestCasesFailed.paintImmediately(jLabelNumberOfTestCasesFailed.getVisibleRect());
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("\nError Occured in ExecuteTestCases Function.");
+			System.out.println("\n" + e.getMessage());
 		}
-		
 	}
 
 	private static void installLnF() {
 		try {
 			String lnfClassname = PREFERRED_LOOK_AND_FEEL;
 			UIManager.setLookAndFeel(lnfClassname);
-		} catch (Exception e) {
-			System.err.println("Cannot install " + PREFERRED_LOOK_AND_FEEL
-					+ " on this platform:" + e.getMessage());
+		} 
+		catch (Exception e) {
+			System.err.println("Cannot install " + PREFERRED_LOOK_AND_FEEL + " on this platform:" + e.getMessage());
 		}
 	}
 
@@ -570,38 +577,38 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			if ("add".equals(e.getActionCommand())) {// when clicked on '>' button
 				Object[] arrayOfListObject;
 				DefaultListModel listModel = new DefaultListModel();
-				int cnt1=0,cnt2=0,cnt3=0;
+				int cnt=0;
 				arrayOfListObject = jListView.getSelectedValues();
 				for (Object listObject : arrayOfListObject){ 
 					listModel.addElement(listObject);
-					cnt1++;
+					cnt++;
 				}
-				jListExecute.setModel(listModel);
+				GlobalVariables.jListExecute.setModel(listModel);
 				
 				arrayOfListObject = jListPlan.getSelectedValues();
 				for (Object listObject : arrayOfListObject){ 
 					listModel.addElement(listObject);
-					cnt2++;
+					cnt++;
 				}
-				jListExecute.setModel(listModel);
+				GlobalVariables.jListExecute.setModel(listModel);
 				
 				arrayOfListObject = jListCommand.getSelectedValues();
 				for (Object listObject : arrayOfListObject){ 
 					listModel.addElement(listObject);
-					cnt3++;
+					cnt++;
 				}
-				System.out.println("Total Count : " +(cnt1+cnt2+cnt3));
-				jListExecute.setModel(listModel);
+				System.out.println("Total Count : " +cnt);
+				GlobalVariables.jListExecute.setModel(listModel);
 			}
 			else if ("execute".equals(e.getActionCommand())) { // when clicked on 'Execute' button
-				if (jListExecute.getModel().getSize() > 0) {
+				if (GlobalVariables.jListExecute.getModel().getSize() > 0) {
 					jButtonExecute.setEnabled(false);
 					Vector<Object> vc = new Vector<Object>();
 				    //;Object o[] = new Object[200];
 					noOfSelectedTestCases = 0;
-					for (int i = 0; i < jListExecute.getModel().getSize(); i++) {
+					for (int i = 0; i < GlobalVariables.jListExecute.getModel().getSize(); i++) {
 						noOfSelectedTestCases ++;
-						vc.add(jListExecute.getModel().getElementAt(i));
+						vc.add(GlobalVariables.jListExecute.getModel().getElementAt(i));
 					}
 					executeTestCases(vc);
 					jButtonExecute.setEnabled(true);
@@ -629,83 +636,94 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 				System.exit(0);
 			}
 			
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (IOException ex) {
+			System.out.println("\nError Occured in ActionPerformed Function.");
+			System.out.println("\n" + ex.getMessage());
 		}
 	}
 
 	private void clearTestPlanResult() {
-		// TODO Auto-generated method stub
-		DefaultListModel listModel = new DefaultListModel();
-		listModel.removeAllElements();
-		jListExecute.setModel(listModel);
-		// Clear progressBar Values
-		jProgressBarStatus.setMinimum(0);
-		jProgressBarStatus.setMaximum(0);
-		// Clear Status label
-		jLabelStatus.setText("Status: ");
-        jLabelStatus.setSize(jLabelStatus.getPreferredSize());
-		jLabelStatus.paintImmediately(jLabelStatus.getVisibleRect());
-		// Clear TestCaseId label
-		jLabelTestCaseId.setText("");
-		jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
-		jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
-		// Clear TestCaseId label
-		jLabelTestCaseId.setText("TestCaseId: ");
-		jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
-		jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
-		jButtonLogLink.setEnabled(false);
-		jButtonReportLink.setEnabled(false);
-		// Clear startDateTime label
-		jLabelStartDateTime.setText("Start DateTime: ");
-		jLabelStartDateTime.setSize(jLabelStartDateTime.getPreferredSize());
-		jLabelStartDateTime.paintImmediately(jLabelStartDateTime.getVisibleRect());
-		// Clear endDateTime label
-		jLabelEndDateTime.setText("End DateTime: ");
-		jLabelEndDateTime.setSize(jLabelEndDateTime.getPreferredSize());
-		jLabelEndDateTime.paintImmediately(jLabelEndDateTime.getVisibleRect());
-		// Clear totalExecuted TestCaseId
-		jLabelNumberOfTestCasesExecuted.setText("Number of TestCases Executed: ");
-		jLabelNumberOfTestCasesExecuted.setSize(jLabelNumberOfTestCasesExecuted.getPreferredSize());
-		jLabelNumberOfTestCasesExecuted.paintImmediately(jLabelNumberOfTestCasesExecuted.getVisibleRect());
-		// Clear totalTestCasesPassed
-		jLabelNumberOfTestCasesPassed.setText("Number of TestCases Passed: ");
-		jLabelNumberOfTestCasesPassed.setSize(jLabelNumberOfTestCasesPassed.getPreferredSize());
-		jLabelNumberOfTestCasesPassed.paintImmediately(jLabelNumberOfTestCasesPassed.getVisibleRect());
-		// Clear totalTestCasesFailed
-		jLabelNumberOfTestCasesFailed.setText("Number of TestCases Failed: ");
-		jLabelNumberOfTestCasesFailed.setSize(jLabelNumberOfTestCasesFailed.getPreferredSize());
-		jLabelNumberOfTestCasesFailed.paintImmediately(jLabelNumberOfTestCasesFailed.getVisibleRect());
-		// Clear progressBar String
-		jProgressBarStatus.setString("");
-		jProgressBarStatus.setStringPainted(true);
-		Rectangle progressRect = jProgressBarStatus.getBounds();
-		progressRect.x = 0;
-		progressRect.y = 0;
-		jProgressBarStatus.paintImmediately(progressRect);
+		try {
+			DefaultListModel listModel = new DefaultListModel();
+			listModel.removeAllElements();
+			GlobalVariables.jListExecute.setModel(listModel);
+			// Clear progressBar Values
+			jProgressBarStatus.setMinimum(0);
+			jProgressBarStatus.setMaximum(0);
+			// Clear Status label
+			jLabelStatus.setText("Status: ");
+			jLabelStatus.setSize(jLabelStatus.getPreferredSize());
+			jLabelStatus.paintImmediately(jLabelStatus.getVisibleRect());
+			// Clear TestCaseId label
+			jLabelTestCaseId.setText("");
+			jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
+			jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
+			// Clear TestCaseId label
+			jLabelTestCaseId.setText("TestCaseId: ");
+			jLabelTestCaseId.setSize(jLabelTestCaseId.getPreferredSize());
+			jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
+			jButtonLogLink.setEnabled(false);
+			jButtonReportLink.setEnabled(false);
+			jButtonSendMessage.setEnabled(false);
+			// Clear startDateTime label
+			jLabelStartDateTime.setText("Start DateTime: ");
+			jLabelStartDateTime.setSize(jLabelStartDateTime.getPreferredSize());
+			jLabelStartDateTime.paintImmediately(jLabelStartDateTime.getVisibleRect());
+			// Clear endDateTime label
+			jLabelEndDateTime.setText("End DateTime: ");
+			jLabelEndDateTime.setSize(jLabelEndDateTime.getPreferredSize());
+			jLabelEndDateTime.paintImmediately(jLabelEndDateTime.getVisibleRect());
+			// Clear totalExecuted TestCaseId
+			jLabelNumberOfTestCasesExecuted.setText("Number of TestCases Executed: ");
+			jLabelNumberOfTestCasesExecuted.setSize(jLabelNumberOfTestCasesExecuted.getPreferredSize());
+			jLabelNumberOfTestCasesExecuted.paintImmediately(jLabelNumberOfTestCasesExecuted.getVisibleRect());
+			// Clear totalTestCasesPassed
+			jLabelNumberOfTestCasesPassed.setText("Number of TestCases Passed: ");
+			jLabelNumberOfTestCasesPassed.setSize(jLabelNumberOfTestCasesPassed.getPreferredSize());
+			jLabelNumberOfTestCasesPassed.paintImmediately(jLabelNumberOfTestCasesPassed.getVisibleRect());
+			// Clear totalTestCasesFailed
+			jLabelNumberOfTestCasesFailed.setText("Number of TestCases Failed: ");
+			jLabelNumberOfTestCasesFailed.setSize(jLabelNumberOfTestCasesFailed.getPreferredSize());
+			jLabelNumberOfTestCasesFailed.paintImmediately(jLabelNumberOfTestCasesFailed.getVisibleRect());
+			// Clear progressBar String
+			jProgressBarStatus.setString("");
+			jProgressBarStatus.setStringPainted(true);
+			Rectangle progressRect = jProgressBarStatus.getBounds();
+			progressRect.x = 0;
+			progressRect.y = 0;
+			jProgressBarStatus.paintImmediately(progressRect);
+		}
+		catch (Exception e) {
+			System.out.println("\nError Occured in ClearTestPlanResult Function.");
+			System.out.println("\n" + e.getMessage());
+		}
 	}
-
+	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getSource() == jCheckBoxView) {
-			if (e.getStateChange() == 1)
-				jListView.setSelectionInterval(0, jListView.getModel().getSize() - 1);
-			else
-				jListView.clearSelection();
+		try {
+			if (e.getSource() == jCheckBoxView) {
+				if (e.getStateChange() == 1)
+					jListView.setSelectionInterval(0, jListView.getModel().getSize() - 1);
+				else
+					jListView.clearSelection();
+			}
+			else if (e.getSource() == jCheckBoxPlan) {
+				if (e.getStateChange() == 1)
+					jListPlan.setSelectionInterval(0, jListPlan.getModel().getSize() - 1);
+				else
+					jListPlan.clearSelection();
+			}
+			else if (e.getSource() == jCheckBoxCommand) {
+				if (e.getStateChange() == 1)
+					jListCommand.setSelectionInterval(0, jListCommand.getModel().getSize() - 1);
+				else
+					jListCommand.clearSelection();
+			}
 		}
-		else if (e.getSource() == jCheckBoxPlan) {
-			if (e.getStateChange() == 1)
-				jListPlan.setSelectionInterval(0, jListPlan.getModel().getSize() - 1);
-			else
-				jListPlan.clearSelection();
-		}
-		else if (e.getSource() == jCheckBoxCommand) {
-			if (e.getStateChange() == 1)
-				jListCommand.setSelectionInterval(0, jListCommand.getModel().getSize() - 1);
-			else
-				jListCommand.clearSelection();
+		catch(Exception ex) {
+			System.out.println("\nError Occured in ItemStateChanged Function.");
+			System.out.println("\n" + ex.getMessage());
 		}
 	}
 
