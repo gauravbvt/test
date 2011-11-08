@@ -651,7 +651,6 @@ public class GenericFunctionLibrary {
 			GlobalVariables.viewElements.put("taskStart",oXmlEleViewElements.getElementsByTagName("taskStart").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("taskEnd",oXmlEleViewElements.getElementsByTagName("taskEnd").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("attachmentCopied",oXmlEleViewElements.getElementsByTagName("attachmentCopied").item(0).getChildNodes().item(0).getNodeValue());
-			
 		} 
 		catch(Exception e) {
 			System.out.println("\nError Occured in LoadObjectRepository Function");
@@ -669,7 +668,7 @@ public class GenericFunctionLibrary {
 		GlobalVariables.sStartDateTime = LogFunctions.getDateTime();
 		createResultFiles();
 		try {
-			//csv file containing data
+			// CSV file containing data
 			GlobalVariables.sTestDataDirectoryPath= GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestData\\";
 			File testDataFile=new File(GlobalVariables.sTestDataDirectoryPath+"TestData.csv");
 			BufferedReader testData = new BufferedReader( new FileReader(testDataFile));
@@ -688,81 +687,6 @@ public class GenericFunctionLibrary {
 			System.out.println("Error Occured in InitializeTestData Function");
 			System.out.println(e.getMessage());
 		}
-		/*GlobalStatic.oDriver = new FirefoxDriver();
-		// URL
-		GlobalStatic.oDriver.get(GlobalStatic.sLoginURL);
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(5000);
-		GlobalStatic.oDriver.manage().deleteAllCookies();
-		// Usernames
-		GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("j_username"));
-		GlobalStatic.oElement.sendKeys(GlobalStatic.sUsername);
-		// Password
-		GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("j_password"));
-		GlobalStatic.oElement.sendKeys(GlobalStatic.sPassword);
-		GlobalStatic.oDriver.findElement(By.name("_spring_security_remember_me")).click();
-		// Sign in
-		GlobalStatic.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/div[6]/input")).click();
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(10000);
-		GlobalStatic.oDriver.findElement(By.linkText("Channels administration")).click();
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(3000);
-		// newPlanUri
-		GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("newPlanUri"));
-		GlobalStatic.oElement.sendKeys("Automation Test Plan");
-		// newPlanClient
-		GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("newPlanClient"));
-		GlobalStatic.oElement.sendKeys("Afourtech");
-		//Submit
-		GlobalStatic.oDriver.findElement(By.name("Submit")).submit();
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(10000);
-		// Go back
-		GlobalStatic.oDriver.navigate().back();
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(3000);
-		GlobalStatic.oDriver.navigate().back();
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(3000);
-		GlobalStatic.oDriver.findElement(By.linkText("Information sharing model")).click();
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(3000);
-		// Select Plan
-		GlobalStatic.oDriver.findElement(By.name("switch-plan:plan-sel")).click();
-		GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("switch-plan:plan-sel"));
-		GlobalStatic.oElement.sendKeys("New Plan v.1 (dev)");
-		GlobalStatic.oElement.sendKeys(Keys.ENTER);
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(5000);
-		// Click About plan under Show pop up menu
-		ApplicationFunctionLibrary.MouseOverAndClick("//span[@class='menubar']/span[2]/span/span", "About plan");
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(3000);
-		// Enter Plan Name
-		GlobalStatic.oDriver.findElement(By.name("plan:mo:aspect:name")).clear();
-		GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("plan:mo:aspect:name"));
-		GlobalStatic.oElement.sendKeys("Automation Test Plan");
-		// Click done button
-		GlobalStatic.oDriver.findElement(By.className("close")).click();
-		// Thread sleep
-		Thread.currentThread();
-		Thread.sleep(2000);
-		// Update Default Segment
-		ApplicationFunctionLibrary.addSegment("Segment 1", "Default");
-		// Add New Segment
-		ApplicationFunctionLibrary.addSegment("Segment 2", "New");
-		// Call logout
-		ApplicationFunctionLibrary.logout();*/
 	}
 
 	/**
@@ -772,48 +696,14 @@ public class GenericFunctionLibrary {
 	public static void tearDownTestData() {
 		try { 
 			System.out.println("Performing cleanup TestData...");
-			/*GlobalStatic.oDriver = new FirefoxDriver();
-			// URL
-			GlobalStatic.oDriver.get(GlobalStatic.sLoginURL);
-			// Username
-			GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("j_username"));
-			GlobalStatic.oElement.sendKeys(GlobalStatic.sUsername);
-			// Password
-			GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("j_password"));
-			GlobalStatic.oElement.sendKeys(GlobalStatic.sPassword);
-			// Sign in
-			GlobalStatic.oDriver.findElement(By.xpath("/html/body/div/div[2]/form/div[6]/input")).click();
-			// Thread sleep
-			Thread.currentThread();
-			Thread.sleep(3000);
-			GlobalStatic.oDriver.findElement(By.linkText("Channels administration")).click();
-			// Thread sleep
-			Thread.currentThread();
-			Thread.sleep(3000);
-			// Select Plan
-			GlobalStatic.oDriver.findElement(By.name("plan-sel")).click();
-			GlobalStatic.oElement = GlobalStatic.oDriver.findElement(By.name("plan-sel"));
-			GlobalStatic.oElement.sendKeys("Automation Test Plan");
-			GlobalStatic.oElement.sendKeys(Keys.ENTER);
-			// Delete Plan
-			GlobalStatic.oDriver.findElement(By.linkText("Delete plan")).click();
-			Alert alert = GlobalStatic.oDriver.switchTo().alert();
-			Thread.currentThread();
-			Thread.sleep(2000);
-			// And acknowledge the alert (equivalent to clicking "OK")
-			alert.accept();
-			// Thread sleep
-			Thread.currentThread();
-			Thread.sleep(3000);
-			// Logout
-			GlobalStatic.oDriver.findElement(By.partialLinkText("Logout ")).click();
-			// Webdriver close
-			GlobalStatic.oDriver.close();*/
 			GlobalVariables.sEndDateTime = LogFunctions.getDateTime();
+			
+			// Garbage Collection
 			Runtime r = Runtime.getRuntime();
 			r.gc();
 			System.runFinalization();
 			System.gc();
+			
 			System.out.println("TestData cleanup completed");
 		}
 		catch(Exception e) {
