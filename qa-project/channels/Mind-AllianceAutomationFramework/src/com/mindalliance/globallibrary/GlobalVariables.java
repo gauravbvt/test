@@ -29,6 +29,15 @@ public class GlobalVariables {
 	public static File fCurrentDir = new File(".");
 	public static int iStepNo = 0;
 	public static int iIndex = 0;
+	public static int noOfViewTestCasesExecuted=0;
+	public static int noOfPlanTestCasesExecuted=0;
+	public static int noOfCommandTestCasesExecuted=0;
+	public static int noOfViewTestCasesPassed=0;
+	public static int noOfPlanTestCasesPassed=0;
+	public static int noOfCommandTestCasesPassed=0;
+	public static int noOfViewTestCasesFailed=0;
+	public static int noOfPlanTestCasesFailed=0;
+	public static int noOfCommandTestCasesFailed=0;
 	public static String sTestCaseId = null;
 	public static String sObjectRepository=null;
 	public static String sHomePage=null;

@@ -69,19 +69,43 @@ public class ReportFunctions {
 	
 	public static void updateTestCaseSheetResult() {
 		try {
+			
 			File file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
-			Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);;
+			Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
+			
+			// Update View, Plan & Command Sheets
 			for (int i = 0; i < GlobalVariables.jListExecute.getModel().getSize() ; i++)	{
 				stestName = GlobalVariables.jListExecute.getModel().getElementAt(i).toString();
-				if(stestName.contains("MAV")) 
-					sheet = sheet.getSpreadSheet().getSheet(1);
-				else if(stestName.contains("MAP"))
-					sheet = sheet.getSpreadSheet().getSheet(2);
-				else if(stestName.contains("MAC"))
-					sheet = sheet.getSpreadSheet().getSheet(3);
-				
+
 				// Call readCsvFile
 				String sResult = readCsvFile(stestName);
+				
+				if(stestName.contains("MAV")) { 
+					sheet = sheet.getSpreadSheet().getSheet(1);
+					// No Of Test Cases Passed & Failed of Views
+					if(sResult.equals(GlobalVariables.sPassed))
+						GlobalVariables.noOfViewTestCasesPassed++;
+					else
+						GlobalVariables.noOfViewTestCasesFailed++;
+
+				}
+				else if(stestName.contains("MAP")) {
+					sheet = sheet.getSpreadSheet().getSheet(2);
+					// No Of Test Cases Passed & Failed of Plans				
+					if(sResult.equals(GlobalVariables.sPassed))
+						GlobalVariables.noOfPlanTestCasesPassed++;
+					else
+						GlobalVariables.noOfPlanTestCasesFailed++;
+				}
+				else if(stestName.contains("MAC")) {
+					sheet = sheet.getSpreadSheet().getSheet(3);
+					// No Of Test Cases Passed & Failed of Commands
+					if(sResult.equals(GlobalVariables.sPassed))
+						GlobalVariables.noOfCommandTestCasesPassed++;
+					else
+						GlobalVariables.noOfCommandTestCasesFailed++;
+				}
+				
 				for(int j=1;j<sheet.getRowCount();j++) {
 					if(stestName.equals(sheet.getValueAt(0,j).toString())) {
 						if (sResult == GlobalVariables.sFailed) {
@@ -95,6 +119,22 @@ public class ReportFunctions {
 					}
 				}
 			}
+			
+			// Update Summary Sheet
+			sheet=sheet.getSpreadSheet().getSheet(0);
+			// No. Of Test Cases Executed of Views, Plans & Commands
+			sheet.getCellAt("G8").setValue(GlobalVariables.noOfViewTestCasesExecuted);
+			sheet.getCellAt("G9").setValue(GlobalVariables.noOfPlanTestCasesExecuted);
+			sheet.getCellAt("G10").setValue(GlobalVariables.noOfCommandTestCasesExecuted);
+			// No. Of Test Cases Passed of Views, Plans & Commands			
+			sheet.getCellAt("H8").setValue(GlobalVariables.noOfViewTestCasesPassed);
+			sheet.getCellAt("H9").setValue(GlobalVariables.noOfPlanTestCasesPassed);
+			sheet.getCellAt("H10").setValue(GlobalVariables.noOfCommandTestCasesPassed);
+			// No. Of Test Cases Failed of Views, Plans & Commands
+			sheet.getCellAt("I8").setValue(GlobalVariables.noOfViewTestCasesFailed);
+			sheet.getCellAt("I9").setValue(GlobalVariables.noOfPlanTestCasesFailed);
+			sheet.getCellAt("I10").setValue(GlobalVariables.noOfCommandTestCasesFailed);
+
 			File outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet.ods");
 			sheet.getSpreadSheet().saveAs(outputFile);
 		}
