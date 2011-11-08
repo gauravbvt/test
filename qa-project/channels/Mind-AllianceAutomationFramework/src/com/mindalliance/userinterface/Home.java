@@ -574,28 +574,29 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			if ("add".equals(e.getActionCommand())) {// when clicked on '>' button
 				Object[] arrayOfListObject;
 				DefaultListModel listModel = new DefaultListModel();
-				int cnt=0;
 				arrayOfListObject = jListView.getSelectedValues();
 				for (Object listObject : arrayOfListObject){ 
 					listModel.addElement(listObject);
-					cnt++;
+					GlobalVariables.noOfViewTestCasesExecuted++;
 				}
 				GlobalVariables.jListExecute.setModel(listModel);
 				
 				arrayOfListObject = jListPlan.getSelectedValues();
 				for (Object listObject : arrayOfListObject){ 
 					listModel.addElement(listObject);
-					cnt++;
+					GlobalVariables.noOfPlanTestCasesExecuted++;
 				}
 				GlobalVariables.jListExecute.setModel(listModel);
 				
 				arrayOfListObject = jListCommand.getSelectedValues();
 				for (Object listObject : arrayOfListObject){ 
 					listModel.addElement(listObject);
-					cnt++;
+					GlobalVariables.noOfCommandTestCasesExecuted++;
 				}
-				System.out.println("Total Count : " +cnt);
 				GlobalVariables.jListExecute.setModel(listModel);
+				
+				System.out.println("Total Count : " + (GlobalVariables.noOfViewTestCasesExecuted +
+						GlobalVariables.noOfPlanTestCasesExecuted + GlobalVariables.noOfCommandTestCasesExecuted));
 			}
 			else if ("execute".equals(e.getActionCommand())) { // when clicked on 'Execute' button
 				if (GlobalVariables.jListExecute.getModel().getSize() > 0) {
