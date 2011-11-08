@@ -88,7 +88,7 @@ public class ApplicationFunctionLibrary {
 			return Boolean.TRUE;
 		} catch (Exception e) {
 			System.out.println("\nError Occured in Login Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 			// Returns FALSE
 			return Boolean.FALSE;
 		}
@@ -113,7 +113,7 @@ public class ApplicationFunctionLibrary {
 		} 
 		catch (Exception e) {
 			System.out.println("\nError Occured in Logout Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 			// Returns FALSE
 			if(GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathStackTrace"))).click();
@@ -151,7 +151,7 @@ public class ApplicationFunctionLibrary {
 		}
 		catch (Exception e) {
 			System.out.println("\nError Occured in MouseOverAndClick Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -186,7 +186,7 @@ public class ApplicationFunctionLibrary {
 		}
 		catch (Exception e) {
 			System.out.println("\nError Occured in AddSegment Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 }

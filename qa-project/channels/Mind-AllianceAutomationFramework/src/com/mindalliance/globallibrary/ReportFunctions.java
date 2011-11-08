@@ -63,7 +63,7 @@ public class ReportFunctions {
 		}
 		catch(Exception e) {
 			System.out.println("\nError in updateTestCaseExecutionResult() function.\n");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -260,7 +260,7 @@ public class ReportFunctions {
 		}
 		catch(Exception e) {
 			System.out.println("\nError Occured in readTestCaseId() function. \n");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -293,7 +293,7 @@ public class ReportFunctions {
 		}
 		catch(Exception e) {
 			System.out.println("\nError in readCsvFile() Function.\n");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 			return "Error";
 		}
 	}
@@ -331,7 +331,7 @@ public class ReportFunctions {
 		}
 		catch(Exception e) {
 			System.out.println("\nError Occured in generateAutomationReport() function.\n");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -377,7 +377,7 @@ public class ReportFunctions {
 		}
 		catch(Exception e) {
 			System.out.println("\nError Occured in generateFinalTestPassReport() function. \n");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -445,7 +445,7 @@ public class ReportFunctions {
 		}
 		catch(Exception e) {
 			System.out.println("\nError Occured in generateTestCaseSummary() function. \n");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -633,7 +633,7 @@ public class ReportFunctions {
 		}
 		catch(Exception e){
 			System.out.println("\nError Occured in generateFailureReport() function.\n");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 		}		
 	
@@ -719,7 +719,7 @@ public class ReportFunctions {
 		}
 		catch(Exception e) {
 			System.out.println("\nError Occured in generateTestCaseIndex() function. \n");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -859,7 +859,7 @@ public class ReportFunctions {
 	}
 	catch(Exception e) {
 		System.out.println("\nError in generateAutomationReportInHtml() function. \n");
-		System.out.println("\n" + e.getMessage());
+		e.printStackTrace();
 	}
 	}
 
@@ -884,7 +884,7 @@ public class ReportFunctions {
 		}
 		catch(Exception e) {
 			System.out.println("\nError Occured in readTestCaseIdForFunctional() function.\n");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -917,7 +917,7 @@ public class ReportFunctions {
 		}
 		catch(Exception e) {
 			System.out.println("\nError Occured in generateAutomationReportForFunctionalTestCases() function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 }

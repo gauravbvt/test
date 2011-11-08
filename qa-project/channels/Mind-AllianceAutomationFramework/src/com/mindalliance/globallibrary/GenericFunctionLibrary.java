@@ -58,7 +58,7 @@ public class GenericFunctionLibrary {
 		}
 		catch(Exception e) {
 			System.out.println("\nError occured in CreateResultFiles Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	/**
@@ -654,7 +654,7 @@ public class GenericFunctionLibrary {
 		} 
 		catch(Exception e) {
 			System.out.println("\nError Occured in LoadObjectRepository Function");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -685,7 +685,7 @@ public class GenericFunctionLibrary {
 		}
 		catch(Exception e){
 			System.out.println("Error Occured in InitializeTestData Function");
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -708,7 +708,7 @@ public class GenericFunctionLibrary {
 		}
 		catch(Exception e) {
 			System.out.println("Error Occured in TearDownTestData Function.");
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 }

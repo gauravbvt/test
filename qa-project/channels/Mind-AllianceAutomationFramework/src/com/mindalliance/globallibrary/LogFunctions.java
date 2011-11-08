@@ -21,7 +21,7 @@ public class LogFunctions {
 		}
 		catch(Exception e) {
 			System.out.println("\nError Occured in GetDateTime Function.");
-			System.out.println("\n" +e.getMessage());
+			e.printStackTrace();
 			return null;
 		}
 	} 
@@ -41,7 +41,7 @@ public class LogFunctions {
 		}
 		catch (IOException e) {
 			System.out.println("\nError Occured in writeLogs() function. \n");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -70,7 +70,7 @@ public class LogFunctions {
 		}
 		catch (IOException e) {
 			System.out.println("\nError Occured in writeResults() function.\n");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -89,7 +89,7 @@ public class LogFunctions {
 		}
 		catch (IOException e) {
 			System.out.println("\nError Occured in writeErrorLogs() function.\n");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}	
 }
