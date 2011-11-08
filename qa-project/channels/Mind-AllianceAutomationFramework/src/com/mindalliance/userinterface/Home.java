@@ -84,7 +84,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		catch (Exception e) {
 			System.out.println("\nIn InitComponents Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -423,7 +423,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		catch (Exception e) {
 			System.out.println("\nError Occured in getJList0 Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 		return jListView;
 	}
@@ -440,7 +440,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		catch (Exception e) {
 			System.out.println("\nError Occured in getJList1 Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 		return jListPlan;
 	}
@@ -458,7 +458,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		catch (Exception e) {
 			System.out.println("\nError Occured in getJList2 Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 		return jListCommand;
 	}
@@ -553,7 +553,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		catch (Exception e) {
 			System.out.println("\nError Occured in ExecuteTestCases Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -638,7 +638,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		} 
 		catch (IOException ex) {
 			System.out.println("\nError Occured in ActionPerformed Function.");
-			System.out.println("\n" + ex.getMessage());
+			ex.printStackTrace();
 		}
 	}
 
@@ -696,7 +696,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		catch (Exception e) {
 			System.out.println("\nError Occured in ClearTestPlanResult Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -724,7 +724,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		catch(Exception ex) {
 			System.out.println("\nError Occured in ItemStateChanged Function.");
-			System.out.println("\n" + ex.getMessage());
+			ex.printStackTrace();
 		}
 	}
 

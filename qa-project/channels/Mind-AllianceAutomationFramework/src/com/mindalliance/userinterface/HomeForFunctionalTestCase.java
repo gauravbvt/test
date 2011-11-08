@@ -95,7 +95,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		catch(Exception e) {
 			System.out.println("\nError Occured in InitComponents Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -538,7 +538,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		catch (Exception e) {
 			System.out.println("\nError Occured in getJList0 Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 		return jListFunctional;
 	}
@@ -658,7 +658,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		catch (Exception e) {
 			System.out.println("\nError Occured in ExecuteTestCases Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -724,7 +724,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		} 
 		catch (IOException ex) {
 			System.out.println("\nError Occured in ActionPerformed Function.");
-			System.out.println("\n" + ex.getMessage());
+			ex.printStackTrace();
 		}
 	}
 
@@ -782,7 +782,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		catch(Exception e) {
 			System.out.println("\nError Occured in ClearTestPlanResult Function.");
-			System.out.println("\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -950,7 +950,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		catch(Exception ex) {
 			System.out.println("Error Occured in ItemStateChanged Function.");
-			System.out.println("\n" + ex.getMessage());
+			ex.printStackTrace();
 		}
 	}
 
