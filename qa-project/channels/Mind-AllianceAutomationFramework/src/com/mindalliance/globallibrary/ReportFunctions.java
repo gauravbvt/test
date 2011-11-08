@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -36,47 +35,7 @@ public class ReportFunctions {
 	 * @throws IOException
 	 * @throws XMLStreamException
 	 */
-	public static void updateTestCaseExecutionResultForFunctionalTestCases(Sheet sheet) {
-//		try {
-//			testCasesPassed = 0;
-//			testCasesFailed = 0;
-//			for (int i = 0; i < GlobalVariables.jListExecute.getModel().getSize() ; i++)	{
-//				stestName = GlobalVariables.jListExecute.getModel().getElementAt(i).toString();
-//				System.out.println(GlobalVariables.jListExecute.getModel().getSize()+ "\t" + stestName);
-//				if (stestName != GlobalVariables.sBlank) {
-//				   // Call readCsvFile
-//					String sResult = readCsvFile(stestName);
-//					if (sResult == GlobalVariables.sFailed) {
-//						sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sFailed);
-//					    sheet.getCellAt("K"+(i+2)).setValue(sCsvScriptException);
-//					    sheet.getCellAt("L"+(i+2)).setValue(sCsvErrorReport);
-//					    // Call generateAutomationReportInHtml()
-//					    generateAutomationReportInHtml(stestName);
-//					    testCasesFailed ++;
-//					    arrayOfTestCaseId[index] = stestName;
-//					    arrayOftestCaseResult[index] = GlobalVariables.sFailed;
-//					    arrayOftestCaseSummary[index++] = sheet.getCellAt("B"+(i+2)).getValue().toString();
-//				    }
-//				    else if (sResult == GlobalVariables.sPassed) {
-//					    sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sPassed);
-//					    // Call generateAutomationReportInHtml()
-//					    generateAutomationReportInHtml(stestName);
-//					    testCasesPassed ++;
-//					    arrayOfTestCaseId[index] = stestName;
-//					    arrayOftestCaseResult[index] = GlobalVariables.sPassed;
-//					    arrayOftestCaseSummary[index++] = sheet.getCellAt("B"+(i+2)).getValue().toString();
-//				    }
-//				    else if (sResult == GlobalVariables.sNotRun)
-//					    sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sNotRun);
-//			    }
-//			}
-//		}
-//		catch(Exception e) {
-//			System.out.println("\nError in updateTestCaseExecutionResult() function.\n");
-//			System.out.println("\n" + e.getMessage());
-//		}		
-	}
-	public static void updateTestCaseExecutionResult(Sheet sheet) {
+	public static void updateTestCaseExecutionResult() {
 		try {
 			testCasesPassed = 0;
 			testCasesFailed = 0;
@@ -86,9 +45,6 @@ public class ReportFunctions {
 				   // Call readCsvFile
 					String sResult = readCsvFile(stestName);
 					if (sResult == GlobalVariables.sFailed) {
-//						sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sFailed);
-//					    sheet.getCellAt("K"+(i+2)).setValue(sCsvScriptException);
-//					    sheet.getCellAt("L"+(i+2)).setValue(sCsvErrorReport);
 					    // Call generateAutomationReportInHtml()
 					    generateAutomationReportInHtml(stestName);
 					    testCasesFailed ++;
@@ -96,15 +52,11 @@ public class ReportFunctions {
 					    arrayOftestCaseResult[index++] = GlobalVariables.sFailed;
 				    }
 				    else if (sResult == GlobalVariables.sPassed) {
-//					    sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sPassed);
 					    // Call generateAutomationReportInHtml()
 					    generateAutomationReportInHtml(stestName);
 					    testCasesPassed ++;
 					    arrayOfTestCaseId[index] = stestName;
 					    arrayOftestCaseResult[index++] = GlobalVariables.sPassed;
-				    }
-				    else if (sResult == GlobalVariables.sNotRun) {
-//					    sheet.getCellAt("J"+(i+2)).setValue(GlobalVariables.sNotRun);
 				    }
 			    }
 			}
@@ -114,7 +66,122 @@ public class ReportFunctions {
 			System.out.println("\n" + e.getMessage());
 		}
 	}
+	
+	public static void updateTestCaseSheetResult() {
+		try {
+			File file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
+			Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);;
+			for (int i = 0; i < GlobalVariables.jListExecute.getModel().getSize() ; i++)	{
+				stestName = GlobalVariables.jListExecute.getModel().getElementAt(i).toString();
+				if(stestName.contains("MAV")) 
+					sheet = sheet.getSpreadSheet().getSheet(1);
+				else if(stestName.contains("MAP"))
+					sheet = sheet.getSpreadSheet().getSheet(2);
+				else if(stestName.contains("MAC"))
+					sheet = sheet.getSpreadSheet().getSheet(3);
+				
+				// Call readCsvFile
+				String sResult = readCsvFile(stestName);
+				for(int j=1;j<sheet.getRowCount();j++) {
+					if(stestName.equals(sheet.getValueAt(0,j).toString())) {
+						if (sResult == GlobalVariables.sFailed) {
+							sheet.getCellAt("J"+(j+1)).setValue(GlobalVariables.sFailed);
+							sheet.getCellAt("K"+(j+1)).setValue(sCsvScriptException);
+							sheet.getCellAt("L"+(j+1)).setValue(sCsvErrorReport);					   
+				   		}
+				   		else if (sResult == GlobalVariables.sPassed) {
+				    		sheet.getCellAt("J"+(j+1)).setValue(GlobalVariables.sPassed);
+				   		}
+					}
+				}
+			}
+			File outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet.ods");
+			sheet.getSpreadSheet().saveAs(outputFile);
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in UpdateTestCaseSheetResult Function.");
+			e.printStackTrace();
+		}
+	}
+	
+	public static void updateTestCaseSheetResultForFunctionalTestCases() {
+		try {
+			File file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
+			Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
+			for (int i = 0; i < GlobalVariables.jListExecute.getModel().getSize() ; i++)	{
+				stestName = GlobalVariables.jListExecute.getModel().getElementAt(i).toString();
+				if(stestName.contains("CL")) 
+					sheet = sheet.getSpreadSheet().getSheet(1);
+				else if(stestName.contains("HP"))
+					sheet = sheet.getSpreadSheet().getSheet(2);
+				else if(stestName.contains("CA"))
+					sheet = sheet.getSpreadSheet().getSheet(3);
+				else if(stestName.contains("DC"))
+					sheet = sheet.getSpreadSheet().getSheet(6);
+				else if(stestName.contains("CC"))
+					sheet = sheet.getSpreadSheet().getSheet(7);
+				else if(stestName.contains("CP"))
+					sheet = sheet.getSpreadSheet().getSheet(8);
+				else if(stestName.contains("PS"))
+					sheet = sheet.getSpreadSheet().getSheet(9);
+				else if(stestName.contains("TF"))
+					sheet = sheet.getSpreadSheet().getSheet(10);
+				else if(stestName.contains("TE"))
+					sheet = sheet.getSpreadSheet().getSheet(11);
+				else if(stestName.contains("IF"))
+					sheet = sheet.getSpreadSheet().getSheet(12);
+				else if(stestName.contains("PP"))
+					sheet = sheet.getSpreadSheet().getSheet(13);
+				else if(stestName.contains("PE"))
+					sheet = sheet.getSpreadSheet().getSheet(14);
+				else if(stestName.contains("LF"))
+					sheet = sheet.getSpreadSheet().getSheet(15);
+				else if(stestName.contains("SG"))
+					sheet = sheet.getSpreadSheet().getSheet(16);
+				else if(stestName.contains("IS"))
+					sheet = sheet.getSpreadSheet().getSheet(17);
 
+				// Update Functional Test Case Sheet
+				for(int j=1;j<sheet.getRowCount();j++) {
+					sheet.getCellAt("K"+j).setValue("");
+					sheet.getCellAt("L"+j).setValue("");
+					sheet.getCellAt("M"+j).setValue("");
+					sheet.getCellAt("N"+j).setValue("");
+					sheet.getCellAt("O"+j).setValue("");
+					sheet.getCellAt("P"+j).setValue("");
+					sheet.getCellAt("Q"+j).setValue("");
+					sheet.getCellAt("R"+j).setValue("");
+					sheet.getCellAt("S"+j).setValue("");
+					sheet.getCellAt("T"+j).setValue("");
+				}
+				sheet.getCellAt("K1").setValue("Result");
+				sheet.getCellAt("L1").setValue("ScriptException");
+				sheet.getCellAt("R1").setValue("Error");
+
+				// Call readCsvFile
+				String sResult = readCsvFile(stestName);
+				for(int j=1;j<sheet.getRowCount();j++) {
+					if(stestName.equals(sheet.getValueAt(0,j).toString())) {
+						if (sResult == GlobalVariables.sFailed) {
+							sheet.getCellAt("K"+(j+1)).setValue(GlobalVariables.sFailed);
+							sheet.getCellAt("L"+(j+1)).setValue(sCsvScriptException);
+							sheet.getCellAt("R"+(j+1)).setValue(sCsvErrorReport);					   
+				   		}
+				   		else if (sResult == GlobalVariables.sPassed) {
+				    		sheet.getCellAt("K"+(j+1)).setValue(GlobalVariables.sPassed);
+				   		}
+					}
+				}
+			}
+			File outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\FunctionalTestCase.ods");
+			sheet.getSpreadSheet().saveAs(outputFile);
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in UpdateTestCaseSheetResultForFunctionalTestCases Function.");
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Read TestCaseId for Automation UI (i.e. Home.java)
 	 * @param sheetNumber
@@ -198,55 +265,28 @@ public class ReportFunctions {
 	 */
 	public static void generateAutomationReport() {
 		try {
-			// Initialize the variables
-			index = 0;
-			Arrays.fill(arrayOfTestCaseId, null);
-			// Load the ODF document from the path
-			File file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
+			// Update Test Case Execution Result
+			updateTestCaseExecutionResult();
 			
-			// TestCase sheet: Tree_Navigation_Views
-			Sheet sheet = SpreadSheet.createFromFile(file).getSheet(1);
-			updateTestCaseExecutionResult(sheet);
-//			// Generate Summary Sheet
-//			sheet = sheet.getSpreadSheet().getSheet(0);
-//			sheet.getCellAt("G8").setValue((testCasesPassed + testCasesFailed));
-//			sheet.getCellAt("H8").setValue(testCasesPassed);
-//			sheet.getCellAt("I8").setValue(testCasesFailed);
-			// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-			totalNoOfTestCasesPassed = testCasesPassed;
-			totalNoOfTestCasesFailed = testCasesFailed;
-
-			// TestCase sheet: Plan
-			sheet = SpreadSheet.createFromFile(file).getSheet(2);
-			updateTestCaseExecutionResult(sheet);
-//			// Generate Summary Sheet
-//			sheet = sheet.getSpreadSheet().getSheet(0);
-//			sheet.getCellAt("G9").setValue((testCasesPassed + testCasesFailed));
-//			sheet.getCellAt("H9").setValue(testCasesPassed);
-//			sheet.getCellAt("I9").setValue(testCasesFailed);
-			// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+			// Update Test Case Execution Result
+			updateTestCaseSheetResult();
+			
+			// No. of Test Cases Passed and Failed
 			totalNoOfTestCasesPassed = testCasesPassed;
 			totalNoOfTestCasesFailed = testCasesFailed;
 			
-			// TestCase sheet: Tree_Navigation_Views
-			sheet = SpreadSheet.createFromFile(file).getSheet(3);
-			updateTestCaseExecutionResult(sheet);
-//			// Generate Summary Sheet
-//			sheet = sheet.getSpreadSheet().getSheet(0);
-//			sheet.getCellAt("G9").setValue((testCasesPassed + testCasesFailed));
-//			sheet.getCellAt("H9").setValue(testCasesPassed);
-//			sheet.getCellAt("I9").setValue(testCasesFailed);
-			// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
-			totalNoOfTestCasesPassed = testCasesPassed;
-			totalNoOfTestCasesFailed = testCasesFailed;
-
-			File outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet.ods");
-			sheet.getSpreadSheet().saveAs(outputFile);
-			
+			// Test Case Index
 			generateTestCaseIndex();
+			
+			// Test Case Summary
 			generateTestCaseSummary();
+			
+			// Final Test Pass Report
 			generateFinalTestPassReport();
+			
+			// Failure Report
 			generateFailureReport();
+			
 			System.out.println("Report generated successfully");
 		}
 		catch(Exception e) {
@@ -811,31 +851,28 @@ public class ReportFunctions {
 
 	public static void generateAutomationReportForFunctionalTestCases() {
 		try {
-			// Initialize the variables
-			index = 0;
-			Arrays.fill(arrayOfTestCaseId, null);
-			// Load the ODF document from the path
-			File file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
-
-			// TestCase sheet: Tree_Navigation_Views
-			Sheet sheet = SpreadSheet.createFromFile(file).getSheet(8);
-			updateTestCaseExecutionResult(sheet);
-			// Generate Summary Sheet
-			sheet = sheet.getSpreadSheet().getSheet(0);
-			sheet.getCellAt("G8").setValue((testCasesPassed + testCasesFailed));
-			sheet.getCellAt("H8").setValue(testCasesPassed);
-			sheet.getCellAt("I8").setValue(testCasesFailed);
-			// totalNoOfTestCasesPassed & totolNoOfTestCasesFailed
+			// Update Test Case Execution Result
+			updateTestCaseExecutionResult();
+			
+			// Update Test Case Execution Result
+			updateTestCaseSheetResultForFunctionalTestCases();
+			
+			// No. of Test Cases Passed and Failed
 			totalNoOfTestCasesPassed = testCasesPassed;
 			totalNoOfTestCasesFailed = testCasesFailed;
-
-			File outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\FunctionalTestCase.ods");
-			sheet.getSpreadSheet().saveAs(outputFile);
-
+			
+			// Test Case Index
 			generateTestCaseIndex();
+			
+			// Test Case Summary
 			generateTestCaseSummary();
+			
+			// Final Test Pass Report
 			generateFinalTestPassReport();
+			
+			// Failure Report
 			generateFailureReport();
+			
 			System.out.println("Report generated successfully");
 		}
 		catch(Exception e) {

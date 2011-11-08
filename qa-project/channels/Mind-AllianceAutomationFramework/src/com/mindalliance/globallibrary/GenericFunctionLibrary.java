@@ -821,45 +821,4 @@ public class GenericFunctionLibrary {
 			System.out.println(e.getMessage());
 		}
 	}
-	
-	
-//	public static void findElement(String value,String method) {
-//		try {
-//			int i=0;
-//			do {
-//				if(method.equals("name")) {
-//					try {
-////						System.out.print("\nHie.......1");
-//						GlobalVariables.oDriver.findElement(By.name(value)).clear();
-//						Thread.currentThread();	
-//						Thread.sleep(1000);
-//						break;
-//					}
-//					catch (Exception e) {
-//						i++;
-//						System.out.println(e.getMessage());
-//						continue;
-//					}
-//				}
-//				else if(method.equals("xpath")) {
-//					try {
-////						System.out.print("\nHie.......2");
-//						GlobalVariables.oDriver.findElement(By.xpath(value)).click();
-//						Thread.currentThread();
-//						Thread.sleep(1000);
-//						break;
-//					}
-//					catch(Exception e) {
-//						i++;
-//						System.out.println("\n"+e.getMessage());
-//						continue;
-//					}
-//				}
-//			} while (i!=3);
-//		}
-//		catch(Exception e) {
-//			System.out.println("\nError Occured in FindElement Function.");
-//			System.out.println("\n" + e.getMessage());
-//		}
-//	}
 }
