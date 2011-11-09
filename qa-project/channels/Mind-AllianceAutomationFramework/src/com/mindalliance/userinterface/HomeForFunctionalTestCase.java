@@ -533,7 +533,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				jListFunctional.setModel(listModel);
 				jListFunctional.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			}
-//			System.out.println("Total Count : "+jListCount);
+			System.out.println("Total Count : "+jListCount);
 			return jListFunctional;
 		}
 		catch (Exception e) {
@@ -604,9 +604,9 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 					jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
 					//Execute current TestCaseId
 					cls = Class.forName("com.mindalliance.functionaltestsripts." + testCaseId);
-					System.out.println("\n");
+//					System.out.println("\n");
 					cls.newInstance();
-					System.out.println("\n");
+//					System.out.println("\n");
 					//Update progressBar
 					cnt = cnt + 1;
 					updateProgressBar(cnt);
