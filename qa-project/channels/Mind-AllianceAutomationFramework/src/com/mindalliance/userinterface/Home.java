@@ -95,17 +95,14 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 
 	private void initComponents() {
 		setTitle("Mind Alliance Automation Framework");
-		setLayout(new GroupLayout());
-		
+		setLayout(new GroupLayout());		
 		// TextField
-		add(getJTextField0(), new Constraints(new Leading(256, -53, 10, 10), new Leading(63, 12, 12)));
-		
+		add(getJTextField0(), new Constraints(new Leading(256, -53, 10, 10), new Leading(63, 12, 12)));		
 		// Scroll Panes
 		add(getJScrollPane0(), new Constraints(new Leading(41, 298, 10, 10), new Leading(34, 317, 12, 12)));
 		add(getJScrollPane1(), new Constraints(new Leading(338, 298, 10, 10), new Leading(34, 317, 10, 10)));
 		add(getJScrollPane2(), new Constraints(new Leading(634, 298, 10, 10), new Leading(34, 317, 10, 10)));
-		add(getJScrollPane3(), new Constraints(new Leading(1027, 298, 10, 10), new Leading(34, 317, 10, 10)));
-		
+		add(getJScrollPane3(), new Constraints(new Leading(1027, 298, 10, 10), new Leading(34, 317, 10, 10)));		
 		// Buttons
 		add(getJButton0(), new Constraints(new Leading(959, 10, 10), new Leading(174, 12, 12)));
 		add(getJButton1(), new Constraints(new Leading(1153, 12, 12), new Leading(369, 12, 12)));
@@ -113,29 +110,23 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		add(getJButton3(), new Constraints(new Leading(1027, 12, 12), new Leading(575, 10, 10)));
 		add(getJButton4(), new Constraints(new Leading(1026, 12, 12), new Leading(622, 10, 10)));		
 		add(getJButton5(), new Constraints(new Leading(1239, 10, 10), new Leading(369, 12, 12)));
-		add(getJButton6(), new Constraints(new Leading(1137, 112, 12, 12), new Leading(575, 12, 12)));
-		
+		add(getJButton6(), new Constraints(new Leading(1137, 112, 12, 12), new Leading(575, 12, 12)));		
 		// Labels
 		add(getJLabel0(), new Constraints(new Leading(41, 12, 12), new Leading(8, 10, 10)));
 		add(getJLabel1(), new Constraints(new Leading(341, 10, 10), new Leading(8, 12, 12)));
 		add(getJLabel2(), new Constraints(new Leading(637, 12, 12), new Leading(10, 12, 12, 12)));
 		add(getJLabel3(), new Constraints(new Leading(1024, 12, 12), new Leading(453, 10, 10)));
-		add(getJLabel4(), new Constraints(new Leading(1024, 12, 12), new Leading(489, 12, 12)));
-		
+		add(getJLabel4(), new Constraints(new Leading(1024, 12, 12), new Leading(489, 12, 12)));		
 		// CheckBoxes
 		add(getJCheckBox0(), new Constraints(new Leading(166, 10, 10), new Leading(4, 8, 8)));
 		add(getJCheckBox1(), new Constraints(new Leading(374, 8, 8), new Leading(4, 8, 8)));
-		add(getJCheckBox2(), new Constraints(new Leading(798, 10, 10), new Leading(4, 8, 8)));
-		
+		add(getJCheckBox2(), new Constraints(new Leading(798, 10, 10), new Leading(4, 8, 8)));		
 		// Panel
-		add(getJPanel0(), new Constraints(new Leading(43, 892, 10, 10), new Leading(363, 278, 10, 10)));
-		
+		add(getJPanel0(), new Constraints(new Leading(43, 892, 10, 10), new Leading(363, 278, 10, 10)));		
 		// ProgressBar
-		add(getJProgressBar0(), new Constraints(new Leading(1024, 298, 10, 10), new Leading(413, 12, 12)));
-		
+		add(getJProgressBar0(), new Constraints(new Leading(1024, 298, 10, 10), new Leading(413, 12, 12)));		
 		// ComboBox
-		add(getJComboBox0(), new Constraints(new Leading(1023, 122, 10, 10), new Leading(369, 12, 12)));
-		
+		add(getJComboBox0(), new Constraints(new Leading(1023, 122, 10, 10), new Leading(369, 12, 12)));		
 		setSize(1356, 698);
 	}
 
