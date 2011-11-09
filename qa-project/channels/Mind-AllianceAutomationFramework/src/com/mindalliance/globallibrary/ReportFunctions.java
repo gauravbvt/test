@@ -70,78 +70,97 @@ public class ReportFunctions {
 	
 	public static void updateTestCaseSheetResult() {
 		try {
+			int cnt=0;
+			File file,outputFile;
+			do {
+				cnt++;
+				if(cnt==1)
+					 file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
+				else 
+					file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet_V2.ods");
+				Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
 			
-			File file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
-			Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
-			
-			// Update View, Plan & Command Sheets
-			for (int i = 0; i < GlobalVariables.jListExecute.getModel().getSize() ; i++)	{
-				stestName = GlobalVariables.jListExecute.getModel().getElementAt(i).toString();
+				// Update View, Plan & Command Sheets
+				for (int i = 0; i < GlobalVariables.jListExecute.getModel().getSize() ; i++)	{
+					stestName = GlobalVariables.jListExecute.getModel().getElementAt(i).toString();
 
-				// Call readCsvFile
-				String sResult = readCsvFile(stestName);
+					// Call readCsvFile
+					String sResult = readCsvFile(stestName);
 				
-				if(stestName.contains("MAV")) { 
-					sheet = sheet.getSpreadSheet().getSheet(1);
-					// No Of Test Cases Passed & Failed of Views
-					if(sResult.equals(GlobalVariables.sPassed))
-						GlobalVariables.noOfViewTestCasesPassed++;
-					else
-						GlobalVariables.noOfViewTestCasesFailed++;
+					if(stestName.contains("MAV")) { 
+						sheet = sheet.getSpreadSheet().getSheet(1);
+						// No Of Test Cases Passed & Failed of Views
+						if(sResult.equals(GlobalVariables.sPassed))
+							GlobalVariables.noOfViewTestCasesPassed++;
+						else
+							GlobalVariables.noOfViewTestCasesFailed++;
 
-				}
-				else if(stestName.contains("MAP")) {
-					sheet = sheet.getSpreadSheet().getSheet(2);
-					// No Of Test Cases Passed & Failed of Plans				
-					if(sResult.equals(GlobalVariables.sPassed))
-						GlobalVariables.noOfPlanTestCasesPassed++;
-					else
-						GlobalVariables.noOfPlanTestCasesFailed++;
-				}
-				else if(stestName.contains("MAC")) {
-					sheet = sheet.getSpreadSheet().getSheet(3);
-					// No Of Test Cases Passed & Failed of Commands
-					if(sResult.equals(GlobalVariables.sPassed))
-						GlobalVariables.noOfCommandTestCasesPassed++;
-					else
-						GlobalVariables.noOfCommandTestCasesFailed++;
-				}
-				
-				for(int j=1;j<sheet.getRowCount();j++) {
-					if(stestName.equals(sheet.getValueAt(0,j).toString())) {
-						if (sResult == GlobalVariables.sFailed) {
-							sheet.getCellAt("J"+(j+1)).setBackgroundColor(Color.CYAN);
-							sheet.getCellAt("J"+(j+1)).setValue(GlobalVariables.sFailed);
-							sheet.getCellAt("K"+(j+1)).setBackgroundColor(Color.CYAN);
-							sheet.getCellAt("K"+(j+1)).setValue(sCsvScriptException);
-							sheet.getCellAt("L"+(j+1)).setBackgroundColor(Color.CYAN);
-							sheet.getCellAt("L"+(j+1)).setValue(sCsvErrorReport);
-				   		}
-				   		else if (sResult == GlobalVariables.sPassed) {
-				   			sheet.getCellAt("J"+(j+1)).setBackgroundColor(Color.ORANGE);
-				    		sheet.getCellAt("J"+(j+1)).setValue(GlobalVariables.sPassed);
-				   		}
+					}
+					else if(stestName.contains("MAP")) {
+						sheet = sheet.getSpreadSheet().getSheet(2);
+						// No Of Test Cases Passed & Failed of Plans				
+						if(sResult.equals(GlobalVariables.sPassed))
+							GlobalVariables.noOfPlanTestCasesPassed++;
+						else
+							GlobalVariables.noOfPlanTestCasesFailed++;
+					}
+					else if(stestName.contains("MAC")) {
+						sheet = sheet.getSpreadSheet().getSheet(3);
+						// No Of Test Cases Passed & Failed of Commands
+						if(sResult.equals(GlobalVariables.sPassed))
+							GlobalVariables.noOfCommandTestCasesPassed++;
+						else
+							GlobalVariables.noOfCommandTestCasesFailed++;
+					}
+					
+					for(int j=1;j<sheet.getRowCount();j++) {
+						if(stestName.equals(sheet.getValueAt(0,j).toString())) {
+							if (sResult == GlobalVariables.sFailed) {
+								sheet.getCellAt("J"+(j+1)).setBackgroundColor(Color.CYAN);
+								sheet.getCellAt("J"+(j+1)).setValue(GlobalVariables.sFailed);
+								sheet.getCellAt("K"+(j+1)).setBackgroundColor(Color.CYAN);
+								sheet.getCellAt("K"+(j+1)).setValue(sCsvScriptException);
+								sheet.getCellAt("L"+(j+1)).setBackgroundColor(Color.CYAN);
+								sheet.getCellAt("L"+(j+1)).setValue(sCsvErrorReport);
+							}
+							else if (sResult == GlobalVariables.sPassed) {	
+								sheet.getCellAt("J"+(j+1)).setBackgroundColor(Color.ORANGE);
+								sheet.getCellAt("J"+(j+1)).setValue(GlobalVariables.sPassed);
+							}
+						}
 					}
 				}
-			}
-			
-			// Update Summary Sheet
-			sheet=sheet.getSpreadSheet().getSheet(0);
-			// No. Of Test Cases Executed of Views, Plans & Commands
-			sheet.getCellAt("G8").setValue(GlobalVariables.noOfViewTestCasesExecuted);
-			sheet.getCellAt("G9").setValue(GlobalVariables.noOfPlanTestCasesExecuted);
-			sheet.getCellAt("G10").setValue(GlobalVariables.noOfCommandTestCasesExecuted);
-			// No. Of Test Cases Passed of Views, Plans & Commands			
-			sheet.getCellAt("H8").setValue(GlobalVariables.noOfViewTestCasesPassed);
-			sheet.getCellAt("H9").setValue(GlobalVariables.noOfPlanTestCasesPassed);
-			sheet.getCellAt("H10").setValue(GlobalVariables.noOfCommandTestCasesPassed);
-			// No. Of Test Cases Failed of Views, Plans & Commands
-			sheet.getCellAt("I8").setValue(GlobalVariables.noOfViewTestCasesFailed);
-			sheet.getCellAt("I9").setValue(GlobalVariables.noOfPlanTestCasesFailed);
-			sheet.getCellAt("I10").setValue(GlobalVariables.noOfCommandTestCasesFailed);
+				
+				// Update Summary Sheet
+				sheet=sheet.getSpreadSheet().getSheet(0);
+				// No. Of Test Cases Executed of Views, Plans & Commands
+				sheet.getCellAt("G8").setValue(GlobalVariables.noOfViewTestCasesExecuted);
+				sheet.getCellAt("G9").setValue(GlobalVariables.noOfPlanTestCasesExecuted);
+				sheet.getCellAt("G10").setValue(GlobalVariables.noOfCommandTestCasesExecuted);
+				// No. Of Test Cases Passed of Views, Plans & Commands			
+				sheet.getCellAt("H8").setValue(GlobalVariables.noOfViewTestCasesPassed);
+				sheet.getCellAt("H9").setValue(GlobalVariables.noOfPlanTestCasesPassed);
+				sheet.getCellAt("H10").setValue(GlobalVariables.noOfCommandTestCasesPassed);
+				// No. Of Test Cases Failed of Views, Plans & Commands
+				sheet.getCellAt("I8").setValue(GlobalVariables.noOfViewTestCasesFailed);
+				sheet.getCellAt("I9").setValue(GlobalVariables.noOfPlanTestCasesFailed);
+				sheet.getCellAt("I10").setValue(GlobalVariables.noOfCommandTestCasesFailed);
 
-			File outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet.ods");
-			sheet.getSpreadSheet().saveAs(outputFile);
+				if(cnt==1)
+					outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet.ods");
+				else
+					outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet_V2.ods");
+				sheet.getSpreadSheet().saveAs(outputFile);
+				
+			}while(cnt!=2);
+			
+			// Set to 0.
+			GlobalVariables.noOfViewTestCasesPassed=0;
+			GlobalVariables.noOfPlanTestCasesPassed=0;
+			GlobalVariables.noOfCommandTestCasesPassed=0;
+			GlobalVariables.noOfViewTestCasesFailed=0;
+			GlobalVariables.noOfPlanTestCasesFailed=0;
+			GlobalVariables.noOfCommandTestCasesFailed=0;
 		}
 		catch(Exception e) {
 			System.out.println("\nError Occured in UpdateTestCaseSheetResult Function.");
@@ -153,6 +172,26 @@ public class ReportFunctions {
 		try {
 			File file = new File(GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
 			Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
+			
+			// Update Test Case Sheet
+			for(int i = 1; i < 18 ; i++) {
+				sheet=sheet.getSpreadSheet().getSheet(i);
+				for(int j=1;j<sheet.getRowCount();j++) {
+					sheet.getCellAt("K"+j).setValue("");
+					sheet.getCellAt("L"+j).setValue("");
+					sheet.getCellAt("M"+j).setValue("");
+					sheet.getCellAt("N"+j).setValue("");
+					sheet.getCellAt("O"+j).setValue("");
+					sheet.getCellAt("P"+j).setValue("");
+					sheet.getCellAt("Q"+j).setValue("");
+					sheet.getCellAt("R"+j).setValue("");
+					sheet.getCellAt("S"+j).setValue("");
+					sheet.getCellAt("T"+j).setValue("");
+				}
+				sheet.getCellAt("K1").setValue("RESULT");
+				sheet.getCellAt("L1").setValue("SCRIPT EXCEPTION");
+				sheet.getCellAt("R1").setValue("ERROR");
+			}
 			for (int i = 0; i < GlobalVariables.jListExecute.getModel().getSize() ; i++)	{
 				stestName = GlobalVariables.jListExecute.getModel().getElementAt(i).toString();
 				if(stestName.contains("CL")) 
@@ -186,39 +225,23 @@ public class ReportFunctions {
 				else if(stestName.contains("IS"))
 					sheet = sheet.getSpreadSheet().getSheet(17);
 
-				// Update Functional Test Case Sheet
-				for(int j=1;j<sheet.getRowCount();j++) {
-					sheet.getCellAt("K"+j).setValue("");
-					sheet.getCellAt("L"+j).setValue("");
-					sheet.getCellAt("M"+j).setValue("");
-					sheet.getCellAt("N"+j).setValue("");
-					sheet.getCellAt("O"+j).setValue("");
-					sheet.getCellAt("P"+j).setValue("");
-					sheet.getCellAt("Q"+j).setValue("");
-					sheet.getCellAt("R"+j).setValue("");
-					sheet.getCellAt("S"+j).setValue("");
-					sheet.getCellAt("T"+j).setValue("");
-				}
-				sheet.getCellAt("K1").setValue("Result");
-				sheet.getCellAt("L1").setValue("ScriptException");
-				sheet.getCellAt("R1").setValue("Error");
-
 				// Call readCsvFile
 				String sResult = readCsvFile(stestName);
 				for(int j=1;j<sheet.getRowCount();j++) {
 					if(stestName.equals(sheet.getValueAt(0,j).toString())) {
 						if (sResult == GlobalVariables.sFailed) {
-							sheet.getCellAt("K"+(j+1)).setBackgroundColor(Color.ORANGE);
+							sheet.getCellAt("K"+(j+1)).setBackgroundColor(Color.CYAN);
 							sheet.getCellAt("K"+(j+1)).setValue(GlobalVariables.sFailed);
-							sheet.getCellAt("L"+(j+1)).setBackgroundColor(Color.ORANGE);
+							sheet.getCellAt("L"+(j+1)).setBackgroundColor(Color.CYAN);
 							sheet.getCellAt("L"+(j+1)).setValue(sCsvScriptException);
-							sheet.getCellAt("R"+(j+1)).setBackgroundColor(Color.ORANGE);
+							sheet.getCellAt("R"+(j+1)).setBackgroundColor(Color.CYAN);
 							sheet.getCellAt("R"+(j+1)).setValue(sCsvErrorReport);					   
 				   		}
 				   		else if (sResult == GlobalVariables.sPassed) {
 				   			sheet.getCellAt("K"+(j+1)).setBackgroundColor(Color.ORANGE);
 				    		sheet.getCellAt("K"+(j+1)).setValue(GlobalVariables.sPassed);
 				   		}
+						break;
 					}
 				}
 			}
@@ -317,7 +340,7 @@ public class ReportFunctions {
 			// Update Test Case Execution Result
 			updateTestCaseExecutionResult();
 			
-			// Update Test Case Execution Result
+			// Update Test Case Sheet Execution Result
 			updateTestCaseSheetResult();
 			
 			// No. of Test Cases Passed and Failed
@@ -905,7 +928,7 @@ public class ReportFunctions {
 			// Update Test Case Execution Result
 			updateTestCaseExecutionResult();
 			
-			// Update Test Case Execution Result
+			// Update Test Case Sheet Execution Result
 			updateTestCaseSheetResultForFunctionalTestCases();
 			
 			// No. of Test Cases Passed and Failed
