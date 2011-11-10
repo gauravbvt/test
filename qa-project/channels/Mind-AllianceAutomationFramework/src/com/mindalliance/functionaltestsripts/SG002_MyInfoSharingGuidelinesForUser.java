@@ -54,7 +54,6 @@ public class SG002_MyInfoSharingGuidelinesForUser
 			if (GlobalVariables.bIsSuccess==false) {
 				
 				// 'My Information Sharing Guidelines' link
-				GlobalVariables.iStepNo=0;
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "My Information Sharing Guidelines Link is Present";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("myInformationSharingGuidelines")));

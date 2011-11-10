@@ -100,6 +100,7 @@ public class SG003_MyInfoGuidelinesToHome
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+				
 				GlobalVariables.oDriver.quit();
 			}else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
