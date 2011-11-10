@@ -1,4 +1,3 @@
-
 package com.mindalliance.testscripts;
 
 import org.openqa.selenium.By;
@@ -61,8 +60,13 @@ public class MAV0114_hideBroadcasts
 				// Assertion: Verify that hide broadcast link changes to show all messages 
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Hide broadcast link changes to show all messages";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAllUsers")));				
-				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("hideInactiveUsers"))) {
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAllUsers")));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				System.out.println(GlobalVariables.oElement.getText()+"\n");
+				System.out.println(GlobalVariables.viewElements.get("hideInactiveUsers"));
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showAllMessages"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

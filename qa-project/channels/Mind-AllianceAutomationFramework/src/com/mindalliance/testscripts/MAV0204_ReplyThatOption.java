@@ -65,7 +65,7 @@ public class MAV0204_ReplyThatOption
 
 				// Click on Reply that option radio button Link 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Replu that option clicked";				
+				GlobalVariables.sDescription = "Reply that option clicked";				
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSendReplyThatOption"))).click();
 				// Assertion: Verify that Instruction text filed is disable				
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:description"));

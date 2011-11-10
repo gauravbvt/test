@@ -140,18 +140,14 @@ public class MAV0147_viewDetailsOfPlace
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				// Click on Done
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				Thread.sleep(2000);
+				// Refresh Page
+				GlobalVariables.oDriver.navigate().refresh();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 			    // Call logout()
 			    GlobalVariables.iStepNo++ ;
