@@ -152,15 +152,15 @@ public class ReportFunctions {
 					outputFile = new File(GlobalVariables.sReportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet_V2.ods");
 				sheet.getSpreadSheet().saveAs(outputFile);
 				
+				// Set Pass/Fail Count to 0.
+				GlobalVariables.noOfViewTestCasesPassed=0;
+				GlobalVariables.noOfPlanTestCasesPassed=0;
+				GlobalVariables.noOfCommandTestCasesPassed=0;
+				GlobalVariables.noOfViewTestCasesFailed=0;
+				GlobalVariables.noOfPlanTestCasesFailed=0;
+				GlobalVariables.noOfCommandTestCasesFailed=0;
+				
 			}while(cnt!=2);
-			
-			// Set to 0.
-			GlobalVariables.noOfViewTestCasesPassed=0;
-			GlobalVariables.noOfPlanTestCasesPassed=0;
-			GlobalVariables.noOfCommandTestCasesPassed=0;
-			GlobalVariables.noOfViewTestCasesFailed=0;
-			GlobalVariables.noOfPlanTestCasesFailed=0;
-			GlobalVariables.noOfCommandTestCasesFailed=0;
 		}
 		catch(Exception e) {
 			System.out.println("\nError Occured in UpdateTestCaseSheetResult Function.");
@@ -532,6 +532,9 @@ public class ReportFunctions {
 									xml.writeCharacters("Number of TestCases Passed: " + totalNoOfTestCasesPassed);
 									xml.writeEmptyElement("br");
 									xml.writeCharacters("Number of TestCases Failed: " + totalNoOfTestCasesFailed);
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("Number of TestCases Passed of Views: " + GlobalVariables.noOfViewTestCasesPassed);
+
 								xml.writeEndElement();
 							xml.writeEndElement();
 						xml.writeEndElement();
