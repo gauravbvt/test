@@ -81,6 +81,7 @@ public class MAV0072_allHelp
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000); 
+				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
