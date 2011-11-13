@@ -460,10 +460,10 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontsize", AbstractFlowMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", AbstractFlowMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        String label = sanitize( goal.getSuccessLabel( "|" ).replaceAll( "\\|", "\\\\n" ) );
+        String label = sanitize( goal.getSuccessLabel( ) );
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
-        attributes.add( new DOTAttribute( "tooltip", goal.getDescription() ) );
+        attributes.add( new DOTAttribute( "tooltip", goal.getFullTitle() ) );
         String dirName;
         try {
             dirName = metaProvider.getImageDirectory().getFile().getAbsolutePath();

@@ -4,8 +4,8 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -67,16 +67,16 @@ public class SharingCommitmentsPanel extends FloatingCommandablePanel {
      * {@inheritDoc}
      */
     protected String getTitle() {
-        return getFlow().getName();
+        return getFlow().getName() + " - commitments";
     }
 
     private void addAbout() {
         Label fromTask = new Label( "fromTask", new Model<String>( ( (Part) getFlow().getSource() ).getTask() ) );
         fromTask.setOutputMarkupId( true );
-        addOrReplace( fromTask );
+        getContentContainer().addOrReplace( fromTask );
         Label toTask = new Label( "toTask", new Model<String>( ( (Part) getFlow().getTarget() ).getTask() ) );
         toTask.setOutputMarkupId( true );
-        addOrReplace( toTask );
+        getContentContainer().addOrReplace( toTask );
     }
 
     private void addCommitmentsTable() {
@@ -85,7 +85,7 @@ public class SharingCommitmentsPanel extends FloatingCommandablePanel {
                 new PropertyModel<List<Commitment>>( this, "commitments" )
         );
         commitmentsTablePanel.setOutputMarkupId( true );
-        addOrReplace( commitmentsTablePanel );
+        getContentContainer().addOrReplace( commitmentsTablePanel );
     }
 
     public List<Commitment> getCommitments() {
@@ -156,7 +156,7 @@ public class SharingCommitmentsPanel extends FloatingCommandablePanel {
      */
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        if ( change.isModified() ) {
+        if ( change.isUnknown() || change.isModified() ) {
             addAbout();
             addCommitmentsTable();
             target.addComponent( commitmentsTablePanel );

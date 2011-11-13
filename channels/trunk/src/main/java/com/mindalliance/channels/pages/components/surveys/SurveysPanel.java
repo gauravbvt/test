@@ -11,13 +11,13 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyService;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
@@ -238,7 +238,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
                 target.addComponent( surveysTable );
             }
         } );
-        add( filteredCheckBox );
+        getContentContainer().add( filteredCheckBox );
     }
 
     public boolean isStateFiltered() {
@@ -252,7 +252,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     private void addTableTitle() {
         titleLabel = new Label( "tableTitle", new PropertyModel<String>( this, "tableTitle" ) );
         titleLabel.setOutputMarkupId( true );
-        add( titleLabel );
+        getContentContainer().add( titleLabel );
     }
 
     public String getTableTitle() {
@@ -275,7 +275,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
                 target.addComponent( surveysTable );
             }
         } );
-        add( statusChoice );
+        getContentContainer().add( statusChoice );
     }
 
     public String getStatusFilter() {
@@ -298,7 +298,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
                 target.addComponent( surveysTable );
             }
         } );
-        add( relevanceChoice );
+        getContentContainer().add( relevanceChoice );
     }
 
     public String getRelevanceFilter() {
@@ -312,7 +312,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     private void addSurveysTable() {
         surveysTable = new SurveysTable( "surveysTable", new PropertyModel<List<Survey>>( this, "surveyWrappers" ) );
         surveysTable.setOutputMarkupId( true );
-        addOrReplace( surveysTable );
+        getContentContainer().addOrReplace( surveysTable );
     }
 
     @Override
@@ -380,7 +380,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     private void addSurveyContainer() {
         surveyContainer = new WebMarkupContainer( "surveyContainer" );
         surveyContainer.setOutputMarkupId( true );
-        add( surveyContainer );
+        getContentContainer().add( surveyContainer );
         addSurveyPanel();
         updateVisibility();
     }
@@ -432,7 +432,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
 
     @Override
     public void refresh( AjaxRequestTarget target, Change change, String Aspect ) {
-        if ( change.isForInstanceOf( Survey.class ) ) {
+        if ( change.isUnknown() || change.isForInstanceOf( Survey.class ) ) {
             addSurveysTable();
             target.addComponent( surveysTable );
         }

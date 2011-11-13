@@ -3,9 +3,9 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -77,7 +77,7 @@ public class OverridesPanel  extends FloatingCommandablePanel {
                 new Model<String>( getPart().getTitle() )
         );
          partTitleLabel.setOutputMarkupId( true );
-         addOrReplace( partTitleLabel );
+         getContentContainer().addOrReplace( partTitleLabel );
      }
 
     private void addOverriddenTable() {
@@ -86,7 +86,7 @@ public class OverridesPanel  extends FloatingCommandablePanel {
         List<Part> overriddenParts = getOverriddenParts();
         overridingContainer.setVisible( !overriddenParts.isEmpty() );
         overridingContainer.add( new OverridesTablePanel( "overridingTable", overriddenParts ) );
-        addOrReplace( overridingContainer );
+        getContentContainer().addOrReplace( overridingContainer );
     }
 
     private List<Part> getOverriddenParts() {
@@ -102,7 +102,7 @@ public class OverridesPanel  extends FloatingCommandablePanel {
         List<Part> overridingParts = getOverridingParts();
         overriddenContainer.setVisible( !overridingParts.isEmpty() );
         overriddenContainer.add( new OverridesTablePanel( "overriddenTable", overridingParts ) );
-        addOrReplace( overriddenContainer );
+        getContentContainer().addOrReplace( overriddenContainer );
     }
 
     private List<Part> getOverridingParts() {
@@ -129,7 +129,7 @@ public class OverridesPanel  extends FloatingCommandablePanel {
      * {@inheritDoc}
      */
     protected String getTitle() {
-        return getPart().getTask();
+        return getPart().getTask() + " - overrides";
     }
 
     /**
@@ -179,7 +179,7 @@ public class OverridesPanel  extends FloatingCommandablePanel {
      */
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        if ( change.isModified() ) {
+        if ( change.isUnknown() || change.isModified() ) {
             addAbout();
             addOverridingTable();
             addOverriddenTable();

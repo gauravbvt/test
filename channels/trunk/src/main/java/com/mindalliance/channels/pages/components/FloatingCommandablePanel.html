@@ -13,13 +13,20 @@
 			<div class="float-bar-title">
 				<span wicket:id="title">A title</span>
 			</div>
+            <div class="float-bar-minimize">
+                 <a wicket:id="minimize" href="#">
+                     <img wicket:id="minimizeIcon"  src="images/float-bar-minimize.png" border="0"/>
+                 </a>
+             </div>
             <div class="float-bar-close">
                 <a wicket:id="close" href="#">
                     <img src="images/float-bar-close.png" border="0"/>
                 </a>
             </div>
-        </div>
-        <wicket:child/>
+         </div>
+        <span wicket:id="content">
+            <wicket:child/>
+        </span>
         <div class="float-resize" wicket:id="resizer">
             <img src="images/resize-icon.png" border="0"/>
         </div>

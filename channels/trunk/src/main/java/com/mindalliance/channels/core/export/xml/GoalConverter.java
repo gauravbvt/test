@@ -37,6 +37,11 @@ public class GoalConverter extends AbstractChannelsConverter {
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
         Goal goal = (Goal) object;
+        if ( !goal.getName().isEmpty() ) {
+            writer.startNode( "name" );
+            writer.setValue( goal.getName() );
+            writer.endNode();
+        }
         if ( goal.getCategory() != null ) {
             writer.startNode( "category" );
             writer.setValue( goal.getCategory().name() );
@@ -95,6 +100,8 @@ public class GoalConverter extends AbstractChannelsConverter {
                 goal.setEndsWithSegment( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "description" ) ) {
                 goal.setDescription( reader.getValue() );
+            } else if ( nodeName.equals( "name" ) ) {
+                goal.setName( reader.getValue() );
             }
             reader.moveUp();
         }

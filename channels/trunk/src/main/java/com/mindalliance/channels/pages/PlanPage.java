@@ -1996,7 +1996,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
         Plan plan = getPlan();
-        if ( change.isUnknown() ||
+        if ( /*change.isUnknown() ||*/
                 change.isDisplay() && identifiable instanceof Plan ) {
             addPlanEditPanel( change );
             target.addComponent( planEditPanel );
@@ -2011,8 +2011,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshSegmentEditPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown()
-                ||
+        if ( /*change.isUnknown()
+                ||*/
                 ( change.isDisplay() || change.isAdded() )
                         && identifiable != null
                         && identifiable instanceof Segment
@@ -2032,7 +2032,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshEntityPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         ModelEntity entity = findExpandedEntity();
-        if ( change.isUnknown() || entity == null ||
+        if ( /*change.isUnknown() ||*/ entity == null ||
                 change.isDisplay()
                         && change.isForInstanceOf( ModelEntity.class ) ) {
             addEntityPanel();
@@ -2050,7 +2050,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             Change change,
             List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown() ||
+        if ( /*change.isUnknown() ||*/
                 identifiable != null
                         && identifiable instanceof Part
                         && change.isAspect( "assignments" ) ) {
@@ -2064,7 +2064,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshCommitmentsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown() ||
+        if ( /*change.isUnknown() ||*/
                 identifiable != null
                         && identifiable instanceof Flow
                         && change.isAspect( "commitments" ) ) {
@@ -2078,7 +2078,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshEOIsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown() ||
+        if ( /*change.isUnknown() ||*/
                 identifiable != null
                         && identifiable instanceof Flow
                         && ( change.isCollapsed()
@@ -2093,7 +2093,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshFailureImpactsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown() ||
+        if ( /*change.isUnknown() ||*/
                 identifiable != null
                         && identifiable instanceof SegmentObject
                         && change.isAspect(
@@ -2108,7 +2108,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshDisseminationPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown() ||
+        if ( /*change.isUnknown() ||*/
                 identifiable != null && identifiable instanceof SegmentObject
                         && change.isAspect( "dissemination" ) ) {
             boolean showTargets = change.hasQualifier( "show", "targets" );
@@ -2122,7 +2122,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void refreshOverridesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown() ||
+        if ( /*change.isUnknown() ||*/
                 identifiable != null
                         && identifiable instanceof Part
                         && change.isAspect( "overrides" ) ) {
@@ -2136,7 +2136,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void refreshSurveysPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isUnknown() ||
+        if ( /*change.isUnknown() ||*/
                 identifiable != null
                         && change.isDisplay()
                         && identifiable instanceof Survey ) {

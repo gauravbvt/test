@@ -54,12 +54,17 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
      * Title bar.
      */
     private WebMarkupContainer moveBar;
+
+    private WebMarkupContainer content;
     /**
-     *  Title label.
+     * Title label.
      */
     private Label titleLabel;
 
     private Random random = new Random();
+    private WebMarkupContainer resizer;
+    private boolean minimized = false;
+    private AjaxFallbackLink minimize;
 
     public FloatingCommandablePanel( String id ) {
         this( id, null, null );
@@ -81,6 +86,8 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         moveBar.add( new AttributeModifier( "onMouseDown", true, new Model<String>( moveScript ) ) );
         add( moveBar );
         addTitle();
+        // minimize
+        addMinimize();
         // close -- blur any entry field to make sure any change is taken
         String closeScript = "this.focus();";
         AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
@@ -91,8 +98,54 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         };
         closeLink.add( new AttributeModifier( "onMouseOver", true, new Model<String>( closeScript ) ) );
         moveBar.add( closeLink );
+        // Content
+        addContent();
+        // resizer
+        addResizer();
+        // styling
+        setLayout();
+    }
+
+    private void addMinimize() {
+        minimize = new AjaxFallbackLink( "minimize" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                minimizeNormalize( target );
+            }
+        };
+        minimize.setOutputMarkupId( true );
+        WebMarkupContainer icon = new WebMarkupContainer( "minimizeIcon" );
+        icon.add( new AttributeModifier(
+                "src",
+                true,
+                new Model<String>( minimized
+                        ? "images/float-bar-maximize.png"
+                        : "images/float-bar-minimize.png" ) ) );
+        minimize.add( icon );
+        moveBar.addOrReplace( minimize );
+    }
+
+    private void minimizeNormalize( AjaxRequestTarget target ) {
+        makeVisible( content, minimized );
+        makeVisible( resizer, minimized );
+        minimized = !minimized;
+        addMinimize();
+        target.addComponent( this );
+        String minimizeNormalizeScript = "Floater.minimizeNormalize('" + minimize.getMarkupId() + "', " + getPadBottom() + ");";
+        target.appendJavascript( minimizeNormalizeScript );
+
+    }
+
+    private void addContent() {
+        content = new WebMarkupContainer( "content" );
+        content.setOutputMarkupId( true );
+        addOrReplace( content );
+    }
+
+    private void addResizer() {
         // resize
-        WebMarkupContainer resizer = new WebMarkupContainer( "resizer" );
+        resizer = new WebMarkupContainer( "resizer" );
+        resizer.setOutputMarkupId( true );
         String resizeScript = MessageFormat.format(
                 "Floater.beginResize(this.parentNode.parentNode,event,{0,number,####},{1,number,####},{2,number,####},{3,number,####});",
                 getMinWidth(),
@@ -102,8 +155,10 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         );
         resizer.add( new AttributeModifier( "onMouseDown", true, new Model<String>( resizeScript ) ) );
         add( resizer );
-        // styling
-        setLayout();
+    }
+
+    protected WebMarkupContainer getContentContainer() {
+        return content;
     }
 
     /**
@@ -123,8 +178,9 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
     protected abstract String getTitle();
 
     /**
-     *   Refresh title.
-     * @param target  an ajax request target
+     * Refresh title.
+     *
+     * @param target an ajax request target
      */
     protected void refreshTitle( AjaxRequestTarget target ) {
         addTitle();
@@ -204,7 +260,7 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
     }
 
     private int randomDelta() {
-       return (NON_OVERLAP_DELTA / 2) - random.nextInt( NON_OVERLAP_DELTA );
+        return ( NON_OVERLAP_DELTA / 2 ) - random.nextInt( NON_OVERLAP_DELTA );
     }
 
     protected int getTop() {
@@ -212,7 +268,7 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
     }
 
     protected int getLeft() {
-        return 35  + randomDelta();
+        return 35 + randomDelta();
     }
 
     protected int getBottom() {

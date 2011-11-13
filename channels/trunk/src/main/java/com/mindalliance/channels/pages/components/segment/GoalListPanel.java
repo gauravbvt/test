@@ -12,12 +12,12 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -31,6 +31,7 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
@@ -109,6 +110,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
         moreContainer.setOutputMarkupId( true );
         addOrReplace( moreContainer );
         initLabel();
+        addNameField();
         addDescriptionField();
         moreContainer.addOrReplace( makeTasksTable() );
         makeVisible( moreContainer, false );
@@ -316,6 +318,20 @@ public class GoalListPanel extends AbstractCommandablePanel {
         item.add( moreLink );
     }
 
+    private void addNameField() {
+        TextField<String> nameField = new TextField<String>(
+                "name",
+                new PropertyModel<String>( this, "name" ) );
+        nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getSegment() ) );
+            }
+        } );
+        nameField.setOutputMarkupId( true );
+        nameField.setEnabled( isLockedByUser( getSegment() ) );
+        moreContainer.addOrReplace( nameField );
+    }
+
     private void addDescriptionField() {
         TextArea<String> descriptionField = new TextArea<String>(
                 "description",
@@ -384,6 +400,28 @@ public class GoalListPanel extends AbstractCommandablePanel {
         return selectedGoal != null
                 ? selectedGoal.getGoal().getLabel()
                 : "no goal is selected";
+    }
+
+    /**
+     * Get selected risk's description.
+     *
+     * @return a string
+     */
+    public String getName() {
+        return selectedGoal != null
+                ? selectedGoal.getName()
+                : "";
+    }
+
+    /**
+     * Set selected risk's description.
+     *
+     * @param value a string
+     */
+    public void setName( String value ) {
+        if ( selectedGoal != null ) {
+            selectedGoal.setName( value != null ? value : "" );
+        }
     }
 
     /**
@@ -622,7 +660,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
          * {@inheritDoc}
          */
         public String getName() {
-            return goal.toString();
+            return goal.toString();  // the name of the goal if set
         }
 
         /**
@@ -653,6 +691,24 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 }
             }
         }
+
+        public void setName( String value ) {
+            String oldValue = goal.getName();
+            if ( !oldValue.equals( value ) ) {
+                if ( markedForCreation ) {
+                    goal.setName( value );
+                } else {
+                    int index = getSegment().getGoals().indexOf( goal );
+                    if ( index >= 0 ) {
+                        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(),
+                                "goals[" + index + "].name",
+                                value,
+                                UpdateObject.Action.Set ) );
+                    }
+                }
+            }
+        }
+
 
         private boolean isUndergoingCreation() {
             return isMarkedForCreation() && !isComplete();

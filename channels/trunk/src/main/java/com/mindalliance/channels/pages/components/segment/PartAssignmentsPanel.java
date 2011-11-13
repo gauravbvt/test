@@ -3,9 +3,9 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -76,7 +76,7 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
      * {@inheritDoc}
      */
     protected String getTitle() {
-        return getPart().getTask();
+        return getPart().getTask() + " - assignments";
     }
 
     private void addAbout() {
@@ -85,7 +85,7 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
                 new Model<String>( getPart().getTitle() )
         );
         partTitleLabel.setOutputMarkupId( true );
-        addOrReplace( partTitleLabel );
+        getContentContainer().addOrReplace( partTitleLabel );
     }
 
     private void addAssignmentsTable() {
@@ -94,7 +94,7 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
                 new PropertyModel<List<Assignment>>( this, "assignments" )
         );
         assignmentsTablePanel.setOutputMarkupId( true );
-        addOrReplace( assignmentsTablePanel );
+        getContentContainer().addOrReplace( assignmentsTablePanel );
     }
 
     public List<Assignment> getAssignments() {
@@ -160,7 +160,7 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
      */
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        if ( change.isModified() ) {
+        if ( change.isUnknown() || change.isModified() ) {
             addAbout();
             addAssignmentsTable();
             target.addComponent( partTitleLabel );

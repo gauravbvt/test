@@ -171,7 +171,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      */
     protected void init() {
         moContainer = new WebMarkupContainer( "mo" );
-        add( moContainer );
+        getContentContainer().add( moContainer );
         banner = new WebMarkupContainer( "banner" );
         banner.setOutputMarkupId( true );
         addHeaderTitle();
@@ -452,7 +452,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         refreshMenus( target );
         adjustComponents();
         target.addComponent( banner );
-        if ( change.isDisplay() || change.isModified() || change.isSelected() ) {
+        if ( change.isUnknown() || change.isDisplay() || change.isModified() || change.isSelected() ) {
             showAspect( aspect, change, target );
         }
     }

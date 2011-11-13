@@ -59,9 +59,13 @@
     </div>
     <div wicket:id="moreDiv">
         <h3>
-			<span>About the <span wicket:id="goalLabel">[goal label]</span></span>
+			<span>About <span wicket:id="goalLabel">[goal label]</span></span>
 			<div>&nbsp;</div>
 		</h3>
+        <fieldset>
+            <legend>Name</legend>
+            <input wicket:id="name" type="text"/>
+        </fieldset>
 		<fieldset>
 	        <legend>Description</legend>
 	        <textarea wicket:id="description" rows="2" cols="40">description</textarea>

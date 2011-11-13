@@ -948,6 +948,14 @@ div.float-bar-close {
 	top:4px;
 }
 
+div.float-bar-minimize {
+	position:absolute;
+	float:right;
+	right:30px;
+	top:4px;
+}
+
+
 div.float-header {
 	border-bottom:2px solid #999999;
 	height:25px;

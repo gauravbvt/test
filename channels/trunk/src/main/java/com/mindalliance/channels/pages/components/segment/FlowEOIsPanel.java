@@ -101,7 +101,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         addDoneButton();
         eoisContainer = new WebMarkupContainer( "eoisContainer" );
         eoisContainer.setOutputMarkupId( true );
-        add( eoisContainer );
+        getContentContainer().add( eoisContainer );
         addHeaders();
         addAboutFlow();
         addEOIs();
@@ -112,7 +112,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
      * {@inheritDoc}
      */
     protected String getTitle() {
-        return getFlow().getName();
+        return getFlow().getName() + " - EOIs";
     }
 
     private void addLinkToClassifications() {
@@ -122,7 +122,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
             }
         };
         classificationsLink.add( new AttributeModifier( "class", true, new Model<String>( "window" ) ) );
-        add( classificationsLink );
+        getContentContainer().add( classificationsLink );
     }
 
     private void addDoneButton() {
@@ -131,7 +131,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 close( target );
             }
         };
-        add( doneLink );
+        getContentContainer().add( doneLink );
     }
 
 
@@ -219,9 +219,9 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                         ? "availability of"
                         : "sharing of" ) );
         flowTypeLabel.setOutputMarkupId( true );
-        addOrReplace( flowTypeLabel );
+        getContentContainer().addOrReplace( flowTypeLabel );
         Label flowNameLabel = new Label( "flowName", new Model<String>( getFlow().getName() ) );
-        addOrReplace( flowNameLabel );
+        getContentContainer().addOrReplace( flowNameLabel );
         Label sourceLabel = new Label(
                 "source",
                 new Model<String>( getFlow().isNeed()
@@ -233,7 +233,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         );
         sourceLabel.setOutputMarkupId( true );
         makeVisible( sourceLabel, !getFlow().isNeed() );
-        addOrReplace( sourceLabel );
+        getContentContainer().addOrReplace( sourceLabel );
         Label targetLabel = new Label(
                 "target",
                 new Model<String>( getFlow().isCapability()
@@ -245,7 +245,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
         );
         targetLabel.setOutputMarkupId( true );
         makeVisible( targetLabel, !getFlow().isCapability() );
-        addOrReplace( targetLabel );
+        getContentContainer().addOrReplace( targetLabel );
     }
 
     private void addEOIs() {
@@ -826,7 +826,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
      */
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        if ( change.isModified() ) {
+        if ( change.isUnknown() || change.isModified() ) {
             addHeaders();
             addAboutFlow();
             addEOIs();

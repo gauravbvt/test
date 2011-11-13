@@ -32,8 +32,9 @@ import java.util.Set;
  */
 public class DefinitionManager implements InitializingBean, Iterable<PlanDefinition> {
 
+
     /**
-     * Ye olde logger.
+     * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( DefinitionManager.class );
 
@@ -350,6 +351,22 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
     }
 
     /**
+     * Get all plan uris.
+     *
+     * @return names of all plans (sorted)
+     */
+    public List<String> getPlanUris() {
+        Set<String> set;
+        synchronized ( definitions ) {
+            set = new HashSet<String>( definitions.size() );
+            for ( PlanDefinition plan : definitions.values() )
+                set.add( plan.getUri() );
+        }
+        return new ArrayList<String>( set );
+    }
+
+
+    /**
      * Return the number of managed plan definitions.
      *
      * @return the number of plan definitions
@@ -383,4 +400,6 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
         }
         return true;
     }
+
+
 }

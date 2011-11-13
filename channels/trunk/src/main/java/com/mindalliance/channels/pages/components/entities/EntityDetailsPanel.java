@@ -10,8 +10,8 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
@@ -138,6 +138,10 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     }
 
     private void addDescriptionField() {
+        moDetailsDiv.add(  new Label(
+                "descriptionLabel",
+                getEntity().isType() ? "Definition" : "Description"
+                ) );
         descriptionField = new TextArea<String>( "description", new PropertyModel<String>( this, "description" ) );
         descriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override

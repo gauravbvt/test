@@ -23,6 +23,10 @@ import java.util.Map;
  */
 public class Goal implements Serializable, Mappable {
     /**
+     * The name of the goal.
+     */
+    private String name = "";
+    /**
      * Category of goal.
      */
     private Category category;
@@ -49,6 +53,14 @@ public class Goal implements Serializable, Mappable {
 
     public Goal() {
 
+    }
+
+    public String getName() {
+        return name == null ? "" : name;
+    }
+
+    public void setName( String name ) {
+        this.name = name;
     }
 
     public Category getCategory() {
@@ -127,11 +139,12 @@ public class Goal implements Serializable, Mappable {
     }
 
     public String getShortLabel() {
-        return ( isGain() ? "Make " : "Mitigate " )
-                + ( level != null ? getLevelLabel().toLowerCase() : "" ) + " "
-                + ( category != null ? category.getGroup().toLowerCase() : "" )
-                + ( isPositive() ? " gain" : " risk" )
-                + ( category != null ? " of " + category.getName( positive ) : "" ).toLowerCase();
+        if ( getName().isEmpty() ) {
+            return getFullTitle();
+        } else {
+            return
+                    getName();
+        }
     }
 
     /**
@@ -139,12 +152,15 @@ public class Goal implements Serializable, Mappable {
      */
     @Override
     public String toString() {
-        return ( isGain() ? "Make " : "Mitigate " )
-                + ( level != null ? getLevelLabel().toLowerCase() : "" ) + " "
-                + ( category != null ? category.getGroup().toLowerCase() : "" )
-                + intentLabel()
-                + ( getOrganization() != null ? getOrganization().getName() : "all" )
-                + ( category != null ? " of " + category.getName( positive ) : "" ).toLowerCase();
+        if ( getName().isEmpty() ) {
+            return ( level != null ? getLevelLabel() : "Some" ) + " "
+                    + ( category != null ? category.getGroup().toLowerCase() : "" )
+                    + (isPositive() ? " gain for " : " risk to ")
+                    + ( getOrganization() != null ? getOrganization().getName() : "all" )
+                    + ( category != null ? " of " + category.getName( positive ) : "" ).toLowerCase();
+        } else {
+            return getName();
+        }
     }
 
     public String getLevelLabel() {
@@ -159,11 +175,6 @@ public class Goal implements Serializable, Mappable {
     public String getCategoryLabel() {
         return getCategory().getLabel( isPositive() );
     }
-
-    private String intentLabel() {
-        return isPositive() ? " gain by " : " risk to ";
-    }
-
 
     /**
      * {inheritDoc}
@@ -225,7 +236,7 @@ public class Goal implements Serializable, Mappable {
     public String getPartialTitle() {
         String label = "";
         label += getLevelLabel();
-        label += intentLabel();
+        label += isPositive() ? " gain of " : " risk of ";
         label += category.getLabel( positive ).toLowerCase();
         return label;
     }
@@ -249,8 +260,8 @@ public class Goal implements Serializable, Mappable {
      * @return a string
      */
     public String getFailureLabel( String sep ) {
-        String label = category.getName( positive );
-        label += isRiskMitigation() ? " not mitigated by " : " not achieved by ";
+        String label = getName().isEmpty() ? category.getName( positive ) : getName();
+        label += isRiskMitigation() ? " not mitigated for " : " not achieved by ";
         label += sep + organization.getName();
         return label;
     }
@@ -258,14 +269,14 @@ public class Goal implements Serializable, Mappable {
     /**
      * Return a success label for the goals.
      *
-     * @param sep the separator string
      * @return a string
      */
-    public String getSuccessLabel( String sep ) {
-        String label = category.getName( positive );
-        label += isRiskMitigation() ? " mitigated by " : " achieved by ";
-        label += sep + organization.getName();
-        return label;
+    public String getSuccessLabel( ) {
+        if ( getName().isEmpty() ) {
+            return category.getName( positive );
+        } else {
+            return getName();
+        }
     }
 
     /**

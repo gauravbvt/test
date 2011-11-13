@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -830,8 +831,8 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 String id,
                 final T bean,
                 String entityProperty,
-                Class<? extends ModelEntity> entityClass,
-                boolean actual,
+                final Class<? extends ModelEntity> entityClass,
+                final boolean actual,
                 final Updatable updatable ) {
             super( id );
             this.bean = bean;
@@ -847,11 +848,18 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
                     for ( String choice : choices ) {
+                        ModelEntity entity = getQueryService().getDao().find( entityClass, choice );
+                        if ( entity != null
+                                && entity.isType() == !actual
+                                && matches( s, choice, actual ) ) candidates.add( choice );
+
+/*
                         if ( kind == ModelEntity.Kind.Type ) {
                             if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
                         } else {
                             if ( Matcher.same( s, choice ) ) candidates.add( choice );
                         }
+*/
                     }
                     return candidates.iterator();
                 }
@@ -862,6 +870,14 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 }
             } );
             add( nameField );
+        }
+
+        private boolean matches( String text, String otherText, boolean actual ) {
+            if ( entityClass.isAssignableFrom( Role.class ) || !actual ) {
+                return getQueryService().likelyRelated( text, otherText );
+            } else {
+                return Matcher.matches( text, otherText );
+            }
         }
 
         public String getEntityName() {

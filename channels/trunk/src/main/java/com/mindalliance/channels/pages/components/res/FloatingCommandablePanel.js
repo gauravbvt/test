@@ -3,6 +3,8 @@ __DEBUG__ = false;
 if ( typeof(Floater) == "undefined" ) {
     Floater = { };
     StyleStates = {};
+    NormalStates = {};
+    Minimized = {};
 }
 
 Floater.findMaxZIndex = function() {
@@ -27,6 +29,29 @@ Floater.moveToTop = function( element ) {
         element.style.zIndex = maxZIndex + 1;
         this.recordStyle(element);
         if ( __DEBUG__ ) console.log("z-index of %s changed to %s", element, element.style.zIndex);
+    }
+}
+
+Floater.minimizeNormalize = function( minimizeId, padBottom ) {
+    e = document.getElementById( minimizeId ).parentNode.parentNode.parentNode.parentNode;
+    if ( Minimized[e] != undefined ) {
+        // normalizing
+        e.style.backgroundColor = NormalStates[e].backgroundColor;
+        e.style.border = NormalStates[e].border;
+        var top = parseInt(e.style.top);
+        var bottom = parseInt(e.style.bottom);
+        var deltaY = Minimized[e] - top;
+        e.style.top = Minimized[e] + "px";
+        e.style.bottom = (bottom - deltaY) + "px";
+        Minimized[e] = undefined;
+    } else {
+        // minimizing
+        NormalStates[e] = {};
+        NormalStates[e].backgroundColor = e.style.backgroundColor;
+        NormalStates[e].border = e.style.border;
+        e.style.backgroundColor = "transparent";
+        e.style.border = "0";
+        Minimized[e] = parseInt(e.style.top);
     }
 }
 
@@ -114,7 +139,13 @@ Floater.beginMove = function( elementToMove, event, padTop, padLeft, padBottom, 
         if ( rightX + padRight < $(elementToMove.parentNode).width() ) {
             elementToMove.style.left = left + "px";
         }
-        if ( top > padTop && bottom > padBottom ) {
+        var actualBottom;
+        if ( Minimized[elementToMove] == undefined ) {
+            actualBottom = bottom;
+        } else {
+            actualBottom = top + 30;
+        }
+        if ( top > padTop && actualBottom > padBottom ) {
             elementToMove.style.top = top + "px";
             elementToMove.style.bottom = bottom + "px";
         }

@@ -5,11 +5,11 @@ import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.diagrams.FailureImpactsDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -120,7 +120,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     }
 
     private void addCaption() {
-        add( new Label( "caption", new Model<String>( getCaption() ) ) );
+        getContentContainer().add( new Label( "caption", new Model<String>( getCaption() ) ) );
     }
 
     private void addAssumeFail() {
@@ -135,7 +135,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
                 target.addComponent( failuresTablePanel );
             }
         } );
-        add( assumeFailsCheckBox );
+        getContentContainer().add( assumeFailsCheckBox );
     }
 
     private void addFlowViewingControls() {
@@ -182,7 +182,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
                 target.addComponent( sizingLabel );
             }
         } );
-        addOrReplace( sizingLabel );
+        getContentContainer().addOrReplace( sizingLabel );
     }
 
     private void addLegend() {
@@ -193,7 +193,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
                 update( target, new Change( Change.Type.Explained, getSegment(), "legend" ) );
             }
         } );
-        add( legend );
+        getContentContainer().add( legend );
     }
 
     private Segment getSegment() {
@@ -210,7 +210,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
                 assumeFails,
                 settings );
         failureImpactsDiagramPanel.setOutputMarkupId( true );
-        addOrReplace( failureImpactsDiagramPanel );
+        getContentContainer().addOrReplace( failureImpactsDiagramPanel );
     }
 
     private void addFailedTasks() {
@@ -221,7 +221,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
                 getExpansions()
         );
         failuresTablePanel.setOutputMarkupId( true );
-        addOrReplace( failuresTablePanel );
+        getContentContainer().addOrReplace( failuresTablePanel );
     }
 
     private String getCaption() {

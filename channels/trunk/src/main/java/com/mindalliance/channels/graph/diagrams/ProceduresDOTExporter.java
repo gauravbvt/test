@@ -402,7 +402,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         attributes.add( new DOTAttribute( "fontsize", ProceduresMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", ProceduresMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        String label = sanitize( goal.getSuccessLabel( "|" ).replaceAll( "\\|", "\\\\n" ) );
+        String label = sanitize( goal.getSuccessLabel( ) );
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", goal.getFullTitle() ) );

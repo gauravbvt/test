@@ -142,7 +142,7 @@ public class FailureImpactsDOTExporter extends AbstractDOTExporter<Node, Flow> {
         String label = sanitize( goal.getFailureLabel( "|" ).replaceAll( "\\|", "\\\\n" ) );
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
-        attributes.add( new DOTAttribute( "tooltip", goal.getDescription() ) );
+        attributes.add( new DOTAttribute( "tooltip", goal.getFullTitle() ) );
         String dirName;
         try {
             dirName = metaProvider.getImageDirectory().getFile().getAbsolutePath();

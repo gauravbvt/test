@@ -7,10 +7,10 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
-import com.mindalliance.channels.pages.components.diagrams.DisseminationDiagramPanel;
-import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.components.diagrams.DisseminationDiagramPanel;
+import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -154,7 +154,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
     private void addCaption() {
         captionLabel = new Label( "caption", new Model<String>( getCaption() ) );
         captionLabel.setOutputMarkupId( true );
-        addOrReplace( captionLabel );
+        getContentContainer().addOrReplace( captionLabel );
     }
 
     private void addTableCaption() {
@@ -164,7 +164,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
                         showTargets ? "Known recipients" : "Known sources"
                 ) );
         tableCaptionLabel.setOutputMarkupId( true );
-        addOrReplace( tableCaptionLabel );
+        getContentContainer().addOrReplace( tableCaptionLabel );
     }
 
     private String getCaption() {
@@ -226,7 +226,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
             }
         } );
        // makeVisible( sizingLabel, getSubject() != null );
-        addOrReplace( sizingLabel );
+        getContentContainer().addOrReplace( sizingLabel );
     }
 
 
@@ -247,7 +247,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
                     settings );
         }
         disseminationDiagramPanel.setOutputMarkupId( true );
-        addOrReplace( disseminationDiagramPanel );
+        getContentContainer().addOrReplace( disseminationDiagramPanel );
     }
 
     private void addSubjectChoice() {
@@ -276,7 +276,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
                 target.addComponent( disseminationTablePanel );
             }
         } );
-        addOrReplace( subjectChoice );
+        getContentContainer().addOrReplace( subjectChoice );
     }
 
     private void addSourcesOrTarget() {
@@ -299,7 +299,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
             }
         };
         showSourcesCheckBox.setEnabled( isPart() );
-        add( showSourcesCheckBox );
+        getContentContainer().add( showSourcesCheckBox );
         // Show targets
         showTargetsCheckBox = new AjaxCheckBox(
                 "showTargets",
@@ -319,7 +319,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
             }
         };
         showTargetsCheckBox.setEnabled( isPart() );
-        add( showTargetsCheckBox );
+        getContentContainer().add( showTargetsCheckBox );
     }
 
     private void addDisseminationTable() {
@@ -333,7 +333,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
             );
         }
         disseminationTablePanel.setOutputMarkupId( true );
-        addOrReplace( disseminationTablePanel );
+        getContentContainer().addOrReplace( disseminationTablePanel );
     }
 
     private List<Subject> findAllSubjects() {

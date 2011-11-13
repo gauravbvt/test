@@ -10,8 +10,8 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -116,11 +116,12 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
     }
 
     private void addKindChoice() {
+        ModelEntity.Kind[] kinds = { ModelEntity.Kind.Type, ModelEntity.Kind.Actual };
         // Actual vs type
         actualOrTypeChoice = new DropDownChoice<ModelEntity.Kind>(
                 "actualOrType",
                 new PropertyModel<ModelEntity.Kind>( this, "entityKind" ),
-                Arrays.asList( ModelEntity.Kind.values() ),
+                Arrays.asList( kinds ),
                 new ChoiceRenderer<ModelEntity.Kind>() {
                     public Object getDisplayValue( ModelEntity.Kind kind ) {
                         return kind.name();
