@@ -104,7 +104,7 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    protected void close( AjaxRequestTarget target ) {
+    protected void doClose( AjaxRequestTarget target ) {
         Change change = new Change( Change.Type.AspectClosed, getPart(), "assignments" );
         update( target, change );
     }

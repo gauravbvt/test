@@ -130,7 +130,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
     }
 
     @Override
-    protected void close( AjaxRequestTarget target ) {
+    protected void doClose( AjaxRequestTarget target ) {
         releaseAspectShown();
         Change change = new Change( Change.Type.Collapsed, getObject() );
         update( target, change );

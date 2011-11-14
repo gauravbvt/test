@@ -288,7 +288,7 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    protected void close( AjaxRequestTarget target ) {
+    protected void doClose( AjaxRequestTarget target ) {
         Change change = new Change( Change.Type.AspectClosed, getSegmentObject(), "failure" );
         update( target, change );
     }

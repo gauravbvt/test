@@ -119,7 +119,7 @@ public class OverridesPanel  extends FloatingCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    protected void close( AjaxRequestTarget target ) {
+    protected void doClose( AjaxRequestTarget target ) {
         Change change = new Change( Change.Type.AspectClosed, getPart(), "overrides" );
         update( target, change );
     }

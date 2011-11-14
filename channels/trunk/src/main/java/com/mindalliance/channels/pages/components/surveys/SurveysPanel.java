@@ -171,7 +171,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     }
 
     @Override
-    protected void close( AjaxRequestTarget target ) {
+    protected void doClose( AjaxRequestTarget target ) {
         Change change = new Change( Change.Type.Collapsed, Survey.UNKNOWN );
         update( target, change );
     }

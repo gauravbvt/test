@@ -401,7 +401,7 @@ public class DisseminationPanel extends FloatingCommandablePanel {
     /**
      * {@inheritDoc}
      */
-    protected void close( AjaxRequestTarget target ) {
+    protected void doClose( AjaxRequestTarget target ) {
         Change change = new Change( Change.Type.AspectClosed, getSegmentObject(), "dissemination" );
         update( target, change );
     }

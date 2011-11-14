@@ -32,16 +32,22 @@ Floater.moveToTop = function( element ) {
     }
 }
 
-Floater.minimizeNormalize = function( minimizeId, padBottom ) {
+Floater.minimizeNormalize = function( minimizeId, padBottom, minimize ) {
     e = document.getElementById( minimizeId ).parentNode.parentNode.parentNode.parentNode;
-    if ( Minimized[e] != undefined ) {
+    if ( !minimize ) {
         // normalizing
         e.style.backgroundColor = NormalStates[e].backgroundColor;
         e.style.border = NormalStates[e].border;
         var top = parseInt(e.style.top);
         var bottom = parseInt(e.style.bottom);
-        var deltaY = Minimized[e] - top;
-        e.style.top = Minimized[e] + "px";
+        var minimizedTop;
+        if ( Minimized[e] != undefined )  {
+            minimizedTop = Minimized[e];
+        } else {
+            minimizedTop = top;
+        }
+        var deltaY = minimizedTop - top;
+        e.style.top = minimizedTop + "px";
         e.style.bottom = (bottom - deltaY) + "px";
         Minimized[e] = undefined;
     } else {
@@ -56,13 +62,15 @@ Floater.minimizeNormalize = function( minimizeId, padBottom ) {
 }
 
 Floater.recordStyle = function( element ) {
-    if ( __DEBUG__ ) console.log("Recording style %s for %s", element.style.toString(), element.id);
-    StyleStates[element.id] = {};
-    StyleStates[element.id].top = element.style.top;
-    StyleStates[element.id].left = element.style.left;
-    StyleStates[element.id].bottom = element.style.bottom;
-    StyleStates[element.id].width = element.style.width;
-    StyleStates[element.id].zIndex = element.style.zIndex;
+    if ( Minimized[element] == undefined ) {
+        if ( __DEBUG__ ) console.log("Recording style %s for %s", element.style.toString(), element.id);
+        StyleStates[element.id] = {};
+        StyleStates[element.id].top = element.style.top;
+        StyleStates[element.id].left = element.style.left;
+        StyleStates[element.id].bottom = element.style.bottom;
+        StyleStates[element.id].width = element.style.width;
+        StyleStates[element.id].zIndex = element.style.zIndex;
+    }
 }
 
 Floater.restoreStyle = function( element ) {

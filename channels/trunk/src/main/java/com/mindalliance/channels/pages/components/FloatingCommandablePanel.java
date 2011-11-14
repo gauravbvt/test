@@ -29,6 +29,7 @@ import java.util.Set;
  */
 abstract public class FloatingCommandablePanel extends AbstractCommandablePanel {
 
+
     /**
      * Background color.
      */
@@ -64,7 +65,7 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
     private Random random = new Random();
     private WebMarkupContainer resizer;
     private boolean minimized = false;
-    private AjaxFallbackLink minimize;
+    private AjaxFallbackLink minimizeLink;
 
     public FloatingCommandablePanel( String id ) {
         this( id, null, null );
@@ -107,13 +108,13 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
     }
 
     private void addMinimize() {
-        minimize = new AjaxFallbackLink( "minimize" ) {
+        minimizeLink = new AjaxFallbackLink( "minimize" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 minimizeNormalize( target );
             }
         };
-        minimize.setOutputMarkupId( true );
+        minimizeLink.setOutputMarkupId( true );
         WebMarkupContainer icon = new WebMarkupContainer( "minimizeIcon" );
         icon.add( new AttributeModifier(
                 "src",
@@ -121,17 +122,20 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
                 new Model<String>( minimized
                         ? "images/float-bar-maximize.png"
                         : "images/float-bar-minimize.png" ) ) );
-        minimize.add( icon );
-        moveBar.addOrReplace( minimize );
+        minimizeLink.add( icon );
+        moveBar.addOrReplace( minimizeLink );
     }
 
     private void minimizeNormalize( AjaxRequestTarget target ) {
-        makeVisible( content, minimized );
-        makeVisible( resizer, minimized );
         minimized = !minimized;
+        makeVisible( content, !minimized );
+        makeVisible( resizer, !minimized );
         addMinimize();
         target.addComponent( this );
-        String minimizeNormalizeScript = "Floater.minimizeNormalize('" + minimize.getMarkupId() + "', " + getPadBottom() + ");";
+        String minimizeNormalizeScript = "Floater.minimizeNormalize('"
+                + minimizeLink.getMarkupId() + "', "
+                + getPadBottom() + ", "
+                + minimized + ");";
         target.appendJavascript( minimizeNormalizeScript );
 
     }
@@ -236,7 +240,12 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
      *
      * @param target an ajax request target.
      */
-    abstract protected void close( AjaxRequestTarget target );
+    protected void close( AjaxRequestTarget target ) {
+        minimized = false;
+        doClose( target );
+    }
+
+    abstract protected void doClose( AjaxRequestTarget target );
 
     public void setLayout() {
         String style = MessageFormat.format(

@@ -80,8 +80,8 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     }
 
     @Override
-    protected void close( AjaxRequestTarget target ) {
-        super.close( target );
+    protected void doClose( AjaxRequestTarget target ) {
+        super.doClose( target );
         getCommander().cleanup( getEntity().getClass(), getEntity().getName() );
     }
 

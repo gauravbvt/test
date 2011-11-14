@@ -95,7 +95,7 @@ public class FlowLegendPanel extends FloatingCommandablePanel {
     }
 
     /** {@inheritDoc} */
-    protected void close( AjaxRequestTarget target ) {
+    protected void doClose( AjaxRequestTarget target ) {
         Change change = new Change( Change.Type.Unexplained, getModel().getObject(), "legend" );
         update( target, change );
     }
