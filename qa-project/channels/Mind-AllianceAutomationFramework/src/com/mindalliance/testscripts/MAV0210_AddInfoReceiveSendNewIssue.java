@@ -13,7 +13,7 @@ public class MAV0210_AddInfoReceiveSendNewIssue
 	public MAV0210_AddInfoReceiveSendNewIssue(){
     	try {
     		
-    		GlobalVariables.sTestCaseId = "TFP080_AddInfoReceiveSendNewIssue";
+    		GlobalVariables.sTestCaseId = "MAV0210_AddInfoReceiveSendNewIssue";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
