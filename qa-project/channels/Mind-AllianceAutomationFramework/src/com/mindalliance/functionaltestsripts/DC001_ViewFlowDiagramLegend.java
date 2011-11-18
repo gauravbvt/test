@@ -34,7 +34,7 @@ public class DC001_ViewFlowDiagramLegend
 					// Click on 'Legend' Icon
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Legend window displayed";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div/span[7]/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath("//img[contains(@src,'images/help_small.png')]")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

@@ -102,9 +102,9 @@ public class CA014_UpdatePlan
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
 				//Thread sleep
 				Thread.currentThread();
-				Thread.sleep(4000);
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:name")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:name"));
+				Thread.sleep(5000);
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:name")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Plan"));
 				//Thread sleep
 				Thread.currentThread();
