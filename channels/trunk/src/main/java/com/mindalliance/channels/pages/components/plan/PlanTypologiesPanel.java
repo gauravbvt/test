@@ -243,7 +243,7 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
         ModelObjectLink selectedTypeLink = new ModelObjectLink(
                 "typeLink",
                 new PropertyModel<ModelObject>( this, "selectedType" ),
-                new Model<String>( "more" ),
+                new Model<String>( "profile" ),
                 "Click for details",
                 "window" );
         typeIndexContainer.add( selectedTypeLink );

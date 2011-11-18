@@ -2434,6 +2434,10 @@ a.overriding:after {
     text-transform: uppercase;
 }
 
+.req .edited-by {
+    float: right;
+}
+
 div.aspect .req table {
  width:65%;
 }

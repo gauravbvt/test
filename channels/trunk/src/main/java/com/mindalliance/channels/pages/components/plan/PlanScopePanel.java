@@ -8,11 +8,11 @@ import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
@@ -198,8 +198,8 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         ModelObjectLink detailsLink = new ModelObjectLink(
                 "detailsLink",
                 new Model<Organization>( selectedOrganization ),
-                new Model<String>( "See details" ),
-                "View the details of the organization",
+                new Model<String>( "See profile" ),
+                "View the profile of the organization",
                 "window" );
         organizationContainer.add( detailsLink );
         Link expectationActionLink = new AjaxFallbackLink( "expectationActionLink" ) {

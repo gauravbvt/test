@@ -6,16 +6,17 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.model.Hierarchical;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.HierarchyRelationship;
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
 import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.engine.imaging.ImagingService;
-import com.mindalliance.channels.core.model.Hierarchical;
-import com.mindalliance.channels.core.model.ModelObject;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
@@ -60,7 +61,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
 
             @Override
             public String getVertexURL( Hierarchical hierarchical ) {
-                Object[] args = { 0, hierarchical.getId() };
+                Object[] args = {0, hierarchical.getId()};
                 return MessageFormat.format( VERTEX_URL_FORMAT, args );
             }
 
@@ -150,15 +151,11 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
             if ( getAnalyst().hasUnwaivedIssues( queryService,
-                                                 (ModelObject) vertex,
-                                                 Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
-            {
+                    (ModelObject) vertex,
+                    Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip",
-                                            sanitize( getAnalyst().getIssuesSummary( queryService,
-                                                                                     (ModelObject) vertex,
-                                                                                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
+            list.add( new DOTAttribute( "tooltip", getTooltip( vertex, queryService ) ) );
             return list;
         }
 
@@ -195,4 +192,17 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
     }
+
+    private String getTooltip( Hierarchical vertex, QueryService queryService ) {
+        if ( vertex instanceof ModelEntity && ( (ModelEntity) vertex ).isType() ) {
+            String definition = ( (ModelEntity) vertex ).getDescription();
+            return sanitize( definition.isEmpty() ? "No definition" : definition );
+        } else {
+            return sanitize( getAnalyst().getIssuesSummary( queryService,
+                    (ModelObject) vertex,
+                    Analyst.INCLUDE_PROPERTY_SPECIFIC ) );
+        }
+    }
+
+
 }

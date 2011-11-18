@@ -123,7 +123,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
                 update( target, change );
             }
         };
-        makeVisible( newButton, isLockedByUser( getPlan() ) );
+        // makeVisible( newButton, isLockedByUser( getPlan() ) );
         add( newButton );
         removeButton = new ConfirmedAjaxFallbackLink<String>( "remove", "Remove requirement?" ) {
             @Override
@@ -138,7 +138,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
                 update( target, change );
             }
         };
-        newButton.setEnabled( this.isLockedByUser( getPlan() ) );
+        // newButton.setEnabled( this.isLockedByUser( getPlan() ) );
         makeVisible( removeButton, false );
         add( removeButton );
     }
@@ -146,8 +146,8 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
     private void updateComponents( AjaxRequestTarget target ) {
         addRequirementEditPanel();
         target.addComponent( requirementEditPanel );
-        makeVisible( removeButton, selectedRequirement != null );
-        makeVisible( newButton, isLockedByUser( getPlan() ) );
+        makeVisible( removeButton, selectedRequirement != null && isLockedByUser( selectedRequirement ) );
+        // makeVisible( newButton, isLockedByUser( getPlan() ) );
         target.addComponent( newButton );
         target.addComponent( removeButton );
         target.addComponent( requirementsTable );
@@ -195,14 +195,26 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
         return mo != null && mo.equals( identifiable );
     }
 
-    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+    @Override
+    public void changed( Change change ) {
         if ( change.isForInstanceOf( Requirement.class ) ) {
             Requirement requirement = (Requirement) change.getSubject( getQueryService() );
             if ( change.isAdded() || change.isExpanded() ) {
                 selectedRequirement = requirement;
-                updateComponents( target );
+                requestLockOn( selectedRequirement );
             } else if ( change.isRemoved() ) {
+                releaseAnyLockOn( selectedRequirement );
                 selectedRequirement = null;
+            }
+        }
+        super.changed( change );
+    }
+
+    @Override
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        if ( change.isForInstanceOf( Requirement.class ) ) {
+            Requirement requirement = (Requirement) change.getSubject( getQueryService() );
+            if ( change.isAdded() || change.isExpanded() || change.isRemoved() ) {
                 updateComponents( target );
             } else if ( change.isUpdated() ) {
                 target.addComponent( requirementsTable );

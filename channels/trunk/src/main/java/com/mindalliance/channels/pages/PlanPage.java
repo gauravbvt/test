@@ -107,17 +107,17 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * The 'expand' parameter in the URL.
      */
-    public static final String EXPAND_PARM = "expand";                                    // NON-NLS
+    public static final String EXPAND_PARM = "expand";
 
     /**
      * The 'segment' parameter in the URL.
      */
-    public static final String SEGMENT_PARM = "segment";                                       // NON-NLS
+    public static final String SEGMENT_PARM = "segment";
 
     /**
      * The 'part' parameter in the URL.
      */
-    static final String PART_PARM = "node";                                               // NON-NLS
+    static final String PART_PARM = "node";
 
     /**
      * Class logger.
@@ -1076,6 +1076,20 @@ public final class PlanPage extends AbstractChannelsWebPage {
         return null;
     }
 
+    private ModelObject findExpanded( Class<? extends ModelObject> clazz ) {
+        for ( long id : expansions ) {
+            try {
+                ModelObject mo = getQueryService().find( ModelObject.class, id );
+                if ( clazz.isAssignableFrom( mo.getClass() ) )
+                    return ( mo );
+            } catch ( NotFoundException ignored ) {
+                // ignore
+            }
+        }
+        return null;
+    }
+
+
     public List<Segment> getAllSegments() {
         List<Segment> allSegments = new ArrayList<Segment>( getQueryService().list( Segment.class ) );
         Collections.sort( allSegments, new Comparator<Segment>() {
@@ -1379,16 +1393,19 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void expand( Change change ) {
         tryAcquiringLock( change );
-        if ( change.isForInstanceOf( ModelEntity.class ) ) {
-            // ModelObject entity = (ModelObject) identifiable;
-            ModelObject previous = findExpandedEntity();
-            if ( previous != null && !previous.equals( change.getSubject( getQueryService() ) ) ) {
-                /*String previousAspect = getAspectShown( previous );
-                viewAspect( entity, previousAspect );*/
+        if ( isSingleExpansion( change ) ) {
+            ModelObject subject = (ModelObject)change.getSubject( getQueryService() );
+            ModelObject previous = findExpanded( subject.getClass() );
+            if ( previous != null && !previous.equals( subject ) ) {
                 collapse( new Change( Change.Type.None, previous ) );
             }
         }
         expansions.add( change.getId() );
+    }
+
+    private boolean isSingleExpansion( Change change ) {
+        return  change.isForInstanceOf( ModelEntity.class )
+                || change.isForInstanceOf( Requirement.class );
     }
 
     private void tryAcquiringLock( Change change ) {
@@ -1511,10 +1528,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 aspectsShown.remove( aspect );
             }
         }
-/*
-        if ( closingAspectReleasesLock( change, aspect ) )
-            tryReleasingLock( change );
-*/
     }
 
     private <T extends ModelObject> T getModelObjectViewed( Class<T> clazz, String aspect ) {
@@ -1758,7 +1771,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         }
         if ( !change.isNone() ) {
-            if ( change.isForInstanceOf( Plan.class ) && change.isSelected() ) {
+            refreshAllMenus( target );
+            if ( change.isForInstanceOf( Plan.class ) && change.isSelected() ) {  // Not caused anymore
                 redirectToPlan();
             } else if ( change.isAspectReplaced() ) {
                 replaceAspect( change, target );
@@ -1784,9 +1798,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 updateMaximizedFlow( target, change );
                 refreshHeadersMenusAndNavigation( target, change, updated );
                 // refreshSegmentPanel( target, change, updated );
-            } else if ( change.isCopied() ) {
+            }/* else if ( change.isCopied() ) {
                 refreshAllMenus( target );
-            } else if ( change.isRefreshNeeded() ) {
+            } */else if ( change.isRefreshNeeded() ) {
                 change.setScript( "alert('The action failed because the page was out of sync.');" );
                 refreshAll( target );
             } else if ( change.isCommunicated() ) {

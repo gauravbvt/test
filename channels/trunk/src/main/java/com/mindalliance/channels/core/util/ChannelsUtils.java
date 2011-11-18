@@ -537,5 +537,12 @@ public final class ChannelsUtils {
                 sentence + '.';
     }
 
-
+    /**
+     * Clean up a name by removing extra spaces.
+     * @param name a string
+     * @return a string
+     */
+    public static String cleanUpName( String name ) {
+        return name.replaceAll( "\\s\\s*", " " );
+    }
 }

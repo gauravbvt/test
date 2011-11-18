@@ -63,12 +63,25 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
+        addEditedBy();
         addName();
         addDescription();
         addTags();
         addSectionHeaders();
         addSection();
         adjustFields();
+    }
+
+    private void addEditedBy() {
+        Label editedByLabel = isLockedByOtherUser( getRequirement() )
+                ?  editedByLabel(
+                    "editedBy",
+                    getRequirement(),
+                    getLockManager().getLockUser( getRequirement().getId() ) )
+                : new Label("editedBy", "");
+        editedByLabel.setOutputMarkupId( true ) ;
+        makeVisible( editedByLabel, isLockedByOtherUser( getRequirement() ) );
+        add( editedByLabel );
     }
 
     private void adjustFields() {

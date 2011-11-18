@@ -15,6 +15,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.Releaseable;
 import org.apache.wicket.model.IModel;
 
@@ -119,9 +120,10 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      */
     @SuppressWarnings( "unchecked" )
     protected <T extends ModelEntity> T doSafeFindOrCreate( Class<T> clazz, String name ) {
+        String safeName = ChannelsUtils.cleanUpName( name );
         return (T) doCommand( new CreateEntityIfNew( User.current().getUsername(),
                                                      clazz,
-                                                     name,
+                                                     safeName,
                                                      ModelEntity.Kind.Actual ) ).getSubject( getQueryService() );
     }
 
@@ -134,9 +136,10 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      */
     @SuppressWarnings( "unchecked" )
     protected <T extends ModelEntity> T doSafeFindOrCreateType( Class<T> clazz, String name ) {
+        String safeName = ChannelsUtils.cleanUpName( name );
         return (T) doCommand( new CreateEntityIfNew( User.current().getUsername(),
                                                      clazz,
-                                                     name,
+                                                     safeName,
                                                      ModelEntity.Kind.Type ) ).getSubject( getQueryService() );
     }
 
