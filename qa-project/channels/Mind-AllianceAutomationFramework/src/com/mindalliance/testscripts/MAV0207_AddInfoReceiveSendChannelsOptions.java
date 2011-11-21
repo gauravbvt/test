@@ -73,25 +73,15 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				for(WebElement option : options) {
-					if("newMedium".equals(option.getText())){
+					if(option.getText().equals(GlobalVariables.viewElements.get("newMedium"))){
 						option.setSelected();
-						GlobalVariables.bIsSuccess=Boolean.TRUE;
+				    	// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
 						break;
 					}
 				}
-				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
-			    else{
-			    	GlobalVariables.sVerifyError="Verifyication Failed. Expected New Medium Actual is "+GlobalVariables.oElement.getText();
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
