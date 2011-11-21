@@ -60,7 +60,7 @@
 <xPathAboutPlanAction>/html/body/form/div[5]/div/div[2]/div/div/span/span[2]/span/span</xPathAboutPlanAction>
 <xPathCloseSurveyWindow>/html/body/form/span[2]/div/div/div[2]/a/img</xPathCloseSurveyWindow>
 <xPathPhaseShowMenu>/html/body/form/div[3]/div/div[2]/div/div/span/span/span/span</xPathPhaseShowMenu>
-<xPathIndexAgent>/html/body/form/div[4]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathIndexAgent>
+<xPathIndexAgent>/html/body/form/div[4]/div/span/div/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathIndexAgent>
 <xPathEvent>/html/body/form/div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td/span/a/span</xPathEvent>
 <xPathRemoveEvent>/html/body/form/div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td[2]/input</xPathRemoveEvent>
 <xPathOrganizationJob>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[13]/td/span/div/div/ul/li/a/span</xPathOrganizationJob>
@@ -121,10 +121,10 @@
 <xPathAbtPlanSegActionAddNewIssue>/html/body/form/div[5]/div/div[2]/div/div/span/span[2]/span/ul/li[5]/span/a/span</xPathAbtPlanSegActionAddNewIssue>
 <xPathNewOrganization>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathNewOrganization>
 <xPathSurvey>/html/body/form/span[2]/div/div[2]/div/h1</xPathSurvey>
-<xPathAgentContacts>/html/body/form/div[4]/div/div[2]/div[2]/span/span/table/tbody/tr/td[5]/span/a/span</xPathAgentContacts>
-<xPathAgent>/html/body/form/div[4]/div/div[2]/div[2]/span/span[2]/h3/span[2]/span/a/span</xPathAgent>
-<xPathAgentCategory>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathAgentCategory>
-<xPathDeleteAgentCategory>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteAgentCategory>
+<xPathAgentContacts>/html/body/form/div[4]/div/span/div/div[2]/span/span/table/tbody/tr/td[5]/span/a/span</xPathAgentContacts>
+<xPathAgent>/html/body/form/div[4]/div/span/div/div[2]/span/span[2]/h3/span[2]/span/a/span</xPathAgent>
+<xPathAgentCategory>/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathAgentCategory>
+<xPathDeleteAgentCategory>/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteAgentCategory>
 <xPathAgentViewAllTypes>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/a</xPathAgentViewAllTypes>
 <xPathURL>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathURL>
 <xPathDeleteAgentURL>/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteAgentURL>
