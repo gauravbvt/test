@@ -214,7 +214,7 @@
 <xPathAssertionDetails>/html/body/form/div[4]/div/div[2]/div/div/h1</xPathAssertionDetails>
 <xPathPhaseAssertionDetails>/html/body/form/div[3]/div/div[2]/div/div/h1</xPathPhaseAssertionDetails>
 <xPathAssertionAboutPlanSegmentDetails>/html/body/form/div[5]/div/div[2]/div/div/h1</xPathAssertionAboutPlanSegmentDetails>
-<xPathAssertionEventWindow>/html/body/form/div[4]/div/div[2]/div[2]/h3/span</xPathAssertionEventWindow>
+<xPathAssertionEventWindow>/html/body/form/div[4]/div/span/div/div[2]/h3/span</xPathAssertionEventWindow>
 <xPathAssertionAboutOrg>/html/body/form/div[5]/div/div[2]/div[2]/h3/span</xPathAssertionAboutOrg>
 <xPathAssertionBibliography>/html/body/form/div[4]/div/div[2]/div[2]/h3/span</xPathAssertionBibliography>
 <xPathAssertionTags>/html/body/form/div[4]/div/div[2]/div[2]/h3</xPathAssertionTags>
