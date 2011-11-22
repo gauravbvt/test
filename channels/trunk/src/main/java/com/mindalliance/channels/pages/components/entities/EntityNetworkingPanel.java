@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.FilterableEntityFlowsPanel;
@@ -80,44 +80,6 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
         entityFlowPanel.setOutputMarkupId( true );
         addOrReplace( entityFlowPanel );
     }
-
-/*    public List<EntityRelationship<T>> getEntityRelationships() {
-        boolean cartesianProduct = false;
-        List<EntityRelationship<T>> entityRels = new ArrayList<EntityRelationship<T>>();
-        if ( selectedEntityRel != null ) {
-            entityRels.add( selectedEntityRel );
-        } else {
-            List<T> entityDomain = getEntityDomain();
-            List<T> entities = new ArrayList<T>();
-            if ( selectedEntity != null ) {
-                entities.add( selectedEntity );
-            } else {
-                entities.addAll( entityDomain );
-                cartesianProduct = true;
-            }
-            for ( T entity : entities ) {
-                for ( T other : entityDomain ) {
-                    if ( entity != other ) {
-                        EntityRelationship<T> sendRel =
-                                getQueryService().findEntityRelationship( entity, other );
-                        if ( sendRel != null ) entityRels.add( sendRel );
-                        if ( !cartesianProduct ) {
-                            EntityRelationship<T> receiveRel =
-                                    getQueryService().findEntityRelationship( other, entity );
-                            if ( receiveRel != null ) entityRels.add( receiveRel );
-                        }
-                    }
-                }
-            }
-        }
-        return entityRels;
-    }*/
-
-    /*   @SuppressWarnings( "unchecked" )
-        public List<T> getEntityDomain() {
-            return (List<T>) getQueryService().listActualEntities( getEntity().getClass() );
-        }
-    */
 
     private T getEntity() {
         return entityModel.getObject();

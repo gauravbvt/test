@@ -148,7 +148,7 @@ public interface Analyst extends CommandListener {
                                                                           T toEntity, Segment segment );
 
     /**
-     * Find relationships with entities of same kind.
+     * Find commitment relationships with entities of same kind.
      *
      * @param segment      a segment
      * @param entity       a model entity
@@ -158,7 +158,7 @@ public interface Analyst extends CommandListener {
     List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity, QueryService queryService );
 
     /**
-     * Find relationships with entities of same kind referenced in a segment.
+     * Find commitment relationships with entities of same kind referenced in a segment.
      *
      * @param queryService the query service
      * @param segment      a segment

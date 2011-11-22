@@ -1099,6 +1099,13 @@ public interface QueryService {
             List<Flow> flows );
 
     /**
+     * Whether a commitment is agreed to if required.
+     * @param commitment a commitment
+     * @return a Boolean
+     */
+    Boolean isAgreedToIfRequired( Commitment commitment );
+
+    /**
      * Find all commitments covered by an agreement by an organization.
      *
      * @param agreement    an agreement

@@ -29,6 +29,7 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.Play;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -572,57 +573,6 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         }
     }
 
-    @Override
-    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( QueryService queryService,
-                                                                                 T fromEntity, T toEntity ) {
-        return findEntityRelationship( queryService, fromEntity, toEntity, null );
-    }
-
-    @Override
-    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( QueryService queryService,
-                                                                                 T fromEntity, T toEntity,
-                                                                                 Segment segment ) {
-        List<Flow> entityFlows = new ArrayList<Flow>();
-        List<Segment> segments = new ArrayList<Segment>();
-        if ( segment == null )
-            segments.addAll( queryService.list( Segment.class ) );
-        else
-            segments.add( segment );
-        for ( Segment seg : segments ) {
-            for ( Flow flow : seg.getAllSharingFlows() ) {
-                Part sourcePart = (Part) flow.getSource();
-                Part targetPart = (Part) flow.getTarget();
-                if ( queryService.isExecutedBy( sourcePart, fromEntity ) && queryService.isExecutedBy( targetPart,
-                        toEntity ) )
-                    entityFlows.add( flow );
-            }
-        }
-        if ( entityFlows.isEmpty() )
-            return null;
-        else {
-            EntityRelationship<T> entityRel = new EntityRelationship<T>( fromEntity, toEntity );
-            entityRel.setFlows( entityFlows );
-            return entityRel;
-        }
-    }
-
-    @Override
-    public List<EntityRelationship> findEntityRelationships( QueryService queryService, Segment segment,
-                                                             Class<? extends ModelEntity> entityClass, Kind kind ) {
-        List<ModelEntity> entities = queryService.findTaskedEntities( segment, entityClass, kind );
-        List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
-        for ( ModelEntity entity : entities ) {
-            for ( ModelEntity otherEntity : entities ) {
-                if ( !entity.equals( otherEntity ) ) {
-                    EntityRelationship<ModelEntity> sendRel =
-                            findEntityRelationship( queryService, entity, otherEntity, segment );
-                    if ( sendRel != null )
-                        rels.add( sendRel );
-                }
-            }
-        }
-        return rels;
-    }
 
     @Override
     public List<RequirementRelationship> findRequirementRelationships(
@@ -678,27 +628,96 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return findRealizabilityProblems( plan, commitment ).isEmpty();
     }
 
+
     @Override
-    public List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity,
-                                                             QueryService queryService ) {
-        List<ModelEntity> otherEntities = new ArrayList<ModelEntity>( queryService.findTaskedEntities( segment,
-                entity.getClass(),
-                entity.getKind() ) );
-        otherEntities.remove( entity );
+    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( QueryService queryService,
+                                                                                 T fromEntity, T toEntity ) {
+        return findEntityRelationship( queryService, fromEntity, toEntity, null );
+    }
+
+    @Override
+    public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( QueryService queryService,
+                                                                                 T fromEntity, T toEntity,
+                                                                                 Segment segment ) {
+        Place planLocale = queryService.getPlan().getLocale();
+        Commitments commitments = Commitments.all( queryService )
+                .inSegment( segment )
+                .withEntityCommitting( fromEntity, planLocale )
+                .withEntityBenefiting( toEntity, planLocale );
+        Set<Flow> entityFlows = new HashSet<Flow>();
+        for( Commitment commitment : commitments ) {
+             entityFlows.add( commitment.getSharing() );
+        }
+        if ( entityFlows.isEmpty() )
+            return null;
+        else {
+            EntityRelationship<T> entityRel = new EntityRelationship<T>( fromEntity, toEntity );
+            entityRel.setFlows( new ArrayList<Flow>( entityFlows ) );
+            return entityRel;
+        }
+    }
+
+    @Override
+    public List<EntityRelationship> findEntityRelationships( QueryService queryService, Segment segment,
+                                                             Class<? extends ModelEntity> entityClass, Kind kind ) {
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
-        for ( ModelEntity otherEntity : otherEntities ) {
-            EntityRelationship<ModelEntity> sendRel = findEntityRelationship( queryService, entity, otherEntity );
-            if ( sendRel != null ) {
-                rels.add( sendRel );
-            }
-            EntityRelationship<ModelEntity> receiveRel = findEntityRelationship( queryService, otherEntity, entity );
-            if ( receiveRel != null ) {
-                rels.add( receiveRel );
-            }
+        List<? extends ModelEntity> entities =
+                kind == Kind.Actual
+                        ? queryService.listActualEntities( entityClass )
+                        : queryService.listTypeEntities( entityClass );
+        for ( ModelEntity entity : entities ) {
+            if ( !entity.isUnknown() )
+                rels.addAll( findEntityRelationships( segment, entity, queryService ) );
         }
         return rels;
     }
 
+    @Override
+    public List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity,
+                                                             QueryService queryService ) {
+        List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
+        Place planLocale = queryService.getPlan().getLocale();
+        // Committing relationships
+        Commitments entityCommittingCommitments = Commitments.all( queryService )
+                .inSegment( segment )
+                .withEntityCommitting( entity, planLocale );
+        List<? extends ModelEntity> otherEntities =
+                 entity.isActual()
+                         ? queryService.listActualEntities( entity.getClass() )
+                         : queryService.listTypeEntities( entity.getClass() );
+
+        for ( ModelEntity otherEntity : otherEntities ) {
+            if ( !otherEntity.isUnknown() && !entity.equals( otherEntity ) ) {
+                Set<Flow> flows = new HashSet<Flow>();
+                for ( Commitment commitment : entityCommittingCommitments.withEntityBenefiting( otherEntity, planLocale ) ) {
+                    flows.add( commitment.getSharing() );
+                }
+                if ( !flows.isEmpty() ) {
+                    EntityRelationship<ModelEntity> rel = new EntityRelationship<ModelEntity>( entity, otherEntity );
+                    rel.setFlows( new ArrayList<Flow>( flows ) );
+                    rels.add( rel );
+                }
+            }
+        }
+        // Benefiting relationships
+        Commitments entityBenefitingCommitments = Commitments.all( queryService )
+                .inSegment( segment )
+                .withEntityBenefiting( entity, planLocale );
+        for ( ModelEntity otherEntity : otherEntities ) {
+            if ( !otherEntity.isUnknown() && !entity.equals( otherEntity ) ) {
+                Set<Flow> flows = new HashSet<Flow>();
+                for ( Commitment commitment : entityBenefitingCommitments.withEntityCommitting( otherEntity, planLocale ) ) {
+                    flows.add( commitment.getSharing() );
+                }
+                if ( !flows.isEmpty() ) {
+                    EntityRelationship<ModelEntity> rel = new EntityRelationship<ModelEntity>( otherEntity, entity );
+                    rel.setFlows( new ArrayList<Flow>( flows ) );
+                    rels.add( rel );
+                }
+            }
+        }
+        return rels;
+    }
     @Override
     public Boolean isEffectivelyConceptual( QueryService queryService, Part part ) {
         return !findConceptualCauses( queryService, part ).isEmpty();
@@ -760,50 +779,55 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 if ( commitments.isEmpty() ) {
                     causes.add( "there are no sharing commitments between any pair of agents" );
                 } else {
-                    List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
                     StringBuilder sb = new StringBuilder();
                     Plan plan = queryService.getPlan();
                     Place locale = plan.getLocale();
-                    List<Commitment> availabilitiesCoincideIfRequired =
-                            availabilitiesCoincideIfRequiredFilter( commitments, mediaUsed, locale );
-                    if ( availabilitiesCoincideIfRequired.isEmpty() ) {
-                        sb.append( "in all sharing commitments, " );
-                        sb.append( "agents are never available at the same time as they must to communicate" );
+                    List<Commitment> agreedTo = agreedToFilter( commitments, queryService );
+                    if ( agreedTo.isEmpty() ) {
+                        sb.append( "none of the sharing commitments are agreed to as required " );
                     } else {
-                        List<Commitment> mediaDeployed =
-                                someMediaDeployedFilter( availabilitiesCoincideIfRequired, mediaUsed, locale );
-                        if ( mediaDeployed.isEmpty() ) {
-                            if ( sb.length() == 0 )
-                                sb.append( "in all sharing commitments, " );
-                            else
-                                sb.append( ", or " );
-                            sb.append( "agents do not have access to required transmission media" );
+                        List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
+                        List<Commitment> availabilitiesCoincideIfRequired =
+                                availabilitiesCoincideIfRequiredFilter( agreedTo, mediaUsed, locale );
+                        if ( availabilitiesCoincideIfRequired.isEmpty() ) {
+                            sb.append( "in all sharing commitments, " );
+                            sb.append( "agents are never available at the same time as they must to communicate" );
                         } else {
-                            List<Commitment> reachable =
-                                    reachableFilter( availabilitiesCoincideIfRequired, mediaUsed, locale );
-                            if ( reachable.isEmpty() ) {
+                            List<Commitment> mediaDeployed =
+                                    someMediaDeployedFilter( availabilitiesCoincideIfRequired, mediaUsed, locale );
+                            if ( mediaDeployed.isEmpty() ) {
                                 if ( sb.length() == 0 )
                                     sb.append( "in all sharing commitments, " );
                                 else
                                     sb.append( ", or " );
-                                sb.append( "the agent to be contacted is not reachable (no contact info)" );
+                                sb.append( "agents do not have access to required transmission media" );
                             } else {
-                                List<Commitment> agentsQualified =
-                                        agentsQualifiedFilter( reachable, mediaUsed, locale );
-                                if ( agentsQualified.isEmpty() ) {
+                                List<Commitment> reachable =
+                                        reachableFilter( availabilitiesCoincideIfRequired, mediaUsed, locale );
+                                if ( reachable.isEmpty() ) {
                                     if ( sb.length() == 0 )
                                         sb.append( "in all sharing commitments, " );
                                     else
                                         sb.append( ", or " );
-                                    sb.append( "both agents are not qualified to use a transmission medium" );
+                                    sb.append( "the agent to be contacted is not reachable (no contact info)" );
                                 } else {
-                                    List<Commitment> languageOverlap = commonLanguageFilter( plan, agentsQualified );
-                                    if ( languageOverlap.isEmpty() ) {
+                                    List<Commitment> agentsQualified =
+                                            agentsQualifiedFilter( reachable, mediaUsed, locale );
+                                    if ( agentsQualified.isEmpty() ) {
                                         if ( sb.length() == 0 )
                                             sb.append( "in all sharing commitments, " );
                                         else
                                             sb.append( ", or " );
-                                        sb.append( "agents do not speak a common language" );
+                                        sb.append( "both agents are not qualified to use a transmission medium" );
+                                    } else {
+                                        List<Commitment> languageOverlap = commonLanguageFilter( plan, agentsQualified );
+                                        if ( languageOverlap.isEmpty() ) {
+                                            if ( sb.length() == 0 )
+                                                sb.append( "in all sharing commitments, " );
+                                            else
+                                                sb.append( ", or " );
+                                            sb.append( "agents do not speak a common language" );
+                                        }
                                     }
                                 }
                             }
@@ -842,37 +866,43 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                     remediations.add(
                             "add jobs to relevant organizations so that agents can be assigned to source and/or target tasks" );
                 } else {
-                    List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
                     Plan plan = queryService.getPlan();
                     Place locale = plan.getLocale();
-                    List<Commitment> availabilitcoincideIfRequired =
-                            availabilitiesCoincideIfRequiredFilter( commitments, mediaUsed, locale );
-                    if ( availabilitcoincideIfRequired.isEmpty() ) {
-                        remediations.add( "change agent availability to make them coincide" );
-                        remediations.add( "add a channel that does not require synchronous communication" );
+                    List<Commitment> agreedTo = agreedToFilter( commitments, queryService );
+                    if ( agreedTo.isEmpty() ) {
+                        remediations.add( "change the profile of the committing organizations and " +
+                                "add the required agreements or remove the requirement for agreements" );
                     } else {
-                        List<Commitment> mediaDeployed =
-                                someMediaDeployedFilter( availabilitcoincideIfRequired, mediaUsed, locale );
-                        if ( mediaDeployed.isEmpty() )
-                            remediations.add( "make sure that the agents that are available"
-                                    + " to each other also have access to required transmission media" );
-                        else {
-                            List<Commitment> reachable =
-                                    reachableFilter( availabilitcoincideIfRequired, mediaUsed, locale );
-                            if ( reachable.isEmpty() )
+                        List<TransmissionMedium> mediaUsed = flow.transmissionMedia();
+                        List<Commitment> availabilitcoincideIfRequired =
+                                availabilitiesCoincideIfRequiredFilter( agreedTo, mediaUsed, locale );
+                        if ( availabilitcoincideIfRequired.isEmpty() ) {
+                            remediations.add( "change agent availability to make them coincide" );
+                            remediations.add( "add a channel that does not require synchronous communication" );
+                        } else {
+                            List<Commitment> mediaDeployed =
+                                    someMediaDeployedFilter( availabilitcoincideIfRequired, mediaUsed, locale );
+                            if ( mediaDeployed.isEmpty() )
                                 remediations.add( "make sure that the agents that are available"
-                                        + " to each other also have known contact information" );
+                                        + " to each other also have access to required transmission media" );
                             else {
-                                List<Commitment> agentsQualified =
-                                        agentsQualifiedFilter( reachable, mediaUsed, locale );
-                                if ( agentsQualified.isEmpty() ) {
-                                    remediations.add( "make sure that agents that are available to each other"
-                                            + " and reachable are also qualified to use the transmission media" );
-                                    remediations.add( "add channels with transmission media requiring no qualification" );
-                                } else if ( commonLanguageFilter( plan, commitments ).isEmpty() ) {
-                                    remediations.add( "make sure that agents that are available to each other, "
-                                            + "reachable and qualified to use the transmission media "
-                                            + "can also speak a common language" );
+                                List<Commitment> reachable =
+                                        reachableFilter( availabilitcoincideIfRequired, mediaUsed, locale );
+                                if ( reachable.isEmpty() )
+                                    remediations.add( "make sure that the agents that are available"
+                                            + " to each other also have known contact information" );
+                                else {
+                                    List<Commitment> agentsQualified =
+                                            agentsQualifiedFilter( reachable, mediaUsed, locale );
+                                    if ( agentsQualified.isEmpty() ) {
+                                        remediations.add( "make sure that agents that are available to each other"
+                                                + " and reachable are also qualified to use the transmission media" );
+                                        remediations.add( "add channels with transmission media requiring no qualification" );
+                                    } else if ( commonLanguageFilter( plan, commitments ).isEmpty() ) {
+                                        remediations.add( "make sure that agents that are available to each other, "
+                                                + "reachable and qualified to use the transmission media "
+                                                + "can also speak a common language" );
+                                    }
                                 }
                             }
                         }
@@ -881,6 +911,17 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             }
         }
         return remediations;
+    }
+
+    // Filter commitments where agreements are in place if required.
+    @SuppressWarnings( "unchecked" )
+    private List<Commitment> agreedToFilter( List<Commitment> commitments, final QueryService queryService ) {
+        return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return queryService.isAgreedToIfRequired( (Commitment) object );
+            }
+        } );
     }
 
     // Filter commitments where agent availabilities coincide if required.
@@ -923,6 +964,10 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 return isSomeMediaDeployed( commitment, mediaUsed, planLocale );
             }
         } );
+    }
+
+    private boolean isAgreedToIfRequired( Commitment commitment ) {
+        return false;
     }
 
     @Override
@@ -1015,6 +1060,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         List<String> problems = new ArrayList<String>();
         List<TransmissionMedium> mediaUsed = commitment.getSharing().transmissionMedia();
         Place planLocale = plan.getLocale();
+        if ( !isAgreedToIfRequired( commitment ) )
+            problems.add( "sharing not agreed to as required" );
         if ( !isAvailabilitiesCoincideIfRequired( commitment, mediaUsed, planLocale ) )
             problems.add( "availabilities do not coincide as they must" );
         if ( !commitment.isCommonLanguage( plan ) )
@@ -1056,8 +1103,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     @Override
     public int commitmentsCount( Requirement requirement, Object[] extras, QueryService queryService ) {
-        Phase.Timing timing = (Phase.Timing)extras[0];
-        Event event = (Event)extras[1];
+        Phase.Timing timing = (Phase.Timing) extras[0];
+        Event event = (Event) extras[1];
         return queryService.getAllCommitments().inSituation(
                 timing,
                 event,
@@ -1070,11 +1117,11 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             Requirement requirement,
             Object[] extras,
             QueryService queryService ) {
-        Phase.Timing timing = (Phase.Timing)extras[0];
-        Event event = (Event)extras[1];
+        Phase.Timing timing = (Phase.Timing) extras[0];
+        Event event = (Event) extras[1];
         Organization org = requirement.getCommitterSpec().getOrganization();
         assert org.isActual();
-        return requirement.satisfaction( org, false, timing, event, queryService, this  );
+        return requirement.satisfaction( org, false, timing, event, queryService, this );
     }
 
     @Override
@@ -1082,12 +1129,12 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             Requirement requirement,
             Object[] extras,
             QueryService queryService ) {
-        Phase.Timing timing = (Phase.Timing)extras[0];
-        Event event = (Event)extras[1];
+        Phase.Timing timing = (Phase.Timing) extras[0];
+        Event event = (Event) extras[1];
         Organization org = requirement.getBeneficiarySpec().getOrganization();
-         assert org.isActual();
-         return requirement.satisfaction( org, true, timing, event, queryService, this  );
-     }
+        assert org.isActual();
+        return requirement.satisfaction( org, true, timing, event, queryService, this );
+    }
 
 
     @Override

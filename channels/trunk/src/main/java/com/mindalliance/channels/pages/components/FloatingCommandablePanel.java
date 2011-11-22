@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.model.Identifiable;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -66,7 +67,7 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
     private WebMarkupContainer resizer;
     private boolean minimized = false;
     private AjaxFallbackLink minimizeLink;
-
+    private static final int MINIMIZED_TITLE_SIZE = 27;
     public FloatingCommandablePanel( String id ) {
         this( id, null, null );
     }
@@ -90,14 +91,13 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         // minimize
         addMinimize();
         // close -- blur any entry field to make sure any change is taken
-        String closeScript = "this.focus();";
         AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 close( target );
             }
         };
-        closeLink.add( new AttributeModifier( "onMouseOver", true, new Model<String>( closeScript ) ) );
+        closeLink.add( new AttributeModifier( "onMouseOver", true, new Model<String>( "this.focus();" ) ) );
         moveBar.add( closeLink );
         // Content
         addContent();
@@ -131,6 +131,7 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         makeVisible( content, !minimized );
         makeVisible( resizer, !minimized );
         addMinimize();
+        addTitle();
         target.addComponent( this );
         String minimizeNormalizeScript = "Floater.minimizeNormalize('"
                 + minimizeLink.getMarkupId() + "', "
@@ -169,10 +170,18 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
      * Add title to floating panel.
      */
     protected void addTitle() {
-        titleLabel = new Label( "title", new Model<String>( getTitle() ) );
+        titleLabel = new Label( "title", new Model<String>( getAdjustedTitle() ) );
         titleLabel.setOutputMarkupId( true );
         moveBar.addOrReplace( titleLabel );
     }
+
+    private String getAdjustedTitle() {
+        String title = getTitle();
+        return minimized
+                ? StringUtils.abbreviate( title, MINIMIZED_TITLE_SIZE )
+                : title;
+    }
+
 
     /**
      * Get title of floating panel.

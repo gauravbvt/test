@@ -1405,13 +1405,13 @@ public abstract class DefaultQueryService implements QueryService {
         for ( final Commitment commitment : commitments ) {
             if ( ModelObject.areIdentical( commitment.getCommitter().getOrganization(), organization ) )
                 if ( commitment.isBetweenUnrelatedOrganizations() ) {
-                    Agreement agreement = Agreement.from( commitment );
+                    final Agreement agreement = Agreement.from( commitment );
                     encompassed.addAll( (List<Agreement>) CollectionUtils.select(
                             agreements,
                             new Predicate() {
                                 @Override
                                 public boolean evaluate( Object object ) {
-                                    return encompasses( Agreement.from( commitment ),
+                                    return encompasses( agreement,
                                             (Agreement) object );
                                 }
                             } )
@@ -1421,6 +1421,26 @@ public abstract class DefaultQueryService implements QueryService {
         }
         return (List<Agreement>) CollectionUtils.subtract( agreements, encompassed );
     }
+
+    @Override
+    public Boolean isAgreedToIfRequired( Commitment commitment ) {
+        Organization org = commitment.getCommitter().getOrganization();
+        if ( org.isEffectiveAgreementsRequired() && commitment.isBetweenUnrelatedOrganizations() ) {
+            final Agreement requiredAgreement = Agreement.from( commitment );
+            return CollectionUtils.exists(
+                    org.getAgreements(),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return encompasses( (Agreement)object, requiredAgreement );
+                        }
+                    }
+            );
+        } else {
+            // agreement not required
+            return true;
+        }
+     }
 
     @Override
     public List<Part> findAllInitiators( EventTiming eventTiming ) {

@@ -367,6 +367,20 @@ public class ResourceSpec extends ModelObject implements Specable {
     }
 
     /**
+     * Whether this resource spec references the entity or an entity that broadens it.
+     *
+     * @param entity an entity
+     * @param locale the default location
+     * @return a boolean
+     */
+    public boolean hasEntityOrNarrower( ModelEntity entity, Place locale ) {
+        return actor != null && actor.narrowsOrEquals( entity, locale )
+            || role != null && role.narrowsOrEquals( entity, locale )
+            || organization != null && organization.narrowsOrEquals( entity, locale )
+            || jurisdiction != null && jurisdiction.narrowsOrEquals( entity, locale );
+    }
+
+    /**
      * Whether the source spec contains an entity in its definition.
      *
      * @param entity an entity
@@ -478,5 +492,20 @@ public class ResourceSpec extends ModelObject implements Specable {
             setJurisdiction( queryService.retrieveEntity( Place.class, state, "jurisdiction" ) );
         else
             setJurisdiction( null );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelEntity> T getEntity( Class<T> aClass ) {
+       if ( aClass.isAssignableFrom( Actor.class )) {
+           return (T)getActor();
+       } else if ( aClass.isAssignableFrom( Role.class )) {
+           return (T)getRole();
+       } else if ( aClass.isAssignableFrom( Organization.class )) {
+           return (T)getOrganization();
+       } else if ( aClass.isAssignableFrom( Place.class )) {
+           return (T)getJurisdiction();
+       } else {
+           return null;
+       }
     }
 }

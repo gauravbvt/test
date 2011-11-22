@@ -12,10 +12,12 @@ import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
@@ -115,6 +117,16 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         return result;
     }
 
+
+    public Commitments inSegment( Segment segment ) {
+        Commitments result = new Commitments();
+        for ( Commitment commitment : commitments ) {
+            if ( segment == null || commitment.isInSegment( segment) )
+            result.add(  commitment );
+        }
+        return result;
+    }
+
     public Commitments inSituation( Phase.Timing timing, Event event, Place planLocale ) {
         Commitments result = new Commitments();
         for ( Commitment commitment : commitments ) {
@@ -146,6 +158,30 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         }
         return result;
     }
+
+
+    public Commitments withEntityCommitting( ModelEntity entity, Place planLocale ) {
+        Commitments result = new Commitments( planLocale );
+        Iterator<Commitment> iterator = iterator();
+        while( iterator.hasNext() ) {
+            Commitment commitment = iterator.next();
+            if ( commitment.getCommitter().getResourceSpec().hasEntityOrNarrower( entity, planLocale ) )
+                result.add(  commitment );
+        }
+        return result;
+    }
+
+    public Commitments withEntityBenefiting( ModelEntity entity, Place planLocale ) {
+        Commitments result = new Commitments( planLocale );
+        Iterator<Commitment> iterator = iterator();
+        while( iterator.hasNext() ) {
+            Commitment commitment = iterator.next();
+            if ( commitment.getBeneficiary().getResourceSpec().hasEntityOrNarrower( entity, planLocale ) )
+                result.add(  commitment );
+        }
+        return result;
+    }
+
 
     public void add( Commitment commitment ) {
         commitments.add( commitment );
@@ -179,6 +215,5 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public List<Commitment> toList() {
         return new ArrayList<Commitment>( commitments );
     }
-
 }
 
