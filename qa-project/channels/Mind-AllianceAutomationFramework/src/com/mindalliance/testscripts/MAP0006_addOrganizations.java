@@ -30,7 +30,7 @@ public class MAP0006_addOrganizations
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 				if (GlobalVariables.bIsSuccess) {
 
-					// Select  the plan from 'Switch to Plan' drop down, located on the top right corner
+					// Select the plan from 'Switch to Plan' drop down, located on the top right corner
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Switch to plan";
 					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("switch-plan:plan-sel")));
@@ -61,7 +61,7 @@ public class MAP0006_addOrganizations
 					Thread.currentThread();
 					Thread.sleep(3000);				     
 				    
-					//Click on 'About Plan' from show popup manu
+					//Click on 'About Plan' from show popup menu
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="About plan";
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"), GlobalVariables.viewElements.get("aboutPlan"));
@@ -88,11 +88,11 @@ public class MAP0006_addOrganizations
 					// Enter name of organization in 'Other organization that should be assigned tasks ' field
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Name Entered";
-					GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
+					GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 					String sOrgName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sOrgName);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);			
