@@ -24,7 +24,7 @@
 <xPathAboutPlanActionMenu>/html/body/form/div[4]/div/span/div/div/div/span/span[2]/span/span</xPathAboutPlanActionMenu>
 <xPathAllSegmentShowMenu>/html/body/form/div[4]/div/div[2]/div/div/span/span/span/span</xPathAllSegmentShowMenu>
 <xPathTaskMoverDetail>/html/body/form/div[5]/div/div[2]/div[2]/h3/span</xPathTaskMoverDetail>
-<xPathDeleteOrgs>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/span/a/span</xPathDeleteOrgs>
+<xPathDeleteOrgs>/html/body/form/div[4]/div/span/div/div[2]/div/div[2]/span/a/span</xPathDeleteOrgs>
 <xPathDefaultTask>/html/body/form/span/div/div[3]/div/div/span[2]/a</xPathDefaultTask>
 <xPathTaskShowMenu>/html/body/form/span/div/div[3]/div/div/span[2]/span/span/span</xPathTaskShowMenu>
 <xPathTaskActionsMenu>/html/body/form/span/div/div[3]/div/div/span[2]/span[2]/span/span</xPathTaskActionsMenu>
