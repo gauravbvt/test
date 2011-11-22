@@ -83,7 +83,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			initComponents();
 		}
 		catch (Exception e) {
-			System.out.println("\nIn InitComponents Function.");
+			System.out.println("In InitComponents Function.");
 			e.printStackTrace();
 		}
 	}
@@ -355,7 +355,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 				image = ImageIO.read(new File(GlobalVariables.fCurrentDir + "//Images//Mind-Alliance_Logo.png"));
 			} 
 			catch (IOException ex) {
-				System.out.println("\n Error Occured in getJPanel1 Function.");
+				System.out.println("Error Occured in getJPanel1 Function.");
 				ex.printStackTrace();
 			}
 		    jPanelLogo.setLayout(new GroupLayout());
@@ -413,7 +413,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			return jListView;
 		}
 		catch (Exception e) {
-			System.out.println("\nError Occured in getJList0 Function.");
+			System.out.println("Error Occured in getJList0 Function.");
 			e.printStackTrace();
 		}
 		return jListView;
@@ -430,7 +430,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			return jListPlan;
 		}
 		catch (Exception e) {
-			System.out.println("\nError Occured in getJList1 Function.");
+			System.out.println("Error Occured in getJList1 Function.");
 			e.printStackTrace();
 		}
 		return jListPlan;
@@ -448,7 +448,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			return jListCommand;
 		}
 		catch (Exception e) {
-			System.out.println("\nError Occured in getJList2 Function.");
+			System.out.println("Error Occured in getJList2 Function.");
 			e.printStackTrace();
 		}
 		return jListCommand;
@@ -490,9 +490,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 					jLabelTestCaseId.paintImmediately(jLabelTestCaseId.getVisibleRect());
 					//Execute current TestCaseId
 					cls = Class.forName("com.mindalliance.testscripts." + testCaseId);
-					System.out.println("\n");
 					cls.newInstance();
-					System.out.println("\n");
 					//Update progressBar
 					cnt = cnt + 1;
 					updateProgressBar(cnt);
@@ -543,7 +541,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			jLabelNumberOfTestCasesFailed.paintImmediately(jLabelNumberOfTestCasesFailed.getVisibleRect());
 		}
 		catch (Exception e) {
-			System.out.println("\nError Occured in ExecuteTestCases Function.");
+			System.out.println("Error Occured in ExecuteTestCases Function.");
 			e.printStackTrace();
 		}
 	}
@@ -628,7 +626,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			
 		} 
 		catch (IOException ex) {
-			System.out.println("\nError Occured in ActionPerformed Function.");
+			System.out.println("Error Occured in ActionPerformed Function.");
 			ex.printStackTrace();
 		}
 	}
@@ -686,7 +684,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			jProgressBarStatus.paintImmediately(progressRect);
 		}
 		catch (Exception e) {
-			System.out.println("\nError Occured in ClearTestPlanResult Function.");
+			System.out.println("Error Occured in ClearTestPlanResult Function.");
 			e.printStackTrace();
 		}
 	}
@@ -714,7 +712,7 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			}
 		}
 		catch(Exception ex) {
-			System.out.println("\nError Occured in ItemStateChanged Function.");
+			System.out.println("Error Occured in ItemStateChanged Function.");
 			ex.printStackTrace();
 		}
 	}
