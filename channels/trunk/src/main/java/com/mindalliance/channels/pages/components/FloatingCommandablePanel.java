@@ -30,6 +30,28 @@ import java.util.Set;
  */
 abstract public class FloatingCommandablePanel extends AbstractCommandablePanel {
 
+    /**
+      * Expected screen resolution.
+      */
+     static protected double DPI = 96.0;
+
+     /**
+      * Pad top on move.
+      */
+     static protected final int PAD_TOP = 68;
+     /**
+      * Pad left on move.
+      */
+     static protected final int PAD_LEFT = 7;
+     /**
+      * Pad bottom on move and resize.
+      */
+     static protected final int PAD_BOTTOM = 7;
+     /**
+      * Pad right on move and resize.
+      */
+     static protected final int PAD_RIGHT = 7;
+
 
     /**
      * Background color.
@@ -68,6 +90,8 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
     private boolean minimized = false;
     private AjaxFallbackLink minimizeLink;
     private static final int MINIMIZED_TITLE_SIZE = 27;
+    private static final int MINIMIZED_HEIGHT = 38;
+
     public FloatingCommandablePanel( String id ) {
         this( id, null, null );
     }
@@ -136,10 +160,12 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         String minimizeNormalizeScript = "Floater.minimizeNormalize('"
                 + minimizeLink.getMarkupId() + "', "
                 + getPadBottom() + ", "
+                + MINIMIZED_HEIGHT + ", "
                 + minimized + ");";
         target.appendJavascript( minimizeNormalizeScript );
 
     }
+
 
     private void addContent() {
         content = new WebMarkupContainer( "content" );

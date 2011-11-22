@@ -50,22 +50,6 @@ import java.util.Set;
 public class FlowEOIsPanel extends FloatingCommandablePanel {
 
     /**
-     * Pad top on move.
-     */
-    private static final int PAD_TOP = 68;
-    /**
-     * Pad left on move.
-     */
-    private static final int PAD_LEFT = 5;
-    /**
-     * Pad bottom on move and resize.
-     */
-    private static final int PAD_BOTTOM = 5;
-    /**
-     * Pad right on move and resize.
-     */
-    private static final int PAD_RIGHT = 6;
-    /**
      * Min width on resize.
      */
     private static final int MIN_WIDTH = 500;

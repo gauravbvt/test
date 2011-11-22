@@ -50,7 +50,7 @@ Floater.moveToTop = function( element ) {
     }
 }
 
-Floater.minimizeNormalize = function( minimizeId, padBottom, minimize ) {
+Floater.minimizeNormalize = function( minimizeId, padBottom, minimizedHeight, minimize ) {
     var element = document.getElementById( minimizeId ).parentNode.parentNode.parentNode.parentNode;
     if ( !minimize ) {
         // normalizing
@@ -79,7 +79,7 @@ Floater.minimizeNormalize = function( minimizeId, padBottom, minimize ) {
         element.style.backgroundColor = "transparent";
         element.style.border = "0";
         element.style.width = "250px";
-        element.style.top = ($( window ).height() - 40) + "px";
+        element.style.top = ($( window ).height() - minimizedHeight) + "px";
     }
     this.moveToTop( element );
 }

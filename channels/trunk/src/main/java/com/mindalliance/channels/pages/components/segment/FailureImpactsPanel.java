@@ -39,27 +39,7 @@ import java.util.Set;
  * Time: 8:40:48 PM
  */
 public class FailureImpactsPanel extends FloatingCommandablePanel {
-    /**
-     * Expected screen resolution.
-     */
-    static private double DPI = 96.0;
 
-    /**
-     * Pad top on move.
-     */
-    private static final int PAD_TOP = 68;
-    /**
-     * Pad left on move.
-     */
-    private static final int PAD_LEFT = 5;
-    /**
-     * Pad bottom on move and resize.
-     */
-    private static final int PAD_BOTTOM = 5;
-    /**
-     * Pad right on move and resize.
-     */
-    private static final int PAD_RIGHT = 6;
     /**
      * Min width on resize.
      */
