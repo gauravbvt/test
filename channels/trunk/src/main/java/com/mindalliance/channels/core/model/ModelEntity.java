@@ -155,12 +155,13 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
      * @return a kind
      */
     public static Kind defaultKindFor( Class<? extends ModelEntity> entityClass ) {
-        if ( Event.class.isAssignableFrom( entityClass )
+       /* if ( Event.class.isAssignableFrom( entityClass )
                 || Role.class.isAssignableFrom( entityClass ) ) {
             return Kind.Type;
         } else {
             return Kind.Actual;
-        }
+        }*/
+        return Kind.Type;
     }
 
     /**

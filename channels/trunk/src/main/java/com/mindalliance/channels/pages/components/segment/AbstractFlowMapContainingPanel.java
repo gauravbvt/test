@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
@@ -41,7 +41,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
     /**
      * Whether to show goals in flow map.
      */
-    private boolean showingGoals = false;
+    private boolean showingGoals = true;
     /**
      * Whether to show conceptual tasks and flows in flow map.
      */
