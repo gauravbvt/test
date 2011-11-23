@@ -175,20 +175,18 @@ public class CA023_AssignUserToAllPlan
 			    GlobalVariables.sDescription = "User is able to view all the plans created by Administrator";
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("switch-plan:plan-sel")));
 				options = GlobalVariables.oDropDown.getOptions();
-			    if(options.size()==2)
-			    {
+			    if(options.size()==2){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
-			    else
-			    {
+			    else{
 			    	GlobalVariables.sVerifyError="Verification Failed. Expected 'No. Of Plans = 2' Actual 'No. Of Plans = "+ options.size()+"'";
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);			    	
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);			    	
 			    }
 			    // WebElement Synchronization
 				Thread.currentThread();

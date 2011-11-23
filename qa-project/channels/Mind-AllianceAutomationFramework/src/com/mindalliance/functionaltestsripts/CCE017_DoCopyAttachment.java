@@ -48,8 +48,8 @@ public class CCE017_DoCopyAttachment
 					// Enter the details for new segment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Segment's details entered";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).clear();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).clear();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Do Copy Attachment"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

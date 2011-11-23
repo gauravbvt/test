@@ -51,8 +51,8 @@ public class CCE023_DoUndoRedoAddInfoCapability
 					// Enter the details
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "New segment updated";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 					for (int i = 0; i <= 8; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys("Segment For Do Undo Redo Add Info Capability");

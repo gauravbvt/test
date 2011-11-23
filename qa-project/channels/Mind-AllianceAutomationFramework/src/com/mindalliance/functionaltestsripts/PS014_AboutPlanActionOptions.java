@@ -49,21 +49,25 @@ public class PS014_AboutPlanActionOptions
 				GlobalVariables.sDescription = "Click on 'Action' Menu";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanActionMenu"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanActionMenu")));
-				//Assertion : Verify that After clicking on 'Actions' menu send message and add new issue options are displayed to user
-				if(GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanActionSendMessage"))).getText().equals(GlobalVariables.viewElements.get("sendMessage")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanActionAddNewIssue"))).getText().equals(GlobalVariables.viewElements.get("addNewIssue"))){
+				GlobalVariables.oElement.click();
+				//Assertion : Verify that action pop up menu is present.
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("actions"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("show")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
-
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

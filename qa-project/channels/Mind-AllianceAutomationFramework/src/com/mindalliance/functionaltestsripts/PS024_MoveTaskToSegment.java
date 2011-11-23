@@ -52,8 +52,8 @@ public class PS024_MoveTaskToSegment
 					// Enter the details for new segment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "First Segment's details entered";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 						for (int i = 0; i <= 8; i++)
 							GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("The Other Segment"));
@@ -92,8 +92,8 @@ public class PS024_MoveTaskToSegment
 					// Enter the details for new segment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Second Segment's details entered";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 						for (int i = 0; i <= 8; i++)
 							GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("View Segment"));
@@ -202,7 +202,7 @@ public class PS024_MoveTaskToSegment
 					// Select the other segment to move tasks
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Other Segment selected";
-					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:destinationSegment")));
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:destinationSegment")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(option.getText().equals("The Other Segment")){
@@ -221,8 +221,8 @@ public class PS024_MoveTaskToSegment
 					// Select the tasks to move
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Tasks selected";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:parts:movableParts:body:rows:2:cells:1:cell:checkBox")).click();
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:parts:movableParts:body:rows:3:cells:1:cell:checkBox")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:parts:movableParts:body:rows:2:cells:1:cell:checkBox")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:parts:movableParts:body:rows:3:cells:1:cell:checkBox")).click();
 			        // Write Results
 				    LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

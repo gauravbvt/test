@@ -48,22 +48,19 @@ public class PS025_AddNewIssue
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Added";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathRemoveIssue")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("menu")))
-				{
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("menu"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
-				else
-				{
+				else{
 					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("menu")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sVerifyError, GlobalVariables.sBlank);
-				}
-				
+				}				
 				// Close Survey Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization

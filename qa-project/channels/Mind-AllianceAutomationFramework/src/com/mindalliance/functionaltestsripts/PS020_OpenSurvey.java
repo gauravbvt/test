@@ -40,15 +40,13 @@ public class PS020_OpenSurvey
 				Thread.sleep(1000);
 				//Assertion : Verify that survey window gets opened
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSurvey")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("surveys")))
-				{
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("surveys"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
-				else
-				{
+				else{
 					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("surveys")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

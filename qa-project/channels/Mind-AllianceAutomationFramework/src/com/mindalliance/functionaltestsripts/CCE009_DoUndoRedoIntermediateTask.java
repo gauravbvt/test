@@ -54,11 +54,11 @@ public class CCE009_DoUndoRedoIntermediateTask
 					// Enter the details
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "New segment updated";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).clear();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).clear();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Do Undo Redo Intermediate Task"));
 					// Click on 'done' button
 					GlobalVariables.oDriver.findElement(By.className("close")).click();

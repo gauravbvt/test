@@ -53,8 +53,8 @@ public class CCE010_DoUndoDisintermediateTask
 					// Enter the details
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "New segment updated";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).clear();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).clear();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Do Undo Redo Disintermediate Task"));
 					// Click on 'done' button
 					GlobalVariables.oDriver.findElement(By.className("close")).click();

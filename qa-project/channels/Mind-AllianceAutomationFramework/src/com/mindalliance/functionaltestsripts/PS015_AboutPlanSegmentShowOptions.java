@@ -48,49 +48,24 @@ public class PS015_AboutPlanSegmentShowOptions
 				GlobalVariables.sDescription = "Click on 'Show' Menu";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAbtPlanSegShowMenu"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAbtPlanSegShowMenu")));
+				GlobalVariables.oElement.click();
 				//Assertion : Verify that After clicking on 'Actions' menu send message and add new issue options are displayed to user
-				if(GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathAbtPlanSegDetails"))).getText().equals(GlobalVariables.viewElements.get("Details")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathAbtPlanSegGoals"))).getText().equals(GlobalVariables.viewElements.get("goals")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathAbtPlanSegOrganizations"))).getText().equals(GlobalVariables.viewElements.get("organizations")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathAbtPlanSegMap"))).getText().equals(GlobalVariables.viewElements.get("map")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathAbtPlanSegTaskMover"))).getText().equals(GlobalVariables.viewElements.get("taskMover"))){
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("show"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("show")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}				
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
-				// Click on 'Actions' Pop up Menu 
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Click on 'Action' Menu";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanAction"))).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanAction")));
-				//Assertion : Verify that After clicking on 'Actions' menu send message and add new issue options are displayed to user
-				if(GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathAbtPlanSegActionSendMessage"))).getText().equals(GlobalVariables.viewElements.get("sendMessage")) &&
-				   GlobalVariables.oElement.findElement(By.xpath(GlobalVariables.plan.get("sXpathAbtPlanSegActionAddNewIssue"))).getText().equals(GlobalVariables.viewElements.get("addNewIssue"))){
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
-				else{
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000); 
 				//Close 'About Plan Segment Window'
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization

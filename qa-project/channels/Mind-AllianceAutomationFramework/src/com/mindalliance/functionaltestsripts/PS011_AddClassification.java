@@ -61,7 +61,7 @@ public class PS011_AddClassification
 				// Add Classification 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Classification Added";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:classification-systems-container:new-classification-system-container:new-classification-system"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:classification-systems-container:new-classification-system-container:new-classification-system"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Secrecy Classifications"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization

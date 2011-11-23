@@ -52,8 +52,8 @@ public class CCE019_DoUndoRedoPasteAttachment
 					// Enter the details for new segment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "First Segment's details entered";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 						for (int i = 0; i <= 8; i++)
 							GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("The Other Segment"));
@@ -92,8 +92,8 @@ public class CCE019_DoUndoRedoPasteAttachment
 					// Enter the details for new segment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Second Segment's details entered";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 						for (int i = 0; i <= 8; i++)
 							GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Do Undo Redo Paste Attachment"));

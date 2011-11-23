@@ -52,8 +52,9 @@ public class DC001_ViewFlowDiagramLegend
 				    	  LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 				    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 				    			  GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				      }	
-					
+					}	
+			
+					// Close Legend window 
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Legend window closed";
 					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
