@@ -9,7 +9,7 @@
 <xPathAddInfoReceiveAttachment>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[12]/td/ul/span/li/a</xPathAddInfoReceiveAttachment>
 <xPathAddInfoSendCreateSurvey>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoSendCreateSurvey>
 <xPathAddInfoReceiveCreateSurvey>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoReceiveCreateSurvey>
-<xPathShowPopUpMenu>//span[contains(@class,'dropmenu')]</xPathShowPopUpMenu>
+<xPathShowPopUpMenu>/html/body/form/div[13]/span/span[2]/span/span</xPathShowPopUpMenu>
 <xPathSendInfoAddNewIssue>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div/div/ul/li/a</xPathSendInfoAddNewIssue>
 <xPathReceiveInfoAddNewIssue>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/div/ul/li/a</xPathReceiveInfoAddNewIssue>
 <xPathReceiveInfoIssueMenu>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li[2]/span/span/span/span/span</xPathReceiveInfoIssueMenu>
@@ -19,8 +19,8 @@
 <xPathSendInfoNotification>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</xPathSendInfoNotification>
 <xPathReceiveInfoNotification>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</xPathReceiveInfoNotification>
 <xPathActionsPopUpMenu>/html/body/form/div[13]/span/span[3]/span/span</xPathActionsPopUpMenu>
-<xPathAboutPlanShowMenu>//span[contains(@class,'dropmenu')]</xPathAboutPlanShowMenu>
-<xPathAbtPlanSegShowMenu>/html/body/form/div[5]/div/div[2]/div/div/span/span/span/span</xPathAbtPlanSegShowMenu>
+<xPathAboutPlanShowMenu>/html/body/form/div[4]/div/span/div/div/div/span/span/span</xPathAboutPlanShowMenu>
+<xPathAbtPlanSegShowMenu>/html/body/form/div[5]/div/span/div/div/div/span/span/span/span</xPathAbtPlanSegShowMenu>
 <xPathAboutPlanActionMenu>/html/body/form/div[4]/div/span/div/div/div/span/span[2]/span/span</xPathAboutPlanActionMenu>
 <xPathAllSegmentShowMenu>/html/body/form/div[4]/div/div[2]/div/div/span/span/span/span</xPathAllSegmentShowMenu>
 <xPathTaskMoverDetail>/html/body/form/div[5]/div/div[2]/div[2]/h3/span</xPathTaskMoverDetail>
@@ -56,7 +56,7 @@
 <xPathStretchUpShrinkBack>/html/body/form/span/div/div/span[6]/img</xPathStretchUpShrinkBack>
 <xPathRespondingPhaseLink>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathRespondingPhaseLink>
 <xPathDeleteEvent>/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/div/table/tbody/tr/td[2]/a/img</xPathDeleteEvent>
-<xPathMoveTaskButton>/html/body/form/div[5]/div/div[2]/div[2]/input</xPathMoveTaskButton>
+<xPathMoveTaskButton>/html/body/form/div[5]/div/span/div/div[2]/input</xPathMoveTaskButton>
 <xPathAboutPlanAction>/html/body/form/div[5]/div/div[2]/div/div/span/span[2]/span/span</xPathAboutPlanAction>
 <xPathCloseSurveyWindow>/html/body/form/span[2]/div/div/div[2]/a/img</xPathCloseSurveyWindow>
 <xPathPhaseShowMenu>/html/body/form/div[3]/div/div[2]/div/div/span/span/span/span</xPathPhaseShowMenu>
@@ -120,7 +120,7 @@
 <xPathAbtPlanSegActionSendMessage>/html/body/form/div[5]/div/div[2]/div/div/span/span[2]/span/ul/li[3]/span/a/span</xPathAbtPlanSegActionSendMessage>
 <xPathAbtPlanSegActionAddNewIssue>/html/body/form/div[5]/div/div[2]/div/div/span/span[2]/span/ul/li[5]/span/a/span</xPathAbtPlanSegActionAddNewIssue>
 <xPathNewOrganization>/html/body/form/div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathNewOrganization>
-<xPathSurvey>/html/body/form/span[2]/div/div[2]/div/h1</xPathSurvey>
+<xPathSurvey>/html/body/form/span[2]/div/span/div/div/h1</xPathSurvey>
 <xPathAgentContacts>/html/body/form/div[4]/div/span/div/div[2]/span/span/table/tbody/tr/td[5]/span/a/span</xPathAgentContacts>
 <xPathAgent>/html/body/form/div[4]/div/span/div/div[2]/span/span[2]/h3/span[2]/span/a/span</xPathAgent>
 <xPathAgentCategory>/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathAgentCategory>
@@ -213,7 +213,7 @@
 <xPathAssertionPhaseDetails>/html/body/form/div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathAssertionPhaseDetails>
 <xPathAssertionDetails>/html/body/form/div[4]/div/span/div/div/div/h1</xPathAssertionDetails>
 <xPathPhaseAssertionDetails>/html/body/form/div[3]/div/div[2]/div/div/h1</xPathPhaseAssertionDetails>
-<xPathAssertionAboutPlanSegmentDetails>/html/body/form/div[5]/div/div[2]/div/div/h1</xPathAssertionAboutPlanSegmentDetails>
+<xPathAssertionAboutPlanSegmentDetails>/html/body/form/div[5]/div/span/div/div/div/h1</xPathAssertionAboutPlanSegmentDetails>
 <xPathAssertionEventWindow>/html/body/form/div[4]/div/span/div/div[2]/h3/span</xPathAssertionEventWindow>
 <xPathAssertionAboutOrg>/html/body/form/div[5]/div/div[2]/div[2]/h3/span</xPathAssertionAboutOrg>
 <xPathAssertionBibliography>/html/body/form/div[4]/div/span/div/div[2]/h3/span</xPathAssertionBibliography>
@@ -243,7 +243,7 @@
 <xPathElementsOfInformation>/html/body/form/div[8]/div/div[2]/div/h1</xPathElementsOfInformation>
 <xPathIssueReport>/html/body/div/div/h1</xPathIssueReport>
 <xPathIssueReportHome>/html/body/div/div/a/img</xPathIssueReportHome>
-<xPathLegendLabel>//img[contains(@src,'images/help_small.png')]</xPathLegendLabel>
+<xPathLegendLabel>/html/body/form/div[12]/div/span/div/h1</xPathLegendLabel>
 <xPathReceivePanel>/html/body/form/span/div/div[3]/div[2]/div/h3/span</xPathReceivePanel>
 <xPathSendPanel>/html/body/form/span/div/div[3]/div[3]/div/h3/span</xPathSendPanel>
 <xPathAddInfoReceiveAssertion>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/span/span</xPathAddInfoReceiveAssertion>
