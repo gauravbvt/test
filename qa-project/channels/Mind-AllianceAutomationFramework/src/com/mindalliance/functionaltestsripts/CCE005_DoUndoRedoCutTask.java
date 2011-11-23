@@ -137,7 +137,7 @@ public class CCE005_DoUndoRedoCutTask
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION:  When details are entered of respective task, the newly added task should be updated in the segment
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr[2]/td[2]/span/a/span"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/span/table/tbody/tr[2]/td[2]/span/a/span"));
 				    if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Task 1")))
 				    {
 				    	// Write Results

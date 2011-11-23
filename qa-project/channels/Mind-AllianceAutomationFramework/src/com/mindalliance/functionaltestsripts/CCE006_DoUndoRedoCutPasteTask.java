@@ -166,7 +166,7 @@ public class CCE006_DoUndoRedoCutPasteTask
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION:  When clicked on 'Paste task' option, the selected cut task should be pasted in Information Sharing Plan in other segment
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr[2]/td[2]/span/a/span"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/span/table/tbody/tr[2]/td[2]/span/a/span"));
 				    if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Task 1"))){
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
