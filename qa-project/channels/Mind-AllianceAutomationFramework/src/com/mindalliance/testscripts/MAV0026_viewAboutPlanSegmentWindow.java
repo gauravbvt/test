@@ -59,7 +59,7 @@ public class MAV0026_viewAboutPlanSegmentWindow
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);    	    	    	     
+							GlobalVariables.sBlank, GlobalVariables.sBlank) ;    	    	    	     
 	            }
 			    else
 			    {

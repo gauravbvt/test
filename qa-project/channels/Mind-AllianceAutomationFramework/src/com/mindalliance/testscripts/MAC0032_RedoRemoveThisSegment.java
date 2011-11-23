@@ -58,8 +58,8 @@ public class MAC0032_RedoRemoveThisSegment {
 				// Enter the details for new segment
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Details entered";
-				GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+				GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 					for (int i = 0; i <= 8; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Redo Remove This Segment"));

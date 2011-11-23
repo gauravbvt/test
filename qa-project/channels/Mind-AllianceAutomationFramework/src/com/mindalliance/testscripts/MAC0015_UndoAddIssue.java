@@ -44,7 +44,7 @@ public class MAC0015_UndoAddIssue {
 				
 				// Click on 'Add new segment' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "First segment added";
+				GlobalVariables.sDescription = "Segment added";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -56,9 +56,9 @@ public class MAC0015_UndoAddIssue {
 				
 				// Enter the details for new segment
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "First Segment's details entered";
-				GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).click();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+				GlobalVariables.sDescription = "Segment's details entered";
+				GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 					for (int i = 0; i <= 8; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Undo Add New Issue"));
