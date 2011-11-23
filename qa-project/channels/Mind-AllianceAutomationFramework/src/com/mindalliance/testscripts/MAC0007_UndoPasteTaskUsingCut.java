@@ -103,8 +103,7 @@ public class MAC0007_UndoPasteTaskUsingCut {
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Click on 'task mover' option under 'Shows' pop up menu
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAbtPlanSegShowMenu"),
-							"Task mover");
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAbtPlanSegShowMenu"),"Task mover");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -171,7 +170,7 @@ public class MAC0007_UndoPasteTaskUsingCut {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION:  When clicked on 'Paste task' option, the selected cut task should be pasted in Information Sharing Plan in other segment
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr[2]/td[2]/span/a/span"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/span/table/tbody/tr[2]/td[2]/span/a/span"));
 				    if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Task 1"))){
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

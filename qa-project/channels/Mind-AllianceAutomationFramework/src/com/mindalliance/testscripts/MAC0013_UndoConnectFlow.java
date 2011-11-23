@@ -134,10 +134,8 @@ public class MAC0013_UndoConnectFlow {
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Enter Task Name of Sender
-					GlobalVariables.oDriver.findElement
-					(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement
-					(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
+					GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
 					for (int i = 0; i <= 17 ; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Receiver"));

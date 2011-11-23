@@ -208,7 +208,7 @@ public class MAC0012_UndoMoveTask {
 					// Select the other segment to move tasks
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Other Segment selected";
-					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:destinationSegment")));
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:destinationSegment")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(option.getText().equals("The Other Segment")){

@@ -153,7 +153,7 @@ public class MAC0003_UndoAddGoal {
 					Thread.currentThread();
 					Thread.sleep(3000);	
 					// ASSERTION: When clicked on 'Undo update segment' option, Goal 'Undo Add Goal' should be removed
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					if (GlobalVariables.oElement.getValue().equals("")) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

@@ -138,7 +138,7 @@ public class MAC0020_UndoPasteAttachment {
 					// Enter the name and select Attach type, upload
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Details entered";
-					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:type")));
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:type")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(GlobalVariables.viewElements.get("reference").equals(option.getText())){
@@ -149,14 +149,14 @@ public class MAC0020_UndoPasteAttachment {
 				    // WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:name"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:upload"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "\\CAP.txt");
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:upload"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:submit")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:submit")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -171,8 +171,7 @@ public class MAC0020_UndoPasteAttachment {
 									GlobalVariables.sBlank, GlobalVariables.sBlank);
 							break;
 						}
-						else
-					    {
+						else{
 							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
 					    	// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
@@ -188,7 +187,7 @@ public class MAC0020_UndoPasteAttachment {
 					// Click copy option of respective attachment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Attachment copied";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -200,8 +199,7 @@ public class MAC0020_UndoPasteAttachment {
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
-					else
-				    {
+					else{
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Attachment copied' "+" Actual " + GlobalVariables.oElement.getText();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);

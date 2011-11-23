@@ -79,7 +79,7 @@ public class MAC0015_UndoAddIssue {
 				Thread.sleep(3000);
 				// Assertion 1.1: Verify that When clicked on 'Add new Issue' option, a issue should be added in the segment
 				GlobalVariables.oDriver.findElement(By.className("issues")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[3]/span/span/span/span/span"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/span/div/span/ol/li[3]/span/span/span/span/span"));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Menu")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

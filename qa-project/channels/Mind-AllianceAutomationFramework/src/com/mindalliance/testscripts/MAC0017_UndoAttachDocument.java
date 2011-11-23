@@ -98,7 +98,7 @@ public class MAC0017_UndoAttachDocument {
 					// Enter the name and select Attach type, upload
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Details entered";
-					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:type")));
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:type")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(GlobalVariables.viewElements.get("reference").equals(option.getText())){
@@ -109,14 +109,14 @@ public class MAC0017_UndoAttachDocument {
 				    // WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:name"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:upload"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:upload"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:submit")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:submit")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -131,8 +131,7 @@ public class MAC0017_UndoAttachDocument {
 									GlobalVariables.sBlank, GlobalVariables.sBlank);
 							break;
 						}
-						else
-					    {
+						else{
 							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
 					    	// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);

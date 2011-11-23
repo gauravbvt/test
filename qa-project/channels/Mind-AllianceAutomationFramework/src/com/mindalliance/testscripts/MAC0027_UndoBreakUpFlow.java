@@ -178,8 +178,7 @@ public class MAC0027_UndoBreakUpFlow
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else
-			    {
+				else{
 					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'node1' "+" Actual " + GlobalVariables.sStrCheck;
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
