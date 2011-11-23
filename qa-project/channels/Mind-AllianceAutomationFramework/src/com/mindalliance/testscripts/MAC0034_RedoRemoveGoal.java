@@ -107,25 +107,25 @@ public class MAC0034_RedoRemoveGoal {
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Goal 'Redo Remove Goal' added";
 					// Objective
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:kind"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:kind"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("mitigate"));
 					// Category
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:category"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:category"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("financial"));
 					// Magnitude
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:level"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:level"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("minor"));
 					// Organization
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:actualOrType"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:actualOrType"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("actual"));
 					// Name for Goal
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Redo Remove Goal"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AddGoal"));
+					// Achieved at end check box
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
-					// Achieved at end check box
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
+					Thread.sleep(3000);	
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -139,7 +139,7 @@ public class MAC0034_RedoRemoveGoal {
 					GlobalVariables.sDescription = "Goal deleted";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("aspect"));
 					GlobalVariables.oElement.click();
-//					for(int i=0;i<=4;i++)
+					for(int i=0;i<=4;i++)
 						GlobalVariables.oElement.sendKeys(Keys.ARROW_RIGHT);
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteGoals"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
@@ -149,7 +149,7 @@ public class MAC0034_RedoRemoveGoal {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on delete option of respective Goal, the Goal should be deleted from Segment
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					if (GlobalVariables.oElement.getValue().equals("")) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -187,7 +187,7 @@ public class MAC0034_RedoRemoveGoal {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on 'Redo remove goal' option, the respective goal should be deleted again in the Segment
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					if (GlobalVariables.oElement.getValue().equals("")) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

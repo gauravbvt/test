@@ -58,33 +58,30 @@ public class MAC0046_RedoRemoveIssue {
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);				
-//				// Assertion: Verify that When clicked on 'Remove issue' option, a respective issue should be removed from the segment
-//				GlobalVariables.oDriver.findElement(By.className("issues")).click();
-//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[2]"));
-//				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
-//				for (WebElement ol: tds){
-//					System.out.println("Hie....11"+ol.getText());
-//					if(ol.getText().equals("")){
-//						System.out.println("Hie....4");
-//						// Write Results
-//						LogFunctions.writeLogs(GlobalVariables.sDescription);
-//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//								GlobalVariables.sBlank, GlobalVariables.sBlank);
-//						break;
-//					}
-//					else{
-//						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual " + ol.getText();
-//						// Write Results
-//						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-//						break;
-//					}
-//				}
-//				System.out.println("Hie....5");
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
+				// Assertion: Verify that When clicked on 'Remove issue' option, a respective issue should be removed from the segment
+				GlobalVariables.oDriver.findElement(By.className("issues")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/span/div/span/ol/li[2]"));
+				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
+				for (WebElement ol: tds){
+					if(ol.getText().equals("")){
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+						break;
+					}
+					else{
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual " + ol.getText();
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+						break;
+					}
+				}
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				
 				// Click on 'Undo remove issue' under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -94,7 +91,8 @@ public class MAC0046_RedoRemoveIssue {
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that When clicked on 'Undo remove issue' option, a issue which was removed from the issue should be restored in the segment
-				GlobalVariables.oDriver.findElement(By.className("issues")).click();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("issues"));
+				GlobalVariables.oElement.click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[3]/span/span/span/span/span"));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Menu")){
 					// Write Results
@@ -105,9 +103,9 @@ public class MAC0046_RedoRemoveIssue {
 				else{
 					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Menu' "+" Actual " + GlobalVariables.oElement.getText();
 					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -122,8 +120,8 @@ public class MAC0046_RedoRemoveIssue {
 				Thread.sleep(3000);
 				// Assertion: Verify that When clicked on 'Redo remove issue' option, the restored  issue should be removed
 				GlobalVariables.oDriver.findElement(By.className("issues")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[2]"));
-				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[3]/span/span/span/span/span"));
+				tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
 				for (WebElement ol: tds){
 					if(ol.getText().equals("")){
 						// Write Results

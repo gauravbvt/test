@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
@@ -85,22 +84,26 @@ public class MAV0191_GoalsOptionUnchecked
 				// Add Goal
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="New Goal Added";
-				// Select Category
-				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:category")));
-				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
-				options.get(1).setSelected();
+				// Objective
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:kind"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("mitigate"));
+				// Category
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:category"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("financial"));
+				// Magnitude
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:level"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("minor"));
+				// Organization
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:actualOrType"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("actual"));
+				// Name for Goal
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AddGoal"));
+				// Achieved at end check box
+				GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				// Enter Goal Details
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("First Goal"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Click on Check box
-				GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
+				Thread.sleep(3000);	
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -118,7 +121,7 @@ public class MAV0191_GoalsOptionUnchecked
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Goals <Options> Selected";
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:part:goals:goals:0:goal:goalChoice")));
-				options = GlobalVariables.oDropDown.getOptions();
+				List<WebElement> options = GlobalVariables.oDropDown.getOptions();
 				options.get(1).setSelected();
 				// 	Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);

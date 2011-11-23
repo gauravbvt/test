@@ -144,8 +144,8 @@ public class MAC0038_RedoPasteTaskUsingCopy {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on 'Paste task' option, the selected cut task should be pasted in Information Sharing Plan in other segment
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr[2]/td[2]/span/a/span"));
-				    if(GlobalVariables.oElement.getText().equals("Task 1")){
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/span/table/tbody/tr[2]/td[2]/span/a/span"));
+					if(GlobalVariables.oElement.getText().equals("Task 1")){
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -182,8 +182,8 @@ public class MAC0038_RedoPasteTaskUsingCopy {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on 'Undo paste task' option, the task which is pasted should be removed from Information Sharing Plan in other segment
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr[2]/td[2]/span/a/span"));
-				    if(GlobalVariables.oElement.getText().equals("Task 1")){
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/span/table/tbody/tr[2]/td[2]/span/a/span"));
+					if(GlobalVariables.oElement.getText().equals("Task 1")){
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

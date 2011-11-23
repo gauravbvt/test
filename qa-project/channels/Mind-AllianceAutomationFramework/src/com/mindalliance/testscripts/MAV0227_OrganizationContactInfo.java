@@ -63,11 +63,11 @@ public class MAV0227_OrganizationContactInfo {
 					// Enter name of organization in 'Other organization that should be assigned tasks ' field
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Name Entered";
-					GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
+					GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 					String sOrgName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sOrgName);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);			
@@ -120,7 +120,7 @@ public class MAV0227_OrganizationContactInfo {
 						for (int i=1;i<=30;i++)
 							GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
 					}
-					GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contactContainer:channels:editable-container:channels:0:medium")));
+					GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:mediaNotDeployedContainer:mediaNotDeployed:0:mediumChoice")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 					if(options.get(1).getText().equals(GlobalVariables.viewElements.get("cell")) &&
 					   options.get(2).getText().equals(GlobalVariables.viewElements.get("conferenceCall")) &&

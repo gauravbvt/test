@@ -111,8 +111,7 @@ public class MAC0005_UndoAddNewTask {
 									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 							break;
 					    }
-					}
-					
+					}					
 					// Click on 'done' button
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization

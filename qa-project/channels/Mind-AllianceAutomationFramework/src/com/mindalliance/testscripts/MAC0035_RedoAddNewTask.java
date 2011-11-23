@@ -91,27 +91,32 @@ public class MAC0035_RedoAddNewTask {
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					// ASSERTION:  When details are entered of respective task, the newly addde task should be updated in the segment
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr[2]/td[2]/span/a/span"));
-				    if(GlobalVariables.oElement.getText().equals("Task 1")){
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-				    }
-				    else{
-				    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task 1' "+" Actual " + GlobalVariables.oElement.getText();
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				    }
+					// ASSERTION:  When details are entered of respective task, the newly added task should be updated in the segment
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
+					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
+					for (WebElement td: tds){
+						if (td.getText().equals("")){
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
+							break;
+						}
+						else{
+							GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual " + td.getText();
+					    	// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+							break;
+					    }
+					}
 					// Click on 'done' button
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-			
+
 					// Click 'Undo add new task' option under 'Action' pop up menu
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Undo add new task done";
@@ -137,7 +142,7 @@ public class MAC0035_RedoAddNewTask {
 					Thread.sleep(3000);
 					// ASSERTION:  When clicked on 'Undo add new task' option the newly addded task should get removed from the segment.
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
-					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
+					tds = GlobalVariables.oElement.findElements(By.tagName("td"));
 					GlobalVariables.bIsSuccess = Boolean.FALSE;
 					for (WebElement td: tds){
 						GlobalVariables.sStrCheck=td.getText();

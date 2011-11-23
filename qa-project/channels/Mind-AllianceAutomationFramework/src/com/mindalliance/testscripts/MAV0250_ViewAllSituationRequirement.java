@@ -65,7 +65,7 @@ public class MAV0250_ViewAllSituationRequirement
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "During, before or after";
 				GlobalVariables.bIsSuccess=Boolean.FALSE;
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:timing")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:timing")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.testData.get("During, before or after").equals(option.getText())){

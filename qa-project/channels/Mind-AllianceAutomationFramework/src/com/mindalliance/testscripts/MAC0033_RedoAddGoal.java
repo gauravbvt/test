@@ -107,35 +107,34 @@ public class MAC0033_RedoAddGoal {
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Goal 'Redo Add Goal' added";
 					// Objective
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:kind"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:kind"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("mitigate"));
 					// Category
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:category"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:category"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("financial"));
 					// Magnitude
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:level"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:level"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("minor"));
 					// Organization
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:actualOrType"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:actualOrType"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("actual"));
 					// Name for Goal
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Redo Add Goal"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AddGoal"));
 					// Achieved at end check box
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);	
 					// ASSERTION: When 'Achieved at end' selected, the Goal with given name should be added in the Segment 
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					if (GlobalVariables.oElement.getValue().equals("Redo Add Goal")) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
-					else
-				    {
+					else{
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Redo Add Goal' "+" Actual " + GlobalVariables.oElement.getValue();
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
@@ -166,7 +165,7 @@ public class MAC0033_RedoAddGoal {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on 'Redo update segment' option, the respective goal should be added again in the Segment
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					if (GlobalVariables.oElement.getValue().equals("Redo Add Goal")) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

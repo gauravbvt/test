@@ -208,17 +208,17 @@ public class MAC0042_RedoMoveTask {
 					// Select the other segment to move tasks
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Other Segment selected";
-					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:destinationSegment")));
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:destinationSegment")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
-				    	if(option.getText().equals(GlobalVariables.testData.get("The Other Segment"))){
+				    	if(option.getText().equals("The Other Segment")){
 				    			option.setSelected();
 				    			break;
 				    	}
 				    }
 			        // Write Results
 				    LogFunctions.writeLogs(GlobalVariables.sDescription);
-				    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);   
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -231,7 +231,7 @@ public class MAC0042_RedoMoveTask {
 					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:parts:movableParts:body:rows:3:cells:1:cell:checkBox")).click();
 			        // Write Results
 				    LogFunctions.writeLogs(GlobalVariables.sDescription);
-				    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);   
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -240,7 +240,7 @@ public class MAC0042_RedoMoveTask {
 					// Click on 'Move' button
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task moved";
-					GlobalVariables.oDriver.findElement(By.xpath("//form/div[5]/div[@class='floating']/div[@class='segment']/div[@class='aspect']/input")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathMoveTaskButton"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
@@ -249,7 +249,7 @@ public class MAC0042_RedoMoveTask {
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
 					for (WebElement td: tds){
-						if (td.getText().equals(GlobalVariables.testData.get("Task 1")) && (GlobalVariables.bIsSuccess == Boolean.FALSE)) {
+						if (td.getText().equals("Task 1") && (GlobalVariables.bIsSuccess == Boolean.FALSE)) {
 							GlobalVariables.bIsSuccess = Boolean.TRUE;
 							break;
 						}
@@ -257,7 +257,7 @@ public class MAC0042_RedoMoveTask {
 					if ((GlobalVariables.bIsSuccess == Boolean.TRUE)) {
 						GlobalVariables.bIsSuccess = Boolean.FALSE;
 						for (WebElement td: tds){
-							if (td.getText().equals(GlobalVariables.testData.get("Task 2"))) {
+							if (td.getText().equals("Task 2")) {
 								GlobalVariables.bIsSuccess = Boolean.TRUE;
 								break;
 							}
@@ -280,12 +280,12 @@ public class MAC0042_RedoMoveTask {
 					Thread.currentThread();
 					Thread.sleep(3000);
 				    // Click on 'About plan segment' option under 'Show' pop up menu
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlanSegment"));
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),"About plan segment");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Click on 'Task mover' option under 'Shows' pop up menu
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAbtPlanSegShowMenu"),GlobalVariables.viewElements.get("taskMover"));
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAbtPlanSegShowMenu"),"Task mover");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -294,7 +294,7 @@ public class MAC0042_RedoMoveTask {
 						GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
 						tds = GlobalVariables.oElement.findElements(By.tagName("td"));
 						for (WebElement td: tds){
-							if (td.getText().equals(GlobalVariables.testData.get("Task 1")) && (GlobalVariables.bIsSuccess == Boolean.FALSE)) {
+							if (td.getText().equals("Task 1") && (GlobalVariables.bIsSuccess == Boolean.FALSE)) {
 								GlobalVariables.bIsSuccess = Boolean.TRUE;
 								break;
 							}
@@ -302,7 +302,8 @@ public class MAC0042_RedoMoveTask {
 						if ((GlobalVariables.bIsSuccess == Boolean.TRUE)) {
 							GlobalVariables.bIsSuccess = Boolean.FALSE;
 							for (WebElement td: tds){
-								if (td.getText().equals(GlobalVariables.testData.get("Task 2"))) {
+								GlobalVariables.sStrCheck=td.getText();
+								if (td.getText().equals("Task 2")) {
 									GlobalVariables.bIsSuccess = Boolean.TRUE;
 									break;
 								}
@@ -313,18 +314,19 @@ public class MAC0042_RedoMoveTask {
 								LogFunctions.writeLogs(GlobalVariables.sDescription);
 								LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 										GlobalVariables.sBlank, GlobalVariables.sBlank);   
+								// WebElement Synchronization
+								Thread.currentThread();
+								Thread.sleep(3000);
 								}
+						else
+					    {
+							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task 2' "+" Actual " + GlobalVariables.sStrCheck;
+					    	// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+					    }
 					}
-					else
-				    {
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				    }
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);	
 					
 					// Click on 'Undo move task' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
@@ -363,8 +365,7 @@ public class MAC0042_RedoMoveTask {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);   
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
-					
+					Thread.sleep(3000);					
 					// Click on 'done' button
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
@@ -391,7 +392,7 @@ public class MAC0042_RedoMoveTask {
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					// ASSERTION 2.2: When clicked on 'Undo move task' option under 'Actions' pop up menu
+					// ASSERTION 2.2: When clicked on 'Redo move task' option under 'Actions' pop up menu
 					if ((GlobalVariables.bIsSuccess == Boolean.FALSE)) {
 						GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
 						tds = GlobalVariables.oElement.findElements(By.tagName("td"));

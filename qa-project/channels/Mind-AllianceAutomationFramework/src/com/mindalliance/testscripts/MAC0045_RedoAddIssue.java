@@ -78,7 +78,7 @@ public class MAC0045_RedoAddIssue {
 				Thread.sleep(3000);
 				// Assertion 1.1: Verify that When clicked on 'Add new Issue' option, a issue should be added in the segment
 				GlobalVariables.oDriver.findElement(By.className("issues")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[3]/span/span/span/span/span"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/span/div/span/ol/li[3]/span/span/span/span/span"));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Menu")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -113,17 +113,20 @@ public class MAC0045_RedoAddIssue {
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
+						break;
 					}
 					else{
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual " + ol.getText();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+						break;
 					}
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(3000);	
 				
 				// Click on Redo add new issue under Action poo up menu
 				GlobalVariables.iStepNo++ ;
@@ -134,7 +137,7 @@ public class MAC0045_RedoAddIssue {
 				Thread.sleep(3000);
 				// Assertion 1.2: Verify that When clicked on 'Undo add new Issue' option, an issue should be removed from the segment
 				GlobalVariables.oDriver.findElement(By.className("issues")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[3]/span/span/span/span/span"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[2]"));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Menu")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
