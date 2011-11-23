@@ -74,6 +74,7 @@ public class GenericFunctionLibrary {
 			File HomePage=new File(GlobalVariables.sObjectRepositoryDirectoryPath+"HomePage.xml");
 			File LoginPage=new File(GlobalVariables.sObjectRepositoryDirectoryPath+"LoginPage.xml");
 			File PlanPage=new File(GlobalVariables.sObjectRepositoryDirectoryPath+"PlanPage.xml");
+			File PlanPageByName=new File(GlobalVariables.sObjectRepositoryDirectoryPath+"PlanPageName.xml");
 
 			GlobalVariables.sObjectRepositoryDirectoryPath = GlobalVariables.fCurrentDir.getCanonicalPath().toString() + "\\TestData\\";
 			File viewElements=new File(GlobalVariables.sObjectRepositoryDirectoryPath+"ViewElements.xml");
@@ -83,6 +84,7 @@ public class GenericFunctionLibrary {
 			Document docLoginPage=db.parse(LoginPage);
 			Document docPlanPage=db.parse(PlanPage);
 			Document docViewElements=db.parse(viewElements);
+			Document docPlanPageByName=db.parse(PlanPageByName);
 
 			/*NodeList elementsList = docEle.getElementsByTagName("elements");
             Node node = elementsList.item(0);*/
@@ -91,13 +93,26 @@ public class GenericFunctionLibrary {
             Element eleLoginPage=docLoginPage.getDocumentElement();
             Element elePlanPage=docPlanPage.getDocumentElement();
             Element eleViewElement=docViewElements.getDocumentElement();
-
+            Element elePlanPageByNameElement=docPlanPageByName.getDocumentElement();
+            
             Element oXmlEleChannelsAdmin = (Element) eleChannelsAdmin;
             Element oXmlEleHomePage = (Element) eleHomePage;
             Element oXmlEleLoginPage = (Element) eleLoginPage;
             Element oXmlElePlanPage = (Element) elePlanPage;
             Element oXmlEleViewElements = (Element) eleViewElement;
-
+            Element oXmlEleByNameElements = (Element) elePlanPageByNameElement;
+            
+            // Plan Page By Name
+            GlobalVariables.planPageByName.put("byNameAddOrg",oXmlEleByNameElements.getElementsByTagName("addOrg").item(0).getChildNodes().item(0).getNodeValue());
+            GlobalVariables.planPageByName.put("byNameAddDescription",oXmlEleByNameElements.getElementsByTagName("addOrgDescription").item(0).getChildNodes().item(0).getNodeValue());
+            GlobalVariables.planPageByName.put("byNameAddOrgAgentName",oXmlEleByNameElements.getElementsByTagName("addOrgAgentName").item(0).getChildNodes().item(0).getNodeValue());
+            GlobalVariables.planPageByName.put("byNameAddOrgAgentTitle",oXmlEleByNameElements.getElementsByTagName("addOrgAgentTitle").item(0).getChildNodes().item(0).getNodeValue());
+            GlobalVariables.planPageByName.put("byNameAddOrgAgentRole",oXmlEleByNameElements.getElementsByTagName("addOrgAgentRole").item(0).getChildNodes().item(0).getNodeValue());
+            GlobalVariables.planPageByName.put("byNameAddOrgAgentJurisdiction",oXmlEleByNameElements.getElementsByTagName("addOrgAgentJurisdiction").item(0).getChildNodes().item(0).getNodeValue());
+            GlobalVariables.planPageByName.put("byNameAddOrgAgentSupervisor",oXmlEleByNameElements.getElementsByTagName("addOrgAgentSupervisor").item(0).getChildNodes().item(0).getNodeValue());
+//            GlobalVariables.planPageByName.put("byNameAddOrgAgentTitle",oXmlEleByNameElements.getElementsByTagName("").item(0).getChildNodes().item(0).getNodeValue());
+            
+            
             // Login Page
             GlobalVariables.login.put("sChannelURL",oXmlEleLoginPage.getElementsByTagName("channelURL").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.login.put("sUsername",oXmlEleLoginPage.getElementsByTagName("username").item(0).getChildNodes().item(0).getNodeValue());
