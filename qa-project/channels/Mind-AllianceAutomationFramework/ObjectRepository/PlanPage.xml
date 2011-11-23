@@ -27,7 +27,7 @@
 <xPathDeleteOrgs>/html/body/form/div[4]/div/span/div/div[2]/div/div[2]/span/a/span</xPathDeleteOrgs>
 <xPathDefaultTask>/html/body/form/span/div/div[3]/div/div/span[2]/a</xPathDefaultTask>
 <xPathTaskShowMenu>/html/body/form/span/div/div[3]/div/div/span[2]/span/span/span</xPathTaskShowMenu>
-<xPathTaskActionsMenu>/html/body/form/span/div/div[3]/div/div/span[2]/span[2]/span/span</xPathTaskActionsMenu>
+<xPathTaskActionsMenu>/html/body/form/span/div/div[3]/div/div/span[2]/span[2]/span</xPathTaskActionsMenu>
 <xPathAddInfoReceive>/html/body/form/span/div/div[3]/div[2]/div/a/span</xPathAddInfoReceive>
 <xPathAddInfoSend>/html/body/form/span/div/div[3]/div[3]/div/a/span</xPathAddInfoSend>
 <xPathReceiveFlowMoreMenu>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/span/span/span/span</xPathReceiveFlowMoreMenu>
