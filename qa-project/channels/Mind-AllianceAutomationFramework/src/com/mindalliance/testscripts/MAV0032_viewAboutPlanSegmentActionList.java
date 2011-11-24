@@ -55,8 +55,8 @@ public class MAV0032_viewAboutPlanSegmentActionList
 			    //Clicks on 'Actions' link under show pop up menu option of "About Plan Segment" 	
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Actions";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanAction"))).click();
-			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanAction")));
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanSegmentAction"))).click();
+			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanSegmentAction")));
 				GlobalVariables.oElement.click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
