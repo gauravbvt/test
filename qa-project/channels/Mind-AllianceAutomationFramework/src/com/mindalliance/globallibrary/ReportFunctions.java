@@ -533,12 +533,11 @@ public class ReportFunctions {
 									xml.writeEmptyElement("br");
 									xml.writeCharacters("Number of TestCases Failed: " + totalNoOfTestCasesFailed);
 									xml.writeEmptyElement("br");
-									xml.writeCharacters("Number of TestCases Passed of Views: " + GlobalVariables.noOfViewTestCasesPassed);
 
 								xml.writeEndElement();
 							xml.writeEndElement();
 						xml.writeEndElement();
-					xml.writeEndElement();
+//					xml.writeEndElement();
 				xml.writeEndElement();
 			xml.writeEndElement();
 			xml.writeEndDocument();
