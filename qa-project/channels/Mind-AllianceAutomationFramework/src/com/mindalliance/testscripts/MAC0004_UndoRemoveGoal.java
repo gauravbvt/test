@@ -167,7 +167,7 @@ public class MAC0004_UndoRemoveGoal {
 					// Click on 'Undo update segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Undo update segment done";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoUpdateSegment"));
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),"Undo remove goal");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -184,7 +184,7 @@ public class MAC0004_UndoRemoveGoal {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 					}
 					// WebElement Synchronization
 					Thread.currentThread();

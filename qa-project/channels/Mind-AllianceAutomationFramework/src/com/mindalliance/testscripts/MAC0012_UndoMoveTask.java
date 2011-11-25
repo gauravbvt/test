@@ -227,8 +227,8 @@ public class MAC0012_UndoMoveTask {
 					// Select the tasks to move
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Tasks selected";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:parts:movableParts:body:rows:2:cells:1:cell:checkBox")).click();
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:parts:movableParts:body:rows:3:cells:1:cell:checkBox")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:parts:movableParts:body:rows:2:cells:1:cell:checkBox")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:parts:movableParts:body:rows:3:cells:1:cell:checkBox")).click();
 			        // Write Results
 				    LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
