@@ -93,7 +93,7 @@ public class MAP0016_addEvent
 					// Switch between context
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Event Added";
-					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:timing")));
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:timing")));
 					List<WebElement> options = GlobalVariables.oDropDown.getOptions(); 
 				    for(WebElement option : options) {
 					    if(GlobalVariables.viewElements.get("after").equals(option.getText())){
@@ -105,16 +105,16 @@ public class MAP0016_addEvent
 					Thread.currentThread();
 					Thread.sleep(5000);
 					//Create an event
-				    GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:event")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:event"));
+				    GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:event")).click();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:event"));
 					String event="This is an event";
 					GlobalVariables.oElement.sendKeys(event);	
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
 					//switch between level
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:level")).click();
-				    GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:level")));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:level")).click();
+				    GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:level")));
 				    options = GlobalVariables.oDropDown.getOptions(); 
 				    for(WebElement option : options) {
 					    if(GlobalVariables.viewElements.get("low").equals(option.getText())){
@@ -150,8 +150,7 @@ public class MAP0016_addEvent
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
-					
+					Thread.sleep(5000);						
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation

@@ -124,12 +124,14 @@ public class MAP0020_addFileToEvent
 					Thread.sleep(1000);
 					
 					//Create an event
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:event")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:event"));
+					GlobalVariables.iStepNo++;
+					GlobalVariables.sDescription="Create an Event";
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:event")).click();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:event"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an event"));	
 					//switch between level
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:level")).click();
-					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:level")));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:level")).click();
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:level")));
 					options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(GlobalVariables.viewElements.get("high").equals(option.getText())){
@@ -141,28 +143,32 @@ public class MAP0020_addFileToEvent
 				    // WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(8000);
-				    GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/div/table/tbody/tr/td/span[2]/a/span")).click();
-				    // WebElement Synchronization
+					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/table/tbody/tr[5]/td/span/div/div/table/tbody/tr/td/span[2]/a/span")).click();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(5000);
 					
 					// Attach a File to an event
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Attach a file to an event";
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:name")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:name"));
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:name")).click();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
-					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:upload"));
+					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:upload"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:submit")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:submit")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
 					// Assertion: verify that file is attached
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
+					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){

@@ -125,19 +125,19 @@ public class MAP0018_attachFile
 					// Attach file to segment
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Attach File";
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:name"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
-					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:upload"));
+					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:upload"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:submit")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:submit")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: verify that file is attached
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[6]/td/ul/span/li/a")).click();
+					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/table/tbody/tr[6]/td/ul/span/li/a")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){

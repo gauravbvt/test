@@ -93,8 +93,8 @@ public class MAP0017_deleteEvent
 					// Switch between context
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Event added";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:timing")).click();
-					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:timing")));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:timing")).click();
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:timing")));
 					List<WebElement> options = GlobalVariables.oDropDown.getOptions(); 
 				    for(WebElement option : options) {
 					    if(GlobalVariables.viewElements.get("after").equals(option.getText())){
@@ -103,12 +103,12 @@ public class MAP0017_deleteEvent
 					    }
 				    }
 					//Create an event
-				    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:event"));
+				    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:event"));
 				    String event="This is an event";
 					GlobalVariables.oElement.sendKeys(event);					
 					//switch between level
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:level")).click();
-					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:context:container:creationDiv:level")));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:level")).click();
+					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:context:container:creationDiv:level")));
 					options = GlobalVariables.oDropDown.getOptions(); 
 				    for(WebElement option : options) {
 					    if(GlobalVariables.viewElements.get("low").equals(option.getText())){

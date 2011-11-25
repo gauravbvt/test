@@ -107,27 +107,27 @@ public class MAP0022_addGoal {
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Goal 'Add Goal' added";
 					// Objective
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:kind"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:kind"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("mitigate"));
 					// Category
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:category"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:category"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("financial"));
 					// Magnitude
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:level"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:level"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("minor"));
 					// Organization
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:actualOrType"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:actualOrType"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("actual"));
 					// Name for Goal
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Goals"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AddGoal"));
 					// Achieved at end check box
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);	
-					// ASSERTION: When 'Achieved at end' selected, the Goal with given name should be added in the Segment 
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
+					// ASSERTION: When clicked on 'Achieved at end' checkbox, Goal 'Goal1' should be added 
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					if (GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("Add Goals"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

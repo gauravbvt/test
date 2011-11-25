@@ -62,11 +62,11 @@ public class MAV0144_viewNetworkOfOrganizations
 				// Create an organizations
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Organizations created";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 				String sOrgName = LogFunctions.getDateTime();
 				GlobalVariables.oElement.sendKeys(sOrgName);
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);	
@@ -98,7 +98,7 @@ public class MAV0144_viewNetworkOfOrganizations
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Organiztions Network details' page gets loaded";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseAssertionDetails")));
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("network"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

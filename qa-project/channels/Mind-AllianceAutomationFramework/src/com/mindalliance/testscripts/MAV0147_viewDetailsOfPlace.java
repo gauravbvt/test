@@ -3,7 +3,6 @@ package com.mindalliance.testscripts;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -54,10 +53,12 @@ public class MAV0147_viewDetailsOfPlace
 				// Enter the details of Place in locale text box
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Details entered";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocale"))).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocale")));
-				for (int i = 0; i <= 50; i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocale"))).click();
+//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocale")));
+//				for (int i = 0; i <= 50; i++)
+//					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Places"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -87,7 +88,7 @@ public class MAV0147_viewDetailsOfPlace
 				// Select the plan from 'Switch to Places' drop down, located on the top right corner
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Places Selected";
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:indexed")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(option.getText().equals(GlobalVariables.viewElements.get("places"))){

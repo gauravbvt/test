@@ -125,10 +125,10 @@ public class MAP0019_deleteAttachFile
 					// Attach file to segment
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Attach File";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:name")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:name"));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:name")).click();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
-					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:upload"));
+					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:upload"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -144,7 +144,7 @@ public class MAP0019_deleteAttachFile
 					// Click on attach
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="File Attached";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:submit")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:submit")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -160,7 +160,7 @@ public class MAP0019_deleteAttachFile
 					GlobalVariables.oElement.click();
 					for(int i=0;i<= 4;i++)
 						GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

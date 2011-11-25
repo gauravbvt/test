@@ -49,20 +49,19 @@ public class MAV0079_pasteAttachmentUnerAction
 				
 				// Attach a File to the segment
 				String file="This is File 1";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:name"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:name"));
 				GlobalVariables.oElement.sendKeys(file);
-				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:upload"));
+				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:upload"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:submit")).click();
+				GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:submit")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Copy Attachment
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCutAttachment"))).click();
-				                                              
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

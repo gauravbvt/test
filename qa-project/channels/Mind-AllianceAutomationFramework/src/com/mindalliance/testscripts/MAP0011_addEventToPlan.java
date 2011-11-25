@@ -119,8 +119,8 @@ public class MAP0011_addEventToPlan
 					String event="Add Event To The Plan";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Add Event";
-					GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
+					GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
 					GlobalVariables.oElement.sendKeys(event);
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
@@ -134,7 +134,7 @@ public class MAP0011_addEventToPlan
 					// Select check box
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Event Added";
-					GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
+					GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);

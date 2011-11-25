@@ -75,8 +75,7 @@ public class MAV0032_viewAboutPlanSegmentActionList
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
-			    else
-			    {
+			    else{
 			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("actions")+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

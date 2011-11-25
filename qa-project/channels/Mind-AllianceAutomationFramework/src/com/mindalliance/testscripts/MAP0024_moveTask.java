@@ -202,7 +202,7 @@ public class MAP0024_moveTask
 					// Move task to another segment
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Move task";
-					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:destinationSegment")));
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:destinationSegment")));
 					options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(GlobalVariables.testData.get("Segment To Verify").equals(option.getText())){

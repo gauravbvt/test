@@ -106,23 +106,22 @@ public class MAP0023_removeGoal {
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Goal 'Delete Goal' added";
 					// Objective
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:kind"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:kind"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("mitigate"));
 					// Category
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:category"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:category"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("financial"));
 					// Magnitude
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:level"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:level"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("minor"));
 					// Organization
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:actualOrType"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:actualOrType"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("actual"));
 					// Name for Goal
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
-					if (!GlobalVariables.oElement.getValue().equals("Add Goal"))
-						GlobalVariables.oElement.sendKeys("Delete Goal");
-				    // Achieved at end check box
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AddGoal"));
+					// Achieved at end check box
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -144,8 +143,8 @@ public class MAP0023_removeGoal {
 					// And acknowledge the alert (equivalent to clicking "OK")
 					alert.accept();
 					//Assertion:Verify that goal should get removed.
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name")).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment"));
 				    if(GlobalVariables.oElement.getText().equals("")){
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

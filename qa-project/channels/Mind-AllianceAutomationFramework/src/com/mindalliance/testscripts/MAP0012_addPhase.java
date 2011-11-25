@@ -107,7 +107,7 @@ public class MAP0012_addPhase
 					String phase="Phase 1";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
 					GlobalVariables.oElement.sendKeys(phase);
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results

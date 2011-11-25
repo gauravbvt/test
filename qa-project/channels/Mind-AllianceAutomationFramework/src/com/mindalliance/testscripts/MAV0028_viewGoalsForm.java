@@ -74,8 +74,7 @@ public class MAV0028_viewGoalsForm {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 	    	    	    	     
 	            }
-			    else
-			    {
+			    else{
 			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("goalsForThisSegment")+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
