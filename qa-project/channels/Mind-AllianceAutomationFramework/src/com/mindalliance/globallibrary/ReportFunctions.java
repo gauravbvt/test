@@ -177,7 +177,7 @@ public class ReportFunctions {
 			for(int i = 1; i < 18 ; i++) {
 				sheet=sheet.getSpreadSheet().getSheet(i);
 				for(int j=1;j<sheet.getRowCount();j++) {
-					sheet.getCellAt("K"+j).setValue("");
+					sheet.getCellAt("I"+j).setValue("");
 					sheet.getCellAt("L"+j).setValue("");
 					sheet.getCellAt("M"+j).setValue("");
 					sheet.getCellAt("N"+j).setValue("");
@@ -188,7 +188,7 @@ public class ReportFunctions {
 					sheet.getCellAt("S"+j).setValue("");
 					sheet.getCellAt("T"+j).setValue("");
 				}
-				sheet.getCellAt("K1").setValue("RESULT");
+				sheet.getCellAt("I1").setValue("RESULT");
 				sheet.getCellAt("L1").setValue("SCRIPT EXCEPTION");
 				sheet.getCellAt("R1").setValue("ERROR");
 			}
@@ -230,16 +230,16 @@ public class ReportFunctions {
 				for(int j=1;j<sheet.getRowCount();j++) {
 					if(stestName.equals(sheet.getValueAt(0,j).toString())) {
 						if (sResult == GlobalVariables.sFailed) {
-							sheet.getCellAt("K"+(j+1)).setBackgroundColor(Color.CYAN);
-							sheet.getCellAt("K"+(j+1)).setValue(GlobalVariables.sFailed);
+							sheet.getCellAt("I"+(j+1)).setBackgroundColor(Color.CYAN);
+							sheet.getCellAt("I"+(j+1)).setValue(GlobalVariables.sFailed);
 							sheet.getCellAt("L"+(j+1)).setBackgroundColor(Color.CYAN);
 							sheet.getCellAt("L"+(j+1)).setValue(sCsvScriptException);
 							sheet.getCellAt("R"+(j+1)).setBackgroundColor(Color.CYAN);
 							sheet.getCellAt("R"+(j+1)).setValue(sCsvErrorReport);					   
 				   		}
 				   		else if (sResult == GlobalVariables.sPassed) {
-				   			sheet.getCellAt("K"+(j+1)).setBackgroundColor(Color.ORANGE);
-				    		sheet.getCellAt("K"+(j+1)).setValue(GlobalVariables.sPassed);
+				   			sheet.getCellAt("I"+(j+1)).setBackgroundColor(Color.ORANGE);
+				    		sheet.getCellAt("I"+(j+1)).setValue(GlobalVariables.sPassed);
 				   		}
 						break;
 					}
