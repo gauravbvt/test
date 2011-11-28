@@ -48,8 +48,9 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
             List<Component> menuItems = super.getMenuItems();
 
             // Move parts across segments
-            if ( getPlan().getSegmentCount() > 1 && getLockManager().isLockableByUser( User.current().getUsername(),
-                                                                                       getSegment() ) )
+            if ( getPlan().isDevelopment()
+                    && getPlan().getSegmentCount() > 1
+                    && getLockManager().isLockableByUser( User.current().getUsername(), getSegment() ) )
                 menuItems.add(
                         new LinkMenuItem(
                                 "menuItem",

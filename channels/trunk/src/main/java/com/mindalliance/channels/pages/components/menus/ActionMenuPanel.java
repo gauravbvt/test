@@ -6,7 +6,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -29,12 +28,12 @@ public abstract class ActionMenuPanel extends MenuPanel {
     @Override
     public List<Component> getMenuItems() {
         synchronized ( getCommander() ) {
-            List<Component> menuItems = new ArrayList<Component>( Arrays.asList(
-                getUndoMenuItem( "menuItem" ),
-                getRedoMenuItem( "menuItem" ),
-                getSendMessageMenuItem( "menuItem" )
-            ) );
-
+            List<Component> menuItems = new ArrayList<Component>( );
+            menuItems.add(  getSendMessageMenuItem( "menuItem" ) );
+            if ( getPlan().isDevelopment() ) {
+                menuItems.add( getUndoMenuItem( "menuItem" ) );
+                menuItems.add( getRedoMenuItem( "menuItem" ) );
+            }
             // Commands
             menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
             return menuItems;
