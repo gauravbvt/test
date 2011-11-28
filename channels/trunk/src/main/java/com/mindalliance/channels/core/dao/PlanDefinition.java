@@ -92,7 +92,7 @@ public class PlanDefinition extends Observable {
      * @throws IOException on initialization errors
      */
     public void initialize( Resource dataDirectory ) throws IOException {
-        planDirectory = new File( dataDirectory.getFile(), Plan.sanitizeUrn( uri ) );
+        planDirectory = new File( dataDirectory.getFile(), Plan.sanitize( uri ) );
         if ( planDirectory.mkdirs() )
             LOG.debug( "Created {}", planDirectory );
 
