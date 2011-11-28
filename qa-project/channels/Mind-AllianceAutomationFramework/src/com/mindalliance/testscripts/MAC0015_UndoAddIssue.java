@@ -70,6 +70,18 @@ public class MAC0015_UndoAddIssue {
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
+				// Click on 'done' button
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Segment updated";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
 				// Click on 'Add New Issue' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue added";
@@ -78,8 +90,7 @@ public class MAC0015_UndoAddIssue {
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion 1.1: Verify that When clicked on 'Add new Issue' option, a issue should be added in the segment
-				GlobalVariables.oDriver.findElement(By.className("issues")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/span/div/span/ol/li[3]/span/span/span/span/span"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("dropmenu"));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Menu")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -105,8 +116,8 @@ public class MAC0015_UndoAddIssue {
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion 1.2: Verify that When clicked on 'Undo add new Issue' option, an issue should be removed from the segment
-				GlobalVariables.oDriver.findElement(By.className("issues")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[2]"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("issues"));
+//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[2]"));
 				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
 				for (WebElement ol: tds){
 					if(ol.getText().equals("")){
@@ -121,7 +132,7 @@ public class MAC0015_UndoAddIssue {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 						break;
 					}
 				}
