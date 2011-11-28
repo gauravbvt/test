@@ -407,7 +407,7 @@ public class AdminPage extends AbstractChannelsWebPage {
     }
 
     public void setNewPlanUri( String newPlanUri ) {
-        this.newPlanUri = newPlanUri;
+        this.newPlanUri = Plan.sanitizeUrn( newPlanUri );
     }
 
     private MarkupContainer createUserRow( IModel<String> uriModel, final ListItem<User> item ) {

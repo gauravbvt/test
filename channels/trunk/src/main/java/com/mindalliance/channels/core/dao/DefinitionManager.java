@@ -394,8 +394,8 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
     public boolean isNewPlanUriValid( String newUri ) {
         if ( get( newUri ) != null ) return false;
         for ( PlanDefinition definition : definitions.values() ) {
-            if ( Plan.sanitize( definition.getUri() )
-                    .equals( Plan.sanitize( newUri ) ) )
+            if ( Plan.sanitizeUrn( definition.getUri() )
+                    .equals( Plan.sanitizeUrn( newUri ) ) )
                 return false;
         }
         return true;

@@ -46,8 +46,8 @@ public class Plan extends ModelObject {
      * @param name original name
      * @return safe version
      */
-    public static String sanitize( String name ) {
-        return name.replaceAll( "\\W", "_" );
+    public static String sanitizeUrn( String name ) {
+        return name.replaceAll( "[^a-zA-Z0-9/_.]", "_" );
     }
 
     /** The status of a (version of) plan. */
@@ -398,7 +398,7 @@ public class Plan extends ModelObject {
      * @return a string
      */
     public String getUrn() {
-        return sanitize( getUri() );
+        return sanitizeUrn( getUri() );
     }
 
     /**
