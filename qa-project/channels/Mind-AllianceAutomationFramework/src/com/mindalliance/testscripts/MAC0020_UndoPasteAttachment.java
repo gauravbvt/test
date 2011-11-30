@@ -187,12 +187,12 @@ public class MAC0020_UndoPasteAttachment {
 					// Click copy option of respective attachment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Attachment copied";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li/a/img")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on copy option, the message 'Attachment copied' should be displayed at the top of the window 
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//div[@class='change-message']/span/span"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//div[@class='change-message']/span/a/img[@class='close']"));
 					if (GlobalVariables.oElement.getText().equals("Attachment copied")) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

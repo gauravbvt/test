@@ -1,8 +1,12 @@
 package com.mindalliance.testscripts;
 
+import java.util.List;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -171,15 +175,25 @@ public class MAC0040_RedoIntermediateTask {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on 'Add intermediate' option, the task should be created between the selected task and its respective other task
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr/td[2]/span/a/span"));
-				    if(GlobalVariables.oElement.getText().equals("doing something")){
-				    	// Write Results
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
+					List<WebElement>tds = GlobalVariables.oElement.findElements(By.tagName("td"));
+					GlobalVariables.bIsSuccess = Boolean.FALSE;
+					for (WebElement td: tds){
+						GlobalVariables.sStrCheck=td.getText();
+						if (td.getText().equals("doing something")){
+							GlobalVariables.bIsSuccess = Boolean.TRUE;
+							break;
+						}
+					}
+					if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
+						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
-				    }
-				    else{
-				    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'doing something' "+" Actual " + GlobalVariables.oElement.getText();
+					}
+					else
+				    {
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task 1' "+" Actual " + GlobalVariables.sStrCheck;
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -187,7 +201,7 @@ public class MAC0040_RedoIntermediateTask {
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					
 					// Click on 'Undo add intermediate' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
@@ -209,20 +223,33 @@ public class MAC0040_RedoIntermediateTask {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on 'Undo add intermediate' option, the intermediate task should be removed
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr/td[2]/span/a/span"));
-				    if(GlobalVariables.oElement.getText().equals("doing something")){
-				    	// Write Results
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
+					tds = GlobalVariables.oElement.findElements(By.tagName("td"));
+					GlobalVariables.bIsSuccess = Boolean.FALSE;
+					for (WebElement td: tds){
+						GlobalVariables.sStrCheck=td.getText();
+						if (td.getText().equals("Task 1")){
+							GlobalVariables.bIsSuccess = Boolean.TRUE;
+							break;
+						}
+					}
+					if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
+						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
-				    }
-				    else{
-				    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'doing something' "+" Actual " + GlobalVariables.oElement.getText();
+					}
+					else
+				    {
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task 1' "+" Actual " + GlobalVariables.sStrCheck;
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();

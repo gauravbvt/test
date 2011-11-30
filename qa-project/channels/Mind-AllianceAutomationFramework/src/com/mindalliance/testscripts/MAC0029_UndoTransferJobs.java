@@ -254,10 +254,6 @@ public class MAC0029_UndoTransferJobs
 					Thread.sleep(3000);					
 					// Assertion: Verify that job has been transferred
 					GlobalVariables.oDriver.findElement(By.linkText(sOrgName2)).click();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//					GlobalVariables.oDriver.findElement(By.linkText(sOrgName2)).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

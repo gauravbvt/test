@@ -144,7 +144,7 @@ public class MAC0018_CopyAttachment
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Click on Cross of 'Attachment copied' option
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[14]/span/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath("//div[@class='change-message']/span/a/img[@class='close']")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);

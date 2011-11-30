@@ -117,7 +117,6 @@ public class MAC0015_UndoAddIssue {
 				Thread.sleep(3000);
 				// Assertion 1.2: Verify that When clicked on 'Undo add new Issue' option, an issue should be removed from the segment
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("issues"));
-//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[2]"));
 				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
 				for (WebElement ol: tds){
 					if(ol.getText().equals("")){

@@ -94,7 +94,6 @@ public class MAC0016_UndoRemoveIssue {
 				// Assertion: Verify that When clicked on 'Undo remove issue' option, a issue which was removed from the issue should be restored in the segment
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("issues"));
 				GlobalVariables.oElement.click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[3]/span/span/span/span/span"));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Menu")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

@@ -41,7 +41,7 @@ public class MAC0007_UndoPasteTaskUsingCut {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(1000);
 					
 					// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 					GlobalVariables.iStepNo++ ;
@@ -91,7 +91,7 @@ public class MAC0007_UndoPasteTaskUsingCut {
 					// Get a handle to the open alert, prompt or confirmation
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(3000);
 					// And acknowledge the alert (equivalent to clicking "OK")
 					alert.accept();
 					// WebElement Synchronization
@@ -170,19 +170,29 @@ public class MAC0007_UndoPasteTaskUsingCut {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION:  When clicked on 'Paste task' option, the selected cut task should be pasted in Information Sharing Plan in other segment
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/span/table/tbody/tr[2]/td[2]/span/a/span"));
-				    if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Task 1"))){
-				    	// Write Results
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
+					tds = GlobalVariables.oElement.findElements(By.tagName("td"));
+					GlobalVariables.bIsSuccess = Boolean.FALSE;
+					for (WebElement td: tds){
+						GlobalVariables.sStrCheck=td.getText();
+						if (td.getText().equals("Task 1")){
+							GlobalVariables.bIsSuccess = Boolean.TRUE;
+							break;
+						}
+					}
+					if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
+						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
-				    }
-				    else{
-				    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task 1' "+" Actual " + GlobalVariables.oElement.getText();
+					}
+					else
+				    {
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task 1' "+" Actual " + GlobalVariables.sStrCheck;
 				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
