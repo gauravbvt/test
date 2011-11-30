@@ -9,7 +9,7 @@
 <xPathAddInfoReceiveAttachment>//span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[12]/td/ul/span/li/a</xPathAddInfoReceiveAttachment>
 <xPathAddInfoSendCreateSurvey>//span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoSendCreateSurvey>
 <xPathAddInfoReceiveCreateSurvey>//span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoReceiveCreateSurvey>
-<xPathShowPopUpMenu>//div[13]/span/span[2]/span/span</xPathShowPopUpMenu>
+<xPathShowPopUpMenu>//div[@class='header']/span[@class='menubar']/span[@class='menuitem']/span[@class='dropmenu']/span</xPathShowPopUpMenu>
 <xPathSendInfoAddNewIssue>//div[@class='sends']/div[@class='section-content']/div[@class='flow']/div/div[@class='flow-details']/span/div[@class='issues']/div[@class='section-title']/ul/li/a</xPathSendInfoAddNewIssue>
 <xPathReceiveInfoAddNewIssue>//div[@class='receives']/div[@class='section-content']/div[@class='flow']/div/div[@class='flow-details']/span/div[@class='issues']/div[@class='section-title']/ul/li/a</xPathReceiveInfoAddNewIssue>
 <xPathReceiveInfoIssueMenu>//span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li[2]/span/span/span/span/span</xPathReceiveInfoIssueMenu>
@@ -18,7 +18,7 @@
 <xPathReceivedReplyThatOption>//span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label[2]/input</xPathReceivedReplyThatOption>
 <xPathSendInfoNotification>//span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</xPathSendInfoNotification>
 <xPathReceiveInfoNotification>//span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</xPathReceiveInfoNotification>
-<xPathActionsPopUpMenu>//div[13]/span/span[3]/span/span</xPathActionsPopUpMenu>
+<xPathActionsPopUpMenu>//div[13]/span/span[3]/span[@class='dropmenu']/span</xPathActionsPopUpMenu>
 <xPathAboutPlanShowMenu>//span[@class='menubar']/span/span/span</xPathAboutPlanShowMenu>
 <xPathAbtPlanSegShowMenu>//span[@class='menubar']/span/span/span</xPathAbtPlanSegShowMenu>
 <xPathAboutPlanActionMenu>//span[@class='menubar']/span[2]/span/span</xPathAboutPlanActionMenu>
@@ -26,8 +26,8 @@
 <xPathTaskMoverDetail>//div[5]/div/span/div/div[2]/h3/span</xPathTaskMoverDetail>
 <xPathDeleteOrgs>//div[4]/div/span/div/div[2]/div/div[2]/span/a/span</xPathDeleteOrgs>
 <xPathDefaultTask>//div[@class='section-title']/span[2]/a</xPathDefaultTask>
-<xPathTaskShowMenu>//div[@class='section-title']/span[2]/span/span/span</xPathTaskShowMenu>
-<xPathTaskActionsMenu>//div[@class='section-title']/span[2]/span[2]/span/span</xPathTaskActionsMenu>
+<xPathTaskShowMenu>//div[@class='section-title']/span[@class='menubar']/span/span/span</xPathTaskShowMenu>
+<xPathTaskActionsMenu>//div[@class='section-title']/span[@class='menubar']/span[2]/span/span</xPathTaskActionsMenu>
 <xPathAddInfoReceive>//div[@class='receives']/div/a/span</xPathAddInfoReceive>
 <xPathAddInfoSend>//div[@class='sends']/div/a/span</xPathAddInfoSend>
 <xPathReceiveFlowMoreMenu>//span/div/div[3]/div[2]/div[2]/div/div/span/span/span/span</xPathReceiveFlowMoreMenu>
@@ -37,10 +37,10 @@
 <xPathSendInfoShowMenu>//div[@class='sends']/div/span/span/span/span</xPathSendInfoShowMenu>
 <xPathSendFlowMoreMenu>//span/div/div[3]/div[3]/div[2]/div/div/span/span/span/span</xPathSendFlowMoreMenu>
 <xPathIssueMoreMenu>//div[5]/div[@class='floating']/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[3]/span/span/span/span/span</xPathIssueMoreMenu>
-<xPathDeleteGoals>//div[5]/div/span/div/div[2]/div/table/tbody/tr/td[7]/a/img</xPathDeleteGoals>
+<xPathDeleteGoals>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/div[@class='goals']/table/tbody/tr/td[7]/a/img</xPathDeleteGoals>
 <xPathDeletePhase>//div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/a/img</xPathDeletePhase>
 <xPathDeletePlanSegAttachment>//div[5]/div/span/div/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeletePlanSegAttachment>
-<xPathDeleteTaskAttachment>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteTaskAttachment>
+<xPathDeleteTaskAttachment>//div[@id='part']/div/div[@class='section-content']/table[2]/tbody/tr[14]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img</xPathDeleteTaskAttachment>
 <xPathCutAttachment>//div[5]/div/span/div/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCutAttachment>
 <xPathDeleteEventAttachment>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteEventAttachment>
 <xPathDeletePlacesAttachment>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeletePlacesAttachment>
@@ -53,10 +53,10 @@
 <xPathDoingSomeThingLink>//div[@id='part']/div[1]/div[2]/table/tbody/tr/td/span/span</xPathDoingSomeThingLink>
 <xPathLegend>//span/div/div/span[7]/img</xPathLegend>
 <xPathAgentsURLRadioButton>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathAgentsURLRadioButton>
-<xPathStretchUpShrinkBack>//span/div/div/span[6]/img</xPathStretchUpShrinkBack>
+<xPathStretchUpShrinkBack>//span/div/div[@class='zoom']/span[6]/img</xPathStretchUpShrinkBack>
 <xPathRespondingPhaseLink>//div[4]/div/span/div/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathRespondingPhaseLink>
 <xPathDeleteEvent>//div[5]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/div/table/tbody/tr/td[2]/a/img</xPathDeleteEvent>
-<xPathMoveTaskButton>//div[5]/div/span/div/div[2]/input</xPathMoveTaskButton>
+<xPathMoveTaskButton>//div[@class='floating']/span/div/div[@class='aspect']/input</xPathMoveTaskButton>
 <xPathAboutPlanAction>//div[5]/div/div[2]/div/div/span/span[2]/span/span</xPathAboutPlanAction>
 <xPathAboutPlanSegmentAction>//div[5]/div/span/div/div/div/span/span[2]/span/span</xPathAboutPlanSegmentAction>
 <xPathCloseSurveyWindow>//span[2]/div/div/div[2]/a/img</xPathCloseSurveyWindow>
@@ -149,7 +149,7 @@
 <xPathDeletePhaseCategories>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeletePhaseCategories>
 <xPathDeletePhaseAttachment>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeletePhaseAttachment>
 <xPathCopyPhaseAttachment>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyPhaseAttachment>
-<xPathCopyTaskAttachment>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/ul/li/a/img</xPathCopyTaskAttachment>
+<xPathCopyTaskAttachment>//span/div/div[@id='part']/div/div[@class='section-content']/table[2]/tbody/tr[14]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li/a/img</xPathCopyTaskAttachment>
 <xPathDeleteOrganizationCategories>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteOrganizationCategories>
 <xPathSendFeedBackOfIssueSummaryReport>/html/body/div/div/span/div/a/span</xPathSendFeedBackOfIssueSummaryReport>
 <xPathTaskAttachmentURL>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/li/span/span/input[2]</xPathTaskAttachmentURL>
@@ -210,7 +210,7 @@
 <xPathPhaseCreatedAssertion>//div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathPhaseCreatedAssertion>
 <xPathMediumDeleteAttachmentAssertion>//div[3]/div/div2/div[2]/div/table/tbody/tr[6]/td</xPathMediumDeleteAttachmentAssertion>
 <xPathDeleteEventAttachmentAssertion>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td</xPathDeleteEventAttachmentAssertion>
-<xPathCopyAttachmentAssertion>//div[14]/span/span</xPathCopyAttachmentAssertion>
+<xPathCopyAttachmentAssertion>//div[@class='change-message']/span/a/img[@class='close']</xPathCopyAttachmentAssertion>
 <xPathAssertionPhaseDetails>//div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathAssertionPhaseDetails>
 <xPathAssertionDetails>//div[4]/div/span/div/div/div/h1</xPathAssertionDetails>
 <xPathPhaseAssertionDetails>//div[3]/div/span/div/div/div/h1</xPathPhaseAssertionDetails>
