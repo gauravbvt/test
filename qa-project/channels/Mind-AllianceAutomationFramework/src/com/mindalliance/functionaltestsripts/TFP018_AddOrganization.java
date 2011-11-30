@@ -50,9 +50,9 @@ public class TFP018_AddOrganization
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
-				// Click on Agent text field
+				// Click on Organization text field
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Agent";
+				GlobalVariables.sDescription="Organization";
 				GlobalVariables.oDriver.findElement(By.name("segment:part:organization:name")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:organization:name"));
 				for(int i=0;i<8;i++)

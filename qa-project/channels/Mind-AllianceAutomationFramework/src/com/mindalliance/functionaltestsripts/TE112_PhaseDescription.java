@@ -50,8 +50,9 @@ public class TE112_PhaseDescription
 					//Enter the new phase in text box for the plan inside 'Phase' section
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
+					String sPhaseName = LogFunctions.getDateTime();
+					GlobalVariables.oElement.sendKeys(sPhaseName);
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -64,15 +65,15 @@ public class TE112_PhaseDescription
 					// Click on Phase
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase name updated";
-					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Phase 1"))).click();
+					GlobalVariables.oDriver.findElement(By.linkText(sPhaseName)).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description")).clear();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:description")).clear();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:description"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an Description"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -85,7 +86,7 @@ public class TE112_PhaseDescription
 					// Click on Done
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Done";
-					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -105,7 +106,7 @@ public class TE112_PhaseDescription
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan closed";
-					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

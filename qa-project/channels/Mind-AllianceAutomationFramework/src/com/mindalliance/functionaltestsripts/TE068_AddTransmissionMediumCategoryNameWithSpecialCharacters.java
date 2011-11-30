@@ -90,8 +90,8 @@ public class TE068_AddTransmissionMediumCategoryNameWithSpecialCharacters
 				// Update new medium Categories
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="New Medium's Categories updated";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
 				for(int i=0;i<=15;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));

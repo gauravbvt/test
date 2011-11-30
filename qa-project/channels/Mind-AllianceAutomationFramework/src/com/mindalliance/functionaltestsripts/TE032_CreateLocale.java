@@ -48,18 +48,18 @@ public class TE032_CreateLocale
 				// Create Locale 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Locale Name Entered";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:localePanel:name")).clear();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:localePanel:name"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Places"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Verify that Locale can be created
-		    	if(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:localePanel:name")).getValue().equals(GlobalVariables.testData.get("Places"))){
+		    	if(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name")).getValue().equals(GlobalVariables.testData.get("Places"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

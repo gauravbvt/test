@@ -54,11 +54,11 @@ public class TE049_AttachInvalidURLToLocale
 				// Create Locale 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Locale Created";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:localePanel:name")).clear();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:localePanel:name"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Places"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results

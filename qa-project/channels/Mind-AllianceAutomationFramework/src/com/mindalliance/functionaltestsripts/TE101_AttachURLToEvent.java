@@ -62,8 +62,8 @@ public class TE101_AttachURLToEvent
 				String event="Add Event To The Plan";
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add Event";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
 				GlobalVariables.oElement.sendKeys(event);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
@@ -77,7 +77,7 @@ public class TE101_AttachURLToEvent
 				// Select check box
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event Added";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -113,7 +113,7 @@ public class TE101_AttachURLToEvent
 				//Attach Attachment as a URL
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Attachment attached as a URL";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:url"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				if (GlobalVariables.sBrowser.equals("Internet Explorer")) {
@@ -179,7 +179,7 @@ public class TE101_AttachURLToEvent
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Click on check-box to delete the event 
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

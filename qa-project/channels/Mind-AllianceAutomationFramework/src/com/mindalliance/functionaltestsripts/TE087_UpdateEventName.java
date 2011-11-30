@@ -61,7 +61,7 @@ public class TE087_UpdateEventName
 				// Create an event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add Event";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Event To The Plan"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
@@ -75,7 +75,7 @@ public class TE087_UpdateEventName
 				// Select check box
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event Added";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -99,11 +99,11 @@ public class TE087_UpdateEventName
 				// Click on text field and Update event name
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Update event name";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name")).clear();
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an updated event"));
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -145,7 +145,7 @@ public class TE087_UpdateEventName
 				Thread.currentThread();
 				Thread.sleep(2000);		
 				// Click on check-box to delete the event 
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

@@ -61,7 +61,7 @@ public class TE140_RemoveOrganizationCategories
 					// Enter name of organization in 'Other organization that should be assigned tasks ' field
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription = "Organization Added";
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 					String sOrgName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sOrgName);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);			
@@ -88,8 +88,8 @@ public class TE140_RemoveOrganizationCategories
 					// Enter Categories in tags text field
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Categories Entered";
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType")).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType")).click();
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
 					for(int i=0;i<20;i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Organizations Categories"));

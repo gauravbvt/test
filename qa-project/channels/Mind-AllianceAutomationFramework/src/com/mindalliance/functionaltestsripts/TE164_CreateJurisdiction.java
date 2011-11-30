@@ -56,7 +56,7 @@ public class TE164_CreateJurisdiction
 				    Thread.currentThread();
 				    Thread.sleep(3000);
 				    // enter into the text box the name of organization
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 					String sOrgName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sOrgName);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);
@@ -121,52 +121,52 @@ public class TE164_CreateJurisdiction
 						GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
 					}
 					// agent name
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field")).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field"));
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field")).click();
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field"));
 					GlobalVariables .oElement.sendKeys(Agent);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Title
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title"));
 					GlobalVariables .oElement.sendKeys(Title);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Role
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field"));
 					GlobalVariables.oElement.sendKeys(Role);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Jury
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
 					GlobalVariables.oElement.sendKeys(Jurisdiction);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Supervisor
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Supervisor"));
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -177,7 +177,7 @@ public class TE164_CreateJurisdiction
 				    Thread.currentThread();
 				    Thread.sleep(3000);
 					// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
-				    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
+				    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
 					if(GlobalVariables.oElement.getValue().equals(Jurisdiction))
 					{
 						// Write Results

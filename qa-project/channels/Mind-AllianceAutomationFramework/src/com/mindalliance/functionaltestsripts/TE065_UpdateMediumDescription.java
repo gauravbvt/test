@@ -89,8 +89,8 @@ public class TE065_UpdateMediumDescription
 				// Update medium description
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Update Medium Description";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:description")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:description"));
 				for(int i=0;i<=25;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is description"));

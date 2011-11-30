@@ -89,8 +89,8 @@ public class TE066_UpdateMediumTags
 				// Update new medium tags
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="New Medium's tags updated";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags"));
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tags:tags")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tags:tags"));
 				for(int i=0;i<=15;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Tags"));

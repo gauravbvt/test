@@ -61,7 +61,7 @@ public class TE092_RemoveCategoriesOfEvents
 				// Create an event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add Event";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Event To The Plan"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
@@ -75,7 +75,7 @@ public class TE092_RemoveCategoriesOfEvents
 				// Select check box
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event Added";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -99,7 +99,7 @@ public class TE092_RemoveCategoriesOfEvents
 				// Click on text field and Update categories 
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Update event categories";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is categories"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
@@ -122,7 +122,7 @@ public class TE092_RemoveCategoriesOfEvents
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion: Verify that Categories can be deleted
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -164,7 +164,7 @@ public class TE092_RemoveCategoriesOfEvents
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Click on check-box to delete the event 
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

@@ -62,8 +62,8 @@ public class TE100_AttachFileToEvent
 				String event="Add Event To The Plan";
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add Event";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
 				GlobalVariables.oElement.sendKeys(event);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
@@ -77,7 +77,7 @@ public class TE100_AttachFileToEvent
 				// Select check box
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event Added";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -101,14 +101,14 @@ public class TE100_AttachFileToEvent
 				// Attach File to an event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Attach File to event";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:name"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
-				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:upload"));
+				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:upload"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:submit")).click();
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:submit")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
@@ -167,7 +167,7 @@ public class TE100_AttachFileToEvent
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Click on check-box to delete the event 
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

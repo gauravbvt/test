@@ -50,8 +50,9 @@ public class TE116_RemovePhaseCategories
 					//Enter the new phase in text box for the plan inside 'Phase' section
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
+					String sPhaseName = LogFunctions.getDateTime();
+					GlobalVariables.oElement.sendKeys(sPhaseName);
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -64,11 +65,11 @@ public class TE116_RemovePhaseCategories
 					// Click on Phase
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase categories added";
-					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Phase 1"))).click();
+					GlobalVariables.oDriver.findElement(By.linkText(sPhaseName)).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an Categories"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results

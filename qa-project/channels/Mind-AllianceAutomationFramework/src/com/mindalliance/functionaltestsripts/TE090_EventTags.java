@@ -61,7 +61,7 @@ public class TE090_EventTags
 				// Create an event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add Event";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
 				System.out.println(GlobalVariables.testData.get("This is tag"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Event To The Plan"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
@@ -76,7 +76,7 @@ public class TE090_EventTags
 				// Select check box
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event Added";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -100,11 +100,11 @@ public class TE090_EventTags
 				// Click on text field and Update event name
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Update event tags";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags")).clear();
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tags:tags")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tags:tags"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is tag"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -136,7 +136,7 @@ public class TE090_EventTags
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Click on check-box to delete the event 
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

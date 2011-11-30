@@ -92,19 +92,19 @@ public class TE074_TransmissionNamedAttachment
 				// Attach file to New Medium
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Attach File";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:name"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
-				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:upload"));
+				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:upload"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:submit")).click();
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:submit")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that file is attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//ul[@class='attach']/span/li[@class='doc_Reference']/a"));
 				if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -122,7 +122,7 @@ public class TE074_TransmissionNamedAttachment
 				Thread.currentThread();
 				Thread.sleep(1000);
 				// Delete Attachment
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
+				GlobalVariables.oDriver.findElement(By.xpath("//ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);

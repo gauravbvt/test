@@ -60,7 +60,7 @@ public class TE132_CreateOrganizationWithSpecialCharacters
 					// Enter name of organization in 'Other organization that should be assigned tasks ' field
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription = "Organization Added";
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 					String sOrgName = ")(*&^%$#!";
 					GlobalVariables.oElement.sendKeys(sOrgName);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);			

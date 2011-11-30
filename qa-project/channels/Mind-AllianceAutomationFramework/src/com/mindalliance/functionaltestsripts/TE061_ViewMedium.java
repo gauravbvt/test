@@ -82,7 +82,7 @@ public class TE061_ViewMedium
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that New Medium Window Opened/Viewed
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name"));
 				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.viewElements.get("newMedium"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

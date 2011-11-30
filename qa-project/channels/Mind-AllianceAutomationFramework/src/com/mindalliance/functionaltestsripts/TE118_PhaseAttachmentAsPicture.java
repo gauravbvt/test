@@ -52,7 +52,7 @@ public class TE118_PhaseAttachmentAsPicture
 					//Enter the new phase in text box for the plan inside 'Phase' section
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
 					String sPhaseName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sPhaseName);
 //					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
@@ -73,7 +73,7 @@ public class TE118_PhaseAttachmentAsPicture
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Click on Attach option
-				    GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:type")));
+				    GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:type")));
 				    List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(GlobalVariables.viewElements.get("picture").equals(option.getText())){

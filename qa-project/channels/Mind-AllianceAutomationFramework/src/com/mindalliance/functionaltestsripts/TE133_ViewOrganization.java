@@ -64,7 +64,7 @@ public class TE133_ViewOrganization
 				// Enter name of organization in 'Other organization that should be assigned tasks ' field
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription = "Organization Added";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 				String sOrgName = LogFunctions.getDateTime();
 				GlobalVariables.oElement.sendKeys(sOrgName);
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);	
@@ -91,7 +91,7 @@ public class TE133_ViewOrganization
 				// Select Organization from index pop up menu
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Select Event";
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:indexed")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(option.getText().equals(GlobalVariables.viewElements.get("organizations"))){

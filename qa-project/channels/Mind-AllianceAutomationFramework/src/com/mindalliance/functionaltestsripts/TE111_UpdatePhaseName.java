@@ -49,8 +49,10 @@ public class TE111_UpdatePhaseName
 					//Enter the new phase in text box for the plan inside 'Phase' section
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
+					String sPhaseName = LogFunctions.getDateTime();
+					GlobalVariables.oElement.sendKeys(sPhaseName);
+//					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -67,11 +69,11 @@ public class TE111_UpdatePhaseName
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name")).clear();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name")).clear();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 2"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -84,7 +86,7 @@ public class TE111_UpdatePhaseName
 					// Click on Done
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Done";
-					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -106,7 +108,7 @@ public class TE111_UpdatePhaseName
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);		
-					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);	
@@ -122,7 +124,7 @@ public class TE111_UpdatePhaseName
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

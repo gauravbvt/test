@@ -54,7 +54,7 @@ public class TE109_ViewPhase
 				//Enter the new phase in text box for the plan inside 'Phase' section
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Phase added successfully";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results

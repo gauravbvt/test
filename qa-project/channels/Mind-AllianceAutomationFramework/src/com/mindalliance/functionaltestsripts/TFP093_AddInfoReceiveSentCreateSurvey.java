@@ -71,7 +71,7 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 				Thread.currentThread();
 				Thread.sleep(35000);
 				// Assertion : Verify that Survey gets Created
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div/div/h1"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("surveys"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -88,7 +88,7 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Close Survey Window
-				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -113,7 +113,7 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 				Thread.currentThread();
 				Thread.sleep(35000);
 				// Assertion : Verify that Survey gets Created
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div/div/h1"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("surveys"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
