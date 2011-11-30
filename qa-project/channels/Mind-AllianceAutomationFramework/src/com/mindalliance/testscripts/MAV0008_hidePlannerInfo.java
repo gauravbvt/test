@@ -48,8 +48,7 @@ public class MAV0008_hidePlannerInfo
 						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(1000);  
-					
+				  Thread.sleep(1000);  					
 				  GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu"))).click();
 				  // WebElement Synchronization
 			 	  Thread.currentThread();
