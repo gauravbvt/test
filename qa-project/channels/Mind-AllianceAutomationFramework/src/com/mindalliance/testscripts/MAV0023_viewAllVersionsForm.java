@@ -66,7 +66,7 @@ public class MAV0023_viewAllVersionsForm
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Versions' gets loaded on the About Plan window";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionVersions")));			    			    
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("versions"))) {
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("versionAssertion"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

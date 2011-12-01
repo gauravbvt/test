@@ -67,7 +67,7 @@ public class MAV0064_viewParticipations
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Participations' gets loaded on the About Plan Segment window";		            		         
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionParticipations")));	    
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("participation"))) {
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("participations"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
