@@ -141,7 +141,7 @@ public interface PlanManager extends CommandListener {
     void productize( Plan oldDevPlan );
 
     /**
-     * Find the production version of a plan.
+     * Find the production version of a plan or null.
      *
      * @param uri a string
      * @return a plan
@@ -149,7 +149,7 @@ public interface PlanManager extends CommandListener {
     Plan findProductionPlan( String uri );
 
     /**
-     * Find the development version of a plan.
+     * Find the development version of a plan or null..
      *
      * @param uri a string
      * @return a plan

@@ -78,5 +78,6 @@
             </list>
         </property>
     </bean>
-
+    <!-- For enunciate -->
+    <alias name="springSecurityFilterChain" alias="securityFilter"/>
 </beans>

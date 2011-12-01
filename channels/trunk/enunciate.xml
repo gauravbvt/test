@@ -1,0 +1,36 @@
+<enunciate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="http://enunciate.codehaus.org/schemas/enunciate-1.8.xsd">
+    <api-classes>
+        <include pattern="com.mindalliance.channels.api.ChannelsService"/>
+        <include pattern="com.mindalliance.channels.api.ChannelsServiceImpl"/>
+        <include pattern="com.mindalliance.channels.api.PlanIdentifiersData"/>
+        <include pattern="com.mindalliance.channels.api.PlanIdentifierData"/>
+        <include pattern="com.mindalliance.channels.api.PlanScopeData"/>
+        <include pattern="com.mindalliance.channels.api.EventData"/>
+        <include pattern="com.mindalliance.channels.api.RoleData"/>
+        <include pattern="com.mindalliance.channels.api.PhaseData"/>
+        <include pattern="com.mindalliance.channels.api.PlaceData"/>
+        <include pattern="com.mindalliance.channels.api.GeoLocationData"/>
+        <include pattern="com.mindalliance.channels.api.OrganizationData"/>
+        <include pattern="com.mindalliance.channels.api.EmploymentData"/>
+    </api-classes>
+    <webapp mergeWebXML="web.xml">
+        <globalServletFilter name="securityFilter" classname="org.springframework.web.filter.DelegatingFilterProxy"/>
+    </webapp>
+    <namespaces>
+        <namespace uri="http://mind-alliance.com/api/isp/v1/" id="isp"/>
+    </namespaces>
+    <modules>
+        <docs docsDir="api" title="Channels REST API"/>
+        <spring-app>
+            <!-- Order matters -->
+            <springImport uri="classpath:servicesConfig.xml"/>
+            <springImport uri="classpath:applicationContext.xml"/>
+            <springImport uri="classpath:persistenceConfig.xml"/>
+            <springImport uri="classpath:securityConfig.xml"/>
+        </spring-app>
+        <jersey>
+            <init-param name="com.sun.jersey.config.feature.XmlRootElementProcessing" value="true"/>
+        </jersey>
+    </modules>
+</enunciate>

@@ -1,7 +1,5 @@
 package com.mindalliance.channels.engine.nlp;
 
-import com.mindalliance.channels.core.nlp.Proximity;
-import com.mindalliance.channels.core.nlp.WordnetSemanticMatcher;
 import junit.framework.TestCase;
 import org.springframework.core.io.FileSystemResource;
 

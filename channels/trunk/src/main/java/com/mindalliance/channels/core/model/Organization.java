@@ -454,6 +454,15 @@ public class Organization extends AbstractUnicastChannelable
     }
 
     /**
+     * Whether a job is confirmed.
+     * @param job a job
+     * @return a boolean
+     */
+    public boolean isConfirmed( Job job ) {
+        return getJobs().contains( job );
+    }
+
+    /**
      * Family relationships between organizations.
      */
     public enum FamilyRelationship {

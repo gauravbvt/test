@@ -23,11 +23,11 @@
             <organization>Mind-Alliance Inc.</organization>
         </developer>
         <developer>
-             <id>romit</id>
-             <name>Romit Chatterjee</name>
-             <email>rc@mind-alliance.com</email>
-             <organization>Mind-Alliance Inc.</organization>
-         </developer>
+            <id>romit</id>
+            <name>Romit Chatterjee</name>
+            <email>rc@mind-alliance.com</email>
+            <organization>Mind-Alliance Inc.</organization>
+        </developer>
         <developer>
             <id>jf</id>
             <name>Jean-François Cloutier</name>
@@ -360,6 +360,13 @@
             <!-- install with: mvn install:install-file -DgroupId=org.neodatis -DartifactId=neodatis-odb -Dversion=1.9.24.679 -Dpackaging=jar -Dfile=... -->
         </dependency>
 
+        <!-- REST API -->
+        <dependency>
+            <groupId>org.codehaus.enunciate</groupId>
+            <artifactId>enunciate-spring-app-rt</artifactId>
+            <version>1.24</version>
+        </dependency>
+
         <!--  JUNIT DEPENDENCY FOR TESTING -->
         <dependency>
             <groupId>junit</groupId>
@@ -407,14 +414,26 @@
         </testResources>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.enunciate</groupId>
+                <artifactId>maven-enunciate-spring-plugin</artifactId>
+                <version>1.24</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                   <systemProperties>
-                      <property>
-                         <name>java.awt.headless</name>
-                         <value>true</value>
-                      </property>
-                   </systemProperties>
+                    <systemProperties>
+                        <property>
+                            <name>java.awt.headless</name>
+                            <value>true</value>
+                        </property>
+                    </systemProperties>
                 </configuration>
             </plugin>
             <plugin>
@@ -431,15 +450,15 @@
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                  <webResources>
-                    <resource>
-                        <directory>src/docbkx</directory>
-                        <targetPath>doc/channels_user_guide</targetPath>
-                        <excludes>
-                            <exclude>channels_user_guide.xml</exclude>
-                        </excludes>
-                    </resource>
-                  </webResources>
+                    <webResources>
+                        <resource>
+                            <directory>src/docbkx</directory>
+                            <targetPath>doc/channels_user_guide</targetPath>
+                            <excludes>
+                                <exclude>channels_user_guide.xml</exclude>
+                            </excludes>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
             <plugin>
@@ -450,18 +469,18 @@
                     <webAppSourceDirectory>${project.build.directory}/${project.build.finalName}</webAppSourceDirectory>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <!--<scanTargets>-->
-                        <!--<scanTarget>src/main/resources</scanTarget>-->
+                    <!--<scanTarget>src/main/resources</scanTarget>-->
                     <!--</scanTargets>-->
                     <!--<scanTargetPatterns>-->
-                        <!--<scanTargetPattern>-->
-                            <!--<directory>src/main/java</directory>-->
-                            <!--<includes>-->
-                                <!--<include>**/*.html</include>-->
-                            <!--</includes>-->
-                            <!--<excludes>-->
-                                <!--<exclude>**/package.html</exclude>-->
-                            <!--</excludes>-->
-                        <!--</scanTargetPattern>-->
+                    <!--<scanTargetPattern>-->
+                    <!--<directory>src/main/java</directory>-->
+                    <!--<includes>-->
+                    <!--<include>**/*.html</include>-->
+                    <!--</includes>-->
+                    <!--<excludes>-->
+                    <!--<exclude>**/package.html</exclude>-->
+                    <!--</excludes>-->
+                    <!--</scanTargetPattern>-->
                     <!--</scanTargetPatterns>-->
                     <connectors>
                         <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
@@ -548,12 +567,12 @@
             <build>
                 <plugins>
                     <plugin>
-                      <artifactId>maven-war-plugin</artifactId>
-                      <configuration>
-                        <archive>
-                          <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                        </archive>
-                      </configuration>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <archive>
+                                <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                            </archive>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.felix</groupId>
@@ -659,9 +678,9 @@
                 </configuration>
             </plugin>
             <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>emma-maven-plugin</artifactId>
-              <version>1.0-alpha-2</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>emma-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
             </plugin>
 
             <plugin>

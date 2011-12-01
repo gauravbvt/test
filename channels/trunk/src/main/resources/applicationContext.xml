@@ -429,4 +429,12 @@ CONFIGURATION NOTES:
         <property name="databaseFactory" ref="databaseFactory"/>
     </bean>
 
+    <!-- REST API -->
+    <bean id="channelsService" class="com.mindalliance.channels.api.ChannelsServiceImpl">
+        <property name="planManager" ref="planManager"/>
+        <property name="semanticMatcher" ref="semanticMatcher"/>
+        <property name="userDao" ref="userDao"/>
+        <property name="attachmentManager" ref="attachmentManager"/>
+    </bean>
+
 </beans>

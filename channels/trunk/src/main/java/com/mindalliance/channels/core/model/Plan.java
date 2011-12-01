@@ -26,23 +26,30 @@ import java.util.Set;
 public class Plan extends ModelObject {
 
     /** Logger. */
-   // private static final Logger LOG = LoggerFactory.getLogger( Plan.class );
+    // private static final Logger LOG = LoggerFactory.getLogger( Plan.class );
 
-    /** Name of the default phase of a plan. */
+    /**
+     * Name of the default phase of a plan.
+     */
     public static final String DEFAULT_PHASE_NAME = "Responding";
 
-    /** Timing of the default phase. */
+    /**
+     * Timing of the default phase.
+     */
     public static final Timing DEFAULT_PHASE_TIMING = Timing.Concurrent;
     /**
      * Default default spoken language.
      */
     public static final String DEFAULT_LANGUAGE = "English";
 
-    /** Whether the plan is meant as a template. */
+    /**
+     * Whether the plan is meant as a template.
+     */
     private boolean template;
 
     /**
      * Return a "directory-safe" equivalent name.
+     *
      * @param name original name
      * @return safe version
      */
@@ -50,23 +57,47 @@ public class Plan extends ModelObject {
         return name.replaceAll( "\\W", "_" );
     }
 
-    /** The status of a (version of) plan. */
+    /**
+     * Whether an organization is expected to have agents with assigned tasks.
+     *
+     * @param organization an organization
+     * @return a boolean
+     */
+    public boolean isInScope( Organization organization ) {
+        return getOrganizations().contains( organization );
+    }
+
+    /**
+     * The status of a (version of) plan.
+     */
     public enum Status implements Serializable {
-        /** In development. */
+        /**
+         * In development.
+         */
         DEVELOPMENT,
-        /** In production. */
+        /**
+         * In production.
+         */
         PRODUCTION,
-        /** Retired. */
+        /**
+         * Retired.
+         */
         RETIRED
     }
 
-    /** The segments, for convenience... */
+    /**
+     * The segments, for convenience...
+     */
     private final Set<Segment> segments = new HashSet<Segment>();
 
-    /** Unplanned-for events. */
+    /**
+     * Unplanned-for events.
+     */
     private List<Event> incidents = new ArrayList<Event>();
 
-    /** Name of client sponsoring the plan. */
+    /**
+     * Name of client sponsoring the plan.
+     */
     private String client = "Unnamed";
 
     /**
@@ -75,7 +106,9 @@ public class Plan extends ModelObject {
      */
     private String uri = "default";
 
-    /** Whether dev, prod or retired. */
+    /**
+     * Whether dev, prod or retired.
+     */
     private Status status;
 
     /**
@@ -84,22 +117,34 @@ public class Plan extends ModelObject {
      */
     private int version;
 
-    /** User names of planners who voted to put this plan into production. */
+    /**
+     * User names of planners who voted to put this plan into production.
+     */
     private List<String> producers = new ArrayList<String>();
 
-    /** Date when version was in retirement, production or development. */
+    /**
+     * Date when version was in retirement, production or development.
+     */
     private Date whenVersioned;
 
-    /** Phases defined for this plan. */
+    /**
+     * Phases defined for this plan.
+     */
     private List<Phase> phases = new ArrayList<Phase>();
 
-    /** Organization whose involvement is expected. */
+    /**
+     * Organization whose involvement is expected.
+     */
     private List<Organization> organizations = new ArrayList<Organization>();
 
-    /** Classifications supported. */
+    /**
+     * Classifications supported.
+     */
     private List<Classification> classifications = new ArrayList<Classification>();
 
-    /** The plan's locale. */
+    /**
+     * The plan's locale.
+     */
     private Place locale;
     /**
      * The plan's default spoken language.
@@ -185,7 +230,7 @@ public class Plan extends ModelObject {
 
     public void setDefaultLanguage( String defaultLanguage ) {
         if ( defaultLanguage != null )
-            this.defaultLanguage =  defaultLanguage;
+            this.defaultLanguage = defaultLanguage;
     }
 
     public String getPlannerSupportCommunity() {
@@ -241,7 +286,7 @@ public class Plan extends ModelObject {
     }
 
     public String getCommunityCalendarPrivateTicket(
-        String defaultCommunityCalendarPrivateTicket ) {
+            String defaultCommunityCalendarPrivateTicket ) {
 
         String ticket = getCommunityCalendarPrivateTicket();
         return ticket.isEmpty() ? defaultCommunityCalendarPrivateTicket : ticket;
@@ -395,6 +440,7 @@ public class Plan extends ModelObject {
 
     /**
      * Get sanitized uri.
+     *
      * @return a string
      */
     public String getUrn() {
@@ -435,18 +481,18 @@ public class Plan extends ModelObject {
      * Find classification given system and name.
      *
      * @param system a string
-     * @param name a string
+     * @param name   a string
      * @return a classification or null
      */
     public Classification getClassification( String system, final String name ) {
         return (Classification) CollectionUtils.find( classificationsFor( system ),
-                                                      new Predicate() {
-                                                          @Override
-                                                          public boolean evaluate( Object object ) {
-                                                              return ( (Classification) object )
-                                                                  .getName().equals( name );
-                                                          }
-                                                      } );
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Classification) object )
+                                .getName().equals( name );
+                    }
+                } );
     }
 
     /**
@@ -545,7 +591,7 @@ public class Plan extends ModelObject {
     @Override
     public boolean equals( Object obj ) {
         return this == obj || obj != null && obj instanceof Plan && getVersionUri()
-            .equals( ( (Plan) obj ).getVersionUri() );
+                .equals( ( (Plan) obj ).getVersionUri() );
     }
 
     @Override
@@ -556,30 +602,30 @@ public class Plan extends ModelObject {
     @Override
     public boolean references( final ModelObject mo ) {
         return ModelObject.areIdentical( locale, mo )
-            || CollectionUtils.exists( segments, new Predicate() {
-                                @Override
-                                public boolean evaluate( Object object ) {
-                                   return ModelObject.areIdentical( (ModelObject) object, mo );
-                                }
-                            } )
-            || CollectionUtils.exists( incidents, new Predicate() {
-                                @Override
-                                public boolean evaluate( Object object ) {
-                                    return ModelObject.areIdentical( (ModelObject) object, mo );
-                                }
-                            } )
-            || CollectionUtils.exists( organizations, new Predicate() {
-                                @Override
-                                public boolean evaluate( Object object ) {
-                                    return ModelObject.areIdentical( (ModelObject) object, mo );
-                                }
-                            } )
-            || CollectionUtils.exists( phases, new Predicate() {
-                                @Override
-                                public boolean evaluate( Object object ) {
-                                    return ModelObject.areIdentical( (ModelObject) object, mo );
-                                }
-                            } );
+                || CollectionUtils.exists( segments, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ModelObject.areIdentical( (ModelObject) object, mo );
+            }
+        } )
+                || CollectionUtils.exists( incidents, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ModelObject.areIdentical( (ModelObject) object, mo );
+            }
+        } )
+                || CollectionUtils.exists( organizations, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ModelObject.areIdentical( (ModelObject) object, mo );
+            }
+        } )
+                || CollectionUtils.exists( phases, new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ModelObject.areIdentical( (ModelObject) object, mo );
+            }
+        } );
     }
 
     /**
@@ -673,7 +719,7 @@ public class Plan extends ModelObject {
         types.add( Type.InfoStandards );
         types.add( Type.Image );
         if ( !hasAttachmentOfType( AttachmentImpl.Type.Help ) )
-            types.add(  Type.Help );
+            types.add( Type.Help );
         return types;
     }
 }
