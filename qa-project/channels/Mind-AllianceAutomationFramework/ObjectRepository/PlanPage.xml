@@ -59,7 +59,7 @@
 <xPathMoveTaskButton>//div[@class='floating']/span/div/div[@class='aspect']/input</xPathMoveTaskButton>
 <xPathAboutPlanAction>//div[5]/div/div[2]/div/div/span/span[2]/span/span</xPathAboutPlanAction>
 <xPathAboutPlanSegmentAction>//div[5]/div/span/div/div/div/span/span[2]/span/span</xPathAboutPlanSegmentAction>
-<xPathCloseSurveyWindow>//span[2]/div/div/div[2]/a/img</xPathCloseSurveyWindow>
+<xPathCloseSurveyWindow>//div[@class='floating']/div[@class='float-bar']/div[@class='float-bar-close']/a/img</xPathCloseSurveyWindow>
 <xPathPhaseShowMenu>//div[3]/div/div[2]/div/div/span/span/span/span</xPathPhaseShowMenu>
 <xPathIndexAgent>//div[4]/div/span/div/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathIndexAgent>
 <xPathEvent>//div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td/span/a/span</xPathEvent>
@@ -231,13 +231,13 @@
 <xPathAssertionSecrecyclassifications>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/h3/span</xPathAssertionSecrecyclassifications>
 <xPathAssertionGoals>//div/span/div[@class='segment']/div[@class='aspect']/h3/span</xPathAssertionGoals>
 <xPathAssertionSegmentOrg>//div/span/div[@class='segment']/div[@class='aspect']/h3/span</xPathAssertionSegmentOrg>
-<xPathAssertionSegmentMap>/html/body/div/span[2]/div/h1</xPathAssertionSegmentMap>
+<xPathAssertionSegmentMap>//div/span[2]/div/h1</xPathAssertionSegmentMap>
 <xPathAssertionMessageTab>//span/span/div/div/div[2]/div[4]/div/span</xPathAssertionMessageTab>
 <xPathAssertionAssignment>//div[6]/div/span/div/div/h1</xPathAssertionAssignment>
-<xPathAssertionCloseAssignment>//div[6]/div/div/div[2]/a/img</xPathAssertionCloseAssignment>
-<xPathAssertionCloseFailureImpact>//div[9]/div/div/div[2]/a/img</xPathAssertionCloseFailureImpact>
-<xPathAssertionCloseDissemination>//div[10]/div/div/div[2]/a/img</xPathAssertionCloseDissemination>
-<xPathAssertionCloseAboutPlanSegment>//div[5]/div/div/div[2]/a/img</xPathAssertionCloseAboutPlanSegment>
+<xPathAssertionCloseAssignment>//div[6]/div/div/div[3]/a/img</xPathAssertionCloseAssignment>
+<xPathAssertionCloseFailureImpact>//div[9]/div/div/div[3]/a/img</xPathAssertionCloseFailureImpact>
+<xPathAssertionCloseDissemination>//div[10]/div/div/div[3]/a/img</xPathAssertionCloseDissemination>
+<xPathAssertionCloseAboutPlanSegment>//div[5]/div/div/div[3]/a/img</xPathAssertionCloseAboutPlanSegment>
 <xPathAssertionDissemination>//div[10]/div/div/div/span</xPathAssertionDissemination>
 <xPathGoBack>//div[15]/img</xPathGoBack>
 <xPathGoForward>//div[15]/img[2]</xPathGoForward>
