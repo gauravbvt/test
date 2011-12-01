@@ -64,9 +64,7 @@ public class MAV0114_hideBroadcasts
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				System.out.println(GlobalVariables.oElement.getText()+"\n");
-				System.out.println(GlobalVariables.viewElements.get("hideInactiveUsers"));
-				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showAllMessages"))) {
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("hideInactiveUsers"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
