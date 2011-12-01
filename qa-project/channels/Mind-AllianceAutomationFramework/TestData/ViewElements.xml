@@ -47,13 +47,14 @@
 <allTags>All tags</allTags>
 <definitions>Definitions</definitions>
 <evaluation>Evaluation</evaluation>
-<participation>All users participating in the plan</participation>
-<versions>This is version 1</versions>
+<participation>Participations</participation>
+<versions>Versions</versions>
 <actions>Actions</actions>
 <show>Show</show>
 <showAdvanceForm>Show advance form</showAdvanceForm>
 <showSimpleForm>Show advance form</showSimpleForm>
 <aboutPlanSegment>About plan segment</aboutPlanSegment>
+<versionAssertion>This is version 1</versionAssertion>
 <goals>Goals</goals>
 <goalsForThisSegment>Goals for this plan segment</goalsForThisSegment>
 <organizations>Organizations</organizations>
@@ -210,7 +211,7 @@
 <deletePlan>Delete Plan</deletePlan>
 <newMedium>New medium</newMedium>
 <anyMedium>any medium</anyMedium>
-<participations>Participations</participations>
+<participations>All users participating in the plan</participations>
 <notOperational>. Conceptual.</notOperational>
 <unspecified>Unspecified</unspecified>
 <analysis>Analysis</analysis>
