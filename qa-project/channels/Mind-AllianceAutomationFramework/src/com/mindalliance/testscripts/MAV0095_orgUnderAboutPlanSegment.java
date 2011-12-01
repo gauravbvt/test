@@ -59,7 +59,7 @@ public class MAV0095_orgUnderAboutPlanSegment
 			    
 			    // Assertion: Verify that page loaded with heading "Organizations" 
 			    GlobalVariables.iStepNo++;
-			    GlobalVariables.sDescription="'Goals' gets loaded on the About Plan Segment window";
+			    GlobalVariables.sDescription="'Organization' gets loaded on the About Plan Segment window";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionOrg")));
 			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("organizationsInThisSegment"))) {
 			    	 // Write Results
