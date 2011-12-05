@@ -132,8 +132,8 @@ public class MAP0002_addNameAndLocalizePlan
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Details entered";
 				// Plan Name 
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:name")).clear();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:name"));
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:name")).clear();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);

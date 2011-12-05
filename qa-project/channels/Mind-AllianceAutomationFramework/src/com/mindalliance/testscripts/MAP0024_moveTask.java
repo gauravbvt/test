@@ -48,7 +48,7 @@ public class MAP0024_moveTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(3000);	
 					
 					// Click on 'Information Sharing Model' link
 					GlobalVariables.iStepNo++ ;
@@ -60,7 +60,7 @@ public class MAP0024_moveTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(3000);
 					
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++;
@@ -72,7 +72,7 @@ public class MAP0024_moveTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(3000);	
 					
 					// Details of Segment
 					GlobalVariables.iStepNo++;
@@ -89,13 +89,13 @@ public class MAP0024_moveTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(3000);	
 				
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 					for (int i = 0; i <= 8; i++)
@@ -104,7 +104,7 @@ public class MAP0024_moveTask
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Select the Segment from 'Select Plan Segment' drop down, located on the top right corner
 					GlobalVariables.iStepNo++ ;
@@ -123,13 +123,13 @@ public class MAP0024_moveTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Add 'New Task' under Action pop-up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewTask"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					// Add details for New Task
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="New task added";
@@ -141,51 +141,51 @@ public class MAP0024_moveTask
 					GlobalVariables.oElement.sendKeys(task);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 				    // write location
 				    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:location:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Location"));
 				    GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 				    // write type
 				    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:actor:actualOrType"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("Type"));
 				    GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 				    // Actor name
 				    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:actor:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Actor"));
 				    GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 				    // Role
 				    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:role:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Role"));
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					// Organization  
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:organization:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afour Tech121"));
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);					
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					// Click on hide details from action pop-menu bar
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 										
 					// Click on 'Move task to another segment' under Show pop-up menu
 					GlobalVariables.iStepNo++;
@@ -197,7 +197,7 @@ public class MAP0024_moveTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Move task to another segment
 					GlobalVariables.iStepNo++;
@@ -212,11 +212,11 @@ public class MAP0024_moveTask
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:parts:movableParts:body:rows:1:cells:1:cell:checkBox")).click();
+					Thread.sleep(3000);
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:parts:movableParts:body:rows:1:cells:1:cell:checkBox")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					// Move button
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathMoveTaskButton"))).click();
 					// Write Results
@@ -225,7 +225,7 @@ public class MAP0024_moveTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);		
+					Thread.sleep(3000);		
 					
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
@@ -233,7 +233,7 @@ public class MAP0024_moveTask
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(3000);	
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
 					options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
@@ -244,14 +244,13 @@ public class MAP0024_moveTask
 				    }
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);		
+					Thread.sleep(3000);		
 				    // move to segment under action pop-up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("moveTasksToSegment"));
 				    // WebElement Synchronization
 				    Thread.currentThread();
-				    Thread.sleep(5000);
+				    Thread.sleep(3000);
 					// Assertion : Verify that task is moved to another segment					
-//				    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr/td[2]/span/a/span"));
 				    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(task));
 				    if(GlobalVariables.oElement.getText().equals(task)){
 				    	// Write Results
@@ -268,11 +267,11 @@ public class MAP0024_moveTask
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);					
+					Thread.sleep(3000);					
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
@@ -280,7 +279,7 @@ public class MAP0024_moveTask
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
 					options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
@@ -291,7 +290,7 @@ public class MAP0024_moveTask
 				    }
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
@@ -299,7 +298,7 @@ public class MAP0024_moveTask
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
@@ -311,7 +310,7 @@ public class MAP0024_moveTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);	
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

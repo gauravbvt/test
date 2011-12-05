@@ -31,6 +31,7 @@ public class MAP0019_deleteAttachFile
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 				if (GlobalVariables.bIsSuccess) {
+					
 					// Select  the plan from 'Switch to Plan' drop down, located on the top right corner
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Switch to plan";
@@ -160,7 +161,7 @@ public class MAP0019_deleteAttachFile
 					GlobalVariables.oElement.click();
 					for(int i=0;i<= 4;i++)
 						GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -171,8 +172,7 @@ public class MAP0019_deleteAttachFile
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: verify that file is deteled
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[6]/td/ul/li"));	
-					GlobalVariables.oDriver.findElement(By.className("attach"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("grouped"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
 						if (li.getText().equals("")){

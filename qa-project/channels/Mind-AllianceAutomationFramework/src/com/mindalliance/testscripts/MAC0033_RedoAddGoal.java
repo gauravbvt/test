@@ -120,7 +120,7 @@ public class MAC0033_RedoAddGoal {
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("actual"));
 					// Name for Goal
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AddGoal"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Redo Add Goal"));
 					// Achieved at end check box
 					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
 					// WebElement Synchronization

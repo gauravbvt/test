@@ -138,7 +138,7 @@ public class MAP0017_deleteEvent
 					Thread.currentThread();
 					Thread.sleep(3000);
 					//Assertions: Verify that the event is deleted
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[5]/div/span/div/div[@class='aspect']/table/tbody/tr[5]/td/span/div[@class='grouped']/div/table[@class='data-table']/tbody/tr[@class='even last']/td[2]/a/img"));
 					if(GlobalVariables.oElement.getText().equals("")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

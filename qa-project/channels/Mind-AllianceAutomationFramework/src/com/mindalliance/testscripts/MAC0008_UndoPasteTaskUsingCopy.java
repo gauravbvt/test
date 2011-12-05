@@ -201,7 +201,7 @@ public class MAC0008_UndoPasteTaskUsingCopy {
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();

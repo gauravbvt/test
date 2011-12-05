@@ -163,7 +163,7 @@ public class MAP0021_deleteFileOfEvent
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(8000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:submit")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:submit")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(8000);
@@ -178,28 +178,32 @@ public class MAP0021_deleteFileOfEvent
 					// Delete an File of an event
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Delete an Attachment of event";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// And acknowledge the alert (equivalent to clicking "OK")
 					alert.accept();
 					// Assertion: verify that file is deleted
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td"));
-					if (GlobalVariables.oElement.getText().equals("Attach:")){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-					} 
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual "+GlobalVariables.oElement.getText();
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				    }
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("grouped"));
+					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
+					for (WebElement li: tds){
+						if (li.getText().equals("")){
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
+							break;
+						}
+						else{
+							GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual "+li.getText();
+					    	// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+					    }
+					}			
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(1000);
 					
 					// Click on done
 					GlobalVariables.iStepNo++;
@@ -215,8 +219,7 @@ public class MAP0021_deleteFileOfEvent
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
-					
+					Thread.sleep(8000);					
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation

@@ -37,7 +37,7 @@ public class MAP0022_addGoal {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(3000);
 					
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
@@ -49,7 +49,7 @@ public class MAP0022_addGoal {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				    // WebElement Synchronization
 				    Thread.currentThread();
-				    Thread.sleep(5000);
+				    Thread.sleep(3000);
 					
 				    // Enter the details for new segment
 				    GlobalVariables.iStepNo++ ;
@@ -65,7 +65,7 @@ public class MAP0022_addGoal {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				    // WebElement Synchronization
 				    Thread.currentThread();
-				    Thread.sleep(5000);
+				    Thread.sleep(3000);
 					
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
@@ -118,6 +118,9 @@ public class MAP0022_addGoal {
 					// Organization
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:actualOrType"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("actual"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					// Name for Goal
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AddGoal"));
@@ -135,7 +138,7 @@ public class MAP0022_addGoal {
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Add Goal' "+" Actual "+GlobalVariables.oElement.getText();
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Add Goal' "+" Actual "+GlobalVariables.oElement.getValue();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -164,7 +167,7 @@ public class MAP0022_addGoal {
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 				    // Call logout()
 					GlobalVariables.iStepNo++ ;

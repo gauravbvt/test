@@ -104,11 +104,11 @@ public class MAP0012_addPhase
 					Thread.sleep(1000);
 					
 					//Enter the new phase in text box for the plan inside 'Phase' section
-					String phase="Phase 1";
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-					GlobalVariables.oElement.sendKeys(phase);
+					String sPhaseName = LogFunctions.getDateTime();
+					GlobalVariables.oElement.sendKeys(sPhaseName);
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
