@@ -191,7 +191,7 @@
 <xPathAssertionRemoveRequirement>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRemoveRequirement>
 <xPathAssertionRequirementUndo>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRequirementUndo>
 <xPathAssertionRequirementName>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tbody/tr/td/span</xPathAssertionRequirementName>
-<xPathNewRequirementDefinitionAssertion>//div[4]/div/div[2]/div[2]/div/div[2]/div/div/h3</xPathNewRequirementDefinitionAssertion>
+<xPathNewRequirementDefinitionAssertion>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/div[@class='req']/h3</xPathNewRequirementDefinitionAssertion>
 <xPathAssertionCopyCapability>/div[14]/span/span</xPathAssertionCopyCapability>
 <xPathAssertionCopyNeed>/div[14]/span/span</xPathAssertionCopyNeed>
 <xPathTaskURLAssertion>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/a</xPathTaskURLAssertion>
@@ -211,7 +211,7 @@
 <xPathPhaseCreatedAssertion>//div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathPhaseCreatedAssertion>
 <xPathMediumDeleteAttachmentAssertion>//div[3]/div/div2/div[2]/div/table/tbody/tr[6]/td</xPathMediumDeleteAttachmentAssertion>
 <xPathDeleteEventAttachmentAssertion>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td</xPathDeleteEventAttachmentAssertion>
-<xPathCopyAttachmentAssertion>//div[@class='change-message']/span/a/img[@class='close']</xPathCopyAttachmentAssertion>
+<xPathCopyAttachmentAssertion>//div[@class='change-message']/span/span</xPathCopyAttachmentAssertion>
 <xPathAssertionPhaseDetails>//div[4]/div/div[2]/div[2]/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</xPathAssertionPhaseDetails>
 <xPathAssertionDetails>//div[@class='floating']/span/div[@class='plan']/div/div[@class='float-header']/h1</xPathAssertionDetails>
 <xPathPhaseAssertionDetails>//div[3]/div/span/div/div/div/h1</xPathPhaseAssertionDetails>
