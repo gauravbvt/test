@@ -60,7 +60,7 @@ public class MAC0062_RedoAddNewRequirement
 				// Click on New Button to Add Requirement
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Requirement";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewRequirement"))).click();
+				GlobalVariables.oDriver.findElement(By.className("button")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);

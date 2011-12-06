@@ -61,7 +61,7 @@ public class MAC0061_UndoAddNewRequirement
 				// Click on New Button to Add Requirement
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Requirement";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewRequirement"))).click();
+				GlobalVariables.oDriver.findElement(By.className("button")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
@@ -92,7 +92,7 @@ public class MAC0061_UndoAddNewRequirement
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that new requirement can be undo 
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionRequirementUndo")));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("norecords"));
 				if(GlobalVariables.oElement.getText().equals("No Records Found")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

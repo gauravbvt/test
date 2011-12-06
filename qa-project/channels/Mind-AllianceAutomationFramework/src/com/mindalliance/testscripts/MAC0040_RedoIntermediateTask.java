@@ -228,7 +228,7 @@ public class MAC0040_RedoIntermediateTask {
 					GlobalVariables.bIsSuccess = Boolean.FALSE;
 					for (WebElement td: tds){
 						GlobalVariables.sStrCheck=td.getText();
-						if (td.getText().equals("Task 1")){
+						if (td.getText().equals("")){
 							GlobalVariables.bIsSuccess = Boolean.TRUE;
 							break;
 						}
@@ -241,7 +241,7 @@ public class MAC0040_RedoIntermediateTask {
 					}
 					else
 				    {
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task 1' "+" Actual " + GlobalVariables.sStrCheck;
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual " + GlobalVariables.sStrCheck;
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
