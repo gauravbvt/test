@@ -1,4 +1,4 @@
-package com.mindalliance.channels.api;
+package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.core.model.Employment;
 
@@ -18,15 +18,13 @@ import javax.xml.bind.annotation.XmlType;
 public class EmploymentData {
 
     private Employment employment;
-    private boolean confirmed;
 
     public EmploymentData() {
-        // for enunciate
+        // required
     }
 
-    public EmploymentData( Employment employment, boolean confirmed ) {
+    public EmploymentData( Employment employment ) {
         this.employment = employment;
-        this.confirmed = confirmed;
     }
 
     @XmlElement
@@ -62,7 +60,7 @@ public class EmploymentData {
 
     @XmlElement
     public Boolean getConfirmed() {
-        return confirmed;
+        return employment.isConfirmed();
     }
 
 }

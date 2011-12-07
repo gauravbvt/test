@@ -762,6 +762,16 @@ public abstract class DefaultQueryService implements QueryService {
         return allCommitments;
     }
 
+    @Override
+    public List<Commitment> findAllCommitments( Boolean includeToSelf ) {
+        List<Commitment> allCommitments = new ArrayList<Commitment>(  );
+        for ( Flow flow : findAllFlows() ) {
+            allCommitments.addAll( findAllCommitments( flow, includeToSelf ) );
+        }
+        return allCommitments;
+    }
+
+
 
     @Override
     public List<Commitment> findAllCommitments( Flow flow ) {
@@ -2861,6 +2871,12 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public Commitments getAllCommitments() {
         return Commitments.all(  this );
+    }
+
+    @Override
+    public Commitments getAllCommitments( Boolean includeToSelf ) {
+        return Commitments.all( this, includeToSelf );
+
     }
 
     @Override

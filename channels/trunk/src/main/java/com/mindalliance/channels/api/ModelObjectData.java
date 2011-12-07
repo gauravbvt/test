@@ -15,7 +15,7 @@ abstract public class ModelObjectData {
     private ModelObject modelObject;
 
     protected ModelObjectData(  ) {
-        // for enunciate;
+        // required
     }
 
     public ModelObjectData( ModelObject modelObject ) {

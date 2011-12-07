@@ -1,5 +1,6 @@
-package com.mindalliance.channels.api;
+package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.api.ModelEntityData;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
@@ -76,9 +77,7 @@ public class OrganizationData extends ModelEntityData {
     public List<EmploymentData> getEmployments() {
         List<EmploymentData> employments = new ArrayList<EmploymentData>(  );
         for( Employment employment : planService.findAllEmploymentsIn( getOrganization() ) ) {
-            employments.add( new EmploymentData(
-                    employment,
-                    getOrganization().isConfirmed( employment.getJob() ) ) );
+            employments.add( new EmploymentData( employment ) );
         }
         return employments;
     }

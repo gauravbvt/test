@@ -1,4 +1,4 @@
-package com.mindalliance.channels.api;
+package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.core.model.Plan;
 
@@ -21,7 +21,7 @@ public class PlanIdentifiersData {
     private List<Plan> plans;
 
     public PlanIdentifiersData() {
-        // for enunciate
+        // required
     }
 
 
@@ -30,7 +30,7 @@ public class PlanIdentifiersData {
     }
 
     @XmlElement( name = "identifier" )
-    public List<PlanIdentifierData> getPlanIdentities() {
+    public List<PlanIdentifierData> getPlanIdentifiers() {
         List<PlanIdentifierData> planIdentities = new ArrayList<PlanIdentifierData>( );
         for (Plan plan : plans) {
             planIdentities.add(  new PlanIdentifierData( plan ) );

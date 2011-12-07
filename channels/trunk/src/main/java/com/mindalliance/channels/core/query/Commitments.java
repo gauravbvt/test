@@ -43,8 +43,13 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     }
 
     public static Commitments all( QueryService queryService ) {
+        return all( queryService, false );
+    }
+
+
+    public static Commitments all( QueryService queryService, Boolean includeToSelf ) {
         Commitments allCommitments = new Commitments( queryService.getPlan().getLocale() );
-        allCommitments.addAll( queryService.findAllCommitments() );
+        allCommitments.addAll( queryService.findAllCommitments( includeToSelf ) );
         return allCommitments;
     }
 
@@ -58,7 +63,7 @@ public class Commitments implements Serializable, Iterable<Commitment> {
 
     public Commitments( QueryService queryService, List<Flow> flows ) {
         planLocale = queryService.getPlan().getLocale();
-        for (Flow flow : flows) {
+        for ( Flow flow : flows ) {
             commitments.addAll( queryService.findAllCommitments( flow ) );
         }
     }
@@ -121,8 +126,8 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public Commitments inSegment( Segment segment ) {
         Commitments result = new Commitments();
         for ( Commitment commitment : commitments ) {
-            if ( segment == null || commitment.isInSegment( segment) )
-            result.add(  commitment );
+            if ( segment == null || commitment.isInSegment( segment ) )
+                result.add( commitment );
         }
         return result;
     }
@@ -131,19 +136,19 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         Commitments result = new Commitments();
         for ( Commitment commitment : commitments ) {
             if ( commitment.isInSituation( timing, event, planLocale ) )
-            result.add(  commitment );
+                result.add( commitment );
         }
         return result;
-     }
+    }
 
 
     public Commitments satisfying( Requirement requirement ) {
         Commitments result = new Commitments( planLocale );
         Iterator<Commitment> iterator = iterator();
-        while( iterator.hasNext() ) {
+        while ( iterator.hasNext() ) {
             Commitment commitment = iterator.next();
             if ( requirement.satisfiedBy( commitment, planLocale ) )
-                result.add(  commitment );
+                result.add( commitment );
         }
         return result;
     }
@@ -151,10 +156,10 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public Commitments realizable( Analyst analyst, Plan plan ) {
         Commitments result = new Commitments( planLocale );
         Iterator<Commitment> iterator = iterator();
-        while( iterator.hasNext() ) {
+        while ( iterator.hasNext() ) {
             Commitment commitment = iterator.next();
             if ( analyst.canBeRealized( commitment, plan ) )
-                result.add(  commitment );
+                result.add( commitment );
         }
         return result;
     }
@@ -163,10 +168,10 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public Commitments withEntityCommitting( ModelEntity entity, Place planLocale ) {
         Commitments result = new Commitments( planLocale );
         Iterator<Commitment> iterator = iterator();
-        while( iterator.hasNext() ) {
+        while ( iterator.hasNext() ) {
             Commitment commitment = iterator.next();
             if ( commitment.getCommitter().getResourceSpec().hasEntityOrNarrower( entity, planLocale ) )
-                result.add(  commitment );
+                result.add( commitment );
         }
         return result;
     }
@@ -174,14 +179,40 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public Commitments withEntityBenefiting( ModelEntity entity, Place planLocale ) {
         Commitments result = new Commitments( planLocale );
         Iterator<Commitment> iterator = iterator();
-        while( iterator.hasNext() ) {
+        while ( iterator.hasNext() ) {
             Commitment commitment = iterator.next();
             if ( commitment.getBeneficiary().getResourceSpec().hasEntityOrNarrower( entity, planLocale ) )
-                result.add(  commitment );
+                result.add( commitment );
         }
         return result;
     }
 
+    public Commitments benefiting( Assignment assignment ) {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( commitment.getBeneficiary().equals( assignment ) )
+                result.add( commitment );
+        }
+        return result;
+    }
+
+    public Commitments committing( Assignment assignment ) {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( commitment.getCommitter().equals( assignment ) )
+                result.add( commitment );
+        }
+        return result;
+    }
+
+    public Commitments toSelf() {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( commitment.getSharing().isToSelf() )
+                result.add( commitment );
+        }
+        return result;
+    }
 
     public void add( Commitment commitment ) {
         commitments.add( commitment );
@@ -194,10 +225,10 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     }
 
     public void addAll( List<Commitment> others ) {
-         for ( Commitment commitment : others ) {
-             commitments.add( commitment );
-         }
-     }
+        for ( Commitment commitment : others ) {
+            commitments.add( commitment );
+        }
+    }
 
     @Override
     public Iterator<Commitment> iterator() {
@@ -215,5 +246,6 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public List<Commitment> toList() {
         return new ArrayList<Commitment>( commitments );
     }
+
 }
 

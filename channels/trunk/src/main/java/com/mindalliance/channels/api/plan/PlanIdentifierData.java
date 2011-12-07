@@ -1,4 +1,4 @@
-package com.mindalliance.channels.api;
+package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.core.model.Plan;
 
@@ -21,7 +21,7 @@ public class PlanIdentifierData {
     private Plan plan;
 
     public PlanIdentifierData() {
-        // for enunciate
+        // required
     }
 
     public PlanIdentifierData( Plan plan ) {

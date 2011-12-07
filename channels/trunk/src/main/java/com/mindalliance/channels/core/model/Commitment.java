@@ -145,4 +145,8 @@ public class Commitment implements Serializable {
         return getSharing().getSource().getSegment().equals( seg )
                 || getSharing().getTarget().getSegment().equals( seg );
     }
+
+    public boolean isToSelf() {
+        return getSharing().isToSelf();
+    }
 }

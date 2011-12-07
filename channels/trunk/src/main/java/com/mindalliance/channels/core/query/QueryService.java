@@ -1040,6 +1040,13 @@ public interface QueryService {
     List<Commitment> findAllCommitments();
 
     /**
+     * Find all commitments in the plan.
+     * @param includeToSelf a boolean
+     * @return a list of commitments
+     */
+    List<Commitment> findAllCommitments( Boolean includeToSelf );
+
+    /**
      * Find all commitments to others implied by a sharing flow.
      *
      * @param flow a flow
@@ -1483,6 +1490,13 @@ public interface QueryService {
      * @return commitments
      */
     Commitments getAllCommitments();
+
+    /**
+      * Get all commitments in the plan.
+      * @param includeToSelf a boolean
+     * @return commitments
+      */
+     Commitments getAllCommitments( Boolean includeToSelf );
 
     /**
      * Find all eoi names used in the plan.

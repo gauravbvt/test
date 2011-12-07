@@ -1,4 +1,4 @@
-package com.mindalliance.channels.api;
+package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.core.model.GeoLocation;
 
@@ -21,7 +21,7 @@ public class GeoLocationData {
     private GeoLocation geoLocation;
 
     public GeoLocationData() {
-        // for enunciate
+        // required
     }
 
     public GeoLocationData( GeoLocation geoLocation ) {

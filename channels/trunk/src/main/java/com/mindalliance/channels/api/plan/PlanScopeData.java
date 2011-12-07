@@ -1,5 +1,11 @@
-package com.mindalliance.channels.api;
+package com.mindalliance.channels.api.plan;
 
+import com.mindalliance.channels.api.entities.ActorData;
+import com.mindalliance.channels.api.entities.EventData;
+import com.mindalliance.channels.api.entities.OrganizationData;
+import com.mindalliance.channels.api.entities.PhaseData;
+import com.mindalliance.channels.api.entities.PlaceData;
+import com.mindalliance.channels.api.entities.RoleData;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Organization;

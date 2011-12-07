@@ -1,5 +1,6 @@
-package com.mindalliance.channels.api;
+package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.core.model.Phase;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -19,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
 public class PhaseData extends ModelObjectData {
 
     public PhaseData() {
-        // for enunciate
+        // required
     }
 
     public PhaseData( Phase phase ) {
