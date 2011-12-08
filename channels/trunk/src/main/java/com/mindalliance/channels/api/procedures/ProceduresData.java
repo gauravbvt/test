@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -67,17 +68,18 @@ public class ProceduresData {
     @XmlElement( name="procedure" )
     public List<ProcedureData> getProcedures() {
         List<ProcedureData> procedures = new ArrayList<ProcedureData>(  );
-        for ( Assignment assignment : getAssignments() ) {
+        Commitments allCommitments = planService.getAllCommitments( true );
+        for ( Assignment assignment : getActorAssignments() ) {
              procedures.add( new ProcedureData(
                      assignment,
-                     planService.getAllCommitments( true ).benefiting( assignment ),
-                     planService.getAllCommitments( true ).committing( assignment ),
+                     allCommitments.benefiting( assignment ),
+                     allCommitments.committing( assignment ),
                      planService ) );
         }
         return procedures;
     }
 
-    private Assignments getAssignments() {
+    private Assignments getActorAssignments() {
         if ( assignments == null ) {
             assignments = planService.getAssignments().with( new ResourceSpec( actor ) );
         }

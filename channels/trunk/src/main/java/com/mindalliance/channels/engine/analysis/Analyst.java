@@ -315,6 +315,14 @@ public interface Analyst extends CommandListener {
     Boolean hasUnwaivedIssues( QueryService queryService, Assignment assignment, Boolean includingPropertySpecific );
 
     /**
+     * Whether model object has user issues.
+     * @param queryService a query service
+     * @param modelObject a model object
+     * @return a boolean
+     */
+    Boolean hasUserIssues( QueryService queryService, ModelObject modelObject );
+
+    /**
      * Whether a commitment could be met based on agent qualified to use medium..
      *
      * @param commitment an info sharing commitment
@@ -322,7 +330,7 @@ public interface Analyst extends CommandListener {
      * @param planLocale a plan locale
      * @return a boolean
      */
-    boolean isAgentsQualified( Commitment commitment, List<TransmissionMedium> mediaUsed, Place planLocale );
+    Boolean isAgentsQualified( Commitment commitment, List<TransmissionMedium> mediaUsed, Place planLocale );
 
     /**
      * Whether a commitment could be met based on availability.
@@ -332,7 +340,7 @@ public interface Analyst extends CommandListener {
      * @param planLocale a plan locale
      * @return a boolean
      */
-    boolean isAvailabilitiesCoincideIfRequired( Commitment commitment, List<TransmissionMedium> mediaUsed,
+    Boolean isAvailabilitiesCoincideIfRequired( Commitment commitment, List<TransmissionMedium> mediaUsed,
                                                 Place planLocale );
 
     /**
@@ -585,5 +593,4 @@ public interface Analyst extends CommandListener {
      * @param issueScanner an issue scanner
      */
     void setIssueScanner( IssueScanner issueScanner );
-
 }

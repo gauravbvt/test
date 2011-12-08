@@ -3,16 +3,6 @@
     <api-classes>
         <include pattern="com.mindalliance.channels.api.ChannelsService"/>
         <include pattern="com.mindalliance.channels.api.ChannelsServiceImpl"/>
-        <include pattern="com.mindalliance.channels.api.plan.PlanIdentifiersData"/>
-        <include pattern="com.mindalliance.channels.api.plan.PlanIdentifierData"/>
-        <include pattern="com.mindalliance.channels.api.plan.PlanScopeData"/>
-        <include pattern="com.mindalliance.channels.api.entities.EventData"/>
-        <include pattern="com.mindalliance.channels.api.entities.RoleData"/>
-        <include pattern="com.mindalliance.channels.api.entities.PhaseData"/>
-        <include pattern="com.mindalliance.channels.api.entities.PlaceData"/>
-        <include pattern="com.mindalliance.channels.api.entities.GeoLocationData"/>
-        <include pattern="com.mindalliance.channels.api.entities.OrganizationData"/>
-        <include pattern="com.mindalliance.channels.api.entities.EmploymentData"/>
     </api-classes>
     <webapp mergeWebXML="src/main/webapp/WEB-INF/web.xml">
         <globalServletFilter name="securityFilter" classname="org.springframework.web.filter.DelegatingFilterProxy"/>

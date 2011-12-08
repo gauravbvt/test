@@ -14,8 +14,8 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -208,10 +208,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             list.add( new DOTAttribute( "fontcolor", getFontColor( vertex ) ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
             if ( !isInvisible( vertex ) ) {
-                if ( !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( queryService,
-                                                                                vertex,
-                                                                                Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
-                {
+                if ( indicateError( vertex, queryService ) ) {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "tooltip",
                                                 sanitize( "Issues: " + getAnalyst().getIssuesSummary( queryService,
@@ -247,6 +244,19 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 }
             }
             return list;
+        }
+
+        private boolean indicateError( Node vertex, QueryService queryService ) {
+            return getAnalyst().hasUserIssues( queryService, vertex ) ||
+                    !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( queryService,
+                                                                                vertex,                                                                                Analyst.INCLUDE_PROPERTY_SPECIFIC );
+        }
+
+        private boolean indicateError( Flow edge, QueryService queryService ) {
+            return getAnalyst().hasUserIssues( queryService, edge ) ||
+                    !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( queryService,
+                                                                                edge,
+                                                                                Analyst.INCLUDE_PROPERTY_SPECIFIC );
         }
 
         private boolean isInvisible( Node vertex ) {
@@ -338,10 +348,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             }
             // Issue coloring
             if ( !isInvisible( edge ) ) {
-                if ( !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( queryService,
-                                                                                edge,
-                                                                                Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
-                {
+                if ( indicateError( edge, queryService ) ) {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "tooltip",

@@ -26,8 +26,17 @@ import java.util.Set;
 @XmlType( propOrder = {"triggers", "situation", "task"} )
 public class ProcedureData {
 
+    /**
+     * An assignment of the actor for which this procedure is being marshalled.
+     */
     private Assignment assignment;
+    /**
+     * All commitments, including to self, benefiting this assignment.
+     */
     private Commitments benefitingCommitments;
+    /**
+     * All commitments
+     */
     private Commitments committingCommitments;
     private PlanService planService;
 
@@ -50,13 +59,13 @@ public class ProcedureData {
     public List<TriggerData> getTriggers() {
         List<TriggerData> triggers = new ArrayList<TriggerData>();
         // anytime
-        if ( assignment.getPart().isOngoing() ) {
+        if ( assignment.isOngoing() ) {
             triggers.add( new TriggerData( assignment, planService ) );
         }
         // event phase is trigger
-        if ( assignment.getPart().isStartsWithSegment() ) {
+        if ( assignment.isInitiatedByEventPhase() ) {
             TriggerData trigger = new TriggerData( assignment, planService );
-            trigger.setEventPhase( assignment.getPart().getSegment().getEventPhase() );
+            trigger.setEventPhase( assignment.getEventPhase() );
             triggers.add( trigger );
         }
         // information discovery (notifications to self)
@@ -84,11 +93,15 @@ public class ProcedureData {
         Set<Flow> triggerNotifications = new HashSet<Flow>();
         for ( Commitment commitment : benefitingCommitments ) {
             Flow flow = commitment.getSharing();
-            if ( flow.isNotification() && flow.isTriggeringToTarget() && !flow.isToSelf() ) {
+            if ( flow.isNotification() && flow.isTriggeringToTarget() && isToSelf( commitment ) ) {
                 triggerNotifications.add( flow );
             }
         }
         return triggerNotifications;
+    }
+
+    private boolean isToSelf( Commitment commitment ) {
+        return commitment.getCommitter().getActor().equals( assignment.getActor() );
     }
 
     private Set<Flow> triggeringRequests() {

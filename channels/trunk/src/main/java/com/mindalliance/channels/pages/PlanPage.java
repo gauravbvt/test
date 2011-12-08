@@ -1076,7 +1076,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
         return null;
     }
 
-    private ModelObject findExpanded( Class<? extends ModelObject> clazz ) {
+    private ModelObject findExpanded( ModelObject subject ) {
+        Class clazz = subject instanceof ModelEntity
+                ? ModelEntity.class
+                : subject.getClass();
         for ( long id : expansions ) {
             try {
                 ModelObject mo = getQueryService().find( ModelObject.class, id );
@@ -1395,7 +1398,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         tryAcquiringLock( change );
         if ( isSingleExpansion( change ) ) {
             ModelObject subject = (ModelObject)change.getSubject( getQueryService() );
-            ModelObject previous = findExpanded( subject.getClass() );
+            ModelObject previous = findExpanded( subject );
             if ( previous != null && !previous.equals( subject ) ) {
                 collapse( new Change( Change.Type.None, previous ) );
             }

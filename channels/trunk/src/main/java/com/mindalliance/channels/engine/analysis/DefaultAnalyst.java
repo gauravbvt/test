@@ -215,6 +215,19 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
+    public Boolean hasUserIssues( QueryService queryService, ModelObject modelObject ) {
+        return CollectionUtils.exists(
+                this.listIssues( queryService, modelObject, false ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !((Issue)object).isDetected();
+                    }
+                }
+        );
+    }
+
+    @Override
     public String getIssuesSummary( QueryService queryService, ModelObject modelObject,
                                     Boolean includingPropertySpecific ) {
         List<? extends Issue> issues = listUnwaivedIssues( queryService, modelObject, includingPropertySpecific );
@@ -938,7 +951,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public boolean isAvailabilitiesCoincideIfRequired( Commitment commitment, List<TransmissionMedium> mediaUsed,
+    public Boolean isAvailabilitiesCoincideIfRequired( Commitment commitment, List<TransmissionMedium> mediaUsed,
                                                        final Place planLocale ) {
         Actor committer = commitment.getCommitter().getActor();
         Actor beneficiary = commitment.getBeneficiary().getActor();
@@ -1022,7 +1035,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public boolean isAgentsQualified( final Commitment commitment, List<TransmissionMedium> mediaUsed,
+    public Boolean isAgentsQualified( final Commitment commitment, List<TransmissionMedium> mediaUsed,
                                       final Place planLocale ) {
         return CollectionUtils.exists( mediaUsed, new Predicate() {
             @Override

@@ -18,7 +18,7 @@ import java.util.List;
  * Time: 2:06 PM
  */
 @XmlRootElement( name = "eoi", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"name", "classifications"} )
+@XmlType( propOrder = {"name", "description", "classifications", "specialHandling"} )
 public class ElementOfInformationData {
 
     private ElementOfInformation eoi;
@@ -38,10 +38,24 @@ public class ElementOfInformationData {
 
     @XmlElement( name = "classification" )
     public List<SecurityClassificationData> getClassifications() {
-        List<SecurityClassificationData> classifications = new ArrayList<SecurityClassificationData>(  );
+        List<SecurityClassificationData> classifications = new ArrayList<SecurityClassificationData>();
         for ( Classification classification : eoi.getClassifications() ) {
-            classifications.add(  new SecurityClassificationData( classification ) );
+            classifications.add( new SecurityClassificationData( classification ) );
         }
         return classifications;
+    }
+
+    @XmlElement
+    public String getSpecialHandling() {
+        return eoi.getSpecialHandling().isEmpty()
+                ? null
+                : eoi.getSpecialHandling();
+    }
+
+    @XmlElement
+    public String getDescription() {
+        return eoi.getDescription().isEmpty()
+                ? null
+                : eoi.getDescription();
     }
 }

@@ -271,4 +271,16 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
     public ResourceSpec getResourceSpec() {
         return new ResourceSpec( getActor(), getRole(), getOrganization(), getJurisdiction() );
     }
+
+    public EventPhase getEventPhase() {
+        return getPart().getSegment().getEventPhase();
+    }
+
+    public boolean isOngoing() {
+        return getPart().isOngoing();
+    }
+
+    public boolean isInitiatedByEventPhase() {
+        return getPart().isStartsWithSegment();
+    }
 }
