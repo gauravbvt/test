@@ -75,14 +75,12 @@ public class TE001_CreateAgent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent"))).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent")));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name"));					
 				//Select 'Agent' Option from List
-		    	if(GlobalVariables.oElement.getText().equalsIgnoreCase("")){
+		    	if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.viewElements.get("agent1"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -98,13 +96,15 @@ public class TE001_CreateAgent
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close Agent Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
+				
 				//Close About Plan Window
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="About Plan window closed";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
