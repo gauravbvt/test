@@ -90,6 +90,25 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         return result;
     }
 
+    public Commitments to( Specable specable ) {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( commitment.getBeneficiary().getResourceSpec().narrowsOrEquals( specable, planLocale ) )
+                result.add( commitment );
+        }
+        return result;
+    }
+
+    public Commitments notTo( Specable specable ) {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( !commitment.getBeneficiary().getResourceSpec().narrowsOrEquals( specable, planLocale ) )
+                result.add( commitment );
+        }
+        return result;
+    }
+
+
     public Commitments with( Flow flow ) {
         Commitments result = new Commitments();
         for ( Commitment commitment : commitments )
@@ -213,6 +232,25 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         }
         return result;
     }
+
+    public Commitments notifications() {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( commitment.getSharing().isNotification() )
+                result.add( commitment );
+        }
+        return result;
+    }
+
+    public Commitments requests() {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( commitment.getSharing().isAskedFor() )
+                result.add( commitment );
+        }
+        return result;
+    }
+
 
     public void add( Commitment commitment ) {
         commitments.add( commitment );

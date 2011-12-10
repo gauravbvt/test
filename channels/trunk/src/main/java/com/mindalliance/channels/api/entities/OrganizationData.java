@@ -1,6 +1,5 @@
 package com.mindalliance.channels.api.entities;
 
-import com.mindalliance.channels.api.ModelEntityData;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
@@ -50,7 +49,7 @@ public class OrganizationData extends ModelEntityData {
     }
 
     @Override
-    @XmlElement
+    @XmlElement( name = "categoryId" )
     public List<Long> getCategories() {
         return super.getCategories();
     }

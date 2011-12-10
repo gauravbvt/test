@@ -1,6 +1,5 @@
 package com.mindalliance.channels.api.entities;
 
-import com.mindalliance.channels.api.ModelEntityData;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;

@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.query.PlanService;
 
+import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -23,20 +24,28 @@ import java.util.List;
  * Time: 10:27 AM
  */
 @XmlRootElement( name = "task", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"name", "category", "location", "teamMates", "goals"} )
-public class TaskData  extends AbstractProcedureElementData {
+@XmlType( propOrder = {"name", "category", "location", "instructions", "teamMates", "goals", "failureImpact"} )
+public class TaskData extends AbstractProcedureElementData {
+
+    private Part part;
 
     public TaskData() {
         // required
     }
 
-    public TaskData( Assignment assignment, PlanService planService ) {
+    public TaskData( Assignment assignment,PlanService planService ) {
         super( assignment, planService );
+    }
+
+    // For consuming tasks
+    public TaskData( Part part, PlanService planService ) {
+        super( planService );
+        this.part = part;
     }
 
     @XmlElement
     public String getName() {
-        return getAssignment().getName();
+        return getPart().getName();
     }
 
     @XmlElement
@@ -53,37 +62,69 @@ public class TaskData  extends AbstractProcedureElementData {
                 ? new PlaceData( location )
                 : null;
     }
+
+    @XmlElement
+    public String getInstructions() {
+        String instructions = getPart().getDescription();
+        return instructions == null
+                ? null
+                : instructions;
+    }
+
     @XmlElement( name = "teamMate" )
     public List<EmploymentData> getTeamMates() {
-        List<EmploymentData> teamMates = new ArrayList<EmploymentData>(  );
-         for ( Assignment assign : otherAssignments() ) {
-             teamMates.add(  new EmploymentData( assign.getEmployment() ) );
-         }
-        return teamMates;
+        if ( getAssignment() == null ) {
+            return null;
+        } else {
+            List<EmploymentData> teamMates = new ArrayList<EmploymentData>();
+            for ( Assignment assign : otherTeamAssignments() ) {
+                teamMates.add( new EmploymentData( assign.getEmployment() ) );
+            }
+            return teamMates;
+        }
     }
 
     @XmlElement( name = "goal" )
     public List<GoalData> getGoals() {
-        List<GoalData> goals = new ArrayList<GoalData>(  );
+        List<GoalData> goals = new ArrayList<GoalData>();
         for ( Goal goal : getPart().getGoals() ) {
             goals.add( new GoalData( goal ) );
         }
         return goals;
     }
 
-    private List<Assignment> otherAssignments() {
-        List<Assignment> otherAssignments = new ArrayList<Assignment>(  );
-        for (Assignment assign : getPlanService().findAllAssignments( getAssignment().getPart(), false ) ) {
-            if ( !assign.equals( getAssignment() ) ) {
-                otherAssignments.add(  assign );
+    @XmlElement
+    public String getFailureImpact() {
+         return getPlanService().computePartPriority( getPart() ).getNegativeLabel();
+     }
+
+    private List<Assignment> otherTeamAssignments() {
+        List<Assignment> otherAssignments = new ArrayList<Assignment>();
+        Part part = getAssignment().getPart();
+        if ( part.isAsTeam() ) {
+            for ( Assignment assign : getPlanService().findAllAssignments( part, false ) ) {
+                if ( !assign.equals( getAssignment() ) ) {
+                    otherAssignments.add( assign );
+                }
             }
         }
         return otherAssignments;
     }
 
     private Part getPart() {
-        return getAssignment().getPart();
+        return part == null
+            ? getAssignment().getPart()
+            : part;
     }
 
+    @WebMethod( exclude = true )
+    public Long getEventId() {
+        return getPart().getSegment().getEvent().getId();
+    }
+
+    @WebMethod( exclude = true )
+    public Long getPhaseId() {
+        return getPart().getSegment().getPhase().getId();
+    }
 
 }

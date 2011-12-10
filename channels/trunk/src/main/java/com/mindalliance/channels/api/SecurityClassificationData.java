@@ -1,4 +1,4 @@
-package com.mindalliance.channels.api.procedures;
+package com.mindalliance.channels.api;
 
 import com.mindalliance.channels.core.model.Classification;
 

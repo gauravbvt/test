@@ -1,5 +1,6 @@
-package com.mindalliance.channels.api;
+package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 

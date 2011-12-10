@@ -1,7 +1,5 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.api.entities.EventData;
-import com.mindalliance.channels.api.entities.PhaseData;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.query.PlanService;
@@ -39,17 +37,17 @@ public class DiscoveryData {
     }
 
     @XmlElement
-    public EventData getEvent() {
+    public Long getEventId() {
         if ( eventPhase != null )
-            return new EventData( eventPhase.getEvent(), planService.getPlan() );
+            return eventPhase.getEvent().getId();
         else
             return null;
     }
 
     @XmlElement
-    public PhaseData getPhase() {
+    public Long getPhaseId() {
         if ( eventPhase != null )
-            return new PhaseData( eventPhase.getPhase() );
+            return eventPhase.getPhase().getId();
         else
             return null;
     }

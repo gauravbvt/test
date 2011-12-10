@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 
 /**
@@ -19,6 +20,10 @@ abstract public class AbstractProcedureElementData {
     protected AbstractProcedureElementData() {
     }
 
+    protected AbstractProcedureElementData( PlanService planService ) {
+        this.planService = planService;
+    }
+
     protected AbstractProcedureElementData(
             Assignment assignment,
             PlanService planService ) {
@@ -32,5 +37,9 @@ abstract public class AbstractProcedureElementData {
 
     public PlanService getPlanService() {
         return planService;
+    }
+
+    protected Plan getPlan() {
+        return planService.getPlan();
     }
 }

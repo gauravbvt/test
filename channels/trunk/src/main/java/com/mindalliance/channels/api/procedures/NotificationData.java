@@ -24,41 +24,92 @@ import java.util.Set;
  * Time: 12:49 PM
  */
 @XmlRootElement( name = "notification", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"information", "employments"} )
-public class NotificationData extends AbstractProcedureElementData {
+@XmlType( propOrder = {"information", "intent", "receiptConfirmationRequested", "instructions", "contactAll", "maxDelay", "employments", "mediaIds", "failureImpact", "consumingTask"} )
+public class NotificationData extends AbstractFlowData {
 
-    private Flow notification;
-    private boolean benefiting;
+    private boolean consuming;
 
     public NotificationData() {
         // required
     }
 
-    public NotificationData( Flow notification, boolean benefiting, Assignment assignment, PlanService planService ) {
-        super( assignment, planService );
-        this.notification = notification;
-        this.benefiting = benefiting;
+    public NotificationData(
+            Flow notification,
+            boolean consuming,
+            Assignment assignment,
+            PlanService planService ) {
+        super( notification, assignment, planService );
+        this.consuming = consuming;
+    }
+
+    @Override
+    @XmlElement
+    public InformationData getInformation() {
+        return new InformationData( getNotification() );
+    }
+
+    @Override
+    @XmlElement
+    public String getIntent() {
+        return super.getIntent();
+    }
+
+    @Override
+    @XmlElement
+    public boolean getReceiptConfirmationRequested() {
+        return super.getReceiptConfirmationRequested();
+    }
+
+
+    @Override
+    @XmlElement
+    public String getInstructions() {
+        return super.getInstructions();
+    }
+
+    @Override
+    @XmlElement( name = "contact" )
+    public List<EmploymentData> getEmployments() {
+       return super.getEmployments();
+    }
+
+    @Override
+    @XmlElement( name = "transmissionMediumId" )
+    public List<Long> getMediaIds() {
+        return super.getMediaIds();
+    }
+
+    @Override
+    @XmlElement
+    public boolean getContactAll() {
+        return super.getContactAll();
+    }
+
+    @Override
+    @XmlElement
+    public TimeDelayData getMaxDelay() {
+        return super.getMaxDelay();
+    }
+
+    @Override
+    @XmlElement
+    public String getFailureImpact() {
+        return super.getFailureImpact();
     }
 
     @XmlElement
-    public InformationData getInformation() {
-        return new InformationData( notification );
+    public TaskData getConsumingTask() {
+        if ( consuming )
+            return null;
+        else
+            return new TaskData( getNotification().getContactedPart(), getPlanService() );
     }
 
-    @XmlElement( name = "contact" )
-    public List<EmploymentData> getEmployments() {
-        List<EmploymentData> employments = new ArrayList<EmploymentData>(  );
-        for ( Employment employment : contacts() ) {
-            employments.add( new EmploymentData( employment ) );
-        }
-        return employments;
-    }
-
-    private List<Employment> contacts() {
+    protected List<Employment> contacts() {
         Set<Employment> contacts = new HashSet<Employment>(  );
-        Part part = benefiting
-                ? (Part)notification.getSource() :
-                (Part)notification.getTarget();
+        Part part = consuming
+                ? (Part)getNotification().getSource() :
+                (Part)getNotification().getTarget();
         for (Assignment otherAssignment : getPlanService().findAllAssignments( part, false ) ) {
             Employment employment = otherAssignment.getEmployment();
             if ( !employment.getActor().equals( getAssignment().getActor() ) ) {
@@ -67,4 +118,9 @@ public class NotificationData extends AbstractProcedureElementData {
         }
         return new ArrayList<Employment>( contacts );
     }
+
+    private Flow getNotification() {
+        return getSharing();
+    }
+
 }

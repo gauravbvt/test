@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.PlanService;
 
+import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -86,6 +87,22 @@ public class TriggerData extends AbstractProcedureElementData {
     public RequestData getOnRequest() {
         if ( request != null && !request.isToSelf() )
             return new RequestData( request, true, getAssignment(), getPlanService() );
+        else
+            return null;
+    }
+
+    @WebMethod( exclude = true )
+    public Long getEventId() {
+        if ( eventPhase != null )
+            return eventPhase.getEvent().getId();
+        else
+            return null;
+    }
+
+    @WebMethod( exclude = true )
+    public Long getPhaseId() {
+        if ( eventPhase != null )
+            return eventPhase.getPhase().getId();
         else
             return null;
     }

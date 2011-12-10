@@ -24,41 +24,97 @@ import java.util.Set;
  * Time: 12:49 PM
  */
 @XmlRootElement( name = "request", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"information", "employments"} )
-public class RequestData extends AbstractProcedureElementData {
+@XmlType( propOrder = {"information", "intent", "receiptConfirmationRequested", "instructions", "contactAll", "maxDelay", "employments", "mediaIds", "failureImpact","consumingTask"} )
+public class RequestData extends AbstractFlowData {
 
     private Flow request;
+    /**
+     * Whether the assignment is issuing a request (false) or a reply (true).
+     */
     private boolean replying;
 
     public RequestData() {
         // required
     }
 
-    public RequestData( Flow request, boolean replying, Assignment assignment, PlanService planService ) {
-        super( assignment, planService );
+    public RequestData(
+            Flow request,
+            boolean replying,
+            Assignment assignment,
+            PlanService planService ) {
+        super( request, assignment, planService );
         this.request = request;
         this.replying = replying;
     }
 
+    @Override
     @XmlElement
     public InformationData getInformation() {
-        return new InformationData( request );
+        return new InformationData( getRequest() );
     }
 
+    @Override
+    @XmlElement
+    public String getIntent() {
+        return super.getIntent();
+    }
+
+    @Override
+    @XmlElement
+    public boolean getReceiptConfirmationRequested() {
+        return super.getReceiptConfirmationRequested();
+    }
+
+    @Override
+    @XmlElement
+    public String getInstructions() {
+        return super.getInstructions();
+    }
+
+    @Override
     @XmlElement( name = "contact" )
     public List<EmploymentData> getEmployments() {
-        List<EmploymentData> employments = new ArrayList<EmploymentData>(  );
-        for ( Employment employment : contacts() ) {
-            employments.add( new EmploymentData( employment ) );
-        }
-        return employments;
+       return super.getEmployments();
     }
 
-    private List<Employment> contacts() {
+    @Override
+    @XmlElement( name = "transmissionMediumId" )
+    public List<Long> getMediaIds() {
+        return super.getMediaIds();
+    }
+
+    @Override
+    @XmlElement
+    public boolean getContactAll() {
+        return super.getContactAll();
+    }
+
+    @Override
+    @XmlElement
+    public TimeDelayData getMaxDelay() {
+        return super.getMaxDelay();
+    }
+
+    @Override
+    @XmlElement
+    public String getFailureImpact() {
+        return super.getFailureImpact();
+    }
+
+    @XmlElement
+    public TaskData getConsumingTask() {
+        if ( replying )
+            return null;
+        else
+            return new TaskData( (Part)getRequest().getTarget(), getPlanService() );
+    }
+
+
+    protected List<Employment> contacts() {
         Set<Employment> contacts = new HashSet<Employment>(  );
         Part part = replying
-                ? (Part)request.getSource() :
-                (Part)request.getTarget();
+                ? (Part)request.getTarget() :
+                (Part)request.getSource();
         for (Assignment otherAssignment : getPlanService().findAllAssignments( part, false ) ) {
             Employment employment = otherAssignment.getEmployment();
             if ( !employment.getActor().equals( getAssignment().getActor() ) ) {
@@ -66,6 +122,10 @@ public class RequestData extends AbstractProcedureElementData {
             }
         }
         return new ArrayList<Employment>( contacts );
+    }
+
+    private Flow getRequest() {
+        return getSharing();
     }
 
 }

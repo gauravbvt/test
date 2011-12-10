@@ -1,6 +1,5 @@
 package com.mindalliance.channels.api.entities;
 
-import com.mindalliance.channels.api.ModelEntityData;
 import com.mindalliance.channels.core.model.ModelObject;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -41,7 +40,7 @@ public class RoleData extends ModelEntityData {
     }
 
     @Override
-    @XmlElement
+    @XmlElement( name = "categoryId" )
     public List<Long> getCategories() {
         return super.getCategories();
     }

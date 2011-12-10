@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.PlanService;
 
+import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -23,7 +24,7 @@ import java.util.Set;
  * Time: 3:05 PM
  */
 @XmlRootElement( name = "procedures", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"triggers", "situation", "task"} )
+@XmlType( propOrder = {"triggers", "situation", "assignment"} )
 public class ProcedureData {
 
     /**
@@ -39,6 +40,7 @@ public class ProcedureData {
      */
     private Commitments committingCommitments;
     private PlanService planService;
+    private List<TriggerData> triggers;
 
     public ProcedureData() {
         // required
@@ -57,39 +59,41 @@ public class ProcedureData {
 
     @XmlElement( name = "trigger" )
     public List<TriggerData> getTriggers() {
-        List<TriggerData> triggers = new ArrayList<TriggerData>();
-        // anytime
-        if ( assignment.isOngoing() ) {
-            triggers.add( new TriggerData( assignment, planService ) );
-        }
-        // event phase is trigger
-        if ( assignment.isInitiatedByEventPhase() ) {
-            TriggerData trigger = new TriggerData( assignment, planService );
-            trigger.setEventPhase( assignment.getEventPhase() );
-            triggers.add( trigger );
-        }
-        // information discovery (notifications to self)
-        for ( Commitment triggerSelfNotification : benefitingCommitments.toSelf() ) {
-            TriggerData trigger = new TriggerData( assignment, planService );
-            trigger.setNotificationToSelf( triggerSelfNotification );
-            triggers.add( trigger );
-        }
-        // triggering notifications (from others)
-        for ( Flow triggerNotification : triggeringNotifications( ) ) {
-            TriggerData trigger = new TriggerData( assignment, planService );
-            trigger.setNotification( triggerNotification );
-            triggers.add( trigger );
-        }
-        // triggering requests (can be from self)
-        for ( Flow triggerRequest : triggeringRequests() ) {
-            TriggerData trigger = new TriggerData( assignment, planService );
-            trigger.setRequest( triggerRequest );
-            triggers.add( trigger );
+        if ( triggers == null ) {
+            triggers = new ArrayList<TriggerData>();
+            // anytime
+            if ( assignment.isOngoing() ) {
+                triggers.add( new TriggerData( assignment, planService ) );
+            }
+            // event phase is trigger
+            if ( assignment.isInitiatedByEventPhase() ) {
+                TriggerData trigger = new TriggerData( assignment, planService );
+                trigger.setEventPhase( assignment.getEventPhase() );
+                triggers.add( trigger );
+            }
+            // information discovery (notifications to self)
+            for ( Commitment triggerSelfNotification : benefitingCommitments.toSelf() ) {
+                TriggerData trigger = new TriggerData( assignment, planService );
+                trigger.setNotificationToSelf( triggerSelfNotification );
+                triggers.add( trigger );
+            }
+            // triggering notifications (from others)
+            for ( Flow triggerNotification : triggeringNotifications() ) {
+                TriggerData trigger = new TriggerData( assignment, planService );
+                trigger.setNotification( triggerNotification );
+                triggers.add( trigger );
+            }
+            // triggering requests (can be from self)
+            for ( Flow triggerRequest : triggeringRequests() ) {
+                TriggerData trigger = new TriggerData( assignment, planService );
+                trigger.setRequest( triggerRequest );
+                triggers.add( trigger );
+            }
         }
         return triggers;
     }
 
-    private Set<Flow> triggeringNotifications( ) {
+    private Set<Flow> triggeringNotifications() {
         Set<Flow> triggerNotifications = new HashSet<Flow>();
         for ( Commitment commitment : benefitingCommitments ) {
             Flow flow = commitment.getSharing();
@@ -117,13 +121,46 @@ public class ProcedureData {
 
     @XmlElement( name = "situation" )
     public SituationData getSituation() {
-        return null;
+        return new SituationData( assignment, planService );
     }
 
-    @XmlElement( name = "task" )
-    public TaskData getTask() {    // todo AssignmentData
-        return null;
+    @XmlElement( name = "assignment" )
+    public AssignmentData getAssignment() {
+        return new AssignmentData( assignment, planService, this );
     }
 
+    @WebMethod( exclude = true )
+    public Commitments getBenefitingCommitments() {
+        return benefitingCommitments;
+    }
 
+    @WebMethod( exclude = true )
+    public Commitments getCommittingCommitments() {
+        return committingCommitments;
+    }
+
+    @WebMethod( exclude = true )
+    public Set<Long> allEventIds() {
+        Set<Long> ids = new HashSet<Long>();
+        ids.add( getSituation().getEventId() );
+        for ( TriggerData trigger : getTriggers() ) {
+            Long eventId = trigger.getEventId();
+            if ( eventId != null )
+                ids.add( eventId );
+        }
+        ids.addAll( getAssignment().allEventIds() );
+        return ids;
+    }
+
+    public Set<Long> allPhaseIds() {
+        Set<Long> ids = new HashSet<Long>();
+        ids.add( getSituation().getPhaseId() );
+        for ( TriggerData trigger : getTriggers() ) {
+            Long phaseIdId = trigger.getPhaseId();
+            if ( phaseIdId != null )
+                ids.add( phaseIdId );
+        }
+        ids.addAll( getAssignment().allPhaseIds() );
+        return ids;
+    }
 }

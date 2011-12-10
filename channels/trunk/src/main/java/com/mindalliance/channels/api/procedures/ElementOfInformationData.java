@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.SecurityClassificationData;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 

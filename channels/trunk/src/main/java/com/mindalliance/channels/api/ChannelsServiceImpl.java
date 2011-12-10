@@ -130,30 +130,22 @@ public class ChannelsServiceImpl implements ChannelsService {
         }
     }
 
-    @WebMethod(
-            exclude = true
-    )
+    @WebMethod( exclude = true )
     public void setPlanManager( PlanManager planManager ) {
         this.planManager = planManager;
     }
 
-    @WebMethod(
-            exclude = true
-    )
+    @WebMethod( exclude = true )
     public void setSemanticMatcher( SemanticMatcher semanticMatcher ) {
         this.semanticMatcher = semanticMatcher;
     }
 
-    @WebMethod(
-            exclude = true
-    )
+    @WebMethod( exclude = true )
     public void setUserDao( UserDao userDao ) {
         this.userDao = userDao;
     }
 
-    @WebMethod(
-            exclude = true
-    )
+    @WebMethod( exclude = true )
     public void setAttachmentManager( AttachmentManager attachmentManager ) {
         this.attachmentManager = attachmentManager;
     }

@@ -27,13 +27,14 @@ import java.util.List;
  * Time: 12:25 PM
  */
 @XmlRootElement( name = "procedures", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"planIdentifier", "actor", "employments", "procedures"} )
+@XmlType( propOrder = {"planIdentifier", "actor", "employments", "procedures", "environment"} )
 public class ProceduresData {
 
     private Plan plan;
     private Actor actor;
     private PlanService planService;
     private Assignments assignments;
+    private List<ProcedureData> procedures;
 
 
     public ProceduresData() {
@@ -65,18 +66,25 @@ public class ProceduresData {
         return employments;
     }
 
-    @XmlElement( name="procedure" )
+    @XmlElement( name = "procedure" )
     public List<ProcedureData> getProcedures() {
-        List<ProcedureData> procedures = new ArrayList<ProcedureData>(  );
-        Commitments allCommitments = planService.getAllCommitments( true );
-        for ( Assignment assignment : getActorAssignments() ) {
-             procedures.add( new ProcedureData(
-                     assignment,
-                     allCommitments.benefiting( assignment ),
-                     allCommitments.committing( assignment ),
-                     planService ) );
+        if ( procedures == null ) {
+            procedures = new ArrayList<ProcedureData>();
+            Commitments allCommitments = planService.getAllCommitments( true );
+            for ( Assignment assignment : getActorAssignments() ) {
+                procedures.add( new ProcedureData(
+                        assignment,
+                        allCommitments.benefiting( assignment ),
+                        allCommitments.committing( assignment ),
+                        planService ) );
+            }
         }
         return procedures;
+    }
+
+    @XmlElement
+    public EnvironmentData getEnvironment() {
+        return new EnvironmentData( getProcedures(), planService );
     }
 
     private Assignments getActorAssignments() {

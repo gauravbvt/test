@@ -1,6 +1,5 @@
 package com.mindalliance.channels.api.entities;
 
-import com.mindalliance.channels.api.ModelEntityData;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelObject;
 
@@ -41,7 +40,7 @@ public class ActorData extends ModelEntityData {
     }
 
     @Override
-    @XmlElement
+    @XmlElement( name = "categoryId" )
     public List<Long> getCategories() {
         return super.getCategories();
     }
@@ -53,7 +52,7 @@ public class ActorData extends ModelEntityData {
     }
 
     private Actor getActor() {
-        return (Actor)getModelObject();
+        return (Actor) getModelObject();
     }
 
 }
