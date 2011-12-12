@@ -9,12 +9,12 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class CL005_InavlidPassword 
+public class CL005_InvalidPassword 
 {
-	public CL005_InavlidPassword(){
+	public CL005_InvalidPassword(){
 		  try {
 			  
-			  GlobalVariables.sTestCaseId = "CL005_InavlidPassword";
+			  GlobalVariables.sTestCaseId = "CL005_InvalidPassword";
 			  GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			  LogFunctions.writeLogs(GlobalVariables.sDescription);
 			  System.out.println(GlobalVariables.sDescription);
@@ -115,7 +115,7 @@ public class CL005_InavlidPassword
 			try {
 				GenericFunctionLibrary.initializeTestData();
 				GenericFunctionLibrary.loadObjectRepository();
-				new CL005_InavlidPassword();
+				new CL005_InvalidPassword();
 				GenericFunctionLibrary.tearDownTestData();
 				ReportFunctions.generateAutomationReport();
 			} 
