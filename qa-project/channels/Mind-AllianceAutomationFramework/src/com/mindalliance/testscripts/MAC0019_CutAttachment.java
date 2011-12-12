@@ -124,7 +124,13 @@ public class MAC0019_CutAttachment
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Cut or delete attachment";
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteTaskAttachment"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					alert.accept();
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));

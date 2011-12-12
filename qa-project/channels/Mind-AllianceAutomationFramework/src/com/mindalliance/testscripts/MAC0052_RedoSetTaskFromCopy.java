@@ -179,7 +179,7 @@ public class MAC0052_RedoSetTaskFromCopy {
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that When clicked on 'Undo set task from copy' option, the task's details should be removed and its respective details should be restored in the task
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
@@ -199,7 +199,7 @@ public class MAC0052_RedoSetTaskFromCopy {
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);				
 				
 				// Click on 'Redo set task from copy' under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -209,7 +209,7 @@ public class MAC0052_RedoSetTaskFromCopy {
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that When clicked on 'Undo set task from copy' option, the task's details should be removed and its respective details should be restored in the task
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

@@ -97,7 +97,7 @@ public class MAC0017_UndoAttachDocument {
 					
 					// Enter the name and select Attach type, upload
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Details entered";
+					GlobalVariables.sDescription = "Attach document";
 					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:type")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {

@@ -118,14 +118,14 @@ public class MAP0017_deleteEvent
 				    }
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(3000);	
 				    // Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);	    
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);	
+					Thread.sleep(3000);	
 					
 					//delete an event
 					GlobalVariables.iStepNo++ ;
@@ -138,7 +138,7 @@ public class MAP0017_deleteEvent
 					Thread.currentThread();
 					Thread.sleep(3000);
 					//Assertions: Verify that the event is deleted
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[5]/div/span/div/div[@class='aspect']/table/tbody/tr[5]/td/span/div[@class='grouped']/div/table[@class='data-table']/tbody/tr[@class='even last']/td[2]/a/img"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//*[@class='grouped']"));
 					if(GlobalVariables.oElement.getText().equals("")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

@@ -136,8 +136,8 @@ public class MAC0050_RedoPasteAttachment {
 					
 					// Enter the name and select Attach type, upload
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Details entered";
-					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:type")));
+					GlobalVariables.sDescription = "Attachment attached";
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:type")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(GlobalVariables.viewElements.get("reference").equals(option.getText())){
@@ -148,14 +148,14 @@ public class MAC0050_RedoPasteAttachment {
 				    // WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:name"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:upload"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "\\CAP.txt");
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:upload"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:attachments:container:controls:submit")).click();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:submit")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -163,11 +163,11 @@ public class MAC0050_RedoPasteAttachment {
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
-						if (li.getText().equals("CAP")){
+						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
 							// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-									GlobalVariables.sBlank, GlobalVariables.sBlank);	 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
 							break;
 						}
 						else{
@@ -186,7 +186,7 @@ public class MAC0050_RedoPasteAttachment {
 					// Click copy option of respective attachment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Attachment copied";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li/a/img")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -200,10 +200,10 @@ public class MAC0050_RedoPasteAttachment {
 					}
 					else{
 						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Attachment copied' "+" Actual " + GlobalVariables.oElement.getText();
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -248,7 +248,7 @@ public class MAC0050_RedoPasteAttachment {
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
 					tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
-						if (li.getText().equals("CAP")){
+						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
 							// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -258,10 +258,10 @@ public class MAC0050_RedoPasteAttachment {
 						else
 					    {
 							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
-					    	// Write Results
-							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+									GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 							break;
 					    }
 					}
@@ -292,7 +292,7 @@ public class MAC0050_RedoPasteAttachment {
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
 					tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
-						if (li.getText().equals("CAP")){
+						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
 							// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -317,6 +317,9 @@ public class MAC0050_RedoPasteAttachment {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -337,6 +340,9 @@ public class MAC0050_RedoPasteAttachment {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					alert = GlobalVariables.oDriver.switchTo().alert();
 					// WebElement Synchronization
 					Thread.currentThread();

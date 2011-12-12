@@ -4,8 +4,6 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.RenderedWebElement;
-import org.openqa.selenium.WebDriverException;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -87,11 +85,10 @@ public class MAC0023_UndoAddInfoNeed {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Info received flow displayed' "+" Actual 'Info received flow is not displayed'";
-				    	// Write Results
+						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -105,14 +102,17 @@ public class MAC0023_UndoAddInfoNeed {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					//ASSERTION: When clicked on 'Undo add information need' option, the added info received flow should be removed from the received section of respective task
-					try {
-						GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
-					}
-					catch (WebDriverException e) {
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("section-content"));
+					if(((RenderedWebElement) GlobalVariables.oElement).isDisplayed()){
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+					}else{
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
+								GlobalVariables.sBlank, GlobalVariables.sBlank);	  
 					}
 					// WebElement Synchronization
 					Thread.currentThread();

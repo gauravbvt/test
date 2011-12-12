@@ -122,6 +122,7 @@ public class MAP0022_addGoal {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Name for Goal
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AddGoal"));
 					// Achieved at end check box
@@ -131,7 +132,7 @@ public class MAP0022_addGoal {
 					Thread.sleep(3000);	
 					// ASSERTION: When clicked on 'Achieved at end' checkbox, Goal 'Goal1' should be added 
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
-					if (GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("Add Goals"))){
+					if (GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("AddGoal"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -137,7 +137,7 @@ public class MAC0020_UndoPasteAttachment {
 					
 					// Enter the name and select Attach type, upload
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Details entered";
+					GlobalVariables.sDescription = "Attachment attached";
 					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:type")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
@@ -192,7 +192,7 @@ public class MAC0020_UndoPasteAttachment {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on copy option, the message 'Attachment copied' should be displayed at the top of the window 
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//div[@class='change-message']/span/a/img[@class='close']"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//div[@class='change-message']/span/span"));
 					if (GlobalVariables.oElement.getText().equals("Attachment copied")) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
