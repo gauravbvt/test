@@ -53,7 +53,6 @@ public class TE115_PhaseCategories
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
 					String sPhaseName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sPhaseName);
-//					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

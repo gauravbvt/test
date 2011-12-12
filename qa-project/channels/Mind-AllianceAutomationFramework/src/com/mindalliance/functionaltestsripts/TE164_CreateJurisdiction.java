@@ -172,7 +172,7 @@ public class TE164_CreateJurisdiction
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Check box
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed")).click();
 					 // WebElement Synchronization
 				    Thread.currentThread();
 				    Thread.sleep(3000);
@@ -214,7 +214,7 @@ public class TE164_CreateJurisdiction
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Check box
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed")).click();
 					 // WebElement Synchronization
 				    Thread.currentThread();
 				    Thread.sleep(3000);

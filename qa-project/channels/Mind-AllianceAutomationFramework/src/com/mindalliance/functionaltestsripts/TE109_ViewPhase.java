@@ -54,8 +54,10 @@ public class TE109_ViewPhase
 				//Enter the new phase in text box for the plan inside 'Phase' section
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Phase added successfully";
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
+				String sPhaseName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sPhaseName);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -80,7 +82,7 @@ public class TE109_ViewPhase
 				// Select Phase from index pop up menu
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Select Event";
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:indexed")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(option.getText().equals(GlobalVariables.viewElements.get("phases"))){
@@ -100,8 +102,8 @@ public class TE109_ViewPhase
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Phase is present";
 				// Assertion: Verify that event is present
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span"));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("Phase 1"))) {
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[4]/div/span/div/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span"));
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase(sPhaseName)) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -182,7 +184,7 @@ public class TE109_ViewPhase
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new TE086_ViewEvent();
+			new TE109_ViewPhase();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 

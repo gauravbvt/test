@@ -34,7 +34,7 @@ public class TE151_DeleteOrganizationAttachment
 					Thread.currentThread();
 					Thread.sleep(2000);				     
 				    
-					//Click on 'About Plan' from show popup manu
+					//Click on 'About Plan' from show pop up menu
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="About plan";
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"), GlobalVariables.viewElements.get("aboutPlan"));
@@ -95,7 +95,7 @@ public class TE151_DeleteOrganizationAttachment
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:submit")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:submit")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -126,7 +126,8 @@ public class TE151_DeleteOrganizationAttachment
 					Thread.currentThread();
 					Thread.sleep(1000);
 					// Assertion: Verify that file is deleted
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathDeleteOrganizationAttachmentAssertion")));
+//					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathDeleteOrganizationAttachmentAssertion")));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("grouped"));
 					if (GlobalVariables.oElement.getText().equals("")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

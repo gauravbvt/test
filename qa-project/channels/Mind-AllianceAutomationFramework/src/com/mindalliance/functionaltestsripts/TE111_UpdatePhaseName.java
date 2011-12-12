@@ -52,7 +52,6 @@ public class TE111_UpdatePhaseName
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
 					String sPhaseName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sPhaseName);
-//					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -65,7 +64,7 @@ public class TE111_UpdatePhaseName
 					// Click on Phase
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase name updated";
-					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Phase 1"))).click();
+					GlobalVariables.oDriver.findElement(By.linkText(sPhaseName)).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

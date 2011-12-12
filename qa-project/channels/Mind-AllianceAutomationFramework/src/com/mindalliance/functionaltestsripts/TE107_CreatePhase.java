@@ -1,8 +1,12 @@
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -49,22 +53,37 @@ public class TE107_CreatePhase
 					//Enter the new phase in text box for the plan inside 'Phase' section
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
+					/*List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
+					List<WebElement> tds;
+					int i=0;
+					for(WebElement tr: trs) {
+						i++;	
+						tds = tr.findElements(By.tagName("input"));
+						for(WebElement td: tds) {
+							
+							GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:"+i+":name-container:name-input"));
+							String sPhaseName = LogFunctions.getDateTime();
+							GlobalVariables.oElement.sendKeys(sPhaseName);
+							GlobalVariables.oElement.sendKeys(Keys.TAB);
+							}
+					}*/
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
+					String sPhaseName = LogFunctions.getDateTime();
+					GlobalVariables.oElement.sendKeys(sPhaseName);
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Assertion: Verify that Phase has been created
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseCreatedAssertion")));
-					if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get("Phase 1"))){
+					if(GlobalVariables.oElement.getText().equalsIgnoreCase(sPhaseName)){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{
-						GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("Phase 1")+"'Actual is "+GlobalVariables.oElement.getText();
+						GlobalVariables.sVerifyError="Verification Failed. Expected '"+sPhaseName+"'Actual is "+GlobalVariables.oElement.getText();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -85,7 +104,7 @@ public class TE107_CreatePhase
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Plan closed";
-					GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
