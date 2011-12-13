@@ -157,7 +157,7 @@ public class MAC0017_UndoAttachDocument {
 					tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
 						GlobalVariables.sStrCheck=li.getText();
-						if (!(li.getText().equals("CAP"))){
+						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
 							GlobalVariables.bIsSuccess = Boolean.TRUE;
 							break;
 						}
