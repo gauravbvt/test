@@ -24,7 +24,7 @@ public class GlobalVariables {
 	public static Hashtable<String,String> assertion=new Hashtable<String,String>();
 	public static Hashtable<String,String> testData=new Hashtable<String,String>();
 	public static Hashtable<String,String> viewElements=new Hashtable<String,String>();
-	public static Hashtable<String,String> planPageByName=new Hashtable<String,String>();
+//	public static Hashtable<String,String> planPageByName=new Hashtable<String,String>();
 	
 	public static boolean bIsSuccess = false;
 	public static Date dCurrentDate = null;
