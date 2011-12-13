@@ -8,7 +8,9 @@ import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.PlanService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -20,6 +22,7 @@ import java.util.List;
 public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     private Flow sharing;
+    private List<EmploymentData> employments;
 
     public AbstractFlowData() {
         // required
@@ -52,15 +55,17 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     public List<EmploymentData> getEmployments() {
-        List<EmploymentData> employments = new ArrayList<EmploymentData>(  );
-        for ( Employment employment : contacts() ) {
-            employments.add( new EmploymentData( employment ) );
+        if ( employments == null ) {
+            employments = new ArrayList<EmploymentData>();
+            for ( Employment employment : contacts() ) {
+                employments.add( new EmploymentData( employment ) );
+            }
         }
         return employments;
     }
 
-    public List<Long> getMediaIds() {
-        List<Long> media = new ArrayList<Long>(  );
+    public List<Long> getMediumIds() {
+        List<Long> media = new ArrayList<Long>();
         for ( TransmissionMedium medium : sharing.transmissionMedia() ) {
             media.add( medium.getId() );
         }
@@ -85,6 +90,44 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     public String getFailureImpact() {
         return getPlanService().computeSharingPriority( sharing ).getNegativeLabel();
     }
+
+    public Set<Long> allOrganizationIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( EmploymentData employment : getEmployments() ) {
+            ids.add( employment.getOrganizationId() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allActorIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( EmploymentData employment : getEmployments() ) {
+            ids.addAll( employment.allActorIds() );
+        }
+        for ( TransmissionMedium medium : sharing.transmissionMedia() ) {
+            if ( medium.getQualification() != null )
+                ids.add( medium.getQualification().getId() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allRoleIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( EmploymentData employment : getEmployments() ) {
+            ids.add( employment.getRoleId() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allPlaceIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( EmploymentData employment : getEmployments() ) {
+            if ( employment.getJurisdictionId() != null )
+                ids.add( employment.getJurisdictionId() );
+        }
+        return ids;
+    }
+
 
     protected abstract List<Employment> contacts();
 

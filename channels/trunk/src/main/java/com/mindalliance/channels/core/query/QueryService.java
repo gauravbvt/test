@@ -55,8 +55,8 @@ public interface QueryService {
     /**
      * Whether the flow could be essential to risk mitigation.
      *
-     * @param flow the flow
-     * @param assumeFails  whether alternate flows are assumed
+     * @param flow        the flow
+     * @param assumeFails whether alternate flows are assumed
      * @return a boolean
      */
     boolean isEssential( Flow flow, boolean assumeFails );
@@ -448,6 +448,14 @@ public interface QueryService {
      * @return a list of jobs
      */
     List<Job> findUnconfirmedJobs( Organization organization );
+
+    /**
+     * Find all actors that directly or indirectly are supervised by a given actor.
+     *
+     * @param supervisor an actor supervising
+     * @return a list of actors supervised
+     */
+    List<Actor> findSupervised( Actor supervisor );
 
     /**
      * Find all titles used in organizations, sorted alphabetically.
@@ -1035,12 +1043,14 @@ public interface QueryService {
 
     /**
      * Find all commitments in the plan.
+     *
      * @return a list of commitments
      */
     List<Commitment> findAllCommitments();
 
     /**
      * Find all commitments in the plan.
+     *
      * @param includeToSelf a boolean
      * @return a list of commitments
      */
@@ -1107,6 +1117,7 @@ public interface QueryService {
 
     /**
      * Whether a commitment is agreed to if required.
+     *
      * @param commitment a commitment
      * @return a Boolean
      */
@@ -1130,7 +1141,7 @@ public interface QueryService {
     /**
      * Find essential flows from a part.
      *
-     * @param part        a part
+     * @param part                 a part
      * @param assumeAlternatesFail boolean whether downstream alternate flows assumed to fail
      * @return a list of flows
      */
@@ -1282,8 +1293,8 @@ public interface QueryService {
      * Find the EOIs that appear (or seem to) in two flows.
      * If need has no EOI (meaning "any"), take the capability's eois.
      *
-     * @param capability      a flow
-     * @param need another flow
+     * @param capability a flow
+     * @param need       another flow
      * @return a list of EOIs
      */
     List<ElementOfInformation> findCommonEOIs( Flow capability, Flow need );
@@ -1438,6 +1449,7 @@ public interface QueryService {
 
     /**
      * Find all capabilities matching a given name.
+     *
      * @param name a string
      * @return a list of flows
      */
@@ -1445,6 +1457,7 @@ public interface QueryService {
 
     /**
      * Find all users that participate a a given actor.
+     *
      * @param actor an actor
      * @return a list of users
      */
@@ -1452,6 +1465,7 @@ public interface QueryService {
 
     /**
      * Find all participations where users are identified as a given actor.
+     *
      * @param actor an actor
      * @return a list of participations
      */
@@ -1460,14 +1474,12 @@ public interface QueryService {
     /**
      * Whether this is a sharing flow where source actor is target actor.
      *
-     *
      * @param flow@return a boolean
      */
     boolean isSharingWithSelf( Flow flow );
 
     /**
      * Get user's full name.
-     *
      *
      * @param participation@return a string
      */
@@ -1478,8 +1490,7 @@ public interface QueryService {
     /**
      * Get extended title for the part.
      *
-     *
-     * @param sep separator string
+     * @param sep  separator string
      * @param part
      * @return a string
      */
@@ -1487,29 +1498,33 @@ public interface QueryService {
 
     /**
      * Get all commitments in the plan.
+     *
      * @return commitments
      */
     Commitments getAllCommitments();
 
     /**
-      * Get all commitments in the plan.
-      * @param includeToSelf a boolean
+     * Get all commitments in the plan.
+     *
+     * @param includeToSelf a boolean
      * @return commitments
-      */
-     Commitments getAllCommitments( Boolean includeToSelf );
+     */
+    Commitments getAllCommitments( Boolean includeToSelf );
 
     /**
      * Find all eoi names used in the plan.
+     *
      * @return a sorted list of strings
      */
     List<String> findAllEoiNames();
 
     /**
      * Get summary of requirement relationship non-fulfillment.
+     *
      * @param requirementRelationship a requirement relationship (between two organizations)
-     * @param timing a phase timing
-     * @param event an event
-     * @param analyst an analyst
+     * @param timing                  a phase timing
+     * @param event                   an event
+     * @param analyst                 an analyst
      * @return
      */
     String getRequirementNonFulfillmentSummary(

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api;
 
-import com.mindalliance.channels.api.plan.PlanIdentifiersData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
+import com.mindalliance.channels.api.plan.PlanSummariesData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 
 import javax.jws.WebService;
@@ -46,10 +46,10 @@ public interface ChannelsService {
     @Path( "plans" )
     @Produces( MediaType.APPLICATION_XML )
     /**
-     * Get identifiers of all production plans.
+     * Get summaries of all production plans.
      * @return plan identifiers
      */
-    PlanIdentifiersData getPlans();
+    PlanSummariesData getPlans();
 
 
     @GET

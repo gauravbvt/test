@@ -5,6 +5,8 @@ import com.mindalliance.channels.core.model.Employment;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -14,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 10:27 AM
  */
 @XmlRootElement( name = "employment", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"agentId", "title", "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
+@XmlType( propOrder = {"organizationId", "actorId", "title", "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
 public class EmploymentData {
 
     private Employment employment;
@@ -27,8 +29,8 @@ public class EmploymentData {
         this.employment = employment;
     }
 
-    @XmlElement
-    public Long getAgentId() {
+    @XmlElement( name = "agentId" )
+    public Long getActorId() {
         return employment.getActor().getId();
     }
 
@@ -63,4 +65,16 @@ public class EmploymentData {
         return employment.isConfirmed();
     }
 
+    @XmlElement
+    public Long getOrganizationId() {
+        return employment.getOrganization().getId();
+    }
+
+    public Set<Long> allActorIds() {
+        Set<Long> ids = new HashSet<Long>(  );
+        ids.add( getActorId() );
+        if ( getSupervisorId() != null )
+            ids.add( getSupervisorId() );
+        return ids;
+    }
 }

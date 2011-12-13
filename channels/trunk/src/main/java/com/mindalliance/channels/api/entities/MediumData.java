@@ -19,9 +19,8 @@ import java.util.List;
  * Time: 2:29 PM
  */
 @XmlRootElement( name = "transmissionMedium", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"name", "id", "categories", "mode", "synchronous", "security", "reach", "qualification"} )
+@XmlType( propOrder = {"name", "id", "categories", "mode", "synchronous", "security", "reach", "qualification", "delegatesTo"} )
 public class MediumData extends ModelEntityData {
-    private TransmissionMedium medium;
 
     public MediumData() {
         // required
@@ -82,6 +81,15 @@ public class MediumData extends ModelEntityData {
         return getMedium().getQualification() == null
                 ? null
                 : new ActorData( getMedium().getQualification() );
+    }
+
+    @XmlElement
+    public List<MediumData> getDelegatesTo() {
+        List<MediumData> delegates = new ArrayList<MediumData>(  );
+        for ( TransmissionMedium delegate : getMedium().getEffectiveDelegatedToMedia() ) {
+            delegates.add(  new MediumData( delegate ) );
+        }
+        return delegates;
     }
 
     private TransmissionMedium getMedium() {

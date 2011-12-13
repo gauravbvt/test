@@ -1,12 +1,14 @@
 package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.api.entities.ActorData;
+import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.entities.EventData;
 import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.api.entities.PhaseData;
 import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.api.entities.RoleData;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
@@ -30,7 +32,7 @@ import java.util.List;
  * Time: 1:25 PM
  */
 @XmlRootElement( name = "plan", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"identity", "phases", "places", "events", "roles", "organizations", "actors"} )
+@XmlType( propOrder = {"identity", "phases", "places", "events", "roles", "organizations", "actors", "employments"} )
 public class PlanScopeData {
 
     private Plan plan;
@@ -99,7 +101,7 @@ public class PlanScopeData {
         List<OrganizationData> orgs = new ArrayList<OrganizationData>();
         for ( Organization org : planService.list( Organization.class ) ) {
             if ( !org.isUnknown() && !org.isUniversal() )
-                orgs.add( new OrganizationData( org, plan, planService ) );
+                orgs.add( new OrganizationData( org, planService ) );
         }
         return orgs;
     }
@@ -113,5 +115,18 @@ public class PlanScopeData {
         }
         return actors;
     }
+
+    @XmlElement( name = "employment" )
+    public List<EmploymentData> getEmployments() {
+        List<EmploymentData> employments = new ArrayList<EmploymentData>(  );
+        for ( Organization org : planService.list( Organization.class ) ) {
+            if ( !org.isUnknown() && !org.isUniversal() )
+                for( Employment employment : planService.findAllEmploymentsIn( org ) ) {
+                    employments.add( new EmploymentData( employment ) );
+                }
+        }
+        return employments;
+    }
+
 
 }

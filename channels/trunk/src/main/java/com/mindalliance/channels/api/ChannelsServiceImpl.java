@@ -1,13 +1,15 @@
 package com.mindalliance.channels.api;
 
-import com.mindalliance.channels.api.plan.PlanIdentifiersData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
+import com.mindalliance.channels.api.plan.PlanSummariesData;
+import com.mindalliance.channels.api.plan.PlanSummaryData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.query.PlanService;
@@ -63,6 +65,7 @@ public class ChannelsServiceImpl implements ChannelsService {
     @Override
     /**
      * Get scope of production plan.
+     * Available only to its planners.
      * @param uri the plan's URI
      * @return a plan's scope
      */
@@ -72,7 +75,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             Plan plan = planManager.findProductionPlan( uri );
             if ( plan == null )
                 throw new Exception( "Plan " + uri + " is not available" );
-            if ( !user.getRole( plan.getUri() ).equals( User.UNAUTHORIZED ) ) {
+            if ( user.isPlanner( plan.getUri() ) ) {
                 return ( new PlanScopeData( plan, getPlanService( plan ) ) );
             } else {
                 throw new Exception( "Plan " + uri + " is not available" );
@@ -88,19 +91,19 @@ public class ChannelsServiceImpl implements ChannelsService {
 
     @Override
     /**
-     * Get identities of all production plans.
+     * Get summaries of all production plans for which the user is authorized.
      * @return plan identifiers
      */
-    public PlanIdentifiersData getPlans() {
+    public PlanSummariesData getPlans() {
         User user = User.current();
-        List<Plan> result = new ArrayList<Plan>();
+        List<PlanSummaryData> result = new ArrayList<PlanSummaryData>();
         for ( Plan plan : planManager.getPlans() ) {
             String uri = plan.getUri();
             if ( plan.isProduction() && !user.getRole( uri ).equals( User.UNAUTHORIZED ) ) {
-                result.add( plan );
+                result.add( new PlanSummaryData( getPlanService( plan )));
             }
         }
-        return new PlanIdentifiersData( result );
+        return new PlanSummariesData( result );
     }
 
     @Override
@@ -116,10 +119,15 @@ public class ChannelsServiceImpl implements ChannelsService {
         } else {
             PlanService planService = getPlanService( plan );
             try {
-                return new ProceduresData(
-                        plan,
-                        planService.find( Actor.class, Long.parseLong( actorId ) ),
-                        planService );
+                Actor actor = planService.find( Actor.class, Long.parseLong( actorId ) );
+                if ( canSeeProcedures( user, actor, planService ) ) {
+                    return new ProceduresData(
+                            plan,
+                            actor,
+                            planService );
+                } else {
+                    throw new Exception( "Procedures are not visible" );
+                }
             } catch ( Exception e ) {
                 throw new WebApplicationException(
                         Response
@@ -128,6 +136,23 @@ public class ChannelsServiceImpl implements ChannelsService {
                                 .build() );
             }
         }
+    }
+
+    private boolean canSeeProcedures( User user, Actor actor, PlanService planService ) {
+        // Planner can see any actor's procedures
+        if ( user.isPlanner( planService.getPlan().getUri() ) )
+            return true;
+        // Participating user can see own procedures
+        Participation participation = planService.findParticipation( user.getUsername() );
+        if ( participation != null ) {
+            Actor participant = participation.getActor();
+            if ( participant.equals(  actor ) )
+                return true;
+            else
+                // or an underling in a common organization
+                return planService.findSupervised( participant ).contains( actor );
+        }
+        return false;
     }
 
     @WebMethod( exclude = true )

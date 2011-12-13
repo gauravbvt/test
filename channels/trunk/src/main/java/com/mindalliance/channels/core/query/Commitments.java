@@ -108,6 +108,16 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         return result;
     }
 
+    public Commitments from( Specable specable ) {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( commitment.getCommitter().getResourceSpec().narrowsOrEquals( specable, planLocale ) )
+                result.add( commitment );
+        }
+        return result;
+    }
+
+
 
     public Commitments with( Flow flow ) {
         Commitments result = new Commitments();

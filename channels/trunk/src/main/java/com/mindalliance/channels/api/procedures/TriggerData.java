@@ -9,6 +9,8 @@ import com.mindalliance.channels.core.query.PlanService;
 import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Web Service data element for a trigger of a procedure of an actor according to a plan.
@@ -25,6 +27,9 @@ public class TriggerData extends AbstractProcedureElementData {
     private Flow request;
     private EventPhase eventPhase;
     private Commitment notificationToSelf;
+    private NotificationData onNotification;
+    private RequestData onRequest;
+    private Commitment requestToSelf;
 
     public TriggerData() {
         // required
@@ -50,6 +55,10 @@ public class TriggerData extends AbstractProcedureElementData {
         this.notificationToSelf = notificationToSelf;
     }
 
+    public void setRequestToSelf( Commitment requestToSelf ) {
+        this.requestToSelf = requestToSelf;
+    }
+
     @XmlElement
     public String getAnytime() {
         return notification == null && request == null && eventPhase == null
@@ -68,27 +77,33 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
     @XmlElement
-    public RequestData getOnResearch() {
-        if ( request != null && request.isToSelf() )
-            return new RequestData( request, true, getAssignment(), getPlanService() );
+    public ResearchData getOnResearch() {
+        if ( requestToSelf != null )
+            return new ResearchData( requestToSelf, getAssignment(), getPlanService() );
         else
             return null;
     }
 
     @XmlElement
     public NotificationData getOnNotification() {
-        if ( notification != null && !notification.isToSelf() )
-            return new NotificationData( notification, true, getAssignment(), getPlanService() );
-        else
-            return null;
+        if ( onNotification == null ) {
+            if ( notification != null && !notification.isToSelf() )
+                onNotification = new NotificationData( notification, true, getAssignment(), getPlanService() );
+            else
+                onNotification = null;
+        }
+        return onNotification;
     }
 
     @XmlElement
     public RequestData getOnRequest() {
-        if ( request != null && !request.isToSelf() )
-            return new RequestData( request, true, getAssignment(), getPlanService() );
-        else
-            return null;
+        if ( onRequest == null ) {
+            if ( request != null )
+                onRequest = new RequestData( request, true, getAssignment(), getPlanService() );
+            else
+                onRequest = null;
+        }
+        return onRequest;
     }
 
     @WebMethod( exclude = true )
@@ -107,4 +122,59 @@ public class TriggerData extends AbstractProcedureElementData {
             return null;
     }
 
+    public Set<Long> allOrganizationIds() {
+        Set<Long> ids = new HashSet<Long>();
+        if ( getOnNotification() != null ) {
+            ids.addAll( getOnNotification().allOrganizationIds() );
+        }
+        if ( getOnRequest() != null ) {
+            ids.addAll( getOnRequest().allOrganizationIds() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allActorIds() {
+        Set<Long> ids = new HashSet<Long>();
+        if ( getOnNotification() != null ) {
+            ids.addAll( getOnNotification().allActorIds() );
+        }
+        if ( getOnRequest() != null ) {
+            ids.addAll( getOnRequest().allActorIds() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allRoleIds() {
+        Set<Long> ids = new HashSet<Long>();
+        if ( getOnNotification() != null ) {
+            ids.addAll( getOnNotification().allRoleIds() );
+        }
+        if ( getOnRequest() != null ) {
+            ids.addAll( getOnRequest().allRoleIds() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allPlaceIds() {
+        Set<Long> ids = new HashSet<Long>();
+        if ( getOnNotification() != null ) {
+            ids.addAll( getOnNotification().allPlaceIds() );
+        }
+        if ( getOnRequest() != null ) {
+            ids.addAll( getOnRequest().allPlaceIds() );
+        }
+        return ids;
+    }
+
+
+    public Set<Long> allMediumIds() {
+        Set<Long> ids = new HashSet<Long>();
+        if ( getOnNotification() != null ) {
+            ids.addAll( getOnNotification().getMediumIds() );
+        }
+        if ( getOnRequest() != null ) {
+            ids.addAll( getOnRequest().getMediumIds() );
+        }
+        return ids;
+    }
 }

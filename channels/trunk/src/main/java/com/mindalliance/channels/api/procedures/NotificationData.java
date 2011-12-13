@@ -24,7 +24,7 @@ import java.util.Set;
  * Time: 12:49 PM
  */
 @XmlRootElement( name = "notification", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"information", "intent", "receiptConfirmationRequested", "instructions", "contactAll", "maxDelay", "employments", "mediaIds", "failureImpact", "consumingTask"} )
+@XmlType( propOrder = {"information", "intent", "receiptConfirmationRequested", "instructions", "contactAll", "maxDelay", "employments", "mediumIds", "failureImpact", "consumingTask"} )
 public class NotificationData extends AbstractFlowData {
 
     private boolean consuming;
@@ -75,8 +75,8 @@ public class NotificationData extends AbstractFlowData {
 
     @Override
     @XmlElement( name = "transmissionMediumId" )
-    public List<Long> getMediaIds() {
-        return super.getMediaIds();
+    public List<Long> getMediumIds() {
+        return super.getMediumIds();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class NotificationData extends AbstractFlowData {
         for (Assignment otherAssignment : getPlanService().findAllAssignments( part, false ) ) {
             Employment employment = otherAssignment.getEmployment();
             if ( !employment.getActor().equals( getAssignment().getActor() ) ) {
-                contacts.add(  employment );
+                contacts.add( employment );
             }
         }
         return new ArrayList<Employment>( contacts );

@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 1:18 PM
  */
 @XmlRootElement( name = "informationDiscovered", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"information", "doingTask"} )
+@XmlType( propOrder = {"information", "doingTask", "followUpTask"} )
 public class InfoDiscoveredData {
 
     private Commitment notificationToSelf;
@@ -38,5 +38,10 @@ public class InfoDiscoveredData {
     @XmlElement
     public TaskData getDoingTask() {
         return new TaskData( notificationToSelf.getCommitter(), planService );
+    }
+
+    @XmlElement
+    public TaskData getFollowUpTask() {
+        return new TaskData( notificationToSelf.getBeneficiary(), planService );
     }
 }

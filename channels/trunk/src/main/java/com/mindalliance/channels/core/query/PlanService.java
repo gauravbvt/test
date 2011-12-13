@@ -43,4 +43,5 @@ public class PlanService extends DefaultQueryService {
     public void setPlan( Plan plan ) {
         this.plan = plan;
     }
+
 }

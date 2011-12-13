@@ -35,7 +35,7 @@ abstract public class ModelEntityData extends ModelObjectData {
     }
 
     public String getKind() {
-        return getModelEntity().isActual() ? "actual" : "kind";
+        return getModelEntity().isActual() ? "actual" : "type";
     }
 
     private ModelEntity getModelEntity() {

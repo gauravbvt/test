@@ -1,15 +1,12 @@
 package com.mindalliance.channels.api.entities;
 
-import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,18 +18,16 @@ import java.util.List;
  * Time: 9:15 AM
  */
 @XmlRootElement( name = "organization", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"id", "name", "categories", "kind", "parentId", "participating", "employments"} )
+@XmlType( propOrder = {"id", "name", "categories", "kind", "parentId", "participating"} )
 public class OrganizationData extends ModelEntityData {
 
-    private Plan plan;
     private PlanService planService;
 
     public OrganizationData() {
     }
 
-    public OrganizationData( ModelObject modelObject, Plan plan, PlanService planService ) {
+    public OrganizationData( ModelObject modelObject, PlanService planService ) {
         super( modelObject );
-        this.plan = plan;
         this.planService = planService;
     }
 
@@ -62,7 +57,7 @@ public class OrganizationData extends ModelEntityData {
 
     @XmlElement
     public Boolean getParticipating() {
-        return plan.isInScope( getOrganization() );
+        return planService.getPlan().isInScope( getOrganization() );
     }
 
     @XmlElement
@@ -70,15 +65,6 @@ public class OrganizationData extends ModelEntityData {
         return getOrganization().getParent() != null
                 ? getOrganization().getParent().getId()
                 : null;
-    }
-
-    @XmlElement( name = "employment" )
-    public List<EmploymentData> getEmployments() {
-        List<EmploymentData> employments = new ArrayList<EmploymentData>(  );
-        for( Employment employment : planService.findAllEmploymentsIn( getOrganization() ) ) {
-            employments.add( new EmploymentData( employment ) );
-        }
-        return employments;
     }
 
     private Organization getOrganization() {

@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 7:20 PM
  */
 @XmlRootElement( name = "goal", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"name", "description", "category", "level", "organizationId"} )
+@XmlType( propOrder = {"kind", "name", "description", "category", "level", "organizationId"} )
 public class GoalData {
 
     private Goal goal;
@@ -33,6 +33,13 @@ public class GoalData {
         return goal.getName().isEmpty()
                 ? null
                 : goal.getName();
+    }
+
+    @XmlElement
+    public String getKind() {
+        return goal.isRiskMitigation()
+                ? "mitigate risk"
+                : "achieve goal";
     }
 
     @XmlElement

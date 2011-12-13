@@ -35,6 +35,7 @@ public class ProceduresData {
     private PlanService planService;
     private Assignments assignments;
     private List<ProcedureData> procedures;
+    private List<EmploymentData> employments;
 
 
     public ProceduresData() {
@@ -59,9 +60,11 @@ public class ProceduresData {
 
     @XmlElement( name = "employment" )
     public List<EmploymentData> getEmployments() {
-        List<EmploymentData> employments = new ArrayList<EmploymentData>();
-        for ( Employment employment : planService.findAllEmploymentsForActor( actor ) ) {
-            employments.add( new EmploymentData( employment ) );
+        if ( employments == null ) {
+            employments = new ArrayList<EmploymentData>();
+            for ( Employment employment : planService.findAllEmploymentsForActor( actor ) ) {
+                employments.add( new EmploymentData( employment ) );
+            }
         }
         return employments;
     }
@@ -84,7 +87,7 @@ public class ProceduresData {
 
     @XmlElement
     public EnvironmentData getEnvironment() {
-        return new EnvironmentData( getProcedures(), planService );
+        return new EnvironmentData( this, planService );
     }
 
     private Assignments getActorAssignments() {

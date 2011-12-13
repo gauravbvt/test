@@ -83,10 +83,16 @@ public class ProcedureData {
                 trigger.setNotification( triggerNotification );
                 triggers.add( trigger );
             }
-            // triggering requests (can be from self)
+            // triggering requests
             for ( Flow triggerRequest : triggeringRequests() ) {
                 TriggerData trigger = new TriggerData( assignment, planService );
                 trigger.setRequest( triggerRequest );
+                triggers.add( trigger );
+            }
+            // triggering requests to self
+            for ( Commitment triggerRequest : triggeringRequestsToSelf() ) {
+                TriggerData trigger = new TriggerData( assignment, planService );
+                trigger.setRequestToSelf( triggerRequest );
                 triggers.add( trigger );
             }
         }
@@ -97,7 +103,7 @@ public class ProcedureData {
         Set<Flow> triggerNotifications = new HashSet<Flow>();
         for ( Commitment commitment : benefitingCommitments ) {
             Flow flow = commitment.getSharing();
-            if ( flow.isNotification() && flow.isTriggeringToTarget() && isToSelf( commitment ) ) {
+            if ( flow.isNotification() && flow.isTriggeringToTarget() && !isToSelf( commitment ) ) {
                 triggerNotifications.add( flow );
             }
         }
@@ -112,12 +118,24 @@ public class ProcedureData {
         Set<Flow> triggerRequests = new HashSet<Flow>();
         for ( Commitment commitment : committingCommitments ) {
             Flow flow = commitment.getSharing();
-            if ( flow.isAskedFor() && flow.isTriggeringToSource() ) {
+            if ( flow.isAskedFor() && flow.isTriggeringToSource() && !isToSelf( commitment ) ) {
                 triggerRequests.add( flow );
             }
         }
         return triggerRequests;
     }
+
+    private List<Commitment> triggeringRequestsToSelf() {
+         List<Commitment> triggerRequestsToSelf = new ArrayList<Commitment>(  );
+         for ( Commitment commitment : committingCommitments ) {
+             Flow flow = commitment.getSharing();
+             if ( flow.isAskedFor() && flow.isTriggeringToSource() && isToSelf( commitment ) ) {
+                 triggerRequestsToSelf.add( commitment );
+             }
+         }
+         return triggerRequestsToSelf;
+     }
+
 
     @XmlElement( name = "situation" )
     public SituationData getSituation() {
@@ -156,11 +174,60 @@ public class ProcedureData {
         Set<Long> ids = new HashSet<Long>();
         ids.add( getSituation().getPhaseId() );
         for ( TriggerData trigger : getTriggers() ) {
-            Long phaseIdId = trigger.getPhaseId();
-            if ( phaseIdId != null )
-                ids.add( phaseIdId );
+            Long phaseId = trigger.getPhaseId();
+            if ( phaseId != null )
+                ids.add( phaseId );
         }
         ids.addAll( getAssignment().allPhaseIds() );
         return ids;
     }
+
+    public Set<Long> allOrganizationIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( TriggerData trigger : getTriggers() ) {
+            ids.addAll( trigger.allOrganizationIds() );
+        }
+        ids.addAll( getAssignment().allOrganizationIds() );
+        return ids;
+    }
+
+    public Set<Long> allActorIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( TriggerData trigger : getTriggers() ) {
+            ids.addAll( trigger.allActorIds() );
+        }
+        ids.addAll( getAssignment().allActorIds() );
+        return ids;
+    }
+
+    public Set<Long> allRoleIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( TriggerData trigger : getTriggers() ) {
+            ids.addAll( trigger.allRoleIds() );
+        }
+        ids.addAll( getAssignment().allRoleIds() );
+        return ids;
+    }
+
+    public Set<Long> allPlaceIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( TriggerData trigger : getTriggers() ) {
+            ids.addAll( trigger.allPlaceIds() );
+        }
+        ids.addAll( getAssignment().allPlaceIds() );
+        return ids;
+    }
+
+    public Set<Long> allMediumIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( TriggerData trigger : getTriggers() ) {
+            ids.addAll( trigger.allMediumIds() );
+        }
+        ids.addAll( getAssignment().allMediumIds() );
+        return ids;
+    }
+
+
+
+
 }

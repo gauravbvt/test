@@ -23,12 +23,14 @@ import java.util.Set;
  * Time: 3:57 PM
  */
 @XmlRootElement( name = "assignedTask", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"task", "inNotifications", "inReplies", "outNotifications", "outReplies", "discoveries"} )
+@XmlType( propOrder = {"task", "inNotifications", "inReplies", "outNotifications", "outReplies", "discoveries", "research"} )
 public class AssignmentData extends AbstractProcedureElementData {
 
     private ProcedureData procedureData;
     private List<NotificationData> outNotifications;
     private List<RequestData> outReplies;
+    private List<NotificationData> inNotifications;
+    private List<RequestData> inReplies;
 
     public AssignmentData() {
         // required
@@ -49,28 +51,32 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     @XmlElement( name = "inNotication" )
     public List<NotificationData> getInNotifications() {
-        List<NotificationData> inNotifications = new ArrayList<NotificationData>();
-        for ( Commitment inNotification : inNotifications() ) {
-            boolean benefiting = true;
-            inNotifications.add( new NotificationData(
-                    inNotification.getSharing(),
-                    benefiting,
-                    getAssignment(),
-                    getPlanService() ) );
+        if ( inNotifications == null ) {
+            inNotifications = new ArrayList<NotificationData>();
+            for ( Commitment inNotification : inNotifications() ) {
+                boolean benefiting = true;
+                inNotifications.add( new NotificationData(
+                        inNotification.getSharing(),
+                        benefiting,
+                        getAssignment(),
+                        getPlanService() ) );
+            }
         }
         return inNotifications;
     }
 
     @XmlElement( name = "inReply" )
     public List<RequestData> getInReplies() {
-        List<RequestData> inReplies = new ArrayList<RequestData>();
-        for ( Commitment inReply : inReplies() ) {
-            boolean benefiting = true;
-            inReplies.add( new RequestData(
-                    inReply.getSharing(),
-                    benefiting,
-                    getAssignment(),
-                    getPlanService() ) );
+        if ( inReplies == null ) {
+            inReplies = new ArrayList<RequestData>();
+            for ( Commitment inReply : inReplies() ) {
+                boolean benefiting = true;
+                inReplies.add( new RequestData(
+                        inReply.getSharing(),
+                        benefiting,
+                        getAssignment(),
+                        getPlanService() ) );
+            }
         }
         return inReplies;
     }
@@ -117,6 +123,96 @@ public class AssignmentData extends AbstractProcedureElementData {
         return discoveries;
     }
 
+    @XmlElement( name = "research" )
+    public List<ResearchData> getResearch() {
+        List<ResearchData> allResearch = new ArrayList<ResearchData>();
+        for ( Commitment research : research() ) {
+            allResearch.add( new ResearchData( research, getAssignment(), getPlanService() ) );
+        }
+        return allResearch;
+    }
+
+    
+    @WebMethod( exclude = true )
+    public Set<Long> allEventIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( NotificationData notificationData : getOutNotifications() ) {
+            ids.add( notificationData.getConsumingTask().getEventId() );
+        }
+        for ( RequestData requestData : getOutReplies() ) {
+            ids.add( requestData.getConsumingTask().getEventId() );
+        }
+        return ids;
+    }
+
+    @WebMethod( exclude = true )
+    public Set<Long> allPhaseIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( NotificationData notificationData : getOutNotifications() ) {
+            ids.add( notificationData.getConsumingTask().getPhaseId() );
+        }
+        for ( RequestData requestData : getOutReplies() ) {
+            ids.add( requestData.getConsumingTask().getPhaseId() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allOrganizationIds() {
+        Set<Long> ids = new HashSet<Long>();
+        ids.add( getAssignment().getOrganization().getId() );
+        for ( AbstractFlowData flowData : getCommunications() ) {
+            ids.addAll( flowData.allOrganizationIds() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allActorIds() {
+        Set<Long> ids = new HashSet<Long>();
+        ids.add( getAssignment().getActor().getId() );
+        if ( getAssignment().getSupervisor() != null )
+            ids.add( getAssignment().getSupervisor().getId() );
+        for ( AbstractFlowData flowData : getCommunications() ) {
+            ids.addAll( flowData.allActorIds() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allRoleIds() {
+        Set<Long> ids = new HashSet<Long>();
+        ids.add( getAssignment().getRole().getId() );
+        for ( AbstractFlowData flowData : getCommunications() ) {
+            ids.addAll( flowData.allRoleIds() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allPlaceIds() {
+        Set<Long> ids = new HashSet<Long>();
+        if ( getAssignment().getJurisdiction() != null )
+            ids.add( getAssignment().getJurisdiction().getId() );
+        for ( AbstractFlowData flowData : getCommunications() ) {
+            ids.addAll( flowData.allPlaceIds() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allMediumIds() {
+         Set<Long> ids = new HashSet<Long>();
+         for ( AbstractFlowData flowData : getCommunications() ) {
+             ids.addAll( flowData.getMediumIds() );
+         }
+         return ids;
+     }
+
+    private List<AbstractFlowData> getCommunications() {
+        List<AbstractFlowData> communications = new ArrayList<AbstractFlowData>(  );
+        communications.addAll(  getInNotifications() );
+        communications.addAll( getInReplies() );
+        communications.addAll(  getOutNotifications() );
+        communications.addAll( getOutReplies() );
+        return communications;
+    }
+
 
     private Commitments inNotifications() {
         return procedureData.getBenefitingCommitments().notifications().notTo( getAssignment().getActor() );
@@ -138,27 +234,12 @@ public class AssignmentData extends AbstractProcedureElementData {
         return procedureData.getCommittingCommitments().notifications().to( getAssignment().getActor() );
     }
 
-    @WebMethod( exclude = true )
-    public Set<Long> allEventIds() {
-        Set<Long> ids = new HashSet<Long>();
-        for ( NotificationData notificationData : getOutNotifications() ) {
-            ids.add(  notificationData.getConsumingTask().getEventId() );
-        }
-        for ( RequestData requestData : getOutReplies() ) {
-            ids.add(  requestData.getConsumingTask().getEventId() );
-        }
-        return ids;
+    private Commitments research() {
+        return procedureData.getBenefitingCommitments().requests()
+                .to( getAssignment().getActor() )
+                .from( getAssignment().getActor() );
     }
 
-    @WebMethod( exclude = true )
-     public Set<Long> allPhaseIds() {
-         Set<Long> ids = new HashSet<Long>();
-         for ( NotificationData notificationData : getOutNotifications() ) {
-             ids.add(  notificationData.getConsumingTask().getPhaseId() );
-         }
-         for ( RequestData requestData : getOutReplies() ) {
-             ids.add(  requestData.getConsumingTask().getPhaseId() );
-         }
-         return ids;
-     }
- }
+    
+    
+}

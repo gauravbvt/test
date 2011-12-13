@@ -283,4 +283,8 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
     public boolean isInitiatedByEventPhase() {
         return getPart().isStartsWithSegment();
     }
+
+    public Actor getSupervisor() {
+        return employment.getSupervisor();
+    }
 }

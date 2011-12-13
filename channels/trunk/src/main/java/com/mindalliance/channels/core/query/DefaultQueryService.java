@@ -110,6 +110,7 @@ public abstract class DefaultQueryService implements QueryService {
     private UserDao userDao;
 
     //-------------------------------
+
     /**
      * Required for CGLIB proxies...
      */
@@ -364,15 +365,14 @@ public abstract class DefaultQueryService implements QueryService {
         Flow sharing = commitment.getSharing();
         Assignment beneficiary = commitment.getBeneficiary();
         if ( beneficiary.getOrganization().narrowsOrEquals( agreement.getBeneficiary(), getPlan().getLocale() )
-             && Matcher.same( agreement.getInformation(), sharing.getName() ) )
-        {
+                && Matcher.same( agreement.getInformation(), sharing.getName() ) ) {
             List<ElementOfInformation> eois = agreement.getEois();
             if ( eois.isEmpty() || subsetOf( sharing.getEois(), eois ) ) {
                 String usage = agreement.getUsage();
                 String otherText = beneficiary.getPart().getTask();
                 if ( usage.isEmpty()
-                     || Matcher.same( usage, otherText )
-                     || semanticMatcher.matches( usage.trim(), otherText.trim(), Proximity.HIGH ) )
+                        || Matcher.same( usage, otherText )
+                        || semanticMatcher.matches( usage.trim(), otherText.trim(), Proximity.HIGH ) )
                     return true;
             }
         }
@@ -421,9 +421,9 @@ public abstract class DefaultQueryService implements QueryService {
             String usage = agreement.getUsage();
             String otherText = other.getUsage();
             if ( usage.isEmpty() || Matcher.same( usage, otherText ) || semanticMatcher.matches(
-                usage.trim(),
-                otherText.trim(),
-                Proximity.HIGH ) )
+                    usage.trim(),
+                    otherText.trim(),
+                    Proximity.HIGH ) )
                 return subsetOf( other.getEois(), agreement.getEois() );
         }
 
@@ -755,7 +755,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Commitment> findAllCommitments() {
-        List<Commitment> allCommitments = new ArrayList<Commitment>(  );
+        List<Commitment> allCommitments = new ArrayList<Commitment>();
         for ( Flow flow : findAllFlows() ) {
             allCommitments.addAll( findAllCommitments( flow ) );
         }
@@ -764,13 +764,12 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Commitment> findAllCommitments( Boolean includeToSelf ) {
-        List<Commitment> allCommitments = new ArrayList<Commitment>(  );
+        List<Commitment> allCommitments = new ArrayList<Commitment>();
         for ( Flow flow : findAllFlows() ) {
             allCommitments.addAll( findAllCommitments( flow, includeToSelf ) );
         }
         return allCommitments;
     }
-
 
 
     @Override
@@ -1029,7 +1028,7 @@ public abstract class DefaultQueryService implements QueryService {
                 : part.getAllSharingReceives();
         for ( final Flow candidate : candidates ) {
             boolean covered = CollectionUtils.exists(
-                disseminations, new Predicate() {
+                    disseminations, new Predicate() {
                 @Override
                 public boolean evaluate( Object object ) {
                     return ( (Dissemination) object ).getFlow().equals( candidate );
@@ -1442,7 +1441,7 @@ public abstract class DefaultQueryService implements QueryService {
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            return encompasses( (Agreement)object, requiredAgreement );
+                            return encompasses( (Agreement) object, requiredAgreement );
                         }
                     }
             );
@@ -1450,7 +1449,7 @@ public abstract class DefaultQueryService implements QueryService {
             // agreement not required
             return true;
         }
-     }
+    }
 
     @Override
     public List<Part> findAllInitiators( EventTiming eventTiming ) {
@@ -2146,7 +2145,7 @@ public abstract class DefaultQueryService implements QueryService {
                         && CollectionUtils.subtract( flow.intermediatedSources(), visited ).isEmpty() ) ) {
                     importantFlows.add( flow );
                     importantFlows.addAll( findImportantFlowsFrom(
-                        (Part) flow.getTarget(),
+                            (Part) flow.getTarget(),
                             visited, assumeAlternatesFail ) );
                 }
             }
@@ -2628,6 +2627,30 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
+    public List<Actor> findSupervised( Actor supervisor ) {
+        return findAllSupervisedSafe( supervisor, null, new HashSet<Actor>() );
+    }
+
+    private List<Actor> findAllSupervisedSafe( Actor supervisor, Organization org, Set<Actor> visited ) {
+        Set<Actor> allSupervised = new HashSet<Actor>();
+        if ( !visited.contains( supervisor ) ) {
+            visited.add( supervisor );
+            for ( Actor actor : listActualEntities( Actor.class ) ) {
+                for ( Employment employment : findAllEmploymentsForActor( actor ) ) {
+                    Actor sup = employment.getSupervisor();
+                    if ( sup != null
+                            && sup.equals( supervisor )
+                            && ( org == null || employment.getOrganization().equals( org ) ) ) {
+                        allSupervised.add( actor );
+                        allSupervised.addAll( findAllSupervisedSafe( actor, employment.getOrganization(), visited ) );
+                    }
+                }
+            }
+        }
+        return new ArrayList<Actor>( allSupervised );
+    }
+
+    @Override
     public List<Flow> findUnconnectedNeeds( Part part ) {
         List<Flow> unconnectedNeeds = new ArrayList<Flow>();
         Iterator<Flow> receives = part.receives();
@@ -2870,7 +2893,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public Commitments getAllCommitments() {
-        return Commitments.all(  this );
+        return Commitments.all( this );
     }
 
     @Override
@@ -2970,7 +2993,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<String> findAllEoiNames() {
-        Set<String> eoiNames = new HashSet<String>(  );
+        Set<String> eoiNames = new HashSet<String>();
         for ( Flow flow : findAllFlows() ) {
             for ( ElementOfInformation eoi : flow.getEois() ) {
                 eoiNames.add( ChannelsUtils.smartUncapitalize( eoi.getContent() ) );
@@ -2987,31 +3010,31 @@ public abstract class DefaultQueryService implements QueryService {
             Phase.Timing timing,
             Event event,
             Analyst analyst ) {
-            StringBuilder sb =new StringBuilder(  );
-            Commitments allCommitments = getAllCommitments();
-            List<Requirement> unfulfilled = new ArrayList<Requirement>(  );
-            Plan plan = getPlan();
-            for ( Requirement requirement : requirementRelationship.getRequirements() ) {
-                Requirement req = requirement.transientCopy();
-                req.setCommitterOrganization( (Organization) requirementRelationship.getFromIdentifiable( this ) );
-                req.setBeneficiaryOrganization( (Organization) requirementRelationship.getToIdentifiable( this ) );
-                if ( allCommitments.satisfying( req )
-                        .inSituation( timing, event, plan.getLocale() )
-                        .realizable( analyst, plan ).isEmpty() )
-                    unfulfilled.add( req );
+        StringBuilder sb = new StringBuilder();
+        Commitments allCommitments = getAllCommitments();
+        List<Requirement> unfulfilled = new ArrayList<Requirement>();
+        Plan plan = getPlan();
+        for ( Requirement requirement : requirementRelationship.getRequirements() ) {
+            Requirement req = requirement.transientCopy();
+            req.setCommitterOrganization( (Organization) requirementRelationship.getFromIdentifiable( this ) );
+            req.setBeneficiaryOrganization( (Organization) requirementRelationship.getToIdentifiable( this ) );
+            if ( allCommitments.satisfying( req )
+                    .inSituation( timing, event, plan.getLocale() )
+                    .realizable( analyst, plan ).isEmpty() )
+                unfulfilled.add( req );
+        }
+        if ( !unfulfilled.isEmpty() ) {
+            sb.append( "Unfulfilled " );
+            sb.append( unfulfilled.size() == 1 ? "requirement: " : "requirements: " );
+            Iterator<Requirement> iter = unfulfilled.iterator();
+            while ( iter.hasNext() ) {
+                sb.append( '"' );
+                sb.append( iter.next().getName() );
+                sb.append( '"' );
+                if ( iter.hasNext() ) sb.append( ", " );
             }
-            if ( !unfulfilled.isEmpty() ) {
-                sb.append( "Unfulfilled " );
-                sb.append( unfulfilled.size() == 1 ? "requirement: " : "requirements: " );
-                Iterator<Requirement> iter = unfulfilled.iterator();
-                while( iter.hasNext() ) {
-                    sb.append( '"' );
-                    sb.append( iter.next().getName() );
-                    sb.append( '"' );
-                    if ( iter.hasNext() ) sb.append( ", " );
-                }
-            }
-            return sb.toString();
+        }
+        return sb.toString();
     }
 
     @Override
@@ -3028,7 +3051,7 @@ public abstract class DefaultQueryService implements QueryService {
                     @Override
                     public boolean evaluate( Object object ) {
                         return covers(
-                            (Agreement) object,
+                                (Agreement) object,
                                 commitment );
                     }
                 }
@@ -3098,7 +3121,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public Boolean isOverridden( Part part ) {
         return !findAllOverridingParts(
-            part, findSynonymousParts( part ) ).isEmpty();
+                part, findSynonymousParts( part ) ).isEmpty();
     }
 
     @Override
@@ -3154,7 +3177,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public Boolean isReferenced( final Classification classification ) {
         boolean hasReference = CollectionUtils.exists(
-            listActualEntities( Actor.class ), new Predicate() {
+                listActualEntities( Actor.class ), new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
                 return ( (Actor) object ).getClearances().contains( classification );
@@ -3198,7 +3221,7 @@ public abstract class DefaultQueryService implements QueryService {
         String text1 = StringUtils.uncapitalize( text );
         String otherText1 = StringUtils.uncapitalize( otherText );
         return Matcher.matches( text, otherText ) || Matcher.same( text1, otherText1 ) || semanticMatcher.matches(
-            text1.trim(), otherText1.trim(), Proximity.HIGH );
+                text1.trim(), otherText1.trim(), Proximity.HIGH );
     }
 
     @Override

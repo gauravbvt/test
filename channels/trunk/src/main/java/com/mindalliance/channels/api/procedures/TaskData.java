@@ -45,7 +45,7 @@ public class TaskData extends AbstractProcedureElementData {
 
     @XmlElement
     public String getName() {
-        return getPart().getName();
+        return getPart().getTask();
     }
 
     @XmlElement
