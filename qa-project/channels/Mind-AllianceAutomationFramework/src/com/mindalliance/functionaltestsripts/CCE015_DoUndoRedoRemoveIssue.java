@@ -86,8 +86,7 @@ public class CCE015_DoUndoRedoRemoveIssue
 				Thread.currentThread();
 				Thread.sleep(3000);				
 				// Assertion: Verify that When clicked on 'Remove issue' option, a respective issue should be removed from the segment
-				GlobalVariables.oDriver.findElement(By.className("issues")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[2]"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("issues"));
 				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
 				for (WebElement ol: tds){
 					if(ol.getText().equals("")){
@@ -118,9 +117,7 @@ public class CCE015_DoUndoRedoRemoveIssue
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that When clicked on 'Undo remove issue' option, a issue which was removed from the issue should be restored in the segment
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("issues"));
-				GlobalVariables.oElement.click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[3]/span/span/span/span/span"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[3]/span/span[@class='menubar']/span/span[@class='dropmenu']/span"));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Menu")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -132,7 +129,7 @@ public class CCE015_DoUndoRedoRemoveIssue
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -146,8 +143,7 @@ public class CCE015_DoUndoRedoRemoveIssue
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that When clicked on 'Redo remove issue' option, the restored  issue should be removed
-				GlobalVariables.oDriver.findElement(By.className("issues")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/div/span/ol/li[2]"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("issues"));
 				tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
 				for (WebElement ol: tds){
 					if(ol.getText().equals("")){

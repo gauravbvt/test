@@ -65,11 +65,11 @@ public class CCE028_DoUndoRedoTransferJobs
 					// Enter name of organization1 in 'Other organization that should be assigned tasks ' field
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Org 1 Name Entered";
-					GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
+					GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 					String sOrgName1 = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sOrgName1);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);			
@@ -98,11 +98,11 @@ public class CCE028_DoUndoRedoTransferJobs
 					// Enter name of organization2 in 'Other organization that should be assigned tasks ' field
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Org 2 Name Entered";
-					GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
+					GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 					String sOrgName2 = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sOrgName2);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);			
@@ -153,56 +153,51 @@ public class CCE028_DoUndoRedoTransferJobs
 					for (int i=1;i<=30;i++)
 						GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
 					}
-					// agent name
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field")).click();
+					// Agent
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					String Agent="Agent 1";
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field"));
-					GlobalVariables .oElement.sendKeys(Agent);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
 					// Title
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Title"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					// Role
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Role"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					// Jury
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Jurisdiction"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					// Supervisor
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Supervisor"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					// Check box
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed")).click();
 					 // WebElement Synchronization
 				    Thread.currentThread();
-				    Thread.sleep(3000);
+				    Thread.sleep(2000);
 					// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td[2]/span/a/span"));
-					if(GlobalVariables.oElement.getText().equals("Agent 1")){
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Agent")));
+					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Agent"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Agent 1' "+" Actual "+GlobalVariables.oElement.getText();
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.testData.get("Agent")+"' Actual "+GlobalVariables.oElement.getText();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -215,7 +210,7 @@ public class CCE028_DoUndoRedoTransferJobs
 					// Check 'Transfer Jobs' Checkbox 
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Check Transfer Jobs Checkbox";
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:transferContainer:transfer")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:transferContainer:transfer")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -227,7 +222,7 @@ public class CCE028_DoUndoRedoTransferJobs
 					// Select Job from the List 
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Select Job from the List";
-					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:transferDiv:fromOrganization")));
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:transferDiv:fromOrganization")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(option.getText().equals(sOrgName2)){
@@ -246,7 +241,7 @@ public class CCE028_DoUndoRedoTransferJobs
 					// Check 'Take Copies' Checkbox 
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Take Copies";
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tabContainer:tabs:panel:transferDiv:copying")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:transferDiv:copying")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -258,12 +253,15 @@ public class CCE028_DoUndoRedoTransferJobs
 					// Click on Done
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Jobs Transferred";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div/div[2]/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);					
+					// Assertion: Verify that job has been transferred
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName2)).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					// Assertion: Verify that job has been transferred
-					GlobalVariables.oDriver.findElement(By.linkText(sOrgName2)).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName1));
 					if(GlobalVariables.oElement.getText().equalsIgnoreCase(sOrgName1)){
 						// Write Results
@@ -296,7 +294,7 @@ public class CCE028_DoUndoRedoTransferJobs
 					
 					// Click on Redo update 
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Undo Update Organization";
+					GlobalVariables.sDescription = "Redo Update Organization";
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("redoUpdateOrganization"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

@@ -85,21 +85,16 @@ public class TFP029_GoalsOptionUnchecked
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="New Goal Added";
 				// Select Category
-				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:category")));
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:category")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				options.get(1).setSelected();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Enter Goal Details
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:organization:name"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("First Goal"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Click on Check box
-				GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -48,15 +48,13 @@ public class PS006_AboutPlanSegmentLink
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "About Plan Segment Window Opened";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAboutPlanSegmentDetails")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details")))
-				{
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else
-				{
+				else{
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -69,8 +67,8 @@ public class PS006_AboutPlanSegmentLink
 				//About Plan segment name Entered
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "About Plan Segment Name Entered";
-				GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:mo:aspect:name"));
+				GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 				GlobalVariables.oElement.sendKeys("Segment 1");
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);

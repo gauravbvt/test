@@ -436,7 +436,7 @@ public class PS019_AboutPlanShowComponents
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionVersions")));			    			    
-				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("versions"))) {
+				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("versionAssertion"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -444,7 +444,7 @@ public class PS019_AboutPlanShowComponents
 				}
 				else
 				{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("versions")+" Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("versionAssertion")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

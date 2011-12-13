@@ -75,8 +75,8 @@ public class PS041_InfoTagsOfRequirement
 				// Enter Info tags of Requirement
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Info tags entred";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:reqSection:information")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:reqSection:infoTags:tags"));
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:requirement:reqSection:infoTags:tags")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:requirement:reqSection:infoTags:tags"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("infoTags"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization

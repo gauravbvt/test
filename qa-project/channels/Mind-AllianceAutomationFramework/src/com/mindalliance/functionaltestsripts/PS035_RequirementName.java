@@ -63,8 +63,8 @@ public class PS035_RequirementName
 				// Enter name in Requirement name text filed
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Requirement name entred";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:name")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:name"));
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:requirement:name")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:requirement:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Requirement"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization

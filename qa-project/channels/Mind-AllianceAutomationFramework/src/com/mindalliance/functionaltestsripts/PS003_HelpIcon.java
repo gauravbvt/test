@@ -53,6 +53,10 @@ public class PS003_HelpIcon
 			    for (String handle : GlobalVariables.oDriver.getWindowHandles()) {
 			    	GlobalVariables.oDriver.switchTo().window(handle);
 			    }
+			    // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);
+			    
 			    // Assertion: Verify that "Help" page loaded 
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Help' gets loaded";		

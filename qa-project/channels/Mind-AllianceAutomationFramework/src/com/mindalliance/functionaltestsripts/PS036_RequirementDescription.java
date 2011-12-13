@@ -62,15 +62,15 @@ public class PS036_RequirementDescription
 				// Enter Description in Requirement description text filed
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Requirement Description entred";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:description")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:description"));
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:requirement:description")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:requirement:description"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Requirement Description"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion: Verify that Requirement name has been entered
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:description"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:requirement:description"));
 				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("Requirement Description"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

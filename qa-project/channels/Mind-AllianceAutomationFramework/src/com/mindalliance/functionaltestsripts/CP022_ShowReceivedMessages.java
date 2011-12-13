@@ -1,6 +1,7 @@
 package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
@@ -32,6 +33,12 @@ public class CP022_ShowReceivedMessages
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
+				
+				// Maximize Browser Window
+				((JavascriptExecutor) GlobalVariables.oDriver).executeScript("if (window.screen) {window.moveTo(0, 0);window.resizeTo(window.screen.availWidth, window.screen.availHeight);};");
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				// Click on Messages tab from social panel
 				GlobalVariables.iStepNo++;

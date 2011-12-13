@@ -14,7 +14,7 @@ public class TFP081_AddInfoReceiveSendIssueDetails
 	public TFP081_AddInfoReceiveSendIssueDetails(){
     	try {
     		
-    		GlobalVariables.sTestCaseId = "TFP081_IssueDetails";
+    		GlobalVariables.sTestCaseId = "TFP081_AddInfoReceiveSendIssueDetails";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);

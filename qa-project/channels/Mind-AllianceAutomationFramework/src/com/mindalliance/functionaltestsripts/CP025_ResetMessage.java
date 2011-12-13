@@ -1,6 +1,7 @@
 package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
@@ -33,6 +34,12 @@ public class CP025_ResetMessage
 				Thread.currentThread();
 				Thread.sleep(1000);
 				
+				// Maximize Browser Window
+				((JavascriptExecutor) GlobalVariables.oDriver).executeScript("if (window.screen) {window.moveTo(0, 0);window.resizeTo(window.screen.availWidth, window.screen.availHeight);};");
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
 				// Click on Messages tab from Collaboration panel
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Messages tab";
@@ -47,6 +54,7 @@ public class CP025_ResetMessage
 				
 				// Enter message in message tab
 				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Message Entered";
 				GlobalVariables.oDriver.findElement(By.name("segment:social:tabs:panel:newMessage:text")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:social:tabs:panel:newMessage:text"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Messages"));

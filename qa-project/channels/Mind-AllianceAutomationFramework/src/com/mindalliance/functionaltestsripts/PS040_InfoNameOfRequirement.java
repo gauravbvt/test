@@ -75,8 +75,8 @@ public class PS040_InfoNameOfRequirement
 				// Enter Info name of Requirement
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Info name entred";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:reqSection:information")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:requirement:reqSection:information"));
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:requirement:reqSection:information")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:requirement:reqSection:information"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("infoName"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization

@@ -183,15 +183,25 @@ public class CCE009_DoUndoRedoIntermediateTask
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// ASSERTION: When clicked on 'Add intermediate' option, the task should be created between the selected task and its respective other task
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr/td[2]/span/a/span"));
-				    if(GlobalVariables.oElement.getText().equals("doing something")) {
-				    	// Write Results
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
+					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
+					GlobalVariables.bIsSuccess = Boolean.FALSE;
+					for (WebElement td: tds){
+						GlobalVariables.sStrCheck=td.getText();
+						if (td.getText().equals("doing something")){
+							GlobalVariables.bIsSuccess = Boolean.TRUE;
+							break;
+						}
+					}
+					if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
+						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
-				    }
-				    else {
-				    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'doing something' "+" Actual " + GlobalVariables.oElement.getText();
+					}
+					else
+				    {
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'doing something' "+" Actual " + GlobalVariables.sStrCheck;
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -199,7 +209,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					
 					// Click on 'Undo add intermediate' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
@@ -211,7 +221,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 					// ASSERTION: When clicked on 'Undo add intermediate' option, the intermediate task should be removed
 					GlobalVariables.bIsSuccess = Boolean.FALSE;
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
-					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
+					tds = GlobalVariables.oElement.findElements(By.tagName("td"));
 					for (WebElement td: tds) {
 						GlobalVariables.sStrCheck=td.getText();
 						if (td.getText().equals("doing something")) {
@@ -233,6 +243,9 @@ public class CCE009_DoUndoRedoIntermediateTask
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
 
 					// Redo- Click on 'Redo add intermediate' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
@@ -242,24 +255,33 @@ public class CCE009_DoUndoRedoIntermediateTask
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// ASSERTION: When clicked on 'Undo add intermediate' option, the intermediate task should be removed
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/div[2]/div[2]/span/table/tbody/tr/td[2]/span/a/span"));
-				    if(GlobalVariables.oElement.getText().equals("doing something")) {
-				    	// Write Results
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
+					tds = GlobalVariables.oElement.findElements(By.tagName("td"));
+					GlobalVariables.bIsSuccess = Boolean.FALSE;
+					for (WebElement td: tds){
+						GlobalVariables.sStrCheck=td.getText();
+						if (td.getText().equals("doing something")){
+							GlobalVariables.bIsSuccess = Boolean.TRUE;
+							break;
+						}
+					}
+					if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
+						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
-				    }
-				    else {
-				    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'doing something' "+" Actual " + GlobalVariables.oElement.getText();
+					}
+					else
+				    {
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'doing something' "+" Actual " + GlobalVariables.sStrCheck;
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// WebElement Synchronization

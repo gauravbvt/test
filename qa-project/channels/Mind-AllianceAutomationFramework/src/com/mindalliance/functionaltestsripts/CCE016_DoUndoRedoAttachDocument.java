@@ -1,8 +1,12 @@
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
@@ -10,11 +14,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class CCE018_DoCutAttachment 
+public class CCE016_DoUndoRedoAttachDocument 
 {
-	public CCE018_DoCutAttachment() {
+	public CCE016_DoUndoRedoAttachDocument() {
 		try {
-			GlobalVariables.sTestCaseId = "CCE018_DoCutAttachment";
+			GlobalVariables.sTestCaseId = "CCE016_DoUndoRedoAttachDocument";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -53,7 +57,7 @@ public class CCE018_DoCutAttachment
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 						for (int i = 0; i <= 8; i++)
 							GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Do Cut Attachment"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Do Undo Redo Attach Document"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -74,23 +78,10 @@ public class CCE018_DoCutAttachment
 					Thread.currentThread();
 					Thread.sleep(3000);
 					
-					// Update the Information of the default task
+					// Click on 'About plan segment' option under 'Show' pop up menu
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Task updated";
-					// Click on legend for maximize the graph
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDefaultTask"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-					for (int i = 0; i <= 15; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task for attachment"));
+					GlobalVariables.sDescription = "About Plan Segment section opened";
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlanSegment"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -99,50 +90,134 @@ public class CCE018_DoCutAttachment
 					Thread.currentThread();
 					Thread.sleep(3000);
 					
-					// Attach a document
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Attachment document";
-					GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name")).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:name"));
+					// Enter the name and select Attach type, upload
+					GlobalVariables.iStepNo++ ;
+					GlobalVariables.sDescription = "Attach document";
+					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:type")));
+					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
+				    for(WebElement option : options) {
+				    	if(GlobalVariables.viewElements.get("reference").equals(option.getText())){
+				    			option.setSelected();
+				    			break;
+				    	}
+				    }
+				    // WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
-					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:upload"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:upload"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:submit")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:submit")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					// Assertion: verify that file is attached
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
+					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
+					for (WebElement li: tds){
+						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
+							break;
+						}
+						else{
+							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
+					    	// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+							break;
+					    }
+					}
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					
-					// Click on delete attachment icon
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Cut or delete attachment";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteTaskAttachment"))).click();
+					// Click 'Undo attach document' option under 'Actions' pop up menu
+					GlobalVariables.iStepNo++ ;
+					GlobalVariables.sDescription = "Undo attach document done";
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoAttachDocument"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					alert.accept();
-					// Click on 'Remove this segment' under 'Actions' pop up menu
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-					// Get a handle to the open alert, prompt or confirmation
-					alert = GlobalVariables.oDriver.switchTo().alert();
-					alert.accept();
+					// Assertion: verify that file is detached
+					GlobalVariables.bIsSuccess = Boolean.FALSE;
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
+					tds = GlobalVariables.oElement.findElements(By.tagName("li"));
+					for (WebElement li: tds){
+						GlobalVariables.sStrCheck=li.getText();
+						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
+							GlobalVariables.bIsSuccess = Boolean.TRUE;
+							break;
+						}
+					}
+					if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					}
+					else{
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + GlobalVariables.sStrCheck;
+				    	// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
+
+					// Click 'Redo attach document' option under 'Actions' pop up menu
+					GlobalVariables.iStepNo++ ;
+					GlobalVariables.sDescription = "Redo attach document done";
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("redoAttachDocument"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					// Assertion: verify that file is attached
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
+					tds = GlobalVariables.oElement.findElements(By.tagName("li"));
+					for (WebElement li: tds){
+						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
+							break;
+						}
+						else{
+							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
+					    	// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+							break;
+					    }
+					}
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					// Click on 'done' button
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+					alert.accept();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
@@ -180,7 +255,7 @@ public class CCE018_DoCutAttachment
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new CCE018_DoCutAttachment();
+			new CCE016_DoUndoRedoAttachDocument();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 
