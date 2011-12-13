@@ -687,8 +687,6 @@ public class GenericFunctionLibrary {
 			System.out.println("TestData initialization completed");
 		}
 		catch(Exception e){
-			System.out.println("Error Occured in InitializeTestData Function");
-			e.printStackTrace();
 		}
 	}
 
@@ -710,8 +708,6 @@ public class GenericFunctionLibrary {
 			System.out.println("TestData cleanup completed");
 		}
 		catch(Exception e) {
-			System.out.println("Error Occured in TearDownTestData Function.");
-			e.printStackTrace();
 		}
 	}
 }

@@ -86,8 +86,6 @@ public class ApplicationFunctionLibrary {
 			// Returns TRUE
 			return Boolean.TRUE;
 		} catch (Exception e) {
-			System.out.println("\nError Occured in Login Function.");
-			e.printStackTrace();
 			// Returns FALSE
 			return Boolean.FALSE;
 		}
@@ -111,8 +109,6 @@ public class ApplicationFunctionLibrary {
 			return Boolean.TRUE;
 		} 
 		catch (Exception e) {
-			System.out.println("\nError Occured in Logout Function.");
-			e.printStackTrace();
 			// Returns FALSE
 			if(GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sXpathStackTrace"))).click();
@@ -127,9 +123,10 @@ public class ApplicationFunctionLibrary {
 	 * MouseOverAndClick
 	 * @param xPath
 	 * @param optionName
+	 * @throws Exception 
 	 * @throws InterruptedException
 	 */
-	public static void MouseOverAndClick(String popUpMenu, String optionName) {
+	public static void MouseOverAndClick(String popUpMenu, String optionName) throws Exception {
 		try {
 			if (popUpMenu != null && optionName != null) {
 				// Mouse hover on popUpMenu
@@ -149,8 +146,7 @@ public class ApplicationFunctionLibrary {
 			//GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[13]/span/span[3]/span/ul/li[8]/span/a/span")).click();
 		}
 		catch (Exception e) {
-			System.out.println("\nError Occured in MouseOverAndClick Function.");
-			e.printStackTrace();
+			throw new Exception("Element Not Present in the Popup menu ");
 		}
 	}
 
@@ -184,8 +180,6 @@ public class ApplicationFunctionLibrary {
 			Thread.sleep(2000);
 		}
 		catch (Exception e) {
-			System.out.println("\nError Occured in AddSegment Function.");
-			e.printStackTrace();
 		}
 	}
 }

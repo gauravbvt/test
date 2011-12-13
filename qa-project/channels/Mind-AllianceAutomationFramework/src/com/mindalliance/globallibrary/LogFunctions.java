@@ -40,8 +40,6 @@ public class LogFunctions {
 		    out.close();
 		}
 		catch (IOException e) {
-			System.out.println("\nError Occured in writeLogs() function. \n");
-			e.printStackTrace();
 		}
 	}
 	
@@ -69,8 +67,6 @@ public class LogFunctions {
 			out.close();
 		}
 		catch (IOException e) {
-			System.out.println("\nError Occured in writeResults() function.\n");
-			e.printStackTrace();
 		}
 	}
 	
@@ -88,8 +84,6 @@ public class LogFunctions {
 		    out.close();
 		}
 		catch (IOException e) {
-			System.out.println("\nError Occured in writeErrorLogs() function.\n");
-			e.printStackTrace();
 		}
 	}	
 }
