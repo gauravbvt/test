@@ -337,7 +337,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
      * @return a list of model entities
      */
     public List<ModelEntity> getImplicitTypes() {
-        return new ArrayList<ModelEntity>();
+        return safeImplicitTypes( new HashSet<ModelEntity>() );
     }
 
     /**
@@ -423,11 +423,15 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         return safeAllImplicitTypes( new HashSet<ModelEntity>() );
     }
 
-    private List<ModelEntity> safeAllTypes( Set<ModelEntity> visited ) {
+    protected List<ModelEntity> safeImplicitTypes( Set<ModelEntity> visited ) {
+        return new ArrayList<ModelEntity>();
+    }
+
+    protected List<ModelEntity> safeAllTypes( Set<ModelEntity> visited ) {
         Set<ModelEntity> allTypes = new HashSet<ModelEntity>();
         if ( !visited.contains( this ) ) {
             allTypes.addAll( getTypes() );
-            allTypes.addAll( getImplicitTypes() );
+            allTypes.addAll( safeAllImplicitTypes( visited ) );
             visited.add( this );
             for ( ModelEntity type : getTypes() ) {
                 allTypes.addAll( type.safeAllTypes( visited ) );
@@ -439,7 +443,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
     private List<ModelEntity> safeAllImplicitTypes( Set<ModelEntity> visited ) {
         List<ModelEntity> allImplicitTypes = new ArrayList<ModelEntity>();
         if ( !visited.contains( this ) ) {
-            allImplicitTypes.addAll( getImplicitTypes() );
+            allImplicitTypes.addAll( safeImplicitTypes( visited ) );
             visited.add( this );
             for ( ModelEntity type : getTypes() ) {
                 allImplicitTypes.addAll( type.safeAllImplicitTypes( visited ) );

@@ -93,10 +93,15 @@ public class Organization extends AbstractUnicastChannelable
 
 
     @Override
-    public List<ModelEntity> getImplicitTypes() {
+    protected List<ModelEntity> safeImplicitTypes( Set<ModelEntity> visited ) {
         Set<ModelEntity> implicitTypes = new HashSet<ModelEntity>();
-        for ( ModelEntity ancestor : ancestors() ) {
-            implicitTypes.addAll( ancestor.getAllTypes() );
+        if ( !visited.contains( this ) ) {
+            visited.add( this );
+            if ( isActual() ) {
+                for ( ModelEntity ancestor : ancestors() ) {
+                    implicitTypes.addAll( ancestor.safeAllTypes( visited ) );
+                }
+            }
         }
         return new ArrayList<ModelEntity>( implicitTypes );
     }
@@ -252,7 +257,7 @@ public class Organization extends AbstractUnicastChannelable
      */
     public List<Organization> ancestors() {
         List<Organization> results = selfAndAncestors();
-        results.remove(  this );
+        results.remove( this );
         return results;
         /*Set<Organization> visited = new HashSet<Organization>();
         safeAncestors( visited );
@@ -465,6 +470,7 @@ public class Organization extends AbstractUnicastChannelable
 
     /**
      * Whether a job is confirmed.
+     *
      * @param job a job
      * @return a boolean
      */

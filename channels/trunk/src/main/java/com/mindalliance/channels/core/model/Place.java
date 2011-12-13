@@ -102,22 +102,23 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     }
 
     @Override
-    public List<ModelEntity> getImplicitTypes() {
-        List<ModelEntity> implicitTypes = super.getImplicitTypes();
-
-        GeoLocation geo = getLocationBasis();
-        String actualAddress = getActualStreetAddress();
-        if ( ( actualAddress == null || actualAddress.isEmpty() ) && geo != null ) {
-            if ( geo.isCity() )
-                implicitTypes.add( City );
-            else if ( geo.isCounty() )
-                implicitTypes.add( County );
-            else if ( geo.isState() )
-                implicitTypes.add( State );
-            else if ( geo.isCountry() )
-                implicitTypes.add( Country );
+    protected List<ModelEntity> safeImplicitTypes( Set<ModelEntity> visited ) {
+        Set<ModelEntity> implicitTypes = new HashSet<ModelEntity>();
+        if ( !visited.contains( this ) ) {
+            GeoLocation geo = getLocationBasis();
+            String actualAddress = getActualStreetAddress();
+            if ( ( actualAddress == null || actualAddress.isEmpty() ) && geo != null ) {
+                if ( geo.isCity() )
+                    implicitTypes.add( City );
+                else if ( geo.isCounty() )
+                    implicitTypes.add( County );
+                else if ( geo.isState() )
+                    implicitTypes.add( State );
+                else if ( geo.isCountry() )
+                    implicitTypes.add( Country );
+            }
         }
-        return implicitTypes;
+        return new ArrayList<ModelEntity>( implicitTypes );
     }
 
     @Override
@@ -130,6 +131,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
     /**
      * Street address.
+     *
      * @return the address
      */
     public String getStreetAddress() {
@@ -142,6 +144,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
     /**
      * A string denoting a geolocation. Null if not set. Set if empty.
+     *
      * @return the geoname
      */
     public String getGeoname() {
@@ -162,6 +165,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
     /**
      * Return the postal code.
+     *
      * @return the postal code
      */
     public String getPostalCode() {
@@ -201,7 +205,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     @Override
     public boolean isInvalid( Place locale ) {
         return super.isInvalid( locale )
-            || isCircular( locale );
+                || isCircular( locale );
     }
 
     /**
@@ -213,8 +217,8 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      */
     public boolean isAbsolute( Place locale ) {
         if ( mustContain.isSpecified( locale )
-             || mustBeContainedIn.isSpecified( locale )
-             || within != null && !within.isAbsolute( locale ) )
+                || mustBeContainedIn.isSpecified( locale )
+                || within != null && !within.isAbsolute( locale ) )
 
             return false;
 
@@ -227,8 +231,8 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
     private boolean isCircular( Place locale ) {
         return isWithinCircular( new HashSet<Place>() )
-            || isMustContainCircular( new HashSet<Place>(), locale )
-            || isMustBeContainedInCircular( new HashSet<Place>(), locale );
+                || isMustContainCircular( new HashSet<Place>(), locale )
+                || isMustBeContainedInCircular( new HashSet<Place>(), locale );
     }
 
     private boolean isMustContainCircular( Set<Place> visited, Place locale ) {
@@ -239,8 +243,8 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
         Place content = mustContain.getReferencedPlace( locale );
         return content != null
-            && ( !mustContain.isPlanReferenced() || content.isAbsolute( locale ) )
-            && content.isMustContainCircular( visited, locale );
+                && ( !mustContain.isPlanReferenced() || content.isAbsolute( locale ) )
+                && content.isMustContainCircular( visited, locale );
     }
 
     private boolean isMustBeContainedInCircular( Set<Place> visited, Place locale ) {
@@ -251,8 +255,8 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
         Place container = mustBeContainedIn.getReferencedPlace( locale );
         return container != null
-            && ( !mustBeContainedIn.isPlanReferenced() || container.isAbsolute( locale ) )
-            && container.isMustBeContainedInCircular( visited, locale );
+                && ( !mustBeContainedIn.isPlanReferenced() || container.isAbsolute( locale ) )
+                && container.isMustBeContainedInCircular( visited, locale );
     }
 
     private boolean isWithinCircular( Set<Place> visited ) {
@@ -267,8 +271,8 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     public boolean narrowsOrEquals( ModelEntity other, Place locale ) {
         // a place narrows another place if it or one of its parent is within the other place
         return super.narrowsOrEquals( other, locale )
-            || other instanceof Place && !other.isInvalid( locale )
-                                      && matchesOrIsInside( (Place) other, locale );
+                || other instanceof Place && !other.isInvalid( locale )
+                && matchesOrIsInside( (Place) other, locale );
     }
 
     @Override
@@ -320,7 +324,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      */
     public static boolean samePlace( Place place, Place other ) {
         return place == null ? other == null || UNKNOWN.equals( other )
-                             : other != null && place.equals( other );
+                : other != null && place.equals( other );
     }
 
     /**
@@ -345,7 +349,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         return containers;
     }
 
-  @Override
+    @Override
     public Place getPlaceBasis() {
         GeoLocation geoLoc = getGeoLocation();
         if ( geoLoc == null )
@@ -358,6 +362,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
     /**
      * Find the geoLocation on which this place is based on.
+     *
      * @return a geoLocation
      */
     public GeoLocation getLocationBasis() {
@@ -444,6 +449,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
     /**
      * Geolocation for the geoname, if any.
+     *
      * @return the resolved location or null
      */
     public GeoLocation getGeoLocation() {
@@ -474,7 +480,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     /**
      * Whether this place is the same as or is inside another by definition or by geolocation.
      *
-     * @param place a place
+     * @param place  a place
      * @param locale the default locale
      * @return a boolean
      */
@@ -484,9 +490,9 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
         GeoLocation loc = getLocationBasis();
         return isActual()
-            && place.isActual()
-            && loc != null
-            && loc.isInside( place.getLocationBasis() );
+                && place.isActual()
+                && loc != null
+                && loc.isInside( place.getLocationBasis() );
     }
 
     /**
@@ -523,7 +529,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
      * Whether this place is within another.
      * Checks if any of my parent places is a given place.
      *
-     * @param place a place
+     * @param place  a place
      * @param locale the default location
      * @return a boolean
      */
@@ -557,11 +563,12 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
     @Override
     public boolean references( ModelObject mo ) {
         return super.references( mo ) || ModelObject.areIdentical( within, mo )
-               || mustBeContainedIn.references( mo ) || mustContain.references( mo );
+                || mustBeContainedIn.references( mo ) || mustContain.references( mo );
     }
 
     /**
      * Get the implied actor.
+     *
      * @return the actor, or null if any
      */
     @Override
@@ -571,6 +578,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
     /**
      * Get the implied role.
+     *
      * @return the role, or null if any
      */
     @Override
@@ -580,6 +588,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
     /**
      * Get the implied organization.
+     *
      * @return the organization, or null if any
      */
     @Override
@@ -589,6 +598,7 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
 
     /**
      * Get the implied jurisdiction.
+     *
      * @return the jurisdiction, or null if any
      */
     @Override
