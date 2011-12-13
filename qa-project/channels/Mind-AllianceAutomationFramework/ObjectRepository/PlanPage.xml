@@ -162,9 +162,9 @@
 <xPathSendInfoTagsLink>//span/div/div[3]/div[3]/div[2]/div/div/div/table/tbodytr[2]/th/label/a</xPathSendInfoTagsLink>
 <xPathReceiveInfoTagsLink>//span/div/div[3]/div[2]/div[2]/div/div/div/table/tbodytr[2]/th/label/a</xPathReceiveInfoTagsLink>
 <xPathIssueSummaryReportSendFeedbackCancel>/html/body/div/div/span/div/div/div/div/div[4]/input</xPathIssueSummaryReportSendFeedbackCancel>
-<xPathShowAdvanceSimpleFormOfTask>//span/div/div[3]/div[@class='part-header']/div[@class='section-content']/table/tbody/tr/td[@class='pointer']/span[2]</xPathShowAdvanceSimpleFormOfTask>
-<xPathShowAdvanceSimpleFormReceiveInfo>//span/div/div[3]/div[2]/div[2]/div/div/span[2]</xPathShowAdvanceSimpleFormReceiveInfo>
-<xPathShowAdvanceSimpleFormSendInfo>/span/div/div[3]/div[3]/div[2]/div/div/span[2]</xPathShowAdvanceSimpleFormSendInfo>
+<xPathShowAdvanceSimpleFormOfTask>//*[@class='simple-advanced']</xPathShowAdvanceSimpleFormOfTask>
+<xPathShowAdvanceSimpleFormReceiveInfo>//*[@class='simple-advanced']</xPathShowAdvanceSimpleFormReceiveInfo>
+<xPathShowAdvanceSimpleFormSendInfo>//*[@class='simple-advanced']</xPathShowAdvanceSimpleFormSendInfo>
 <xPathSendMessageSocialPanel>//div[2]/div[2]/div[3]/span/div/div/div[2]/div[4]/input</xPathSendMessageSocialPanel>
 <xPathSendMessageAndEmailSocialPanel>//div[2]/div[2]/div[3]/span/div/div/div[2]/div[4]/input[2]</xPathSendMessageAndEmailSocialPanel>
 <xPathResetMessageSocialPanel>//div[2]/div[2]/div[3]/span/div/div/div[2]/div[4]/input[3]</xPathResetMessageSocialPanel>
