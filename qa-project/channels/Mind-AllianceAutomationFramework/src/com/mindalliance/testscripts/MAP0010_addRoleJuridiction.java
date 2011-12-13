@@ -81,8 +81,7 @@ public class MAP0010_addRoleJuridiction
 				    Thread.currentThread();
 				    Thread.sleep(3000);
 				    // enter into the text box the name of organization
-				    GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrg"))).click();
-					GlobalVariables.oElement =GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrg")));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 					String sOrgName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sOrgName);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);
@@ -131,9 +130,9 @@ public class MAP0010_addRoleJuridiction
 					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
 					
-					// Enter  Role, Title, Jurisdiction and supervisor for an agent inside 'Job' section
+					// Enter  Egent details
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Details Entered";
 					String Agent="Agent 1";
@@ -144,35 +143,35 @@ public class MAP0010_addRoleJuridiction
 						GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
 					}
 					// agent name
-					GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrgAgentName"))).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrgAgentName")));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field"));
 					GlobalVariables.oElement.sendKeys(Agent);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
 					// Title
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrgAgentTitle")));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Title"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Role
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrgAgentRole")));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Role"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Jury
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrgAgentJurisdiction")));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Jurisdiction"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Supervisor
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrgAgentSupervisor")));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Supervisor"));
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -210,6 +209,34 @@ public class MAP0010_addRoleJuridiction
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
+					// Clear details
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					// Check box
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed")).click();
+					 // WebElement Synchronization
+				    Thread.currentThread();
+				    Thread.sleep(3000);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);					
+					// Click on Organization
+					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					// Remove Organization
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

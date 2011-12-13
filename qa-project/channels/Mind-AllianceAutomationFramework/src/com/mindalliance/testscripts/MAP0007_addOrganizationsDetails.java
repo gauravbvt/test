@@ -82,18 +82,14 @@ public class MAP0007_addOrganizationsDetails
 					
 					// Enter name of organization in 'Other organization that should be assigned tasks ' field
 					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Name Entered";
-					GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrg"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrg")));
+					GlobalVariables.sDescription = "Name Entered";
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 					String sOrgName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sOrgName);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);			
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(2000);	
 					// Assertion: Verify that organization should get added to plan
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName));
 					if (GlobalVariables.oElement.getText().equals(sOrgName)) {
@@ -103,15 +99,20 @@ public class MAP0007_addOrganizationsDetails
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName+"' "+" Actual "+GlobalVariables.oElement.getText();
-				    	// Write Results
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName+"'"+" Actual "+GlobalVariables.oElement.getText();
+						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);		
+					Thread.sleep(2000);	
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
 					
 					//  Enter the details about the selected organization in the details form.
 					GlobalVariables.iStepNo++;
@@ -149,11 +150,11 @@ public class MAP0007_addOrganizationsDetails
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Org details are entered";
 					// writing details
-					GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddDescription"))).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddDescription")));
-					for (int i = 0; i <= 50; i++)
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:description")).click();
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:description"));
+					for(int i=0;i<20;i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys("This is an Description");
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Organizations Description"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);

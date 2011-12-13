@@ -87,18 +87,14 @@ public class MAP0006_addOrganizations
 					
 					// Enter name of organization in 'Other organization that should be assigned tasks ' field
 					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Name Entered";
-					GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrg"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrg")));
+					GlobalVariables.sDescription = "Name Entered";
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 					String sOrgName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sOrgName);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);			
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);	
+					Thread.sleep(2000);	
 					// Assertion: Verify that organization should get added to plan
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName));
 					if (GlobalVariables.oElement.getText().equals(sOrgName)) {
@@ -116,7 +112,12 @@ public class MAP0006_addOrganizations
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);		
+					Thread.sleep(2000);	
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
+					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);	
 					
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;

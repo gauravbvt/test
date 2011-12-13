@@ -87,15 +87,14 @@ public class MAP0008_removeExpectation
 					
 					// Enter name of organization in 'Other organization that should be assigned tasks ' field
 					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Name Entered";
-					GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrg"))).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name(GlobalVariables.planPageByName.get("byNameAddOrg")));
+					GlobalVariables.sDescription = "Name Entered";
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
 					String sOrgName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sOrgName);
 					GlobalVariables.oElement.sendKeys(Keys.ENTER);			
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(2000);	
 					// Assertion: Verify that organization should get added to plan
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName));
 					if (GlobalVariables.oElement.getText().equals(sOrgName)) {
@@ -105,15 +104,15 @@ public class MAP0008_removeExpectation
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName+"' "+" Actual "+GlobalVariables.oElement.getText();
-				    	// Write Results
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName+"'"+" Actual "+GlobalVariables.oElement.getText();
+						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);		
+					Thread.sleep(2000);	
 					
 					// Remove Expectations from organization
 					GlobalVariables.iStepNo++;
