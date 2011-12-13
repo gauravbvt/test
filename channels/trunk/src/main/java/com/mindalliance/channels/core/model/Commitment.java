@@ -147,6 +147,6 @@ public class Commitment implements Serializable {
     }
 
     public boolean isToSelf() {
-        return getSharing().isToSelf();
+          return getSharing().isToSelf() || getCommitter().getActor().equals( getBeneficiary().getActor() );
     }
 }

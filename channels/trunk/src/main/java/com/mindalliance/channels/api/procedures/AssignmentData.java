@@ -7,7 +7,6 @@ import com.mindalliance.channels.core.query.PlanService;
 
 import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,7 +21,6 @@ import java.util.Set;
  * Date: 12/8/11
  * Time: 3:57 PM
  */
-@XmlRootElement( name = "assignedTask", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"task", "inNotifications", "inReplies", "outNotifications", "outReplies", "discoveries", "research"} )
 public class AssignmentData extends AbstractProcedureElementData {
 
@@ -56,7 +54,7 @@ public class AssignmentData extends AbstractProcedureElementData {
             for ( Commitment inNotification : inNotifications() ) {
                 boolean benefiting = true;
                 inNotifications.add( new NotificationData(
-                        inNotification.getSharing(),
+                        inNotification,
                         benefiting,
                         getAssignment(),
                         getPlanService() ) );
@@ -72,7 +70,7 @@ public class AssignmentData extends AbstractProcedureElementData {
             for ( Commitment inReply : inReplies() ) {
                 boolean benefiting = true;
                 inReplies.add( new RequestData(
-                        inReply.getSharing(),
+                        inReply,
                         benefiting,
                         getAssignment(),
                         getPlanService() ) );
@@ -88,7 +86,7 @@ public class AssignmentData extends AbstractProcedureElementData {
             for ( Commitment outNotification : outNotifications() ) {
                 boolean benefiting = false;
                 outNotifications.add( new NotificationData(
-                        outNotification.getSharing(),
+                        outNotification,
                         benefiting,
                         getAssignment(),
                         getPlanService() ) );
@@ -104,7 +102,7 @@ public class AssignmentData extends AbstractProcedureElementData {
             for ( Commitment outReply : outReplies() ) {
                 boolean benefiting = false;
                 outReplies.add( new RequestData(
-                        outReply.getSharing(),
+                        outReply,
                         benefiting,
                         getAssignment(),
                         getPlanService() ) );

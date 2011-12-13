@@ -53,6 +53,13 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         return allCommitments;
     }
 
+    public static Commitments all( QueryService queryService, Boolean includeToSelf, Boolean includeUnknowns ) {
+        Commitments allCommitments = new Commitments( queryService.getPlan().getLocale() );
+        allCommitments.addAll( queryService.findAllCommitments( includeToSelf, includeUnknowns ) );
+        return allCommitments;
+    }
+
+
 
     public Commitments( QueryService queryService, Specable profile, Assignments assignments ) {
         planLocale = queryService.getPlan().getLocale();
@@ -182,12 +189,12 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         return result;
     }
 
-    public Commitments realizable( Analyst analyst, Plan plan ) {
+    public Commitments realizable( Analyst analyst, Plan plan, QueryService queryService ) {
         Commitments result = new Commitments( planLocale );
         Iterator<Commitment> iterator = iterator();
         while ( iterator.hasNext() ) {
             Commitment commitment = iterator.next();
-            if ( analyst.canBeRealized( commitment, plan ) )
+            if ( analyst.canBeRealized( commitment, plan, queryService ) )
                 result.add( commitment );
         }
         return result;

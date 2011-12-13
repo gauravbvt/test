@@ -251,11 +251,21 @@ public class Organization extends AbstractUnicastChannelable
      * @return a list of organizations, without this one
      */
     public List<Organization> ancestors() {
-        Set<Organization> visited = new HashSet<Organization>();
+        List<Organization> results = selfAndAncestors();
+        results.remove(  this );
+        return results;
+        /*Set<Organization> visited = new HashSet<Organization>();
         safeAncestors( visited );
         visited.remove( this );
+        return new ArrayList<Organization>( visited );*/
+    }
+
+    public List<Organization> selfAndAncestors() {
+        Set<Organization> visited = new HashSet<Organization>();
+        safeAncestors( visited );
         return new ArrayList<Organization>( visited );
     }
+
 
     private void safeAncestors( Set<Organization> visited ) {
         if ( !visited.contains( this ) ) {

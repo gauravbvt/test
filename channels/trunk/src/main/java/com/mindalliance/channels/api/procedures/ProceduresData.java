@@ -73,7 +73,7 @@ public class ProceduresData {
     public List<ProcedureData> getProcedures() {
         if ( procedures == null ) {
             procedures = new ArrayList<ProcedureData>();
-            Commitments allCommitments = planService.getAllCommitments( true );
+            Commitments allCommitments = planService.getAllCommitments( true, false );
             for ( Assignment assignment : getActorAssignments() ) {
                 procedures.add( new ProcedureData(
                         assignment,

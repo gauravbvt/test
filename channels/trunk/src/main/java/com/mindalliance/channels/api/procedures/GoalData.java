@@ -3,7 +3,6 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.core.model.Goal;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -14,7 +13,6 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 12/7/11
  * Time: 7:20 PM
  */
-@XmlRootElement( name = "goal", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"kind", "name", "description", "category", "level", "organizationId"} )
 public class GoalData {
 

@@ -1,10 +1,10 @@
 package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.api.ModelObjectData;
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.Phase;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -15,8 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 11/30/11
  * Time: 1:55 PM
  */
-@XmlRootElement( name = "phase", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"id", "name", "timing"} )
+@XmlType( propOrder = {"id", "name", "timing", "documentation"} )
 public class PhaseData extends ModelObjectData {
 
     public PhaseData() {
@@ -42,6 +41,12 @@ public class PhaseData extends ModelObjectData {
     @XmlElement
     public String getTiming() {
         return getPhase().getTiming().getLabel();
+    }
+
+    @XmlElement
+    @Override
+    public DocumentationData getDocumentation() {
+        return super.getDocumentation();
     }
 
     private Phase getPhase() {

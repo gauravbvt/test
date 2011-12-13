@@ -5,9 +5,9 @@ import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -42,8 +42,10 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
                 List<Commitment> commitments = actorCommitments.get( actor );
                 if ( !commitments.isEmpty() ) {
                     for ( Commitment commitment : commitments ) {
-                        allProblems.addAll( getAnalyst().findRealizabilityProblems( queryService.getPlan(),
-                                                                                    commitment ) );
+                        allProblems.addAll( getAnalyst().findRealizabilityProblems(
+                                queryService.getPlan(),
+                                commitment,
+                                queryService ) );
                     }
                     if ( flow.isAll() && commitments.size() > 1 ) {
                         if ( !allProblems.isEmpty() ) {
@@ -66,8 +68,10 @@ public class AgentCanNotFulfillSharingResponsibilities extends AbstractIssueDete
                                 new Predicate() {
                                     @Override
                                     public boolean evaluate( Object object ) {
-                                        return getAnalyst().findRealizabilityProblems( queryService.getPlan(),
-                                                                                       (Commitment) object ).isEmpty();
+                                        return getAnalyst().findRealizabilityProblems(
+                                                queryService.getPlan(),
+                                                (Commitment) object,
+                                                queryService ).isEmpty();
                                     }
                                 }
                         );

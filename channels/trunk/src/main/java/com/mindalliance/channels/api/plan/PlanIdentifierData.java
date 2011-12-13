@@ -3,7 +3,6 @@ package com.mindalliance.channels.api.plan;
 import com.mindalliance.channels.core.model.Plan;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -14,7 +13,6 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 12/1/11
  * Time: 11:28 AM
  */
-@XmlRootElement( name = "identifier", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"uri", "name", "version"} )
 public class PlanIdentifierData {
 

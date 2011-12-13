@@ -3,7 +3,6 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.core.model.EventTiming;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -14,7 +13,6 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 12/8/11
  * Time: 4:14 PM
  */
-@XmlRootElement( name = "context", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = { "event", "timing" } )
 
 public class EventTimingData {

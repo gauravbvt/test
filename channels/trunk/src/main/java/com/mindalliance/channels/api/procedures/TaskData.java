@@ -10,7 +10,6 @@ import com.mindalliance.channels.core.query.PlanService;
 
 import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +22,7 @@ import java.util.List;
  * Date: 12/6/11
  * Time: 10:27 AM
  */
-@XmlRootElement( name = "task", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"name", "category", "location", "instructions", "teamMates", "goals", "failureImpact"} )
+@XmlType( propOrder = {"name", "category", "location", "instructions", "teamMates", "goals", "failureImpact", "documentation"} )
 public class TaskData extends AbstractProcedureElementData {
 
     private Part part;
@@ -97,6 +95,11 @@ public class TaskData extends AbstractProcedureElementData {
     public String getFailureImpact() {
          return getPlanService().computePartPriority( getPart() ).getNegativeLabel();
      }
+
+    @XmlElement
+    public DocumentationData getDocumentation() {
+        return new DocumentationData( getPart() );
+    }
 
     private List<Assignment> otherTeamAssignments() {
         List<Assignment> otherAssignments = new ArrayList<Assignment>();

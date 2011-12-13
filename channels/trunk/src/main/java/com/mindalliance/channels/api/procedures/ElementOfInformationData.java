@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,6 @@ import java.util.List;
  * Date: 12/6/11
  * Time: 2:06 PM
  */
-@XmlRootElement( name = "eoi", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"name", "description", "classifications", "specialHandling"} )
 public class ElementOfInformationData {
 

@@ -13,6 +13,8 @@ import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.query.PlanService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -34,6 +36,12 @@ import java.util.List;
         endpointInterface = "com.mindalliance.channels.api.ChannelsService"
 )
 public class ChannelsServiceImpl implements ChannelsService {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( ChannelsServiceImpl.class );
+
 
     private PlanManager planManager;
     private SemanticMatcher semanticMatcher;
@@ -109,8 +117,14 @@ public class ChannelsServiceImpl implements ChannelsService {
     @Override
     public ProceduresData getProcedures( String uri, String actorId ) {
         User user = User.current();
-        Plan plan = planManager.findProductionPlan( uri );
+        Plan plan = null;
+        try {
+            plan = planManager.findProductionPlan( uri );
+        } catch ( Exception e ) {
+            LOG.error( "Plan not found " + uri );
+        }
         if ( plan == null || user.getRole( uri ).equals( User.UNAUTHORIZED ) ) {
+            LOG.error( user.getUsername() + " is not authorized to access plan " + uri );
             throw new WebApplicationException(
                     Response
                             .status( Response.Status.BAD_REQUEST )
@@ -126,9 +140,13 @@ public class ChannelsServiceImpl implements ChannelsService {
                             actor,
                             planService );
                 } else {
+                    LOG.error( user.getUsername()
+                            + " is not authorized to access procedures of agent " + actorId
+                            + " in plan " + uri );
                     throw new Exception( "Procedures are not visible" );
                 }
             } catch ( Exception e ) {
+                LOG.error( e.getMessage(), e );
                 throw new WebApplicationException(
                         Response
                                 .status( Response.Status.BAD_REQUEST )

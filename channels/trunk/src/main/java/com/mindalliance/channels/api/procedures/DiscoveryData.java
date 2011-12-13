@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Web Service data element for a discovery made by an agent.
@@ -15,7 +14,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Date: 12/6/11
  * Time: 12:49 PM
  */
-@XmlRootElement( name = "discovery", namespace = "http://mind-alliance.com/api/isp/v1/" )
 public class DiscoveryData {
 
     private EventPhase eventPhase;

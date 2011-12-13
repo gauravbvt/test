@@ -2,13 +2,13 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,8 +23,8 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 12:49 PM
  */
-@XmlRootElement( name = "notification", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"information", "intent", "receiptConfirmationRequested", "instructions", "contactAll", "maxDelay", "employments", "mediumIds", "failureImpact", "consumingTask"} )
+@XmlType( propOrder = {"information", "intent", "receiptConfirmationRequested", "instructions", "contactAll",
+        "maxDelay", "employments", "mediumIds", "failureImpact", "consumingTask", "documentation", "agreements"} )
 public class NotificationData extends AbstractFlowData {
 
     private boolean consuming;
@@ -34,11 +34,11 @@ public class NotificationData extends AbstractFlowData {
     }
 
     public NotificationData(
-            Flow notification,
+            Commitment notificationCommitment,
             boolean consuming,
             Assignment assignment,
             PlanService planService ) {
-        super( notification, assignment, planService );
+        super( notificationCommitment, assignment, planService );
         this.consuming = consuming;
     }
 
@@ -103,6 +103,18 @@ public class NotificationData extends AbstractFlowData {
             return null;
         else
             return new TaskData( getNotification().getContactedPart(), getPlanService() );
+    }
+
+    @XmlElement
+    @Override
+    public DocumentationData getDocumentation() {
+        return super.getDocumentation();
+    }
+
+    @Override
+    @XmlElement( name = "agreement" )
+    public List<AgreementData> getAgreements() {
+        return super.getAgreements();
     }
 
     protected List<Employment> contacts() {

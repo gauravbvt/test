@@ -637,8 +637,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public Boolean canBeRealized( Commitment commitment, Plan plan ) {
-        return findRealizabilityProblems( plan, commitment ).isEmpty();
+    public Boolean canBeRealized( Commitment commitment, Plan plan, QueryService queryService ) {
+        return findRealizabilityProblems( plan, commitment, queryService ).isEmpty();
     }
 
 
@@ -979,10 +979,6 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         } );
     }
 
-    private boolean isAgreedToIfRequired( Commitment commitment ) {
-        return false;
-    }
-
     @Override
     public boolean isSomeMediaDeployed( final Commitment commitment, List<TransmissionMedium> mediaUsed,
                                         final Place planLocale ) {
@@ -1062,18 +1058,18 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     @Override
     public String realizability( Commitment commitment, QueryService queryService ) {
-        List<String> problems = findRealizabilityProblems( queryService.getPlan(), commitment );
+        List<String> problems = findRealizabilityProblems( queryService.getPlan(), commitment, queryService );
         return problems.isEmpty() ?
                 "Yes" :
                 "No: " + StringUtils.capitalize( ChannelsUtils.listToString( problems, ", and " ) );
     }
 
     @Override
-    public List<String> findRealizabilityProblems( Plan plan, Commitment commitment ) {
+    public List<String> findRealizabilityProblems( Plan plan, Commitment commitment, QueryService queryService ) {
         List<String> problems = new ArrayList<String>();
         List<TransmissionMedium> mediaUsed = commitment.getSharing().transmissionMedia();
         Place planLocale = plan.getLocale();
-        if ( !isAgreedToIfRequired( commitment ) )
+        if ( !queryService.isAgreedToIfRequired( commitment ) )
             problems.add( "sharing not agreed to as required" );
         if ( !isAvailabilitiesCoincideIfRequired( commitment, mediaUsed, planLocale ) )
             problems.add( "availabilities do not coincide as they must" );

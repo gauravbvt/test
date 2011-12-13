@@ -1,10 +1,10 @@
 package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
@@ -16,8 +16,7 @@ import java.util.List;
  * Date: 11/30/11
  * Time: 2:44 PM
  */
-@XmlRootElement( name = "place", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"id", "name", "kind", "categories", "streetAddress", "postalCode", "geolocation"} )
+@XmlType( propOrder = {"id", "name", "kind", "categories", "streetAddress", "postalCode", "geolocation", "documentation"} )
 public class PlaceData extends ModelEntityData {
 
     public PlaceData() {
@@ -72,6 +71,12 @@ public class PlaceData extends ModelEntityData {
         return getPlace().getGeoLocation() != null
                 ? new GeoLocationData( getPlace().getGeoLocation() )
                 : null;
+    }
+
+    @XmlElement
+    @Override
+    public DocumentationData getDocumentation() {
+        return super.getDocumentation();
     }
     
     private Place getPlace() {

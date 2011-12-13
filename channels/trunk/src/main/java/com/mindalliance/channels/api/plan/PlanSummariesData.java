@@ -12,7 +12,7 @@ import java.util.List;
  * Date: 12/1/11
  * Time: 11:20 AM
  */
-@XmlRootElement( name = "plan", namespace = "http://mind-alliance.com/api/isp/v1/" )
+@XmlRootElement( name = "planSummary", namespace = "http://mind-alliance.com/api/isp/v1/" )
 public class PlanSummariesData {
 
     private List<PlanSummaryData> planSummaries;

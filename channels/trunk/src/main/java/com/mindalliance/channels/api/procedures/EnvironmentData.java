@@ -21,7 +21,6 @@ import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,7 +35,6 @@ import java.util.Set;
  * Date: 12/9/11
  * Time: 3:43 PM
  */
-@XmlRootElement( name = "environment", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"events", "phases", "organizations", "actors", "roles", "places", "media"} )
 public class EnvironmentData {
 

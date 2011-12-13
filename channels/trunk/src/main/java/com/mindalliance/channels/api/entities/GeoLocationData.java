@@ -3,7 +3,6 @@ package com.mindalliance.channels.api.entities;
 import com.mindalliance.channels.core.model.GeoLocation;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -14,7 +13,6 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 11/30/11
  * Time: 3:18 PM
  */
-@XmlRootElement( name = "geolocation", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"city", "county", "state", "country"} )
 public class GeoLocationData {
 

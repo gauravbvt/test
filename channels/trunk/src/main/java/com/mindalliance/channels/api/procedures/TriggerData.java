@@ -3,12 +3,10 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.EventPhase;
-import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,11 +18,10 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:16 AM
  */
-@XmlRootElement( name = "trigger", namespace = "http://mind-alliance.com/api/isp/v1/" )
 public class TriggerData extends AbstractProcedureElementData {
 
-    private Flow notification;
-    private Flow request;
+    private Commitment notification;
+    private Commitment request;
     private EventPhase eventPhase;
     private Commitment notificationToSelf;
     private NotificationData onNotification;
@@ -39,11 +36,11 @@ public class TriggerData extends AbstractProcedureElementData {
         super( assignment, planService );
     }
 
-    public void setNotification( Flow notification ) {
+    public void setNotification( Commitment notification ) {
         this.notification = notification;
     }
 
-    public void setRequest( Flow request ) {
+    public void setRequest( Commitment request ) {
         this.request = request;
     }
 

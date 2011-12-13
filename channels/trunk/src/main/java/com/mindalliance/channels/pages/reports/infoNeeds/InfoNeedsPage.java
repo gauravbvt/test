@@ -69,10 +69,14 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         super( AllInfoNeedsPage.class, parameters );
     }
 
-    private static Commitments realizable( Commitments allCommitments, Analyst analyst, Plan plan ) {
+    private static Commitments realizable(
+            Commitments allCommitments,
+            Analyst analyst,
+            Plan plan,
+            QueryService queryService ) {
         Commitments result = new Commitments();
         for ( Commitment commitment : allCommitments )
-            if ( analyst.canBeRealized( commitment, plan ) )
+            if ( analyst.canBeRealized( commitment, plan, queryService ) )
                 result.add( commitment );
 
         return result;
@@ -203,7 +207,10 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         Assignments allAssignments = queryService.getAssignments( false, false );
         Assignments assignments = allAssignments.with( profile );
         Commitments commitments = realizable(
-            new Commitments( queryService, profile, allAssignments ), getAnalyst(), queryService.getPlan() );
+            new Commitments( queryService, profile, allAssignments ),
+                getAnalyst(),
+                queryService.getPlan(),
+                queryService );
 
         List<InfoNeedsReportSegment> reportSegments = new ArrayList<InfoNeedsReportSegment>();
         int i = 1;

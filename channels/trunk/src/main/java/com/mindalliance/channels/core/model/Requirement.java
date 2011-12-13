@@ -262,7 +262,7 @@ public class Requirement extends ModelObject implements Countable {
             boolean asBeneficiary,
             final Phase.Timing timing,
             final Event event,
-            QueryService queryService,
+            final QueryService queryService,
             final Analyst analyst ) {
         Satisfaction[] satisfactions = new Satisfaction[2];
         Satisfaction agentCountSatisfaction = null;
@@ -285,7 +285,7 @@ public class Requirement extends ModelObject implements Countable {
                             Commitment commitment = (Commitment) object;
                             return commitment.isInSituation( timing, event, plan.getLocale() )
                                     && satisfiedBy( commitment, planLocale )
-                                    && analyst.canBeRealized( commitment, plan );
+                                    && analyst.canBeRealized( commitment, plan, queryService );
                         }
                     }
             );

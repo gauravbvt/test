@@ -2,13 +2,13 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,11 +23,10 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 12:49 PM
  */
-@XmlRootElement( name = "request", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"information", "intent", "receiptConfirmationRequested", "instructions", "contactAll", "maxDelay", "employments", "mediumIds", "failureImpact","consumingTask"} )
+@XmlType( propOrder = {"information", "intent", "receiptConfirmationRequested", "instructions", "contactAll",
+        "maxDelay", "employments", "mediumIds", "failureImpact","consumingTask", "agreements", "documentation"} )
 public class RequestData extends AbstractFlowData {
 
-    private Flow request;
     /**
      * Whether the assignment is issuing a request (false) or a reply (true).
      */
@@ -38,12 +37,11 @@ public class RequestData extends AbstractFlowData {
     }
 
     public RequestData(
-            Flow request,
+            Commitment requestCommitment,
             boolean replying,
             Assignment assignment,
             PlanService planService ) {
-        super( request, assignment, planService );
-        this.request = request;
+        super( requestCommitment, assignment, planService );
         this.replying = replying;
     }
 
@@ -109,12 +107,23 @@ public class RequestData extends AbstractFlowData {
             return new TaskData( (Part)getRequest().getTarget(), getPlanService() );
     }
 
+    @Override
+    @XmlElement( name = "agreement" )
+    public List<AgreementData> getAgreements() {
+        return super.getAgreements();
+    }
+
+    @XmlElement
+    @Override
+    public DocumentationData getDocumentation() {
+        return super.getDocumentation();
+    }
 
     protected List<Employment> contacts() {
         Set<Employment> contacts = new HashSet<Employment>(  );
         Part part = replying
-                ? (Part)request.getTarget() :
-                (Part)request.getSource();
+                ? (Part)getSharing().getTarget() :
+                (Part)getSharing().getSource();
         for (Assignment otherAssignment : getPlanService().findAllAssignments( part, false ) ) {
             Employment employment = otherAssignment.getEmployment();
             if ( !employment.getActor().equals( getAssignment().getActor() ) ) {

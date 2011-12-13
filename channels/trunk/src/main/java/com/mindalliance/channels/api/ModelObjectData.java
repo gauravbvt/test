@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api;
 
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.ModelObject;
 
 /**
@@ -28,6 +29,10 @@ abstract public class ModelObjectData {
 
     public String getName() {
         return modelObject.getName();
+    }
+
+    public DocumentationData getDocumentation() {
+        return new DocumentationData( modelObject );
     }
 
     protected ModelObject getModelObject() {

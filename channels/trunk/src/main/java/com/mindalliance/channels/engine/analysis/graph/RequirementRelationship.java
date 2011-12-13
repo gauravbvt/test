@@ -100,7 +100,7 @@ public class RequirementRelationship extends Relationship<Organization> {
                 Commitment commitment = commitmentIterator.next();
                 fulfilled = commitment.isInSituation( timing, event, planLocale )
                         && req.satisfiedBy( commitment, planLocale )
-                        && analyst.canBeRealized( commitment, plan );
+                        && analyst.canBeRealized( commitment, plan, queryService );
             }
             if ( !fulfilled )
                 unfulfilled.add( req );

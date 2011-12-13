@@ -203,18 +203,20 @@ public interface Analyst extends CommandListener {
      * Whether a commitment can be realized.
      * @param commitment a commitment
      * @param plan a plan
+     * @param queryService a query service
      * @return a Boolean
      */
-    Boolean canBeRealized( Commitment commitment, Plan plan );
+    Boolean canBeRealized( Commitment commitment, Plan plan, QueryService queryService );
 
     /**
      * Find problem impeding realization of a commitment.
      *
      * @param plan       a plan
      * @param commitment an info sharing commitment
+     * @param queryService a query service
      * @return a boolean
      */
-    List<String> findRealizabilityProblems( Plan plan, Commitment commitment );
+    List<String> findRealizabilityProblems( Plan plan, Commitment commitment, QueryService queryService );
 
     /**
      * Find any relationship between a plan segment and another. A relationship is one or more external flow in the

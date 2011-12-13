@@ -31,7 +31,7 @@ import java.util.List;
  * Date: 11/29/11
  * Time: 1:25 PM
  */
-@XmlRootElement( name = "plan", namespace = "http://mind-alliance.com/api/isp/v1/" )
+@XmlRootElement( name = "planScope", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"identity", "phases", "places", "events", "roles", "organizations", "actors", "employments"} )
 public class PlanScopeData {
 

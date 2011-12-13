@@ -1,10 +1,10 @@
 package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelObject;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
@@ -16,8 +16,7 @@ import java.util.List;
  * Date: 12/1/11
  * Time: 10:02 AM
  */
-@XmlRootElement( name = "agent", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"id", "name", "categories", "kind"} )
+@XmlType( propOrder = {"id", "name", "categories", "kind", "documentation"} )
 public class ActorData extends ModelEntityData {
 
     public ActorData() {
@@ -49,6 +48,12 @@ public class ActorData extends ModelEntityData {
     @XmlElement
     public String getKind() {
         return super.getKind();
+    }
+
+    @XmlElement
+    @Override
+    public DocumentationData getDocumentation() {
+        return super.getDocumentation();
     }
 
     private Actor getActor() {

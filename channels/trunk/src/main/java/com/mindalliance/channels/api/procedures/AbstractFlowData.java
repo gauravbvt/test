@@ -1,7 +1,9 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
+import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.TransmissionMedium;
@@ -21,7 +23,7 @@ import java.util.Set;
  */
 public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
-    private Flow sharing;
+    private Commitment commitment;
     private List<EmploymentData> employments;
 
     public AbstractFlowData() {
@@ -29,29 +31,29 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     public AbstractFlowData(
-            Flow sharing,
+            Commitment commitment,
             Assignment assignment,
             PlanService planService ) {
         super( assignment, planService );
-        this.sharing = sharing;
+        this.commitment = commitment;
     }
 
     protected Flow getSharing() {
-        return sharing;
+        return commitment.getSharing();
     }
 
     public boolean getReceiptConfirmationRequested() {
-        return sharing.isReceiptConfirmationRequested();
+        return getSharing().isReceiptConfirmationRequested();
     }
 
     public InformationData getInformation() {
-        return new InformationData( sharing );
+        return new InformationData( getSharing() );
     }
 
     public String getIntent() {
-        return sharing.getIntent() == null
+        return getSharing().getIntent() == null
                 ? null
-                : sharing.getIntent().getLabel();
+                : getSharing().getIntent().getLabel();
     }
 
     public List<EmploymentData> getEmployments() {
@@ -66,29 +68,29 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public List<Long> getMediumIds() {
         List<Long> media = new ArrayList<Long>();
-        for ( TransmissionMedium medium : sharing.transmissionMedia() ) {
+        for ( TransmissionMedium medium : getSharing().transmissionMedia() ) {
             media.add( medium.getId() );
         }
         return media;
     }
 
     public boolean getContactAll() {
-        return sharing.isAll();
+        return getSharing().isAll();
     }
 
     public TimeDelayData getMaxDelay() {
-        return new TimeDelayData( sharing.getMaxDelay() );
+        return new TimeDelayData( getSharing().getMaxDelay() );
     }
 
     public String getInstructions() {
-        String instructions = sharing.getDescription();
+        String instructions = getSharing().getDescription();
         return instructions == null
                 ? null
                 : instructions;
     }
 
     public String getFailureImpact() {
-        return getPlanService().computeSharingPriority( sharing ).getNegativeLabel();
+        return getPlanService().computeSharingPriority( getSharing() ).getNegativeLabel();
     }
 
     public Set<Long> allOrganizationIds() {
@@ -104,7 +106,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         for ( EmploymentData employment : getEmployments() ) {
             ids.addAll( employment.allActorIds() );
         }
-        for ( TransmissionMedium medium : sharing.transmissionMedia() ) {
+        for ( TransmissionMedium medium : getSharing().transmissionMedia() ) {
             if ( medium.getQualification() != null )
                 ids.add( medium.getQualification().getId() );
         }
@@ -128,6 +130,17 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return ids;
     }
 
+    public List<AgreementData> getAgreements() {
+        List<AgreementData> agreements = new ArrayList<AgreementData>(  );
+        for ( Agreement agreement : getPlanService().findAllConfirmedAgreementsCovering( commitment ) ) {
+            agreements.add( new AgreementData( agreement ) );
+        }
+        return agreements;
+    }
+
+    public DocumentationData getDocumentation() {
+        return new DocumentationData( getSharing() );
+    }
 
     protected abstract List<Employment> contacts();
 

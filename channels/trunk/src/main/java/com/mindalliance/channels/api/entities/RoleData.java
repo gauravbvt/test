@@ -1,9 +1,9 @@
 package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.ModelObject;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
@@ -15,8 +15,7 @@ import java.util.List;
  * Date: 12/1/11
  * Time: 10:45 AM
  */
-@XmlRootElement( name = "role", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"id", "name", "categories"} )
+@XmlType( propOrder = {"id", "name", "categories", "documentation"} )
 public class RoleData extends ModelEntityData {
 
     public RoleData() {
@@ -43,6 +42,12 @@ public class RoleData extends ModelEntityData {
     @XmlElement( name = "categoryId" )
     public List<Long> getCategories() {
         return super.getCategories();
+    }
+
+    @XmlElement
+    @Override
+    public DocumentationData getDocumentation() {
+        return super.getDocumentation();
     }
 
 }

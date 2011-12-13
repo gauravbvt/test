@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.api.entities.ActorData;
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
@@ -8,7 +9,6 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +21,7 @@ import java.util.List;
  * Date: 12/12/11
  * Time: 1:36 PM
  */
-@XmlRootElement( name = "planSummary", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"planIdentifier", "description", "participation", "supervised"} )
+@XmlType( propOrder = {"planIdentifier", "description", "participation", "supervised", "documentation"} )
 
 public class PlanSummaryData {
 
@@ -61,6 +60,11 @@ public class PlanSummaryData {
             underlings.add(  new ActorData( underling ) );
         }
         return underlings;
+    }
+
+    @XmlElement
+    public DocumentationData getDocumentation() {
+        return new DocumentationData( getPlan() );
     }
 
     private Actor getParticipant() {

@@ -1,11 +1,11 @@
 package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,8 +20,7 @@ import java.util.Set;
  * Date: 11/30/11
  * Time: 10:36 AM
  */
-@XmlRootElement( name = "event", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"id", "name", "categories", "incident", "selfTerminating", "locationId", "plannedPhases"} )
+@XmlType( propOrder = {"id", "name", "categories", "incident", "selfTerminating", "locationId", "plannedPhases", "documentation"} )
 public class EventData extends ModelEntityData {
 
     private Plan plan;
@@ -77,6 +76,12 @@ public class EventData extends ModelEntityData {
             }
         }
         return new ArrayList<Long>( phaseIds );
+    }
+
+    @XmlElement
+    @Override
+    public DocumentationData getDocumentation() {
+        return super.getDocumentation();
     }
 
     private Event getEvent() {

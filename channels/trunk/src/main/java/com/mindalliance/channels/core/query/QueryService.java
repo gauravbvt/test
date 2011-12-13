@@ -1057,6 +1057,15 @@ public interface QueryService {
     List<Commitment> findAllCommitments( Boolean includeToSelf );
 
     /**
+      * Find all commitments.
+      *
+      * @param allowCommitmentsToSelf a boolean
+      * @param includeUnknowns a boolean
+      * @return a list of commitments
+      */
+     List<Commitment> findAllCommitments( Boolean allowCommitmentsToSelf, Boolean includeUnknowns );
+
+    /**
      * Find all commitments to others implied by a sharing flow.
      *
      * @param flow a flow
@@ -1072,6 +1081,16 @@ public interface QueryService {
      * @return a list of commitments
      */
     List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf );
+
+    /**
+     * Find all commitments implied by a sharing flow.
+     *
+     * @param flow                   a flow
+     * @param allowCommitmentsToSelf a boolean
+     * @param includeUnknowns a boolean
+     * @return a list of commitments
+     */
+    List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf, Boolean includeUnknowns );
 
     /**
      * Find all commitments implied by a sharing flow.
@@ -1137,6 +1156,14 @@ public interface QueryService {
             Organization organization,
             Assignments assignments,
             List<Flow> allFLows );
+
+    /**
+     * Find all confirmed agreements that cover an information sharing commitment.
+     *
+     * @param commitment an information sharing commitment
+     * @return a list of agreements
+     */
+    List<Agreement> findAllConfirmedAgreementsCovering( Commitment commitment );
 
     /**
      * Find essential flows from a part.
@@ -1512,6 +1539,16 @@ public interface QueryService {
     Commitments getAllCommitments( Boolean includeToSelf );
 
     /**
+     * Get all commitments in the plan.
+     *
+     * @param includeToSelf a boolean
+     * @param includeUnknowns a boolean
+     * @return commitments
+     */
+    Commitments getAllCommitments( Boolean includeToSelf, Boolean includeUnknowns );
+
+
+    /**
      * Find all eoi names used in the plan.
      *
      * @return a sorted list of strings
@@ -1525,7 +1562,7 @@ public interface QueryService {
      * @param timing                  a phase timing
      * @param event                   an event
      * @param analyst                 an analyst
-     * @return
+     * @return a string
      */
     String getRequirementNonFulfillmentSummary(
             RequirementRelationship requirementRelationship,

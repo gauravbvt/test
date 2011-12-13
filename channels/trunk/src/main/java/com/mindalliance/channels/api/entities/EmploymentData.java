@@ -3,7 +3,6 @@ package com.mindalliance.channels.api.entities;
 import com.mindalliance.channels.core.model.Employment;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +14,6 @@ import java.util.Set;
  * Date: 12/1/11
  * Time: 10:27 AM
  */
-@XmlRootElement( name = "employment", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"organizationId", "actorId", "title", "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
 public class EmploymentData {
 

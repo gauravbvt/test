@@ -1,11 +1,11 @@
 package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.api.SecurityClassificationData;
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,7 @@ import java.util.List;
  * Date: 12/8/11
  * Time: 2:29 PM
  */
-@XmlRootElement( name = "transmissionMedium", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"name", "id", "categories", "mode", "synchronous", "security", "reach", "qualification", "delegatesTo"} )
+@XmlType( propOrder = {"name", "id", "categories", "mode", "synchronous", "security", "reach", "qualification", "delegatesTo", "documentation"} )
 public class MediumData extends ModelEntityData {
 
     public MediumData() {
@@ -90,6 +89,12 @@ public class MediumData extends ModelEntityData {
             delegates.add(  new MediumData( delegate ) );
         }
         return delegates;
+    }
+
+    @XmlElement
+    @Override
+    public DocumentationData getDocumentation() {
+        return super.getDocumentation();
     }
 
     private TransmissionMedium getMedium() {

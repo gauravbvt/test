@@ -1,11 +1,11 @@
 package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
@@ -17,8 +17,7 @@ import java.util.List;
  * Date: 12/1/11
  * Time: 9:15 AM
  */
-@XmlRootElement( name = "organization", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"id", "name", "categories", "kind", "parentId", "participating"} )
+@XmlType( propOrder = {"id", "name", "categories", "kind", "parentId", "participating", "documentation"} )
 public class OrganizationData extends ModelEntityData {
 
     private PlanService planService;
@@ -65,6 +64,12 @@ public class OrganizationData extends ModelEntityData {
         return getOrganization().getParent() != null
                 ? getOrganization().getParent().getId()
                 : null;
+    }
+
+    @XmlElement
+    @Override
+    public DocumentationData getDocumentation() {
+        return super.getDocumentation();
     }
 
     private Organization getOrganization() {

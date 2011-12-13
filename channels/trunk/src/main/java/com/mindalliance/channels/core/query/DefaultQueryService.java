@@ -771,6 +771,17 @@ public abstract class DefaultQueryService implements QueryService {
         return allCommitments;
     }
 
+    @Override
+    public List<Commitment> findAllCommitments( Boolean includeToSelf, Boolean includeUnknowns ) {
+        List<Commitment> allCommitments = new ArrayList<Commitment>();
+        for ( Flow flow : findAllFlows() ) {
+            allCommitments.addAll( findAllCommitments( flow, includeToSelf, includeUnknowns ) );
+        }
+        return allCommitments;
+    }
+
+
+
 
     @Override
     public List<Commitment> findAllCommitments( Flow flow ) {
@@ -781,6 +792,12 @@ public abstract class DefaultQueryService implements QueryService {
     public List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf ) {
         return findAllCommitments( flow, allowCommitmentsToSelf, getAssignments( true ) );
     }
+
+    @Override
+    public List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf, Boolean includeUnknowns ) {
+        return findAllCommitments( flow, allowCommitmentsToSelf, getAssignments( includeUnknowns ) );
+    }
+
 
 
     @Override
@@ -864,6 +881,20 @@ public abstract class DefaultQueryService implements QueryService {
                     results.add( commitment );
         }
         return new ArrayList<Commitment>( results );
+    }
+
+    @Override
+    public List<Agreement> findAllConfirmedAgreementsCovering( Commitment commitment ) {
+        List<Agreement> agreements = new ArrayList<Agreement>(  );
+        Organization committerOrg = commitment.getCommitter().getOrganization();
+        for ( Organization agreeingOrg : committerOrg.selfAndAncestors() ) {
+             for ( Agreement agreement : agreeingOrg.getAgreements() ) {
+                 if ( encompasses(  agreement, Agreement.from( commitment ) ) ) {
+                     agreements.add( agreement );
+                 }
+             }
+        }
+        return agreements;
     }
 
     @Override
@@ -2899,8 +2930,14 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public Commitments getAllCommitments( Boolean includeToSelf ) {
         return Commitments.all( this, includeToSelf );
+    }
+
+    @Override
+    public Commitments getAllCommitments( Boolean includeToSelf, Boolean includeUnknowns ) {
+        return Commitments.all( this, includeToSelf, includeUnknowns );
 
     }
+
 
     @Override
     @SuppressWarnings( "unchecked" )
@@ -3009,7 +3046,7 @@ public abstract class DefaultQueryService implements QueryService {
             RequirementRelationship requirementRelationship,
             Phase.Timing timing,
             Event event,
-            Analyst analyst ) {
+            Analyst analyst) {
         StringBuilder sb = new StringBuilder();
         Commitments allCommitments = getAllCommitments();
         List<Requirement> unfulfilled = new ArrayList<Requirement>();
@@ -3020,7 +3057,7 @@ public abstract class DefaultQueryService implements QueryService {
             req.setBeneficiaryOrganization( (Organization) requirementRelationship.getToIdentifiable( this ) );
             if ( allCommitments.satisfying( req )
                     .inSituation( timing, event, plan.getLocale() )
-                    .realizable( analyst, plan ).isEmpty() )
+                    .realizable( analyst, plan, this ).isEmpty() )
                 unfulfilled.add( req );
         }
         if ( !unfulfilled.isEmpty() ) {

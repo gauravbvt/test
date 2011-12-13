@@ -23,7 +23,7 @@ import java.util.List;
 @WebService( targetNamespace = "http://mind-alliance.com/api/isp/v1/" )
 public interface ChannelsService {
     /**
-     * Get the scopes of al authorized production plans.
+     * Get the scopes of all authorized production plans (for authenticated planners only).
      *
      * @return plan scopes
      */
@@ -36,7 +36,7 @@ public interface ChannelsService {
     @Path( "plan/{uri}" )
     @Produces( MediaType.APPLICATION_XML )
     /**
-     * Get scope of production plan.
+     * Get the scope of a production plan (for authenticated planners only).
      * @param uri a plan's URI
      * @return a plan's scope
      */
@@ -46,7 +46,7 @@ public interface ChannelsService {
     @Path( "plans" )
     @Produces( MediaType.APPLICATION_XML )
     /**
-     * Get summaries of all production plans.
+     * Get summaries of all production plans visible to the authenticated user.
      * @return plan identifiers
      */
     PlanSummariesData getPlans();
@@ -56,7 +56,7 @@ public interface ChannelsService {
     @Path( "procedures/{uri}/{actorId}" )
     @Produces( MediaType.APPLICATION_XML )
     /**
-     * Get identifiers of all production plans.
+     * Get the procedures of an agent in a plan (for authenticated planners or user participating in plan as the agent).
      * @param uri a plan's URI
      * @param actorId an actor's id
      * @return plan identifiers

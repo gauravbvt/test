@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -17,8 +16,8 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 12/12/11
  * Time: 8:49 PM
  */
-@XmlRootElement( name = "informationResearched", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"information", "maxDelay", "researchTask", "consumingTask", "instructions", "failureImpact"} )
+@XmlType( propOrder = {"information", "maxDelay", "researchTask", "consumingTask", "instructions",
+        "failureImpact", "documentation"} )
 public class ResearchData extends AbstractProcedureElementData {
 
     private Commitment requestToSelf;
@@ -64,6 +63,11 @@ public class ResearchData extends AbstractProcedureElementData {
     @XmlElement
     public String getFailureImpact() {
         return getPlanService().computeSharingPriority( getSharing() ).getNegativeLabel();
+    }
+
+    @XmlElement
+    public DocumentationData getDocumentation() {
+        return new DocumentationData( requestToSelf.getSharing() );
     }
 
     private Flow getSharing() {

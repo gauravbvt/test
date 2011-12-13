@@ -8,7 +8,6 @@ import com.mindalliance.channels.core.query.PlanService;
 
 import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +22,6 @@ import java.util.Set;
  * Date: 12/5/11
  * Time: 3:05 PM
  */
-@XmlRootElement( name = "procedures", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"triggers", "situation", "assignment"} )
 public class ProcedureData {
 
@@ -78,13 +76,13 @@ public class ProcedureData {
                 triggers.add( trigger );
             }
             // triggering notifications (from others)
-            for ( Flow triggerNotification : triggeringNotifications() ) {
+            for ( Commitment triggerNotification : triggeringNotifications() ) {
                 TriggerData trigger = new TriggerData( assignment, planService );
                 trigger.setNotification( triggerNotification );
                 triggers.add( trigger );
             }
             // triggering requests
-            for ( Flow triggerRequest : triggeringRequests() ) {
+            for ( Commitment triggerRequest : triggeringRequests() ) {
                 TriggerData trigger = new TriggerData( assignment, planService );
                 trigger.setRequest( triggerRequest );
                 triggers.add( trigger );
@@ -99,27 +97,23 @@ public class ProcedureData {
         return triggers;
     }
 
-    private Set<Flow> triggeringNotifications() {
-        Set<Flow> triggerNotifications = new HashSet<Flow>();
+    private List<Commitment> triggeringNotifications() {
+        List<Commitment> triggerNotifications = new ArrayList<Commitment>();
         for ( Commitment commitment : benefitingCommitments ) {
             Flow flow = commitment.getSharing();
-            if ( flow.isNotification() && flow.isTriggeringToTarget() && !isToSelf( commitment ) ) {
-                triggerNotifications.add( flow );
+            if ( flow.isNotification() && flow.isTriggeringToTarget() && !commitment.isToSelf() ) {
+                triggerNotifications.add( commitment );
             }
         }
         return triggerNotifications;
     }
 
-    private boolean isToSelf( Commitment commitment ) {
-        return commitment.getCommitter().getActor().equals( assignment.getActor() );
-    }
-
-    private Set<Flow> triggeringRequests() {
-        Set<Flow> triggerRequests = new HashSet<Flow>();
+    private List<Commitment> triggeringRequests() {
+        List<Commitment> triggerRequests = new ArrayList<Commitment>();
         for ( Commitment commitment : committingCommitments ) {
             Flow flow = commitment.getSharing();
-            if ( flow.isAskedFor() && flow.isTriggeringToSource() && !isToSelf( commitment ) ) {
-                triggerRequests.add( flow );
+            if ( flow.isAskedFor() && flow.isTriggeringToSource() && !commitment.isToSelf( ) ) {
+                triggerRequests.add( commitment );
             }
         }
         return triggerRequests;
@@ -129,7 +123,7 @@ public class ProcedureData {
          List<Commitment> triggerRequestsToSelf = new ArrayList<Commitment>(  );
          for ( Commitment commitment : committingCommitments ) {
              Flow flow = commitment.getSharing();
-             if ( flow.isAskedFor() && flow.isTriggeringToSource() && isToSelf( commitment ) ) {
+             if ( flow.isAskedFor() && flow.isTriggeringToSource() && commitment.isToSelf() ) {
                  triggerRequestsToSelf.add( commitment );
              }
          }

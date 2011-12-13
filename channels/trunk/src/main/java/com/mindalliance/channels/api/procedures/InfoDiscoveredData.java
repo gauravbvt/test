@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -14,8 +13,7 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 12/6/11
  * Time: 1:18 PM
  */
-@XmlRootElement( name = "informationDiscovered", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"information", "doingTask", "followUpTask"} )
+@XmlType( propOrder = {"information", "doingTask", "followUpTask", "documentation"} )
 public class InfoDiscoveredData {
 
     private Commitment notificationToSelf;
@@ -44,4 +42,10 @@ public class InfoDiscoveredData {
     public TaskData getFollowUpTask() {
         return new TaskData( notificationToSelf.getBeneficiary(), planService );
     }
+
+    @XmlElement
+    public DocumentationData getDocumentation() {
+        return new DocumentationData( notificationToSelf.getSharing() );
+    }
+
 }
