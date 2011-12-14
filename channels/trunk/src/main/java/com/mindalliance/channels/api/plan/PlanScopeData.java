@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.plan;
 
-import com.mindalliance.channels.api.entities.ActorData;
+import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.entities.EventData;
 import com.mindalliance.channels.api.entities.OrganizationData;
@@ -61,7 +61,7 @@ public class PlanScopeData {
         List<PhaseData> phases = new ArrayList<PhaseData>();
         for ( Phase phase : planService.list( Phase.class ) ) {
             if ( !phase.isUnknown() && !phase.isUniversal() )
-                phases.add( new PhaseData( phase ) );
+                phases.add( new PhaseData( phase, plan ) );
         }
         return phases;
     }
@@ -71,7 +71,7 @@ public class PlanScopeData {
         List<PlaceData> places = new ArrayList<PlaceData>();
         for ( Place place : planService.list( Place.class ) ) {
             if ( !place.isUnknown() && !place.isUniversal() )
-                places.add( new PlaceData( place ) );
+                places.add( new PlaceData( place, plan ) );
         }
         return places;
     }
@@ -91,7 +91,7 @@ public class PlanScopeData {
         List<RoleData> roles = new ArrayList<RoleData>();
         for ( Role role : planService.list( Role.class ) ) {
             if ( !role.isUnknown() && !role.isUniversal() )
-                roles.add( new RoleData( role ) );
+                roles.add( new RoleData( role, plan ) );
         }
         return roles;
     }
@@ -107,11 +107,11 @@ public class PlanScopeData {
     }
 
     @XmlElement( name = "agent" )
-    public List<ActorData> getActors() {
-        List<ActorData> actors = new ArrayList<ActorData>();
+    public List<AgentData> getActors() {
+        List<AgentData> actors = new ArrayList<AgentData>();
         for ( Actor actor : planService.list( Actor.class ) ) {
             if ( !actor.isUnknown() && !actor.isUniversal() )
-                actors.add( new ActorData( actor ) );
+                actors.add( new AgentData( actor, plan ) );
         }
         return actors;
     }

@@ -3,6 +3,7 @@ package com.mindalliance.channels.api.entities;
 import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,8 @@ abstract public class ModelEntityData extends ModelObjectData {
     public ModelEntityData() {
     }
 
-    public ModelEntityData( ModelObject modelObject ) {
-        super( modelObject );
+    public ModelEntityData( ModelObject modelObject, Plan plan ) {
+        super( modelObject, plan );
     }
 
     public List<Long> getCategories() {

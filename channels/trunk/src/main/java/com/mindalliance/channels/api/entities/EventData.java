@@ -23,14 +23,11 @@ import java.util.Set;
 @XmlType( propOrder = {"id", "name", "categories", "incident", "selfTerminating", "locationId", "plannedPhases", "documentation"} )
 public class EventData extends ModelEntityData {
 
-    private Plan plan;
-
     public EventData() {
     }
 
     public EventData( Event event, Plan plan ) {
-        super( event );
-        this.plan = plan;
+        super( event, plan );
     }
 
     @Override
@@ -47,7 +44,7 @@ public class EventData extends ModelEntityData {
 
     @XmlElement
     public Boolean getIncident() {
-        return plan.isIncident( getEvent() );
+        return getPlan().isIncident( getEvent() );
     }
 
     @XmlElement
@@ -70,7 +67,7 @@ public class EventData extends ModelEntityData {
     @XmlElement(name = "plannedPhaseId")
     public List<Long> getPlannedPhases() {
         Set<Long> phaseIds = new HashSet<Long>(  );
-        for ( Segment segment : plan.getSegments() ) {
+        for ( Segment segment : getPlan().getSegments() ) {
             if (segment.getEvent().equals( getEvent() ) ) {
                 phaseIds.add( segment.getPhase().getId() );
             }

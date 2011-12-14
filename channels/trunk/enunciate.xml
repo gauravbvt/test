@@ -11,7 +11,7 @@
         <namespace uri="http://mind-alliance.com/api/isp/v1/" id="isp"/>
     </namespaces>
     <modules>
-        <docs docsDir="api" title="Channels REST API"/>
+        <docs docsDir="api" title="Channels Web Services API"/>
         <spring-app>
             <!-- Order matters -->
             <springImport uri="classpath:servicesConfig.xml"/>

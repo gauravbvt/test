@@ -10,7 +10,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 /**
  * Channels Web Service Interface
@@ -22,18 +21,9 @@ import java.util.List;
  */
 @WebService( targetNamespace = "http://mind-alliance.com/api/isp/v1/" )
 public interface ChannelsService {
-    /**
-     * Get the scopes of all authorized production plans (for authenticated planners only).
-     *
-     * @return plan scopes
-     */
-    @GET
-    @Path( "planScopes" )
-    @Produces( MediaType.APPLICATION_XML )
-    List<PlanScopeData> getPlanScopes();
 
     @GET
-    @Path( "plan/{uri}" )
+    @Path( "plan/{uri}/scope" )
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get the scope of a production plan (for authenticated planners only).
@@ -53,14 +43,14 @@ public interface ChannelsService {
 
 
     @GET
-    @Path( "procedures/{uri}/{actorId}" )
+    @Path( "plan/{uri}/procedures/agent/{agentId}" )
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get the procedures of an agent in a plan (for authenticated planners or user participating in plan as the agent).
      * @param uri a plan's URI
-     * @param actorId an actor's id
+     * @param agentId an agent's id
      * @return plan identifiers
      */
-    ProceduresData getProcedures( @PathParam( "uri" ) String uri, @PathParam( "actorId" ) String actorId );
+    ProceduresData getProcedures( @PathParam( "uri" ) String uri, @PathParam( "agentId" ) String agentId );
 
 }

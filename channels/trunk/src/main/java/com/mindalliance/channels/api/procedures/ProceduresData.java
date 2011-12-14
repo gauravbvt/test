@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.api.entities.ActorData;
+import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
 import com.mindalliance.channels.core.model.Actor;
@@ -54,8 +54,8 @@ public class ProceduresData {
     }
 
     @XmlElement( name = "agent" )
-    public ActorData getActor() {
-        return new ActorData( actor );
+    public AgentData getActor() {
+        return new AgentData( actor, plan );
     }
 
     @XmlElement( name = "employment" )

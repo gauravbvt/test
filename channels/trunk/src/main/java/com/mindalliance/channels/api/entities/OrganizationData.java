@@ -26,7 +26,7 @@ public class OrganizationData extends ModelEntityData {
     }
 
     public OrganizationData( ModelObject modelObject, PlanService planService ) {
-        super( modelObject );
+        super( modelObject, planService.getPlan() );
         this.planService = planService;
     }
 

@@ -2,6 +2,7 @@ package com.mindalliance.channels.api;
 
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 
 /**
  * Web Service data element for a model object.
@@ -14,14 +15,16 @@ import com.mindalliance.channels.core.model.ModelObject;
 abstract public class ModelObjectData {
 
     private ModelObject modelObject;
+    private Plan plan;
 
     protected ModelObjectData(  ) {
         // required
     }
 
-    public ModelObjectData( ModelObject modelObject ) {
+    public ModelObjectData( ModelObject modelObject, Plan plan ) {
          this.modelObject = modelObject;
-     }
+        this.plan = plan;
+    }
 
     public long getId() {
         return modelObject.getId();
@@ -37,6 +40,10 @@ abstract public class ModelObjectData {
 
     protected ModelObject getModelObject() {
         return modelObject;
+    }
+
+    protected Plan getPlan() {
+        return plan;
     }
 
 }

@@ -3,9 +3,11 @@ package com.mindalliance.channels.api.entities;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,14 +18,14 @@ import java.util.List;
  * Date: 12/1/11
  * Time: 10:02 AM
  */
-@XmlType( propOrder = {"id", "name", "categories", "kind", "documentation"} )
-public class ActorData extends ModelEntityData {
+@XmlType( propOrder = {"id", "name", "categories", "kind", "availability", "languages", "documentation"} )
+public class AgentData extends ModelEntityData {
 
-    public ActorData() {
+    public AgentData() {
     }
 
-    public ActorData( ModelObject modelObject ) {
-        super( modelObject );
+    public AgentData( ModelObject modelObject, Plan plan ) {
+        super( modelObject, plan );
     }
 
     @Override
@@ -48,6 +50,20 @@ public class ActorData extends ModelEntityData {
     @XmlElement
     public String getKind() {
         return super.getKind();
+    }
+
+    @XmlElement( name = "language" )
+    public List<String> getLanguages() {
+        List<String> languages = new ArrayList<String>(  );
+        for ( String language : getActor().getEffectiveLanguages( getPlan() ) ) {
+            languages.add( language );
+        }
+        return languages;
+    }
+
+    @XmlElement
+    public AvailabilityData getAvailability() {
+        return new AvailabilityData( getActor().getAvailability() );
     }
 
     @XmlElement

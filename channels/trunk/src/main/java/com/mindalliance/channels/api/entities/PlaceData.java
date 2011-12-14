@@ -3,6 +3,7 @@ package com.mindalliance.channels.api.entities;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Plan;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -23,8 +24,8 @@ public class PlaceData extends ModelEntityData {
         // required
     }
 
-    public PlaceData( ModelObject modelObject ) {
-        super( modelObject );
+    public PlaceData( ModelObject modelObject, Plan plan ) {
+        super( modelObject, plan );
     }
 
     //-------------------------------

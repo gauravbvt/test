@@ -57,7 +57,7 @@ public class TaskData extends AbstractProcedureElementData {
     public PlaceData getLocation() {
         Place location = getPart().getLocation();
         return location != null
-                ? new PlaceData( location )
+                ? new PlaceData( location, getPlan() )
                 : null;
     }
 

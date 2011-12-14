@@ -2,6 +2,7 @@ package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -22,8 +23,8 @@ public class RoleData extends ModelEntityData {
         // required
     }
 
-    public RoleData( ModelObject modelObject ) {
-        super( modelObject );
+    public RoleData( ModelObject modelObject, Plan plan ) {
+        super( modelObject, plan );
     }
 
     @Override

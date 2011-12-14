@@ -423,6 +423,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         return safeAllImplicitTypes( new HashSet<ModelEntity>() );
     }
 
+    // Default
     protected List<ModelEntity> safeImplicitTypes( Set<ModelEntity> visited ) {
         return new ArrayList<ModelEntity>();
     }

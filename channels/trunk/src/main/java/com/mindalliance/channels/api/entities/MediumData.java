@@ -3,6 +3,7 @@ package com.mindalliance.channels.api.entities;
 import com.mindalliance.channels.api.SecurityClassificationData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.Classification;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -25,8 +26,8 @@ public class MediumData extends ModelEntityData {
         // required
     }
 
-    public MediumData( TransmissionMedium medium ) {
-        super( medium );
+    public MediumData( TransmissionMedium medium, Plan plan ) {
+        super( medium, plan );
     }
 
     @Override
@@ -72,21 +73,21 @@ public class MediumData extends ModelEntityData {
     public PlaceData getReach() {
         return getMedium().getReach() == null
                 ? null
-                : new PlaceData( getMedium().getReach() );
+                : new PlaceData( getMedium().getReach(), getPlan() );
     }
 
     @XmlElement
-    public ActorData getQualification() {
+    public AgentData getQualification() {
         return getMedium().getQualification() == null
                 ? null
-                : new ActorData( getMedium().getQualification() );
+                : new AgentData( getMedium().getQualification(), getPlan() );
     }
 
     @XmlElement
     public List<MediumData> getDelegatesTo() {
         List<MediumData> delegates = new ArrayList<MediumData>(  );
         for ( TransmissionMedium delegate : getMedium().getEffectiveDelegatedToMedia() ) {
-            delegates.add(  new MediumData( delegate ) );
+            delegates.add(  new MediumData( delegate, getPlan() ) );
         }
         return delegates;
     }

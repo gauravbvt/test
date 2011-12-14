@@ -50,28 +50,6 @@ public class ChannelsServiceImpl implements ChannelsService {
 
     @Override
     /**
-     * Get the scopes of al authorized production plans.
-     * @return plan scopes
-     */
-    public List<PlanScopeData> getPlanScopes() {
-        User user = User.current();
-        List<PlanScopeData> result = new ArrayList<PlanScopeData>();
-        for ( Plan plan : planManager.getPlans() ) {
-            if ( plan.isProduction() && !user.getRole( plan.getUri() ).equals( User.UNAUTHORIZED ) ) {
-                PlanService planService = new PlanService(
-                        planManager,
-                        semanticMatcher,
-                        userDao,
-                        attachmentManager,
-                        plan );
-                result.add( new PlanScopeData( plan, planService ) );
-            }
-        }
-        return result;
-    }
-
-    @Override
-    /**
      * Get scope of production plan.
      * Available only to its planners.
      * @param uri the plan's URI

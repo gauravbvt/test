@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.api.entities.ActorData;
+import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.entities.EventData;
 import com.mindalliance.channels.api.entities.MediumData;
@@ -66,11 +66,11 @@ public class EnvironmentData {
         Set<Long> added = new HashSet<Long>(  );
          for ( Long id : allPhaseIds() ) {
              Phase phase = planService.find(  Phase.class, id );
-             phases.add( new PhaseData( phase ) );
+             phases.add( new PhaseData( phase, getPlan() ) );
              added.add( id );
              for ( ModelEntity category : phase.getAllTypes() ) {
                  if (!added.contains( category.getId() ) ) {
-                     phases.add( new PhaseData( (Phase)category ) );
+                     phases.add( new PhaseData( (Phase)category, getPlan() ) );
                      added.add( category.getId() );
                  }
              }
@@ -103,16 +103,16 @@ public class EnvironmentData {
     }
 
      @XmlElement( name = "agent" )
-    public List<ActorData> getActors() throws NotFoundException {
-        List<ActorData> actors = new ArrayList<ActorData>(  );
+    public List<AgentData> getActors() throws NotFoundException {
+        List<AgentData> actors = new ArrayList<AgentData>(  );
          Set<Long> added = new HashSet<Long>(  );
          for ( Long id : allActorIds() ) {
              Actor actor = planService.find( Actor.class, id );
-             actors.add( new ActorData( actor ) );
+             actors.add( new AgentData( actor, getPlan() ) );
              added.add( id );
              for ( ModelEntity category : actor.getAllTypes() ) {
                  if (!added.contains( category.getId() ) ) {
-                     actors.add( new ActorData( (Actor)category ) );
+                     actors.add( new AgentData( (Actor)category, getPlan() ) );
                      added.add( category.getId() );
                  }
              }
@@ -126,11 +126,11 @@ public class EnvironmentData {
         Set<Long> added = new HashSet<Long>(  );
          for ( Long id : allRoleIds() ) {
              Role role = planService.find( Role.class, id );
-             roles.add( new RoleData( role ) );
+             roles.add( new RoleData( role, getPlan() ) );
              added.add( id );
              for ( ModelEntity category : role.getAllTypes() ) {
                  if (!added.contains( category.getId() ) ) {
-                     roles.add( new RoleData( (Role)category ) );
+                     roles.add( new RoleData( (Role)category, getPlan() ) );
                      added.add( category.getId() );
                  }
              }
@@ -144,11 +144,11 @@ public class EnvironmentData {
         Set<Long> added = new HashSet<Long>(  );
          for ( Long id : allPlaceIds() ) {
              Place place = planService.find( Place.class, id );
-             places.add( new PlaceData( place ) );
+             places.add( new PlaceData( place, getPlan() ) );
              added.add( id );
              for ( ModelEntity category : place.getAllTypes() ) {
                  if (!added.contains( category.getId() ) ) {
-                     places.add( new PlaceData( (Place)category ) );
+                     places.add( new PlaceData( (Place)category, getPlan() ) );
                      added.add( category.getId() );
                  }
              }
@@ -162,17 +162,17 @@ public class EnvironmentData {
         Set<Long> added = new HashSet<Long>(  );
          for ( Long id : allMediumIds() ) {
              TransmissionMedium medium = planService.find( TransmissionMedium.class, id );
-             media.add( new MediumData( medium ) );
+             media.add( new MediumData( medium, getPlan() ) );
              added.add( id );
              for ( ModelEntity category : medium.getAllTypes() ) {
                  if (!added.contains( category.getId() ) ) {
-                     media.add( new MediumData( (TransmissionMedium)category ) );
+                     media.add( new MediumData( (TransmissionMedium)category, getPlan() ) );
                      added.add( category.getId() );
                  }
              }
              for ( TransmissionMedium delegate : medium.getEffectiveDelegatedToMedia() ) {
                  if (!added.contains( delegate.getId() ) ) {
-                     media.add( new MediumData( delegate ) );
+                     media.add( new MediumData( delegate, getPlan() ) );
                      added.add( delegate.getId() );
                  }
              }

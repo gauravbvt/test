@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.plan;
 
-import com.mindalliance.channels.api.entities.ActorData;
+import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
@@ -46,18 +46,18 @@ public class PlanSummaryData {
     }
 
     @XmlElement( name = "participatingAs" )
-    public ActorData getParticipation() {
+    public AgentData getParticipation() {
         Actor participant = getParticipant();
         return participant == null
                 ? null
-                : new ActorData( participant );
+                : new AgentData( participant, getPlan() );
     }
 
     @XmlElement( name = "supervised" )
-    public List<ActorData> getSupervised() {
-        List<ActorData> underlings = new ArrayList<ActorData>(  );
+    public List<AgentData> getSupervised() {
+        List<AgentData> underlings = new ArrayList<AgentData>(  );
         for ( Actor underling : findSupervised() ) {
-            underlings.add(  new ActorData( underling ) );
+            underlings.add(  new AgentData( underling, getPlan() ) );
         }
         return underlings;
     }
