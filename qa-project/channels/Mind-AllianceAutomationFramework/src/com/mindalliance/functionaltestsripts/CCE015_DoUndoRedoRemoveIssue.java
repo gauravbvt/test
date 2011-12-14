@@ -86,7 +86,7 @@ public class CCE015_DoUndoRedoRemoveIssue
 				Thread.currentThread();
 				Thread.sleep(3000);				
 				// Assertion: Verify that When clicked on 'Remove issue' option, a respective issue should be removed from the segment
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("issues"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol"));
 				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
 				for (WebElement ol: tds){
 					if(ol.getText().equals("")){
@@ -143,7 +143,7 @@ public class CCE015_DoUndoRedoRemoveIssue
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that When clicked on 'Redo remove issue' option, the restored  issue should be removed
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("issues"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol"));
 				tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
 				for (WebElement ol: tds){
 					if(ol.getText().equals("")){

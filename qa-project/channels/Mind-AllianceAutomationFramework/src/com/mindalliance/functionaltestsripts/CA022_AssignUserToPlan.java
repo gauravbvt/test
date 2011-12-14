@@ -102,11 +102,14 @@ public class CA022_AssignUserToPlan
 				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				List<WebElement> tds;
 				int i=-1;
+				GlobalVariables.bIsSuccess=Boolean.FALSE;
 				for(WebElement tr: trs) {
 					i++;	
 					tds = tr.findElements(By.tagName("td"));
 					for(WebElement td: tds) {
 						if(td.getText().contains(GlobalVariables.testData.get("user"))){
+							GlobalVariables.sStrCheck=td.getText();
+							 GlobalVariables.bIsSuccess=Boolean.TRUE;
 							GlobalVariables.oDriver.findElement(By.name("item:"+i+":group:password")).clear();
 							GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("item:"+i+":group:password"));
 							GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Password"));
@@ -114,16 +117,25 @@ public class CA022_AssignUserToPlan
 							Thread.currentThread();
 							Thread.sleep(2000);
 							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+(i+1)+"]/td[9]/input")).click();
-							// Write Results
-							LogFunctions.writeLogs(GlobalVariables.sDescription);
-							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-									GlobalVariables.sBlank, GlobalVariables.sBlank);
 						}
 					}
 				}
+				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    }
+			    else{
+			    	GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("user")+"' Actual '"+GlobalVariables.sStrCheck+"'";
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				GlobalVariables.oDriver.findElement(By.name("Submit")).submit();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -175,18 +187,18 @@ public class CA022_AssignUserToPlan
 			    GlobalVariables.iStepNo++ ;
 			    GlobalVariables.sDescription = "User is able to view the plan created by Administrator";
 			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[2]/div[2]/div[2]/div/span"));
-			    if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("afourtech"))) {
+			    if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("newPlan"))) {
 				    // Write Results
 			    	LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    	LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);			    	
 			    }
 			    else {
-			    	GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("afourtech")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
+			    	GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("newPlan")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
 			    	LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    	LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);			    				    	
+						GlobalVariables.sBlank, GlobalVariables.sVerifyError);			    				    	
 			    }
 			    // WebElement Synchronization
 			    Thread.currentThread();
