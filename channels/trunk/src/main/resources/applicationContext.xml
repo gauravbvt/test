@@ -435,6 +435,7 @@ CONFIGURATION NOTES:
         <property name="semanticMatcher" ref="semanticMatcher"/>
         <property name="userDao" ref="userDao"/>
         <property name="attachmentManager" ref="attachmentManager"/>
+        <property name="analyst" ref="analyst"/>
     </bean>
 
 </beans>

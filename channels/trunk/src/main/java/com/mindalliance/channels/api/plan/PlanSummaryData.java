@@ -21,7 +21,7 @@ import java.util.List;
  * Date: 12/12/11
  * Time: 1:36 PM
  */
-@XmlType( propOrder = {"planIdentifier", "description", "participation", "supervised", "documentation"} )
+@XmlType( propOrder = {"planIdentifier", "description", "planners", "participation", "supervised", "documentation"} )
 
 public class PlanSummaryData {
 
@@ -45,12 +45,22 @@ public class PlanSummaryData {
         return getPlan().getDescription();
     }
 
+    @XmlElement
+    public List<UserData> getPlanners() {
+        List<UserData> planners = new ArrayList<UserData>(  );
+        for ( User planner : planService.getUserDao().getPlanners( getPlan().getUri() ) ) {
+              planners.add( new UserData( planner ) );
+        }
+        return planners;
+    }
+
     @XmlElement( name = "participatingAs" )
-    public AgentData getParticipation() {
-        Actor participant = getParticipant();
-        return participant == null
+    public ParticipationData getParticipation() {
+        User user = User.current();
+        Participation participation = planService.findParticipation( user.getUsername() );
+        return participation == null || participation.getActor() == null
                 ? null
-                : new AgentData( participant, getPlan() );
+                : new ParticipationData( participation, user, getPlan() );
     }
 
     @XmlElement( name = "supervised" )

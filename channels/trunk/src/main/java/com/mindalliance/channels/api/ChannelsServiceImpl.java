@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api;
 
+import com.mindalliance.channels.api.issues.IssuesData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.plan.PlanSummariesData;
 import com.mindalliance.channels.api.plan.PlanSummaryData;
@@ -13,6 +14,7 @@ import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +49,7 @@ public class ChannelsServiceImpl implements ChannelsService {
     private SemanticMatcher semanticMatcher;
     private UserDao userDao;
     private AttachmentManager attachmentManager;
+    private Analyst analyst;
 
     @Override
     /**
@@ -134,6 +137,28 @@ public class ChannelsServiceImpl implements ChannelsService {
         }
     }
 
+    @Override
+    public IssuesData getIssues( String uri, String version ) {
+        User user = User.current();
+        Plan plan = null;
+        try {
+            plan = planManager.getPlan( uri, Integer.parseInt( version ) );
+        } catch ( Exception e ) {
+            LOG.error( "Plan not found " + uri + " version " + version );
+        }
+        if ( plan == null || user.getRole( uri ).equals( User.UNAUTHORIZED ) ) {
+            LOG.error( user.getUsername() + " is not authorized to access plan " + uri );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No plan available with uri " + uri )
+                            .build() );
+        } else {
+            PlanService planService = getPlanService( plan );
+            return new IssuesData( planService, analyst );
+        }
+    }
+
     private boolean canSeeProcedures( User user, Actor actor, PlanService planService ) {
         // Planner can see any actor's procedures
         if ( user.isPlanner( planService.getPlan().getUri() ) )
@@ -170,6 +195,12 @@ public class ChannelsServiceImpl implements ChannelsService {
     public void setAttachmentManager( AttachmentManager attachmentManager ) {
         this.attachmentManager = attachmentManager;
     }
+
+    @WebMethod( exclude = true )
+    public void setAnalyst( Analyst analyst ) {
+        this.analyst = analyst;
+    }
+
 
     private PlanService getPlanService( Plan plan ) {
         return new PlanService(

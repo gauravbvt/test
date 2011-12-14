@@ -22,7 +22,7 @@ import java.util.Set;
  * Date: 12/5/11
  * Time: 3:05 PM
  */
-@XmlType( propOrder = {"triggers", "situation", "assignment"} )
+@XmlType( propOrder = {"triggers", "assignment"} )
 public class ProcedureData {
 
     /**
@@ -131,11 +131,6 @@ public class ProcedureData {
      }
 
 
-    @XmlElement( name = "situation" )
-    public SituationData getSituation() {
-        return new SituationData( assignment, planService );
-    }
-
     @XmlElement( name = "assignment" )
     public AssignmentData getAssignment() {
         return new AssignmentData( assignment, planService, this );
@@ -154,7 +149,6 @@ public class ProcedureData {
     @WebMethod( exclude = true )
     public Set<Long> allEventIds() {
         Set<Long> ids = new HashSet<Long>();
-        ids.add( getSituation().getEventId() );
         for ( TriggerData trigger : getTriggers() ) {
             Long eventId = trigger.getEventId();
             if ( eventId != null )
@@ -166,7 +160,6 @@ public class ProcedureData {
 
     public Set<Long> allPhaseIds() {
         Set<Long> ids = new HashSet<Long>();
-        ids.add( getSituation().getPhaseId() );
         for ( TriggerData trigger : getTriggers() ) {
             Long phaseId = trigger.getPhaseId();
             if ( phaseId != null )

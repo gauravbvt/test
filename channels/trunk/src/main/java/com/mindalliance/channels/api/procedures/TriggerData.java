@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.query.PlanService;
 
 import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:16 AM
  */
+@XmlType( propOrder={"situation", "anytime", "onDiscovery", "onResearch", "onNotification", "onRequest"} )
 public class TriggerData extends AbstractProcedureElementData {
 
     private Commitment notification;
@@ -103,23 +105,40 @@ public class TriggerData extends AbstractProcedureElementData {
         return onRequest;
     }
 
+    @XmlElement
+     public SituationData getSituation() {
+         if ( isSituationKnown() ) {
+             return new SituationData( getAssignment(), getPlanService() );
+         } else {
+             return null;
+         }
+     }
+
+     private boolean isSituationKnown() {
+         return eventPhase != null
+                 || notification != null && notification.getSharing().isReferencesEventPhase()
+                 || request != null && request.getSharing().isReferencesEventPhase();
+     }
+
     @WebMethod( exclude = true )
     public Long getEventId() {
-        if ( eventPhase != null )
-            return eventPhase.getEvent().getId();
+         SituationData situation = getSituation();
+        if ( situation != null )
+            return situation.getEventId();
         else
             return null;
     }
 
     @WebMethod( exclude = true )
     public Long getPhaseId() {
-        if ( eventPhase != null )
-            return eventPhase.getPhase().getId();
+        SituationData situation = getSituation();
+        if ( situation != null )
+            return situation.getPhaseId();
         else
             return null;
     }
 
-    public Set<Long> allOrganizationIds() {
+     public Set<Long> allOrganizationIds() {
         Set<Long> ids = new HashSet<Long>();
         if ( getOnNotification() != null ) {
             ids.addAll( getOnNotification().allOrganizationIds() );
