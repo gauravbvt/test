@@ -354,7 +354,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathAssertionDetails",oXmlElePlanPage.getElementsByTagName("xPathAssertionDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathPhaseAssertionDetails",oXmlElePlanPage.getElementsByTagName("xPathPhaseAssertionDetails").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionEventWindow",oXmlElePlanPage.getElementsByTagName("xPathAssertionEventWindow").item(0).getChildNodes().item(0).getNodeValue());
-			GlobalVariables.assertion.put("sXpathAssertionOrg",oXmlElePlanPage.getElementsByTagName("xPathAssertionAboutOrg").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.assertion.put("sXpathAssertionOrgSeg",oXmlElePlanPage.getElementsByTagName("xPathAssertionOrgSeg").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionBibliography",oXmlElePlanPage.getElementsByTagName("xPathAssertionBibliography").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionTags",oXmlElePlanPage.getElementsByTagName("xPathAssertionTags").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionTypes",oXmlElePlanPage.getElementsByTagName("xPathAssertionTypes").item(0).getChildNodes().item(0).getNodeValue());
