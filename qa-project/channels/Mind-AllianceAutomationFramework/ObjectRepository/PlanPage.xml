@@ -4,7 +4,7 @@
 <xPathRequirementNetwork>//div[4]/div/span/div/div[2]/div/div/ul/li[2]/a/span</xPathRequirementNetwork>
 <xPathNewRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/a</xPathNewRequirement>
 <xPathSentElementInformation>//div[@class='sends']/div[2]/div/div/div/table/tbody/tr[4]/th/a</xPathSentElementInformation>
-<xPathReceiveElementInformation>//div[@class='receives']/div[2]/div/div/div/table/tbody/tr[4]/th/a</xPathReceiveElementInformation>
+<xPathReceiveElementInformation>//*[@class='model-object-link']</xPathReceiveElementInformation>
 <xPathAddInfoSendAttachment>//span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[13]/td/ul/span/li/a</xPathAddInfoSendAttachment>
 <xPathAddInfoReceiveAttachment>//span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[12]/td/ul/span/li/a</xPathAddInfoReceiveAttachment>
 <xPathAddInfoSendCreateSurvey>//span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoSendCreateSurvey>
@@ -12,8 +12,8 @@
 <xPathShowPopUpMenu>//div[@class='header']/span[@class='menubar']/span[@class='menuitem']/span[@class='dropmenu']/span</xPathShowPopUpMenu>
 <xPathSendInfoAddNewIssue>//div[@class='sends']/div[@class='section-content']/div[@class='flow']/div/div[@class='flow-details']/span/div[@class='issues']/div[@class='section-title']/ul/li/a</xPathSendInfoAddNewIssue>
 <xPathReceiveInfoAddNewIssue>//div[@class='receives']/div[@class='section-content']/div[@class='flow']/div/div[@class='flow-details']/span/div[@class='issues']/div[@class='section-title']/ul/li/a</xPathReceiveInfoAddNewIssue>
-<xPathReceiveInfoIssueMenu>//span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li[2]/span/span/span/span/span</xPathReceiveInfoIssueMenu>
-<xPathSendInfoIssueMenu>//span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li[2]/span/span/span/span/span</xPathSendInfoIssueMenu>
+<xPathReceiveInfoIssueMenu>//span/div/div[3]/div[@class='receives']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/span/ol/li[2]/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathReceiveInfoIssueMenu>
+<xPathSendInfoIssueMenu>//span/div/div[3]/div[@class='sends']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/span/ol/li[2]/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathSendInfoIssueMenu>
 <xPathSendReplyThatOption>//span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label[2]</xPathSendReplyThatOption>
 <xPathReceivedReplyThatOption>//span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label[2]/input</xPathReceivedReplyThatOption>
 <xPathSendInfoNotification>//span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</xPathSendInfoNotification>
@@ -23,7 +23,6 @@
 <xPathAbtPlanSegShowMenu>//span[@class='menubar']/span/span/span</xPathAbtPlanSegShowMenu>
 <xPathAboutPlanActionMenu>//span[@class='menubar']/span[2]/span/span</xPathAboutPlanActionMenu>
 <xPathAllSegmentShowMenu>//div[4]/div/span/div/div/div/span/span/span/span</xPathAllSegmentShowMenu>
-<xPathAssertionOrgSeg></xPathAssertionOrgSeg>
 <xPathTaskMoverDetail>//div[5]/div/span/div/div[2]/h3/span</xPathTaskMoverDetail>
 <xPathDeleteOrgs>//div[4]/div/span/div/div[2]/div/div[2]/span/a/span</xPathDeleteOrgs>
 <xPathDefaultTask>//div[@class='section-title']/span[2]/a</xPathDefaultTask>
@@ -192,8 +191,8 @@
 <xPathAssertionRequirementUndo>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRequirementUndo>
 <xPathAssertionRequirementName>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tbody/tr/td/span</xPathAssertionRequirementName>
 <xPathNewRequirementDefinitionAssertion>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/div[@class='req']/h3</xPathNewRequirementDefinitionAssertion>
-<xPathAssertionCopyCapability>/div[14]/span/span</xPathAssertionCopyCapability>
-<xPathAssertionCopyNeed>/div[14]/span/span</xPathAssertionCopyNeed>
+<xPathAssertionCopyCapability>//div[@class='change-message']/span/span</xPathAssertionCopyCapability>
+<xPathAssertionCopyNeed>//div[@class='change-message']/span/span</xPathAssertionCopyNeed>
 <xPathTaskURLAssertion>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/a</xPathTaskURLAssertion>
 <xPathEmailNameInvalidErrorMessageAssertion>//div[2]/div[2]/div[3]/span/div/div/div[2]/div/div/ul/li/span</xPathEmailNameInvalidErrorMessageAssertion>
 <xPathErrorMessageSocialPanelAssertion>//div[2]/div/div/div[2]/div/span/span</xPathErrorMessageSocialPanelAssertion>
@@ -215,7 +214,7 @@
 <xPathAssertionPhaseDetails>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/table/tbody/tr[5]/td/span/div[@class='phases']/ul/li/span/span/a/span</xPathAssertionPhaseDetails>
 <xPathAssertionDetails>//div[@class='floating']/span/div[@class='plan']/div/div[@class='float-header']/h1</xPathAssertionDetails>
 <xPathPhaseAssertionDetails>//div[3]/div/span/div/div/div/h1</xPathPhaseAssertionDetails>
-<xPathAssertionAboutPlanSegmentDetails>//div[5]/div/span/div/div/div/h1</xPathAssertionAboutPlanSegmentDetails>
+<xPathAssertionAboutPlanSegmentDetails>//div[5]/div[@class='floating']/span/div[@class='segment']/div/div[@class='float-header']/h1</xPathAssertionAboutPlanSegmentDetails>
 <xPathAssertionEventWindow>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/h3/span</xPathAssertionEventWindow>
 <xPathAssertionAboutOrg>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/h3/span</xPathAssertionAboutOrg>
 <xPathAssertionBibliography>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/h3/span</xPathAssertionBibliography>
@@ -242,7 +241,7 @@
 <xPathAssertionDissemination>//div[10]/div/div/div/span</xPathAssertionDissemination>
 <xPathGoBack>//div[15]/img</xPathGoBack>
 <xPathGoForward>//div[15]/img[2]</xPathGoForward>
-<xPathElementsOfInformation>//div[8]/div/div[2]/div/h1</xPathElementsOfInformation>
+<xPathElementsOfInformation>//span/div/div[3]/div[3]/div[2]/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/table/tbody/tr[4]/th[@class='area']/a[@class='model-object-link']</xPathElementsOfInformation>
 <xPathIssueReport>/html/body/div/div/h1</xPathIssueReport>
 <xPathIssueReportHome>/html/body/div/div/a/img</xPathIssueReportHome>
 <xPathLegendLabel>//div[12]/div/span/div/h1</xPathLegendLabel>
@@ -252,4 +251,5 @@
 <xPathAddInfoSendAssertion>//span/div/div[3]/div[3]/div[2]/div/div/span/span</xPathAddInfoSendAssertion>
 <xPathEventAttachmentAssertion>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathEventAttachmentAssertion>
 <xPathEventUrlAttachmentAssertion>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/a</xPathEventUrlAttachmentAssertion>
+<xPathAssertionOrgSeg>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/h3/span</xPathAssertionOrgSeg>
 </elements>
