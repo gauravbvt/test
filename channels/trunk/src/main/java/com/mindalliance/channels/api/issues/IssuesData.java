@@ -47,7 +47,7 @@ public class IssuesData {
     }
 
 
-    @XmlElement
+    @XmlElement( name = "issue" )
     public List<IssueData> getIssues() {
         List<IssueData> issues = new ArrayList<IssueData>();
         for ( ModelObject mo : planService.list( ModelObject.class ) ) {

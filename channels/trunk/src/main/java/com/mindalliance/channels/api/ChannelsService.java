@@ -24,6 +24,15 @@ import javax.ws.rs.core.MediaType;
 public interface ChannelsService {
 
     @GET
+    @Path( "plans" )
+    @Produces( MediaType.APPLICATION_XML )
+    /**
+     * Get summaries of all plan versions visible to the authenticated user.
+     * @return plan summaries
+     */
+    PlanSummariesData getPlans();
+
+    @GET
     @Path( "plan/{uri}/version/{version}/scope" )
     @Produces( MediaType.APPLICATION_XML )
     /**
@@ -32,15 +41,6 @@ public interface ChannelsService {
      * @return a plan's scope
      */
     PlanScopeData getPlanScope( @PathParam( "uri" ) String uri, @PathParam( "version") String version );
-
-    @GET
-    @Path( "plans" )
-    @Produces( MediaType.APPLICATION_XML )
-    /**
-     * Get summaries of all plan versions visible to the authenticated user.
-     * @return plan summaries
-     */
-    PlanSummariesData getPlans();
 
 
     @GET
@@ -53,6 +53,16 @@ public interface ChannelsService {
      * @return the procedures of the agent from the plan
      */
     ProceduresData getProcedures( @PathParam( "uri" ) String uri, @PathParam( "agentId" ) String agentId );
+
+    @GET
+    @Path( "plan/{uri}/procedures" )
+    @Produces( MediaType.APPLICATION_XML )
+    /**
+     * Get the procedures of the user if he/she participates in the identified plan as an agent.
+     * @param uri a plan's URI
+     * @return the procedures of the agent representing the user in the plan
+     */
+    ProceduresData getMyProcedures( @PathParam( "uri" ) String uri );
 
     @GET
     @Path( "plan/{uri}/version/{version}/issues" )

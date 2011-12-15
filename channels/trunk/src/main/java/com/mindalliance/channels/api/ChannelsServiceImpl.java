@@ -101,39 +101,52 @@ public class ChannelsServiceImpl implements ChannelsService {
         Plan plan = null;
         try {
             plan = planManager.findProductionPlan( uri );
+            if ( plan == null || user.getRole( uri ).equals( User.UNAUTHORIZED ) ) {
+                throw new Exception( "No plan available with uri " + uri );
+            }
+            PlanService planService = getPlanService( plan );
+            Actor actor = planService.find( Actor.class, Long.parseLong( actorId ) );
+            if ( !canSeeProcedures( user, actor, planService ) ) {
+                throw new Exception( "Procedures not visible to " + user.getUsername() + " for plan with uri " + uri );
+            }
+            return new ProceduresData(
+                    plan,
+                    actor,
+                    planService );
         } catch ( Exception e ) {
-            LOG.error( "Plan not found " + uri );
-        }
-        if ( plan == null || user.getRole( uri ).equals( User.UNAUTHORIZED ) ) {
-            LOG.error( user.getUsername() + " is not authorized to access plan " + uri );
+            LOG.warn( "No procedures available for agent " + actorId, e );
             throw new WebApplicationException(
                     Response
                             .status( Response.Status.BAD_REQUEST )
-                            .entity( "No plan available with uri " + uri )
+                            .entity( "No procedures available for agent " + actorId )
                             .build() );
-        } else {
-            PlanService planService = getPlanService( plan );
-            try {
-                Actor actor = planService.find( Actor.class, Long.parseLong( actorId ) );
-                if ( canSeeProcedures( user, actor, planService ) ) {
-                    return new ProceduresData(
-                            plan,
-                            actor,
-                            planService );
-                } else {
-                    LOG.error( user.getUsername()
-                            + " is not authorized to access procedures of agent " + actorId
-                            + " in plan " + uri );
-                    throw new Exception( "Procedures are not visible" );
-                }
-            } catch ( Exception e ) {
-                LOG.error( e.getMessage(), e );
-                throw new WebApplicationException(
-                        Response
-                                .status( Response.Status.BAD_REQUEST )
-                                .entity( "No procedures available for agent " + actorId )
-                                .build() );
+        }
+    }
+
+    @Override
+    public ProceduresData getMyProcedures( String uri ) {
+        try {
+            User user = User.current();
+            Plan plan = planManager.findProductionPlan( uri );
+            if ( plan == null || user.getRole( uri ).equals( User.UNAUTHORIZED ) ) {
+                throw new Exception( user.getUsername() + " is not authorized to access production plan " + uri );
             }
+            PlanService planService = getPlanService( plan );
+            Participation participation = planService.findParticipation( user.getUsername() );
+            if ( participation == null || participation.getActor() == null ) {
+                throw new Exception( user.getUsername() + " does not participate in production plan " + uri );
+            }
+            return new ProceduresData(
+                    plan,
+                    participation.getActor(),
+                    planService );
+        } catch ( Exception e ) {
+            LOG.warn( e.getMessage(), e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No procedures available for production plan " + uri )
+                            .build() );
         }
     }
 

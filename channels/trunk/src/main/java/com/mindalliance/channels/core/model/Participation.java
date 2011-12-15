@@ -108,4 +108,11 @@ public class Participation extends AbstractUnicastChannelable {
     public void setUsername( String username ) {
         this.username = username;
     }
+
+    @Override
+    public String toString() {
+        return username
+                + " participates as agent "
+                + (actor == null ? "(unknown)" : actor.getName() );
+    }
 }
