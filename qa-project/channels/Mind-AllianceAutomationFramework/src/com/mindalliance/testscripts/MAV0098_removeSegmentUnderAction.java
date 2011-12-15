@@ -77,7 +77,19 @@ public class MAV0098_removeSegmentUnderAction
 			    // WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);
-			    			    			    
+			    
+			    // Click on 'done' button
+			    GlobalVariables.iStepNo++;
+			    GlobalVariables.sDescription="Done";
+			    GlobalVariables.oDriver.findElement(By.className("close")).click();
+			    // Write Results
+			    LogFunctions.writeLogs(GlobalVariables.sDescription);
+			    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(1000);
+			    
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

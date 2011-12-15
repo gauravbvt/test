@@ -66,8 +66,8 @@ public class MAV0134_viewNetworkOfAgent
 				// Create Agent in All Participants
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent created";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:3:cells:4:cell:entityName")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:participations:participationsTable:participations:body:rows:3:cells:4:cell:entityName"));
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
 				for (int i = 0; i <= 50; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
@@ -94,7 +94,7 @@ public class MAV0134_viewNetworkOfAgent
 				// Select the plan from 'Switch to Plan' drop down, located on the top right corner
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Agent Selected";
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:indexed")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(option.getText().equals(GlobalVariables.viewElements.get("agents"))){

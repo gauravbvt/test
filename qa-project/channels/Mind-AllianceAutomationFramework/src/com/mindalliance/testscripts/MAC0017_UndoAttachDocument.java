@@ -121,7 +121,7 @@ public class MAC0017_UndoAttachDocument {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: verify that file is attached
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
 						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
@@ -153,7 +153,7 @@ public class MAC0017_UndoAttachDocument {
 					Thread.sleep(3000);
 					// Assertion: verify that file is detached
 					GlobalVariables.bIsSuccess = Boolean.FALSE;
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
 					tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
 						GlobalVariables.sStrCheck=li.getText();

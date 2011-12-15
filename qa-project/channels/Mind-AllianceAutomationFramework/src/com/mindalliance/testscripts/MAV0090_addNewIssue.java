@@ -44,24 +44,37 @@ public class MAV0090_addNewIssue
 				Thread.currentThread();
 				Thread.sleep(1000);
 								
-				// Assertion: Verify that new window opens with title "About Segment opens"
-				GlobalVariables.iStepNo++;
-			    GlobalVariables.sDescription="'New Issue' gets loaded";		            		         
-			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAboutPlanSegmentDetails")));			    
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
-			    	// Write Results
+				// Click on 'Add New Issue' option under 'Actions' pop up menu
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "New Issue added";
+				// Assertion 1.1: Verify that When clicked on 'Add new Issue' option, a issue should be added in the segment
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[3]/span/span[@class='menubar']/span/span[@class='dropmenu']/span"));
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Menu")){
+					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-	            }
-			    else{
-			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("details")+" Actual "+GlobalVariables.oElement.getText();
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Menu' "+" Actual " + GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Click on 'done' button
+			    GlobalVariables.iStepNo++;
+			    GlobalVariables.sDescription="Done";
+			    GlobalVariables.oDriver.findElement(By.className("close")).click();
+			    // Write Results
+			    LogFunctions.writeLogs(GlobalVariables.sDescription);
+			    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);
 			    

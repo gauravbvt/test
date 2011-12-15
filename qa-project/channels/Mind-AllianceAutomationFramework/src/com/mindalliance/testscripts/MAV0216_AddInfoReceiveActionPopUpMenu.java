@@ -63,13 +63,12 @@ public class MAV0216_AddInfoReceiveActionPopUpMenu
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				// Click on Show pop menu
+				// Click on Action pop menu
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Receive Info Action Pop Up Menu";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"))).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu")));
-				GlobalVariables.oElement.click();
 				// Assertion: Verify Show pop up of menu of sent info is present.
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu")));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("action"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

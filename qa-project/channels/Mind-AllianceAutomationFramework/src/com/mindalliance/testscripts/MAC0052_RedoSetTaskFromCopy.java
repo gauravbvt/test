@@ -180,9 +180,6 @@ public class MAC0052_RedoSetTaskFromCopy {
 				Thread.sleep(3000);
 				// Assertion: Verify that When clicked on 'Undo set task from copy' option, the task's details should be removed and its respective details should be restored in the task
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				if (GlobalVariables.oElement.getText().equals("")) {
 					// Write Results

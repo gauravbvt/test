@@ -60,7 +60,7 @@ public class MAV0095_orgUnderAboutPlanSegment
 			    // Assertion: Verify that page loaded with heading "Organizations" 
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Organization' gets loaded on the About Plan Segment window";
-			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionOrg")));
+			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionOrgSeg")));
 			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("organizationsInThisSegment"))) {
 			    	 // Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -78,6 +78,18 @@ public class MAV0095_orgUnderAboutPlanSegment
 				Thread.currentThread();
 				Thread.sleep(1000); 
 			    
+				// Click on 'done' button
+			    GlobalVariables.iStepNo++;
+			    GlobalVariables.sDescription="Done";
+			    GlobalVariables.oDriver.findElement(By.className("close")).click();
+			    // Write Results
+			    LogFunctions.writeLogs(GlobalVariables.sDescription);
+			    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(1000);
+				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
@@ -97,7 +109,6 @@ public class MAV0095_orgUnderAboutPlanSegment
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 		} 
 		catch (Exception e) {
-			System.out.println(e.getMessage()+"Hie3........");
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

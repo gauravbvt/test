@@ -2,6 +2,7 @@ package com.mindalliance.testscripts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
@@ -102,10 +103,11 @@ public class MAV0199_AddInfoReceiveSendInformation
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Information Details Entered";				
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Sends Information"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Receives informations"));
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion : Verify that Add Info Received Information is entered successfully
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Sends Information"))) {
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Receives informations"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

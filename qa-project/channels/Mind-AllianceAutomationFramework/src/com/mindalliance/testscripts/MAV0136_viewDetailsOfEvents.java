@@ -62,8 +62,8 @@ public class MAV0136_viewDetailsOfEvents
 				// Create an event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event created";
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Event"));
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -72,7 +72,7 @@ public class MAV0136_viewDetailsOfEvents
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -127,16 +127,16 @@ public class MAV0136_viewDetailsOfEvents
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Close Event Window
-				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Close AboutPlan Window
-				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

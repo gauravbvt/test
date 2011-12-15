@@ -123,24 +123,15 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium")));
 				options = GlobalVariables.oDropDown.getOptions();
 				for(WebElement option : options) {
-					if("newMedium".equals(option.getText())){
+					if(option.getText().equals(GlobalVariables.viewElements.get("newMedium"))){
 						option.setSelected();
-						GlobalVariables.bIsSuccess=Boolean.TRUE;
+				    	// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
 						break;
 					}
 				}
-				if(GlobalVariables.bIsSuccess==Boolean.FALSE){
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
-			    else{
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

@@ -86,6 +86,7 @@ public class MAV0227_OrganizationContactInfo {
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("index"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
+						GlobalVariables.sStrCheck=li.getText();
 						if (li.getText().equals(sOrgName)){
 							li.findElement(By.linkText(sOrgName)).click();
 							break;
@@ -97,11 +98,12 @@ public class MAV0227_OrganizationContactInfo {
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
-					else{						
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+					else{	
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName+"' "+" Actual " + GlobalVariables.sStrCheck;
+				    	// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 					}
 					// WebElement Synchronization
 					Thread.currentThread();
