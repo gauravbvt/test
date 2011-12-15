@@ -56,18 +56,17 @@ public class ChannelsServiceImpl implements ChannelsService {
      * Get scope of production plan.
      * Available only to its planners.
      * @param uri the plan's URI
+     * @param version a plan version
      * @return a plan's scope
      */
-    public PlanScopeData getPlanScope( String uri ) {
+    public PlanScopeData getPlanScope( String uri, String version ) {
         try {
             User user = User.current();
-            Plan plan = planManager.findProductionPlan( uri );
-            if ( plan == null )
+            Plan plan = planManager.getPlan( uri, Integer.parseInt( version ) );
+            if ( plan == null || !user.isPlanner( uri ) ) {
                 throw new Exception( "Plan " + uri + " is not available" );
-            if ( user.isPlanner( plan.getUri() ) ) {
-                return ( new PlanScopeData( plan, getPlanService( plan ) ) );
             } else {
-                throw new Exception( "Plan " + uri + " is not available" );
+                return ( new PlanScopeData( plan, getPlanService( plan ) ) );
             }
         } catch ( Exception e ) {
             throw new WebApplicationException(
@@ -80,16 +79,17 @@ public class ChannelsServiceImpl implements ChannelsService {
 
     @Override
     /**
-     * Get summaries of all production plans for which the user is authorized.
-     * @return plan identifiers
+     * Get summaries of all versions of all plans visible to the user.
+     * @return plan summaries
      */
     public PlanSummariesData getPlans() {
         User user = User.current();
         List<PlanSummaryData> result = new ArrayList<PlanSummaryData>();
         for ( Plan plan : planManager.getPlans() ) {
             String uri = plan.getUri();
-            if ( plan.isProduction() && !user.getRole( uri ).equals( User.UNAUTHORIZED ) ) {
-                result.add( new PlanSummaryData( getPlanService( plan )));
+            if ( !user.getRole( uri ).equals( User.UNAUTHORIZED )
+                    && ( user.isPlanner( uri ) || plan.isProduction() ) ) {
+                result.add( new PlanSummaryData( getPlanService( plan ) ) );
             }
         }
         return new PlanSummariesData( result );
@@ -146,7 +146,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         } catch ( Exception e ) {
             LOG.error( "Plan not found " + uri + " version " + version );
         }
-        if ( plan == null || user.getRole( uri ).equals( User.UNAUTHORIZED ) ) {
+        if ( plan == null || !user.isPlanner( uri ) ) {
             LOG.error( user.getUsername() + " is not authorized to access plan " + uri );
             throw new WebApplicationException(
                     Response
@@ -167,7 +167,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         Participation participation = planService.findParticipation( user.getUsername() );
         if ( participation != null ) {
             Actor participant = participation.getActor();
-            if ( participant.equals(  actor ) )
+            if ( participant.equals( actor ) )
                 return true;
             else
                 // or an underling in a common organization

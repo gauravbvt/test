@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.model.Plan;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.text.SimpleDateFormat;
 
 /**
  * Web Service data element for the identity of a plan.
@@ -13,7 +14,7 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 12/1/11
  * Time: 11:28 AM
  */
-@XmlType( propOrder = {"uri", "name", "version"} )
+@XmlType( propOrder = {"uri", "name", "version", "release", "dateVersioned"} )
 public class PlanIdentifierData {
 
     private Plan plan;
@@ -39,6 +40,20 @@ public class PlanIdentifierData {
     @XmlElement
     public int getVersion() {
         return plan.getVersion();
+    }
+
+    @XmlElement
+    public String getRelease() {
+        return plan.isDevelopment()
+                ? "development"
+                : plan.isProduction()
+                ? "production"
+                : "retired";
+    }
+
+    @XmlElement
+    public String getDateVersioned() {
+        return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( plan.getWhenVersioned() );
     }
 
 }

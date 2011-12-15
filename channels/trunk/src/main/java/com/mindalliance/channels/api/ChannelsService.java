@@ -24,20 +24,20 @@ import javax.ws.rs.core.MediaType;
 public interface ChannelsService {
 
     @GET
-    @Path( "plan/{uri}/scope" )
+    @Path( "plan/{uri}/version/{version}/scope" )
     @Produces( MediaType.APPLICATION_XML )
     /**
-     * Get the scope of a production plan (for authenticated planners only).
+     * Get the scope of a version of a plan (for authorized planners only).
      * @param uri a plan's URI
      * @return a plan's scope
      */
-    PlanScopeData getPlanScope( @PathParam( "uri" ) String uri );
+    PlanScopeData getPlanScope( @PathParam( "uri" ) String uri, @PathParam( "version") String version );
 
     @GET
     @Path( "plans" )
     @Produces( MediaType.APPLICATION_XML )
     /**
-     * Get summaries of all production plans visible to the authenticated user.
+     * Get summaries of all plan versions visible to the authenticated user.
      * @return plan summaries
      */
     PlanSummariesData getPlans();
@@ -47,7 +47,7 @@ public interface ChannelsService {
     @Path( "plan/{uri}/procedures/agent/{agentId}" )
     @Produces( MediaType.APPLICATION_XML )
     /**
-     * Get the procedures of an agent in a plan (for authenticated planners or user participating in plan as the agent).
+     * Get the procedures of an agent in a plan (for authorized planners or user participating in plan as the agent).
      * @param uri a plan's URI
      * @param agentId an agent's id
      * @return the procedures of the agent from the plan
@@ -58,7 +58,7 @@ public interface ChannelsService {
     @Path( "plan/{uri}/version/{version}/issues" )
     @Produces( MediaType.APPLICATION_XML )
     /**
-     * Get the issues reported and detected in a plan (for authenticated planners).
+     * Get the issues reported and detected in a plan (for authorized planners).
      * @param uri a plan's URI
      * @return plan issues
      */

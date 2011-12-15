@@ -15,7 +15,9 @@ import com.mindalliance.channels.core.query.PlanService;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,7 +29,7 @@ import java.util.List;
  * Time: 12:25 PM
  */
 @XmlRootElement( name = "procedures", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"planIdentifier", "actor", "employments", "procedures", "environment"} )
+@XmlType( propOrder = {"date", "planIdentifier", "actor", "employments", "procedures", "environment"} )
 public class ProceduresData {
 
     private Plan plan;
@@ -46,6 +48,11 @@ public class ProceduresData {
         this.plan = plan;
         this.actor = actor;
         this.planService = planService;
+    }
+
+    @XmlElement
+    public String getDate() {
+        return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() );
     }
 
     @XmlElement( name = "plan" )
