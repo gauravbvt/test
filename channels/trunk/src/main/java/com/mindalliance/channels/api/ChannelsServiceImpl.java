@@ -53,6 +53,25 @@ public class ChannelsServiceImpl implements ChannelsService {
 
     @Override
     /**
+     * Get summaries of all versions of all plans visible to the user.
+     * @return plan summaries
+     */
+    public PlanSummariesData getPlans() {
+        LOG.info( "Getting summaries for all visible plans" );
+        User user = User.current();
+        List<PlanSummaryData> result = new ArrayList<PlanSummaryData>();
+        for ( Plan plan : planManager.getPlans() ) {
+            String uri = plan.getUri();
+            if ( !user.getRole( uri ).equals( User.UNAUTHORIZED )
+                    && ( user.isPlanner( uri ) || plan.isProduction() ) ) {
+                result.add( new PlanSummaryData( getPlanService( plan ) ) );
+            }
+        }
+        return new PlanSummariesData( result );
+    }
+
+    @Override
+    /**
      * Get scope of production plan.
      * Available only to its planners.
      * @param uri the plan's URI
@@ -60,6 +79,7 @@ public class ChannelsServiceImpl implements ChannelsService {
      * @return a plan's scope
      */
     public PlanScopeData getPlanScope( String uri, String version ) {
+        LOG.info( "Getting scope for plan " + uri + " version " + version );
         try {
             User user = User.current();
             Plan plan = planManager.getPlan( uri, Integer.parseInt( version ) );
@@ -78,25 +98,8 @@ public class ChannelsServiceImpl implements ChannelsService {
     }
 
     @Override
-    /**
-     * Get summaries of all versions of all plans visible to the user.
-     * @return plan summaries
-     */
-    public PlanSummariesData getPlans() {
-        User user = User.current();
-        List<PlanSummaryData> result = new ArrayList<PlanSummaryData>();
-        for ( Plan plan : planManager.getPlans() ) {
-            String uri = plan.getUri();
-            if ( !user.getRole( uri ).equals( User.UNAUTHORIZED )
-                    && ( user.isPlanner( uri ) || plan.isProduction() ) ) {
-                result.add( new PlanSummaryData( getPlanService( plan ) ) );
-            }
-        }
-        return new PlanSummariesData( result );
-    }
-
-    @Override
     public ProceduresData getProcedures( String uri, String actorId ) {
+        LOG.info( "Getting user procedures of agent " + actorId + " for production version of plan " + uri );
         User user = User.current();
         Plan plan = null;
         try {
@@ -125,6 +128,7 @@ public class ChannelsServiceImpl implements ChannelsService {
 
     @Override
     public ProceduresData getMyProcedures( String uri ) {
+        LOG.info( "Getting user procedures for production version of plan " + uri );
         try {
             User user = User.current();
             Plan plan = planManager.findProductionPlan( uri );
@@ -152,6 +156,7 @@ public class ChannelsServiceImpl implements ChannelsService {
 
     @Override
     public IssuesData getIssues( String uri, String version ) {
+        LOG.info( "Getting issues in plan " + uri + " version " + version );
         User user = User.current();
         Plan plan = null;
         try {
