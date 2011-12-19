@@ -55,7 +55,7 @@ public class CP022_ShowReceivedMessages
 				// Click on 'show sent' Link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="show sent";
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/span/div/div/div[2]/div/div/a[2]/span")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCollebrationSentReceiveMessageLink"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -67,7 +67,7 @@ public class CP022_ShowReceivedMessages
 				// Click on 'show received' Link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="show sent";
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/span/div/div/div[2]/div/div/a[2]/span")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCollebrationSentReceiveMessageLink"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -79,7 +79,7 @@ public class CP022_ShowReceivedMessages
 				// Assertion: Verify that show received link changes to show sent 
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Show received link changes to show sent";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/span/div/div/div[2]/div/div/a[2]/span"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCollebrationSentReceiveMessageLink")));
 				if (GlobalVariables.oElement.getText().equals("show sent")) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

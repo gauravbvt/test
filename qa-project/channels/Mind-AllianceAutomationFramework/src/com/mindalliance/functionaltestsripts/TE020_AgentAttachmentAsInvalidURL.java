@@ -111,7 +111,7 @@ public class TE020_AgentAttachmentAsInvalidURL
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Assertion : Verify that URL gets Attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("attach"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URLAssertion"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

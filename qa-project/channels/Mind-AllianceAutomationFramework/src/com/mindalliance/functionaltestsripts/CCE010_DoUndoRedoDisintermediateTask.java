@@ -272,12 +272,12 @@ public class CCE010_DoUndoRedoDisintermediateTask
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("redoDisintermediate"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					// Assertion: When clicked on 'Redo disintermediate' option, the task should be disntermediate again
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//span[@class='menubar']/span[3]/span/ul"));
 					List<WebElement> list = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: list){
-						if (li.getValue().equals("Redo")){
+						if (li.getValue().equals("Redo disintermediate")){
 							// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

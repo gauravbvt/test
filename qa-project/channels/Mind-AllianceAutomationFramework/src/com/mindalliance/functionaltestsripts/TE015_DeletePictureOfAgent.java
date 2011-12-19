@@ -121,7 +121,7 @@ public class TE015_DeletePictureOfAgent
 					// Delete Attachment
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Delete Picture";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteAgentURL"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
@@ -132,7 +132,7 @@ public class TE015_DeletePictureOfAgent
 					Thread.currentThread();
 					Thread.sleep(1000);
 					// Assertion: verify that file is deleted
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("grouped"));
 					if (GlobalVariables.oElement.getText().equals("")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

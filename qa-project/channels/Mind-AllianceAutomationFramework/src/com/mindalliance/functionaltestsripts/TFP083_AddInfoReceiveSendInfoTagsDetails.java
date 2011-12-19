@@ -2,6 +2,7 @@ package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
@@ -81,6 +82,7 @@ public class TFP083_AddInfoReceiveSendInfoTagsDetails
 				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:tags:tags")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:tags:tags"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Tags"));
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion: Verify that Issue details can be entered
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:tags:tags"));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Tags"))){
@@ -123,6 +125,7 @@ public class TFP083_AddInfoReceiveSendInfoTagsDetails
 				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:tags:tags")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:tags:tags"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Tags"));
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion: Verify that Issue details can be entered
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:tags:tags"));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Tags"))){

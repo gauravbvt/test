@@ -68,7 +68,7 @@ public class TFP024_EventUnnamed
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that Phase window opens with name 'Responding'
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name"));
 				if(GlobalVariables.oElement.getText().equals("")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

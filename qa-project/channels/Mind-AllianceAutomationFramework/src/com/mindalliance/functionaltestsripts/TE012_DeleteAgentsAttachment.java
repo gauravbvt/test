@@ -111,7 +111,7 @@ public class TE012_DeleteAgentsAttachment
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: verify that file is attached
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
 					if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -132,7 +132,7 @@ public class TE012_DeleteAgentsAttachment
 					// Delete Attachment
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Delete Attachment";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteAgentURL"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
@@ -143,7 +143,7 @@ public class TE012_DeleteAgentsAttachment
 					Thread.currentThread();
 					Thread.sleep(1000);
 					// Assertion: verify that file is deleted
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("grouped"));
 					if (GlobalVariables.oElement.getText().equals("")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

@@ -88,7 +88,7 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Close Survey Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				GlobalVariables.oDriver.findElement(By.xpath("//span[2]/div[@class='floating']/div[@class='float-bar']/div[@class='float-bar-close']/a/img")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -130,7 +130,7 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Close Survey Window
-				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+				GlobalVariables.oDriver.findElement(By.xpath("//span[2]/div[@class='floating']/div[@class='float-bar']/div[@class='float-bar-close']/a/img")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

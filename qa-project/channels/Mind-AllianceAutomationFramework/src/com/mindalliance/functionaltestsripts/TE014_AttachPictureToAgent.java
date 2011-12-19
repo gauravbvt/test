@@ -134,7 +134,7 @@ public class TE014_AttachPictureToAgent
 					// Delete Attachment
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Delete Attachment";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteAgentURL"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

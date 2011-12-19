@@ -90,8 +90,8 @@ public class TE024_UpdateAgentContactInfo
 				//Update Agent Contact Information
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Contact Information Updated";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:medium")).click();
-				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:medium")));
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:contact:channels:editable-container:channels:0:medium")).click();
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:contact:channels:editable-container:channels:0:medium")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("email").equals(option.getText())){
@@ -103,19 +103,19 @@ public class TE024_UpdateAgentContactInfo
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Update Email
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:address")).clear();
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:contact:channels:editable-container:channels:0:address")).clear();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:address"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:contact:channels:editable-container:channels:0:address"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("email"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Assertion : Verify that Agent's Contact Information Gets Updated
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:address")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:address"));
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:contact:channels:editable-container:channels:0:address")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:contact:channels:editable-container:channels:0:address"));
 				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("email"))) {					
 			    	LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -129,7 +129,7 @@ public class TE024_UpdateAgentContactInfo
 						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 			    }
 				//Delete Agent's Contact Information
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:contact:channels:editable-container:channels:0:included")).click();
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:contact:channels:editable-container:channels:0:included")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

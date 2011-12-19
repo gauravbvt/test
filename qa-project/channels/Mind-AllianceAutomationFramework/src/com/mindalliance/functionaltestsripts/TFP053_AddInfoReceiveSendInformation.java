@@ -2,6 +2,8 @@ package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -67,6 +69,7 @@ public class TFP053_AddInfoReceiveSendInformation
 				GlobalVariables.sDescription = "Information Details Entered";				
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Sends Information"));
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion : Verify that Add Info Sent Information is entered successfully
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name"));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Sends Information"))) {
@@ -76,10 +79,11 @@ public class TFP053_AddInfoReceiveSendInformation
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Sends Informations' "+" Actual " + GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -101,20 +105,22 @@ public class TFP053_AddInfoReceiveSendInformation
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Information Details Entered";				
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Sends Information"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Receives informations"));
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion : Verify that Add Info Received Information is entered successfully
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Sends Information"))) {
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Receives informations"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Receives Information' "+" Actual " + GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();

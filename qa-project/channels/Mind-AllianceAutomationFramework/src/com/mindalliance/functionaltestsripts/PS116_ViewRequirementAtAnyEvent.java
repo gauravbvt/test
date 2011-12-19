@@ -65,7 +65,7 @@ public class PS116_ViewRequirementAtAnyEvent
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Any event";
 				GlobalVariables.bIsSuccess=Boolean.FALSE;
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:event")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:event")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.testData.get("Any event").equals(option.getText())){

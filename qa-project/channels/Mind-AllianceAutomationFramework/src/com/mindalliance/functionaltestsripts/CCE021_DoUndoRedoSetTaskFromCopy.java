@@ -81,7 +81,7 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				// Add details for New Task
 				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Set task from Copy"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -147,13 +147,13 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span[2]")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// ASSERTION: When clicked on 'Set task from copy' option, the copied task details should be saved in the selected task
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-				if (GlobalVariables.oElement.getValue().equals("Set task from Copy")) {
+				if (GlobalVariables.oElement.getValue().equals("Task Sender")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -178,10 +178,10 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion: Verify that When clicked on 'Undo set task from copy' option, the task's details should be removed and its respective details should be restored in the task
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				if (GlobalVariables.oElement.getText().equals("")) {
 					// Write Results
@@ -206,12 +206,12 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("redoSetTaskFromCopy"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Assertion: Verify that When clicked on 'Undo set task from copy' option, the task's details should be removed and its respective details should be restored in the task
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				if (GlobalVariables.oElement.getText().equals("")) {
 					// Write Results
@@ -228,16 +228,16 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
 				List<WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {

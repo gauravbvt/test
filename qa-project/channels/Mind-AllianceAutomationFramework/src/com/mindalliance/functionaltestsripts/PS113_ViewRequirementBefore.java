@@ -65,7 +65,7 @@ public class PS113_ViewRequirementBefore
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Situation - Before";
 				GlobalVariables.bIsSuccess=Boolean.FALSE;
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:tabs:panel:timing")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:timing")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.testData.get("Before").equals(option.getText())){

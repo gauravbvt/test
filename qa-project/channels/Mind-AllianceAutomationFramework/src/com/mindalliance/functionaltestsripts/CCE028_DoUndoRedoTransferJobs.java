@@ -207,7 +207,7 @@ public class CCE028_DoUndoRedoTransferJobs
 					Thread.currentThread();
 					Thread.sleep(2000);
 					
-					// Check 'Transfer Jobs' Checkbox 
+					// Check 'Transfer Jobs' Check box 
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Check Transfer Jobs Checkbox";
 					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:transferContainer:transfer")).click();

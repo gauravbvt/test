@@ -2,6 +2,8 @@ package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -68,9 +70,7 @@ public class TFP070_AddInfoReceiveSendInstructions
 				// Within time entered
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:description"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an Instruction"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion : Verify that Instruction details are entered
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:description"));
 				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("This is an Instruction"))) {

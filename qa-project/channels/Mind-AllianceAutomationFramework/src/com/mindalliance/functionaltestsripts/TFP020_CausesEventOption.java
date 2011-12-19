@@ -60,15 +60,12 @@ public class TFP020_CausesEventOption
 				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Event"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion: Verify thatTask causes event
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				if(GlobalVariables.oElement.getValue().contains(GlobalVariables.testData.get("Event"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -113,8 +110,7 @@ public class TFP020_CausesEventOption
 				Thread.sleep(2000);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-					
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");					
 			}
 			else 
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

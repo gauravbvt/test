@@ -82,7 +82,7 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				
 				// Enter Attachment as reference
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New Issue Attachment As Reference Of Send Panel Entered";
+				GlobalVariables.sDescription = "New Issue Attachment As Policy Of Send Panel Entered";
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:type")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				for(WebElement option : options) {
@@ -103,7 +103,7 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("flow-details"));
 				GlobalVariables.oElement.click();
 				for(int i=0;i<15;i++)
 					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
@@ -111,23 +111,28 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("This is File 1")));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-				}
-				else {
-					GlobalVariables.sVerifyError="Verification Failed Actual 'This is File 1' Expected "+GlobalVariables.oElement.getText();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
+				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
+				for (WebElement li: tds){
+					if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+						break;
+					}
+					else{
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
+				    	// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+						break;
+				    }
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click 'Add info received' Link. 
 				GlobalVariables.iStepNo++ ;
@@ -176,7 +181,7 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Scroll Down
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("part-header"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("flow-details"));
 				GlobalVariables.oElement.click();
 				for(int i=0;i<15;i++)
 					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
@@ -184,23 +189,28 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("This is File 1")));
-				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);					
-				}
-				else {
-					GlobalVariables.sVerifyError="Verification Failed Actual 'This is File 1' Expected "+GlobalVariables.oElement.getText();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
+				tds = GlobalVariables.oElement.findElements(By.tagName("li"));
+				for (WebElement li: tds){
+					if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+						break;
+					}
+					else{
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
+				    	// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+						break;
+				    }
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization

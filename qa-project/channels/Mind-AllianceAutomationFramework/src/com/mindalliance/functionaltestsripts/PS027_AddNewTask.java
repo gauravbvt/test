@@ -1,8 +1,6 @@
 package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -49,28 +47,25 @@ public class PS027_AddNewTask
 				//Assertion : Verify that survey window gets opened
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Task Added";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-				for(int i=0;i<50;i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task 1"));
-				GlobalVariables.oElement.sendKeys(Keys.ENTER);
+				if(GlobalVariables.oElement.getText().equals("doing something")){
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'doing something' "+" Actual " + GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(2000);				
 				//Remove Task
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoAddNewTask"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoAddNewTask"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
