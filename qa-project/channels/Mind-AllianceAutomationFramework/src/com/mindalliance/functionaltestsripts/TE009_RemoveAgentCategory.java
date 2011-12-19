@@ -65,8 +65,9 @@ public class TE009_RemoveAgentCategory
 				Thread.currentThread();
 				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sAgentName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sAgentName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -88,8 +89,9 @@ public class TE009_RemoveAgentCategory
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Category Added";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Category 1"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sAgentCategory = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sAgentCategory);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
@@ -116,8 +118,7 @@ public class TE009_RemoveAgentCategory
 				Thread.currentThread();
 				Thread.sleep(3000);
 				//Assertion : Verify that Agent Category gets Deleted
-				try
-				{
+				try{
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentCategory")));
 					GlobalVariables.sVerifyError="Verification Failed. Expected '' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
@@ -125,8 +126,7 @@ public class TE009_RemoveAgentCategory
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 				}
-				catch(Exception e)
-				{
+				catch(Exception e){
 			    	LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);

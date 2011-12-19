@@ -66,8 +66,9 @@ public class TE007_AddAgentCategory
 				Thread.currentThread();
 				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sAgentName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sAgentName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -93,7 +94,8 @@ public class TE007_AddAgentCategory
 				Thread.currentThread();
 				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Category 1"));
+				String sAgentCategory = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sAgentCategory);
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 			    // WebElement Synchronization
 				Thread.currentThread();
@@ -103,14 +105,14 @@ public class TE007_AddAgentCategory
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("category1"))){
+				if(GlobalVariables.oElement.getText().equals(sAgentCategory)){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 		    	else{
-		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("category1")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
+		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+sAgentCategory+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

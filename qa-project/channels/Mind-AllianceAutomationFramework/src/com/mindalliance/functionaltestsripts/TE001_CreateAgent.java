@@ -65,8 +65,9 @@ public class TE001_CreateAgent
 				Thread.currentThread();
 				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sAgentName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sAgentName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -80,14 +81,14 @@ public class TE001_CreateAgent
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Select 'Agent' Option from List
-		    	if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.viewElements.get("agent1"))){
+		    	if(GlobalVariables.oElement.getText().equalsIgnoreCase(sAgentName)){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 		    	else{
-		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("agent1")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
+		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+sAgentName+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
