@@ -60,8 +60,7 @@ public class MAC0016_UndoRemoveIssue {
 				Thread.currentThread();
 				Thread.sleep(3000);				
 				// Assertion: Verify that When clicked on 'Remove issue' option, a respective issue should be removed from the segment
-				GlobalVariables.oDriver.findElement(By.className("issues")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/span/div/span/ol/li[2]"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("issues"));
 				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
 				for (WebElement ol: tds){
 					if(ol.getText().equals("")){
@@ -82,7 +81,7 @@ public class MAC0016_UndoRemoveIssue {
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(3000);	
 				
 				// Click on 'Undo remove issue' under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
