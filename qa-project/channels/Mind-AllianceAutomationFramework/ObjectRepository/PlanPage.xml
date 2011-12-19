@@ -74,7 +74,8 @@
 <xPathLegend>//span/div/div/span[7]/img</xPathLegend>
 <xPathDoingSomeThing>//span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span[2]</xPathDoingSomeThing>
 <xPathPlanURIName>//div[4]/div/div[2]/div[2]/table/tbody/tr/td/span</xPathPlanURIName>
-<xPathCollebrationPanelResstMessage>/span/span/div/div/div[2]/div[4]/input[3]</xPathCollebrationPanelResstMessage>
+<xPathCollebrationSentReceiveMessageLink>//span/span/div/div/div[@class='tab-panel']/div[@class='social-controls']/div[@class='text-controls']/a[2]/span</xPathCollebrationSentReceiveMessageLink>
+<xPathCollebrationPanelResstMessage>//span/span/div[@id='social']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='new-message']/input[3]</xPathCollebrationPanelResstMessage>
 <xPathShowHidePlanners>//div[13]/span/span[2]/span/ul/li/span/a/span</xPathShowHidePlanners>
 <xPathShowAboutPlan>//div[13]/span/span[2]/span/ul/li[2]/span/a/span</xPathShowAboutPlan>
 <xPathShowAboutPlanSegment>//div[13]/span/span[2]/span/ul/li[3]/span/a/span</xPathShowAboutPlanSegment>
@@ -124,7 +125,7 @@
 <xPathSurvey>//span[2]/div/span/div/div/h1</xPathSurvey>
 <xPathAgentContacts>//div[@class='aspect']/span/span/table/tbody/tr/td[5]/span/a/span</xPathAgentContacts>
 <xPathAgent>//div[4]/div/span/div/div[2]/span/span[2]/h3/span[2]/span/a/span</xPathAgent>
-<xPathAgentCategory>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathAgentCategory>
+<xPathAgentCategory>//div[3]/div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathAgentCategory>
 <xPathDeleteAgentCategory>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteAgentCategory>
 <xPathAgentViewAllTypes>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/a</xPathAgentViewAllTypes>
 <xPathURL>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathURL>
@@ -152,7 +153,7 @@
 <xPathCopyTaskAttachment>//span/div/div[@id='part']/div/div[@class='section-content']/table[2]/tbody/tr[14]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li/a/img</xPathCopyTaskAttachment>
 <xPathDeleteOrganizationCategories>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteOrganizationCategories>
 <xPathSendFeedBackOfIssueSummaryReport>/html/body/div/div/span/div/a/span</xPathSendFeedBackOfIssueSummaryReport>
-<xPathTaskAttachmentURL>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/li/span/span/input[2]</xPathTaskAttachmentURL>
+<xPathTaskAttachmentURL>//span/div/div[3]/div[@class='part-header']/div[@class='section-content']/table/tbody/tr[14]/td[@class='grouped']/ul[@class='attach']/li[@class='controls']/span/span/input[2]</xPathTaskAttachmentURL>
 <xPathTaskIssueMenu>//span/div/div[3]/div/div[2]/span/div/span/ol/li/span/span/span/span/span</xPathTaskIssueMenu>
 <xPathTaskIssueAttachmentURL>//span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathTaskIssueAttachmentURL>
 <xPathSendsAttachmentURL>//span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[13]/td/ul/li/span/span/input[2]</xPathSendsAttachmentURL>
@@ -185,11 +186,11 @@
 <xPathWhenTabOfReceiversOfRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[2]/a/span</xPathWhenTabOfReceiversOfRequirement>
 <xPathHowManyOfReceiversOfRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[3]/a/span</xPathHowManyOfReceiversOfRequirement>
 <!-- Assertions -->
-<xPathAssertionInfoTagsRequirement>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tbody/tr/td[4]/span</xPathAssertionInfoTagsRequirement>
-<xPathAssertionInfoNameRequirement>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tbody/tr/td[3]/span</xPathAssertionInfoNameRequirement>
+<xPathAssertionInfoTagsRequirement>//div[4]/div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/span/table[@class='data-table']/tbody/tr[@class='even']/td[4]/span</xPathAssertionInfoTagsRequirement>
+<xPathAssertionInfoNameRequirement>//div[4]/div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/span/table[@class='data-table']/tbody/tr[@class='even']/td[3]/span</xPathAssertionInfoNameRequirement>
 <xPathAssertionRemoveRequirement>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRemoveRequirement>
 <xPathAssertionRequirementUndo>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRequirementUndo>
-<xPathAssertionRequirementName>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tbody/tr/td/span</xPathAssertionRequirementName>
+<xPathAssertionRequirementName>//div[4]/div/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/span/table[@class='data-table']/tbody/tr[@class='even']/td/span</xPathAssertionRequirementName>
 <xPathNewRequirementDefinitionAssertion>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/div[@class='req']/h3</xPathNewRequirementDefinitionAssertion>
 <xPathAssertionCopyCapability>//div[@class='change-message']/span/span</xPathAssertionCopyCapability>
 <xPathAssertionCopyNeed>//div[@class='change-message']/span/span</xPathAssertionCopyNeed>
