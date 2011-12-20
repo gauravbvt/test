@@ -6,7 +6,6 @@
 
 package com.mindalliance.channels.core.command;
 
-import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.commands.DisconnectFlow;
 import com.mindalliance.channels.core.command.commands.RemoveCapability;
 import com.mindalliance.channels.core.command.commands.RemoveNeed;
@@ -16,9 +15,6 @@ import com.mindalliance.channels.core.dao.Journal;
 import com.mindalliance.channels.core.dao.JournalCommand;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Delay;
-import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -27,10 +23,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -303,53 +296,6 @@ public class DefaultCommander implements Commander {
             goalMaps.add( goal.toMap() );
         }
      */
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public void initPartFrom( Part part, Map<String, Object> state ) {
-        part.setDescription( (String) state.get( "description" ) );
-        part.setTask( (String) state.get( "task" ) );
-        part.setRepeating( (Boolean) state.get( "repeating" ) );
-        part.setSelfTerminating( (Boolean) state.get( "selfTerminating" ) );
-        part.setTerminatesEventPhase( (Boolean) state.get( "terminatesEventPhase" ) );
-        part.setStartsWithSegment( (Boolean) state.get( "startsWithSegment" ) );
-        part.setOngoing( (Boolean) state.get( "ongoing" ) );
-        part.setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
-        part.setCompletionTime( (Delay) state.get( "completionTime" ) );
-        part.setAttachments( new ArrayList<Attachment>( (List<Attachment>) state.get( "attachments" ) ) );
-        List<Map<String, Object>> goalStates = (List<Map<String, Object>>) state.get( "goals" );
-        QueryService queryService = getQueryService();
-        for ( Map<String, Object> goalMap : goalStates ) {
-            Goal goal = fromMap( goalMap, queryService );
-            part.addGoal( goal );
-        }
-        //        part.setGoals( new ArrayList<Goal>( (List<Goal>) state.get( "goals" ) ) );
-        if ( state.get( "initiatedEvent" ) != null )
-            part.setInitiatedEvent( queryService.findOrCreateType( Event.class,
-                                                                   (String) state.get( "initiatedEvent" ) ) );
-        else
-            part.setInitiatedEvent( null );
-        if ( state.get( "actor" ) != null )
-            part.setActor( queryService.retrieveEntity( Actor.class, state, "actor" ) );
-        else
-            part.setActor( null );
-        if ( state.get( "role" ) != null )
-            part.setRole( queryService.retrieveEntity( Role.class, state, "role" ) );
-        else
-            part.setRole( null );
-        if ( state.get( "organization" ) != null )
-            part.setOrganization( queryService.retrieveEntity( Organization.class, state, "organization" ) );
-        else
-            part.setOrganization( null );
-        if ( state.get( "jurisdiction" ) != null )
-            part.setJurisdiction( queryService.retrieveEntity( Place.class, state, "jurisdiction" ) );
-        else
-            part.setJurisdiction( null );
-        if ( state.get( "location" ) != null )
-            part.setLocation( queryService.retrieveEntity( Place.class, state, "location" ) );
-        else
-            part.setLocation( null );
-    }
 
     /**
      * Create goal from mapped state.

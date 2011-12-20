@@ -67,7 +67,9 @@ public class SetPartFromCopy extends AbstractCommand {
             multi = makeSubCommands( copy );
             set( "subCommands", multi );
         }
-        commander.initPartFrom( part, (Map<String, Object>) copy.get( "partState" ) );
+        part.initFromMap(
+                ( Map<String, Object>)copy.get( "partState" ),
+                commander.getQueryService() );
         multi.execute( commander );
         describeTarget( part );
         return new Change( Type.Recomposed, segment );

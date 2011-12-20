@@ -233,6 +233,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.PartIsOngoingAndStartsWithSegment"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.NoIntermediateToBypass"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.RequirementNotSatisfiedByOrganization"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.AssignedTaskLocationNotCommunicated"/>
             </list>
         </property>
     </bean>

@@ -1,6 +1,5 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
@@ -10,6 +9,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +39,8 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
             Part target = (Part) flow.getTarget();
             Organization sourceOrg = source.getOrganization();
             Organization targetOrg = target.getOrganization();
-            Place sourceLoc = source.getLocation();
-            Place targetLoc = target.getLocation();
+            Place sourceLoc = source.getKnownLocation();
+            Place targetLoc = target.getKnownLocation();
             Actor sourceActor = source.getActor();
             Actor targetActor = target.getActor();
             if ( ( restriction == Flow.Restriction.SameOrganization ||

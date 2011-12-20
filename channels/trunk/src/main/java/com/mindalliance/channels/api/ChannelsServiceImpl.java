@@ -179,17 +179,14 @@ public class ChannelsServiceImpl implements ChannelsService {
 
     private boolean canSeeProcedures( User user, Actor actor, PlanService planService ) {
         // Planner can see any actor's procedures
-        if ( user.isPlanner( planService.getPlan().getUri() ) )
+        Plan plan = planService.getPlan();
+        if ( plan.isTemplate() || user.isPlanner( plan.getUri() ) )
             return true;
-        // Participating user can see own procedures
+        // Participating user can see own procedures. Supervisor can procedures of supervised.
         Participation participation = planService.findParticipation( user.getUsername() );
         if ( participation != null ) {
             Actor participant = participation.getActor();
-            if ( participant.equals( actor ) )
-                return true;
-            else
-                // or an underling in a common organization
-                return planService.findSupervised( participant ).contains( actor );
+            return participant.equals( actor ) || planService.findSupervised( participant ).contains( actor );
         }
         return false;
     }

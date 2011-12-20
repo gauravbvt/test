@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.jws.WebMethod;
@@ -22,7 +23,7 @@ import java.util.List;
  * Date: 12/6/11
  * Time: 10:27 AM
  */
-@XmlType( propOrder = {"name", "category", "location", "instructions", "teamMates", "goals", "failureImpact", "documentation"} )
+@XmlType( propOrder = {"name", "category", "communicatedLocation", "location", "instructions", "teamMates", "goals", "failureImpact", "documentation"} )
 public class TaskData extends AbstractProcedureElementData {
 
     private Part part;
@@ -31,7 +32,7 @@ public class TaskData extends AbstractProcedureElementData {
         // required
     }
 
-    public TaskData( Assignment assignment,PlanService planService ) {
+    public TaskData( Assignment assignment, PlanService planService ) {
         super( assignment, planService );
     }
 
@@ -54,11 +55,25 @@ public class TaskData extends AbstractProcedureElementData {
     }
 
     @XmlElement
+    public SubjectData getCommunicatedLocation() {
+        if ( getAssignment() == null ) return null;
+        else {
+            Subject subject = getAssignment().getCommunicatedLocation();
+            return subject != null
+                    ? new SubjectData( subject )
+                    : null;
+        }
+    }
+
+    @XmlElement
     public PlaceData getLocation() {
-        Place location = getPart().getLocation();
-        return location != null
-                ? new PlaceData( location, getPlan() )
-                : null;
+        if ( getAssignment() == null ) return null;
+        else {
+            Place location = getAssignment().getLocation();
+            return location != null
+                    ? new PlaceData( location, getPlan() )
+                    : null;
+        }
     }
 
     @XmlElement
@@ -93,8 +108,8 @@ public class TaskData extends AbstractProcedureElementData {
 
     @XmlElement
     public String getFailureImpact() {
-         return getPlanService().computePartPriority( getPart() ).getNegativeLabel();
-     }
+        return getPlanService().computePartPriority( getPart() ).getNegativeLabel();
+    }
 
     @XmlElement
     public DocumentationData getDocumentation() {
@@ -116,8 +131,8 @@ public class TaskData extends AbstractProcedureElementData {
 
     private Part getPart() {
         return part == null
-            ? getAssignment().getPart()
-            : part;
+                ? getAssignment().getPart()
+                : part;
     }
 
     @WebMethod( exclude = true )

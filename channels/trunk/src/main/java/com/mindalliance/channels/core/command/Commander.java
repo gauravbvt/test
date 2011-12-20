@@ -13,7 +13,6 @@ import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 
@@ -358,14 +357,6 @@ public interface Commander {
     boolean isLockable( String className );
 
     ImportExportFactory getImportExportFactory();
-
-    /**
-     * Initialize a part from a preserved state.
-     *
-     * @param part a part
-     * @param state a map
-     */
-    void initPartFrom( Part part, Map<String, Object> state );
 
     /**
      * User left a plan.

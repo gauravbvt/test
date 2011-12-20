@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.AssignedLocation;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
@@ -87,10 +88,13 @@ public class PartConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         if ( part.getLocation() != null ) {
-            writer.startNode( "location" );
+            writer.startNode( "assignedLocation" );
+            context.convertAnother( part.getLocation() );
+/*
             writer.addAttribute( "id", Long.toString( part.getLocation().getId() ) );
             writer.addAttribute( "kind", part.getLocation().isType() ? "Type" : "Actual" );
             writer.setValue( part.getLocation().getName() );
+*/
             writer.endNode();
         }
         if ( part.getJurisdiction() != null ) {
@@ -169,7 +173,7 @@ public class PartConverter extends AbstractChannelsConverter {
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "description" ) ) {
                 part.setDescription( reader.getValue() );
-            } else if ( nodeName.equals( "tags") ) {
+            } else if ( nodeName.equals( "tags" ) ) {
                 part.addTags( reader.getValue() );
             } else if ( nodeName.equals( "detection-waivers" ) ) {
                 importDetectionWaivers( part, reader );
@@ -202,13 +206,21 @@ public class PartConverter extends AbstractChannelsConverter {
                         Long.parseLong( idString ),
                         kind, context ) );
             } else if ( nodeName.equals( "location" ) ) {
+                // deprecated
+                LOG.warn( "The part \"location\" element is deprecated. Use \"assignedLocation\" instead." );
                 String idString = reader.getAttribute( "id" );
                 ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
-                part.setLocation( getEntity(
+                AssignedLocation assignedLocation = new AssignedLocation();
+                assignedLocation.setKind( AssignedLocation.Kind.NamedPlace );
+                assignedLocation.setNamedPlace( getEntity(
                         Place.class,
                         reader.getValue(),
                         Long.parseLong( idString ),
                         kind, context ) );
+                part.setLocation( assignedLocation );
+            } else if ( nodeName.equals( "assignedLocation" ) ) {
+                AssignedLocation assignedLocation = (AssignedLocation) context.convertAnother( part, AssignedLocation.class );
+                part.setLocation( assignedLocation );
             } else if ( nodeName.equals( "jurisdiction" ) ) {
                 String idString = reader.getAttribute( "id" );
                 ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );

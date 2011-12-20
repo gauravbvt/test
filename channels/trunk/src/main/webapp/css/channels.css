@@ -258,6 +258,25 @@ span.entityReference input[type='text'] {
 	min-width: 150px;
 }
 
+#location {
+    display: block;
+    position: relative;
+    width: 98%;
+}
+
+#location select {
+    position: absolute;
+    width: 65px;
+    padding: 1px;
+}
+
+#location span {
+    width: 70%;
+    margin-left: 70px;
+	position: relative;
+	min-width: 150px;
+}
+
 input[type="text"].no-expand {
     width: 5em;
 }

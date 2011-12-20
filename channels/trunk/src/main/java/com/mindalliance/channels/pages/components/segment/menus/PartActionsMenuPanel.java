@@ -68,8 +68,8 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
                     getCommander().cleanup( Organization.class, part.getOrganization().getName() );
                 if ( part.getJurisdiction() != null )
                     getCommander().cleanup( Place.class, part.getJurisdiction().getName() );
-                if ( part.getLocation() != null )
-                    getCommander().cleanup( Place.class, part.getLocation().getName() );
+                if ( part.getKnownLocation() != null )
+                    getCommander().cleanup( Place.class, part.getKnownLocation().getName() );
             }
         } );
         if ( isExpanded( getPart() ) ) {

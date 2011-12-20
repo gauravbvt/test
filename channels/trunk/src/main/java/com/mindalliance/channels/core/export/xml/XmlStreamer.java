@@ -17,6 +17,7 @@ import com.mindalliance.channels.core.dao.Journal;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.export.ConnectionSpecification;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.AssignedLocation;
 import com.mindalliance.channels.core.model.Availability;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
@@ -214,6 +215,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.registerConverter( new EventTimingConverter( this ) );
             stream.registerConverter( new AgreementConverter( this ) );
             stream.registerConverter( new RequirementConverter( this ) );
+            stream.registerConverter( new AssignedLocationConverter( this ) );
             stream.registerConverter( new ExportConverter( this ) );
         }
 
@@ -247,6 +249,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "eventphase", EventPhase.class );
             stream.alias( "eventtiming", EventTiming.class );
             stream.alias( "requirement", Requirement.class );
+            stream.alias( "assignedLocation", AssignedLocation.class );
         }
 
         @Override

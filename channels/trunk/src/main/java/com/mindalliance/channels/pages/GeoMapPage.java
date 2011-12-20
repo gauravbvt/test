@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.GeoLocation;
 import com.mindalliance.channels.core.model.Job;
@@ -9,6 +8,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.geo.GeoService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.PageParameters;
@@ -227,7 +227,7 @@ public class GeoMapPage extends AbstractChannelsWebPage {
             Part part = (Part) geo;
             StringBuilder sb = new StringBuilder();
             sb.append( queryService.getFullTitle( " ", part ) );
-            Place location = part.getLocation();
+            Place location = part.getKnownLocation();
             if ( location != null ) {
                 sb.append( " at " );
                 sb.append( location.getName() );

@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <select wicket:id="kind">
+        <option>Named</option>
+        <option>As communicated</option>
+        <option>Within agent's jurisdiction</option>
+        <option>Within organization's jurisdiction</option>
+    </select>
+    <span wicket:id="named">[entity reference panel]</span>
+    <span wicket:id="subject">
+        in info <input wicket:id="info" type="text" class="phrase"/>
+        <span wicket:id="eoiContainer"> as element <input wicket:id="eoi" type="text" class="phrase"/></span>
+    </span>
+</wicket:panel>
+</body>
+</html>

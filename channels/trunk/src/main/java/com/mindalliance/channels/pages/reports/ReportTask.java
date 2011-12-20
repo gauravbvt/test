@@ -88,7 +88,7 @@ public class ReportTask  implements Serializable, Comparable<ReportTask> {
 
         StringWriter w = new StringWriter();
         w.append( String.valueOf( getPart().getSegment().getPhaseEventTitle() ) );
-        Place location = part.getLocation();
+        Place location = part.getKnownLocation();
         if ( location != null )
             w.append( " in " ).append( String.valueOf( location ) );
         return ensurePeriod( w.toString() );
@@ -110,9 +110,9 @@ public class ReportTask  implements Serializable, Comparable<ReportTask> {
 
     public String getLocationString() {
 
-        return part.getLocation() == null ?
+        return part.getKnownLocation() == null ?
                 "" :
-                ensurePeriod( "This task is located in " + part.getLocation() );
+                ensurePeriod( "This task is located in " + part.getKnownLocation() );
     }
 
     public String getCategoryString() {
@@ -125,7 +125,7 @@ public class ReportTask  implements Serializable, Comparable<ReportTask> {
     }
 
     public Place getLocation() {
-        return getPart().getLocation();
+        return getPart().getKnownLocation();
     }
 
     public String getTeamSpec() {

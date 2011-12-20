@@ -7,8 +7,6 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -16,6 +14,8 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.analysis.DetectedIssue;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -83,7 +83,7 @@ public class RedundantPart extends AbstractIssueDetector {
                && ( part.resourceSpec().narrowsOrEquals( otherPart.resourceSpec(), locale )
                     || otherPart.resourceSpec().narrowsOrEquals( part.resourceSpec(), locale ) )
 
-               && ( ModelEntity.implies( part.getLocation(), otherPart.getLocation(), locale )
-                    || ModelEntity.implies( otherPart.getLocation(), part.getLocation(), locale ) );
+               && ( ModelEntity.implies( part.getKnownLocation(), otherPart.getKnownLocation(), locale )
+                    || ModelEntity.implies( otherPart.getKnownLocation(), part.getKnownLocation(), locale ) );
     }
 }

@@ -145,12 +145,20 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
     }
 
     /**
-     * Get where the task is executed, if specified.
+     * Get where the task is executed, if known from specification, else null.
      *
      * @return a place
      */
     public Place getLocation() {
-        return part.getLocation();
+        AssignedLocation assignedLocation = part.getLocation();
+        if ( assignedLocation.isNamed() )
+            return assignedLocation.getNamedPlace();
+        else if ( assignedLocation.isAgentJurisdiction() )
+            return getEmployment().getJurisdiction();
+        else if ( assignedLocation.isOrganizationJurisdiction() )
+            return getOrganization().getJurisdiction();
+        else
+            return null;
     }
 
     public Specable getSpecableActor() {
@@ -286,5 +294,12 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
 
     public Actor getSupervisor() {
         return employment.getSupervisor();
+    }
+
+    public Subject getCommunicatedLocation() {
+        AssignedLocation assignedLocation = getPart().getLocation();
+        return assignedLocation.isCommunicated()
+                ? assignedLocation.getSubject()
+                : null;
     }
 }

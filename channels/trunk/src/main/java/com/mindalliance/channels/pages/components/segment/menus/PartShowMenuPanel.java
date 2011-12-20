@@ -3,9 +3,9 @@ package com.mindalliance.channels.pages.components.segment.menus;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -135,10 +135,10 @@ public class PartShowMenuPanel extends MenuPanel {
             modelObjects.add( new ModelObjectWrapper(
                     "About jurisdiction",
                     part.getJurisdiction() ) );
-        if ( part.getLocation() != null )
+        if ( part.getKnownLocation() != null )
             modelObjects.add( new ModelObjectWrapper(
                     "About location",
-                    part.getLocation() ) );
+                    part.getKnownLocation() ) );
         if ( part.getInitiatedEvent() != null )
             modelObjects.add( new ModelObjectWrapper(
                     "About event",

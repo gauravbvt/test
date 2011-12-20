@@ -1617,7 +1617,8 @@ public abstract class DefaultQueryService implements QueryService {
             Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {
                 Part part = parts.next();
-                if ( part.getLocation() != null && part.getLocation().narrowsOrEquals( place, locale ) )
+                Place location = part.getKnownLocation();
+                if ( location != null && location.narrowsOrEquals( place, locale ) )
                     inPlace.add( part );
             }
         }
@@ -1772,7 +1773,7 @@ public abstract class DefaultQueryService implements QueryService {
         List<Part> list = new ArrayList<Part>();
         if ( place != null ) {
             for ( Part part : findAllParts() ) {
-                if ( Place.samePlace( part.getLocation(), place ) )
+                if ( Place.samePlace( part.getKnownLocation(), place ) )
                     list.add( part );
             }
         }

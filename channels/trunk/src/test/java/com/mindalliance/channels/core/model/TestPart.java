@@ -65,7 +65,9 @@ public class TestPart extends TestCase {
 
     public void testLocation() {
         assertNull( part.getLocation() );
-        final Place location = new Place( "Somewhere" );
+        AssignedLocation location = new AssignedLocation();
+        final Place place = new Place( "Somewhere" );
+        location.setNamedPlace( place );
         part.setLocation( location );
         assertSame( location, part.getLocation() );
     }

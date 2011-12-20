@@ -45,7 +45,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     /**
      * The location (optional).
      */
-    private Place location;
+    private AssignedLocation location = new AssignedLocation();
 
     /**
      * Whether the part's task completes on its own after some time.
@@ -175,11 +175,11 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         spec = new ResourceSpec( getActor(), getRole(), getOrganization(), jurisdiction );
     }
 
-    public Place getLocation() {
+    public AssignedLocation getLocation() {
         return location;
     }
 
-    public void setLocation( Place location ) {
+    public void setLocation( AssignedLocation location ) {
         this.location = location;
     }
 
@@ -648,9 +648,9 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     public String getGeoMarkerLabel() {
         StringBuilder sb = new StringBuilder();
         sb.append( getTitle() );
-        if ( getLocation() != null ) {
+        if ( getKnownLocation() != null ) {
             sb.append( " at " );
-            sb.append( getLocation().getName() );
+            sb.append( getKnownLocation().getName() );
         }
         return sb.toString();
     }
@@ -673,7 +673,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     public boolean references( final ModelObject mo ) {
         return ModelObject.areIdentical( getActor(), mo ) || ModelObject.areIdentical( getRole(), mo )
                || ModelObject.areIdentical( getJurisdiction(), mo ) || ModelObject.areIdentical( getOrganization(), mo )
-               || ModelObject.areIdentical( location, mo ) || ModelObject.areIdentical( initiatedEvent, mo )
+               || ModelObject.areIdentical( location.getNamedPlace(), mo ) || ModelObject.areIdentical( initiatedEvent, mo )
                || CollectionUtils.exists( goals, new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
@@ -902,7 +902,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         if ( getJurisdiction() != null )
             state.put( "jurisdiction", Arrays.asList( getJurisdiction().getName(), getJurisdiction().isType() ) );
         if ( location != null )
-            state.put( "location", Arrays.asList( location.getName(), location.isType() ) );
+            state.put( "location", location.mapState() );
         return state;
     }
 
@@ -943,8 +943,13 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
             setJurisdiction( queryService.retrieveEntity( Place.class, state, "jurisdiction" ) );
         else
             setJurisdiction( null );
-        if ( state.get( "location" ) != null )
-            setLocation( queryService.retrieveEntity( Place.class, state, "location" ) );
+        if ( state.get( "location" ) != null ) {
+            AssignedLocation assignedLocation= new AssignedLocation();
+            assignedLocation.initFromMap(
+                    (Map<String, Object>) state.get( "location" ),
+                    queryService );
+            setLocation( assignedLocation );
+        }
         else
             setLocation( null );
     }
@@ -1106,6 +1111,14 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
                 specs.add( new ResourceSpec( (Specable) target ) );
         }
         return specs;
+    }
+
+    public Place getKnownLocation() {
+        if ( location != null && location.isNamed() ) {
+            return location.getNamedPlace();
+        } else {
+            return null;
+        }
     }
 
     /**

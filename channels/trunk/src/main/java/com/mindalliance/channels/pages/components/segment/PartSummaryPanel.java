@@ -97,10 +97,9 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
     private String getPost() {
         Part part = getPart();
         StringBuilder sb = new StringBuilder();
-        if ( part.getLocation() != null ) {
-            sb.append( " at location \"" );
-            sb.append( part.getLocation().getName() );
-            sb.append( "\"" );
+        if ( part.getLocation() != null && !part.getLocation().toString().isEmpty() ) {
+            sb.append( "to be executed " );
+            sb.append( part.getLocation().toString() );
         }
         sb.append( "." );
         if ( part.isRepeating()

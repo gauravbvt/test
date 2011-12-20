@@ -83,7 +83,7 @@ public class Subject implements Serializable, Comparable<Subject> {
     public String getLabel( int maxInfoLength ) {
         StringBuilder sb = new StringBuilder();
         sb.append( "\"" );
-        sb.append( content );
+        sb.append( content.isEmpty() ? "?" : content );
         sb.append( "\" in \"" );
         sb.append( StringUtils.abbreviate( info, maxInfoLength ) );
         sb.append( "\"" );

@@ -49,7 +49,7 @@ public class DuplicatePart extends AbstractCommand {
             Map<String, Object> partState = part.mapState();
             Long priorId = (Long) get( "duplicate" );
             Part duplicate = queryService.createPart( segment, priorId );
-            commander.initPartFrom( duplicate, partState );
+            duplicate.initFromMap( partState, queryService );
             set( "duplicate", duplicate.getId() );
             describeTarget( duplicate );                    
             return new Change( Change.Type.Added, duplicate );
