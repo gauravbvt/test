@@ -60,7 +60,7 @@
 <xPathAboutPlanAction>//div[5]/div/div[2]/div/div/span/span[2]/span/span</xPathAboutPlanAction>
 <xPathAboutPlanSegmentAction>//div[5]/div/span/div/div/div/span/span[2]/span/span</xPathAboutPlanSegmentAction>
 <xPathCloseSurveyWindow>//div[@class='floating']/div[@class='float-bar']/div[@class='float-bar-close']/a/img</xPathCloseSurveyWindow>
-<xPathPhaseShowMenu>//div[3]/div/div[2]/div/div/span/span/span/span</xPathPhaseShowMenu>
+<xPathPhaseShowMenu>//div[@class='floating']/span/div[@class='entity']/div[@class='actor']/div[@class='float-header']/span[@class='menubar']/span[@class='menuitem']/span[@class='dropmenu']</xPathPhaseShowMenu>
 <xPathIndexAgent>//div[4]/div/span/div/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathIndexAgent>
 <xPathEvent>//div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td/span/a/span</xPathEvent>
 <xPathRemoveEvent>//div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td[2]/input</xPathRemoveEvent>
@@ -129,7 +129,7 @@
 <xPathDeleteAgentCategory>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteAgentCategory>
 <xPathAgentViewAllTypes>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/a</xPathAgentViewAllTypes>
 <xPathURL>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathURL>
-<xPathDeleteAgentURL>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteAgentURL>
+<xPathDeleteAgentURL>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li/ul[@class='menu']/li[2]/a/img</xPathDeleteAgentURL>
 <xPathAgentMore>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[13]/td/a/span</xPathAgentMore>
 <xPathLocale>//div[4]/div/div[2]/div[2]/table/tbody/tr[6]/th/label/a[2]/span</xPathLocale>
 <xPathPlanHomeIcon>//img</xPathPlanHomeIcon>
@@ -186,6 +186,8 @@
 <xPathWhenTabOfReceiversOfRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[2]/a/span</xPathWhenTabOfReceiversOfRequirement>
 <xPathHowManyOfReceiversOfRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[3]/a/span</xPathHowManyOfReceiversOfRequirement>
 <!-- Assertions -->
+<xPathAssertionReceivesInfoNewMedium>//span/div/div[3]/div[@class='sends']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/table/tbody/tr[9]/td/ol[@class='channels']/li/span/a[@class='entity-link']/span</xPathAssertionReceivesInfoNewMedium>
+<xPathAssertionSendInfoNewMedium>//span/div/div[3]/div[@class='sends']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/table/tbody/tr[9]/td/ol[@class='channels']/li/span/a[@class='entity-link']/span</xPathAssertionSendInfoNewMedium>
 <xPathAssertionInfoTagsRequirement>//div[4]/div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/span/table[@class='data-table']/tbody/tr[@class='even']/td[4]/span</xPathAssertionInfoTagsRequirement>
 <xPathAssertionInfoNameRequirement>//div[4]/div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/span/table[@class='data-table']/tbody/tr[@class='even']/td[3]/span</xPathAssertionInfoNameRequirement>
 <xPathAssertionRemoveRequirement>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRemoveRequirement>
