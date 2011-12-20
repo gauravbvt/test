@@ -97,8 +97,8 @@ public class TE035_UpdateLocaleWithSpecialCharacters
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Update Locale Name
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name"));
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#! Updated"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
@@ -115,7 +115,7 @@ public class TE035_UpdateLocaleWithSpecialCharacters
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Update Locale Name
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:name"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name"));
 				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get(")(*&^%$#! Updated"))) {
 	    			// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -129,14 +129,31 @@ public class TE035_UpdateLocaleWithSpecialCharacters
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sVerifyError, GlobalVariables.sBlank);					
 				}
-				//Close 'Locale' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close 'About Plan' Window
+				
+				//Close Locale Window
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Locale Done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				//Close About Plan Window
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="About Plan Done";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 

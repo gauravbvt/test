@@ -65,8 +65,9 @@ public class TE022_AgentAttachmentAsURLUsingNamedValue
 				Thread.currentThread();
 				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sAgentName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sAgentName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -87,7 +88,7 @@ public class TE022_AgentAttachmentAsURLUsingNamedValue
 				// Click on 'URL' radio button
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="URL Name Entered";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:name"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("google"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -96,7 +97,8 @@ public class TE022_AgentAttachmentAsURLUsingNamedValue
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
+				
+				// Click on URL button
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="URL Radio Button Clicked";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentsURLRadioButton"))).click();
@@ -111,7 +113,7 @@ public class TE022_AgentAttachmentAsURLUsingNamedValue
 				//Attach Attachment as a URL
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Attachment attached as a URL";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:url"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 			    // WebElement Synchronization
@@ -147,16 +149,30 @@ public class TE022_AgentAttachmentAsURLUsingNamedValue
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close Agent Window
+				
+				// Click on done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="File is attached";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				//Close About Plan Window
+				Thread.sleep(1000);
+				
+				// Click on done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);	
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

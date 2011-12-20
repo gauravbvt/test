@@ -58,8 +58,9 @@ public class TE038_AddLocaleCategory
 				Thread.currentThread();
 				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Places"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sLocale = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sLocale);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -80,7 +81,7 @@ public class TE038_AddLocaleCategory
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:indexed")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(option.getText().equals(GlobalVariables.viewElements.get("places"))){
@@ -97,22 +98,23 @@ public class TE038_AddLocaleCategory
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Add Locale's Category
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Category 1"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
+				String sLocaleCategory = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sLocaleCategory);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that Locale's Category is added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentCategory")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Category 1"))) {
+				if(GlobalVariables.oElement.getText().equals(sLocaleCategory)) {
 	    			// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.testData.get("Category 1")+"' Actual '"+GlobalVariables.oElement.getValue()+"'";
+					GlobalVariables.sVerifyError="Verification Failed. Expected '"+sLocaleCategory+"' Actual '"+GlobalVariables.oElement.getValue()+"'";
 	    			// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -126,17 +128,31 @@ public class TE038_AddLocaleCategory
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
-				//Thread sleep
-				Thread.currentThread();
-				Thread.sleep(2000);				
-				//Close 'Locale' Window
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close 'About Plan' Window
+				
+				//Close Locale Window
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Locale Done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				//Close About Plan Window
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="About Plan Done";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 

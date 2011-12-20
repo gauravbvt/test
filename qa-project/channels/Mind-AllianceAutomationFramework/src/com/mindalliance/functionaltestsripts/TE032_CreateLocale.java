@@ -53,27 +53,36 @@ public class TE032_CreateLocale
 				Thread.currentThread();
 				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Places"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sLocale = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sLocale);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Verify that Locale can be created
-		    	if(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name")).getValue().equals(GlobalVariables.testData.get("Places"))){
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name"));
+		    	if(GlobalVariables.oElement.getValue().equals(sLocale)){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 		    	else {
-		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("Places")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
+		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+sLocale+"' Actual '"+GlobalVariables.oElement.getText()+"'";
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 			    }
+		    	
 				//Close About Plan Window
+		    	GlobalVariables.iStepNo++;
+		    	GlobalVariables.sDescription="Done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

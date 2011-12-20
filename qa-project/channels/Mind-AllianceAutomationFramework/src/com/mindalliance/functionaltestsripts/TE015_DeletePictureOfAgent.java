@@ -65,12 +65,14 @@ public class TE015_DeletePictureOfAgent
 					//Create Agent
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Agent Created";
-					GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).click();
+					GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).clear();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-					for(int i=0;i<50;i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					String sAgentName = LogFunctions.getDateTime();
+					GlobalVariables.oElement.sendKeys(sAgentName);
+					GlobalVariables.oElement.sendKeys(Keys.ENTER);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -91,7 +93,7 @@ public class TE015_DeletePictureOfAgent
 					// Click on Picture option
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Attach Picture";
-					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:type")));
+					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:type")));
 					List<WebElement> options = GlobalVariables.oDropDown.getOptions();
 				    for(WebElement option : options) {
 				    	if(GlobalVariables.testData.get("Picture").equals(option.getText())){
@@ -102,14 +104,14 @@ public class TE015_DeletePictureOfAgent
 				    // WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:name"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
-					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:upload"));
+					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:upload"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "Mind-Alliance_Logo.png");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:submit")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:submit")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -149,10 +151,6 @@ public class TE015_DeletePictureOfAgent
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
 					
 					// Click on done
 					GlobalVariables.iStepNo++;
@@ -165,6 +163,18 @@ public class TE015_DeletePictureOfAgent
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
+					
+					// Click on done
+					GlobalVariables.iStepNo++;
+					GlobalVariables.sDescription="Done";
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);	
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;

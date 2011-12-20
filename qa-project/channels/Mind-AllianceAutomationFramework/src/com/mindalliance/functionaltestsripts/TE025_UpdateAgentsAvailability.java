@@ -63,10 +63,11 @@ public class TE025_UpdateAgentsAvailability
 				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);				
+				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sAgentName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sAgentName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -87,24 +88,24 @@ public class TE025_UpdateAgentsAvailability
 				//Click on 'Always Available' Check box
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="'Always Available' Checkbox unchecked";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:twentyFourSeven")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:mo-details:availability:twentyFourSeven")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Assertion : Verify that Agent is available for full Time i.e from Sunday to Saturday
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:0:timePeriod:dayOn"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:0:timePeriod:dayOn"));
 				GlobalVariables.sunday=GlobalVariables.oElement.isSelected();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:1:timePeriod:dayOn"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:1:timePeriod:dayOn"));
 				GlobalVariables.monday=GlobalVariables.oElement.isSelected();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:2:timePeriod:dayOn"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:2:timePeriod:dayOn"));
 				GlobalVariables.tuesday=GlobalVariables.oElement.isSelected();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:3:timePeriod:dayOn"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:3:timePeriod:dayOn"));
 				GlobalVariables.wednesday=GlobalVariables.oElement.isSelected();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:4:timePeriod:dayOn"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:4:timePeriod:dayOn"));
 				GlobalVariables.thursday=GlobalVariables.oElement.isSelected();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:5:timePeriod:dayOn"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:5:timePeriod:dayOn"));
 				GlobalVariables.friday=GlobalVariables.oElement.isSelected();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:6:timePeriod:dayOn"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:mo-details:availability:timePeriodsContainer:dayAvailability:6:timePeriod:dayOn"));
 				GlobalVariables.saturday=GlobalVariables.oElement.isSelected();
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -127,20 +128,34 @@ public class TE025_UpdateAgentsAvailability
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Check 'Always Available' Checkbox
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:availability:twentyFourSeven")).click();
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:mo-details:availability:twentyFourSeven")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Close 'Agent' Window
+				
+				// Click on done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Agents availability updation done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				// Close 'About Plan' Window
+				Thread.sleep(1000);
+				
+				// Click on done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);	
 
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

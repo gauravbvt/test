@@ -60,12 +60,14 @@ public class TE011_AgentAttachmentAsFile
 					//Create Agent
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Agent Created";
-					GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).click();
+					GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).clear();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-					for(int i=0;i<50;i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					String sAgentName = LogFunctions.getDateTime();
+					GlobalVariables.oElement.sendKeys(sAgentName);
+					GlobalVariables.oElement.sendKeys(Keys.ENTER);
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -83,35 +85,22 @@ public class TE011_AgentAttachmentAsFile
 					Thread.currentThread();
 					Thread.sleep(2000);
 					
-					// Click on 'File' radio button
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="File radio button clicked";			
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:radios")).click();
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:radios"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					
 					// Attach file to Agent
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Attach File";
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:name"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
-					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:upload"));
+					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:upload"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:submit")).click();
+					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:submit")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: verify that file is attached
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
 					if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -135,11 +124,23 @@ public class TE011_AgentAttachmentAsFile
 					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);				
+					Thread.sleep(1000);							
+					
+					// Click on done
+					GlobalVariables.iStepNo++;
+					GlobalVariables.sDescription="Done";
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);				
+					Thread.sleep(1000);	
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);	
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;

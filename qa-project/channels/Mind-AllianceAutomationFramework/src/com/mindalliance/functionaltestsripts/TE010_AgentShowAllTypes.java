@@ -60,6 +60,9 @@ public class TE010_AgentShowAllTypes
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Created";
 				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
 				String sAgentName = LogFunctions.getDateTime();
 				GlobalVariables.oElement.sendKeys(sAgentName);
@@ -83,15 +86,15 @@ public class TE010_AgentShowAllTypes
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				//Add Agent Category
+				// Click on All Types
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent - 'View All Types' Link clicked";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentViewAllTypes"))).click();
+				GlobalVariables.oDriver.findElement(By.className("window")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
 				//Assertion : Verify that new window with title 'All types' gets displayed to the user
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("plan"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanShowAllTypes")));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allTypes"))){
 			    	LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -136,7 +139,6 @@ public class TE010_AgentShowAllTypes
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			}
 		catch (Exception e) {
-			System.out.println(e.getMessage()+"Hie.....");
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");

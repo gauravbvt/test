@@ -66,8 +66,9 @@ public class TE028_UpdateAgentCategory
 				Thread.currentThread();
 				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sAgentName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sAgentName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -85,12 +86,13 @@ public class TE028_UpdateAgentCategory
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				//Add Agent Category
+				// Add Agent Category
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Agent Category Added";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Category 1"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
+				String sAgentCategory = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sAgentCategory);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -107,30 +109,30 @@ public class TE028_UpdateAgentCategory
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Update Agent Category Description
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description")).clear();
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:description")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:description"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an Description"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Update Agent Category Tags
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags")).clear();
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tags:tags")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tags:tags"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is a Tag"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:description"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:description"));
 				if(GlobalVariables.oElement.getValue().contains(GlobalVariables.viewElements.get("description"))) {
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:tags:tags"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tags:tags"));
 					if(GlobalVariables.oElement.getValue().equals(GlobalVariables.viewElements.get("tagDescription"))) {
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -148,7 +150,7 @@ public class TE028_UpdateAgentCategory
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Close Agent Category Window
-				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -178,16 +180,30 @@ public class TE028_UpdateAgentCategory
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Close Agent Window
+				
+				// Click on done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Agent Category Updated";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				//Close About Plan Window
+				Thread.sleep(1000);
+				
+				// Click on done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-			    // WebElement Synchronization
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);	
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

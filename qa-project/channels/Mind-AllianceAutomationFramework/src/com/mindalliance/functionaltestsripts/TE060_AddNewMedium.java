@@ -70,7 +70,7 @@ public class TE060_AddNewMedium
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that New Medium added successfully
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("entity-link"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionSendInfoNewMedium")));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("newMedium"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

@@ -54,8 +54,9 @@ public class TE056_UpdateLocaleCityCountryPlace
 				Thread.currentThread();
 				Thread.sleep(1000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Places"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sLocale = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sLocale);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -77,18 +78,18 @@ public class TE056_UpdateLocaleCityCountryPlace
 				// Enter City, Country, State and Country
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="City/Country/State Entered";
-				GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:geonameContainer:geoname")).clear();
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:geonameContainer:geoname")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:geonameContainer:geoname"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:geonameContainer:geoname"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("India"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion: Verify that Locale's “City, county, state and/or country” details gets updated
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:geonameContainer:geoname"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:geonameContainer:geoname"));
 				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("India"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -101,17 +102,31 @@ public class TE056_UpdateLocaleCityCountryPlace
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
-				// WebElement Synchronization
+			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click on done
+				
+				//Close Locale Window
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Locale Done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Close 'About Plan' Window
+				
+				//Close About Plan Window
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="About Plan Done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// WebElement Synchronization
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
