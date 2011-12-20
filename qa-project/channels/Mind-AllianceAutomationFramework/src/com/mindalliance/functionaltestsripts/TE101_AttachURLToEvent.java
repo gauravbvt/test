@@ -59,13 +59,13 @@ public class TE101_AttachURLToEvent
 				Thread.sleep(1000);
 				
 				// Create an event
-				String event="Add Event To The Plan";
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add Event";
 				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
-				GlobalVariables.oElement.sendKeys(event);
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sEventName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sEventName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -89,7 +89,7 @@ public class TE101_AttachURLToEvent
 				// Click on Event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event clicked";
-				GlobalVariables.oDriver.findElement(By.linkText(event)).click();
+				GlobalVariables.oDriver.findElement(By.linkText(sEventName)).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

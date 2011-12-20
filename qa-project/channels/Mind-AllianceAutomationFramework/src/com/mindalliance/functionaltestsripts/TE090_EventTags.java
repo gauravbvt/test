@@ -62,9 +62,9 @@ public class TE090_EventTags
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add Event";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
-				System.out.println(GlobalVariables.testData.get("This is tag"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Event To The Plan"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sEventName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sEventName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -88,7 +88,7 @@ public class TE090_EventTags
 				// Click on Event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event clicked";
-				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Add Event To The Plan"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText(sEventName)).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

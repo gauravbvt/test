@@ -63,8 +63,9 @@ public class TE091_EventCategories
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add Event";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Event To The Plan"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sEventName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sEventName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -88,7 +89,7 @@ public class TE091_EventCategories
 				// Click on Event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event clicked";
-				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Add Event To The Plan"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText(sEventName)).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -101,8 +102,9 @@ public class TE091_EventCategories
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event Category Added";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is categories"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sEventCategory = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sEventCategory);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

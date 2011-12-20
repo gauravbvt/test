@@ -56,8 +56,7 @@ public class TE109_ViewPhase
 				GlobalVariables.sDescription="Phase added successfully";
 				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-				String sPhaseName = LogFunctions.getDateTime();
-				GlobalVariables.oElement.sendKeys(sPhaseName);
+				GlobalVariables.oElement.sendKeys("Phase 1");
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -103,7 +102,7 @@ public class TE109_ViewPhase
 				GlobalVariables.sDescription="Phase is present";
 				// Assertion: Verify that event is present
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[4]/div/span/div/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span"));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase(sPhaseName)) {
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Phase 1")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -123,7 +122,7 @@ public class TE109_ViewPhase
 				// Click on 'done' button
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Plan closed";
-				GlobalVariables.oDriver.findElement(By.className("float-bar-close")).click();
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

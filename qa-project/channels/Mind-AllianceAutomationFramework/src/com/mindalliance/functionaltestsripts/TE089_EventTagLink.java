@@ -62,8 +62,9 @@ public class TE089_EventTagLink
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add Event";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Event To The Plan"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sEventName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sEventName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -87,7 +88,7 @@ public class TE089_EventTagLink
 				// Click on Event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event clicked";
-				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Add Event To The Plan"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText(sEventName)).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -111,11 +112,11 @@ public class TE089_EventTagLink
 				// Click on 'done' button
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Event details window closed";
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div/div[2]/a/img")).click();
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/div/div[2]/a/img")).click();
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -62,8 +62,9 @@ public class TE084_CreateEvent
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add Event";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Event To The Plan"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				String sEventName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sEventName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -80,15 +81,15 @@ public class TE084_CreateEvent
 				Thread.currentThread();
 				Thread.sleep(2000);					
 				// Assertion : verify that Event is added
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Add Event To The Plan")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Add Event To The Plan"))) {
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sEventName));
+				if(GlobalVariables.oElement.getText().equals(sEventName)) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else {
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Add Event To The Plan' "+" Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sEventName+"' "+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

@@ -49,20 +49,6 @@ public class TE107_CreatePhase
 					//Enter the new phase in text box for the plan inside 'Phase' section
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
-					/*List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
-					List<WebElement> tds;
-					int i=0;
-					for(WebElement tr: trs) {
-						i++;	
-						tds = tr.findElements(By.tagName("input"));
-						for(WebElement td: tds) {
-							
-							GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:"+i+":name-container:name-input"));
-							String sPhaseName = LogFunctions.getDateTime();
-							GlobalVariables.oElement.sendKeys(sPhaseName);
-							GlobalVariables.oElement.sendKeys(Keys.TAB);
-							}
-					}*/
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
 					String sPhaseName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sPhaseName);
