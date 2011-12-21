@@ -151,8 +151,9 @@ public class DefinitionManager implements InitializingBean, Iterable<PlanDefinit
                 properties.load( inputStream );
 
             synchronized ( definitions ) {
-                for ( String uri : properties.stringPropertyNames() )
-                    memorize( new PlanDefinition( uri, properties.getProperty( uri ) ) );
+                for ( String uri : properties.stringPropertyNames() ) {
+                    memorize( new PlanDefinition( Plan.sanitize( uri ), properties.getProperty( uri ) ) );
+                }
 
                 if ( definitions.isEmpty() )
                     getOrCreate( "default", "Default Plan", "Internal" );

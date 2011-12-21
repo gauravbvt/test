@@ -56,13 +56,16 @@ public class Agreement extends AbstractAttachable implements Serializable {
      * @return an agreement
      */
     public static Agreement from( Commitment commitment ) {
-        assert impliesAnAgreement( commitment );
-        Agreement agreement = new Agreement();
-        agreement.setBeneficiary( commitment.getBeneficiary().getOrganization() );
-        agreement.setInformation( commitment.getSharing().getName() );
-        agreement.setEois( commitment.getSharing().copyEois() );
-        agreement.setUsage( commitment.getBeneficiary().getPart().getTask() );
-        return agreement;
+        if ( impliesAnAgreement( commitment ) ) {
+            Agreement agreement = new Agreement();
+            agreement.setBeneficiary( commitment.getBeneficiary().getOrganization() );
+            agreement.setInformation( commitment.getSharing().getName() );
+            agreement.setEois( commitment.getSharing().copyEois() );
+            agreement.setUsage( commitment.getBeneficiary().getPart().getTask() );
+            return agreement;
+        } else {
+            return null;
+        }
     }
 
     public Organization getBeneficiary() {

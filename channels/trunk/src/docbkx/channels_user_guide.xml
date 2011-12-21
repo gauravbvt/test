@@ -11731,6 +11731,29 @@
                 
                 <entry><para>Yes</para></entry>
               </row>
+ 
+              <row>
+                <entry><para>Location of assigned task not communicated</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Add a flow received by the task named containing information about the location</para>
+                  </listitem>
+                  <listitem>
+                    <para>or name the assigned location in the task specification</para>
+                  </listitem>
+                  <listitem>
+                    <para>or make the assigned location be the assigned agent's jurisdiction</para>
+                  </listitem>
+                  <listitem>
+                    <para>or make the assigned location be the jurisdiction of the assigned agent's organization.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
               
               
             </tbody>

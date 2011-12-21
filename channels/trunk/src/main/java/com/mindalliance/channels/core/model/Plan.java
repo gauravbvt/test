@@ -374,11 +374,11 @@ public class Plan extends ModelObject {
     }
 
     public void setUri( String uri ) {
-        this.uri = uri;
+        this.uri = sanitize( uri );
     }
 
     public String getVersionUri() {
-        return uri + ':' + version;
+        return getUri() + ':' + version;
     }
 
     public List<String> getProducers() {

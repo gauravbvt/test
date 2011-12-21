@@ -781,8 +781,6 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
 
-
-
     @Override
     public List<Commitment> findAllCommitments( Flow flow ) {
         return findAllCommitments( flow, false );
@@ -797,7 +795,6 @@ public abstract class DefaultQueryService implements QueryService {
     public List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf, Boolean includeUnknowns ) {
         return findAllCommitments( flow, allowCommitmentsToSelf, getAssignments( includeUnknowns ) );
     }
-
 
 
     @Override
@@ -885,14 +882,15 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Agreement> findAllConfirmedAgreementsCovering( Commitment commitment ) {
-        List<Agreement> agreements = new ArrayList<Agreement>(  );
+        List<Agreement> agreements = new ArrayList<Agreement>();
         Organization committerOrg = commitment.getCommitter().getOrganization();
         for ( Organization agreeingOrg : committerOrg.selfAndAncestors() ) {
-             for ( Agreement agreement : agreeingOrg.getAgreements() ) {
-                 if ( encompasses(  agreement, Agreement.from( commitment ) ) ) {
-                     agreements.add( agreement );
-                 }
-             }
+            for ( Agreement agreement : agreeingOrg.getAgreements() ) {
+                Agreement agreementFromCommitment = Agreement.from( commitment );
+                if ( agreementFromCommitment != null && encompasses( agreement, agreementFromCommitment ) ) {
+                    agreements.add( agreement );
+                }
+            }
         }
         return agreements;
     }
@@ -1446,17 +1444,19 @@ public abstract class DefaultQueryService implements QueryService {
             if ( ModelObject.areIdentical( commitment.getCommitter().getOrganization(), organization ) )
                 if ( commitment.isBetweenUnrelatedOrganizations() ) {
                     final Agreement agreement = Agreement.from( commitment );
-                    encompassed.addAll( (List<Agreement>) CollectionUtils.select(
-                            agreements,
-                            new Predicate() {
-                                @Override
-                                public boolean evaluate( Object object ) {
-                                    return encompasses( agreement,
-                                            (Agreement) object );
-                                }
-                            } )
-                    );
-                    agreements.add( agreement );
+                    if ( agreement != null ) {
+                        encompassed.addAll( (List<Agreement>) CollectionUtils.select(
+                                agreements,
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        return encompasses( agreement,
+                                                (Agreement) object );
+                                    }
+                                } )
+                        );
+                        agreements.add( agreement );
+                    }
                 }
         }
         return (List<Agreement>) CollectionUtils.subtract( agreements, encompassed );
@@ -1467,7 +1467,7 @@ public abstract class DefaultQueryService implements QueryService {
         Organization org = commitment.getCommitter().getOrganization();
         if ( org.isEffectiveAgreementsRequired() && commitment.isBetweenUnrelatedOrganizations() ) {
             final Agreement requiredAgreement = Agreement.from( commitment );
-            return CollectionUtils.exists(
+            return requiredAgreement != null && CollectionUtils.exists(
                     org.getAgreements(),
                     new Predicate() {
                         @Override
@@ -3047,7 +3047,7 @@ public abstract class DefaultQueryService implements QueryService {
             RequirementRelationship requirementRelationship,
             Phase.Timing timing,
             Event event,
-            Analyst analyst) {
+            Analyst analyst ) {
         StringBuilder sb = new StringBuilder();
         Commitments allCommitments = getAllCommitments();
         List<Requirement> unfulfilled = new ArrayList<Requirement>();

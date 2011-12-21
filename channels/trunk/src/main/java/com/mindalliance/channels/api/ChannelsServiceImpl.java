@@ -74,7 +74,7 @@ public class ChannelsServiceImpl implements ChannelsService {
     /**
      * Get scope of production plan.
      * Available only to its planners.
-     * @param uri the plan's URI
+     * @param uri the plan's URN
      * @param version a plan version
      * @return a plan's scope
      */
