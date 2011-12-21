@@ -113,7 +113,7 @@ public class CA023_AssignUserToAllPlan
 							// WebElement Synchronization
 							Thread.currentThread();
 							Thread.sleep(2000);
-							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+(i+1)+"]/td[6]/input")).click();
+							GlobalVariables.oDriver.findElement(By.xpath("//div/div[2]/div/form/table[7]/tbody/tr["+(i+1)+"]/td[6]/input")).click();
 							// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

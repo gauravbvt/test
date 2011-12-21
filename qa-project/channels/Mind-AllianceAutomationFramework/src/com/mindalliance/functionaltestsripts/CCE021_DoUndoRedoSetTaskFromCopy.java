@@ -160,7 +160,7 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Set task from Copy' "+" Actual " + GlobalVariables.oElement.getValue();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task Sender' "+" Actual " + GlobalVariables.oElement.getValue();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

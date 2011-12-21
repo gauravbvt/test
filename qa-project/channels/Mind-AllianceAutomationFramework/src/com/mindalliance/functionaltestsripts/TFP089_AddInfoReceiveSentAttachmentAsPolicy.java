@@ -111,7 +111,7 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Policy"));
 				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 				for (WebElement li: tds){
 					if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){

@@ -48,6 +48,9 @@ public class PS027_AddNewTask
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Task Added";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				if(GlobalVariables.oElement.getText().equals("doing something")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
