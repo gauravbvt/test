@@ -107,7 +107,7 @@
 <xPathAboutPlanShowAllIssues>//div[4]/div/div[2]/div/div/span/span/span/ul/li[8]/span/a/span</xPathAboutPlanShowAllIssues>
 <xPathAboutPlanShowBibliography>//div[4]/div/div[2]/div/div/span/span/span/ul/li[9]/span/a/span</xPathAboutPlanShowBibliography>
 <xPathAboutPlanShowIndex>//div[4]/div/div[2]/div/div/span/span/span/ul/li[10]/span/a/span</xPathAboutPlanShowIndex>
-<xPathAboutPlanShowAllTypes>//div[4]/div/div[2]/div/div/span/span/span/ul/li[11]/span/a/span</xPathAboutPlanShowAllTypes>
+<xPathAboutPlanShowAllTypes>//div[4]/div[@class='floating']/span/div[@class='plan']/div/div[@class='float-header']/h1</xPathAboutPlanShowAllTypes>
 <xPathAboutPlanShowAllTags>//div[4]/div/div[2]/div/div/span/span/span/ul/li[12]/span/a/span</xPathAboutPlanShowAllTags>
 <xPathAboutPlanShowEvaluation>//div[4]/div/div[2]/div/div/span/span/span/ul/li[13]/span/a/span</xPathAboutPlanShowEvaluation>
 <xPathAboutPlanShowParticipations>//div[4]/div/div[2]/div/div/span/span/span/ul/li[14]/span/a/span</xPathAboutPlanShowParticipations>
