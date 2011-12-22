@@ -103,7 +103,7 @@ public class TE041_ShowLocaleViewAllTypes
 				// Click on 'View All Types' Link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "All Types Window Displayed";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentViewAllTypes"))).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLocaleViewAllTypes"))).click();
 				// Write Results
 				Thread.currentThread();
 				Thread.sleep(2000);
