@@ -80,7 +80,7 @@ public class TE034_UpdateLocaleName
 				Thread.sleep(2000);
 				
 				//Update Locale Name
-				GlobalVariables.iStepNo++ ;
+				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription = "Locale Name Updated";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("index"));
 				// WebElement Synchronization
@@ -139,8 +139,8 @@ public class TE034_UpdateLocaleName
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Update Locale Name
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name"));
-				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("Places Updated"))) {
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[4]/div/span/div/div[2]/div[2]/table/tbody/tr/td[3]/ul/li/span/span/a/span"));
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Places Updated"))) {
 	    			// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
