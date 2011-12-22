@@ -69,8 +69,8 @@
 <xPathOrganizationChart>//div[3]/div/span/div/div[2]/div/table/tbody/tr[13]/td/span/div/div/ul/li[2]/a/span</xPathOrganizationChart>
 <xPathOrganizationAgreement>//div[3]/div/span/div/div[2]/div/table/tbody/tr[13]/td/span/div/div/ul/li[3]/a/span</xPathOrganizationAgreement>
 <xPathAboutPlanLocale>//div[4]/div/div[2]/div[2]/table/tbody/tr[6]/td/span/input</xPathAboutPlanLocale>
-<xPathAboutPlanLocaleLink>//div[4]/div/div[2]/div[2]/div[2]/table/tbody/tr/td[3]/ul/li/span/span/a/span</xPathAboutPlanLocaleLink>
-<xPathLocaleWithSpecialCharacters>//div[4]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathLocaleWithSpecialCharacters>
+<xPathAboutPlanLocaleLink>//form/div[4]/div/span/div/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathAboutPlanLocaleLink>
+<xPathLocaleWithSpecialCharacters>//form/div[4]/div/span/div/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathLocaleWithSpecialCharacters>
 <xPathLegend>//span/div/div/span[7]/img</xPathLegend>
 <xPathDoingSomeThing>//span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span[2]</xPathDoingSomeThing>
 <xPathPlanURIName>//div[4]/div/div[2]/div[2]/table/tbody/tr/td/span</xPathPlanURIName>
@@ -131,7 +131,7 @@
 <xPathURL>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathURL>
 <xPathDeleteAgentURL>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li/ul[@class='menu']/li[2]/a/img</xPathDeleteAgentURL>
 <xPathAgentMore>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[13]/td/a/span</xPathAgentMore>
-<xPathLocale>//div[4]/div/div[2]/div[2]/table/tbody/tr[6]/th/label/a[2]/span</xPathLocale>
+<xPathLocale>//div/div[2]/table/tbody/tr[6]/th/label/a[2]/span</xPathLocale>
 <xPathPlanHomeIcon>//img</xPathPlanHomeIcon>
 <xPathAgentDetails>//div[4]/div/div[2]/span/span/table/tbody/tr[5]/td[5]/span/a</xPathAgentDetails>
 <xPathAgentName>//div[@class='aspect']/span/span[2]/h3/span[2]/span/a[@class='entity-link']/span</xPathAgentName>
