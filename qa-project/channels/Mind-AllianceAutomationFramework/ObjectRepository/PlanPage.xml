@@ -242,7 +242,7 @@
 <xPathAssertionCloseDissemination>//div[10]/div/div/div[3]/a/img</xPathAssertionCloseDissemination>
 <xPathAssertionCloseAboutPlanSegment>//div[5]/div/div/div[3]/a/img</xPathAssertionCloseAboutPlanSegment>
 <xPathAssertionDissemination>//div[10]/div/div/div/span</xPathAssertionDissemination>
-<xPathGoBack>//div[15]/img</xPathGoBack>
+<xPathGoBack>//div[15]/img[@class='navigation']</xPathGoBack>
 <xPathGoForward>//div[15]/img[2]</xPathGoForward>
 <xPathElementsOfInformation>//span/div/div[3]/div[3]/div[2]/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/table/tbody/tr[4]/th[@class='area']/a[@class='model-object-link']</xPathElementsOfInformation>
 <xPathIssueReport>/html/body/div/div/h1</xPathIssueReport>
