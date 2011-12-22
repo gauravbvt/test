@@ -81,7 +81,7 @@ public class MAV0213_AttachReceiveSentAttachOption
 				// Enter Attach option of New Issue
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Attach Option Of Send Panel Entered";
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:type")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:attachments:container:controls:type")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("reference").equals(option.getText())||GlobalVariables.viewElements.get("policy").equals(option.getText())){
@@ -123,7 +123,7 @@ public class MAV0213_AttachReceiveSentAttachOption
 				// Enter details of New Issue
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Attach Option Of Receive Panel Entered";
-				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:type")));
+				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:attachments:container:controls:type")));
 				options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("reference").equals(option.getText())||GlobalVariables.viewElements.get("policy").equals(option.getText())){

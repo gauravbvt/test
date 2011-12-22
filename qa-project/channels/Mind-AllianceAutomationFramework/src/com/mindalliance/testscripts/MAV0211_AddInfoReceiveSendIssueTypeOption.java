@@ -81,7 +81,7 @@ public class MAV0211_AddInfoReceiveSendIssueTypeOption
 				// Select Issue Type Option
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Issue Type of Send Info";
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:type")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:type")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("validity").equals(option.getText())||GlobalVariables.viewElements.get("completeness").equals(option.getText())||GlobalVariables.viewElements.get("robustness").equals(option.getText())){
@@ -123,7 +123,7 @@ public class MAV0211_AddInfoReceiveSendIssueTypeOption
 				// Select Issue Type Option
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Issue Type of Receive Panel";
-				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:type")));
+				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:type")));
 				options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("validity").equals(option.getText())||GlobalVariables.viewElements.get("completeness").equals(option.getText())||GlobalVariables.viewElements.get("robustness").equals(option.getText())){

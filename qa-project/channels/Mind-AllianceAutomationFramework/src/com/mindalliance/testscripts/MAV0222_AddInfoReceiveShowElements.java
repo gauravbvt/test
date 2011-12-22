@@ -74,6 +74,13 @@ public class MAV0222_AddInfoReceiveShowElements
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);	
 				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Elements of information Actual' "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);	
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -112,6 +119,13 @@ public class MAV0222_AddInfoReceiveShowElements
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);	
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Elements of information Actual' "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);	
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -168,7 +182,7 @@ public class MAV0222_AddInfoReceiveShowElements
     		else {
     			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
     					e.getMessage(),GlobalVariables.sBlank);
-    			ApplicationFunctionLibrary.logout();	
+    			ApplicationFunctionLibrary.logout();
     		}
     		System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
     	}

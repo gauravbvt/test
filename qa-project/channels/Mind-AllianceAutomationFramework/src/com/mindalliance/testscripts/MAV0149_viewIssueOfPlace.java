@@ -54,11 +54,14 @@ public class MAV0149_viewIssueOfPlace
 				// Enter the details of Place in locale text box
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Details entered";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocale"))).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocale")));
-				for (int i = 0; i <= 50; i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Places"));
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name"));
+				String sLocale = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sLocale);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -87,7 +90,7 @@ public class MAV0149_viewIssueOfPlace
 				// Select the plan from 'Switch to Places' drop down, located on the top right corner
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Places Selected";
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:indexed")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(option.getText().equals(GlobalVariables.viewElements.get("places"))){
@@ -103,14 +106,13 @@ public class MAV0149_viewIssueOfPlace
 				Thread.currentThread();
 				Thread.sleep(2000);
 			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
-			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAboutPlanLocaleLink"))).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
 				
 				// Click on Issue under show pop up menu
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Organizations issue";
+				GlobalVariables.sDescription="Places issue";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("Issues"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
