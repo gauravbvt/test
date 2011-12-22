@@ -128,6 +128,7 @@
 <xPathAgentCategory>//div[3]/div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathAgentCategory>
 <xPathDeleteAgentCategory>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteAgentCategory>
 <xPathAgentViewAllTypes>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/a</xPathAgentViewAllTypes>
+<xPathLocaleViewAllTypes>//div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/a</xPathLocaleViewAllTypes>
 <xPathURL>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathURL>
 <xPathDeleteAgentURL>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li/ul[@class='menu']/li[2]/a/img</xPathDeleteAgentURL>
 <xPathAgentMore>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[13]/td/a/span</xPathAgentMore>
@@ -206,7 +207,7 @@
 <xPathRemoveOrganizationAssertion>//div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul</xPathRemoveOrganizationAssertion>
 <xPathDeletePhaseAttachmentAssertion>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li</xPathDeletePhaseAttachmentAssertion>
 <xPathPhaseAttachmentAssertion>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathPhaseAttachmentAssertion>
-<xPathPlacesAttachmentAssertion>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathPlacesAttachmentAssertion>
+<xPathPlacesAttachmentAssertion>//div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/a</xPathPlacesAttachmentAssertion>
 <xPathOrganizationAttachmentAssertion>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathOrganizationAttachmentAssertion>
 <xPathPhaseCategoriesAssertion>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathPhaseCategoriesAssertion>
 <xPathDeletePhaseAssertion>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/table/tbody/tr[5]/td/span/div[@class='phases']/ul/li/span/span/a/span</xPathDeletePhaseAssertion>
