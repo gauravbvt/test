@@ -105,7 +105,7 @@ public class TE033_ViewLocale
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				//Close About Plan Window
+				//Close 'About Plan' Window
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="About Plan Done";
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
