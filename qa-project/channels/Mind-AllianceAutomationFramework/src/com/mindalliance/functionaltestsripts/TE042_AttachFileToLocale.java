@@ -204,7 +204,7 @@ public class TE042_AttachFileToLocale
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new TE011_AgentAttachmentAsFile();
+			new TE042_AttachFileToLocale();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 
