@@ -10,10 +10,10 @@
 <xPathAddInfoSendCreateSurvey>//span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoSendCreateSurvey>
 <xPathAddInfoReceiveCreateSurvey>//span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoReceiveCreateSurvey>
 <xPathShowPopUpMenu>//div[@class='header']/span[@class='menubar']/span[@class='menuitem']/span[@class='dropmenu']/span</xPathShowPopUpMenu>
-<xPathSendInfoAddNewIssue>//div[@class='sends']/div[@class='section-content']/div[@class='flow']/div/div[@class='flow-details']/span/div[@class='issues']/div[@class='section-title']/ul/li/a</xPathSendInfoAddNewIssue>
-<xPathReceiveInfoAddNewIssue>//div[@class='receives']/div[@class='section-content']/div[@class='flow']/div/div[@class='flow-details']/span/div[@class='issues']/div[@class='section-title']/ul/li/a</xPathReceiveInfoAddNewIssue>
-<xPathReceiveInfoIssueMenu>//span/div/div[3]/div[@class='receives']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/span/ol/li[2]/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathReceiveInfoIssueMenu>
-<xPathSendInfoIssueMenu>//span/div/div[3]/div[@class='sends']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/span/ol/li[2]/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathSendInfoIssueMenu>
+<xPathSendInfoAddNewIssue>//div[@class='sends']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/div[@class='section-title']/ul[@class='menu']/li</xPathSendInfoAddNewIssue>
+<xPathReceiveInfoAddNewIssue>//div[@class='receives']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/div[@class='section-title']/ul[@class='menu']/li</xPathReceiveInfoAddNewIssue>
+<xPathReceiveInfoIssueMenu>//div[@class='receives']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/span/ol/li/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathReceiveInfoIssueMenu>
+<xPathSendInfoIssueMenu>//div[@class='sends']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/span/ol/li/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathSendInfoIssueMenu>
 <xPathSendReplyThatOption>//span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label[2]</xPathSendReplyThatOption>
 <xPathReceivedReplyThatOption>//span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label[2]/input</xPathReceivedReplyThatOption>
 <xPathSendInfoNotification>//span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</xPathSendInfoNotification>
@@ -60,7 +60,7 @@
 <xPathAboutPlanAction>//div[5]/div/div[2]/div/div/span/span[2]/span/span</xPathAboutPlanAction>
 <xPathAboutPlanSegmentAction>//div[5]/div/span/div/div/div/span/span[2]/span/span</xPathAboutPlanSegmentAction>
 <xPathCloseSurveyWindow>//div[@class='floating']/div[@class='float-bar']/div[@class='float-bar-close']/a/img</xPathCloseSurveyWindow>
-<xPathPhaseShowMenu>//div[@class='floating']/span/div[@class='entity']/div[@class='actor']/div[@class='float-header']/span[@class='menubar']/span[@class='menuitem']/span[@class='dropmenu']</xPathPhaseShowMenu>
+<xPathPhaseShowMenu>//div[3]/div[@class='floating']/span/div[@class='entity']/div/div[@class='float-header']/span[@class='menubar']/span[@class='menuitem']/span[@class='dropmenu']/span</xPathPhaseShowMenu>
 <xPathIndexAgent>//div[4]/div/span/div/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathIndexAgent>
 <xPathEvent>//div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td/span/a/span</xPathEvent>
 <xPathRemoveEvent>//div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td[2]/input</xPathRemoveEvent>
