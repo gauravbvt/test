@@ -31,9 +31,9 @@
 <xPathAddInfoReceive>//div[@class='receives']/div/a/span</xPathAddInfoReceive>
 <xPathAddInfoSend>//div[@class='sends']/div/a/span</xPathAddInfoSend>
 <xPathReceiveFlowMoreMenu>//span/div/div[3]/div[2]/div[2]/div/div/span/span/span/span</xPathReceiveFlowMoreMenu>
-<xPathReceiveInfoActionMenu>//div[@class='receives']/div/span/span[2]/span/span</xPathReceiveInfoActionMenu>
+<xPathReceiveInfoActionMenu>//div[@class='receives']/div[@class='section-title']/span[@class='menubar']/span[2]/span[@class='dropmenu']/span</xPathReceiveInfoActionMenu>
 <xPathReceiveShowMenu>//div[@class='receives']/div/span/span/span/span</xPathReceiveShowMenu>
-<xPathSendInfoActionMenu>//div[@class='sends']/div/span/span[2]/span/span</xPathSendInfoActionMenu>
+<xPathSendInfoActionMenu>//div[@class='sends']/div[@class='section-title']/span[@class='menubar']/span[2]/span[@class='dropmenu']/span</xPathSendInfoActionMenu>
 <xPathSendInfoShowMenu>//div[@class='sends']/div/span/span/span/span</xPathSendInfoShowMenu>
 <xPathSendFlowMoreMenu>//span/div/div[3]/div[3]/div[2]/div/div/span/span/span/span</xPathSendFlowMoreMenu>
 <xPathIssueMoreMenu>//div[5]/div[@class='floating']/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[3]/span/span/span/span/span</xPathIssueMoreMenu>
