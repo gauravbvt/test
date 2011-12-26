@@ -68,7 +68,7 @@ public class MAV0222_AddInfoReceiveShowElements
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSentElementInformation"))).click();
 				// Assertion: Verify that Elements of Information is Present
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathElementsOfInformation")));
-				if(GlobalVariables.oElement.getText().equals("Elements of information")){
+				if(GlobalVariables.oElement.getText().equals("Elements:")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -112,16 +112,20 @@ public class MAV0222_AddInfoReceiveShowElements
 				// Click on Elements of Receive Info
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Receive Info Elements";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathReceiveElementInformation"))).click();	
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathElementsOfInformation")));
-				if(GlobalVariables.oElement.getText().equals("Elements of information")){
+				GlobalVariables.oDriver.findElement(By.linkText("Elements:")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Assertion: Verify that Elements of Information is Present
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText("Elements:"));
+				if(GlobalVariables.oElement.getText().equals("Elements:")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);	
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Elements of information Actual' "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Elements:' "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

@@ -62,10 +62,13 @@ public class MAV0224_AddInfoReceiveCopyNeed
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				// Copy Capability
+				// Copy Need
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Sent Info Copy Capilibility";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"), GlobalVariables.viewElements.get("copyNeed"));
+				GlobalVariables.sDescription = "Sent Info Copy Need";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"), GlobalVariables.viewElements.get("copyNeed"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that Elements of Information is Present
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionCopyNeed")));
 				if(GlobalVariables.oElement.getText().equals("Need copied")){

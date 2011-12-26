@@ -118,6 +118,7 @@ public class MAP0023_removeGoal {
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:actualOrType"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("actual"));
 					// Name for Goal
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AddGoal"));
 					// Achieved at end check box
@@ -143,7 +144,6 @@ public class MAP0023_removeGoal {
 					// And acknowledge the alert (equivalent to clicking "OK")
 					alert.accept();
 					//Assertion:Verify that goal should get removed.
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment"));
 				    if(GlobalVariables.oElement.getText().equals("")){
 				    	// Write Results

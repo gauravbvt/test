@@ -66,6 +66,9 @@ public class MAV0223_AddInfoSentCopyCapability
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Sent Info Copy Capilibility";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"), GlobalVariables.viewElements.get("copyCapability"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);	
 				// Assertion: Verify that Elements of Information is Present
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionCopyCapability")));
 				if(GlobalVariables.oElement.getText().equals("Capability copied")){
@@ -74,9 +77,21 @@ public class MAV0223_AddInfoSentCopyCapability
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);	
 				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Capability copied' Actual' "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);	
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);				
+				Thread.sleep(2000);		
+				// Click on Cross
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCrossOnAttachmentCopiedMessage"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Click on 'Remove this segment' under 'Actions' pop up menu
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// Get a handle to the open alert, prompt or confirmation

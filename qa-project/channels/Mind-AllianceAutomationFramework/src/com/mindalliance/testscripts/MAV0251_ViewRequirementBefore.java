@@ -68,10 +68,11 @@ public class MAV0251_ViewRequirementBefore
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:timing")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
+			    	GlobalVariables.sStrCheck=option.getText();
 			    	if(GlobalVariables.testData.get("Before").equals(option.getText())){
-			    		GlobalVariables.bIsSuccess=Boolean.TRUE;
 			    		option.setSelected();
-			    			break;
+			    		GlobalVariables.bIsSuccess=Boolean.TRUE;
+			    		break;
 			    	}
 			    }
 			    if(GlobalVariables.bIsSuccess==Boolean.FALSE){
@@ -81,6 +82,7 @@ public class MAV0251_ViewRequirementBefore
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 			    else{
+			    	GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.testData.get("Before") + " Actual '"+GlobalVariables.sStrCheck+ "'";
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -90,6 +92,18 @@ public class MAV0251_ViewRequirementBefore
 				Thread.currentThread();
 				Thread.sleep(1000);
 				
+				// Click on Done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Done";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);	
+								
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

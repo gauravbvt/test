@@ -42,7 +42,7 @@ public class MAP0007_addOrganizationsDetails
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Click on 'Information Sharing Model' link
 					GlobalVariables.iStepNo++ ;
@@ -54,7 +54,7 @@ public class MAP0007_addOrganizationsDetails
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(3000);
 					
 					//Click on 'About Plan' from show pop up menu
 					GlobalVariables.iStepNo++;
@@ -66,7 +66,7 @@ public class MAP0007_addOrganizationsDetails
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					//Click on 'all organizations' from show pop-up menu
 					GlobalVariables.iStepNo++;
@@ -78,7 +78,7 @@ public class MAP0007_addOrganizationsDetails
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Enter name of organization in 'Other organization that should be assigned tasks ' field
 					GlobalVariables.iStepNo++;
@@ -108,11 +108,6 @@ public class MAP0007_addOrganizationsDetails
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);	
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
 					
 					//  Enter the details about the selected organization in the details form.
 					GlobalVariables.iStepNo++;
@@ -140,11 +135,11 @@ public class MAP0007_addOrganizationsDetails
 					}
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Enter Org Details
 					GlobalVariables.iStepNo++ ;
@@ -157,14 +152,14 @@ public class MAP0007_addOrganizationsDetails
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Organizations Description"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(8000);
+					Thread.sleep(3000);
 								
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
@@ -195,12 +190,12 @@ public class MAP0007_addOrganizationsDetails
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					// Click on 'done' button
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					
 					// Call logout()
 					GlobalVariables.iStepNo++ ;
@@ -212,7 +207,7 @@ public class MAP0007_addOrganizationsDetails
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);	
+					Thread.sleep(3000);	
 				
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

@@ -142,7 +142,7 @@ public class MAP0009_addTask
 					Thread.currentThread();
 					Thread.sleep(2000);
 				    // write location
-				    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:location:name"));
+				    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:location:named:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Location"));
 				    // WebElement Synchronization
 					Thread.currentThread();

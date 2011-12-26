@@ -152,29 +152,20 @@ public class MAC0017_UndoAttachDocument {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: verify that file is detached
-					GlobalVariables.bIsSuccess = Boolean.FALSE;
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
-					tds = GlobalVariables.oElement.findElements(By.tagName("li"));
-					for (WebElement li: tds){
-						GlobalVariables.sStrCheck=li.getText();
-						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
-							GlobalVariables.bIsSuccess = Boolean.TRUE;
-							break;
-						}
-					}
-					if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("grouped"));
+					if (GlobalVariables.oElement.getText().equals("")) {
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + GlobalVariables.sStrCheck;
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + GlobalVariables.oElement.getText();
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 								GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
-				    }
+					}
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
