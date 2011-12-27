@@ -131,7 +131,6 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
                 Change change = doCommand( new RemoveRequirement(
                         getUsername(),
                         selectedRequirement ) );
-                selectedRequirement = null;
                 addRequirementsTable();
                 target.addComponent( requirementsTable );
                 updateComponents( target );

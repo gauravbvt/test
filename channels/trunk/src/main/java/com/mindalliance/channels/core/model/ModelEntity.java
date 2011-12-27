@@ -129,7 +129,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 Event.class.isAssignableFrom( entityClass )
                         || Role.class.isAssignableFrom( entityClass )
                         || TransmissionMedium.class.isAssignableFrom( entityClass )
-                        || Phase.class.isAssignableFrom( entityClass )
+                       // || Phase.class.isAssignableFrom( entityClass )
         );
     }
 
