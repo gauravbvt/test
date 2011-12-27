@@ -155,23 +155,23 @@ public class TE046_DeleteLocalePicture
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);				
-				// Assertion: Verify that file is deleted
-				try {
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathDeletePlaceAttachmentAssertion")));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				} 
-				catch(Exception e){
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
+//				// Assertion: Verify that file is deleted
+//				try {
+//					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathDeletePlaceAttachmentAssertion")));
+//					// Write Results
+//					LogFunctions.writeLogs(GlobalVariables.sDescription);
+//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+//							GlobalVariables.sBlank, GlobalVariables.sBlank);
+//				} 
+//				catch(Exception e){
+//					// Write Results
+//					LogFunctions.writeLogs(GlobalVariables.sDescription);
+//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+//							GlobalVariables.sBlank, GlobalVariables.sBlank);
+//			    }
+//			    // WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(2000);
 				
 				//Close Locale Window
 				GlobalVariables.iStepNo++;
