@@ -106,7 +106,7 @@ public class TE086_ViewEvent
 				// Select Event from index pop up menu
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Select Event";
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:mo:aspect:indexed")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:indexed")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(option.getText().equals(GlobalVariables.viewElements.get("events"))){

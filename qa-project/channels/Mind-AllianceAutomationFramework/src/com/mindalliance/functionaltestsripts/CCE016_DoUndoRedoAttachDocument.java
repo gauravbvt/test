@@ -115,7 +115,7 @@ public class CCE016_DoUndoRedoAttachDocument
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					// Assertion: verify that file is attached
+					// Assertion: Verify that file is attached
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
 					if (GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
 						// Write Results

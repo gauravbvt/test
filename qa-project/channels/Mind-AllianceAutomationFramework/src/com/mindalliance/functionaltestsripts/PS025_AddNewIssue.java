@@ -48,6 +48,9 @@ public class PS025_AddNewIssue
 				GlobalVariables.sDescription = "New Issue added";
 				// Assertion 1.1: Verify that When clicked on 'Add new Issue' option, a issue should be added in the segment
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[3]/span/span[@class='menubar']/span/span[@class='dropmenu']/span"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Menu")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

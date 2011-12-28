@@ -61,8 +61,8 @@ public class TFP014_AddLocation
 				// Click on Tags text field
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Location";
-				GlobalVariables.oDriver.findElement(By.name("segment:part:location:name")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:location:name"));
+				GlobalVariables.oDriver.findElement(By.name("segment:part:location:named:name")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:location:named:name"));
 				for(int i=0;i<8;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys("Location");

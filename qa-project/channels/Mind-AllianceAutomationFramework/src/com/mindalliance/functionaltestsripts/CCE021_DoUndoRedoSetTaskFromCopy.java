@@ -84,7 +84,7 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(4000);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -146,11 +146,11 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskActionsMenu"),GlobalVariables.viewElements.get("setTaskFromCopy"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// ASSERTION: When clicked on 'Set task from copy' option, the copied task details should be saved in the selected task
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				if (GlobalVariables.oElement.getValue().equals("Task Sender")) {
