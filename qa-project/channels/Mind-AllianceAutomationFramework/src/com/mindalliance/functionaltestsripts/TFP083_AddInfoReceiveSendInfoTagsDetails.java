@@ -79,12 +79,12 @@ public class TFP083_AddInfoReceiveSendInfoTagsDetails
 				// Enter Tags details of New Issue
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Tags Details Of Send Panel Entered";
-				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:tags:tags")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:tags:tags"));
+				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:tags:tags")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:tags:tags"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Tags"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion: Verify that Issue details can be entered
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:tags:tags"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:tags:tags"));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Tags"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -122,12 +122,12 @@ public class TFP083_AddInfoReceiveSendInfoTagsDetails
 				// Enter details of New Issue
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Details Of Receive Panel Entered";
-				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:tags:tags")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:tags:tags"));
+				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:tags:tags")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:tags:tags"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Tags"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion: Verify that Issue details can be entered
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:tags:tags"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:tags:tags"));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Tags"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

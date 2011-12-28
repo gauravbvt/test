@@ -63,15 +63,14 @@ public class TFP053_AddInfoReceiveSendInformation
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
-				// Enter Information Details of 'Add Info Sent' 
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Information Details Entered";				
+				
+				// Enter Information Details of 'Add Info Sent'
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Information for Sending details entered";
+				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Sends Information"));
-				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// Assertion : Verify that Add Info Sent Information is entered successfully
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name"));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Sends Information"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -107,7 +106,11 @@ public class TFP053_AddInfoReceiveSendInformation
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Receives informations"));
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion : Verify that Add Info Received Information is entered successfully
+				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Receives informations"))) {
 					// Write Results

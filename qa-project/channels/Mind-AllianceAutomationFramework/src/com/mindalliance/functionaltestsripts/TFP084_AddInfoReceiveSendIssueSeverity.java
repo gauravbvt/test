@@ -14,7 +14,7 @@ import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
 public class TFP084_AddInfoReceiveSendIssueSeverity 
-{
+{ 
 	public TFP084_AddInfoReceiveSendIssueSeverity(){
     	try {
     		
@@ -82,7 +82,7 @@ public class TFP084_AddInfoReceiveSendIssueSeverity
 				// Enter Severity of New Issue
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Severity Of Send Panel Entered";
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:severity")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:severity")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("minor").equals(option.getText())||GlobalVariables.viewElements.get("major").equals(option.getText())||GlobalVariables.viewElements.get("severe").equals(option.getText())||GlobalVariables.viewElements.get("extreme").equals(option.getText())){
@@ -124,7 +124,7 @@ public class TFP084_AddInfoReceiveSendIssueSeverity
 				// Enter details of New Issue
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Details Of Receive Panel Entered";
-				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:severity")));
+				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:severity")));
 				options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("minor").equals(option.getText())||GlobalVariables.viewElements.get("major").equals(option.getText())||GlobalVariables.viewElements.get("severe").equals(option.getText())||GlobalVariables.viewElements.get("extreme").equals(option.getText())){

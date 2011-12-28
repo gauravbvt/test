@@ -78,11 +78,11 @@ public class TFP085_AddInfoReceiveSentSuggestion
 				// Enter Tags details of New Issue
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Suggestion Of Send Panel Entered";
-				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:remediation")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:remediation"));
+				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:remediation")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:remediation"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Suggestion"));
 				// Assertion: Verify that Issue details can be entered
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:remediation"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:remediation"));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Suggestion"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -115,16 +115,16 @@ public class TFP085_AddInfoReceiveSentSuggestion
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(2000); 
 				
 				// Enter details of New Issue
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Suggestion Of Receive Panel Entered";
-				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:remediation")).clear();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:remediation"));
+				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:remediation")).clear();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:remediation"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Suggestion"));
 				// Assertion: Verify that Issue details can be entered
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:remediation"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:remediation"));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Suggestion"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
