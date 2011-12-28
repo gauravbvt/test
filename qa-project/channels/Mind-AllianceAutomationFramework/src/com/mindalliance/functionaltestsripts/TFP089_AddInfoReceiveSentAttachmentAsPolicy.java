@@ -83,22 +83,22 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				// Enter Attachment as reference
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Attachment As Policy Of Send Panel Entered";
-				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:type")));
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:attachments:container:controls:type")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 				for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("policy").equals(option.getText())){
 			    		option.setSelected();
 			    	}
 			    }
-				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name")).clear();
-				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name"));
+				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:attachments:container:controls:name")).clear();
+				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:attachments:container:controls:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
-				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:upload"));
+				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:attachments:container:controls:upload"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:submit")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:attachments:container:controls:submit")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
@@ -114,7 +114,7 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Policy"));
 				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 				for (WebElement li: tds){
-					if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
+					if (li.getText().equals("")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -161,22 +161,22 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				// Enter Attachment as reference
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Attachment As Reference Of Receive Panel Entered";
-				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:type")));
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:attachments:container:controls:type")));
 				options = GlobalVariables.oDropDown.getOptions();
 				for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("policy").equals(option.getText())){
 			    		option.setSelected();
 			    	}
 			    }
-				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name")).clear();
-				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:name"));
+				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:attachments:container:controls:name")).clear();
+				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:attachments:container:controls:name"));
 				GlobalVariables.oElement.sendKeys("This is File 1");
-				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:upload"));
+				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:attachments:container:controls:upload"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:submit")).click();
+				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:0:issue:attachments:container:controls:submit")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
@@ -189,10 +189,10 @@ public class TFP089_AddInfoReceiveSentAttachmentAsPolicy
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that file is attached successfully
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Policy"));
 				tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 				for (WebElement li: tds){
-					if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
+					if (li.getText().equals("")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

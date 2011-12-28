@@ -81,8 +81,8 @@ public class TFP086_AttachReceiveSentAttachOption
 				
 				// Enter Attach option of New Issue
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New Issue Attach Option Of Send Panel Entered";
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:type")));
+				GlobalVariables.sDescription = "New Issue:- Attach Option Of Send Panel";
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:attachments:container:controls:type")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("reference").equals(option.getText())||GlobalVariables.viewElements.get("policy").equals(option.getText())){
@@ -123,14 +123,21 @@ public class TFP086_AttachReceiveSentAttachOption
 				
 				// Enter details of New Issue
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New Issue Attach Option Of Receive Panel Entered";
-				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:issues:issues-container:issues:1:issue:attachments:container:controls:type")));
+				GlobalVariables.sDescription = "New Issue :- Attach Option Of Receive Panel";
+				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:attachments:container:controls:type")));
 				options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.viewElements.get("reference").equals(option.getText())||GlobalVariables.viewElements.get("policy").equals(option.getText())){
 			    		// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    			break;
+			    	}
+			    	else{
+			    		// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    			break;
 			    	}
