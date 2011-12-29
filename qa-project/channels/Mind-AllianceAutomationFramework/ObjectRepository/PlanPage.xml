@@ -42,9 +42,9 @@
 <xPathDeletePlanSegAttachment>//div[5]/div/span/div/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeletePlanSegAttachment>
 <xPathDeleteTaskAttachment>//div[@id='part']/div/div[@class='section-content']/table[2]/tbody/tr[14]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img</xPathDeleteTaskAttachment>
 <xPathCutAttachment>//div[5]/div/span/div/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCutAttachment>
-<xPathDeleteEventAttachment>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteEventAttachment>
+<xPathDeleteEventAttachment>//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteEventAttachment>
 <xPathDeletePlacesAttachment>//div[3]/div/span/div/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li/ul[@class='menu']/li[2]/a/img</xPathDeletePlacesAttachment>
-<xPathCopyEventAttachment>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyEventAttachment>
+<xPathCopyEventAttachment>//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyEventAttachment>
 <xPathRemoveIssue>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[3]/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathRemoveIssue>
 <xPathPresenceTabs>//span/span/div/div/div/ul/li/a/span</xPathPresenceTabs>
 <xPathShowAllUsers>//span/span/div/div/div[2]/div/div/a/span</xPathShowAllUsers>
@@ -129,7 +129,7 @@
 <xPathDeleteAgentCategory>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteAgentCategory>
 <xPathAgentViewAllTypes>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/a</xPathAgentViewAllTypes>
 <xPathLocaleViewAllTypes>//div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/a</xPathLocaleViewAllTypes>
-<xPathURL>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathURL>
+<xPathURL>//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathURL>
 <xPathDeleteAgentURL>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li/ul[@class='menu']/li[2]/a/img</xPathDeleteAgentURL>
 <xPathAgentMore>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[13]/td/a/span</xPathAgentMore>
 <xPathLocale>//div/div[2]/table/tbody/tr[6]/th/label/a[2]/span</xPathLocale>
@@ -148,9 +148,9 @@
 <xPathTaskCausesEvent>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[10]/th/label/span/a/span</xPathTaskCausesEvent>
 <xPathTaskEventUnnamed>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[4]/span</xPathTaskEventUnnamed>
 <xPathTaskPhaseResponding>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[2]/span</xPathTaskPhaseResponding>
-<xPathDeletePhaseCategories>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeletePhaseCategories>
+<xPathDeletePhaseCategories>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeletePhaseCategories>
 <xPathDeletePhaseAttachment>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img</xPathDeletePhaseAttachment>
-<xPathCopyPhaseAttachment>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyPhaseAttachment>
+<xPathCopyPhaseAttachment>//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyPhaseAttachment>
 <xPathCopyTaskAttachment>//span/div/div[@id='part']/div/div[@class='section-content']/table[2]/tbody/tr[14]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li/a/img</xPathCopyTaskAttachment>
 <xPathDeleteOrganizationCategories>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteOrganizationCategories>
 <xPathSendFeedBackOfIssueSummaryReport>/html/body/div/div/span/div/a/span</xPathSendFeedBackOfIssueSummaryReport>
