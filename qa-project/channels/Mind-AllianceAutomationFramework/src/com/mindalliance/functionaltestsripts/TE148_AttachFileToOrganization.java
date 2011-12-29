@@ -100,7 +100,7 @@ public class TE148_AttachFileToOrganization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: Verify that file is attached
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathOrganizationAttachmentAssertion")));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
 					if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
