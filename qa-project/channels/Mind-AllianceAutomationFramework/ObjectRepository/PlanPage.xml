@@ -139,7 +139,7 @@
 <xPathIssueSummaryReportToHome>/html/body/div/div/a/img</xPathIssueSummaryReportToHome>
 <xPathViewAllTypesOfAddInfoSendNewMedium>//div[3]/div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/a</xPathViewAllTypesOfAddInfoSendNewMedium>
 <xPathEventTagsLink>//div[3]/div/span/div/div[2]/div/table/tbody/tr[4]/th/label/a</xPathEventTagsLink>
-<xPathDeleteCategoriesOfEvent>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteCategoriesOfEvent>
+<xPathDeleteCategoriesOfEvent>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteCategoriesOfEvent>
 <xPathInformationSharingGuidelinesForParticipantsToHome>/html/body/div/div/a/img</xPathInformationSharingGuidelinesForParticipantsToHome>
 <xPathActiveUsers>/html/body/div/div[2]/div[2]/table/tbody/tr/td/a</xPathActiveUsers>
 <xPathParticipantsPageSubTitle>/html/body/div/div[2]/div/h1</xPathParticipantsPageSubTitle>
