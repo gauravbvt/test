@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <elements>
-<channelURL>http://192.168.4.128:8081/channels</channelURL>
+<channelURL>http://192.168.4.127:8081/channels</channelURL>
 <username>jf</username>
 <usernamefullname>Jean-Francois Cloutier</usernamefullname>
 <password>Mind-Alliance</password>
