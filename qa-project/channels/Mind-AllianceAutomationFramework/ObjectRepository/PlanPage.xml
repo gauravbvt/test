@@ -125,7 +125,7 @@
 <xPathSurvey>//span[2]/div/span/div/div/h1</xPathSurvey>
 <xPathAgentContacts>//div[@class='aspect']/span/span/table/tbody/tr/td[5]/span/a/span</xPathAgentContacts>
 <xPathAgent>//div[4]/div/span/div/div[2]/span/span[2]/h3/span[2]/span/a/span</xPathAgent>
-<xPathAgentCategory>//div[3]/div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathAgentCategory>
+<xPathAgentCategory>//div[3]/div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span</xPathAgentCategory>
 <xPathDeleteAgentCategory>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteAgentCategory>
 <xPathAgentViewAllTypes>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/a</xPathAgentViewAllTypes>
 <xPathLocaleViewAllTypes>//div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/a</xPathLocaleViewAllTypes>
@@ -137,8 +137,8 @@
 <xPathAgentDetails>//div[4]/div/div[2]/span/span/table/tbody/tr[5]/td[5]/span/a</xPathAgentDetails>
 <xPathAgentName>//div[@class='aspect']/span/span[2]/h3/span[2]/span/a[@class='entity-link']/span</xPathAgentName>
 <xPathIssueSummaryReportToHome>/html/body/div/div/a/img</xPathIssueSummaryReportToHome>
-<xPathViewAllTypesOfAddInfoSendNewMedium>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/a</xPathViewAllTypesOfAddInfoSendNewMedium>
-<xPathEventTagsLink>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[4]/th/label/a</xPathEventTagsLink>
+<xPathViewAllTypesOfAddInfoSendNewMedium>//div[3]/div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/a</xPathViewAllTypesOfAddInfoSendNewMedium>
+<xPathEventTagsLink>//div[3]/div/span/div/div[2]/div/table/tbody/tr[4]/th/label/a</xPathEventTagsLink>
 <xPathDeleteCategoriesOfEvent>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteCategoriesOfEvent>
 <xPathInformationSharingGuidelinesForParticipantsToHome>/html/body/div/div/a/img</xPathInformationSharingGuidelinesForParticipantsToHome>
 <xPathActiveUsers>/html/body/div/div[2]/div[2]/table/tbody/tr/td/a</xPathActiveUsers>
@@ -193,14 +193,14 @@
 <xPathAssertionInfoNameRequirement>//div[4]/div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/span/table[@class='data-table']/tbody/tr[@class='even']/td[3]/span</xPathAssertionInfoNameRequirement>
 <xPathAssertionRemoveRequirement>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRemoveRequirement>
 <xPathAssertionRequirementUndo>//div[4]/div/div[2]/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRequirementUndo>
-<xPathAssertionRequirementName>//div[4]/div/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/span/table[@class='data-table']/tbody/tr[@class='even']/td/span</xPathAssertionRequirementName>
+<xPathAssertionRequirementName>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/span/table[@class='data-table']/tbody/tr[@class='even']/td/span</xPathAssertionRequirementName>
 <xPathNewRequirementDefinitionAssertion>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/div[@class='req']/h3</xPathNewRequirementDefinitionAssertion>
 <xPathAssertionCopyCapability>//div[@class='change-message']/span/span</xPathAssertionCopyCapability>
 <xPathAssertionCopyNeed>//div[@class='change-message']/span/span</xPathAssertionCopyNeed>
 <xPathTaskURLAssertion>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/a</xPathTaskURLAssertion>
 <xPathEmailNameInvalidErrorMessageAssertion>//div[2]/div[2]/div[3]/span/div/div/div[2]/div/div/ul/li/span</xPathEmailNameInvalidErrorMessageAssertion>
 <xPathErrorMessageSocialPanelAssertion>//div[2]/div/div/div[2]/div/span/span</xPathErrorMessageSocialPanelAssertion>
-<xPathEventAssertion>//div[4]/div/div[2]/div[2]/span/div/table/tbody/tr/td/span/a/span</xPathEventAssertion>
+<xPathEventAssertion>//div[4]/div/span/div/div[2]/span/div/table/tbody/tr/td/span/a/span</xPathEventAssertion>
 <xPathDeletePlaceAttachmentAssertion>//div[3]/div/div[2]/div/table/tbody/tr[6]/td</xPathDeletePlaceAttachmentAssertion>
 <xPathAgentURLAssertion>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathAgentURLAssertion>
 <xPathDeleteOrganizationAttachmentAssertion>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/li</xPathDeleteOrganizationAttachmentAssertion>
