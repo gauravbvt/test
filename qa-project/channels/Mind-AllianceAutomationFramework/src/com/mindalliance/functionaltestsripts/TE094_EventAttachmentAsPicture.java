@@ -68,7 +68,7 @@ public class TE094_EventAttachmentAsPicture
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
 				String sEventName = LogFunctions.getDateTime();
 				GlobalVariables.oElement.sendKeys(sEventName);
-				GlobalVariables.oElement.sendKeys(Keys.ENTER);
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

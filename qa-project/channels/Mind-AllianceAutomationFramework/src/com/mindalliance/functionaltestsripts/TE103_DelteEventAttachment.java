@@ -128,7 +128,7 @@ public class TE103_DelteEventAttachment
 				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
 				// Assertion: Verify that file is deleted
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathDeleteOrganizationAttachmentAssertion")));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("grouped"));
 				if (GlobalVariables.oElement.getText().equals("")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

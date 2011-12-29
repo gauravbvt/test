@@ -82,7 +82,7 @@ public class TE125_PhaseURL
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:mo:aspect:mo-details:attachments:container:controls:url"));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:url"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					if(GlobalVariables.sBrowser.equals("Internet Explorer")) {
@@ -102,7 +102,7 @@ public class TE125_PhaseURL
 					Thread.currentThread();
 					Thread.sleep(2000);
 					//Assertion : Verify that URL gets Attached
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseAttachmentAssertion")));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'http://www.google.com')]"));
 					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("URLAssertion"))) {
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
