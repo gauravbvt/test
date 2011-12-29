@@ -122,6 +122,7 @@ public class MAV0227_OrganizationContactInfo {
 						for (int i=1;i<=30;i++)
 							GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
 					}
+					// Assertion: Verify that contact info is present
 					GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:mediaNotDeployedContainer:mediaNotDeployed:0:mediumChoice")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 					if(options.get(1).getText().equals(GlobalVariables.viewElements.get("cell")) &&
@@ -143,13 +144,14 @@ public class MAV0227_OrganizationContactInfo {
 					   options.get(17).getText().equals(GlobalVariables.viewElements.get("television")) &&
 					   options.get(18).getText().equals(GlobalVariables.viewElements.get("twoWayRadio")) &&
 					   options.get(19).getText().equals(GlobalVariables.viewElements.get("newMedium"))) {
-							// 	Write Results
+						GlobalVariables.sStrCheck=options.get(1).getText();
+						// 	Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 									GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else {
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName+"' "+" Actual " +GlobalVariables.oDropDown.getOptions();
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName+"' "+" Actual " +GlobalVariables.sStrCheck;
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

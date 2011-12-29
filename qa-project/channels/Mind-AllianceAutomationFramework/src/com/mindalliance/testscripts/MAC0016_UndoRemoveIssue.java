@@ -1,10 +1,6 @@
 package com.mindalliance.testscripts;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -60,28 +56,23 @@ public class MAC0016_UndoRemoveIssue {
 				Thread.currentThread();
 				Thread.sleep(3000);				
 				// Assertion: Verify that When clicked on 'Remove issue' option, a respective issue should be removed from the segment
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("issues"));
-				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
-				for (WebElement ol: tds){
-					if(ol.getText().equals("")){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-						break;
-					}
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual " + ol.getText();
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-						break;
-					}
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[2]/span/span[@class='menubar']/span/span[@class='dropmenu']/span"));
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("")){
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Menu' "+" Actual " + GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);	
+				Thread.sleep(3000);
 				
 				// Click on 'Undo remove issue' under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;

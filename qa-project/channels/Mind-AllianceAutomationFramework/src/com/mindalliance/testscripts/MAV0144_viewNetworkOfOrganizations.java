@@ -98,14 +98,14 @@ public class MAV0144_viewNetworkOfOrganizations
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Organiztions Network details' page gets loaded";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseAssertionDetails")));
-			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("network"))) {
+			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("network1"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 	            }
 			    else{
-			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("network")+" Actual "+GlobalVariables.oElement.getText();
+			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("network1")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

@@ -85,7 +85,7 @@ public class MAC0064_RedoRemoveRequirement
 				
 				// Click on Remove requirement button
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Requirement Removed";
+				GlobalVariables.sDescription="Remove new requirement";
 				// Remove Requirement
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathRemoveRequirement"))).click();
 				// WebElement Synchronization
@@ -93,12 +93,15 @@ public class MAC0064_RedoRemoveRequirement
 				Thread.sleep(1000);
 				// Get a handle to the open alert, prompt or confirmation
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);	
-				// Assertion: Verify that new requirement can be undo 
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXPathAssertionRemoveRequirement")));
+				// Assertion: Verify that new requirement can be removed 
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("norecords"));
 				if(GlobalVariables.oElement.getText().equals("No Records Found")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -106,7 +109,7 @@ public class MAC0064_RedoRemoveRequirement
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.viewElements.get("informationSharingRequirements") + " Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed Expected 'no records' Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -136,7 +139,7 @@ public class MAC0064_RedoRemoveRequirement
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that new requirement can be redo 
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXPathAssertionRemoveRequirement")));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("norecords"));
 				if(GlobalVariables.oElement.getText().equals("No Records Found")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -144,7 +147,7 @@ public class MAC0064_RedoRemoveRequirement
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.viewElements.get("informationSharingRequirements") + " Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed Expected 'no records' Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

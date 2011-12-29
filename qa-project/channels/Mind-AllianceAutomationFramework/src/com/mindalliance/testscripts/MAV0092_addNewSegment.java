@@ -47,23 +47,23 @@ public class MAV0092_addNewSegment
 				// Assertion: Verify that window opens with title "About Plan Segment:<Name>" and heading "Details"
 				GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Add New Segment' gets loaded";		            		         
-			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAboutPlanSegmentDetails")));			    
+			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAboutPlanSegmentDetails")));
 			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sBlank) ;    	    	    	     
 	            }
 			    else{
 			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("details")+" Actual "+GlobalVariables.oElement.getText();
-					// Write Results
+			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				}
-				// WebElement Synchronization
-			    Thread.currentThread();
-			    Thread.sleep(1000);
+			    }
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000); 
 			    
 			    // Click on 'done' button
 			    GlobalVariables.iStepNo++;

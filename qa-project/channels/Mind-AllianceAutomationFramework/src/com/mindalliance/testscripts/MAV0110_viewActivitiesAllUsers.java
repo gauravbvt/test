@@ -62,6 +62,9 @@ public class MAV0110_viewActivitiesAllUsers
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 			    }				
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

@@ -84,11 +84,14 @@ public class MAV0228_MediaNotDeployed
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Organization selected";
 					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+					GlobalVariables.bIsSuccess=Boolean.TRUE;
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("index"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
 						if (li.getText().equals(sOrgName)){
+							GlobalVariables.sStrCheck=li.getText();
 							li.findElement(By.linkText(sOrgName)).click();
+							GlobalVariables.bIsSuccess = Boolean.FALSE;
 							break;
 						}
 					}
@@ -99,10 +102,11 @@ public class MAV0228_MediaNotDeployed
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else{		
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+						GlobalVariables.sVerifyError="Verification failed Expected '"+"' Actual '"+GlobalVariables.sStrCheck +"'";
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 					}
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -142,16 +146,18 @@ public class MAV0228_MediaNotDeployed
 					   options.get(17).getText().equals(GlobalVariables.viewElements.get("television")) &&
 					   options.get(18).getText().equals(GlobalVariables.viewElements.get("twoWayRadio")) &&
 					   options.get(19).getText().equals(GlobalVariables.viewElements.get("newMedium"))) {
+						GlobalVariables.sStrCheck=options.get(0).getText();
 							// 	Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 									GlobalVariables.sBlank, GlobalVariables.sBlank);
 					}
 					else {
+						GlobalVariables.sVerifyError="Verification failed Expected '"+"' Actual '"+GlobalVariables.sStrCheck +"'";
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 					}
 					// WebElement Synchronization
 					Thread.currentThread();

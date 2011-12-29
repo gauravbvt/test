@@ -65,7 +65,7 @@ public class MAV0225_AddInfoReceiveRemoveInfoNeeds
 				// Remove Info Needs
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Remove Info Need";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"), GlobalVariables.viewElements.get("removeInfoNeed"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"), GlobalVariables.viewElements.get("removeInfoNeed"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

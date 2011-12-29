@@ -103,7 +103,7 @@ public class MAC0062_RedoAddNewRequirement
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Assertion: Verify that new requirement can be undo 
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("xPathAssertionRequirementName")));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionRequirementName")));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("UNNAMED"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -120,24 +120,13 @@ public class MAC0062_RedoAddNewRequirement
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);	
-				// Remove Requirement
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathRemoveRequirement"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Get a handle to the open alert, prompt or confirmation
-				alert = GlobalVariables.oDriver.switchTo().alert();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
 				// WebElement Synchronization

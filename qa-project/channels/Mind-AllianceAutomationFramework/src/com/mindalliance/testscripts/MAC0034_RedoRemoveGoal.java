@@ -143,6 +143,9 @@ public class MAC0034_RedoRemoveGoal {
 						GlobalVariables.oElement.sendKeys(Keys.ARROW_RIGHT);
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteGoals"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					// And acknowledge the alert (equivalent to clicking "OK")
 					alert.accept();
 					// WebElement Synchronization
@@ -170,7 +173,7 @@ public class MAC0034_RedoRemoveGoal {
 					// Click on 'Undo update segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Undo update segment done";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoUpdateSegment"));
+					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoRemoveGoal"));
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

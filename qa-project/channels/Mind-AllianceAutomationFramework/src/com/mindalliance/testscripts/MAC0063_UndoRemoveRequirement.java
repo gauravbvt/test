@@ -86,7 +86,7 @@ public class MAC0063_UndoRemoveRequirement
 				
 				// Click on Remove requirement button
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Undo add new requirement";
+				GlobalVariables.sDescription="Remove new requirement";
 				// Remove Requirement
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathRemoveRequirement"))).click();
 				// WebElement Synchronization
@@ -94,11 +94,14 @@ public class MAC0063_UndoRemoveRequirement
 				Thread.sleep(1000);
 				// Get a handle to the open alert, prompt or confirmation
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
 				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);	
-				// Assertion: Verify that new requirement can be undo 
+				// Assertion: Verify that new requirement can be removed 
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("norecords"));
 				if(GlobalVariables.oElement.getText().equals("No Records Found")){
 					// Write Results
@@ -107,7 +110,7 @@ public class MAC0063_UndoRemoveRequirement
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.viewElements.get("informationSharingRequirements") + " Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed Expected 'no records' Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -124,8 +127,8 @@ public class MAC0063_UndoRemoveRequirement
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Assertion: Verify that new requirement can be undo 
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("xPathAssertionRequirementName")));
+				// Assertion: Verify that requirement can be undo 
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionRequirementName")));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("UNNAMED"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -139,18 +142,6 @@ public class MAC0063_UndoRemoveRequirement
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				}
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);	
-				
-				// Remove Requirement
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathRemoveRequirement"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				// Get a handle to the open alert, prompt or confirmation
-				alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);	

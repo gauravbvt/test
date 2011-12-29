@@ -63,10 +63,8 @@ public class MAV0138_viewIssueOfEvent
 				GlobalVariables.sDescription="Event created";
 				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input")).clear();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Event"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
+				String sEvent = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sEvent);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -83,7 +81,7 @@ public class MAV0138_viewIssueOfEvent
 				// Click on event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event Window Opened";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathEvent"))).click();
+				GlobalVariables.oDriver.findElement(By.linkText(sEvent)).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

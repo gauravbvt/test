@@ -15,7 +15,7 @@ import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
 /**
- * Testcase ID: MAC0052_RedoSetTaskFromCopy
+ * Test case ID: MAC0052_RedoSetTaskFromCopy
  * 	   Summary: Verify that user is able to undo the set task from copy
  * @author AFour
  * 
@@ -178,8 +178,21 @@ public class MAC0052_RedoSetTaskFromCopy {
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+				// Click on legend for maximize the graph
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that When clicked on 'Undo set task from copy' option, the task's details should be removed and its respective details should be restored in the task
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				// Click on legend for maximize the graph
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				if (GlobalVariables.oElement.getText().equals("")) {
 					// Write Results
@@ -196,7 +209,7 @@ public class MAC0052_RedoSetTaskFromCopy {
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);				
+				Thread.sleep(2000);
 				
 				// Click on 'Redo set task from copy' under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -205,11 +218,21 @@ public class MAC0052_RedoSetTaskFromCopy {
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+				// Click on legend for maximize the graph
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that When clicked on 'Undo set task from copy' option, the task's details should be removed and its respective details should be restored in the task
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+				// Click on legend for maximize the graph
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				if (GlobalVariables.oElement.getText().equals("")) {
 					// Write Results
