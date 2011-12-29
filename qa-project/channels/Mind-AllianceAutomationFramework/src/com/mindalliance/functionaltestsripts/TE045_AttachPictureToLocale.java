@@ -136,7 +136,7 @@ public class TE045_AttachPictureToLocale
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion: Verify that file is attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Picture"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Image"));
 				if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

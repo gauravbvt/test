@@ -151,11 +151,11 @@ public class TE046_DeleteLocalePicture
 				Thread.sleep(2000);
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
+				alert.accept(); 
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);				
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Picture"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("grouped"));
 				if (GlobalVariables.oElement.getText().contains("")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

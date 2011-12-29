@@ -129,7 +129,7 @@ public class TE043_DeleteLocaleAttachment
 				Thread.currentThread();
 				Thread.sleep(2000);				
 				// Assertion: Verify that file is deleted
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Picture"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("grouped"));
 				if (GlobalVariables.oElement.getText().contains("")) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
