@@ -43,7 +43,7 @@
 <xPathDeleteTaskAttachment>//div[@id='part']/div/div[@class='section-content']/table[2]/tbody/tr[14]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img</xPathDeleteTaskAttachment>
 <xPathCutAttachment>//div[5]/div/span/div/div[2]/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCutAttachment>
 <xPathDeleteEventAttachment>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeleteEventAttachment>
-<xPathDeletePlacesAttachment>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathDeletePlacesAttachment>
+<xPathDeletePlacesAttachment>//div[3]/div/span/div/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li/ul[@class='menu']/li[2]/a/img</xPathDeletePlacesAttachment>
 <xPathCopyEventAttachment>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyEventAttachment>
 <xPathRemoveIssue>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[3]/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathRemoveIssue>
 <xPathPresenceTabs>//span/span/div/div/div/ul/li/a/span</xPathPresenceTabs>
