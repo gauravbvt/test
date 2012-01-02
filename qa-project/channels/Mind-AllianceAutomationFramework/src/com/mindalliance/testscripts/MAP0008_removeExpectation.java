@@ -118,14 +118,27 @@ public class MAP0008_removeExpectation
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Expectation removed";
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrgs"))).click();
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(2000);
+					// Assertion: Verify that Organization Gets Removed
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("index"));
+					if (GlobalVariables.oElement.getText().equals("")) {
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+					}
+					else{
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName+"'"+" Actual "+GlobalVariables.oElement.getText();
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				    }
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
 					
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;

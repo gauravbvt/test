@@ -80,7 +80,7 @@ public class TE134_RemoveOrganization
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Assertion: Verify that Organization Gets Removed
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathRemoveOrganizationAssertion")));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("index"));
 					if (GlobalVariables.oElement.getText().equals("")) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

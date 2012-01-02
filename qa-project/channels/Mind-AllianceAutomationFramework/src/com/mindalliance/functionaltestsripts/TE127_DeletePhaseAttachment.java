@@ -52,7 +52,6 @@ public class TE127_DeletePhaseAttachment
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
 					String sPhaseName = LogFunctions.getDateTime();
 					GlobalVariables.oElement.sendKeys(sPhaseName);
-//					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -107,7 +106,7 @@ public class TE127_DeletePhaseAttachment
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Assertion: Verify that phase attachment can be deleted
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathDeletePhaseAttachmentAssertion")));
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("grouped"));
 					if (GlobalVariables.oElement.getText().equals("")) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -135,7 +134,7 @@ public class TE127_DeletePhaseAttachment
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);			
+					Thread.sleep(5000);	
 					// Delete an Phase
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
 					// WebElement Synchronization
