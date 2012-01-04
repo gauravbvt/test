@@ -1,7 +1,12 @@
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -45,6 +50,29 @@ public class TE052_UpdateLocaleIsWithin
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Select Actual places
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Select Actual";
+				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:actualOrType")));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
+			    for(WebElement option : options) {
+			    	if(GlobalVariables.viewElements.get("actual").equals(option.getText())){
+			    			option.setSelected();
+			    			break;
+			    	}
+			    }
+			    // Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				
 				// Create Locale 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Locale Created";
@@ -77,7 +105,7 @@ public class TE052_UpdateLocaleIsWithin
 				//Update Locale Is Within Details
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Locale Is Within Details Updated";
-				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:withinContainer:within")).clear();
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:withinContainer:within")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
