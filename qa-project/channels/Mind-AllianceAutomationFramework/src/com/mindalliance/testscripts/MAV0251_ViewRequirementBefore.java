@@ -69,7 +69,7 @@ public class MAV0251_ViewRequirementBefore
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	GlobalVariables.sStrCheck=option.getText();
-			    	if(GlobalVariables.testData.get("Before").equals(option.getText())){
+			    	if(GlobalVariables.testData.get("Before").equalsIgnoreCase(option.getText())){
 			    		option.setSelected();
 			    		GlobalVariables.bIsSuccess=Boolean.TRUE;
 			    		break;

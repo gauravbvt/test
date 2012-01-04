@@ -66,6 +66,9 @@ public class MAV0210_AddInfoReceiveSendNewIssue
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue Added Of Send Panel";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSendInfoAddNewIssue"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that Issue has been created
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSendInfoIssueMenu")));
 				if(GlobalVariables.oElement.getText().equals("Menu")){
@@ -101,6 +104,9 @@ public class MAV0210_AddInfoReceiveSendNewIssue
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue added of Receive Panel";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathReceiveInfoAddNewIssue"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Assertion: Verify that Issue has been created
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathReceiveInfoIssueMenu")));
 				if(GlobalVariables.oElement.getText().equals("Menu")){
