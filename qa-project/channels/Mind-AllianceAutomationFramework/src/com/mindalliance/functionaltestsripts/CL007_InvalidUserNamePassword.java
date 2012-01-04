@@ -70,7 +70,8 @@ public class CL007_InvalidUserNamePassword
 		      // Assertion: Verify that new page is displayed with title as 'Channels Sign In failed!'
 		      GlobalVariables.iStepNo++ ;
 		      GlobalVariables.sDescription = "Login Failed ";
-		      if(GlobalVariables.oDriver.getTitle().equalsIgnoreCase("Channels - Sign in")){
+		      GlobalVariables.oElement.findElement(By.tagName("h2"));
+		      if(GlobalVariables.oElement.getText().equalsIgnoreCase("Sign in failed")){
 		    	  // Write Results
 		    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 		    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
