@@ -201,7 +201,7 @@ public class TE075_TransmissionMediumURLAttachment
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new TE074_TransmissionNamedAttachment();
+			new TE075_TransmissionMediumURLAttachment();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 
