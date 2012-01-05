@@ -73,7 +73,7 @@ public class TE124_AttachFileToPhase
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					
 					// Attach File to an phase
 					GlobalVariables.iStepNo++;
@@ -84,11 +84,11 @@ public class TE124_AttachFileToPhase
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:submit")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					// Assertion: Verify that file is attached
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
 					if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("AttachmentFileName"))) {
@@ -106,7 +106,7 @@ public class TE124_AttachFileToPhase
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					// Delete Attachment
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhaseAttachment"))).click();
 					// WebElement Synchronization

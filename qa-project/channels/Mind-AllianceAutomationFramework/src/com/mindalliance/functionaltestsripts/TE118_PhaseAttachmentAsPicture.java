@@ -71,7 +71,7 @@ public class TE118_PhaseAttachmentAsPicture
 					GlobalVariables.oDriver.findElement(By.linkText(sPhaseName)).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					// Click on Attach option
 				    GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:attachments:container:controls:type")));
 				    List <WebElement> options = GlobalVariables.oDropDown.getOptions();
@@ -87,7 +87,7 @@ public class TE118_PhaseAttachmentAsPicture
 				    }			   
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					
 					// Click on Done
 					GlobalVariables.iStepNo++;

@@ -106,7 +106,7 @@ public class TE160_CreateJobAgent
 					Thread.currentThread();
 					Thread.sleep(5000);
 					
-					// Enter  Egent details
+					// Enter  Agent details
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Details Entered";
 					String Agent="Agent 1";
