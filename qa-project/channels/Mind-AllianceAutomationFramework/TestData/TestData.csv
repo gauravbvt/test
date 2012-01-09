@@ -6,10 +6,18 @@ Automation Test Plan v.1 (dev),Automation Test Plan v.1 (dev)
 Segment For Undo Add Segment,Segment For Undo Add Segment
 Segment For Undo Remove This Segment,Segment For Undo Remove This Segment
 Segment For Undo Add Goal,Segment For Undo Add Goal
+Segment For Task Communicated Location,Segment For Task Communicated Location
+Segment Location As InInfo,Segment Location As InInfo
+Segment Location asElements,Segment Location asElements
+Segment LocationAsAgentsJurisdiction,Segment LocationAsAgentsJurisdiction
+Segment For LocationAsAgentsJurisdiction,Segment For LocationAsAgentsJurisdiction
+Segment LocationAsOrganizationJurisdiction,Segment LocationAsOrganizationJurisdiction
 AddGoal,AddGoal
 Actor,Actor
+Agent's jurisdiction,Agent's jurisdiction
 this is task 121,this is task 121
 Location,Location
+Organization's jurisdiction,Organization's jurisdiction
 Segment For Undo Add New Issue,Segment For Undo Add New Issue
 Type,Type
 Afour Tech121,Afour Tech121
@@ -18,6 +26,7 @@ Segment For Add Task,Segment For Add Task
 Segment for Undo Remove Goal,Segment for Undo Remove Goal
 Segment For Undo Add Task,Segment For Undo Add Task
 Task One,Task 1
+Communicated,Communicated
 Segment For Undo Cut Task,Segment For Undo Cut Task
 Segment For Undo Paste Task Using Cut,Segment For Undo Paste Task Using Cut
 The Other Segment,The Other Segment
@@ -209,6 +218,8 @@ Segment For Delete Picture File To Locale,Segment For Delete Picture File To Loc
 Segment For Attach Named File To Locale,Segment For Attach Named File To Locale
 Segment For Attach Invalid URL To Locale,Segment For Attach Invalid URL To Locale
 India,India
+Named,Named
+Segment For Task Named Location,Segment For Task Named Location
 Segment for Add New Issue,Segment for Add New Issue
 Segment for Redo Remove Issue,Segment for Redo Remove Issue
 Segment For Create Event,Segment For Create Event

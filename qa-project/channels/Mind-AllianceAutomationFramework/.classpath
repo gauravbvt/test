@@ -30,6 +30,6 @@
 	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/selenium-java-2.0b3-srcs.jar"/>
 	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/selenium-server-standalone-2.0b3.jar"/>
 	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/smtp.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.6.0_23/jre/lib/rt.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Java/jdk1.6.0_23/jre/lib/rt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
