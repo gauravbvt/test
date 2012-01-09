@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <elements>
-<channelURL>http://192.168.4.128:8081/channels</channelURL>
-<username>balasaheb</username>
-<usernamefullname>Balasaheb</usernamefullname>
-<password>@test123</password>
+<channelURL>http://192.168.4.128:8080/</channelURL>
+<username>jf</username>
+<usernamefullname>Jean-Francois Cloutier</usernamefullname>
+<password>Mind-Alliance</password>
 <login>/html/body/div/div[2]/form/div[6]/input</login>
 <xPathBody>/html/body</xPathBody>
 <xPathForgotUsernamePassword>/html/body/div/div[2]/form/div[6]/a</xPathForgotUsernamePassword>
