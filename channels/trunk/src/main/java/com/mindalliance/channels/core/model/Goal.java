@@ -186,8 +186,7 @@ public class Goal implements Serializable, Mappable {
                     category != null && category == other.getCategory()
                             && positive == other.isPositive()
                             && level != null && level == other.getLevel()
-                            && organization != null && organization.equals( other.getOrganization() )
-                            && description != null && description.equals( other.getDescription() );
+                            && organization != null && organization.equals( other.getOrganization() );
 
         } else {
             return false;
@@ -203,7 +202,6 @@ public class Goal implements Serializable, Mappable {
         if ( positive ) hash = hash * 31;
         if ( level != null ) hash = hash * 31 + level.hashCode();
         if ( organization != null ) hash = hash * 31 + organization.hashCode();
-        if ( description != null ) hash = hash * 31 + description.hashCode();
         return hash;
     }
 
@@ -211,6 +209,7 @@ public class Goal implements Serializable, Mappable {
      * {@inheritDoc}
      */
     public void map( Map<String, Object> map ) {
+        map.put(  "name", name );
         map.put( "category", category );
         map.put( "positive", positive );
         map.put( "level", level );

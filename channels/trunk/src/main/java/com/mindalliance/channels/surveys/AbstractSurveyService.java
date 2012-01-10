@@ -193,9 +193,11 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
             }
         } );
 
+/*
         for ( Plan plan : planManager.getPlans() )
             if ( plan.isDevelopment() )
                 loadSurveys( plan );
+*/
     }
 
     private void loadSurveys( Plan plan ) {
@@ -228,7 +230,8 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
 
     private void addSurvey( Plan plan, Survey survey ) {
         List<Survey> planSurveys = getSurveys( plan );
-        planSurveys.add( survey );
+        if ( !planSurveys.contains( survey ) )
+            planSurveys.add( survey );
     }
 
     private List<Survey> getSurveys( Plan plan ) {
@@ -495,14 +498,14 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     public List<SurveyResponse> findSurveysResponses( User user, int maxNumber, boolean showCompleted )
             throws SurveyException {
         List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();
-        List<Survey> surveys = findOpenSurveysFor( user );
-        Collections.sort( surveys, new Comparator<Survey>() {
+        List<Survey> openSurveys = findOpenSurveysFor( user );
+        Collections.sort( openSurveys, new Comparator<Survey>() {
             @Override
             public int compare( Survey s1, Survey s2 ) {
                 return s2.getLaunchDate().compareTo( s1.getLaunchDate() );
             }
         } );
-        Iterator<Survey> surveyIterator = surveys.iterator();
+        Iterator<Survey> surveyIterator = openSurveys.iterator();
         int n = 0;
         while ( n < maxNumber && surveyIterator.hasNext() ) {
             Survey survey = surveyIterator.next();

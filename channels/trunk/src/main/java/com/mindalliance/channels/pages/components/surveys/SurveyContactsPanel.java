@@ -10,15 +10,15 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.surveys.Contact;
 import com.mindalliance.channels.surveys.Survey;
 import com.mindalliance.channels.surveys.SurveyException;
 import com.mindalliance.channels.surveys.SurveyService;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -186,19 +186,27 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
     private List<ContactDescriptor> getContactDescriptors() {
         List<ContactDescriptor> contactDescriptors = new ArrayList<ContactDescriptor>();
         QueryService queryService = getQueryService();
+        Place planLocale = getPlan().getLocale();
         for ( Contact contact : getAllContacts() ) {
             String username = contact.getUsername();
             Actor actor = queryService.findOrCreate( Participation.class, username ).getActor();
             if ( actor == null ) {
                 contactDescriptors.add( new ContactDescriptor( contact, null ) );
             } else {
-                // TODO - Does this make sense?
                 List<ResourceSpec> specs = queryService
                         .findAllResourcesNarrowingOrEqualTo( actor );
-                for ( Specable spec : specs ) {
-                    contactDescriptors.add( new ContactDescriptor( contact, spec ) );
+                Specable narrowest = null;
+                for ( ResourceSpec spec : specs ) {
+                    if ( narrowest == null ) {
+                        narrowest = spec;
+                    } else {
+                        if ( spec.narrows( narrowest, planLocale ) ) {
+                            narrowest = spec;
+                        }
+                    }
                 }
-            }
+                contactDescriptors.add( new ContactDescriptor( contact, narrowest ) );
+           }
         }
         return (List<ContactDescriptor>) CollectionUtils.select(
                 contactDescriptors,

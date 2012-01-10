@@ -111,7 +111,7 @@ abstract public class Survey implements Identifiable, Serializable {
     public static Survey UNKNOWN = UnknownSurvey.getInstance();
 
     public abstract Identifiable findIdentifiable( Analyst analyst, QueryService queryService )
-        throws NotFoundException;
+            throws NotFoundException;
 
     public abstract boolean matches( Type type, Identifiable identifiable );
 
@@ -291,7 +291,7 @@ abstract public class Survey implements Identifiable, Serializable {
 
     public Contact getContact( final String username ) {
         return (Contact) CollectionUtils.find(
-            contacts, new Predicate() {
+                contacts, new Predicate() {
             @Override
             public boolean evaluate( Object obj ) {
                 return ( (Contact) obj ).getUsername().equals( username );
@@ -394,7 +394,7 @@ abstract public class Survey implements Identifiable, Serializable {
             }
             String specs = URLDecoder.decode( tokens.nextToken(), "UTF-8" );
             Class<? extends Survey> clazz = (Class<? extends Survey>) Survey.class.getClassLoader()
-                                                                                  .loadClass( surveyClassName );
+                    .loadClass( surveyClassName );
             Survey survey = clazz.newInstance();
             survey.setId( id );
             survey.setStatus( status );
@@ -463,12 +463,12 @@ abstract public class Survey implements Identifiable, Serializable {
 
     public int getContactedCount() {
         return CollectionUtils.select(
-            contacts, PredicateUtils.invokerPredicate( "isContacted" ) ).size();
+                contacts, PredicateUtils.invokerPredicate( "isContacted" ) ).size();
     }
 
     public int getToBeContactedCount() {
         return CollectionUtils.select(
-            contacts, PredicateUtils.invokerPredicate( "isToBeContacted" ) ).size();
+                contacts, PredicateUtils.invokerPredicate( "isToBeContacted" ) ).size();
     }
 
     public boolean updateSurveyData( SurveyService surveyService, Plan plan ) {
@@ -522,9 +522,9 @@ abstract public class Survey implements Identifiable, Serializable {
         context.put( "plan", getPlanText() );
         context.put( "deadline", getDeadlineText() );
         context.put(
-            "issuer", issuer != null ? issuer.getFullName() : "(unknown)" );
+                "issuer", issuer != null ? issuer.getFullName() : "(unknown)" );
         context.put(
-            "email", issuer != null ? issuer.getEmail() : surveyService.getDefaultEmailAddress( plan ) );
+                "email", issuer != null ? issuer.getEmail() : surveyService.getDefaultEmailAddress( plan ) );
         context.put( "survey", getTitle() );
         return context;
     }
@@ -551,11 +551,19 @@ abstract public class Survey implements Identifiable, Serializable {
 
     public boolean hasContact( final String userName ) {
         return CollectionUtils.exists(
-            contacts, new Predicate() {
+                contacts, new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
                 return ( (Contact) object ).getUsername().equals( userName );
             }
         } );
+    }
+
+    public boolean equals( Object other ) {
+        return other instanceof Survey && ( (Survey) other ).getId() == getId();
+    }
+    
+    public int hashCode() {
+        return 31 + new Long( getId() ).hashCode();
     }
 }
