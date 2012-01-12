@@ -75,7 +75,7 @@ public class MAV0252_ViewRequirementAfter
 			    		break;
 			    	}
 			    }
-			    if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+			    if(GlobalVariables.bIsSuccess==Boolean.TRUE){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

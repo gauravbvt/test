@@ -127,25 +127,25 @@ public class MAV0228_MediaNotDeployed
 					}
 					GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:mediaNotDeployedContainer:mediaNotDeployed:0:mediumChoice")));
 					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
-					if(options.get(1).getText().equals(GlobalVariables.viewElements.get("cell")) &&
-					   options.get(2).getText().equals(GlobalVariables.viewElements.get("conferenceCall")) &&
-					   options.get(3).getText().equals(GlobalVariables.viewElements.get("courier")) &&
-					   options.get(4).getText().equals(GlobalVariables.viewElements.get("email")) &&
-					   options.get(5).getText().equals(GlobalVariables.viewElements.get("faceToFace")) &&
-					   options.get(6).getText().equals(GlobalVariables.viewElements.get("fax")) &&
-					   options.get(7).getText().equals(GlobalVariables.viewElements.get("im")) &&
-					   options.get(8).getText().equals(GlobalVariables.viewElements.get("landline")) &&
-					   options.get(9).getText().equals(GlobalVariables.viewElements.get("mail")) &&
-					   options.get(10).getText().equals(GlobalVariables.viewElements.get("meeting")) &&
-					   options.get(11).getText().equals(GlobalVariables.viewElements.get("notificationSystem")) &&
-					   options.get(12).getText().equals(GlobalVariables.viewElements.get("onlineChat")) &&
-					   options.get(13).getText().equals(GlobalVariables.viewElements.get("pager")) &&
-					   options.get(14).getText().equals(GlobalVariables.viewElements.get("paSystems")) &&
-					   options.get(15).getText().equals(GlobalVariables.viewElements.get("phone")) &&
-					   options.get(16).getText().equals(GlobalVariables.viewElements.get("radio")) &&
-					   options.get(17).getText().equals(GlobalVariables.viewElements.get("television")) &&
-					   options.get(18).getText().equals(GlobalVariables.viewElements.get("twoWayRadio")) &&
-					   options.get(19).getText().equals(GlobalVariables.viewElements.get("newMedium"))) {
+					if(options.get(0).getText().equals(GlobalVariables.viewElements.get("cell")) &&
+					   options.get(1).getText().equals(GlobalVariables.viewElements.get("conferenceCall")) &&
+					   options.get(2).getText().equals(GlobalVariables.viewElements.get("courier")) &&
+					   options.get(3).getText().equals(GlobalVariables.viewElements.get("email")) &&
+					   options.get(4).getText().equals(GlobalVariables.viewElements.get("faceToFace")) &&
+					   options.get(5).getText().equals(GlobalVariables.viewElements.get("fax")) &&
+					   options.get(6).getText().equals(GlobalVariables.viewElements.get("im")) &&
+					   options.get(7).getText().equals(GlobalVariables.viewElements.get("landline")) &&
+					   options.get(8).getText().equals(GlobalVariables.viewElements.get("mail")) &&
+					   options.get(9).getText().equals(GlobalVariables.viewElements.get("meeting")) &&
+					   options.get(10).getText().equals(GlobalVariables.viewElements.get("notificationSystem")) &&
+					   options.get(11).getText().equals(GlobalVariables.viewElements.get("onlineChat")) &&
+					   options.get(12).getText().equals(GlobalVariables.viewElements.get("pager")) &&
+					   options.get(13).getText().equals(GlobalVariables.viewElements.get("paSystems")) &&
+					   options.get(14).getText().equals(GlobalVariables.viewElements.get("phone")) &&
+					   options.get(15).getText().equals(GlobalVariables.viewElements.get("radio")) &&
+					   options.get(16).getText().equals(GlobalVariables.viewElements.get("television")) &&
+					   options.get(17).getText().equals(GlobalVariables.viewElements.get("twoWayRadio")) &&
+					   options.get(18).getText().equals(GlobalVariables.viewElements.get("newMedium"))) {
 						GlobalVariables.sStrCheck=options.get(0).getText();
 							// 	Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
