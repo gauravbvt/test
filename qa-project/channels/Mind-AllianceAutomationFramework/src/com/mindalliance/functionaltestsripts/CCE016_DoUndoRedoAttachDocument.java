@@ -108,6 +108,7 @@ public class CCE016_DoUndoRedoAttachDocument
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:upload"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
+//					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -116,7 +117,8 @@ public class CCE016_DoUndoRedoAttachDocument
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: Verify that file is attached
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
+					//GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
 					if (GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

@@ -51,7 +51,7 @@ public class PS027_AddNewTask
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				if(GlobalVariables.oElement.getText().equals("doing something")){
+				if(GlobalVariables.oElement.getValue().equals("doing something")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

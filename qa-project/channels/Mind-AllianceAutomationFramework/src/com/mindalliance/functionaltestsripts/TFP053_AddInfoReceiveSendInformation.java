@@ -71,14 +71,14 @@ public class TFP053_AddInfoReceiveSendInformation
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Sends Information"));
 				// Assertion : Verify that Add Info Sent Information is entered successfully
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Sends Information"))) {
+				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("Sends Information"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Sends Informations' "+" Actual " + GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Sends Informations' "+" Actual " + GlobalVariables.oElement.getValue();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -112,14 +112,14 @@ public class TFP053_AddInfoReceiveSendInformation
 				// Assertion : Verify that Add Info Received Information is entered successfully
 				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Receives informations"))) {
+				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("Receives informations"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Receives Information' "+" Actual " + GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Receives Information' "+" Actual " + GlobalVariables.oElement.getValue();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

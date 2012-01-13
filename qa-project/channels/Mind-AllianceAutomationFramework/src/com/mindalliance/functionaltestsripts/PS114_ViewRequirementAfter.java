@@ -68,7 +68,7 @@ public class PS114_ViewRequirementAfter
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:timing")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
-			    	if(GlobalVariables.testData.get("After").equals(option.getText())){
+			    	if(GlobalVariables.testData.get("After").equals(option.getValue())){
 			    		GlobalVariables.bIsSuccess=Boolean.TRUE;
 			    		option.setSelected();
 			    		break;

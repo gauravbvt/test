@@ -100,7 +100,7 @@ public class TE070_ViewAllTypesOfMedium
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				
 				// Click on done
 				GlobalVariables.iStepNo++;

@@ -2,7 +2,6 @@ package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -150,6 +149,7 @@ public class CCE029_DoUndoRedoAddRequirement
 				Thread.currentThread();
 				Thread.sleep(2000);	
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathRemoveRequirement"))).click();
+//				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/span/div/div[2]/div/div[2]/div/a[2]")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

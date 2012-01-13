@@ -56,10 +56,10 @@ public class TE053_UpdateLocaleStreetAddress
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:actualOrType")));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
-			    	if(GlobalVariables.viewElements.get("actual").equals(option.getText())){
+			    	if(GlobalVariables.viewElements.get("actual").equals(option.getValue())){
 			    			option.setSelected();
 			    			break;
 			    	}
@@ -78,7 +78,7 @@ public class TE053_UpdateLocaleStreetAddress
 				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name"));
 				String sLocale = LogFunctions.getDateTime();
 				GlobalVariables.oElement.sendKeys(sLocale);
@@ -107,7 +107,7 @@ public class TE053_UpdateLocaleStreetAddress
 				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:streetContainer:streetAddress")).clear();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:streetContainer:streetAddress"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Address"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
@@ -125,7 +125,7 @@ public class TE053_UpdateLocaleStreetAddress
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:streetContainer:streetAddress"));
-				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("Address"))) {
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Address"))) {
 	    			// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
