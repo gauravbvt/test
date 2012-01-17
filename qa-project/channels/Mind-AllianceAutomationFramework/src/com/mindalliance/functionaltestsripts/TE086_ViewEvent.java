@@ -126,7 +126,7 @@ public class TE086_ViewEvent
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event is present";
 				// Assertion: Verify that event is present
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/span/div/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span"));
 				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Add Event To The Plan"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
