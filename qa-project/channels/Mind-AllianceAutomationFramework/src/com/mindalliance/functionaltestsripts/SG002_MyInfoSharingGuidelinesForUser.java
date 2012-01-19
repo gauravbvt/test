@@ -35,9 +35,9 @@ public class SG002_MyInfoSharingGuidelinesForUser
 			Thread.currentThread();
 			Thread.sleep(2000);
 			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
-			GlobalVariables.oElement.sendKeys("priyanka");
+			GlobalVariables.oElement.sendKeys("balasaheb");
 			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
-			GlobalVariables.oElement.sendKeys("piu");
+			GlobalVariables.oElement.sendKeys("@test123");
 			// Click on Sign In button
 			GlobalVariables.iStepNo++ ;
 			GlobalVariables.sDescription = "Login is successful";
@@ -57,14 +57,14 @@ public class SG002_MyInfoSharingGuidelinesForUser
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "My Information Sharing Guidelines Link is Present";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("myInformationSharingGuidelines")));
-				if(GlobalVariables.oElement.getText().equals("My information sharing guidelines")){
+				if(GlobalVariables.oElement.getText().equals("IS guidelines for all participants")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Information sharing guidelines for all participants' "+" Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'IS guidelines for all participants' "+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

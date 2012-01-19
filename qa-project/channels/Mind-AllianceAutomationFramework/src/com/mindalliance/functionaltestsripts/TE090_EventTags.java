@@ -125,6 +125,7 @@ public class TE090_EventTags
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.navigate().refresh();
 				// About Plan
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
 				// WebElement Synchronization

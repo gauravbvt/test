@@ -124,6 +124,7 @@ public class TE089_EventTagLink
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.navigate().refresh();
 				// About Plan
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
 				// WebElement Synchronization
@@ -133,7 +134,7 @@ public class TE089_EventTagLink
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allEvents"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Click on check-box to delete the event 
 				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 				// WebElement Synchronization
