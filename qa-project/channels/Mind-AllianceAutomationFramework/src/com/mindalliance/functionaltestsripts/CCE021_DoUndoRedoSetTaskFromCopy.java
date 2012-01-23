@@ -80,6 +80,9 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				GlobalVariables.sDescription = "Task detail updated";
 				// Add details for New Task
 				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(4000);
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
 				// WebElement Synchronization
@@ -142,7 +145,7 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				
 				// Click on 'Set task from copy' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Task copied";
+				GlobalVariables.sDescription = "Set Task from Copy";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskActionsMenu"),GlobalVariables.viewElements.get("setTaskFromCopy"));
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -150,17 +153,17 @@ public class CCE021_DoUndoRedoSetTaskFromCopy
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				// ASSERTION: When clicked on 'Set task from copy' option, the copied task details should be saved in the selected task
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-				if (GlobalVariables.oElement.getValue().equals("Task Sender")) {
+				if (GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("Task Sender"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Task Sender' "+" Actual " + GlobalVariables.oElement.getValue();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.testData.get("Task Sender")+"' Actual " + GlobalVariables.oElement.getValue();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
