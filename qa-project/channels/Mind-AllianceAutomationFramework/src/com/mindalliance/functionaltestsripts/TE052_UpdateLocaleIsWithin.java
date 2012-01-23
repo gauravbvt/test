@@ -38,7 +38,7 @@ public class TE052_UpdateLocaleIsWithin
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				//About Plan Window Opened
+				// About Plan Window Opened
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "About Plan Window Opened";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));

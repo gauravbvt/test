@@ -95,7 +95,7 @@ public class TE068_AddTransmissionMediumCategoryNameWithSpecialCharacters
 				for(int i=0;i<=15;i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

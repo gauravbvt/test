@@ -38,7 +38,7 @@ public class TE053_UpdateLocaleStreetAddress
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				//About Plan Window Opened
+				// About Plan Window Opened
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "About Plan Window Opened";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
@@ -50,16 +50,17 @@ public class TE053_UpdateLocaleStreetAddress
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				//Select Actual Place
+				// Select Actual places
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Select Actual";
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name")).clear();
 				GlobalVariables.oDropDown=new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:actualOrType")));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
-			    	if(GlobalVariables.viewElements.get("actual").equals(option.getValue())){
+			    	if(GlobalVariables.viewElements.get("actual").equals(option.getText())){
 			    			option.setSelected();
 			    			break;
 			    	}
@@ -136,7 +137,7 @@ public class TE053_UpdateLocaleStreetAddress
 	    			// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sVerifyError, GlobalVariables.sBlank);					
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);					
 				}
 			    // WebElement Synchronization
 				Thread.currentThread();
