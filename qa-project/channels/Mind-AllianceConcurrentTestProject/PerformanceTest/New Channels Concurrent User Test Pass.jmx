@@ -1073,7 +1073,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">30</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1322114114000</longProp>
         <longProp name="ThreadGroup.end_time">1322114114000</longProp>
@@ -1642,9 +1642,18 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor" enabled="false">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">SegmentId</stringProp>
+            <stringProp name="RegexExtractor.regex">&lt;option selected=&quot;selected&quot; value=&quot;(\d+)&quot;&gt;SegmentForA</stringProp>
+            <stringProp name="RegexExtractor.template"></stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="-343851887">&lt;option selected=&quot;selected&quot; value=&quot;0&quot;&gt;SegmentForA${Counter}&lt;/option&gt;</stringProp>
+              <stringProp name="1081770572">&lt;option selected=&quot;selected&quot; value=&quot;${SegmentId_g1}&quot;&gt;SegmentForA${Counter}&lt;/option&gt;</stringProp>
             </collectionProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -2082,7 +2091,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings"/>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -2603,7 +2612,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="293591336">&lt;span class=&quot;task&quot;&gt;TaskForA${Counter}&lt;/span&gt;</stringProp>
             </collectionProp>
@@ -2966,9 +2975,9 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="-1665699948">&lt;span&gt;Agent&lt;/span&gt;</stringProp>
+              <stringProp name="-1179558492">&lt;span&gt;AgentForA${Counter}&lt;/span&gt;</stringProp>
             </collectionProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -3415,9 +3424,9 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="-334659272">&lt;span&gt;OrganizationForA${Counter}&lt;/span</stringProp>
+              <stringProp name="911747958">&lt;span&gt;Organization&lt;/span&gt;</stringProp>
             </collectionProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -3755,7 +3764,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">30</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1322115492000</longProp>
         <longProp name="ThreadGroup.end_time">1322115492000</longProp>
@@ -4324,9 +4333,18 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor" enabled="false">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">SegmentId</stringProp>
+            <stringProp name="RegexExtractor.regex">&lt;option selected=&quot;selected&quot; value=&quot;(\d+)&quot;&gt;SegmentForB</stringProp>
+            <stringProp name="RegexExtractor.template"></stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="-752676112">&lt;option selected=&quot;selected&quot; value=&quot;0&quot;&gt;SegmentForB${Counter}&lt;/option&gt;</stringProp>
+              <stringProp name="672946347">&lt;option selected=&quot;selected&quot; value=&quot;${SegmentId_g1}&quot;&gt;SegmentForB${Counter}&lt;/option&gt;</stringProp>
             </collectionProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -5092,9 +5110,9 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="-728394168">&lt;input type=&quot;text&quot; value=&quot;GoalForB${Counter}&quot; name=&quot;sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name&quot; disabled=&quot;disabled&quot; id=&quot;id171&quot; autocomplete=&quot;off&quot;&gt;</stringProp>
+              <stringProp name="1334059918">&lt;input type=&quot;text&quot; value=&quot;GoalForB${Counter}&quot; name=&quot;sg-editor:content:mo:aspect:goalsDiv:goal:${PlannerB}:organization:name&quot; disabled=&quot;disabled&quot; id=&quot;id171&quot; autocomplete=&quot;off&quot;&gt;</stringProp>
             </collectionProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -5708,7 +5726,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-703481017">&lt;span class=&quot;task&quot;&gt;TaskForB${Counter}&lt;/span&gt;</stringProp>
             </collectionProp>
@@ -6783,9 +6801,18 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor" enabled="false">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">SegmentId</stringProp>
+            <stringProp name="RegexExtractor.regex">&lt;option selected=&quot;selected&quot; value=&quot;(\d+)&quot;&gt;SegmentForC</stringProp>
+            <stringProp name="RegexExtractor.template"></stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="-1161500337">&lt;option selected=&quot;selected&quot; value=&quot;0&quot;&gt;SegmentForC${Counter}&lt;/option&gt;</stringProp>
+              <stringProp name="264122122">&lt;option selected=&quot;selected&quot; value=&quot;${SegmentId_g1}&quot;&gt;SegmentForC${Counter}&lt;/option&gt;</stringProp>
             </collectionProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -7399,7 +7426,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="516319812">&lt;span&gt;OrganizationForC${Counter}&lt;/span&gt;</stringProp>
             </collectionProp>
@@ -7825,7 +7852,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-1982357972">value=&quot;EventForC${Counter}&quot;</stringProp>
             </collectionProp>
@@ -8324,14 +8351,14 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0004_UpdatePlanDetails" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0004_UpdatePlanDetails" enabled="true">
         <stringProp name="TestPlan.comments">Lock should be generated for user B while User A is updating the details of the plan.</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">30</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322117787000</longProp>
         <longProp name="ThreadGroup.end_time">1322117787000</longProp>
@@ -8986,7 +9013,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="278797551">Plan: PerformanceTestPlan${Counter} v.1(dev)</stringProp>
             </collectionProp>
@@ -9240,14 +9267,14 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0005_AddNewEvents" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0005_AddNewEvents" enabled="true">
         <stringProp name="TestPlan.comments">Lock should be generated for user B for adding new events to the plan.</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">30</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322118247000</longProp>
         <longProp name="ThreadGroup.end_time">1322118247000</longProp>
@@ -10002,7 +10029,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-422094122">value=&quot;AddNewEvent1&quot;</stringProp>
             </collectionProp>
@@ -10501,14 +10528,14 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0006_AddNewOrg" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0006_AddNewOrg" enabled="true">
         <stringProp name="TestPlan.comments">Lock should be generated for user B for adding new organization to the plan.</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">30</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322118600000</longProp>
         <longProp name="ThreadGroup.end_time">1322118600000</longProp>
@@ -11170,7 +11197,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="533669695">&lt;span&gt;AddNewOrganization${Counter}&lt;/span&gt;</stringProp>
             </collectionProp>
@@ -11585,14 +11612,14 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0007_UpdatePlanSegment" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0007_UpdatePlanSegment" enabled="true">
         <stringProp name="TestPlan.comments">Lock should be generated for user B while User A is updating the details of the plan segment.</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">30</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322119549000</longProp>
         <longProp name="ThreadGroup.end_time">1322119549000</longProp>
@@ -12247,9 +12274,18 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor" enabled="false">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">SegmentId</stringProp>
+            <stringProp name="RegexExtractor.regex">&lt;option selected=&quot;selected&quot; value=&quot;(\d+)&quot;&gt;UpdateSegment</stringProp>
+            <stringProp name="RegexExtractor.template"></stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="-1481192718">&lt;option selected=&quot;selected&quot; value=&quot;0&quot;&gt;UpdateSegment${Counter}&lt;/option&gt;</stringProp>
+              <stringProp name="-1552577043">&lt;option selected=&quot;selected&quot; value=&quot;${SegmentId_g1}&quot;&gt;UpdateSegment${Counter}&lt;/option&gt;</stringProp>
             </collectionProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -12501,14 +12537,14 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0008_AddNewGoals" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0008_AddNewGoals" enabled="true">
         <stringProp name="TestPlan.comments">Lock should be generated for user B for adding new goal to the plan segment</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">30</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322121486000</longProp>
         <longProp name="ThreadGroup.end_time">1322121486000</longProp>
@@ -13619,7 +13655,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-136860066">&lt;input type=&quot;text&quot; value=&quot;Goals${Counter}&quot; name=&quot;sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name&quot; disabled=&quot;disabled&quot; id=&quot;id104&quot; autocomplete=&quot;off&quot;&gt;</stringProp>
             </collectionProp>
@@ -13952,14 +13988,14 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0009_UpdateSameTask" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0009_UpdateSameTask" enabled="true">
         <stringProp name="TestPlan.comments">Lock should be generated for user B for updating same task of about plan</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
+        <stringProp name="ThreadGroup.num_threads">30</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322123665000</longProp>
         <longProp name="ThreadGroup.end_time">1322123665000</longProp>
@@ -14996,7 +15032,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-1307419694">&lt;span class=&quot;task&quot;&gt;Updating Same Task ${Counter}&lt;/span&gt;</stringProp>
             </collectionProp>
@@ -15329,14 +15365,14 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0010_AddFlow" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0010_AddFlow" enabled="true">
         <stringProp name="TestPlan.comments">Lock should be generated for user B for add flow </stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">30</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322123973000</longProp>
         <longProp name="ThreadGroup.end_time">1322123973000</longProp>
@@ -15919,7 +15955,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="731381158">value=&quot;Flow${Counter}&quot;</stringProp>
             </collectionProp>
@@ -16461,7 +16497,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-615084152">&lt;span id=&quot;id164&quot; title=&quot; (TaskForFlow${Counter})&quot;&gt;</stringProp>
             </collectionProp>
@@ -16794,7 +16830,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0011_UpdatePhase" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0011_UpdatePhase" enabled="true">
         <stringProp name="TestPlan.comments"> Lock should be generated for user B for same updating phase</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
@@ -17570,6 +17606,15 @@ Consider that User A is accessing the component of the channels first.</stringPr
             </collectionProp>
           </HeaderManager>
           <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="-785597558">UpdatePhase${Counter}</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/channels/plan" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
@@ -17980,7 +18025,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0012_UpdateAgent" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0012_UpdateAgent" enabled="true">
         <stringProp name="TestPlan.comments">Lock should be generated for user B for same updating Agent</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
@@ -19069,7 +19114,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0013_UpdatePlace" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0013_UpdatePlace" enabled="true">
         <stringProp name="TestPlan.comments"> Lock should be generated for user B for same updating Places</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
@@ -20858,7 +20903,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0014_UpdateTransmissionMedia" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0014_UpdateTransmissionMedia" enabled="true">
         <stringProp name="TestPlan.comments">Lock should be generated for user B for same updating Tramission Media</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
@@ -22465,7 +22510,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0015_UpdateOrganization" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0015_UpdateOrganization" enabled="true">
         <stringProp name="TestPlan.comments"> Lock should be generated for user B for same updating Organizations</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
@@ -23781,7 +23826,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0016_UpdateRoles" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TC0016_UpdateRoles" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
