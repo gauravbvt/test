@@ -60,6 +60,13 @@ public class TFP100_AdvanceFormOfTask
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.viewElements.get("showAdvanceForm")+"' "+" Actual " + GlobalVariables.oElement.getText();
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

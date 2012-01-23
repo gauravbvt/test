@@ -46,8 +46,7 @@ public class TFP111_LocationAsOrganizationJurisdiction
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				
+				Thread.sleep(2000);				
 				// Stretch Up Task Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
@@ -76,17 +75,10 @@ public class TFP111_LocationAsOrganizationJurisdiction
 			    	if(GlobalVariables.testData.get("Organization's jurisdiction").equals(option.getText())){
 			    			option.setSelected();
 			    			GlobalVariables.bIsSuccess=Boolean.TRUE;
-			    			break;	}
+			    			break;
+			    	}
 			    }
-			    // Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
-				 // Assertion: Verify that Organization's jurisdiction Location get selected.
+			    // Assertion: Verify that Organization's jurisdiction Location get selected.
 			    if(GlobalVariables.bIsSuccess==Boolean.TRUE){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

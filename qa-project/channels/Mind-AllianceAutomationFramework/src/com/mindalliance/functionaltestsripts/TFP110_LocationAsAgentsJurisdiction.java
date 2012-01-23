@@ -47,7 +47,6 @@ public class TFP110_LocationAsAgentsJurisdiction
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
 				// Stretch Up Task Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
@@ -76,17 +75,10 @@ public class TFP110_LocationAsAgentsJurisdiction
 			    	if(GlobalVariables.testData.get("Agent's jurisdiction").equals(option.getText())){
 			    			option.setSelected();
 			    			GlobalVariables.bIsSuccess=Boolean.TRUE;
-			    			break;	}
-			    }
-			    // Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
-				 // Assertion: Verify that AgentsJurisdiction Location get selected.
+			    			break;	
+			    	}
+			    }			
+			    // Assertion: Verify that AgentsJurisdiction Location get selected.
 			    if(GlobalVariables.bIsSuccess==Boolean.TRUE){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -100,7 +92,6 @@ public class TFP110_LocationAsAgentsJurisdiction
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 			    }
-			    
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
