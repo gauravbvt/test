@@ -52,8 +52,8 @@
 <versions>Versions</versions>
 <actions>Actions</actions>
 <show>Show</show>
-<showAdvanceForm>Show advance form</showAdvanceForm>
-<showSimpleForm>Show advance form</showSimpleForm>
+<showAdvanceForm>Show advanced form</showAdvanceForm>
+<showSimpleForm>Show simple form</showSimpleForm>
 <aboutPlanSegment>About plan segment</aboutPlanSegment>
 <versionAssertion>This is version 1</versionAssertion>
 <goals>Goals</goals>
