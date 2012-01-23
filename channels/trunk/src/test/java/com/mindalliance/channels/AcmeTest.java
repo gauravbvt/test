@@ -32,7 +32,7 @@ public class AcmeTest extends WalkthroughTest {
     private PlanDao planDao;
 
     public AcmeTest() {
-        super( "guest", "mindalliance.com/channels/plans/acme" );
+        super( "guest", "mindalliance_com_channels_plans_acme" );
     }
 
     @Before

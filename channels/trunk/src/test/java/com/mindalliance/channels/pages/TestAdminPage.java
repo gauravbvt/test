@@ -28,9 +28,9 @@ import static org.junit.Assert.fail;
 @TestExecutionListeners( AbstractChannelsTest.InstallSamplesListener.class )
 public class TestAdminPage extends AbstractChannelsTest {
 
-    private static final String DEMO = "mindalliance.com/channels/plans/demo";
+    private static final String DEMO = "mindalliance_com_channels_plans_demo";
 
-    private static final String ACME = "mindalliance.com/channels/plans/acme";
+    private static final String ACME = "mindalliance_com_channels_plans_acme";
 
     public TestAdminPage() {
         super( "denis", DEMO );
@@ -198,7 +198,7 @@ public class TestAdminPage extends AbstractChannelsTest {
         tester.assertRenderedPage( AdminPage.class );
         tester.assertErrorMessages( new String[]{ "A plan with that uri already exists" } );
 
-        String uri = "brand.spanking.new.plan";
+        String uri = "brand_spanking_new_plan";
         String client = "Bob Customer";
 
         form = tester.newFormTester( "users" );

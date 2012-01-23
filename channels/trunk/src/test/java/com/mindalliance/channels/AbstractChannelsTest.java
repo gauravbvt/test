@@ -46,6 +46,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.MergedContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -294,6 +295,11 @@ public abstract class AbstractChannelsTest implements ApplicationContextAware {
         @Override
         protected String getResourceSuffix() {
             return "-context.xml";
+        }
+
+        @Override
+        public ConfigurableApplicationContext loadContext( MergedContextConfiguration mergedConfig ) {
+            return loadContext( mergedConfig.getLocations() );
         }
 
         @Override

@@ -2,8 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:sec="http://www.springframework.org/schema/security"
 
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd"
 
        default-autowire="byName">
 
@@ -18,21 +18,35 @@
         <property name="userDefinitions" value="users.properties"/>
         <property name="defaultDefinitions" value="/WEB-INF/users.properties"/>
     </bean>
-
-    <sec:http auto-config='true' access-denied-page="/static/403.html" create-session="always"
+    
+    <sec:http pattern="/**/*.css" security="none"/>
+    <sec:http pattern="/**/*.js" security="none"/>
+    <sec:http pattern="/**/*.ico" security="none"/>
+    <sec:http pattern="/login.html" security="none"/>
+    <sec:http pattern="/newPasswordRequest.html" security="none"/>
+    <sec:http pattern="/static/**" security="none"/>
+    <sec:http pattern="/images/**" security="none"/>
+    <sec:http pattern="/resources/**" security="none"/>
+    <sec:http pattern="/doc/**" security="none"/>
+    <sec:http pattern="/api/**" security="none"/>
+    
+    <sec:http pattern="/rest/**">
+        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
+        <sec:http-basic/>
+    </sec:http>
+    <sec:http pattern="/soap/**">
+        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
+        <sec:http-basic/>
+    </sec:http>
+    <sec:http pattern="/xml/**">
+        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
+        <sec:http-basic/>
+    </sec:http>
+    
+    <sec:http auto-config='true' access-denied-page="/static/403.html" 
+              create-session="always"
               disable-url-rewriting="false">
 
-        <sec:intercept-url pattern="/css/*.css" filters="none"/>
-        <sec:intercept-url pattern="/*.js" filters="none"/>
-        <sec:intercept-url pattern="/*.ico" filters="none"/>
-        <sec:intercept-url pattern="/static/**" filters="none"/>
-        <sec:intercept-url pattern="/images/**" filters="none"/>
-        <sec:intercept-url pattern="/resources/**" filters="none"/>
-        <sec:intercept-url pattern="/doc/**" filters="none"/>
-        <sec:intercept-url pattern="/api/**" filters="none"/>
-        <sec:intercept-url pattern="/login.html" filters="none"/>
-        <sec:intercept-url pattern="/newPasswordRequest.html" filters="none"/>
-        <!--<sec:intercept-url pattern="/plan" access="ROLE_PLANNER"/>-->
         <sec:intercept-url pattern="/admin" access="ROLE_ADMIN"/>
         <sec:intercept-url pattern="/**" access="ROLE_USER"/>
 
@@ -63,7 +77,7 @@
     </bean>
 
     <bean id="securityInterceptor"
-          class="org.springframework.security.access.intercept.aspectj.AspectJAnnotationSecurityInterceptor">
+          class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
         <property name="securityMetadataSource">
             <bean class="org.springframework.security.access.annotation.SecuredAnnotationSecurityMetadataSource"/>
         </property>
@@ -71,13 +85,14 @@
     </bean>
 
     <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
-        <property name="decisionVoters">
+        <constructor-arg>
             <list>
                 <bean class="org.springframework.security.access.vote.RoleVoter"/>
                 <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
             </list>
-        </property>
+        </constructor-arg>
     </bean>
+
     <!-- For enunciate -->
     <alias name="springSecurityFilterChain" alias="securityFilter"/>
 </beans>
