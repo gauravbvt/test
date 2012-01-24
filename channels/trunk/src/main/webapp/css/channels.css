@@ -44,7 +44,7 @@ div.header .help-icon {
 #contents {
     position: absolute;
     top: 5em;
-    bottom: 5px;
+    bottom: 10px;
     left: 0;
     width: 80%;
     overflow: hidden;
@@ -63,19 +63,29 @@ div.header .help-icon {
 
 
 div.section-content {
-    position: absolute;
-    top: 3em;
-    bottom: 5px;
-    left: 5px;
-    right: 0;
+    bottom: 0;
+    left: 0;
     overflow: auto;
+    position: absolute;
+    right: 0;
+    top: 39px;
 }
+
+div.part-header div.section-content {
+    bottom: 0;
+    left: 10px;
+    overflow: auto;
+    position: absolute;
+    right: 0;
+    top: 39px;
+}
+
 
 #graph, #part {
     position: absolute;
     left: 0;
     right: 0;
-    margin: 5px 5px 0 5px;
+    margin: 10px 10px 0;
 }
 
 #maximized-graph {
@@ -92,10 +102,18 @@ div.section-content {
 }
 
 #part .summary {
-    display: inline;
-	padding-left:20px;
+    display: block;
+    font-size: 15px;
+    line-height: 140%;
+    padding-bottom: 5px;
+    padding-left: 23px;
+    padding-top: 10px;
+	text-decoration:underline;
 }
 
+#part .summary:hover {
+	color:#333;
+}
 
 .simple-advanced {
     cursor: pointer;
@@ -149,7 +167,9 @@ div.maximized > div.zoom {
 }
 
 div.section-title {
-    position: relative;
+    background: #E4EEFE;
+    border-bottom: 1px solid #7794C7;
+    color: #333333;
 }
 
 .receives, .sends, .part-header {
@@ -161,19 +181,18 @@ div.section-title {
 .part-header {
     left: 0;
     right: 66.66%;
-    margin-right: 4px;
+    margin-right: 10px;
 }
 
 .receives {
     left: 33.33%;
     right: 33.33%;
-    margin-right: 2px;
+    margin-right: 10px;
 }
 
 .sends {
     left: 66.66%;
     right: 0;
-    margin-left: 2px;
 }
 
 #segment {
@@ -305,18 +324,14 @@ input[type="text"].invalid-address {
 
 div.issues {
     position: relative;
-    border: 1px solid #C25036;
+    border: 3px solid #C9252C;
     padding: 0;
     margin-top: 5px;
 }
 
 div.issues div.section-title {
-	background:#E78569;
+	background:#C9252C;
     border-bottom: 1px solid #C25036;
-}
-
-div.issues div.section-title ul.menu {
-	padding:5px 8px 0 0;
 }
 
 #part div.issues {
@@ -324,10 +339,11 @@ div.issues div.section-title ul.menu {
 }
 
 div.issues h4 {
-    background: transparent url( '../images/warning.png' ) no-repeat 8px 5px;
-    padding:5px 0 3px 30px;
-	margin:0;
-	text-transform:capitalize;
+    background: url("../images/warning.png") no-repeat scroll 8px 5px transparent;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 3px 0 4px 30px;
+    text-transform: uppercase;
 }
 
 div.issues ol {
@@ -337,7 +353,32 @@ div.issues ol {
 
 div.issues li {
 	font-size:11px;
-	padding:5px 0;
+	padding:5px 0 10px 0;
+	margin:0 0 10px 0;
+	border-bottom:2px solid #C9252C;
+}
+
+div.issues div.section-title ul.menu {
+	padding:4px 3px 0 0;
+}
+
+div.issues div.section-title ul.menu li {
+	border:none;
+}
+
+div.issues div.section-title ul.menu li a {
+    background: none repeat scroll 0 0 #8b0000;
+    color: #FFFFFF;
+    padding: 2px 5px;
+    text-transform: uppercase;
+}
+
+div.issues ol li table span a.menubar {
+    background: none repeat scroll 0 0 #8b0000;
+    border-radius: 5px 5px 5px 5px;
+    color: #FFFFFF;
+    padding: 5px;
+    text-transform: capitalize;
 }
 
 div.issues ul.attach li {
@@ -358,7 +399,7 @@ div.issue-details table {
 }
 
 textarea.error, input.error, div.issues {
-    background-color: #ebcabd;
+    background-color: #ffffff;
 }
 
 span.error, li.error {
@@ -395,9 +436,11 @@ h1 {
     display: inline;
 }
 
+/*
 h2, h3 {
     border-bottom: 2px solid #BCBEC0;
 }
+*/
 
 h2 {
     padding: 0 0 1px 0;
@@ -406,9 +449,11 @@ h2 {
 }
 
 h3 {
-    font-size: 1.1em;
-	line-height:100%;
-	padding:3px 0 5px;	
+    font-size: 16px;
+    margin: 0;
+    padding: 10px;
+    text-transform: uppercase;
+	letter-spacing:1px;
 }
 
 body, ul.menu, .menubar {
@@ -570,12 +615,14 @@ ul.menu, div.caption, span.menubar, ul.ranges {
 
 .receives .flow > div, .sends .flow > div {
     position: relative;
-    padding: 5px 5px 5px 23px;
+    padding: 10px;
 }
 
+/*
 .receives .section-content, .sends .section-content {
     width: 98%;
 }
+*/
 
 ol.channels li {
     margin: 0 0 2px !important;
@@ -737,12 +784,11 @@ div.header {
 }
 
 .part-header, .receives, .sends, div.section, #graph, div.aspect {
-    border: 1px inset #c3dede;
+    border: 1px solid #7794c7;
 }
 
 .part-header, .receives, .sends, div.section, div.aspect {
     background: #f6f6f6;
-    padding: 5px;
 }
 
 td.link.notify, td.link.answer {
@@ -750,20 +796,28 @@ td.link.notify, td.link.answer {
     padding-left: 25px;
 }
 
+/*
+
 .receives h3 span {
     background: transparent url( '../images/arrow-left.png' ) no-repeat 100% 50%;
     padding-right: 22px;
 }
+
+*/
 
 td.link.ask, td.link.receive {
     background: transparent url( '../images/arrow_left_blue.png' ) no-repeat 0 50%;
     padding-left: 25px;
 }
 
+/*
+
 .sends h3 span {
     background: transparent url( '../images/arrow-right.png' ) no-repeat 100% 50%;
     padding-right: 22px;
 }
+
+*/
 
 th.wicket_orderDown a {
     background: transparent url( '../images/bullet-arrow-top.png' ) no-repeat 100% 4px;
@@ -890,15 +944,12 @@ div.import-dialog {
 .menubar .dropmenu {
     width: auto;
     cursor: pointer;
-    padding: 1px 16px 1px 5px;
     position: relative;
 	border:1px solid transparent;
-    background: url( '../images/bullet-arrow-bottom.png' ) no-repeat scroll 90% 56%;
 	color:#333333;
 }
 
 .menubar .dropmenu:hover {
-    background: url( '../images/bullet-arrow-bottom-high.png' ) no-repeat scroll 90% 56% #e6e6e6;
 	border:1px solid #C7C8CA;
 	color:#000000;
 }
@@ -1618,20 +1669,29 @@ input[disabled] {
 
 .flow:first-child .even {
 	border-bottom:1px solid #BCBEC0;
-	border-top:1px solid #BCBEC0;
+	/*border-top:1px solid #BCBEC0;*/
 }
 
+/*
 .flow .even:hover {
 	border-bottom:1px solid #666666;
 }
+
+*/
 
 .flow .odd {
 	border-bottom:1px solid #BCBEC0;
 }
 
+/*
+
 .flow .odd:hover {
 	border-bottom:1px solid #666666;
 }
+
+*/
+
+
 
 .flow .info , .summary .task {
     font-weight: bold;
@@ -1651,38 +1711,29 @@ input[disabled] {
 
 /* ----- Add New Task, Info Received-Sent Link ----- */
 
-a.add-flow {
-	display:inline;
-	font-weight:normal;
-	margin:0;
-	padding:0 5px 0 15px;
-	position:absolute;
-	right:0;
-	top:0;
-	white-space:nowrap;
-	font-size:8pt;
-	background: url( '../images/bullet-add.png' ) no-repeat 5px 6px ;
-	color:#333333;
-	text-transform:lowercase;
-}
-
+a.add-flow,
 a.add-task {
-	display:inline;
-	font-weight:normal;
-	margin:0 0 0 5px;
-	padding:2px 5px 2px 15px;
-	right:0;
-	top:0;
-	white-space:nowrap;
-	font-size:8pt;
-	background: url( '../images/bullet-add.png' ) no-repeat 5px 6px ;
-	color:#333333;
-	text-transform:lowercase;
+    border: 1px solid #999999;
+    border-radius: 5px 5px 5px 5px;
+    color: #333333;
+    display: inline;
+    font-size: 10px;
+    font-weight: normal;
+    margin: 7px 7px 0 0;
+    padding: 1px 5px;
+    position: absolute;
+    right: 0;
+    text-transform: uppercase;
+    top: 0;
+    white-space: nowrap;
+	background:url("../images/button-bg-small.png") repeat-x scroll 0 0;
 }
 
-a.add-flow:hover, a.add-task:hover {
-	background: url( '../images/bullet-add-high.png' ) no-repeat 5px 6px #E8E8E8 ;
+a.add-flow:hover,
+a.add-task:hover {
 	color:#000000;
+    border: 1px solid #999999;
+	background:url("../images/button-bg-small.high.png") repeat-x scroll 0 0;
 }
 
 div.part-header > div.section-title > span.menubar {
@@ -1707,6 +1758,8 @@ img.inline {
 
 /* ----- Task Title ----- */
 
+/*
+
 h3.task-title {
 	background: url( '../images/tasks.cog.png' ) no-repeat 0 1px;
 	padding-left:18px;
@@ -1717,101 +1770,77 @@ h3.task-title-noop {
 	padding-left:18px;
 }
 
+*/
+
+h3.task-title-noop {
+	color:#b22222;
+}
+
+
+
+/* ----- Task, Receive and Send Severity Icon ----- */
+
+
+span.extreme {
+	background: url( '../images/bullet-red-big.png' ) no-repeat 0 13px;
+}
+
+span.major {
+	background: url( '../images/bullet-yellow-big.png' ) no-repeat 0 13px;
+}
+
+span.minor {
+	background: url( '../images/bullet-blue-big.png' ) no-repeat 0 13px;
+}
+
+span.severe {
+	background: url( '../images/bullet-orange-big.png' ) no-repeat 0 13px;
+}
+
+span.none {
+	background: url( '../images/bullet-black-big.png' ) no-repeat 0 13px;
+}
+
+
+.flow div.extreme {
+	background: url( '../images/corner-red.png' ) no-repeat top left;
+}
+
+.flow div.major {
+	background: url( '../images/corner-yellow.png' ) no-repeat top left;
+}
+
+.flow div.minor {
+	background: url( '../images/corner-blue.png' ) no-repeat top left;
+}
+
+.flow div.severe {
+	background: url( '../images/corner-orange.png' ) no-repeat top left;
+}
+
+.flow div.none {
+	background: url( '../images/corner-black.png' ) no-repeat top left;
+}
+
+.flow div.extreme.selected,
+.flow div.major.selected,
+.flow div.minor.selected,
+.flow div.severe.selected,
+.flow div.none.selected {
+    background-color: #E8E8E8;
+}
 
 /* ------ Selected flow ---------- */
 
-.flow .odd.selected {
-    background-color: #D8D8D8;
-    border-top-color: #9C9EA0;
-    border-bottom-color: #9C9EA0;
+.flow .selected {
+    background-color: #E8E8E8;
 }
 
 .flow .selected .title {
     font-weight: bold;
 }
 
-/* ----- Task, Receive and Send Severity Icon ----- */
 
-div.flow div.extreme {
-	background: url( '../images/bullet-red.png' ) no-repeat 9px 10px;
-}
-
-div.flow div.extreme.even {
-	background: url( '../images/bullet-red.png' ) no-repeat 9px 10px #E8E8E8;
-}
-
-div.flow div.extreme.even.selected {
-	background: url( '../images/bullet-red.png' ) no-repeat 9px 10px #D8D8D8;
-}
-
-span.extreme {
-	background: url( '../images/bullet-red.png' ) no-repeat 6px 5px;
-}
-
-div.flow div.major {
-	background: url( '../images/bullet-yellow.png' ) no-repeat 9px 10px;
-}
-
-div.flow div.major.even {
-	background: url( '../images/bullet-yellow.png' ) no-repeat 9px 10px #E8E8E8;
-}
-
-div.flow div.major.even.selected {
-	background: url( '../images/bullet-yellow.png' ) no-repeat 9px 10px #D8D8D8;
-}
-
-span.major {
-	background: url( '../images/bullet-yellow.png' ) no-repeat 6px 5px;
-}
-
-div.flow div.minor {
-	background: url( '../images/bullet-blue.png' ) no-repeat 9px 10px;
-}
-
-div.flow div.minor.even {
-	background: url( '../images/bullet-blue.png' ) no-repeat 9px 10px #E8E8E8;
-}
-
-div.flow div.minor.even.selected {
-	background: url( '../images/bullet-blue.png' ) no-repeat 9px 10px #D8D8D8;
-}
-
-span.minor {
-	background: url( '../images/bullet-blue.png' ) no-repeat 6px 5px;
-}
-
-div.flow div.severe {
-	background: url( '../images/bullet-orange.png' ) no-repeat 9px 10px;
-}
-
-div.flow div.severe.even {
-	background: url( '../images/bullet-orange.png' ) no-repeat 9px 10px #E8E8E8;
-}
-
-div.flow div.severe.even.selected {
-	background: url( '../images/bullet-orange.png' ) no-repeat 9px 10px #D8D8D8;
-}
-
-span.severe {
-	background: url( '../images/bullet-orange.png' ) no-repeat 6px 5px;
-}
-
-div.flow div.none {
-	background: url( '../images/bullet-black.png' ) no-repeat 9px 10px;
-}
-
-div.flow div.none.even {
-	background: url( '../images/bullet-black.png' ) no-repeat 9px 10px #E8E8E8;
-}
-
-div.flow div.none.even.selected {
-	background: url( '../images/bullet-black.png' ) no-repeat 9px 10px #D8D8D8;
-}
-
-
-span.none {
-	background: url( '../images/bullet-black.png' ) no-repeat 6px 5px;
-}
 
 /* ----- Sends and Receives Channels ----- */
 
@@ -1833,13 +1862,13 @@ div.section-content > div.flow > div > img {
 
 #social {
     position: absolute;
-    top: 5.4em;
+    top: 5.8em;
     bottom: 0;
     right: 0;
     width: 20%;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 	background:#c3d9ff;
-	border-left:1px solid #6c7b7b;
+	border-left:1px solid #7794C7;
 	float:right;
 	overflow:hidden;
 }
@@ -1852,6 +1881,7 @@ div.section-content > div.flow > div > img {
 	top:0;
 	right:0;
 	width:100%;
+	border-bottom:1px solid #7794C7;
 }
 
 /* ----- Social - Tabbed Panels ----- */
