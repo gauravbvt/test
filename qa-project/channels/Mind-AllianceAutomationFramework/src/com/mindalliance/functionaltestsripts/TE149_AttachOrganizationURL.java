@@ -117,10 +117,7 @@ public class TE149_AttachOrganizationURL
 					Thread.currentThread();
 					Thread.sleep(1000);
 					//Assertion : Verify that URL gets Attached
-					//GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathEventUrlAttachmentAssertion")));
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'http://www.google.com')]"));
-					System.out.println(GlobalVariables.oElement.getText());
-					System.out.println(GlobalVariables.testData.get("URLAssertion"));
 					if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URLAssertion"))){
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);

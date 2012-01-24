@@ -1,8 +1,6 @@
 package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -55,9 +53,6 @@ public class TFP020_CausesEventOption
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Causes Event ( Event Created )";
 				GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent")).clear();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Event"));
 				// WebElement Synchronization
@@ -65,7 +60,6 @@ public class TFP020_CausesEventOption
 				Thread.sleep(2000);
 				// Assertion: Verify thatTask causes event
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:initiatedEvent"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				if(GlobalVariables.oElement.getValue().contains(GlobalVariables.testData.get("Event"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

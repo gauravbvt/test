@@ -16,7 +16,7 @@ public class TE163_JobsCreated
 {
 	public TE163_JobsCreated() {
 		try {
-			GlobalVariables.sTestCaseId = "TE162_CreateJobsRole";
+			GlobalVariables.sTestCaseId = "TE163_JobsCreated";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);

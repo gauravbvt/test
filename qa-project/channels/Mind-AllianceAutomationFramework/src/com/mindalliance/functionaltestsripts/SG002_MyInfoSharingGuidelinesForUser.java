@@ -35,7 +35,7 @@ public class SG002_MyInfoSharingGuidelinesForUser
 			Thread.currentThread();
 			Thread.sleep(2000);
 			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_username"));
-			GlobalVariables.oElement.sendKeys("balasaheb");
+			GlobalVariables.oElement.sendKeys("user");
 			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
 			GlobalVariables.oElement.sendKeys("@test123");
 			// Click on Sign In button
@@ -51,13 +51,12 @@ public class SG002_MyInfoSharingGuidelinesForUser
 			Thread.currentThread();
 			Thread.sleep(3000);
 			
-			if (GlobalVariables.bIsSuccess==false) {
-				
+			if (GlobalVariables.bIsSuccess==false) {				
 				// 'My Information Sharing Guidelines' link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "My Information Sharing Guidelines Link is Present";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("myInformationSharingGuidelines")));
-				if(GlobalVariables.oElement.getText().equals("IS guidelines for all participants")){
+				if(GlobalVariables.oElement.getText().equals("My information sharing guidelines")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -70,7 +70,7 @@ public class TE049_AttachInvalidURLToLocale
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
 				// Open Locale Window				
 				GlobalVariables.iStepNo++ ;
@@ -78,7 +78,7 @@ public class TE049_AttachInvalidURLToLocale
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("index"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:indexed")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {

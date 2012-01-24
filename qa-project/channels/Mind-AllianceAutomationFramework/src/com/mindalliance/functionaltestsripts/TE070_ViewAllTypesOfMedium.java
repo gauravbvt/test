@@ -112,7 +112,7 @@ public class TE070_ViewAllTypesOfMedium
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				// Close New Medium Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization

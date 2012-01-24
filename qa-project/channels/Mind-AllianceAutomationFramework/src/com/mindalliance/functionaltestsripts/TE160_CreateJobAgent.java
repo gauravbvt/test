@@ -154,7 +154,7 @@ public class TE160_CreateJobAgent
 					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed")).click();
 					 // WebElement Synchronization
 				    Thread.currentThread();
-				    Thread.sleep(2000);
+				    Thread.sleep(5000);
 					// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
 				    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(Agent));
 				    if(GlobalVariables.oElement.getText().equals(Agent))

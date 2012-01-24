@@ -60,14 +60,14 @@ public class TFP021_UsuallyCompletesAfterOption
 				Thread.currentThread();
 				Thread.sleep(3000);
 					
-				// Click on Usually Completes After Checkbox
+				// Click on Usually Completes After Check box
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Usually Completes After";
 				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:self-terminating")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Assertion : Verify that Textbox & Listbox gets Enabled
+				// Assertion : Verify that Text box & List box gets Enabled
 				if(GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:completion-time:delay-amount")).isEnabled() &&
 				   GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:completion-time:delay-unit")).isEnabled()) {
 					// Write Results
