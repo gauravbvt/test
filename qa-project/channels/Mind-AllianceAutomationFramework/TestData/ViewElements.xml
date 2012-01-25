@@ -18,7 +18,7 @@
 <assignmentsAndCommitments>Assignments &amp; commitments</assignmentsAndCommitments>
 <informationSharingGuidelinesForAllParticipants>IS guidelines for all participants</informationSharingGuidelinesForAllParticipants>
 <assignmentsAndCommitmentsPageTitle>Channels - All procedures in </assignmentsAndCommitmentsPageTitle>
-<participantPagesTitle>Channels - IS Guidelines - All Participants</participantPagesTitle>
+<participantPagesTitle>Channels - Participant IS Guidelines Report for User</participantPagesTitle>
 <details>details</details>	
 <untitled>Untitled</untitled>	
 <undoRemoveGoal>Undo remove goal</undoRemoveGoal>
@@ -227,7 +227,8 @@
 <unnamed>unnamed</unnamed>
 <taskStart>. The task starts with "responding while unnamed".</taskStart>
 <taskEnd>. The task can end "responding while unnamed".</taskEnd>
-<myInformationSharingGuidelines>IS guidelines for all participants</myInformationSharingGuidelines>
+<myInformationSharingGuidelines>My information sharing guidelines</myInformationSharingGuidelines>
+<iSGuidelinesForAllParticipants>IS guidelines for all participants</iSGuidelinesForAllParticipants>
 <policy>Policy</policy>
 <mandatingPolicy>Mandating policy</mandatingPolicy>
 <prohibitingPolicy>Prohibiting policy</prohibitingPolicy>
