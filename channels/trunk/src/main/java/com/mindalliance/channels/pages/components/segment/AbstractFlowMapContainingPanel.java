@@ -7,7 +7,6 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -15,6 +14,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 import java.util.Set;
 
@@ -170,9 +170,9 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
             protected void onEvent( AjaxRequestTarget target ) {
                 hidingNoop = !hidingNoop;
                 addFlowDiagram();
-                target.addComponent( flowMapDiagramPanel );
+                target.add( flowMapDiagramPanel );
                 addFlowMapViewingControls();
-                target.addComponent( controlsContainer );
+                target.add( controlsContainer );
             }
         } );
         controlsContainer.add( hideNoop );
@@ -200,9 +200,9 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
             protected void onEvent( AjaxRequestTarget target ) {
                 showingConnectors = !showingConnectors;
                 addFlowDiagram();
-                target.addComponent( flowMapDiagramPanel );
+                target.add( flowMapDiagramPanel );
                 addFlowMapViewingControls();
-                target.addComponent( controlsContainer );
+                target.add( controlsContainer );
             }
         } );
         controlsContainer.add( showConnectors );
@@ -230,9 +230,9 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
             protected void onEvent( AjaxRequestTarget target ) {
                 showingGoals = !showingGoals;
                 addFlowDiagram();
-                target.addComponent( flowMapDiagramPanel );
+                target.add( flowMapDiagramPanel );
                 addFlowMapViewingControls();
-                target.addComponent( controlsContainer );
+                target.add( controlsContainer );
             }
         } );
         controlsContainer.add( showGoals );
@@ -261,7 +261,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 super.onComponentTag( tag );
                 String domIdentifier = getFlowMapDomId();
                 String script = "wicketAjaxGet('"
-                        + getCallbackUrl( true )
+                        + getCallbackUrl(  )
                         + "&width='+$('" + domIdentifier + "').width()+'"
                         + "&height='+$('" + domIdentifier + "').height()";
                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
@@ -272,8 +272,8 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
             @Override
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
-                String swidth = requestCycle.getRequest().getParameter( "width" );
-                String sheight = requestCycle.getRequest().getParameter( "height" );
+                String swidth = requestCycle.getRequest().getQueryParameters().getParameterValue( "width" ).toString();
+                String sheight = requestCycle.getRequest().getQueryParameters().getParameterValue( "height" ).toString();
                 if ( !resizedToFit ) {
                     flowDiagramDim[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
                     flowDiagramDim[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
@@ -282,9 +282,9 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 }
                 resizedToFit = !resizedToFit;
                 addFlowDiagram();
-                target.addComponent( flowMapDiagramPanel );
+                target.add( flowMapDiagramPanel );
                 addFlowMapViewingControls();
-                target.addComponent( controlsContainer );
+                target.add( controlsContainer );
             }
         } );
         controlsContainer.add( reduceToFit );

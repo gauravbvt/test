@@ -2,16 +2,16 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.PlaceReference;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.core.dao.User;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -73,10 +73,10 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         planCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
-                target.addComponent( eventCheckBox );
-                target.addComponent( eventChoice );
-                target.addComponent( placeCheckBox );
-                target.addComponent( entityReferencePanel );
+                target.add( eventCheckBox );
+                target.add( eventChoice );
+                target.add( placeCheckBox );
+                target.add( entityReferencePanel );
                 if ( reset ) {
                     reset = false;
                     update( target, new Change( Change.Type.Updated, getEntity(), property ) );
@@ -92,10 +92,10 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         eventCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
-                target.addComponent( planCheckBox );
-                target.addComponent( eventChoice );
-                target.addComponent( placeCheckBox );
-                target.addComponent( entityReferencePanel );
+                target.add( planCheckBox );
+                target.add( eventChoice );
+                target.add( placeCheckBox );
+                target.add( entityReferencePanel );
                 if ( reset ) {
                     reset = false;
                     update( target, new Change( Change.Type.Updated, getEntity(), property ) );
@@ -111,10 +111,10 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         placeCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
-                target.addComponent( planCheckBox );
-                target.addComponent( eventCheckBox );
-                target.addComponent( eventChoice );
-                target.addComponent( entityReferencePanel );
+                target.add( planCheckBox );
+                target.add( eventCheckBox );
+                target.add( eventChoice );
+                target.add( entityReferencePanel );
                 if ( reset ) {
                     reset = false;
                     update( target, new Change( Change.Type.Updated, getEntity(), property ) );
@@ -187,7 +187,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
 
     private void refreshAll( AjaxRequestTarget target ) {
         reset = false;
-        target.addComponent( this );
+        target.add( this );
     }
 
     public boolean isPlanReferenced() {

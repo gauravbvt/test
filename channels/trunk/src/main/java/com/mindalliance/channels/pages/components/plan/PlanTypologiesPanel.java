@@ -15,7 +15,6 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.diagrams.HierarchyDiagramPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencesAndMatchesPanel;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -26,6 +25,7 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 import java.util.Arrays;
 import java.util.List;
@@ -121,10 +121,10 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addTypologyDiagram();
-                target.addComponent( typologyDiagramPanel );
+                target.add( typologyDiagramPanel );
                 setSelectedType( null );
                 addTypeIndex();
-                target.addComponent( typeIndexContainer );
+                target.add( typeIndexContainer );
             }
         } );
         addOrReplace( typeKindChoice );
@@ -137,8 +137,8 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addTypologyDiagram();
-                target.addComponent( typologyDiagramPanel );
-                target.addComponent( dotCheckBox );
+                target.add( typologyDiagramPanel );
+                target.add( dotCheckBox );
             }
         } );
         addOrReplace( neatoCheckBox );
@@ -148,8 +148,8 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addTypologyDiagram();
-                target.addComponent( typologyDiagramPanel );
-                target.addComponent( neatoCheckBox );
+                target.add( typologyDiagramPanel );
+                target.add( neatoCheckBox );
             }
         } );
         addOrReplace( dotCheckBox );
@@ -168,12 +168,12 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
                 if ( !reducedToFit ) {
                     String domIdentifier = DOM_IDENTIFIER;
                     script = "wicketAjaxGet('"
-                            + getCallbackUrl( true )
+                            + getCallbackUrl( )
                             + "&width='+$('" + domIdentifier + "').width()+'"
                             + "&height='+$('" + domIdentifier + "').height()";
                 } else {
                     script = "wicketAjaxGet('"
-                            + getCallbackUrl( true )
+                            + getCallbackUrl( )
                             + "'";
                 }
                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
@@ -185,8 +185,8 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
                 if ( !reducedToFit ) {
-                    String swidth = requestCycle.getRequest().getParameter( "width" );
-                    String sheight = requestCycle.getRequest().getParameter( "height" );
+                    String swidth = requestCycle.getRequest().getQueryParameters().getParameterValue( "width" ).toString();
+                    String sheight = requestCycle.getRequest().getQueryParameters().getParameterValue( "height" ).toString();
                     if ( swidth != null && sheight != null ) {
                         diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
                         diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
@@ -196,9 +196,9 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
                 }
                 reducedToFit = !reducedToFit;
                 addTypologyDiagram();
-                target.addComponent( typologyDiagramPanel );
+                target.add( typologyDiagramPanel );
                 addTypologySizing();
-                target.addComponent( sizingLabel );
+                target.add( sizingLabel );
             }
         } );
         addOrReplace( sizingLabel );
@@ -296,9 +296,9 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
         if ( change.isSelected() && change.isForInstanceOf( ModelEntity.class ) ) {
             setSelectedType( (ModelEntity) change.getSubject( getQueryService() ) );
             addTypologyDiagram();
-            target.addComponent( typologyDiagramPanel );
+            target.add( typologyDiagramPanel );
             addTypeIndex();
-            target.addComponent( typeIndexContainer );
+            target.add( typeIndexContainer );
         } else {
             super.updateWith( target, change, updated );
         }

@@ -2,7 +2,6 @@
 // All rights reserved.
 package com.mindalliance.channels.pages.procedures;
 
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -14,19 +13,20 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
-import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.slf4j.LoggerFactory;
@@ -125,15 +125,15 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
             try {
                 PageParameters parameters = getPageParameters();
                 assignment = getAssignment(
-                    parameters.getLong( SelectorPanel.ACTOR_PARM, 0 ),
-                    parameters.getLong( SelectorPanel.ORGANIZATION_PARM, 0 ),
-                    parameters.getLong( TASK_PARM, 0 ) );
+                    parameters.get( SelectorPanel.ACTOR_PARM).toLong( 0 ),
+                    parameters.get( SelectorPanel.ORGANIZATION_PARM ).toLong( 0 ),
+                    parameters.get( TASK_PARM ).toLong( 0 ) );
 
             } catch ( StringValueConversionException ignored ) {
-                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
+                throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_NOT_FOUND, "Not found" );
 
             } catch ( NotFoundException ignored ) {
-                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
+                throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_NOT_FOUND, "Not found" );
             }
 
         return assignment;
@@ -201,8 +201,8 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
         Plan plan = getPlanService().getPlan();
 
         PageParameters parms = new PageParameters();
-        parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
-        parms.put( SelectorPanel.VERSION_PARM, plan.getVersion() );
+        parms.set( SelectorPanel.PLAN_PARM, plan.getUri() );
+        parms.set( SelectorPanel.VERSION_PARM, plan.getVersion() );
         return parms;
     }
 
@@ -224,14 +224,14 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
 
     public Component newFlowLink( Flow flow ) {
         PageParameters parms = getTopParameters();
-        parms.put( SelectorPanel.ACTOR_PARM,
+        parms.set( SelectorPanel.ACTOR_PARM,
                 Long.toString( ( (Identifiable) getActor() ).getId() ) );
-        parms.put( TASK_PARM, Long.toString( getPart().getId() ) );
+        parms.set( TASK_PARM, Long.toString( getPart().getId() ) );
         String delay;
         if ( flow == null )
             delay = "";
         else {
-            parms.put( FLOW_PARM, Long.toString( flow.getId() ) );
+            parms.set( FLOW_PARM, Long.toString( flow.getId() ) );
             delay = flow.getMaxDelay().toString();
         }
 
@@ -251,16 +251,16 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
 
         PageParameters parms = new PageParameters();
         if ( !specable.getActor().isUnknown() )
-            parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getActor() ).getId() ) );
+            parms.set( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getActor() ).getId() ) );
         else if ( !specable.getRole().isUnknown() )
-            parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getRole() ).getId() ) );
+            parms.set( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getRole() ).getId() ) );
 
         if ( !specable.getOrganization().isUnknown() )
-            parms.put( SelectorPanel.ORGANIZATION_PARM, Long.toString( ( specable.getOrganization() ).getId() ) );
+            parms.set( SelectorPanel.ORGANIZATION_PARM, Long.toString( ( specable.getOrganization() ).getId() ) );
 
-        parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
-        parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
-        parms.put( "task", Long.toString( part.getId() ) );
+        parms.set( SelectorPanel.PLAN_PARM, plan.getUri() );
+        parms.set( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
+        parms.set( "task", Long.toString( part.getId() ) );
 
         return new BookmarkablePageLink<AssignmentReportPage>(
                 "task", AssignmentReportPage.class, parms )
@@ -297,15 +297,15 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
 
         PageParameters parms = new PageParameters();
         if ( !specable.getActor().isUnknown() )
-            parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getActor() ).getId() ) );
+            parms.set( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getActor() ).getId() ) );
         else if ( !specable.getRole().isUnknown() )
-            parms.put( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getRole() ).getId() ) );
+            parms.set( SelectorPanel.ACTOR_PARM, Long.toString( ( specable.getRole() ).getId() ) );
         Organization org = specable.getOrganization();
         if ( org != null && !org.isUnknown() )
-            parms.put( SelectorPanel.ORGANIZATION_PARM, Long.toString( ( org ).getId() ) );
-        parms.put( SelectorPanel.PLAN_PARM, plan.getUri() );
-        parms.put( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
-        parms.put( AbstractReportPage.TASK_PARM, Long.toString( part.getId() ) );
+            parms.set( SelectorPanel.ORGANIZATION_PARM, Long.toString( ( org ).getId() ) );
+        parms.set( SelectorPanel.PLAN_PARM, plan.getUri() );
+        parms.set( SelectorPanel.VERSION_PARM, Long.toString( plan.getVersion() ) );
+        parms.set( AbstractReportPage.TASK_PARM, Long.toString( part.getId() ) );
 
         return new BookmarkablePageLink<AssignmentReportPage>(
                 "task", AssignmentReportPage.class, parms )
@@ -315,13 +315,13 @@ public class AbstractReportPage extends AbstractChannelsWebPage implements Repor
     public Flow getFlow() {
         if ( flow == null ) {
             try {
-                flow = getPlanService().find( Flow.class, getPageParameters().getAsLong( FLOW_PARM ) );
+                flow = getPlanService().find( Flow.class, getPageParameters().get( FLOW_PARM ).toLong() );
 
             } catch ( NumberFormatException ignored ) {
-                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
+                throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_NOT_FOUND, "Not found" );
 
             } catch ( NotFoundException ignored ) {
-                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
+                throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_NOT_FOUND, "Not found" );
             }
         }
 

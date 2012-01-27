@@ -167,9 +167,9 @@ public class OverridesPanel  extends FloatingCommandablePanel {
             addAbout();
             addOverridingTable();
             addOverriddenTable();
-            target.addComponent( partTitleLabel );
-            target.addComponent( overridingContainer );
-            target.addComponent( overriddenContainer );
+            target.add( partTitleLabel );
+            target.add( overridingContainer );
+            target.add( overriddenContainer );
         }
     }
 
@@ -250,7 +250,7 @@ public class OverridesPanel  extends FloatingCommandablePanel {
           */
          protected void resetTable( AjaxRequestTarget target ) {
              init();
-             target.addComponent( this );
+             target.add( this );
          }
      }
     }

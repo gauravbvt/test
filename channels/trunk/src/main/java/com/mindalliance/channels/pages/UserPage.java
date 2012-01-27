@@ -21,7 +21,6 @@ import com.mindalliance.channels.pages.reports.issues.IssuesPage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -34,9 +33,9 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
@@ -137,7 +136,7 @@ public class UserPage extends AbstractChannelsWebPage {
                 try {
                     doTimedUpdate( target );
                     addSpinner();
-                    target.addComponent( spinner );
+                    target.add( spinner );
                 } catch ( Exception e ) {
                     LOG.error( "Failed to do timed update", e );
                     ErrorPage.emailException(
@@ -154,9 +153,7 @@ public class UserPage extends AbstractChannelsWebPage {
     }
 
     private void redirectHere() {
-        String url = redirectUrl( "home", getPlan() );
-        RedirectPage page = new RedirectPage( url );
-        setResponsePage( page );
+        setResponsePage( UserPage.class, planParameters( getPlan() ) );
     }
 
     private void addSpinner() {
@@ -210,13 +207,13 @@ public class UserPage extends AbstractChannelsWebPage {
     private void fadeOutMessagePanel( AjaxRequestTarget target ) {
         if ( !getMessage().isEmpty() ) {
             if ( ( System.currentTimeMillis() - message_time ) > ( MESSAGE_FADE_OUT_DELAY * 1000 ) ) {
-                target.appendJavascript( "$('div.change-message').fadeOut('slow');" );
+                target.appendJavaScript( "$('div.change-message').fadeOut('slow');" );
                 message = null;
             }
         } else {
             makeVisible( messageContainer, false );
         }
-        target.addComponent( messageContainer );
+        target.add( messageContainer );
     }
 
 
@@ -268,7 +265,7 @@ public class UserPage extends AbstractChannelsWebPage {
 
     private void addPlanImage() {
         WebMarkupContainer image = new WebMarkupContainer( "planImage" );
-        image.add( new AttributeModifier( "src", true, new Model<String>( getPlanImagePath() ) ) );
+        image.add( new AttributeModifier( "src", new Model<String>( getPlanImagePath() ) ) );
         form.add( image );
     }
 
@@ -470,18 +467,18 @@ public class UserPage extends AbstractChannelsWebPage {
                 && change.isForInstanceOf( Plan.class )
                 && change.isForProperty( "user" ) ) {
             addWelcome();
-            target.addComponent( welcomeLabel );
+            target.add( welcomeLabel );
         }
         String message = change.getMessage();
         if ( message != null ) {
             addChangeMessagePanel();
-            target.addComponent( messageContainer );
+            target.add( messageContainer );
         } else if ( change.isCommunicated() ) {
             newMessage( target, change );
             refreshSocialPanel( target, change );
         }
         if ( change.getScript() != null ) {
-            target.appendJavascript( change.getScript() );
+            target.appendJavaScript( change.getScript() );
         }
     }
 

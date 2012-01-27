@@ -79,9 +79,9 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         descriptionArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssueActionsMenu();
-                target.addComponent( issueActionMenu );
+                target.add( issueActionMenu );
                 addSummary();
-                target.addComponent( summary );
+                target.add( summary );
             }
         } );
         add( descriptionArea );
@@ -94,7 +94,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         typeChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addSummary();
-                target.addComponent( summary );
+                target.add( summary );
             }
         } );
         add( typeChoice );
@@ -117,7 +117,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         severityChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addSummary();
-                target.addComponent( summary );
+                target.add( summary );
             }
         } );
         add( severityChoice );
@@ -127,9 +127,9 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
         remediationArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssueActionsMenu();
-                target.addComponent( issueActionMenu );
+                target.add( issueActionMenu );
                 addSummary();
-                target.addComponent( summary );
+                target.add( summary );
             }
         } );
         add( remediationArea );

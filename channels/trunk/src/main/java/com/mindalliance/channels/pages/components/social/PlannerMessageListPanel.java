@@ -109,7 +109,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 privateOnly = !privateOnly;
                 addShowHideBroadcastsLabel();
                 addPlannerMessages();
-                target.addComponent( showHideBroadcastsLabel );
+                target.add( showHideBroadcastsLabel );
                 adjustComponents( target );
             }
         };
@@ -135,7 +135,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 showReceived = !showReceived;
                 addShowReceivedSentLabel();
                 addPlannerMessages();
-                target.addComponent( sentReceivedLabel );
+                target.add( sentReceivedLabel );
                 adjustComponents( target );
             }
         };
@@ -374,7 +374,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         newMessageAbout = null;
         newMessageRecipient = ALL_PLANNERS;
         addNewMessage();
-        target.addComponent( newMessageContainer );
+        target.add( newMessageContainer );
     }
 
     private boolean sendNewMessage( boolean emailIt ) {
@@ -392,10 +392,10 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
 
     private void adjustComponents( AjaxRequestTarget target ) {
         adjustComponents();
-        target.addComponent( plannerMessagesContainer );
-        target.addComponent( showAFew );
-        target.addComponent( showMore );
-        target.addComponent( aboutMessagesLabel );
+        target.add( plannerMessagesContainer );
+        target.add( showAFew );
+        target.add( showMore );
+        target.add( aboutMessagesLabel );
     }
 
     private void adjustComponents() {
@@ -415,7 +415,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         setNewMessageAbout( about );
         addNewMessage();
         refresh( target, new Change( Change.Type.Communicated ) );
-        target.addComponent( newMessageContainer );
+        target.add( newMessageContainer );
     }
 
     public void deleteMessage( PlannerMessage message, AjaxRequestTarget target ) {

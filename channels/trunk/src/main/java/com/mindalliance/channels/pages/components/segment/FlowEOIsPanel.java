@@ -153,7 +153,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 if ( changed ) {
                     addHeaders();
                     addEOIs();
-                    target.addComponent( eoisContainer );
+                    target.add( eoisContainer );
                     update( target, new Change( Change.Type.Updated, getFlow(), "eois" ) );
                 }
             }
@@ -168,7 +168,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
                 updateLinkingLinks( target );
                 if ( change.isForProperty( "eois" ) ) {
                     addEOIs();
-                    target.addComponent( eoisContainer );
+                    target.add( eoisContainer );
                     update( target, new Change( Change.Type.Updated, getFlow(), "eois" ) );
                 }
             }
@@ -190,8 +190,8 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     private void updateLinkingLinks( AjaxRequestTarget target ) {
         makeVisible( unlinkedClassificationsLink, !isClassificationsLinked() );
         makeVisible( linkedClassificationsLink, isClassificationsLinked() );
-        target.addComponent( unlinkedClassificationsLink );
-        target.addComponent( linkedClassificationsLink );
+        target.add( unlinkedClassificationsLink );
+        target.add( linkedClassificationsLink );
     }
 
     private void addAboutFlow() {
@@ -274,7 +274,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addHeaders();
                 addEOIs();
-                target.addComponent( eoisContainer );
+                target.add( eoisContainer );
                 update( target, new Change( Change.Type.Updated, getFlow(), "eois" ) );
             }
         } );
@@ -292,9 +292,9 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 if ( wrapper.isMarkedForCreation() ) {
                     addEOIs();
-                    target.addComponent( eoisContainer );
+                    target.add( eoisContainer );
                 } else {
-                    target.addComponent( item );
+                    target.add( item );
                 }
                 update( target, new Change( Change.Type.Updated, getFlow(), "eois" ) );
             }
@@ -814,7 +814,7 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
             addHeaders();
             addAboutFlow();
             addEOIs();
-            target.addComponent( eoisContainer );
+            target.add( eoisContainer );
         }
     }
 

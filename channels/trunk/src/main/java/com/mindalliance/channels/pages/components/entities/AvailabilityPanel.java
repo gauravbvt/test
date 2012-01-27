@@ -54,9 +54,9 @@ public class AvailabilityPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addTimePeriods();
                 makeVisible( timePeriodsContainer, !isTwentyFourSeven() );
-                // target.addComponent( regularHoursContainer );
-                target.addComponent( timePeriodsContainer );
-                target.addComponent( twentyFourSevenCheckBox );
+                // target.add( regularHoursContainer );
+                target.add( timePeriodsContainer );
+                target.add( twentyFourSevenCheckBox );
                 update(target, new Change(Change.Type.Updated, getAvailable(), "availability" ));
             }
         };

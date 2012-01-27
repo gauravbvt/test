@@ -6,6 +6,10 @@
 
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.PlanRename;
+import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -14,10 +18,6 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.PlanRename;
-import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -245,7 +245,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
         if ( change.isForProperty( "phases" ) ) {
             // Only unused phases can be removed, added ones at not yet referenced.
             addOrReplace( createIssuePanel() );
-            target.addComponent( issuesPanel );
+            target.add( issuesPanel );
         } else {
             super.updateWith( target, change, updated );
         }

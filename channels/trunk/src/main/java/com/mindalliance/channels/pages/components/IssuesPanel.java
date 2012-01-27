@@ -64,7 +64,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
                 Change change = doCommand( new AddUserIssue( User.current().getUsername(), model.getObject() ) );
                 /*
                                 makeVisible( this, Channels.analyst().hasIssues( model.getObject(), false ) );
-                                target.addComponent( this );
+                                target.add( this );
                 */
                 update( target, change );
             }
@@ -118,7 +118,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        target.addComponent( issuesContainer );
+        target.add( issuesContainer );
         super.updateWith( target, change, updated );
     }
 }

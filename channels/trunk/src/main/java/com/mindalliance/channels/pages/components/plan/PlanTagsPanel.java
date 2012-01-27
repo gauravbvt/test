@@ -122,9 +122,9 @@ public class PlanTagsPanel extends AbstractCommandablePanel {
         if ( change.isSelected() && change.getQualifier( "tag" ) != null ) {
             selectedTag =(Tag)change.getQualifier( "tag" );
             addInfoStandard();
-            target.addComponent( infoStandardContainer );
+            target.add( infoStandardContainer );
             addTaggedIndex();
-            target.addComponent( tagIndexContainer );
+            target.add( tagIndexContainer );
         } else {
             super.updateWith( target, change, updated );
         }

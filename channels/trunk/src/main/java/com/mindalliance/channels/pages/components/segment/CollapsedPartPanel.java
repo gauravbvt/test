@@ -96,10 +96,10 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
 
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        target.addComponent( descriptionLabel );
-        target.addComponent( summaryPanel );
+        target.add( descriptionLabel );
+        target.add( summaryPanel );
         addIssuesPanel();
         adjustFields();
-        target.addComponent( partIssuesPanel );
+        target.add( partIssuesPanel );
     }
 }

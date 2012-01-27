@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.dao;
 
 import com.mindalliance.channels.core.model.Segment;
+import org.apache.wicket.markup.MarkupType;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -38,7 +39,7 @@ public interface Exporter  {
      * The mime type of files to which segments are exported.
      * @return -- a mime type
      */
-    String getMimeType();
+    MarkupType getMimeType();
 
     /**
      * Get current version, for upgrading purposes.

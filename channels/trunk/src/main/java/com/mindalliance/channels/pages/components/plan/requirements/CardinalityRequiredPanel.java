@@ -49,7 +49,7 @@ public class CardinalityRequiredPanel extends AbstractCommandablePanel {
 
     private void updateFields( AjaxRequestTarget target ) {
         init();
-        target.addComponent( this );
+        target.add( this );
     }
 
     private void addMinCount() {

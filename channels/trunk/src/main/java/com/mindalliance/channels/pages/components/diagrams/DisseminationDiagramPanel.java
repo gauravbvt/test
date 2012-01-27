@@ -8,7 +8,7 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.pages.png.DisseminationPage;
+import com.mindalliance.channels.pages.png.DisseminationPng;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -91,23 +91,23 @@ public class DisseminationDiagramPanel extends AbstractDiagramPanel {
         StringBuilder sb = new StringBuilder();
         try {
         sb.append( "dissemination.png?" );
-        sb.append( DisseminationPage.SEGMENT );
+        sb.append( DisseminationPng.SEGMENT );
         sb.append( '=' );
         sb.append( getSegmentObject().getSegment().getId() );
         sb.append( '&' );
-        sb.append( DisseminationPage.OBJECT );
+        sb.append( DisseminationPng.OBJECT );
         sb.append( '=' );
         sb.append( getSegmentObject().getId() );
         sb.append( '&' );
-        sb.append( DisseminationPage.INFO );
+        sb.append( DisseminationPng.INFO );
         sb.append( '=' );
         sb.append( URLEncoder.encode( subject.getInfo(), "UTF-8" ) );
         sb.append( '&' );
-        sb.append( DisseminationPage.CONTENT );
+        sb.append( DisseminationPng.CONTENT );
         sb.append( '=' );
         sb.append( URLEncoder.encode( subject.getContent(), "UTF-8"  ) );
         sb.append( '&' );
-        sb.append( DisseminationPage.SHOW_TARGETS );
+        sb.append( DisseminationPng.SHOW_TARGETS );
         sb.append( '=' );
         sb.append( showTargets );
 

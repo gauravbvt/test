@@ -197,7 +197,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addPhaseLink();
-                target.addComponent( phaseLink );
+                target.add( phaseLink );
                 update( target, new Change( Change.Type.Updated, getSegment(), "phase" ) );
             }
         } );
@@ -223,9 +223,9 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addEventLink();
-                target.addComponent( eventLink );
+                target.add( eventLink );
                 addEventLevelChoice();
-                target.addComponent( eventLevelChoice );
+                target.add( eventLevelChoice );
                 update( target, new Change( Change.Type.Updated, getSegment(), "event" ) );
             }
         } );
@@ -353,14 +353,14 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         makeVisible( target, issuesPanel, getAnalyst().hasIssues( getQueryService(), getSegment(), false ) );
-        target.addComponent( issuesPanel );
+        target.add( issuesPanel );
         super.updateWith( target, change, updated );
     }
 
     public void refresh( AjaxRequestTarget target ) {
         makeVisible( target, issuesPanel, getAnalyst().hasIssues( getQueryService(), getSegment(), false ) );
-        target.addComponent( issuesPanel );
+        target.add( issuesPanel );
         addPhaseChoice();
-        target.addComponent( phaseChoices );
+        target.add( phaseChoices );
     }
 }

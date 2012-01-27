@@ -10,7 +10,6 @@ import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.diagrams.FailureImpactsDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -24,6 +23,7 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -111,8 +111,8 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addEssentialFlowMap();
                 addFailedTasks();
-                target.addComponent( failureImpactsDiagramPanel );
-                target.addComponent( failuresTablePanel );
+                target.add( failureImpactsDiagramPanel );
+                target.add( failuresTablePanel );
             }
         } );
         getContentContainer().add( assumeFailsCheckBox );
@@ -131,12 +131,12 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
                  if ( !reducedToFit ) {
                      String domIdentifier = DOM_IDENTIFIER;
                      script = "wicketAjaxGet('"
-                             + getCallbackUrl( true )
+                             + getCallbackUrl( )
                              + "&width='+$('" + domIdentifier + "').width()+'"
                              + "&height='+$('" + domIdentifier + "').height()";
                  } else {
                      script = "wicketAjaxGet('"
-                             + getCallbackUrl( true )
+                             + getCallbackUrl( )
                              + "'";
                  }
                  String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
@@ -148,8 +148,8 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
                 if ( !reducedToFit ) {
-                    String swidth = requestCycle.getRequest().getParameter( "width" );
-                    String sheight = requestCycle.getRequest().getParameter( "height" );
+                    String swidth = requestCycle.getRequest().getQueryParameters().getParameterValue( "width" ).toString();
+                    String sheight = requestCycle.getRequest().getQueryParameters().getParameterValue( "height" ).toString();
                     diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
                     diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
                 } else {
@@ -157,9 +157,9 @@ public class FailureImpactsPanel extends FloatingCommandablePanel {
                 }
                 reducedToFit = !reducedToFit;
                 addEssentialFlowMap();
-                target.addComponent( failureImpactsDiagramPanel );
+                target.add( failureImpactsDiagramPanel );
                 addFlowViewingControls();
-                target.addComponent( sizingLabel );
+                target.add( sizingLabel );
             }
         } );
         getContentContainer().addOrReplace( sizingLabel );

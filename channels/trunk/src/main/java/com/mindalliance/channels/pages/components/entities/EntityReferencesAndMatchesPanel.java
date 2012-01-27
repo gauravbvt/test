@@ -71,8 +71,8 @@ public class EntityReferencesAndMatchesPanel extends AbstractUpdatablePanel {
         referencesCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIndexPanel();
-                target.addComponent( matchesCheckBox );
-                target.addComponent( indexPanel );
+                target.add( matchesCheckBox );
+                target.add( indexPanel );
             }
         } );
         refsVsMatches.add( referencesCheckBox );
@@ -82,8 +82,8 @@ public class EntityReferencesAndMatchesPanel extends AbstractUpdatablePanel {
         matchesCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIndexPanel();
-                target.addComponent( referencesCheckBox );
-                target.addComponent( indexPanel );
+                target.add( referencesCheckBox );
+                target.add( indexPanel );
             }
         } );
         refsVsMatches.add( matchesCheckBox );

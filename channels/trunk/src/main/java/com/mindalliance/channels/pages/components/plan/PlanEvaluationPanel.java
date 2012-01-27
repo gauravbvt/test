@@ -13,7 +13,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -47,7 +46,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
         evaluation.setOutputMarkupId( true );
         addOrReplace( evaluation );
         // Validity
-        Image validityImage = new Image( "validityImage" );
+        WebMarkupContainer validityImage = new WebMarkupContainer( "validityImage" );
         validityImage.add( new AttributeModifier( "src", new PropertyModel<String>( this, "validityImage" ) ) );
         validityImage.add( new AttributeModifier( "title", new PropertyModel<String>( this, "validityTitle" ) ) );
         validityImage.setOutputMarkupId( true );
@@ -56,7 +55,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
         validityLabel.setOutputMarkupId( true );
         evaluation.add( validityLabel );
         // Completeness
-        Image completenessImage = new Image( "completenessImage" );
+        WebMarkupContainer completenessImage = new WebMarkupContainer( "completenessImage" );
         completenessImage.add( new AttributeModifier( "src", new PropertyModel<String>( this, "completenessImage" ) ) );
         completenessImage.add( new AttributeModifier( "title",
                                                       new PropertyModel<String>( this, "completenessTitle" ) ) );
@@ -66,7 +65,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
         completenessLabel.setOutputMarkupId( true );
         evaluation.add( completenessLabel );
         // Robustness
-        Image robustnessImage = new Image( "robustnessImage" );
+        WebMarkupContainer robustnessImage = new WebMarkupContainer( "robustnessImage" );
         robustnessImage.add( new AttributeModifier( "src", new PropertyModel<String>( this, "robustnessImage" ) ) );
         robustnessImage.add( new AttributeModifier( "title", new PropertyModel<String>( this, "robustnessTitle" ) ) );
         robustnessImage.setOutputMarkupId( true );

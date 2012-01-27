@@ -22,21 +22,24 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
+import com.mindalliance.channels.pages.reports.guidelines.AllGuidelinesPage;
 import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage;
+import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.slf4j.Logger;
@@ -127,17 +130,17 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     public static PageParameters createParameters( Specable profile, String uri, int version ) {
 
         PageParameters result = new PageParameters();
-        result.put( "plan", uri );
-        result.put( "v", version );
+        result.set( "plan", uri );
+        result.set( "v", version );
         if ( profile != null ) {
             if ( profile.getActor() != null )
-                result.put( "agent", profile.getActor().getId() );
+                result.set( "agent", profile.getActor().getId() );
             if ( profile.getRole() != null )
-                result.put( "role", profile.getRole().getId() );
+                result.set( "role", profile.getRole().getId() );
             if ( profile.getOrganization() != null )
-                result.put( "org", profile.getOrganization().getId() );
+                result.set( "org", profile.getOrganization().getId() );
             if ( profile.getJurisdiction() != null )
-                result.put( "place", profile.getJurisdiction().getId() );
+                result.set( "place", profile.getJurisdiction().getId() );
         }
         return result;
     }
@@ -157,14 +160,18 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
         BookmarkablePageLink<? extends WebPage> guidelinesLink = newTargetedLink( id,
-                                                                                  "",
-                                                                                  GuidelinesPage.class,
-                                                                                  GuidelinesPage.createParameters(
-                                                                                          planner ? null : actor,
-                                                                                          uri,
-                                                                                          plan.getVersion() ),
-                                                                                  null,
-                                                                                  plan );
+                "",
+                planner ? AllGuidelinesPage.class : GuidelinesPage.class,
+                /**
+                 * getUser().isPlanner( plan.getUri() ) ? new ResourceSpec()
+                 : getProfile( service, getUser() ),
+                 */
+                AbstractParticipantPage.createParameters(
+                        planner ? new ResourceSpec() : actor,
+                        uri,
+                        plan.getVersion() ),
+                null,
+                plan );
         if ( !samePage )
             guidelinesLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return guidelinesLink;
@@ -182,13 +189,14 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
         BookmarkablePageLink<? extends WebPage> infoNeedsLink = newTargetedLink( id,
-                                                                                 "",
-                                                                                 InfoNeedsPage.class,
-                                                                                 InfoNeedsPage.createParameters( planner ? null : actor,
-                                                                                                                 uri,
-                                                                                                                 plan.getVersion() ),
-                                                                                 null,
-                                                                                 plan );
+                "",
+                planner ? AllInfoNeedsPage.class : InfoNeedsPage.class,
+                AbstractParticipantPage.createParameters(
+                        planner ? new ResourceSpec() : actor,
+                        uri,
+                        plan.getVersion() ),
+                null,
+                plan );
         if ( !samePage )
             infoNeedsLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return infoNeedsLink;
@@ -204,11 +212,11 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
 
         if ( plan != null ) {
             try {
-                result.put( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
+                result.set( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
             } catch ( UnsupportedEncodingException e ) {
                 LOG.error( "Failed to url-encode plan uri " + plan.getUri(), e );
             }
-            result.put( VERSION_PARM, Integer.toString( plan.getVersion() ) );
+            result.set( VERSION_PARM, Integer.toString( plan.getVersion() ) );
         }
 
         return result;
@@ -237,16 +245,16 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     public static ResourceSpec getProfile( QueryService service, PageParameters parameters ) throws NotFoundException {
         // TODO check read permission
         try {
-            Actor actor = parameters.containsKey( "agent" ) ? service.find( Actor.class, parameters.getLong( "agent" ) )
-                                                            : null;
+            Actor actor = parameters.getNamedKeys().contains( "agent" ) ? service.find( Actor.class, parameters.get( "agent" ).toLong() )
+                    : null;
             Role role =
-                    parameters.containsKey( "role" ) ? service.find( Role.class, parameters.getLong( "role" ) ) : null;
+                    parameters.getNamedKeys().contains( "role" ) ? service.find( Role.class, parameters.get( "role" ).toLong() ) : null;
             Organization organization =
-                    parameters.containsKey( "org" ) ? service.find( Organization.class, parameters.getLong( "org" ) )
-                                                    : null;
+                    parameters.getNamedKeys().contains( "org" ) ? service.find( Organization.class, parameters.get( "org" ).toLong() )
+                            : null;
             Place jurisdiction =
-                    parameters.containsKey( "place" ) ? service.find( Place.class, parameters.getLong( "place" ) )
-                                                      : null;
+                    parameters.getNamedKeys().contains( "place" ) ? service.find( Place.class, parameters.get( "place" ).toLong() )
+                            : null;
             return new ResourceSpec( actor, role, organization, jurisdiction );
         } catch ( StringValueConversionException ignored ) {
             throw new NotFoundException();
@@ -279,12 +287,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     protected PageParameters makePlanParameters() {
         PageParameters params = new PageParameters();
         try {
-            params.put( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
+            params.set( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
         }
-        params.put( VERSION_PARM, plan.getVersion() );
+        params.set( VERSION_PARM, plan.getVersion() );
         return params;
     }
 
@@ -292,7 +300,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
      * Set a component's visibility.
      *
      * @param component a component
-     * @param visible a boolean
+     * @param visible   a boolean
      */
     protected static void makeVisible( Component component, boolean visible ) {
         component.add( new AttributeModifier( "style", true, new Model<String>( visible ? "" : "display:none" ) ) );
@@ -315,7 +323,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
             Plan plan ) {
 
         BookmarkablePageLink<T> link = newTargetedLink( id, target, pageClass, popupSettings, plan );
-        for ( String name : parameters.keySet() ) {
+        for ( String name : parameters.getNamedKeys() ) {
             link.setParameter( name, "" + parameters.get( name ) );
         }
         return link;
@@ -332,8 +340,21 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         return query;
     }
 
+    public static PageParameters planParameters( Plan p ) {
+        PageParameters parameters = new PageParameters();
+        try {
+            parameters.set( "plan", URLEncoder.encode( p.getUri(), "UTF-8" ) );
+            parameters.set( "v", p.getVersion() );
+        } catch ( UnsupportedEncodingException e ) {
+            LOG.error( "Failed to encode plan uri", e );
+        }
+        return parameters;
+    }
+
     public static String redirectUrl( String path, Plan p ) {
-        return path + "?" + queryParameters( p );
+        return path
+                + "?"
+                + queryParameters( p );
     }
 
     @Override
@@ -363,7 +384,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
      * @param parameters the parameters
      */
     protected void setPlanFromParameters( PageParameters parameters ) {
-        String encodedPlanUri = parameters.getString( PLAN_PARM, null );
+        String encodedPlanUri = parameters.get( PLAN_PARM ).toString( null );
         if ( encodedPlanUri == null ) {
             try {
                 encodedPlanUri = URLEncoder.encode( user.getPlanUri(), "UTF-8" );
@@ -380,15 +401,15 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         }
         int planVersion;
         try {
-            planVersion = parameters.getInt( VERSION_PARM, 0 );
+            planVersion = parameters.get( VERSION_PARM ).toInt( 0 );
         } catch ( StringValueConversionException ignored ) {
             LOG.warn( "Bad value in url" );
-            throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
+            throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_NOT_FOUND, "Not found" );
         }
 
         List<Plan> plans = getPlans();
         if ( plans.isEmpty() )
-            throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
+            throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
 
         for ( Iterator<Plan> it = plans.iterator(); it.hasNext() && plan == null; ) {
             Plan p = it.next();

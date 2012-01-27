@@ -211,11 +211,11 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateEnabled();
-                target.addComponent( statusChoice );
-                target.addComponent( relevanceChoice );
-                target.addComponent( titleLabel );
+                target.add( statusChoice );
+                target.add( relevanceChoice );
+                target.add( titleLabel );
                 addSurveysTable();
-                target.addComponent( surveysTable );
+                target.add( surveysTable );
             }
         } );
         getContentContainer().add( filteredCheckBox );
@@ -250,9 +250,9 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         statusChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( titleLabel );
+                target.add( titleLabel );
                 addSurveysTable();
-                target.addComponent( surveysTable );
+                target.add( surveysTable );
             }
         } );
         getContentContainer().add( statusChoice );
@@ -273,9 +273,9 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         relevanceChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( titleLabel );
+                target.add( titleLabel );
                 addSurveysTable();
-                target.addComponent( surveysTable );
+                target.add( surveysTable );
             }
         } );
         getContentContainer().add( relevanceChoice );
@@ -303,7 +303,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
             filters.put( property, (ModelObject) identifiable );
         }
         addSurveysTable();
-        target.addComponent( surveysTable );
+        target.add( surveysTable );
     }
 
     @Override
@@ -397,14 +397,14 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
         if ( change.isForInstanceOf( Survey.class ) ) {
             if ( change.isUpdated() || change.isRemoved() ) {
                 addSurveysTable();
-                target.addComponent( surveysTable );
+                target.add( surveysTable );
             }
             if ( selectedSurvey.isUnknown() && !change.isRemoved() )
                 super.updateWith( target, change, updated );
             else {
                 addSurveyPanel();
                 updateVisibility();
-                target.addComponent( surveyContainer );
+                target.add( surveyContainer );
             }
         } else
             super.updateWith( target, change, updated );
@@ -414,7 +414,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     public void refresh( AjaxRequestTarget target, Change change, String Aspect ) {
         if ( change.isUnknown() || change.isForInstanceOf( Survey.class ) ) {
             addSurveysTable();
-            target.addComponent( surveysTable );
+            target.add( surveysTable );
         }
     }
 

@@ -102,7 +102,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
         systemsChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addNameChoice( item );
-                target.addComponent( item );
+                target.add( item );
             }
         } );
         makeVisible( systemsChoice, wrapper.isMarkedForCreation() && !choices.isEmpty() );
@@ -173,7 +173,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
         namesChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addClassifications();
-                target.addComponent( classificationsContainer );
+                target.add( classificationsContainer );
                 update(
                         target,
                         new Change( Change.Type.Updated, getClassified(), classifiableProperty ) );
@@ -191,7 +191,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 wrapper.delete();
                 addClassifications();
-                target.addComponent( classificationsContainer );
+                target.add( classificationsContainer );
                 update(
                         target,
                         new Change( Change.Type.Updated, getClassified(), classifiableProperty ) );

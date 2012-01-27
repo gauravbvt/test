@@ -92,7 +92,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
         usersChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addContactsTable();
-                target.addComponent( surveyContactsTable );
+                target.add( surveyContactsTable );
             }
         } );
         add( usersChoice );
@@ -144,7 +144,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
             }
         } catch ( SurveyException e ) {
             e.printStackTrace();
-            target.prependJavascript( "alert(\"Failed to add new contacts.\")" );
+            target.prependJavaScript( "alert(\"Failed to add new contacts.\")" );
         }
         return changed;
     }
@@ -171,7 +171,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
             filters.put( property, (ModelObject) identifiable );
         }
         addContactsTable();
-        target.addComponent( surveyContactsTable );
+        target.add( surveyContactsTable );
     }
 
     /**

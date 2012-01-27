@@ -108,7 +108,7 @@ public class DelegatedToMediaPanel extends AbstractCommandablePanel {
                         target,
                         new Change( Change.Type.Updated, getModeledMedium(), "delegatedToMedia" ) );
                 addMediaList();
-                target.addComponent( mediaContainer );
+                target.add( mediaContainer );
             }
         } );
         makeVisible( mediaChoice, wrapper.isMarkedForCreation()
@@ -165,7 +165,7 @@ public class DelegatedToMediaPanel extends AbstractCommandablePanel {
                                 "delegatedToMedia"
                         ) );
                 addMediaList();
-                target.addComponent( mediaContainer );
+                target.add( mediaContainer );
             }
         };
         makeVisible( deleteLink, wrapper.canBeDeleted() );

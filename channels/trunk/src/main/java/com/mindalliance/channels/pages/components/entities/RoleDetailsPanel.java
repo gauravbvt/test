@@ -7,12 +7,12 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.util.NameRange;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
-import com.mindalliance.channels.core.util.NameRange;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -121,8 +121,8 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
                 showingMore = !showingMore;
                 addMoreLink();
                 addRolePerformers();
-                target.addComponent( moreLink );
-                target.addComponent( performersContainer );
+                target.add( moreLink );
+                target.add( performersContainer );
             }
         };
         moreLink.add( new AttributeModifier(
@@ -156,8 +156,8 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
                 nameRange = new NameRange();
                 addNameRangePanel();
                 addRoleEmploymentTable();
-                target.addComponent( nameRangePanel );
-                target.addComponent( roleEmploymentTable );
+                target.add( nameRangePanel );
+                target.add( roleEmploymentTable );
             }
         } );
         performersContainer.add( indexedOnChoices );
@@ -214,7 +214,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
             filters.add( identifiable );
         }
         addRoleEmploymentTable();
-        target.addComponent( roleEmploymentTable );
+        target.add( roleEmploymentTable );
     }
 
     /**
@@ -234,7 +234,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
         nameRange = range;
         nameRangePanel.setSelected( target, range );
         addRoleEmploymentTable();
-        target.addComponent( roleEmploymentTable );
+        target.add( roleEmploymentTable );
     }
 
     /**

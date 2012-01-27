@@ -50,7 +50,7 @@ public class CalendarPanel extends AbstractSocialListPanel {
                 BG_COLOR,
                 getEncodedTimeZone(),
                 getCalendarPrivateTicket() );
-        calendarFrame.add( new AttributeModifier( "src", true, new Model<String>( src ) ) );
+        calendarFrame.add( new AttributeModifier( "src", new Model<String>( src ) ) );
         add( calendarFrame );
     }
 

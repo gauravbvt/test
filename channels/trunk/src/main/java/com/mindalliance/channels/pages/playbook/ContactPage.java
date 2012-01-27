@@ -8,11 +8,11 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.procedures.VCardPanel;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class ContactPage extends AbstractChannelsWebPage {
 
         Flow flow = getParm( "0", Flow.class );
         if ( flow == null )
-            throw new AbortWithWebErrorCodeException( NOT_FOUND );
+            throw new AbortWithHttpErrorCodeException( NOT_FOUND, "Not found" );
 
         init( flow, getQueryService().findAllContacts( contactsSpec( flow ), true ) );
     }
@@ -64,9 +64,9 @@ public class ContactPage extends AbstractChannelsWebPage {
         T result = null;
 
         PageParameters parms = getPageParameters();
-        if ( parms.containsKey( parm ) )
+        if ( parms.getNamedKeys().contains( parm ) )
             try {
-                result = getQueryService().find( parmClass, Long.valueOf( parms.getString( parm ) ) );
+                result = getQueryService().find( parmClass, Long.valueOf( parms.get( parm ).toString() ) );
 
             } catch ( NumberFormatException ignored ) {
                 result = null;

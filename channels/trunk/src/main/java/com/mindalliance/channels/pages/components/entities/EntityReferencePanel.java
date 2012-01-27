@@ -132,7 +132,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
             protected void onUpdate( AjaxRequestTarget target ) {
                 String oldName = getEntityName();
                 adjustFields();
-                target.addComponent( nameField );
+                target.add( nameField );
                 setEntityName( null );
                 if ( !oldName.equals( getEntityName() ) ) {
                     update( target, new Change( Change.Type.Updated, getReferencer(), property ) );
@@ -172,8 +172,8 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
-                target.addComponent( actualOrTypeChoice );
-                target.addComponent( nameField );
+                target.add( actualOrTypeChoice );
+                target.add( nameField );
                 update( target, new Change( Change.Type.Updated, getReferencer(), property ) );
             }
         } );

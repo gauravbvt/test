@@ -62,9 +62,9 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
             public void onClick( AjaxRequestTarget target ) {
                 showHereOnly = !showHereOnly;
                 addShowHideLabel();
-                target.addComponent( showHideLabel );
+                target.add( showHideLabel );
                 addPresences();
-                target.addComponent( presencesContainer );
+                target.add( presencesContainer );
             }
         };
         add( showHideLink );
@@ -117,6 +117,6 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
 
     public void refresh( AjaxRequestTarget target, Change change ) {
         addPresences();
-        target.addComponent( presencesContainer );
+        target.add( presencesContainer );
     }
 }

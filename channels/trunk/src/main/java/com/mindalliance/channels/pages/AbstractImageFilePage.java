@@ -2,13 +2,13 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.util.ResponseOutputStream;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.Response;
-import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.servlet.AbortWithHttpStatusException;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,25 +33,25 @@ public abstract class AbstractImageFilePage extends Page {
     public AbstractImageFilePage( PageParameters parameters ) {
         super( parameters );
 
-        String fileNameParam = parameters.getString( "0" );
+        String fileNameParam = parameters.get( "0" ).toString();
         if ( fileNameParam == null )
-            throw new AbortWithWebErrorCodeException( 403 );
+            throw new AbortWithHttpErrorCodeException( 403, "Unauthorized access" );
         File file;
         try {
             filename = decodeFileName( fileNameParam );
             file = getFile( filename );
         } catch ( IOException e ) {
-            throw new AbortWithHttpStatusException( 404, false );
+            throw new AbortWithHttpErrorCodeException( 404, "Not found" );
         }
         if ( file.exists() ) {
-            Response response = getResponse();
+            BufferedWebResponse response = new BufferedWebResponse(  (WebResponse) getResponse()  );
             response.setContentLength( file.length() );
-            response.setLastModifiedTime( Time.valueOf( file.lastModified() ) );
+            response.setLastModifiedTime( Time.millis( file.lastModified() )  );
             WebApplication application = (WebApplication) getApplication();
             response.setContentType( application.getServletContext().getMimeType( filename ) );
 
         } else
-            throw new AbortWithHttpStatusException( 404, false );
+            throw new AbortWithHttpErrorCodeException( 404, "Not found" );
 
     }
 
@@ -60,11 +60,11 @@ public abstract class AbstractImageFilePage extends Page {
     protected abstract File getFile( String fileName ) throws IOException;
 
     @Override
-    protected void onRender( MarkupStream markupStream ) {
+    protected void onRender(  ) {
         FileInputStream inputStream = null;
         Logger logger = LoggerFactory.getLogger( getClass() );
         try {
-            OutputStream outputStream = getResponse().getOutputStream();
+            OutputStream outputStream = new ResponseOutputStream( getResponse() );
             inputStream = new FileInputStream( getFile( filename ) );
 
             byte[] buffer = new byte[10 * 1024];

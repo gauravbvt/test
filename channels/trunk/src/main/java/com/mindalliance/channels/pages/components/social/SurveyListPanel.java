@@ -3,8 +3,8 @@ package com.mindalliance.channels.pages.components.social;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.surveys.SurveyResponse;
 import com.mindalliance.channels.surveys.SurveyException;
+import com.mindalliance.channels.surveys.SurveyResponse;
 import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -95,7 +95,7 @@ public class SurveyListPanel extends AbstractSocialListPanel {
                 surveyResponses = null;
                 addShowHideCompletedLabel();
                 addSurveyReminders();
-                target.addComponent( showHideCompletedLabel );
+                target.add( showHideCompletedLabel );
                 adjustComponents( target );
             }
         };
@@ -154,10 +154,10 @@ public class SurveyListPanel extends AbstractSocialListPanel {
 
     private void adjustComponents( AjaxRequestTarget target ) {
         adjustComponents();
-        target.addComponent( surveyRemindersContainer );
-        target.addComponent( showAFew );
-        target.addComponent( showMore );
-        target.addComponent( noSurveyReminderContainer );
+        target.add( surveyRemindersContainer );
+        target.add( showAFew );
+        target.add( showMore );
+        target.add( noSurveyReminderContainer );
     }
 
     private void adjustComponents() {

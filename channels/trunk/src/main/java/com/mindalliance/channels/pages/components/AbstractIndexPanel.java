@@ -262,13 +262,13 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 if ( indexedOn.equals( EOIS ) )  {
                     setFilteredByName( true );
                 }
-                target.addComponent( byNameCheckBox );
-                target.addComponent( byTagsCheckBox );
+                target.add( byNameCheckBox );
+                target.add( byTagsCheckBox );
                 nameRange = new NameRange();
                 addNameRangePanel();
                 addIndices();
-                target.addComponent( nameRangePanel );
-                target.addComponent( indicesContainer );
+                target.add( nameRangePanel );
+                target.add( indicesContainer );
             }
         } );
         addOrReplace( indexedOnChoices );
@@ -295,9 +295,9 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         filterField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addNameRangePanel();
-                target.addComponent( nameRangePanel );
+                target.add( nameRangePanel );
                 addIndices();
-                target.addComponent( indicesContainer );
+                target.add( indicesContainer );
             }
         } );
         addOrReplace( filterField );
@@ -310,11 +310,11 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addNameRangePanel();
-                target.addComponent( nameRangePanel );
+                target.add( nameRangePanel );
                 addIndices();
-                target.addComponent( indicesContainer );
-                target.addComponent( filterField );
-                target.addComponent( byTagsCheckBox );
+                target.add( indicesContainer );
+                target.add( filterField );
+                target.add( byTagsCheckBox );
             }
         } );
         addOrReplace( byNameCheckBox );
@@ -324,11 +324,11 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addNameRangePanel();
-                target.addComponent( nameRangePanel );
+                target.add( nameRangePanel );
                 addIndices();
-                target.addComponent( indicesContainer );
-                target.addComponent( filterField );
-                target.addComponent( byNameCheckBox );
+                target.add( indicesContainer );
+                target.add( filterField );
+                target.add( byNameCheckBox );
             }
         } );
         addOrReplace( byTagsCheckBox );
@@ -565,7 +565,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         nameRange = range;
         nameRangePanel.setSelected( target, range );
         addIndices();
-        target.addComponent( indicesContainer );
+        target.add( indicesContainer );
     }
 
     public void setFilter( String val ) {

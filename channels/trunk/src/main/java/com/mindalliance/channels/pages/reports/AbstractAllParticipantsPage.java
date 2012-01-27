@@ -19,16 +19,17 @@ import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
-import org.apache.wicket.PageParameters;
+import com.mindalliance.channels.pages.UserPage;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.pages.RedirectPage;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValueConversionException;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,7 +38,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static javax.servlet.http.HttpServletResponse.*;
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 /**
  * Abstract reports index page on participants and agents.
@@ -73,39 +75,38 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
 
     private List<User> unassigned;
 
-    public AbstractAllParticipantsPage( Class<? extends AbstractParticipantPage> clazz ) {
+ /*   public AbstractAllParticipantsPage( Class<? extends AbstractParticipantPage> clazz ) {
 
         List<Plan> plans = planManager.getPlannablePlans( user );
         if ( plans.isEmpty() )
-            throw new AbortWithWebErrorCodeException( SC_FORBIDDEN );
+            throw new AbortWithHttpErrorCodeException( SC_FORBIDDEN, "Unauthorized access" );
 
         Plan plan = plans.get( 0 );
         PageParameters pageParameters = new PageParameters();
-        pageParameters.put( PLAN, plan.getUri() );
-        pageParameters.put( VERSION, plan.getVersion() );
-
-        setRedirect( true );
+        pageParameters.set( PLAN, plan.getUri() );
+        pageParameters.set( VERSION, plan.getVersion() );
         setResponsePage( clazz, pageParameters );
     }
-
+*/
     public AbstractAllParticipantsPage( PageParameters parameters ) {
         super( parameters );
-
         try {
-            if ( parameters.containsKey( PLAN ) && parameters.containsKey( VERSION ) ) {
-                Plan plan = planManager.getPlan( parameters.getString( PLAN ), parameters.getInt( VERSION ) );
+            if ( parameters.getNamedKeys().contains( PLAN ) && parameters.getNamedKeys().contains( VERSION ) ) {
+                Plan plan = planManager.getPlan(
+                        parameters.get( PLAN ).toString(),
+                        parameters.get( VERSION ).toInt() );
 
                 if ( plan == null )
-                    throw new AbortWithWebErrorCodeException( SC_NOT_FOUND );
+                    throw new AbortWithHttpErrorCodeException( SC_NOT_FOUND, "Not found" );
 
                 if ( !user.isPlanner( plan.getUri() ) )
-                    throw new AbortWithWebErrorCodeException( SC_FORBIDDEN );
+                    throw new AbortWithHttpErrorCodeException( SC_FORBIDDEN, "Unauthorized access" );
 
                 Commander commander = getCommander( plan );
                 init( commander.getQueryService(), plan );
             }
         } catch ( StringValueConversionException ignored ) {
-            throw new AbortWithWebErrorCodeException( SC_NOT_FOUND );
+            throw new AbortWithHttpErrorCodeException( SC_NOT_FOUND, "Not found" );
         }
     }
 
@@ -150,6 +151,9 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
         actors = findFreeActors( findAssignedActors( users ), service.getAssignments().getActualActors() );
 
         unassigned = findUnassignedUsers( service );
+        if ( !user.isPlanner( uri ) ) {
+            throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
+        }
         initComponents( service, plan );
     }
 
@@ -160,9 +164,7 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
         channels_logo.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                String homeUrl = AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
-                RedirectPage page = new RedirectPage( homeUrl );
-                setResponsePage( page );
+                setResponsePage( UserPage.class, AbstractChannelsWebPage.planParameters( getPlan() ) );
             }
         } );
         add( channels_logo );

@@ -141,9 +141,9 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
                     public void onClick( AjaxRequestTarget target ) {
                         selectedSection = item.getModelObject();
                         addSection();
-                        target.addComponent( sectionPanel );
+                        target.add( sectionPanel );
                         addSectionHeaders();
-                        target.addComponent( sectionHeadersContainer );
+                        target.add( sectionHeadersContainer );
                     }
                 };
                 String sectionName = makeSectionName( item.getModelObject() );
@@ -238,7 +238,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
 
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( Issue.class ) || change.isForProperty( "attachments" ) ) {
-            target.addComponent( sectionHeadersContainer );
+            target.add( sectionHeadersContainer );
         }
         super.updateWith( target, change, updated );
     }

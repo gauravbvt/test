@@ -215,13 +215,13 @@ public class AgreementsPanel extends AbstractCommandablePanel {
                 if ( selectedAgreement == null || !selectedAgreement.equals( object ) ) {
                     selectedAgreement = (AgreementWrapper) object;
                     addCommitmentsContainer();
-                    target.addComponent( commitmentsContainer );
+                    target.add( commitmentsContainer );
                 }
             } else if ( action.equals( "confirmed" ) ) {
                 addAgreementsTable();
-                target.addComponent( agreementsTable );
+                target.add( agreementsTable );
                 addCommitmentsContainer();
-                target.addComponent( commitmentsContainer );
+                target.add( commitmentsContainer );
                 if ( ( (AgreementWrapper) object ).isConfirmed() ) {
                     update(
                             target,
@@ -453,7 +453,7 @@ public class AgreementsPanel extends AbstractCommandablePanel {
          */
         protected void resetTable( AjaxRequestTarget target ) {
             initialize();
-            target.addComponent( this );
+            target.add( this );
         }
 
     }

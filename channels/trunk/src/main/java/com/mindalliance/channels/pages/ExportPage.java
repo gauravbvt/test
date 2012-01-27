@@ -2,15 +2,16 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
-import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.core.query.QueryService;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.MarkupStream;
+import com.mindalliance.channels.core.util.ResponseOutputStream;
+import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.slf4j.Logger;
@@ -46,10 +47,10 @@ public class ExportPage extends WebPage {
         super( parameters );
 
         QueryService queryService = getQueryService();
-        if ( parameters.containsKey( PlanPage.SEGMENT_PARM ) )
+        if ( parameters.getNamedKeys().contains( PlanPage.SEGMENT_PARM ) )
             try {
                 segment = queryService.find( Segment.class,
-                        parameters.getLong( PlanPage.SEGMENT_PARM ) );
+                        parameters.get( PlanPage.SEGMENT_PARM ).toLong() );
 
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Bad segment specified. Exporting default segment.", ignored );
@@ -73,18 +74,17 @@ public class ExportPage extends WebPage {
     }
 
     @Override
-    public String getMarkupType() {
+    public MarkupType getMarkupType() {
         return getExporter().getMimeType();
     }
 
     /**
      * Generate and return the bytes for the segment.
-     * @param markupStream the markup stream (ignored)
      */
     @Override
-    protected void onRender( MarkupStream markupStream ) {
+    protected void onRender(  ) {
         try {
-            getExporter().export( segment, getResponse().getOutputStream() );
+            getExporter().export( segment, new ResponseOutputStream( getResponse() ) );
         } catch ( IOException e ) {
             LOG.error( "Export error", e );
         }

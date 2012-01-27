@@ -3,18 +3,14 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.core.model.Identifiable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.behavior.HeaderContributor;
-import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.markup.html.JavascriptPackageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import java.text.MessageFormat;
 import java.util.Random;
@@ -72,7 +68,7 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
     /**
      * JavaScript.
      */
-    private static ResourceReference JAVASCRIPT = new JavascriptResourceReference(
+    private static final JavaScriptResourceReference JAVASCRIPT = new JavaScriptResourceReference(
             FloatingCommandablePanel.class, "res/FloatingCommandablePanel.js" );
     /**
      * Title bar.
@@ -95,11 +91,10 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
     public FloatingCommandablePanel( String id ) {
         this( id, null, null );
     }
-
-    public FloatingCommandablePanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
+    
+     public FloatingCommandablePanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
         setOutputMarkupId( true );
-        add( JavascriptPackageResource.getHeaderContribution( JAVASCRIPT ) );
         // move
         moveBar = new WebMarkupContainer( "moveBar" );
         String moveScript = MessageFormat.format(
@@ -131,6 +126,35 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         setLayout();
     }
 
+    public void renderHead( IHeaderResponse response ) {
+        super.renderHead( response );
+        response.renderJavaScriptReference( JAVASCRIPT );
+        String script = "Floater.onOpen('" + getMarkupId() + "');";
+        response.renderOnDomReadyJavaScript( script );
+    }
+
+    public void setLayout() {
+        String style = MessageFormat.format(
+                "display:none;position:absolute;background-color:{0};border:{1}px solid {2};top:{3,number,#####}px;left:{4,number,#####}px;bottom:{5,number,#####}px;width:{6,number,#####}px;z-index:{7,number,#####};",
+                BG_COLOR,
+                BORDER_WIDTH,
+                BORDER_COLOR,
+                getTop(),
+                getLeft(),
+                getBottom(),
+                getWidth(),
+                getZIndex()
+        );
+        add( new AttributeModifier( "style", true, new Model<String>( style ) ) );
+       /* add( new AbstractBehavior() {
+            public void renderHead( Component component, IHeaderResponse response ) {
+                String script = "Floater.onOpen('" + getMarkupId() + "');";
+                response.renderOnDomReadyJavascript( script );
+            }
+        } );*/
+    }
+
+
     private void addMinimize() {
         minimizeLink = new AjaxFallbackLink( "minimize" ) {
             @Override
@@ -156,13 +180,13 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         makeVisible( resizer, !minimized );
         addMinimize();
         addTitle();
-        target.addComponent( this );
+        target.add( this );
         String minimizeNormalizeScript = "Floater.minimizeNormalize('"
                 + minimizeLink.getMarkupId() + "', "
                 + getPadBottom() + ", "
                 + MINIMIZED_HEIGHT + ", "
                 + minimized + ");";
-        target.appendJavascript( minimizeNormalizeScript );
+        target.appendJavaScript( minimizeNormalizeScript );
 
     }
 
@@ -223,7 +247,7 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
      */
     protected void refreshTitle( AjaxRequestTarget target ) {
         addTitle();
-        target.addComponent( titleLabel );
+        target.add( titleLabel );
     }
 
 
@@ -281,27 +305,6 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
     }
 
     abstract protected void doClose( AjaxRequestTarget target );
-
-    public void setLayout() {
-        String style = MessageFormat.format(
-                "display:none;position:absolute;background-color:{0};border:{1}px solid {2};top:{3,number,#####}px;left:{4,number,#####}px;bottom:{5,number,#####}px;width:{6,number,#####}px;z-index:{7,number,#####};",
-                BG_COLOR,
-                BORDER_WIDTH,
-                BORDER_COLOR,
-                getTop(),
-                getLeft(),
-                getBottom(),
-                getWidth(),
-                getZIndex()
-        );
-        add( new AttributeModifier( "style", true, new Model<String>( style ) ) );
-        add( new HeaderContributor( new IHeaderContributor() {
-            public void renderHead( IHeaderResponse response ) {
-                String script = "Floater.onOpen('" + getMarkupId() + "');";
-                response.renderOnDomReadyJavascript( script );
-            }
-        } ) );
-    }
 
     private int randomDelta() {
         return ( NON_OVERLAP_DELTA / 2 ) - random.nextInt( NON_OVERLAP_DELTA );

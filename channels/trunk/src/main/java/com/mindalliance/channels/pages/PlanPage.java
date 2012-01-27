@@ -53,7 +53,6 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -68,13 +67,14 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
-import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
@@ -85,7 +85,6 @@ import java.io.Serializable;
 import java.text.Collator;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -415,7 +414,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     public void renderHead( HtmlHeaderContainer container ) {
-        container.getHeaderResponse().renderJavascript( PlanPage.IE7CompatibilityScript, null );
+        container.getHeaderResponse().renderJavaScript( PlanPage.IE7CompatibilityScript, null );
         super.renderHead( container );
     }
 
@@ -506,9 +505,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         channels_logo.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                String homeUrl = AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
-                RedirectPage page = new RedirectPage( homeUrl );
-                setResponsePage( page );
+                setResponsePage( UserPage.class, planParameters( getPlan() )  );
             }
         } );
         form.add( channels_logo );
@@ -666,7 +663,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     makeVisible( spinner, false );
 /*
                     addSpinner();
-                    target.addComponent( spinner );
+                    target.add( spinner );
 */
                 } catch ( Exception e ) {
                     LOG.error( "Failed to do timed update", e );
@@ -742,7 +739,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         } else {
             updateRefreshNowNotice();
             if ( getPlan().isDevelopment() ) {
-                target.addComponent( refreshNeededComponent );
+                target.add( refreshNeededComponent );
             }
             fadeOutMessagePanel( target );
         }
@@ -752,13 +749,13 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void fadeOutMessagePanel( AjaxRequestTarget target ) {
         if ( !getMessage().isEmpty() ) {
             if ( ( System.currentTimeMillis() - message_time ) > ( MESSAGE_FADE_OUT_DELAY * 1000 ) ) {
-                target.appendJavascript( "$('div.change-message').fadeOut('slow');" );
+                target.appendJavaScript( "$('div.change-message').fadeOut('slow');" );
                 message = null;
             }
         } else {
             makeVisible( messageContainer, false );
         }
-        target.addComponent( messageContainer );
+        target.add( messageContainer );
     }
 
     private void updateRefreshNowNotice() {
@@ -1111,9 +1108,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * @return a segment, or null if not found
      */
     public static Segment findSegment( QueryService queryService, PageParameters parameters ) {
-        if ( parameters.containsKey( SEGMENT_PARM ) )
+        if ( parameters.getNamedKeys().contains( SEGMENT_PARM ) )
             try {
-                return queryService.find( Segment.class, parameters.getLong( SEGMENT_PARM ) );
+                return queryService.find( Segment.class, parameters.get( SEGMENT_PARM ).toLong() );
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Invalid segment specified in parameters. Using default." );
             } catch ( NotFoundException ignored ) {
@@ -1132,10 +1129,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * @return a part, or null if not found
      */
     public static Part findPart( Segment segment, PageParameters parameters ) {
-        if ( parameters.containsKey( PART_PARM ) )
+        if ( parameters.getNamedKeys().contains( PART_PARM ) )
             try {
                 if ( segment != null )
-                    return (Part) segment.getNode( parameters.getLong( PART_PARM ) );
+                    return (Part) segment.getNode( parameters.get( PART_PARM ).toLong() );
             } catch ( StringValueConversionException ignored ) {
                 LOG.warn( "Invalid part specified in parameters. Using default." );
             }
@@ -1157,9 +1154,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * Redirect to current plan page.
      */
     public void redirectToPlan() {
-        String url = redirectUrl( "plan", getPlan() );
-        RedirectPage page = new RedirectPage( url );
-        setResponsePage( page );
+        setResponsePage( PlanPage.class, planParameters( getPlan() )  );
     }
 
     /**
@@ -1206,11 +1201,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
     public static PageParameters getParameters(
             Segment segment, Part p, Set<Long> expanded ) {
         PageParameters result = new PageParameters();
-        result.put( SEGMENT_PARM, Long.toString( segment.getId() ) );
+        result.set( SEGMENT_PARM, Long.toString( segment.getId() ) );
         if ( p != null ) {
-            result.put( PART_PARM, Long.toString( p.getId() ) );
+            result.set( PART_PARM, Long.toString( p.getId() ) );
             for ( long id : expanded )
-                result.add( EXPAND_PARM, Long.toString( id ) );
+                result.set( EXPAND_PARM, Long.toString( id ) );
         }
         return result;
     }
@@ -1259,12 +1254,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
     public static Set<Long> findExpansions( PageParameters parameters ) {
         if ( parameters == null )
             return new HashSet<Long>();
-        Set<Long> result = new HashSet<Long>( parameters.size() );
-        if ( parameters.containsKey( EXPAND_PARM ) ) {
-            List<String> stringList = Arrays.asList( parameters.getStringArray( EXPAND_PARM ) );
-            for ( String id : stringList )
+        Set<Long> result = new HashSet<Long>( );
+        if ( parameters.getNamedKeys().contains( EXPAND_PARM ) ) {
+            List<StringValue> stringList = parameters.getValues( EXPAND_PARM );
+            for ( StringValue id : stringList )
                 try {
-                    result.add( Long.valueOf( id ) );
+                    result.add( id.toLong() );
                 } catch ( NumberFormatException ignored ) {
                     LOG.warn( MessageFormat.format( "Invalid expansion parameter: {0}", id ) );
                 }
@@ -1317,7 +1312,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     public PageParameters getParametersExpanding( long id ) {
         PageParameters result = getPageParameters();
         if ( !findExpansions().contains( id ) ) {
-            result.add( EXPAND_PARM, Long.toString( id ) );
+            result.set( EXPAND_PARM, Long.toString( id ) );
         }
         return result;
     }
@@ -1343,13 +1338,13 @@ public final class PlanPage extends AbstractChannelsWebPage {
      */
     public PageParameters getParametersCollapsing( long id ) {
         PageParameters result = getPageParameters();
-        String[] expanded = result.getStringArray( EXPAND_PARM );
+        List<StringValue> expanded = result.getValues( EXPAND_PARM );
         String idString = Long.toString( id );
         result.remove( EXPAND_PARM );
         if ( expanded != null ) {
-            for ( String exp : expanded )
-                if ( !exp.equals( idString ) )
-                    result.add( EXPAND_PARM, exp );
+            for ( StringValue exp : expanded )
+                if ( !exp.toString().equals( idString ) )
+                    result.set( EXPAND_PARM, exp );
         }
         return result;
     }
@@ -1768,7 +1763,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         String message = change.getMessage();
         if ( message != null ) {
             addChangeMessagePanel();
-            target.addComponent( messageContainer );
+            target.add( messageContainer );
             if ( message.contains( "copied" ) ) {
                 refreshAllMenus( target );
             }
@@ -1816,7 +1811,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         }
         if ( change.getScript() != null ) {
-            target.appendJavascript( change.getScript() );
+            target.appendJavaScript( change.getScript() );
         }
     }
 
@@ -1924,35 +1919,35 @@ public final class PlanPage extends AbstractChannelsWebPage {
         if ( change.isMaximized() || change.isMinimized() || change.isSelected() || change.isExpanded() || change.isRecomposed() ) {
             addMaximizedFlowPanel( change );
             if ( !flowMaximized ) segmentPanel.updateFlowMapOnMinimize( target, change );
-            target.addComponent( maximizedFlowPanel );
+            target.add( maximizedFlowPanel );
         }
     }
 
     private void updateFlowLegend( AjaxRequestTarget target ) {
         addFlowLegendPanel();
-        target.addComponent( flowLegendPanel );
+        target.add( flowLegendPanel );
     }
 
     private void updateRefresh( AjaxRequestTarget target ) {
         updateRefreshNowNotice();
-        target.addComponent( refreshNeededComponent );
+        target.add( refreshNeededComponent );
     }
 
     private void updateHeaders( AjaxRequestTarget target ) {
         addPlanName();
-        target.addComponent( planNameLabel );
+        target.add( planNameLabel );
         annotateSegmentName();
-        target.addComponent( segmentNameLabel );
-        target.addComponent( segmentDescriptionLabel );
+        target.add( segmentNameLabel );
+        target.add( segmentDescriptionLabel );
         form.addOrReplace( createPartsMapLink() );
-        target.addComponent( partsMapLink );
+        target.add( partsMapLink );
     }
 
     private void refreshPlanMenus( AjaxRequestTarget target ) {
         addPlanActionsMenu();
         addPlanShowMenu();
-        target.addComponent( planActionsMenu );
-        target.addComponent( planShowMenu );
+        target.add( planActionsMenu );
+        target.add( planShowMenu );
     }
 
     private void updateSelectorsVisibility() {
@@ -1962,12 +1957,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void updateSelectors( AjaxRequestTarget target, Change change ) {
         if ( change.isForInstanceOf( Part.class ) && change.isSelected() ) {
             // In case selecting the part switched segments
-            target.addComponent( segmentDropDownChoice );
+            target.add( segmentDropDownChoice );
         }
         updateSelectorsVisibility();
-        target.addComponent( selectSegmentContainer );
+        target.add( selectSegmentContainer );
         addPlanName();
-        target.addComponent( planNameLabel );
+        target.add( planNameLabel );
     }
 
     private void refreshChildren(
@@ -2003,7 +1998,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         if ( change.isForInstanceOf( SegmentObject.class )
                 && ( change.isSelected() || change.isDisplay() || change.isExists() ) ) {
             segmentPanel.doRefresh( target, change );
-            // target.addComponent( segmentPanel );
+            // target.add( segmentPanel );
         } else {
             segmentPanel.refresh( target, change, updated, getAspectShown( getSegment() ) );
         }
@@ -2016,7 +2011,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         if ( /*change.isUnknown() ||*/
                 change.isDisplay() && identifiable instanceof Plan ) {
             addPlanEditPanel( change );
-            target.addComponent( planEditPanel );
+            target.add( planEditPanel );
         } else if ( planEditPanel instanceof PlanEditPanel ) {
             ( (PlanEditPanel) planEditPanel ).refresh( target,
                     change,
@@ -2036,8 +2031,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 ||
                 identifiable != null && change.isSelected() && identifiable instanceof Part ) {
             addSegmentEditPanel();
-            target.addComponent( segmentEditPanel );
-            target.addComponent( segmentDropDownChoice );
+            target.add( segmentEditPanel );
+            target.add( segmentDropDownChoice );
         } else if ( segmentEditPanel instanceof SegmentEditPanel ) {
             ( (SegmentEditPanel) segmentEditPanel ).refresh( target,
                     change,
@@ -2053,7 +2048,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 change.isDisplay()
                         && change.isForInstanceOf( ModelEntity.class ) ) {
             addEntityPanel();
-            target.addComponent( entityPanel );
+            target.add( entityPanel );
         } else if ( entityPanel instanceof EntityPanel ) {
             ( (EntityPanel) entityPanel ).refresh( target,
                     change,
@@ -2072,7 +2067,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                         && identifiable instanceof Part
                         && change.isAspect( "assignments" ) ) {
             addAssignmentsPanel();
-            target.addComponent( assignmentsPanel );
+            target.add( assignmentsPanel );
         } else if ( assignmentsPanel instanceof PartAssignmentsPanel ) {
             ( (PartAssignmentsPanel) assignmentsPanel ).refresh( target, change, updated );
         }
@@ -2086,7 +2081,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                         && identifiable instanceof Flow
                         && change.isAspect( "commitments" ) ) {
             addCommitmentsPanel();
-            target.addComponent( commitmentsPanel );
+            target.add( commitmentsPanel );
         } else if ( commitmentsPanel instanceof SharingCommitmentsPanel ) {
             ( (SharingCommitmentsPanel) commitmentsPanel ).refresh( target, change, updated );
         }
@@ -2101,7 +2096,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                         && ( change.isCollapsed()
                         || change.isAspect( "eois" ) ) ) {
             addEOIsPanel();
-            target.addComponent( eoisPanel );
+            target.add( eoisPanel );
         } else if ( eoisPanel instanceof FlowEOIsPanel ) {
             ( (FlowEOIsPanel) eoisPanel ).refresh( target, change, updated );
         }
@@ -2116,7 +2111,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                         && change.isAspect(
                         "failure" ) ) {
             addFailureImpactsPanel();
-            target.addComponent( failureImpactsPanel );
+            target.add( failureImpactsPanel );
         } else if ( failureImpactsPanel instanceof FailureImpactsPanel ) {
             ( (FailureImpactsPanel) failureImpactsPanel ).refresh( target, change, updated );
         }
@@ -2131,7 +2126,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             boolean showTargets = change.hasQualifier( "show", "targets" );
             Subject subject = (Subject) change.getQualifier( "subject" );
             addDisseminationPanel( subject, showTargets );
-            target.addComponent( disseminationPanel );
+            target.add( disseminationPanel );
         } else if ( disseminationPanel instanceof DisseminationPanel ) {
             ( (DisseminationPanel) disseminationPanel ).refresh( target, change, updated );
         }
@@ -2144,7 +2139,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                         && identifiable instanceof Part
                         && change.isAspect( "overrides" ) ) {
             addOverridesPanel();
-            target.addComponent( overridesPanel );
+            target.add( overridesPanel );
         } else if ( overridesPanel instanceof OverridesPanel ) {
             ( (OverridesPanel) overridesPanel ).refresh( target, change, updated );
         }
@@ -2162,7 +2157,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     ? Survey.UNKNOWN
                     : expandedSurvey;
             addSurveysPanel( viewedSurvey );
-            target.addComponent( surveysPanel );
+            target.add( surveysPanel );
         } else if ( surveysPanel instanceof SurveysPanel ) {
             ( (SurveysPanel) surveysPanel ).refresh( target,
                     change,
@@ -2172,21 +2167,21 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void updateNavigation() {
-        goBackContainer.add( new AttributeModifier( "src", true, new Model<String>( isCanGoBack()
+        goBackContainer.add( new AttributeModifier( "src", new Model<String>( isCanGoBack()
                 ? "images/go_back.png"
                 : "images/go_back_disabled.png" ) ) );
-        goBackContainer.add( new AttributeModifier( "title", true, new Model<String>(
+        goBackContainer.add( new AttributeModifier( "title", new Model<String>(
                 isCanGoBack() ? "Go back" : "" ) ) );
-        goForwardContainer.add( new AttributeModifier( "src", true, new Model<String>(
+        goForwardContainer.add( new AttributeModifier( "src", new Model<String>(
                 isCanGoForward() ? "images/go_forward.png" : "images/go_forward_disabled.png" ) ) );
-        goForwardContainer.add( new AttributeModifier( "title", true, new Model<String>(
+        goForwardContainer.add( new AttributeModifier( "title", new Model<String>(
                 isCanGoForward() ? "Go forward" : "" ) ) );
     }
 
     private void updateNavigation( AjaxRequestTarget target ) {
         updateNavigation();
-        target.addComponent( goBackContainer );
-        target.addComponent( goForwardContainer );
+        target.add( goBackContainer );
+        target.add( goForwardContainer );
     }
 
     /**

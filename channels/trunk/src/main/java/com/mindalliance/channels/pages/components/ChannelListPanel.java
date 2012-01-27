@@ -109,7 +109,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
     private void doUpdate( AjaxRequestTarget target ) {
         wrappedChannels = null;
-        target.addComponent( channelsList );
+        target.add( channelsList );
         update( target,
                 new Change( Change.Type.Updated, getChannelable(),
                         "modifiableChannels" ) );                                      // NON-NLS

@@ -24,6 +24,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -34,6 +35,8 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -262,8 +265,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
             selectedFlowUpdated = false;
         }
         refreshMenus( target );
-        target.appendJavascript( PlanPage.IE7CompatibilityScript );
-        target.addComponent( flowsDiv );
+        target.appendJavaScript( PlanPage.IE7CompatibilityScript );
+        target.add( flowsDiv );
     }
 
     /**
@@ -273,7 +276,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
      */
     public void refreshMenus( AjaxRequestTarget target ) {
         addTitle();
-        target.addComponent( titleContainer );
+        target.add( titleContainer );
     }
 
     public void changed( Change change ) {
@@ -322,10 +325,10 @@ public class FlowListPanel extends AbstractCommandablePanel {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         change.addQualifier( "updated", isSelectedFlowUpdated() );
-        target.appendJavascript( PlanPage.IE7CompatibilityScript );
+        target.appendJavaScript( PlanPage.IE7CompatibilityScript );
         if ( change.isSelected() || change.isDisplay() || change.isAdded() ) {
             refreshMenus( target );
-            target.addComponent( flowsDiv );
+            target.add( flowsDiv );
         }
         super.updateWith( target, change, updated );
         if ( change.isDisplay() ) {
@@ -336,15 +339,19 @@ public class FlowListPanel extends AbstractCommandablePanel {
     //-------------------------------
     List<AbstractFlowPanel> getFlowPanels() {
         final List<AbstractFlowPanel> flowPanels = new ArrayList<AbstractFlowPanel>();
-        Iterator<? extends ListItem<Flow>> listItems = flowPanelsListView.iterator();
+        Iterator<Component> listItems = flowPanelsListView.iterator();
         while ( listItems.hasNext() ) {
-            listItems.next().visitChildren( new IVisitor<Component>() {
+            ((MarkupContainer)listItems.next()).visitChildren(
+                    Component.class,
+                    new IVisitor<Component, Void>() {
                 @Override
-                public Object component( Component component ) {
+                public void component( Component component, final IVisit<Void> visit ) {
                     if ( component instanceof AbstractFlowPanel ) {
                         flowPanels.add( (AbstractFlowPanel) component );
+                        visit.stop();
+                    } else {
+                        visit.dontGoDeeper();
                     }
-                    return null;
                 }
             } );
         }

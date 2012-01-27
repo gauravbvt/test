@@ -11,10 +11,10 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.ResourceSpec;
-import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.core.query.QueryService;
-import org.apache.wicket.PageParameters;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
@@ -65,9 +65,7 @@ public abstract class PlaybookPage extends AbstractChannelsWebPage {
         part = getParm( PART_PARM, Part.class );
 
         if ( actor == null ) {
-            if ( parameters.containsKey( ACTOR_PARM ) ) {
-                // Invalid actor parameter. Forget other parameters and redirect
-                setRedirect( true );
+            if ( parameters.getNamedKeys().contains( ACTOR_PARM ) ) {
                 throw new RestartResponseException( getClass() );
             } else {
                 // No actor specified. Just show top page.
@@ -92,9 +90,9 @@ public abstract class PlaybookPage extends AbstractChannelsWebPage {
     private <T extends ModelObject> T getParm( String parm, Class<T> parmClass ) {
         T result = null;
         PageParameters parms = getPageParameters();
-        if ( parms.containsKey( parm ) )
+        if ( parms.getNamedKeys().contains( parm ) )
             try {
-                result = getQueryService().find( parmClass, Long.valueOf( parms.getString( parm ) ) );
+                result = getQueryService().find( parmClass, Long.valueOf( parms.get( parm ).toString() ) );
 
             } catch ( NumberFormatException ignored ) {
                 result = null;

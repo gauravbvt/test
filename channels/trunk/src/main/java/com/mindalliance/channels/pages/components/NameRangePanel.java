@@ -199,6 +199,6 @@ public class NameRangePanel extends Panel {
     public void setSelected( AjaxRequestTarget target, NameRange range ) {
         selectedRange = range;
         addRangeList();
-        target.addComponent( rangesDiv );
+        target.add( rangesDiv );
     }
 }

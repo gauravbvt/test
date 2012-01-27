@@ -103,7 +103,7 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
                     protected void onEvent( AjaxRequestTarget target ) {
                         deleteEoi( item.getModelObject() );
                         addEois();
-                        target.addComponent( eoisContainer );
+                        target.add( eoisContainer );
                         update( target, new Change( Change.Type.Updated, requirement, "eois" ) );
                     }
                 } );
@@ -130,7 +130,7 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addEois();
-                target.addComponent( eoisContainer );
+                target.add( eoisContainer );
                 update( target, new Change( Change.Type.Updated, requirement, "eois" ) );
             }
         } );

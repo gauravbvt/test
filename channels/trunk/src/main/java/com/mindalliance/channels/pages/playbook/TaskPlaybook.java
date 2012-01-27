@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Delay;
@@ -12,14 +11,15 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.wicket.Component;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,11 +51,10 @@ public class TaskPlaybook extends PlaybookPage {
         Part part = getPart();
 
         if ( part == null ) {
-            if ( parameters.containsKey( PART_PARM ) ) {
+            if ( parameters.getNamedKeys().contains( PART_PARM ) ) {
                 // Invalid part parameter, trim it and redirect to summary
                 PageParameters parms = new PageParameters();
-                parms.put( ACTOR_PARM, parameters.getString( ACTOR_PARM ) );
-                setRedirect( true );
+                parms.set( ACTOR_PARM, parameters.get( ACTOR_PARM ).toString() );
                 throw new RestartResponseException( getClass(), parms );
             } else {
                 // Quietly show the actor summary, keeping same URL

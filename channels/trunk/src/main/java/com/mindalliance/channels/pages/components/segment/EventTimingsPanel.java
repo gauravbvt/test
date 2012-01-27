@@ -343,8 +343,8 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
         reset();
         addEventTimings();
         addNewEventTiming();
-        target.addComponent( eventTimingsContainer );
-        target.addComponent( creationContainer );
+        target.add( eventTimingsContainer );
+        target.add( creationContainer );
         super.updateWith( target, change, updated );
     }
 

@@ -1,5 +1,8 @@
 package com.mindalliance.channels.pages.components.entities;
 
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
@@ -13,12 +16,9 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
-import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
@@ -198,11 +198,11 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 addCommitmentsPanel();
                 addParticipantsTable();
                 adjustFields();
-                target.addComponent( moreContainer );
-                target.addComponent( rolesContainer );
-                target.addComponent( assignmentsContainer );
-                target.addComponent( commitmentsContainer );
-                target.addComponent( participantsContainer );
+                target.add( moreContainer );
+                target.add( rolesContainer );
+                target.add( assignmentsContainer );
+                target.add( commitmentsContainer );
+                target.add( participantsContainer );
             }
         };
         moreLink.add( new AttributeModifier(
@@ -268,7 +268,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         newLanguageField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addLanguages();
-                target.addComponent( languagesContainer );
+                target.add( languagesContainer );
                 update( target, new Change( Change.Type.Updated, getActor(), "languages" ) );
             }
         } );
@@ -287,7 +287,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                         language,
                         UpdateObject.Action.Remove ) );
                 addLanguages();
-                target.addComponent( languagesContainer );
+                target.add( languagesContainer );
                 update( target,
                         new Change(
                                 Change.Type.Updated,
@@ -360,8 +360,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         isArchetypeCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
-                target.addComponent( isPlaceHolderCheckBox );
-                target.addComponent( singularityContainer );
+                target.add( isPlaceHolderCheckBox );
+                target.add( singularityContainer );
                 update( target, new Change( Change.Type.Updated, getActor(), "archetype" ) );
             }
         } );
@@ -380,8 +380,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         isPlaceHolderCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
-                target.addComponent( isArchetypeCheckBox );
-                target.addComponent( singularityContainer );
+                target.add( isArchetypeCheckBox );
+                target.add( singularityContainer );
                 update( target, new Change( Change.Type.Updated, getActor(), "placeHolder" ) );
             }
         } );
@@ -452,10 +452,10 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 nameRange = new NameRange();
                 addNameRangePanel();
                 addActorEmploymentTable();
-                target.addComponent( nameRangePanel );
-                target.addComponent( actorEmploymentTable );
+                target.add( nameRangePanel );
+                target.add( actorEmploymentTable );
                 addRolesMap();
-                target.addComponent( rolesMapLink );
+                target.add( rolesMapLink );
             }
         } );
         rolesContainer.add( indexedOnChoices );
@@ -581,7 +581,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
             filters.add( identifiable );
         }
         addActorEmploymentTable();
-        target.addComponent( actorEmploymentTable );
+        target.add( actorEmploymentTable );
     }
 
     /**
@@ -601,9 +601,9 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         nameRange = range;
         nameRangePanel.setSelected( target, range );
         addActorEmploymentTable();
-        target.addComponent( actorEmploymentTable );
+        target.add( actorEmploymentTable );
         addRolesMap();
-        target.addComponent( rolesMapLink );
+        target.add( rolesMapLink );
     }
 
     /**
@@ -906,7 +906,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
          */
         protected void resetTable( AjaxRequestTarget target ) {
             init();
-            target.addComponent( this );
+            target.add( this );
         }
     }
 
@@ -998,7 +998,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
          */
         protected void resetTable( AjaxRequestTarget target ) {
             init();
-            target.addComponent( this );
+            target.add( this );
         }
     }
 

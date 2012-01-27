@@ -338,7 +338,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 setShowSimpleForm( !isShowSimpleForm() );
                 adjustSimpleAdvancedFields( target );
                 addSimpleAdvanced();
-                target.addComponent( simpleAdvanced );
+                target.add( simpleAdvanced );
             }
         } );
         addOrReplace( simpleAdvanced );
@@ -347,13 +347,13 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void adjustSimpleAdvancedFields( AjaxRequestTarget target ) {
         boolean showSimpleForm = isShowSimpleForm();
         makeVisible( tagsContainer, !showSimpleForm );
-        target.addComponent( tagsContainer );
+        target.add( tagsContainer );
         makeVisible( classificationContainer, !showSimpleForm );
-        target.addComponent( classificationContainer );
+        target.add( classificationContainer );
         makeVisible( executionContainer, !showSimpleForm );
-        target.addComponent( executionContainer );
+        target.add( executionContainer );
         makeVisible( timingContainer, !showSimpleForm );
-        target.addComponent( timingContainer );
+        target.add( timingContainer );
     }
 
     private String getCssClasses() {
@@ -623,7 +623,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 completionTimePanel.enable( getPart().isSelfTerminating() && isLockedByUser( getPart() ) );
-                target.addComponent( completionTimePanel );
+                target.add( completionTimePanel );
                 update( target, new Change( Change.Type.Updated, getPart(), "selfTerminating" ) );
             }
         } );
@@ -634,7 +634,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 repeatsEveryPanel.enable( getPart().isRepeating() );
-                target.addComponent( repeatsEveryPanel );
+                target.add( repeatsEveryPanel );
                 update( target, new Change( Change.Type.Updated, getPart(), "onclick" ) );
             }
         } );
@@ -1112,11 +1112,11 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         adjustFields();
         addGoals();
         // todo - remove
-        target.addComponent( partDescription );
+        target.add( partDescription );
         // todo - remove
-        target.addComponent( partIssuesPanel );
-        target.addComponent( attachmentsPanel );
-        target.addComponent( this );
+        target.add( partIssuesPanel );
+        target.add( attachmentsPanel );
+        target.add( this );
     }
 
     /**
@@ -1144,10 +1144,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( change.isUpdated() ) {
                 String property = change.getProperty();
                 addSummaryPanel();
-                target.addComponent( summaryPanel );
+                target.add( summaryPanel );
                 for ( EntityReferencePanel entityReferencePanel : entityFields ) {
                     entityReferencePanel.updateIssues();
-                    target.addComponent( entityReferencePanel );
+                    target.add( entityReferencePanel );
                 }
                 if ( change.getSubject( getQueryService() ).equals( getPart() ) ) {
                     if ( Arrays.asList( EntityProps ).contains( property ) )
@@ -1155,15 +1155,15 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 }
                 if ( property.equals( "goals" ) ) {
                     addGoals();
-                    target.addComponent( taskGoalsPanel );
+                    target.add( taskGoalsPanel );
                 }
-                target.addComponent( initiatedEventField );
+                target.add( initiatedEventField );
             }
             if ( !change.isDisplay() && !change.isCopied() ) {
                 makeVisible( target,
                         partIssuesPanel,
                         getAnalyst().hasIssues( getQueryService(), getPart(), false ) );
-                target.addComponent( partIssuesPanel );
+                target.add( partIssuesPanel );
             }
         }
         change.addQualifier( "updated", partUpdated );
@@ -1173,7 +1173,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void updateEntityLink( AjaxRequestTarget target, Change change ) {
         ModelObjectLink moLink = addEntityLink( change.getProperty() );
         if ( moLink != null ) {
-            target.addComponent( moLink );
+            target.add( moLink );
         }
     }
 }

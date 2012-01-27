@@ -150,12 +150,12 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addEventLink();
-                target.addComponent( eventLink );
+                target.add( eventLink );
                 addTimingChoices();
                 timingChoices.setEnabled(
                         isLockedByUser( getRequirement() )
                                 && getAssignmentSpec().getEvent() != null );
-                target.addComponent( timingChoices );
+                target.add( timingChoices );
                 update( target, new Change( Change.Type.Updated, getRequirement(), propertyPath( "event" ) ) );
             }
         } );

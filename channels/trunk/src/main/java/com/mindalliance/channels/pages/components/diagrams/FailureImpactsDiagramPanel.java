@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.pages.png.FailureImpactsPage;
+import com.mindalliance.channels.pages.png.FailureImpactsPng;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -68,15 +68,15 @@ public class FailureImpactsDiagramPanel extends AbstractDiagramPanel {
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append( "essential.png?" );
-        sb.append( FailureImpactsPage.SEGMENT );
+        sb.append( FailureImpactsPng.SEGMENT );
         sb.append( '=' );
         sb.append( getSegmentObject().getSegment().getId() );
         sb.append( '&' );
-        sb.append( FailureImpactsPage.FAILURE );
+        sb.append( FailureImpactsPng.FAILURE );
         sb.append( '=' );
         sb.append( getSegmentObject().getId() );
         sb.append( '&' );
-        sb.append( FailureImpactsPage.ASSUME_FAILS );
+        sb.append( FailureImpactsPng.ASSUME_FAILS );
         sb.append( '=' );
         sb.append( assumeFails );
         double[] diagramSize = getDiagramSize();

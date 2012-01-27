@@ -71,7 +71,7 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
             public void onClick( AjaxRequestTarget target ) {
                 othersOnly = !othersOnly;
                 addShowHideLabel();
-                target.addComponent( showHideLabel );
+                target.add( showHideLabel );
                 addCommandEvents();
                 adjustComponents( target );
             }
@@ -89,10 +89,10 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
 
     private void adjustComponents( AjaxRequestTarget target ) {
         adjustComponents();
-        target.addComponent( planningEventsContainer );
-        target.addComponent( showAFew );
-        target.addComponent( showMore );
-        target.addComponent( noCommandContainer );
+        target.add( planningEventsContainer );
+        target.add( showAFew );
+        target.add( showMore );
+        target.add( noCommandContainer );
     }
 
     private void adjustComponents() {

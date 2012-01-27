@@ -159,7 +159,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
                     surveyService.launchSurvey( survey, getPlan(), getQueryService() );
                 } catch ( SurveyException e ) {
                     LOG.warn("Failed lo launch survey", e);
-                    target.prependJavascript( "alert(\"Oops! Failed to launch survey.\")" );
+                    target.prependJavaScript( "alert(\"Oops! Failed to launch survey.\")" );
                 }
                 update( target, new Change( Change.Type.Updated, survey ) );
             }
@@ -176,7 +176,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
                 try {
                     surveyService.closeSurvey( survey, getPlan() );
                 } catch ( SurveyException e ) {
-                    target.prependJavascript( "alert(\"Oops! Failed to close survey.\")" );
+                    target.prependJavaScript( "alert(\"Oops! Failed to close survey.\")" );
                 }
                 update( target, new Change( Change.Type.Updated, survey ) );
             }
@@ -193,7 +193,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
                 try {
                     surveyService.deleteSurvey( survey );
                 } catch ( SurveyException e ) {
-                    target.prependJavascript( "alert(\"Oops! Failed to cancel survey.\")" );
+                    target.prependJavaScript( "alert(\"Oops! Failed to cancel survey.\")" );
                 }
                 update( target, new Change( Change.Type.Removed, survey ) );
             }

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.dao;
 
 import com.mindalliance.channels.core.model.Segment;
+import org.apache.wicket.markup.MarkupType;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public interface Importer {
      *
      * @return -- a mime type
      */
-    String getMimeType();
+    MarkupType getMimeType();
 
     /**
      * Current version

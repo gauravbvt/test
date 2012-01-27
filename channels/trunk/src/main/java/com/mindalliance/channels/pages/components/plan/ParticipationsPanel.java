@@ -7,6 +7,9 @@ import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.NameRange;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -14,9 +17,6 @@ import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.core.util.NameRange;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -96,8 +96,8 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                 nameRange = new NameRange();
                 addRangesPanel();
                 addParticipationsTable();
-                target.addComponent( nameRangePanel );
-                target.addComponent( participationsTable );
+                target.add( nameRangePanel );
+                target.add( participationsTable );
             }
         } );
         add( indexedOnChoices );
@@ -174,9 +174,9 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                 addWithoutActorCheckBox();
                 addRangesPanel();
                 addParticipationsTable();
-                target.addComponent( withoutActorCheckBox );
-                target.addComponent( nameRangePanel );
-                target.addComponent( participationsTable );
+                target.add( withoutActorCheckBox );
+                target.add( nameRangePanel );
+                target.add( participationsTable );
             }
         } );
         withActorCheckBox.setOutputMarkupId( true );
@@ -194,9 +194,9 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                 nameRange = new NameRange();
                 addRangesPanel();
                 addParticipationsTable();
-                target.addComponent( withActorCheckBox );
-                target.addComponent( nameRangePanel );
-                target.addComponent( participationsTable );
+                target.add( withActorCheckBox );
+                target.add( nameRangePanel );
+                target.add( participationsTable );
             }
         } );
         withoutActorCheckBox.setOutputMarkupId( true );
@@ -283,7 +283,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         nameRange = range;
         nameRangePanel.setSelected( target, range );
         addParticipationsTable();
-        target.addComponent( participationsTable );
+        target.add( participationsTable );
     }
 
     public void update( AjaxRequestTarget target, Object object, String action ) {
@@ -291,14 +291,14 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             if ( action.equals( "select" ) ) {
                 setSelectedParticipation( (ParticipationWrapper) object );
                 addParticipation();
-                target.addComponent( participationDiv );
+                target.add( participationDiv );
             } else {
                 if ( action.equals( "entity named" ) ) {
                     addParticipationsTable();
-                    target.addComponent( participationsTable );
+                    target.add( participationsTable );
                     selectedParticipation = null;
                     addParticipation();
-                    target.addComponent( participationDiv );
+                    target.add( participationDiv );
                     update(
                             target,
                             new Change(

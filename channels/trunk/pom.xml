@@ -70,6 +70,13 @@
         <url>https://wush.net/trac/mindalliance/browser/channels/trunk</url>
     </scm>
 
+    <repositories>
+        <repository>
+            <id>googlecode</id>
+            <url>http://jqwicket.googlecode.com/svn/m2-repo/releases/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>aopalliance</groupId>
@@ -263,7 +270,7 @@
         <!--  WICKET DEPENDENCIES -->
         <dependency>
             <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket</artifactId>
+            <artifactId>wicket-core</artifactId>
             <version>${wicket.version}</version>
         </dependency>
 
@@ -355,16 +362,12 @@
             <!-- Download from: http://www.geonames.org/source-code/geonames-1.0.1.jar -->
             <!-- Install with: mvn install:install-file -DgroupId=org.geonames -DartifactId=geonames -Dversion=1.0.1 -Dpackaging=jar -Dfile=... -->
         </dependency>
+
+        <!-- JQWicket -->
         <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>gmap2</artifactId>
-            <version>${wicket.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>com.google.code.jqwicket</groupId>
+            <artifactId>jqwicket</artifactId>
+            <version>0.8</version>
         </dependency>
 
         <!-- Database -->
@@ -729,9 +732,11 @@
 
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>
-        <wicket.version>1.4.15</wicket.version>
+        <wicket.version>1.5.4</wicket.version>
         <jetty.version>6.1.4</jetty.version>
-        <slf4j.version>1.5.11</slf4j.version>
+        <!--<slf4j.version>1.5.11</slf4j.version>-->
+
+        <slf4j.version>1.5.6</slf4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <contextPath>/channels</contextPath>
     </properties>

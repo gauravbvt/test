@@ -108,7 +108,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addFlowsPanel();
-                target.addComponent( flowsPanel );
+                target.add( flowsPanel );
             }
         } );
         add( infoFilterField );
@@ -118,7 +118,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addFlowsPanel();
-                target.addComponent( flowsPanel );
+                target.add( flowsPanel );
             }
         } );
         add( taskFilterField );
@@ -185,7 +185,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
             identifiableFilters.put( property, identifiable );
         }
         addFlowsPanel();
-        target.addComponent( flowsPanel );
+        target.add( flowsPanel );
     }
 
     @Override

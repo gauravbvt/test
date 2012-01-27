@@ -12,7 +12,6 @@ import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.diagrams.DisseminationDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -26,6 +25,7 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -173,12 +173,12 @@ public class DisseminationPanel extends FloatingCommandablePanel {
                 if ( !reducedToFit ) {
                     String domIdentifier = DOM_IDENTIFIER;
                     script = "wicketAjaxGet('"
-                            + getCallbackUrl( true )
+                            + getCallbackUrl(  )
                             + "&width='+$('" + domIdentifier + "').width()+'"
                             + "&height='+$('" + domIdentifier + "').height()";
                 } else {
                     script = "wicketAjaxGet('"
-                            + getCallbackUrl( true )
+                            + getCallbackUrl(  )
                             + "'";
                 }
                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
@@ -190,8 +190,8 @@ public class DisseminationPanel extends FloatingCommandablePanel {
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
                 if ( !reducedToFit ) {
-                    String swidth = requestCycle.getRequest().getParameter( "width" );
-                    String sheight = requestCycle.getRequest().getParameter( "height" );
+                    String swidth = requestCycle.getRequest().getRequestParameters().getParameterValue( "width" ).toString();
+                    String sheight = requestCycle.getRequest().getRequestParameters().getParameterValue( "height" ).toString();
                     diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
                     diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
                 } else {
@@ -199,9 +199,9 @@ public class DisseminationPanel extends FloatingCommandablePanel {
                 }
                 reducedToFit = !reducedToFit;
                 addDisseminationDiagram();
-                target.addComponent( disseminationDiagramPanel );
+                target.add( disseminationDiagramPanel );
                 addViewingControls();
-                target.addComponent( sizingLabel );
+                target.add( sizingLabel );
             }
         } );
        // makeVisible( sizingLabel, getSubject() != null );
@@ -250,9 +250,9 @@ public class DisseminationPanel extends FloatingCommandablePanel {
                 addCaption();
                 addDisseminationDiagram();
                 addDisseminationTable();
-                target.addComponent( captionLabel );
-                target.addComponent( disseminationDiagramPanel );
-                target.addComponent( disseminationTablePanel );
+                target.add( captionLabel );
+                target.add( disseminationDiagramPanel );
+                target.add( disseminationTablePanel );
             }
         } );
         getContentContainer().addOrReplace( subjectChoice );
@@ -269,12 +269,12 @@ public class DisseminationPanel extends FloatingCommandablePanel {
                 addDisseminationDiagram();
                 addDisseminationTable();
                 addSubjectChoice();
-                target.addComponent( captionLabel );
-                target.addComponent( tableCaptionLabel );
-                target.addComponent( subjectChoice );
-                target.addComponent( showTargetsCheckBox );
-                target.addComponent( disseminationDiagramPanel );
-                target.addComponent( disseminationTablePanel );
+                target.add( captionLabel );
+                target.add( tableCaptionLabel );
+                target.add( subjectChoice );
+                target.add( showTargetsCheckBox );
+                target.add( disseminationDiagramPanel );
+                target.add( disseminationTablePanel );
             }
         };
         showSourcesCheckBox.setEnabled( isPart() );
@@ -289,12 +289,12 @@ public class DisseminationPanel extends FloatingCommandablePanel {
                 addDisseminationDiagram();
                 addDisseminationTable();
                 addSubjectChoice();
-                target.addComponent( captionLabel );
-                target.addComponent( tableCaptionLabel );
-                target.addComponent( subjectChoice );
-                target.addComponent( showSourcesCheckBox );
-                target.addComponent( disseminationDiagramPanel );
-                target.addComponent( disseminationTablePanel );
+                target.add( captionLabel );
+                target.add( tableCaptionLabel );
+                target.add( subjectChoice );
+                target.add( showSourcesCheckBox );
+                target.add( disseminationDiagramPanel );
+                target.add( disseminationTablePanel );
             }
         };
         showTargetsCheckBox.setEnabled( isPart() );

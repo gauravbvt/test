@@ -84,7 +84,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                     public void onClick( AjaxRequestTarget target ) {
                         moveToTop( classification );
                         addClassificationsList();
-                        target.addComponent( classificationsContainer );
+                        target.add( classificationsContainer );
                         update( target, new Change( Change.Type.Updated, getPlan(), "classifications" ) );
                     }
                 };
@@ -96,7 +96,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                     public void onClick( AjaxRequestTarget target ) {
                         selectedClassification = classification;
                         addClassificationIndex();
-                        target.addComponent( indexContainer );
+                        target.add( indexContainer );
                     }
                 };
                 moreLink.setVisible( isReferenced( classification ) );
@@ -107,12 +107,12 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                     public void onClick( AjaxRequestTarget target ) {
                         delete( classification );
                         addClassificationsList();
-                        target.addComponent( classificationsContainer );
+                        target.add( classificationsContainer );
                         if ( selectedClassification != null && selectedClassification.equals( classification ) ) {
                             selectedClassification = null;
                         }
                         addClassificationIndex();
-                        target.addComponent( indexContainer );
+                        target.add( indexContainer );
                         update( target, new Change( Change.Type.Updated, getPlan(), "classifications" ) );
                     }
                 };
@@ -181,12 +181,12 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 Classification classification = addClassification();
                 if ( classification != null ) {
                     newClassificationName = null;
-                    target.addComponent( newClassificationField );
+                    target.add( newClassificationField );
                     selectedClassification = classification;
                     addClassificationsList();
-                    target.addComponent( classificationsContainer );
+                    target.add( classificationsContainer );
                     addClassificationIndex();
-                    target.addComponent( indexContainer );
+                    target.add( indexContainer );
                 }
             }
         } );

@@ -2,10 +2,10 @@ package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Tag;
+import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
-import com.mindalliance.channels.core.util.NameRange;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
@@ -192,7 +192,7 @@ public class TagDomainPanel extends AbstractUpdatablePanel implements NameRangea
         nameRange = range;
         nameRangePanel.setSelected( target, range );
         addTags();
-        target.addComponent( tagsContainer );
+        target.add( tagsContainer );
     }
 
     private class IndexedTagPanel extends AbstractUpdatablePanel {

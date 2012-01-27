@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.FilterableEntityFlowsPanel;
@@ -106,8 +106,8 @@ public class EntitiesPanel<T extends ModelEntity> extends AbstractUpdatablePanel
             } else {
                 addEntitiesNetworkPanel();
                 addEntityFlowsPanel();
-                target.addComponent( entitiesNetworkPanel );
-                target.addComponent( entityFlowPanel );
+                target.add( entitiesNetworkPanel );
+                target.add( entityFlowPanel );
             }
         } else {
             super.updateWith( target, change, updated );

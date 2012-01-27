@@ -126,6 +126,6 @@ import java.util.List;
          */
         protected void resetTable( AjaxRequestTarget target ) {
             init();
-            target.addComponent( this );
+            target.add( this );
         }
     }

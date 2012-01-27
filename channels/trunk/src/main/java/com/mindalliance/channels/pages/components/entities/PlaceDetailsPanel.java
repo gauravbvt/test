@@ -4,12 +4,15 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.GeoLocation;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.NameRange;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
@@ -18,9 +21,6 @@ import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.core.util.NameRange;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -164,7 +164,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssues( withinField, getPlace(), "within" );
-                target.addComponent( withinField );
+                target.add( withinField );
                 refreshPlacesWithin( target );
                 update( target, new Change( Change.Type.Updated, getPlace(), "within" ) );
             }
@@ -202,9 +202,9 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
 
     private void refreshPlacesWithin( AjaxRequestTarget target ) {
         addPlacesWithin();
-        target.addComponent( withinPlacesMapLink );
-        target.addComponent( nameRangePanel );
-        target.addComponent( placesWithinTable );
+        target.add( withinPlacesMapLink );
+        target.add( nameRangePanel );
+        target.add( placesWithinTable );
     }
 
     private void addGeoLocationList() {
@@ -252,11 +252,11 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         postalCodeField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssues( geonameField, getPlace(), "geoname" );
-                target.addComponent( geonameField );
+                target.add( geonameField );
                 addIssues( postalCodeField, getPlace(), "postalCode" );
-                target.addComponent( postalCodeField );
+                target.add( postalCodeField );
                 addIssues( withinField, getPlace(), "within" );
-                target.addComponent( withinField );
+                target.add( withinField );
                 refreshPlacesWithin( target );
                 update( target, new Change( Change.Type.Updated, getPlace(), "postalCode" ) );
             }
@@ -287,13 +287,13 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addGeoLocationList();
-                target.addComponent( geoLocationsContainer );
+                target.add( geoLocationsContainer );
                 addIssues( geonameField, getPlace(), "geoname" );
-                target.addComponent( geonameField );
+                target.add( geonameField );
                 addIssues( postalCodeField, getPlace(), "postalCode" );
-                target.addComponent( postalCodeField );
+                target.add( postalCodeField );
                 addIssues( withinField, getPlace(), "within" );
-                target.addComponent( withinField );
+                target.add( withinField );
                 refreshPlacesWithin( target );
                 update( target, new Change( Change.Type.Updated, getPlace(), "geoname" ) );
             }
@@ -397,7 +397,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         nameRange = range;
         nameRangePanel.setSelected( target, range );
         addPlacesWithin();
-        target.addComponent( placesWithinTable );
+        target.add( placesWithinTable );
     }
 
     /**
@@ -590,8 +590,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 @Override
                 protected void onUpdate( AjaxRequestTarget target ) {
                     addIssues( postalCodeField, getPlace(), "postalCode" );
-                    target.addComponent( postalCodeField );
-                    target.addComponent( geoLocationsContainer );
+                    target.add( postalCodeField );
+                    target.add( geoLocationsContainer );
                     refreshPlacesWithin( target );
                     update( target, new Change( Change.Type.Updated, getPlace(), "geoLocation" ) );
                 }

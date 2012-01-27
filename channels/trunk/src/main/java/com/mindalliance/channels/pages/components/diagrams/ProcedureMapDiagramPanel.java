@@ -12,7 +12,7 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.pages.PlanPage;
-import com.mindalliance.channels.pages.png.ProceduresPage;
+import com.mindalliance.channels.pages.png.ProceduresPng;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,21 +84,21 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
         sb.append("=");
         sb.append( segment == null ? "NONE" : segment.getId() );
         sb.append( "&" );
-        sb.append( ProceduresPage.SUMMARIZE );
+        sb.append( ProceduresPng.SUMMARIZE );
         sb.append("=");
         sb.append( summarizeByOrgType && summarizeByRole
-                ? ProceduresPage.SUMMARIZE_BY_ORG_TYPE_AND_ROLE
+                ? ProceduresPng.SUMMARIZE_BY_ORG_TYPE_AND_ROLE
                 : summarizeByOrgType
-                ? ProceduresPage.SUMMARIZE_BY_ORG_TYPE
+                ? ProceduresPng.SUMMARIZE_BY_ORG_TYPE
                 : summarizeByOrg
-                ? ProceduresPage.SUMMARIZE_BY_ORG
+                ? ProceduresPng.SUMMARIZE_BY_ORG
                 : summarizeByRole
-                ? ProceduresPage.SUMMARIZE_BY_ROLE
+                ? ProceduresPng.SUMMARIZE_BY_ROLE
                 : "NONE" );
         if ( focusEntity != null ) {
-            sb.append( "&" ); sb.append( ProceduresPage.FOCUS_CLASS ); sb.append( "=");
+            sb.append( "&" ); sb.append( ProceduresPng.FOCUS_CLASS ); sb.append( "=");
             sb.append( focusEntity.getClass().getSimpleName() );
-            sb.append( "&" ); sb.append( ProceduresPage.FOCUS_ID ); sb.append( "=");
+            sb.append( "&" ); sb.append( ProceduresPng.FOCUS_ID ); sb.append( "=");
             sb.append( focusEntity.getId() );
         }
         double[] diagramSize = getDiagramSize();

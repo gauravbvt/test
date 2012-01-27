@@ -286,7 +286,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         } else {
             showAspect( aspect, change );
         }
-        target.addComponent( aspectPanel );
+        target.add( aspectPanel );
     }
 
     @Override
@@ -363,8 +363,8 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         /*
                 aspectShown = aspect;
                 showAspect( aspect );
-                target.addComponent( headerTitle );
-                target.addComponent( aspectPanel );
+                target.add( headerTitle );
+                target.add( aspectPanel );
         */
         releaseAspectShown();
         aspectShown = aspect;
@@ -396,9 +396,9 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         public void refresh( AjaxRequestTarget target ) {
             refreshMenus( target );
             adjustComponents();
-            target.addComponent( banner );
+            target.add( banner );
             setAspectShown( target, aspectShown );
-            target.addComponent( aspectPanel );
+            target.add( aspectPanel );
         }
     */
 
@@ -409,8 +409,8 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      */
     public void refreshMenus( AjaxRequestTarget target ) {
         addActionsMenu();
-        target.addComponent( actionsMenu );
-        target.addComponent( showMenu );
+        target.add( actionsMenu );
+        target.add( showMenu );
     }
 
     public MenuPanel getShowMenu() {
@@ -419,10 +419,10 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        target.addComponent( actionsMenu );
+        target.add( actionsMenu );
         adjustComponents();
         annotateHeaderTitle( getObject(), ( (Channels) getApplication() ).getAnalyst() );
-        target.addComponent( banner );
+        target.add( banner );
         super.updateWith( target, change, updated );
     }
 
@@ -431,7 +431,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         refreshTitle( target );
         refreshMenus( target );
         adjustComponents();
-        target.addComponent( banner );
+        target.add( banner );
         if ( change.isUnknown() || change.isDisplay() || change.isModified() || change.isSelected() ) {
             showAspect( aspect, change, target );
         }

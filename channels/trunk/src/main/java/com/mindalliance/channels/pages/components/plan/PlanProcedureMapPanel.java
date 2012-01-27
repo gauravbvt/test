@@ -11,7 +11,6 @@ import com.mindalliance.channels.pages.components.diagrams.ProcedureMapDiagramPa
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -24,6 +23,7 @@ import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -144,7 +144,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addProcedureMapDiagramPanel();
-                target.addComponent( procedureMapDiagramPanel );
+                target.add( procedureMapDiagramPanel );
                 Change change = isPlanSelected()
                         ? new Change( Change.Type.Selected, getPlan() )
                         : new Change( Change.Type.Selected, segment );
@@ -179,9 +179,9 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addFocusEntityField();
-                target.addComponent( focusField );
+                target.add( focusField );
                 displayButton.setEnabled( isFocusSelected() );
-                target.addComponent( displayButton );
+                target.add( displayButton );
             }
         } );
         addOrReplace( focusKindChoice );
@@ -211,9 +211,9 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 displayButton.setEnabled( isFocusSelected() );
-                target.addComponent( displayButton );
+                target.add( displayButton );
                 makeVisible( sizingLabel, isFocusSelected() );
-                target.addComponent( sizingLabel );
+                target.add( sizingLabel );
                 Change change = isPlanSelected()
                         ? new Change( Change.Type.Selected, getPlan() )
                         : new Change( Change.Type.Selected, segment );
@@ -243,7 +243,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addProcedureMapDiagramPanel();
-                target.addComponent( procedureMapDiagramPanel );
+                target.add( procedureMapDiagramPanel );
             }
         });
         addOrReplace( summarizeChoice );
@@ -255,7 +255,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 addProcedureMapDiagramPanel();
-                target.addComponent( procedureMapDiagramPanel );
+                target.add( procedureMapDiagramPanel );
             }
         });
         displayButton.setOutputMarkupId( true );
@@ -321,12 +321,12 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                 if ( !reducedToFit ) {
                     String domIdentifier = DOM_IDENTIFIER;
                     script = "wicketAjaxGet('"
-                            + getCallbackUrl( true )
+                            + getCallbackUrl( )
                             + "&width='+$('" + domIdentifier + "').width()+'"
                             + "&height='+$('" + domIdentifier + "').height()";
                 } else {
                     script = "wicketAjaxGet('"
-                            + getCallbackUrl( true )
+                            + getCallbackUrl( )
                             + "'";
                 }
                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
@@ -338,8 +338,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
                 if ( !reducedToFit ) {
-                    String swidth = requestCycle.getRequest().getParameter( "width" );
-                    String sheight = requestCycle.getRequest().getParameter( "height" );
+                    String swidth = requestCycle.getRequest().getQueryParameters().getParameterValue( "width" ).toString();
+                    String sheight = requestCycle.getRequest().getQueryParameters().getParameterValue( "height" ).toString();
                     diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
                     diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
                 } else {
@@ -347,9 +347,9 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                 }
                 reducedToFit = !reducedToFit;
                 addProcedureMapDiagramPanel();
-                target.addComponent( procedureMapDiagramPanel );
+                target.add( procedureMapDiagramPanel );
                 addMapSizing();
-                target.addComponent( sizingLabel );
+                target.add( sizingLabel );
             }
         } );
         makeVisible( sizingLabel, isFocusSelected() );
@@ -502,9 +502,9 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     public void refreshSegment( AjaxRequestTarget target, Segment segment ) {
         this.segment = segment;
         addSegmentChoice();
-        target.addComponent( segmentChoice );
+        target.add( segmentChoice );
         addProcedureMapDiagramPanel();
-        target.addComponent( procedureMapDiagramPanel );
+        target.add( procedureMapDiagramPanel );
     }
 }
 

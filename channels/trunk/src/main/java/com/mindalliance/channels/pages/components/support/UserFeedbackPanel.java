@@ -102,7 +102,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 clientInfo = getClientProperties();
                 makeVisible( feedbackContainer, true );
-                target.addComponent( feedbackContainer );
+                target.add( feedbackContainer );
             }
         };
         add( newFeedback );
@@ -168,9 +168,9 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
     private void updateFields( AjaxRequestTarget target ) {
-        target.addComponent( questionCheckBox );
-        target.addComponent( problemCheckBox );
-        target.addComponent( suggestionCheckBox );
+        target.add( questionCheckBox );
+        target.add( problemCheckBox );
+        target.add( suggestionCheckBox );
     }
 
     private void addFeedbackButtons() {
@@ -182,14 +182,14 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
                     String alert = success
                             ? "Feedback sent. Thank you!"
                             : "Oops! Your feedback could not be sent. Sorry.";
-                    target.appendJavascript( "alert('" + alert + "');" );
+                    target.appendJavaScript( "alert('" + alert + "');" );
                     resetFeedback();
                     updateFields( target );
                     makeVisible( feedbackContainer, !success );
-                    target.addComponent( feedbackContainer );
+                    target.add( feedbackContainer );
                 } else {
-                    target.appendJavascript( "alert('Please enter a short text.');" );
-                    target.addComponent( feedbackContainer );
+                    target.appendJavaScript( "alert('Please enter a short text.');" );
+                    target.add( feedbackContainer );
                 }
             }
         };
@@ -202,7 +202,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
                 resetFeedback();
                 updateFields( target );
                 makeVisible( feedbackContainer, false );
-                target.addComponent( feedbackContainer );
+                target.add( feedbackContainer );
             }
         };
         feedbackContainer.add( cancelButton );

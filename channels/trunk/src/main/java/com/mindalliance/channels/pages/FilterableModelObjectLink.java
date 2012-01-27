@@ -8,8 +8,8 @@ import com.mindalliance.channels.pages.components.entities.EntityLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -42,7 +42,7 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
     /**
      * Filter/unfilter image.
      */
-    private Image image;
+    private WebMarkupContainer image;
     /**
      * Link to (de)activate filtering.
      */
@@ -105,7 +105,7 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 filterable.toggleFilter( getLinkedObject(), filterProperty, target );
                 addImage();
-                target.addComponent( image );
+                target.add( image );
             }
         };
         add( filterLink );
@@ -116,9 +116,9 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
     }
 
     private void addImage() {
-        image = new Image( "lockImage" );
-        image.add( new AttributeModifier( "src", true, new PropertyModel<String>( this, "imageSource" ) ) );
-        image.add( new AttributeModifier( "title", true, new PropertyModel<String>( this, "imageTitle" ) ) );
+        image = new WebMarkupContainer( "lockImage" );
+        image.add( new AttributeModifier( "src", new PropertyModel<String>( this, "imageSource" ) ) );
+        image.add( new AttributeModifier( "title", new PropertyModel<String>( this, "imageTitle" ) ) );
         image.setOutputMarkupId( true );
         filterLink.addOrReplace( image );
     }

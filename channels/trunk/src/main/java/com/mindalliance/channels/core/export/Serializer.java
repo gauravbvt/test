@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.Importer;
 import com.mindalliance.channels.core.dao.Journal;
 import com.mindalliance.channels.core.model.Segment;
+import org.apache.wicket.markup.MarkupType;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
@@ -61,8 +62,8 @@ public class Serializer implements Importer, Exporter {
     /**
      * {@inheritDoc}
      */
-    public String getMimeType() {
-        return "application/x-java-serialized-object";
+    public MarkupType getMimeType() {
+        return new MarkupType( "ser", "application/x-java-serialized-object" );
     }
 
     /**

@@ -145,7 +145,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 if ( isUnknownOtherSelected() ) {
                     makeVisible( secondChoice, true );
-                    target.addComponent( secondChoice );
+                    target.add( secondChoice );
                 } else if ( isOtherNodeChanged() )
                     update( target, new Change( Change.Type.Selected, selectedOtherNode, "other" ) );
             }
@@ -216,8 +216,8 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
                 }
                 if ( isOtherNodeChanged() )
                     update( target, new Change( Change.Type.Selected, selectedOtherNode, "other" ) );
-                target.addComponent( firstChoiceInput );
-                target.addComponent( secondChoice );
+                target.add( firstChoiceInput );
+                target.add( secondChoice );
             }
         } );
         secondChoice.add( secondChoiceInput );

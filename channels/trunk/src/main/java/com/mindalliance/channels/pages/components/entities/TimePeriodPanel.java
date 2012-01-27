@@ -62,7 +62,7 @@ public class TimePeriodPanel extends AbstractCommandablePanel {
                 new PropertyModel<Boolean>( this, "dayOn" ) ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 makeVisible( periodContainer, isDayOn() );
-                target.addComponent( periodContainer );
+                target.add( periodContainer );
                 update( target, new Change( Change.Type.Updated, getAvailable(), "availability" ) );
             }
         };
@@ -88,10 +88,10 @@ public class TimePeriodPanel extends AbstractCommandablePanel {
         addFromMinute();
         addToHour();
         addToMinute();
-        target.addComponent( fromHourSpinner );
-        target.addComponent( fromMinuteSpinner );
-        target.addComponent( toHourSpinner );
-        target.addComponent( toMinuteSpinner );
+        target.add( fromHourSpinner );
+        target.add( fromMinuteSpinner );
+        target.add( toHourSpinner );
+        target.add( toMinuteSpinner );
         super.updateWith( target, change, updated );
     }
 

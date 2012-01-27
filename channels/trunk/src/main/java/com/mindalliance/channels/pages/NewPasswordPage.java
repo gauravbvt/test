@@ -7,7 +7,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -18,6 +17,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.mail.MailSender;
 
@@ -73,10 +73,10 @@ public class NewPasswordPage extends WebPage {
                     username = "";
                     email= "";
                     addIdentityFields();
-                    target.addComponent( requestForm );
+                    target.add( requestForm );
                 }
-                target.addComponent( outcomeContainer );
-                target.addComponent(  loginLink );
+                target.add( outcomeContainer );
+                target.add(  loginLink );
             }
         };
         requestForm.add( submitLink );

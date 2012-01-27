@@ -142,7 +142,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         jobActorRange = range;
         jobsDiv.addOrReplace( makeJobsTable() );
         rangePanel.setSelected( target, range );
-        target.addComponent( jobsDiv );
+        target.add( jobsDiv );
     }
 
     private void addJobs() {
@@ -218,7 +218,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         transferFromChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addJobTransferPanel( jobTransferDiv );
-                target.addComponent( jobTransferPanel );
+                target.add( jobTransferPanel );
             }
         } );
         jobTransferDiv.add( transferFromChoice );
@@ -243,8 +243,8 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 if ( executeJobTransfers() ) {
                     addJobs();
                     addJobTransfers();
-                    target.addComponent( jobsDiv );
-                    target.addComponent( jobTransferDiv );
+                    target.add( jobsDiv );
+                    target.add( jobTransferDiv );
                     update( target, new Change(
                             Change.Type.Updated,
                             getOrganization(),
@@ -268,7 +268,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             protected void onUpdate( AjaxRequestTarget target ) {
                 addJobTransferPanel( jobTransferDiv );
                 makeVisible( jobTransferDiv, isTransferring() );
-                target.addComponent( jobTransferDiv );
+                target.add( jobTransferDiv );
             }
         } );
         transferCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
@@ -387,10 +387,10 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             protected void onUpdate( AjaxRequestTarget target ) {
                 if ( !getOrganization().getJobs().contains( jobWrapper.getJob() ) ) {
                     addJobPlaybook( null );
-                    target.addComponent( flowsDiv );
+                    target.add( flowsDiv );
                 }
                 jobsDiv.addOrReplace( makeJobsTable() );
-                target.addComponent( jobsDiv );
+                target.add( jobsDiv );
                 update( target, new Change(
                         Change.Type.Updated,
                         getOrganization(),
@@ -424,7 +424,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         titleField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addConfirmedCell( item );
-                target.addComponent( item );
+                target.add( item );
                 if ( !jobWrapper.isMarkedForCreation() && jobWrapper.isConfirmed() ) {
                     update( target, new Change(
                             Change.Type.Updated,
@@ -445,7 +445,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 new Model<String>( "Show flows" ) ) {
             public void onClick( AjaxRequestTarget target ) {
                 addJobPlaybook( jobWrapper.getJob() );
-                target.addComponent( flowsDiv );
+                target.add( flowsDiv );
             }
         };
         makeVisible( flowsLink, !jobWrapper.isMarkedForCreation() && jobWrapper.hasFlows() );
@@ -527,7 +527,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
      */
     public void update( AjaxRequestTarget target, Object object, String action ) {
         makeVisible( doTransfer, !getTransferredJobs().isEmpty() );
-        target.addComponent( doTransfer );
+        target.add( doTransfer );
     }
 
     /**
@@ -858,7 +858,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             entityField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                 protected void onUpdate( AjaxRequestTarget target ) {
                     addConfirmedCell( item );
-                    target.addComponent( item );
+                    target.add( item );
                     if ( !jobWrapper.isMarkedForCreation() ) {
                         update( target, new Change(
                                 Change.Type.Updated,
@@ -1026,7 +1026,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
         protected void resetTable( AjaxRequestTarget target ) {
             initialize();
-            target.addComponent( this );
+            target.add( this );
         }
 
         /**

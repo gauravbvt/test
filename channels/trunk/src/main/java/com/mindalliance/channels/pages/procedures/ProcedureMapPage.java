@@ -6,20 +6,20 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.UserPage;
 import com.mindalliance.channels.pages.components.IndicatorAwareWebContainer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
-import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
     }
 
     public void renderHead( HtmlHeaderContainer container ) {
-        container.getHeaderResponse().renderJavascript( PlanPage.IE7CompatibilityScript, null );
+        container.getHeaderResponse().renderJavaScript( PlanPage.IE7CompatibilityScript, null );
         super.renderHead( container );
     }
 
@@ -96,15 +96,15 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
             public void onClick( AjaxRequestTarget target ) {
                 selector.setGoingForward();
                 makeVisible( goBackLink, selector.canGoBack() );
-                target.addComponent( goBackLink );
+                target.add( goBackLink );
                 showingMap = !showingMap;
                 if ( showingMap ) {
                     selector.resetSelected();
                 }
                 addReportTitle();
-                target.addComponent( reportTitle );
+                target.add( reportTitle );
                 showMapOrReport( target );
-                target.addComponent( showLabel );
+                target.add( showLabel );
             }
         };
         // makeVisible( showLink, ( !showingMap || selector.hasProcedures() ) );
@@ -119,7 +119,7 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
                 if ( change != null ) {
                     changed( change );
                     makeVisible( goBackLink, selector.canGoBack() );
-                    target.addComponent( goBackLink );
+                    target.add( goBackLink );
                     updateWith( target, change, new ArrayList<Updatable>() );
                 }
             }
@@ -135,9 +135,7 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
           channels_logo.add( new AjaxEventBehavior( "onclick") {
               @Override
               protected void onEvent( AjaxRequestTarget target ) {
-                  String homeUrl =  AbstractChannelsWebPage.redirectUrl( "home", getPlan() );
-                  RedirectPage page =  new RedirectPage( homeUrl );
-                  setResponsePage( page );
+                  setResponsePage( UserPage.class, planParameters( getPlan() ) );
               }
           });
           header.add( channels_logo );
@@ -154,8 +152,8 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
         addSelected();
         makeVisible( selector, showingMap );
         makeVisible( selected, !showingMap );
-        target.addComponent( selector );
-        target.addComponent( selected );
+        target.add( selector );
+        target.add( selected );
     }
 
     private void addSelector() {
@@ -221,7 +219,7 @@ public class ProcedureMapPage extends AbstractChannelsWebPage {
             addHeader();
             addSelected();
             addReportTitle();
-            target.addComponent( header );
+            target.add( header );
             showMapOrReport( target );
         }
     }

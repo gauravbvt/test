@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -15,6 +14,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * All participants and agents info needs.
@@ -27,7 +27,7 @@ import org.apache.wicket.model.Model;
 public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
 
     public AllInfoNeedsPage() {
-        super( InfoNeedsPage.class );
+        super( new PageParameters(  ) );
     }
 
     public AllInfoNeedsPage( PageParameters parameters ) {
@@ -47,12 +47,12 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                     protected void populateItem( ListItem<Participation> item ) {
                         PageParameters parameters = new PageParameters();
                         Participation p = item.getModelObject();
-                        parameters.put( PLAN, getUri() );
-                        parameters.put( VERSION, getVersion() );
+                        parameters.set( PLAN, getUri() );
+                        parameters.set( VERSION, getVersion() );
                         Actor actor = p.getActor();
-                        parameters.put( "agent", actor.getId() );
+                        parameters.set( "agent", actor.getId() );
                         String userName = p.getUsername();
-                        parameters.put( "user", userName );
+                        parameters.set( "user", userName );
                         User otherUser = getUserDao().getUserNamed( userName );
                         item.add(
                             new BookmarkablePageLink<InfoNeedsPage>(

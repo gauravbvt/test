@@ -18,24 +18,24 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,66 +139,71 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
             }
         };
 
-        form.add( newPlanSelector().setVisible( getPlans().size() > 1 ),
+        form.add( newPlanSelector().setVisible( getPlans().size() > 1 ) );
+        WebMarkupContainer orgSelectContainer = new WebMarkupContainer( "org-select" );
+        form.add( orgSelectContainer );
+        DropDownChoice<Organization> orgSelector = new DropDownChoice<Organization>( "organization",
+                getOrganizationChoices(),
+                new IChoiceRenderer<Organization>() {
+                    @Override
+                    public Object getDisplayValue(
+                            Organization object ) {
+                        return object.equals(
+                                ALL_ORGS )
+                                ? "All"
+                                : object.getName();
+                    }
 
-                  new WebMarkupContainer( "org-select" ).add( new DropDownChoice<Organization>( "organization",
-                                                                                                getOrganizationChoices(),
-                                                                                                new IChoiceRenderer<Organization>() {
-                                                                                                    @Override
-                                                                                                    public Object getDisplayValue(
-                                                                                                            Organization object ) {
-                                                                                                        return object.equals(
-                                                                                                                ALL_ORGS )
-                                                                                                               ? "All"
-                                                                                                               : object.getName();
-                                                                                                    }
+                    @Override
+                    public String getIdValue(
+                            Organization object,
+                            int index ) {
+                        return object.equals(
+                                ALL_ORGS )
+                                ? ALL
+                                : Long.toString(
+                                object.getId() );
+                    }
+                } );
+        orgSelector.add( newOnChange( "onchange" ) );
+        orgSelectContainer.add( orgSelector );
+        //.setVisible( getOrganizationChoices().size() > 1 ),
+        WebMarkupContainer actorSelectContainer = new WebMarkupContainer( "actor-select" );
+        form.add( actorSelectContainer );
+        DropDownChoice<Specable> actorSelector = new DropDownChoice<Specable>( "actor",
+                getActorChoices(),
+                new IChoiceRenderer<Specable>() {
+                    @Override
+                    public Object getDisplayValue(
+                            Specable object ) {
+                        return object.equals(
+                                ALL_ACTORS )
+                                ? "All"
+                                : Assignments
+                                .stringify(
+                                        object );
+                    }
 
-                                                                                                    @Override
-                                                                                                    public String getIdValue(
-                                                                                                            Organization object,
-                                                                                                            int index ) {
-                                                                                                        return object.equals(
-                                                                                                                ALL_ORGS )
-                                                                                                               ? ALL
-                                                                                                               : Long.toString(
-                                                                                                                       object.getId() );
-                                                                                                    }
-                                                                                                } )
-                                                                      .add( newOnChange( "onchange" ) ) ),
-                  //.setVisible( getOrganizationChoices().size() > 1 ),
+                    @Override
+                    public String getIdValue(
+                            Specable object,
+                            int index ) {
+                        return object.equals(
+                                ALL_ACTORS )
+                                ? ALL
+                                : Long.toString(
+                                ( (ModelObject) object )
+                                        .getId() );
+                    }
+                } );
+        actorSelector.add( newOnChange( "onchange" ) );
+        actorSelectContainer.add( actorSelector );
+        actorSelectContainer.add( actorSelectContainer );
+        //.setVisible( getActorChoices().size() > 1 ),
 
-                  new WebMarkupContainer( "actor-select" ).add( new DropDownChoice<Specable>( "actor",
-                                                                                              getActorChoices(),
-                                                                                              new IChoiceRenderer<Specable>() {
-                                                                                                  @Override
-                                                                                                  public Object getDisplayValue(
-                                                                                                          Specable object ) {
-                                                                                                      return object.equals(
-                                                                                                              ALL_ACTORS )
-                                                                                                             ? "All"
-                                                                                                             : Assignments
-                                                                                                                     .stringify(
-                                                                                                                             object );
-                                                                                                  }
-
-                                                                                                  @Override
-                                                                                                  public String getIdValue(
-                                                                                                          Specable object,
-                                                                                                          int index ) {
-                                                                                                      return object.equals(
-                                                                                                              ALL_ACTORS )
-                                                                                                             ? ALL
-                                                                                                             : Long.toString(
-                                                                                                                     ( (ModelObject) object )
-                                                                                                                             .getId() );
-                                                                                                  }
-                                                                                              } )
-                                                                        .add( newOnChange( "onchange" ) ) )
-                  //.setVisible( getActorChoices().size() > 1 ),
-
-                  /*    , new WebMarkupContainer( "optionals" )
-                .add( new CheckBox( "showingIssues" ).add( newOnChange( "onclick" ) ) )
-                .setVisible( isPlanner() )*/ );
+        /*    , new WebMarkupContainer( "optionals" )
+      .add( new CheckBox( "showingIssues" ).add( newOnChange( "onclick" ) ) )
+      .setVisible( isPlanner() )*/
 
         add( form );
     }
@@ -212,8 +217,8 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
             participationActor = participation.getActor();
         }
         PageParameters pageParameters = page.getPageParameters();
-        long actorId = pageParameters.containsKey( SelectorPanel.ACTOR_PARM ) ? pageParameters
-                .getLong( SelectorPanel.ACTOR_PARM ) : -1;
+        long actorId = pageParameters.getNamedKeys().contains( SelectorPanel.ACTOR_PARM ) ? pageParameters
+                .get( SelectorPanel.ACTOR_PARM ).toLong() : -1;
         if ( actorId > 0 ) {
             try {
                 paramActor = getQueryService().find( Actor.class, actorId );
@@ -223,8 +228,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
         }
         if ( paramActor != null ) {
             if ( user.isPlanner( getPlan().getUri() ) || participationActor != null && participationActor
-                    .equals( paramActor ) )
-            {
+                    .equals( paramActor ) ) {
                 actor = paramActor;
             }
         }
@@ -234,7 +238,8 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
                 if ( participationActor != null ) {
                     actor = participationActor;
                 } else {
-                    throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
+                    throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN,
+                            "Unauthorized access" );
                 }
             }
         }
@@ -242,12 +247,12 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
 
     MarkupContainer newPlanSelector() {
         return new WebMarkupContainer( "switch-plan" ).add( new DropDownChoice<Plan>( "plan-sel",
-                                                                                      new PropertyModel<Plan>( this,
-                                                                                                               "plan" ),
-                                                                                      new PropertyModel<List<? extends Plan>>(
-                                                                                              this,
-                                                                                              "plans" ) )
-                                                                    .add( newOnChange( "onchange" ) ) );
+                new PropertyModel<Plan>( this,
+                        "plan" ),
+                new PropertyModel<List<? extends Plan>>(
+                        this,
+                        "plans" ) )
+                .add( newOnChange( "onchange" ) ) );
     }
 
     /**
@@ -259,9 +264,9 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     public Assignments getAssignments() {
         Assignments as = getAllAssignments();
         return isActorSelected() && isOrgSelected() ? as.notFrom( actor ).withAll( actor, organization )
-                                                    : isActorSelected() ? as.notFrom( actor ).with( actor )
-                                                                        : isOrgSelected() ? as.with( organization )
-                                                                                          : as;
+                : isActorSelected() ? as.notFrom( actor ).with( actor )
+                : isOrgSelected() ? as.with( organization )
+                : as;
     }
 
     /**
@@ -272,9 +277,9 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     @Override
     public ResourceSpec getSelection() {
         return new ResourceSpec( actor instanceof Actor ? (Actor) actor : null,
-                                 actor instanceof Role ? (Role) actor : null,
-                                 actor instanceof Actor && ( (ModelEntity) actor ).isActual() ? null : organization,
-                                 null );
+                actor instanceof Role ? (Role) actor : null,
+                actor instanceof Actor && ( (ModelEntity) actor ).isActual() ? null : organization,
+                null );
     }
 
     @Override
@@ -284,7 +289,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
         return assignments;
     }
 
-    private IBehavior newOnChange( String event ) {
+    private Behavior newOnChange( String event ) {
         return new AjaxFormComponentUpdatingBehavior( event ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -294,7 +299,6 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     }
 
     private void redirect() {
-        setRedirect( true );
         setResponsePage( getPage().getClass(), getParameters() );
     }
 
@@ -307,11 +311,11 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
         PageParameters result = new PageParameters();
         page.getParameters();
         if ( isActorSelected() && getActorChoices().size() > 1 )
-            result.put( ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
+            result.set( ACTOR_PARM, Long.toString( ( (Identifiable) actor ).getId() ) );
         if ( isOrgSelected() && getOrganizationChoices().size() > 1 )
-            result.put( ORGANIZATION_PARM, Long.toString( organization.getId() ) );
+            result.set( ORGANIZATION_PARM, Long.toString( organization.getId() ) );
         if ( showingIssues )
-            result.put( ISSUES_PARM, Boolean.toString( showingIssues ) );
+            result.set( ISSUES_PARM, Boolean.toString( showingIssues ) );
 
         return result;
     }
@@ -329,12 +333,12 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
         setActor( parameters );
         setOrganization( parameters );
         if ( isPlanner() )
-            setShowingIssues( parameters.getAsBoolean( ISSUES_PARM, false ) );
+            setShowingIssues( parameters.get( ISSUES_PARM ).toBoolean( false ) );
         return parameters;
     }
 
     private void setOrganization( PageParameters parameters ) {
-        String orgId = parameters.getString( ORGANIZATION_PARM, ALL );
+        String orgId = parameters.get( ORGANIZATION_PARM ).toString( ALL );
         Assignments as = getAllAssignments();
 
         if ( ALL.equals( orgId ) ) {
@@ -365,7 +369,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
 
     private void setActor( PageParameters parameters ) {
 
-        String actorId = parameters.getString( ACTOR_PARM, ALL );
+        String actorId = parameters.get( ACTOR_PARM ).toString( ALL );
         Specable a = null;
 
         if ( isPlanner() ) {
@@ -392,7 +396,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
             if ( isPlanner() )
                 setValid( false );
             else
-                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
+                throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
         } else
             setActor( a );
     }
@@ -430,7 +434,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
      */
     public List<? extends Specable> getActors() {
         return isActorSelected() || !isPlanner() ? Collections.singletonList( actor )
-                                                 : getAllActors( getAllAssignments() );
+                : getAllActors( getAllAssignments() );
     }
 
     private List<Specable> getAllActors( Assignments as ) {

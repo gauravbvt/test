@@ -5,14 +5,14 @@ import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.Attachment.Type;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.Upload;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.model.AttachmentImpl;
-import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AttachDocument;
 import com.mindalliance.channels.core.command.commands.CopyAttachment;
 import com.mindalliance.channels.core.command.commands.DetachDocument;
+import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.model.AttachmentImpl;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -89,9 +89,9 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private TextField<String> urlField;
 
     /**
-     * The file upload received from the client.
+     * The file uploads received from the client.
      */
-    private FileUpload upload;
+    private List<FileUpload> uploads;
 
     /**
      * The attachment kind (e.g. file or url)
@@ -173,6 +173,11 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             protected void onSubmit( AjaxRequestTarget target, Form<?> form ) {
                 update( target, new Change( Change.Type.Unknown ) );
             }
+
+            @Override
+            protected void onError( AjaxRequestTarget target, Form<?> form ) {
+                target.appendJavaScript( "alert('Upload failed. Please try again." );
+            }
         };
         submit.setOutputMarkupId( true );
         submit.setEnabled( false );
@@ -188,12 +193,12 @@ public class AttachmentPanel extends AbstractCommandablePanel {
 
     private void refresh( AjaxRequestTarget target ) {
         adjustFields();
-        target.addComponent( nameField );
-        target.addComponent( controlsContainer );
-        target.addComponent( uploadField );
-        target.addComponent( urlField );
-        target.addComponent( submit );
-        target.addComponent( attachmentsContainer );
+        target.add( nameField );
+        target.add( controlsContainer );
+        target.add( uploadField );
+        target.add( urlField );
+        target.add( submit );
+        target.add( attachmentsContainer );
     }
 
     private void addUrlField() {
@@ -235,14 +240,14 @@ public class AttachmentPanel extends AbstractCommandablePanel {
 
     private void addUploadField() {
         uploadField = new FileUploadField(
-                "upload", new PropertyModel<FileUpload>( this, "upload" ) );
+                "upload", new PropertyModel<List<FileUpload>>( this, "uploads" ) );
         uploadField.setOutputMarkupId( true );
         uploadField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 makeVisible( submit, true );
                 submit.setEnabled( true );
-                target.addComponent( submit );
+                target.add( submit );
             }
         } );
         controlsContainer.add( uploadField );
@@ -361,7 +366,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 makeVisible( uploadField, Kind.File.equals( k ) );
                 makeVisible( urlField, Kind.URL.equals( k ) );
                 makeVisible( submit, Kind.File.equals( kind ) );
-                target.addComponent( AttachmentPanel.this );
+                target.add( AttachmentPanel.this );
             }
         } );
         controlsContainer.add( kindSelector );
@@ -377,47 +382,49 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         return attachable.getAttachments();
     }
 
-    public FileUpload getUpload() {
-        return upload;
+    public List<FileUpload> getUploads() {
+        return uploads;
     }
 
     /**
-     * Set an upload. Called when user attached a file and then submitted.
+     * Set uploads. Called when user attached a file and then submitted.
      *
-     * @param upload the uploaded file info
+     * @param uploads the uploaded files info
      */
-    public void setUpload( FileUpload upload ) {
-        this.upload = upload;
-        if ( upload != null ) {
-            ModelObject mo = getAttachee();
-            LoggerFactory.getLogger( getClass() ).info( "Attaching file to {}", mo );
-            Attachment attachment = attachmentManager.upload(
-                    getPlan(),
-                    new Upload() {
-                        @Override
-                        public Type getSelectedType() {
-                            return AttachmentPanel.this.getSelectedType();
-                        }
+    public void setUploads( List<FileUpload> uploads ) {
+        this.uploads = uploads;
+        if ( uploads != null ) {
+            for ( final FileUpload upload : uploads ) {
+                ModelObject mo = getAttachee();
+                LoggerFactory.getLogger( getClass() ).info( "Attaching file to {}", mo );
+                Attachment attachment = attachmentManager.upload(
+                        getPlan(),
+                        new Upload() {
+                            @Override
+                            public Type getSelectedType() {
+                                return AttachmentPanel.this.getSelectedType();
+                            }
 
-                        @Override
-                        public String getName() {
-                            return AttachmentPanel.this.getName();
-                        }
+                            @Override
+                            public String getName() {
+                                return AttachmentPanel.this.getName();
+                            }
 
-                        @Override
-                        public String getFileName() {
-                            return AttachmentPanel.this.upload.getClientFileName();
-                        }
+                            @Override
+                            public String getFileName() {
+                                return upload.getClientFileName();
+                            }
 
-                        @Override
-                        public InputStream getInputStream() throws IOException {
-                            return AttachmentPanel.this.upload.getInputStream();
-                        }
-                    } );
-            // Only add non-redundant attachment.
-            if ( attachment != null ) {
-                doCommand( new AttachDocument( User.current().getUsername(), mo, attachablePath, attachment ) );
-                postProcess( attachment );
+                            @Override
+                            public InputStream getInputStream() throws IOException {
+                                return upload.getInputStream();
+                            }
+                        } );
+                // Only add non-redundant attachment.
+                if ( attachment != null ) {
+                    doCommand( new AttachDocument( User.current().getUsername(), mo, attachablePath, attachment ) );
+                    postProcess( attachment );
+                }
             }
         }
     }

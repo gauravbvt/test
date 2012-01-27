@@ -20,7 +20,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.target.basic.RedirectRequestTarget;
+import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,8 +73,8 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                                 @Override
                                 public void onClick( AjaxRequestTarget target ) {
                                     getCommander().userLeftPlan( User.current().getUsername() );
-                                    getRequestCycle().setRequestTarget(
-                                            new RedirectRequestTarget( "logout" ) );
+                                    getRequestCycle().
+                                            scheduleRequestHandlerAfterCurrent( new RedirectRequestHandler( "logout" ) );
                                 }
                             } ) );
 

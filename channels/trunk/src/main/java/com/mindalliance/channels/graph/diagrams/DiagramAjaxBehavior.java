@@ -101,7 +101,7 @@ public abstract class DiagramAjaxBehavior extends AbstractDefaultAjaxBehavior {
         cb.append("javascript:");
         //cb.append("{alert('boo');");
         String script = "wicketAjaxGet('"
-                        + getCallbackUrl(true)
+                        + getCallbackUrl( )
                         + (graphId != null ? "&graph=" + graphId : "")
                         + (vertexId != null ? "&vertex=" + vertexId : "")
                         + (edgeId != null ? "&edge=" + edgeId : "");

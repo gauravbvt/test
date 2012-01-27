@@ -101,7 +101,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssuesTable();
-                target.addComponent( issuesTable );
+                target.add( issuesTable );
             }
         } );
         issueTypeChoice.setOutputMarkupId( true );
@@ -143,7 +143,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
         // only about is filtered; property is ignored
         about = identifiable == about ? null : (ModelObject) identifiable;
         addIssuesTable();
-        target.addComponent( issuesTable );
+        target.add( issuesTable );
     }
 
     /**
@@ -165,7 +165,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
      */
     protected void updateIssuesTable( AjaxRequestTarget target ) {
         addIssuesTable();
-        target.addComponent( issuesTable );
+        target.add( issuesTable );
     }
 
     /**
@@ -236,23 +236,20 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                         update( target, new Change( Change.Type.Expanded, survey ) );
                     } catch ( SurveyException e ) {
                         LOG.error( "Fail to get or create survey on " + issue.getDetectorLabel() );
-                        target.prependJavascript( "alert(\"Oops! Could not get or create survey.\")" );
-                        target.addComponent( AbstractIssueTablePanel.this );
+                        target.prependJavaScript( "alert(\"Oops! Could not get or create survey.\")" );
+                        target.add( AbstractIssueTablePanel.this );
                     }
                 }
             };
             add( link );
             WebMarkupContainer image = new WebMarkupContainer( "image" );
             image.add( new AttributeModifier( "src",
-                                              true,
                                               new Model<String>( surveyed ?
                                                                  "images/survey_small.png" :
                                                                  "images/survey_add_small.png" ) ) );
             image.add( new AttributeModifier( "alt",
-                                              true,
                                               new Model<String>( surveyed ? "View survey" : "Create new survey" ) ) );
             image.add( new AttributeModifier( "title",
-                                              true,
                                               new Model<String>( surveyed ? "View survey" : "Create new survey" ) ) );
             link.add( image );
         }

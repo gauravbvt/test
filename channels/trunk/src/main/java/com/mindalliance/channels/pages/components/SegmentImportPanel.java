@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -13,6 +13,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Segment import panel.
@@ -31,9 +32,9 @@ public class SegmentImportPanel extends AbstractCommandablePanel {
     private SubmitLink submitLink;
 
     /**
-     * The file upload.
+     * The file uploads.
      */
-    private FileUpload upload;
+    private List<FileUpload> uploads;
 
     public SegmentImportPanel( String id ) {
         super( id );
@@ -41,10 +42,10 @@ public class SegmentImportPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        importDialog = new WebMarkupContainer("import");
+        importDialog = new WebMarkupContainer( "import" );
         importDialog.setOutputMarkupId( true );
-        makeVisible(importDialog, false);
-        add(importDialog);
+        makeVisible( importDialog, false );
+        add( importDialog );
         addUploadField();
         addCancel();
         addSubmit();
@@ -54,20 +55,20 @@ public class SegmentImportPanel extends AbstractCommandablePanel {
     private void addCancel() {
         AjaxFallbackLink closeLink = new AjaxFallbackLink( "cancel" ) {
             public void onClick( AjaxRequestTarget target ) {
-                close(target);
+                close( target );
             }
         };
         importDialog.add( closeLink );
     }
 
-    public void open( AjaxRequestTarget target) {
+    public void open( AjaxRequestTarget target ) {
         makeVisible( importDialog, true );
-        target.addComponent( importDialog );
+        target.add( importDialog );
     }
 
-    public void close(AjaxRequestTarget target) {
+    public void close( AjaxRequestTarget target ) {
         makeVisible( importDialog, false );
-        target.addComponent( importDialog );
+        target.add( importDialog );
     }
 
     /**
@@ -90,17 +91,17 @@ public class SegmentImportPanel extends AbstractCommandablePanel {
 
     public void refresh( AjaxRequestTarget target ) {
         adjustFields();
-        target.addComponent( submitLink );
+        target.add( submitLink );
     }
 
     private void addUploadField() {
         FileUploadField segmentImportField = new FileUploadField(
-                "import", new PropertyModel<FileUpload>( this, "upload" ) );
+                "import", new PropertyModel<List<FileUpload>>( this, "uploads" ) );
         segmentImportField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 submitLink.setEnabled( true );
-                target.addComponent( submitLink );
+                target.add( submitLink );
             }
         } );
         importDialog.add( segmentImportField );
@@ -109,22 +110,24 @@ public class SegmentImportPanel extends AbstractCommandablePanel {
     /**
      * Set an upload. Called when user attached a file and then submitted.
      *
-     * @param upload the uploaded file info
+     * @param uploads the uploaded files info
      */
-    public void setUpload( FileUpload upload ) {
-        this.upload = upload;
-        if ( upload != null ) {
-            try {
-                getPlanManager().importSegment( User.current().getUsername(), User.plan(), upload.getInputStream() );
-            } catch ( IOException e ) {
-                LoggerFactory.getLogger( getClass() ).warn( "Unable to get upload stream", e );
+    public void setUploads( List<FileUpload> uploads ) {
+        this.uploads = uploads;
+        if ( uploads != null ) {
+            for ( FileUpload upload : uploads ) {
+                try {
+                    getPlanManager().importSegment( User.current().getUsername(), User.plan(), upload.getInputStream() );
+                } catch ( IOException e ) {
+                    LoggerFactory.getLogger( getClass() ).warn( "Unable to get upload stream", e );
+                }
+                ( (PlanPage) getPage() ).redirectToPlan();
             }
-            ( (PlanPage) getPage() ).redirectToPlan();
         }
     }
 
-    public FileUpload getUpload() {
-        return upload;
+    public List<FileUpload> getUploads() {
+        return uploads;
     }
 
 }

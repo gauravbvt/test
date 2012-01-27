@@ -130,7 +130,7 @@ public class TypesPanel extends AbstractCommandablePanel {
         nameField.setVisible( wrapper.isMarkedForCreation() && isLockedByUser( getEntity() ) );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( item );
+                target.add( item );
                 update( target, new Change( Change.Type.Updated, getEntity(), "types" ) );
             }
         } );

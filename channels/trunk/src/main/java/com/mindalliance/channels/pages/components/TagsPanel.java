@@ -62,7 +62,7 @@ public class TagsPanel extends AbstractCommandablePanel {
         tagsField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( tagsField );
+                target.add( tagsField );
                 update( target, new Change( Change.Type.Updated, getModel().getObject(), tagsProperty ) );
             }
         } );

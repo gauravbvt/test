@@ -263,7 +263,7 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUpdated() && change.isForProperty( "geoLocation" ) ) {
             addShowMenu();
-            target.addComponent( getShowMenu() );
+            target.add( getShowMenu() );
         }
         if ( change.isExists() && change.isForInstanceOf( Issue.class ) ) {
             setAspectShown(target, DETAILS);

@@ -4,8 +4,8 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.plan.IssuesSummaryTable;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * Issues report.
@@ -28,8 +28,8 @@ public class IssuesPage extends AbstractChannelsWebPage {
 
     public static PageParameters createParameters( String uri, int version ) {
         PageParameters result = new PageParameters();
-        result.put( "plan", uri );
-        result.put( "v", version );
+        result.set( "plan", uri );
+        result.set( "v", version );
         return result;
     }
 

@@ -108,8 +108,8 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
         refreshAppliedRequirements( target );
         addRequiredNetworkPanel();
         addRequiredCommitments();
-        target.addComponent( commitmentsContainer );
-        target.addComponent( requiredNetworkingPanel );
+        target.add( commitmentsContainer );
+        target.add( requiredNetworkingPanel );
     }
 
     private List<String> getTimingChoices() {
@@ -224,8 +224,8 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
             identifiableFilters.put( property, identifiable );
         }
         addAppliedRequirements();
-        target.addComponent( appliedRequirementsLabel );
-        target.addComponent( appliedRequirementsTable );
+        target.add( appliedRequirementsLabel );
+        target.add( appliedRequirementsTable );
     }
 
     @Override
@@ -395,14 +395,14 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
                     || change.isForInstanceOf( RequirementRelationship.class )
                     || change.isForInstanceOf( Plan.class ) ) {
                 addRequiredNetworkPanel();
-                target.addComponent( requiredNetworkingPanel );
+                target.add( requiredNetworkingPanel );
                 refreshAppliedRequirements( target );
             } else {
                 super.updateWith( target, change, updated );
             }
         } else if ( change.isExpanded() && change.isForInstanceOf( Requirement.class ) ) {
             addRequiredCommitments();
-            target.addComponent( commitmentsContainer );
+            target.add( commitmentsContainer );
         } else {
             super.updateWith( target, change, updated );
         }
@@ -410,10 +410,10 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
 
     private void refreshAppliedRequirements( AjaxRequestTarget target ) {
         addAppliedRequirements();
-        target.addComponent( appliedRequirementsLabel );
-        target.addComponent( appliedRequirementsTable );
+        target.add( appliedRequirementsLabel );
+        target.add( appliedRequirementsTable );
         addRequiredCommitments();
-        target.addComponent( commitmentsContainer );
+        target.add( commitmentsContainer );
     }
 
     private class AppliedRequirementsTable extends AbstractTablePanel<Requirement> {

@@ -15,9 +15,9 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
@@ -25,7 +25,6 @@ import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.pages.components.segment.ExternalFlowsPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -35,6 +34,7 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
@@ -184,10 +184,10 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
                 if ( !reducedToFit ) {
                     String domIdentifier = DOM_IDENTIFIER;
                     script =
-                            "wicketAjaxGet('" + getCallbackUrl( true ) + "&width='+$('" + domIdentifier + "').width()+'"
+                            "wicketAjaxGet('" + getCallbackUrl(  ) + "&width='+$('" + domIdentifier + "').width()+'"
                             + "&height='+$('" + domIdentifier + "').height()";
                 } else {
-                    script = "wicketAjaxGet('" + getCallbackUrl( true ) + "'";
+                    script = "wicketAjaxGet('" + getCallbackUrl(  ) + "'";
                 }
                 String onclick =
                         ( "{" + generateCallbackScript( script ) + " return false;}" ).replaceAll( "&amp;", "&" );
@@ -198,8 +198,8 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
                 if ( !reducedToFit ) {
-                    String swidth = requestCycle.getRequest().getParameter( "width" );
-                    String sheight = requestCycle.getRequest().getParameter( "height" );
+                    String swidth = requestCycle.getRequest().getQueryParameters().getParameterValue( "width" ).toString();
+                    String sheight = requestCycle.getRequest().getQueryParameters().getParameterValue( "height" ).toString();
                     diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
                     diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
                 } else
@@ -207,9 +207,9 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
 
                 reducedToFit = !reducedToFit;
                 addPlanMapDiagramPanel();
-                target.addComponent( planMapDiagramPanel );
+                target.add( planMapDiagramPanel );
                 addPlanSizing();
-                target.addComponent( sizingLabel );
+                target.add( sizingLabel );
             }
         } );
         addOrReplace( sizingLabel );
@@ -468,7 +468,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
         addExternalFlowsPanel();
         addCausesTitleLabel();
         addCausesPanel();
-        target.addComponent( this );
+        target.add( this );
     }
 
     /**
@@ -516,7 +516,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
             } else {
                 refresh( target );
                 if ( change.getScript() != null ) {
-                    target.appendJavascript( change.getScript() );
+                    target.appendJavaScript( change.getScript() );
                 }
             }
         } else {

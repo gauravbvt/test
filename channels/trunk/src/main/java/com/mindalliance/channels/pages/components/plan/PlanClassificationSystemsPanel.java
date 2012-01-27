@@ -74,9 +74,9 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
                 AjaxFallbackLink details = new AjaxFallbackLink( "details" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         addClassificationSystemPanel( name );
-                        target.addComponent( classificationSystemPanel );
+                        target.add( classificationSystemPanel );
                         addClassificationSystemsList();
-                        target.addComponent( classificationSystemsContainer );
+                        target.add( classificationSystemsContainer );
                     }
                 };
                 item.add( details );
@@ -124,11 +124,11 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
         classificationSystemField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addClassificationSystemsList();
-                target.addComponent( classificationSystemsContainer );
+                target.add( classificationSystemsContainer );
                 addClassificationSystemPanel( getNewClassificationSystemName() );
-                target.addComponent( classificationSystemPanel );
+                target.add( classificationSystemPanel );
                 newClassificationSystemName = null;
-                target.addComponent( classificationSystemField );
+                target.add( classificationSystemField );
             }
         } );
         newSystemContainer.add( classificationSystemField );
@@ -164,7 +164,7 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
     protected void update( AjaxRequestTarget target, Change change ) {
         if ( change.isUpdated() ) {
             addClassificationSystemsList();
-            target.addComponent( classificationSystemsContainer );
+            target.add( classificationSystemsContainer );
         }
         super.update( target, change );
     }

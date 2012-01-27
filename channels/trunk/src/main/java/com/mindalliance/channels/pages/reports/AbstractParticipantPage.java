@@ -15,22 +15,20 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RedirectToUrlException;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
-import org.apache.wicket.util.string.StringValueConversionException;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,57 +45,19 @@ import java.util.Set;
  * Abstract participant report page.
  */
 public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger( AbstractParticipantPage.class );
 
     //-------------------------------
-    public AbstractParticipantPage( Class<? extends AbstractParticipantPage> clazz ) {
-        try {
-            Plan plan = getUser().getPlan();
-            if ( plan == null )
-                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
-
-            setPlan( plan );
-            QueryService service = getQueryService();
-            setRedirect( true );
-            setResponsePage( 
-                    clazz,
-                    createParameters( 
-                            getUser().isPlanner( plan.getUri() ) ? new ResourceSpec()
-                                                                 : getProfile( service, getUser() ),
-                            plan.getUri(),
-                            plan.getVersion() ) );
-        } catch ( NotFoundException e ) {
-            // User has no participant page
-            LOG.info( getUser().getFullName() + " not a participant", e );
-            throw new RedirectToUrlException( "/static/nonParticipant.html" );
-        }
-    }
-
-    public AbstractParticipantPage( Class<? extends AbstractAllParticipantsPage> clazz, PageParameters parameters ) {
+    public AbstractParticipantPage( PageParameters parameters ) {
         super( parameters );
-        try {
-            String uri = getPlan().getUri();
-            if ( getUser().isPlanner( uri ) && parameters.size() == 2 ) {
-                setRedirect( false );
-                setResponsePage( clazz, parameters );
-            } else {
-                QueryService service = getQueryService();
-                init( service, getProfile( service, parameters ), parameters.getString( "user", null ) );
-            }
-        } catch ( StringValueConversionException e ) {
-            LOG.info( "Bad parameter: " + parameters, e );
-            throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
-        } catch ( NotFoundException e ) {
-            LOG.info( "Not found: " + parameters, e );
-            throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_NOT_FOUND );
-        }
+        init( parameters );
     }
 
     //-------------------------------
     protected static String getClassificationString( List<Classification> classifications ) {
         return classifications.isEmpty() ? AggregatedContact.N_A
-                                         : ChannelsUtils.listToString( classifications, " or " );
+                : ChannelsUtils.listToString( classifications, " or " );
     }
 
     protected abstract String getReportName();
@@ -106,68 +66,76 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
 
     protected abstract String getReportType();
 
-    protected void init( QueryService queryService, ResourceSpec profile, String override ) {
-        Plan plan = queryService.getPlan();
-        AggregatedContact contact = getUser().isPlanner( plan.getUri() )
-            ? new AggregatedContact( queryService, profile.getActor(), override )
-            : new AggregatedContact( queryService, profile.getActor(), getUser().getUsername() );
-        contact.resolveChannels( queryService );
-        add( 
-                new Label( "reportTitle", getReportTitle() + " for " + contact.getActorName() ),
-                new Label( "reportName", getReportName() ),
-                new UserFeedbackPanel( "planFeedback", plan, "Send overall feedback" ),
-                new Label( "reportType", getReportType() ),
-                new Label( "personName", contact.getActorName() ),
-                new Label( "planName", plan.getName() ),
-                new Label( "planName2", plan.getName() ),
-                new Label( "planVersion", "v" + plan.getVersion() ),
-                new Label( "planDescription", plan.getDescription() ),
-                newContact( "contact", contact ).add( new Label( "myAvail", contact.getAvailability() ) )
-                .setRenderBodyOnly( true ) );
-        initReportBody( plan, queryService, profile, override, contact );
+    protected void init( PageParameters parameters ) {
+        try {
+            QueryService service = getQueryService();
+            ResourceSpec profile =  getProfile( service, parameters );
+            Plan plan = service.getPlan();
+            String override = parameters.get( "user" ).toString( null);
+            AggregatedContact contact = getUser().isPlanner( plan.getUri() )
+            ? new AggregatedContact( service, profile.getActor(), override )
+            : new AggregatedContact( service, profile.getActor(), getUser().getUsername() );
+            contact.resolveChannels( service );
+            add(
+                    new Label( "reportTitle", getReportTitle() + " for " + contact.getActorName() ),
+                    new Label( "reportName", getReportName() ),
+                    new UserFeedbackPanel( "planFeedback", plan, "Send overall feedback" ),
+                    new Label( "reportType", getReportType() ),
+                    new Label( "personName", contact.getActorName() ),
+                    new Label( "planName", plan.getName() ),
+                    new Label( "planName2", plan.getName() ),
+                    new Label( "planVersion", "v" + plan.getVersion() ),
+                    new Label( "planDescription", plan.getDescription() ),
+                    newContact( "contact", contact ).add( new Label( "myAvail", contact.getAvailability() ) )
+                            .setRenderBodyOnly( true ) );
+            initReportBody( plan, service, profile, override, contact );
+        } catch ( NotFoundException e ) {
+            LOG.warn( "Profile not found for user" );
+            throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
+        }
     }
 
-    protected abstract void initReportBody( 
-        Plan plan,
-        QueryService service,
-        ResourceSpec profile,
-        String override,
-        AggregatedContact contact );
+    protected abstract void initReportBody(
+            Plan plan,
+            QueryService service,
+            ResourceSpec profile,
+            String override,
+            AggregatedContact contact );
 
     protected static MarkupContainer newContact( String id, AggregatedContact contact ) {
         List<Channel> channels = contact.getChannels();
-        return new WebMarkupContainer( id ).add( 
+        return new WebMarkupContainer( id ).add(
                 new UserFeedbackPanel( "contactFeedback", contact.getParticipation(), "Send feedback" ),
                 new Label( "contact.name", contact.getActorName() ),
                 new Label( "contact.roles", contact.getRoles() ),
                 new Label( "contact.classification", contact.getClassifications() ),
-                new WebMarkupContainer( "contactInfos" ).add( 
+                new WebMarkupContainer( "contactInfos" ).add(
                         new ListView<Channel>( "contactInfo", channels ) {
-                        @Override
-                        protected void populateItem( ListItem<Channel> item ) {
-                            Channel channel = item.getModelObject();
-                            String label = channel.getMedium().getLabel();
-                            boolean isEmail = "Email".equals( label );
-                            String address = channel.getAddress();
-                            item.add( 
-                                        new WebMarkupContainer( "mail" ).add( 
+                            @Override
+                            protected void populateItem( ListItem<Channel> item ) {
+                                Channel channel = item.getModelObject();
+                                String label = channel.getMedium().getLabel();
+                                boolean isEmail = "Email".equals( label );
+                                String address = channel.getAddress();
+                                item.add(
+                                        new WebMarkupContainer( "mail" ).add(
                                                 new WebMarkupContainer( "mailTo" )
-                                                    .add(
-                                                        new Label( "channel", address ) ).add( 
-                                                            new AttributeModifier(
+                                                        .add(
+                                                                new Label( "channel", address ) ).add(
+                                                        new AttributeModifier(
                                                                 "href",
                                                                 true,
                                                                 new Model<String>( "mailTo:" + address ) ) ) )
-                                                    .setRenderBodyOnly( true )
-                                                    .setVisible( isEmail ),
+                                                .setRenderBodyOnly( true )
+                                                .setVisible( isEmail ),
                                         new WebMarkupContainer( "notMail" )
-                                            .add(
-                                                new Label( "channelType", label + ':' ),
-                                                new Label( "channel", address ) )
-                                            .setRenderBodyOnly( true )
-                                            .setVisible( !isEmail ) );
-                        }
-                    } ).setVisible( !channels.isEmpty() ),
+                                                .add(
+                                                        new Label( "channelType", label + ':' ),
+                                                        new Label( "channel", address ) )
+                                                .setRenderBodyOnly( true )
+                                                .setVisible( !isEmail ) );
+                            }
+                        } ).setVisible( !channels.isEmpty() ),
                 new WebMarkupContainer( "noInfo" ).setVisible( channels.isEmpty() ) );
     }
 
@@ -201,8 +169,8 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
             organization = employment.getOrganization();
             participation = findParticipation( service, actor, null );
             actorName = participation != null ? service.getUserFullName( participation )
-                                              : actor == null ? ""
-                                                              : actor.getName();
+                    : actor == null ? ""
+                    : actor.getName();
 
             Actor sup = employment.getSupervisor();
             if ( sup == null )
@@ -210,7 +178,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
             else {
                 List<Employment> supEmps = service.findAllEmploymentsForActor( sup );
                 supervisor = supEmps.isEmpty() ? new AggregatedContact()
-                                               : new AggregatedContact( service, supEmps.get( 0 ), assignments );
+                        : new AggregatedContact( service, supEmps.get( 0 ), assignments );
             }
 
             employments.add( employment );
@@ -229,8 +197,8 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
             }
 
             actorName = participation != null ? service.getUserFullName( participation )
-                                              : actor == null ? ""
-                                                              : actor.getName();
+                    : actor == null ? ""
+                    : actor.getName();
         }
 
         //-------------------------------
@@ -241,8 +209,8 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
                 return i;
 
             return actorName == null ? -1
-                                     : o.getActorName() == null ? 1
-                                                                  : actorName.compareTo( o.getActorName() );
+                    : o.getActorName() == null ? 1
+                    : actorName.compareTo( o.getActorName() );
         }
 
         @Override
@@ -255,7 +223,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
 
             AggregatedContact other = (AggregatedContact) obj;
             return actor == null ? other.getActor() == null
-                                 : actor.equals( other.getActor() );
+                    : actor.equals( other.getActor() );
         }
 
         public static Participation findParticipation( QueryService service, Actor actor, String username ) {
@@ -275,7 +243,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
 
         public String getAvailability() {
             return actor == null || actor.getAvailability() == null ? N_A
-                                                                      : actor.getAvailability().toString();
+                    : actor.getAvailability().toString();
         }
 
         public List<Channel> getChannels() {
@@ -284,19 +252,19 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
 
         public String getClassifications() {
             return actor == null ? N_A
-                                 : getClassificationString( actor.getClassifications() );
+                    : getClassificationString( actor.getClassifications() );
         }
 
         public String getRoles() {
             List<Employment> list = new ArrayList<Employment>( employments );
-            Collections.sort( 
+            Collections.sort(
                     list,
                     new Comparator<Employment>() {
                         @Override
                         public int compare( Employment o1, Employment o2 ) {
                             int i = o1.getOrganization().compareTo( o2.getOrganization() );
                             return i == 0 ? o1.getRole().compareTo( o2.getRole() )
-                                          : i;
+                                    : i;
                         }
                     } );
 
@@ -310,16 +278,16 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
         @Override
         public int hashCode() {
             return actor != null ? actor.hashCode()
-                                 : 0;
+                    : 0;
         }
 
         public void resolveChannels( QueryService service ) {
             if ( channels.isEmpty() ) {
                 Set<Channel> set = new HashSet<Channel>();
                 for ( Employment employment : employments )
-                    set.addAll( 
+                    set.addAll(
                             participation == null ? service.findAllChannelsFor( new ResourceSpec( employment ) )
-                                                  : participation.getEffectiveChannels() );
+                                    : participation.getEffectiveChannels() );
 
                 channels.addAll( set );
                 Collections.sort( channels );

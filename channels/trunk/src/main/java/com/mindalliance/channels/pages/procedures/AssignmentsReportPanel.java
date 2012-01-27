@@ -9,8 +9,8 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Specable;
-import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -160,7 +160,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                         @Override
                         protected void onEvent( AjaxRequestTarget target ) {
                             subtaskList.setVisible( !subtaskList.isVisible() );
-                            target.addComponent( item );
+                            target.add( item );
                         }
                     } );
                 }
@@ -184,7 +184,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
             protected void onEvent( AjaxRequestTarget target ) {
                 tasks.setVisible( !tasks.isVisible() );
                 markAnchorExpansionState( anchorContainer, tasks.isVisible() );
-                target.addComponent( component );
+                target.add( component );
             }
         } );
 
@@ -227,7 +227,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
                         @Override
                         protected void onEvent( AjaxRequestTarget target ) {
                             subtaskList.setVisible( !subtaskList.isVisible() );
-                            target.addComponent( item );
+                            target.add( item );
                         }
                     } );
                 }
@@ -249,7 +249,7 @@ public class AssignmentsReportPanel extends AbstractUpdatablePanel {
             protected void onEvent( AjaxRequestTarget target ) {
                 tasks.setVisible( !tasks.isVisible() );
                 markAnchorExpansionState( anchorContainer, tasks.isVisible() );
-                target.addComponent( component );
+                target.add( component );
             }
         } );
 

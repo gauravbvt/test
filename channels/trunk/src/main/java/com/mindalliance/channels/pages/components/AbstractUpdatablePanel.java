@@ -195,7 +195,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     protected static void makeVisible( AjaxRequestTarget target, Component component, boolean visible ) {
         makeVisible( component, visible );
-        target.addComponent( component );
+        target.add( component );
     }
 
     /**
@@ -258,7 +258,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     public void refresh( AjaxRequestTarget target, Change change, List<Updatable> updated, String aspect ) {
         if ( !updated.contains( this ) && !change.isNone() ) {
             refresh( target, change, aspect );
-            //   target.addComponent( this );
+            //   target.add( this );
         }
     }
 
@@ -424,7 +424,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     public void redisplay( AjaxRequestTarget target ) {
-        target.addComponent( this );
+        target.add( this );
     }
 
     protected PlanPage planPage() {

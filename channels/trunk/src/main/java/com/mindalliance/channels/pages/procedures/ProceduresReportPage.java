@@ -9,7 +9,7 @@ package com.mindalliance.channels.pages.procedures;
 import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.model.Organization;
-import org.apache.wicket.PageParameters;
+import com.mindalliance.channels.pages.UserPage;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -21,9 +21,12 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.time.Time;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -49,9 +52,8 @@ public class ProceduresReportPage extends AbstractReportPage {
         selector = new SelectorPanel( "selector",this );
         if ( !selector.isValid() ) {
             if ( selector.getPlans().isEmpty() )
-                throw new AbortWithWebErrorCodeException( HttpServletResponse.SC_FORBIDDEN );
+                throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unaithorized access" );
 
-            setRedirect( true );
             throw new RestartResponseException( getClass(), selector.getParameters() );
         }
 
@@ -89,9 +91,7 @@ public class ProceduresReportPage extends AbstractReportPage {
         channels_logo.add( new AjaxEventBehavior( "onclick") {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                String homeUrl =  redirectUrl( "home", getPlan() );
-                RedirectPage page =  new RedirectPage( homeUrl );
-                setResponsePage( page );
+                setResponsePage( UserPage.class, planParameters( getPlan() ) );
             }
         });
         add( channels_logo );
@@ -111,11 +111,11 @@ public class ProceduresReportPage extends AbstractReportPage {
         long longTime = commander.getLastModified();
         long now = System.currentTimeMillis();
 
-        response.setDateHeader( "Date", now );
+        response.setDateHeader( "Date", Time.millis( now ) );
         response.setHeader( "Cache-Control", "max-age=0, private, must-revalidate" );
 //        response.setDateHeader( "Expires", now );
 //        response.setDateHeader( "Expires", now + 24L*60*60*1000 );
-        response.setDateHeader( "Last-Modified", longTime );
+        response.setDateHeader( "Last-Modified", Time.millis( longTime ) );
     }
 
     public List<Organization> getBreadcrumbs() {

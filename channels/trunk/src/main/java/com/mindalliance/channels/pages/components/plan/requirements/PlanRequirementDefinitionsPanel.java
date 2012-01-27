@@ -119,7 +119,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
                 selectedRequirement = (Requirement) change.getSubject( getQueryService() );
                 updateComponents( target );
                 addRequirementsTable();
-                target.addComponent( requirementsTable );
+                target.add( requirementsTable );
                 update( target, change );
             }
         };
@@ -132,7 +132,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
                         getUsername(),
                         selectedRequirement ) );
                 addRequirementsTable();
-                target.addComponent( requirementsTable );
+                target.add( requirementsTable );
                 updateComponents( target );
                 update( target, change );
             }
@@ -144,13 +144,13 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
 
     private void updateComponents( AjaxRequestTarget target ) {
         addRequirementEditPanel();
-        target.addComponent( requirementEditPanel );
+        target.add( requirementEditPanel );
         makeVisible( removeButton, selectedRequirement != null && isLockedByUser( selectedRequirement ) );
         // makeVisible( newButton, isLockedByUser( getPlan() ) );
-        target.addComponent( newButton );
-        target.addComponent( removeButton );
-        target.addComponent( requirementsTable );
-        target.addComponent( this );
+        target.add( newButton );
+        target.add( removeButton );
+        target.add( requirementsTable );
+        target.add( this );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -185,7 +185,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
             identifiableFilters.put( property, identifiable );
         }
         addRequirementsTable();
-        target.addComponent( requirementsTable );
+        target.add( requirementsTable );
     }
 
     @Override
@@ -216,11 +216,11 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
             if ( change.isAdded() || change.isExpanded() || change.isRemoved() ) {
                 updateComponents( target );
             } else if ( change.isUpdated() ) {
-                target.addComponent( requirementsTable );
+                target.add( requirementsTable );
             }
         } else if ( change.isExists() && change.isForInstanceOf( Issue.class ) ) {
             addRequirementsTable();
-            target.addComponent( requirementsTable );
+            target.add( requirementsTable );
         }
         super.updateWith( target, change, updated );
     }

@@ -15,7 +15,6 @@ import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -25,6 +24,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -33,14 +33,13 @@ import java.util.List;
 
 /** A planner's table of contents to responders pages. */
 
-public class AllGuidelines extends AbstractAllParticipantsPage {
+public class AllGuidelinesPage extends AbstractAllParticipantsPage {
 
-    public AllGuidelines() {
-
-        super( GuidelinesPage.class );
+    public AllGuidelinesPage() {
+        super( new PageParameters(  ) );
     }
 
-    public AllGuidelines( PageParameters parameters ) {
+    public AllGuidelinesPage( PageParameters parameters ) {
         super( parameters );
     }
 
@@ -57,12 +56,12 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
                     protected void populateItem( ListItem<Participation> item ) {
                         PageParameters parameters = new PageParameters();
                         Participation p = item.getModelObject();
-                        parameters.put( PLAN, getUri() );
-                        parameters.put( VERSION, getVersion() );
+                        parameters.set( PLAN, getUri() );
+                        parameters.set( VERSION, getVersion() );
                         Actor actor = p.getActor();
-                        parameters.put( "agent", actor.getId() );
+                        parameters.set( "agent", actor.getId() );
                         String userName = p.getUsername();
-                        parameters.put( "user", userName );
+                        parameters.set( "user", userName );
                         User otherUser = getUserDao().getUserNamed( userName );
                         item.add(
                             new BookmarkablePageLink<GuidelinesPage>(
@@ -87,7 +86,6 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
                                                 e );
                                         }
                                         getPage().detachModels();
-                                        setRedirect( true );
                                         setResponsePage( GuidelinesPage.class, getPage().getPageParameters() );
                                     }
                                 } )
@@ -131,7 +129,6 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
                                                     LoggerFactory.getLogger( getClass() ).warn( "Unable to get plan lock", e );
                                                 }
                                                 getPage().detachModels();
-                                                setRedirect( true );
                                                 setResponsePage( GuidelinesPage.class,
                                                                  getPage().getPageParameters() );
                                             }
@@ -163,8 +160,8 @@ public class AllGuidelines extends AbstractAllParticipantsPage {
                     protected void populateItem( ListItem<Plan> item ) {
                         PageParameters parameters = new PageParameters();
                         Plan p = item.getModelObject();
-                        parameters.put( PLAN, p.getUri() );
-                        parameters.put( VERSION, p.getVersion() );
+                        parameters.set( PLAN, p.getUri() );
+                        parameters.set( VERSION, p.getVersion() );
 
                         item.add( new BookmarkablePageLink<GuidelinesPage>(
                             "responderList", GuidelinesPage.class, parameters )

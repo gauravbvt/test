@@ -114,7 +114,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
-                target.addComponent( moveButton );
+                target.add( moveButton );
             }
         } );
         add( destinationSegmentSelector );
@@ -149,10 +149,10 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
                                 new ArrayList<Part>();
                 adjustFields();
                 addMovablePartsTable();
-                target.addComponent( movablePartsTable );
-                target.addComponent( allOrNoneLabel );
-                target.addComponent( allOrNoneLink );
-                target.addComponent( moveButton );
+                target.add( movablePartsTable );
+                target.add( allOrNoneLabel );
+                target.add( allOrNoneLink );
+                target.add( moveButton );
             }
         };
         add( allOrNoneLink );
@@ -182,9 +182,9 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
                     addMovablePartsTable();
                     selectedParts = new ArrayList<Part>();
                     adjustFields();
-                    target.addComponent( moveButton );
-                    target.addComponent( movablePartsTable );
-                    target.addComponent( destinationSegmentSelector );
+                    target.add( moveButton );
+                    target.add( movablePartsTable );
+                    target.add( destinationSegmentSelector );
                 }
             }
         };
@@ -236,7 +236,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
                     selectedParts.add( selectedPart );
                 }
                 adjustFields();
-                target.addComponent( moveButton );
+                target.add( moveButton );
             }
         }
     }
@@ -392,7 +392,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
         @Override
         protected void resetTable( AjaxRequestTarget target ) {
             initialize();
-            target.addComponent( this );
+            target.add( this );
         }
     }
 }

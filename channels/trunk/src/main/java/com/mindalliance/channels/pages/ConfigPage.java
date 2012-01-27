@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +54,7 @@ public class ConfigPage extends WebPage {
 
         } catch ( IOException e ) {
             LOGGER.error( "Unable to read or find channels.properties", e );
-            throw new AbortWithWebErrorCodeException(
+            throw new AbortWithHttpErrorCodeException(
                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                 "Unable to read configuration. Server was not configured properly ( "
                     + e.getMessage() + " )" );

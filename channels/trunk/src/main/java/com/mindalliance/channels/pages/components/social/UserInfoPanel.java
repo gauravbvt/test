@@ -6,8 +6,8 @@ import com.mindalliance.channels.core.dao.UserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Participation;
-import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.pages.components.ChannelListPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -231,7 +231,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 resetAll();
-                target.addComponent( UserInfoPanel.this );
+                target.add( UserInfoPanel.this );
             }
         };
         userInfoContainer.add( reset );
@@ -248,7 +248,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                                     : "Your password was NOT changed (new password not confirmed)." );
                         }
                         resetAll();
-                        target.addComponent( UserInfoPanel.this );
+                        target.add( UserInfoPanel.this );
                         update( target, change );
                     } else {
                         Change change = new Change( Change.Type.None );
@@ -257,8 +257,8 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                     }
                 } catch ( IOException e ) {
                     LOG.error( "Failed to save user info", e );
-                    target.appendJavascript( "alert('Failed to save');" );
-                    target.addComponent( UserInfoPanel.this );
+                    target.appendJavaScript( "alert('Failed to save');" );
+                    target.add( UserInfoPanel.this );
                 }
             }
         };
@@ -269,13 +269,13 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     private void adjustFields( AjaxRequestTarget target ) {
         resetErrors();
         addErrors();
-        target.addComponent( errorsContainer );
+        target.add( errorsContainer );
         // applyButton.setEnabled( canSave() );
-        // target.addComponent( applyButton );
+        // target.add( applyButton );
         newPasswordText.setEnabled( passwordOk );
         repeatNewPasswordText.setEnabled( passwordOk );
-        target.addComponent( newPasswordText );
-        target.addComponent( repeatNewPasswordText );
+        target.add( newPasswordText );
+        target.add( repeatNewPasswordText );
     }
 
     private void resetErrors() {

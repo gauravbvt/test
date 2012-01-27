@@ -184,7 +184,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                             update( target, new Change( Change.Type.Updated, getSegment(), "goals" ) );
                         }
                         addCategoryCell( item );
-                        target.addComponent( item );
+                        target.add( item );
                     }
                 } );
         kindDropDownChoice.setEnabled( wrapper.isMarkedForCreation() && isLockedByUser( getSegment() ) );
@@ -311,7 +311,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 selectedGoal = wrapper;
                 moreContainer.addOrReplace( makeTasksTable() );
                 makeVisible( moreContainer, selectedGoal != null );
-                target.addComponent( moreContainer );
+                target.add( moreContainer );
             }
         };
         makeVisible( moreLink, !wrapper.isMarkedForCreation() );
@@ -458,8 +458,8 @@ public class GoalListPanel extends AbstractCommandablePanel {
         initLabel();
         moreContainer.addOrReplace( makeTasksTable() );
         makeVisible( moreContainer, selectedGoal != null );
-        target.addComponent( goalsContainer );
-        target.addComponent( moreContainer );
+        target.add( goalsContainer );
+        target.add( moreContainer );
         super.updateWith( target, change, updated );
     }
 

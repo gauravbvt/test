@@ -353,7 +353,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIntentField();
-                target.addComponent( intentChoice );
+                target.add( intentChoice );
                 update( target, new Change( Change.Type.Updated, getFlow(), "intent" ) );
             }
         } );
@@ -372,7 +372,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 restrictionChoice.setEnabled( isRestricted() );
-                target.addComponent( restrictionChoice );
+                target.add( restrictionChoice );
                 if ( !isRestricted() ) {
                     update( target, new Change( Change.Type.Updated, getFlow(), "restriction" ) );
                 }
@@ -501,12 +501,12 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void adjustFieldsOnUpdate( Flow f, AjaxRequestTarget target ) {
         triggersSourceContainer.setVisible(
                 ( !isSend() || f.isAskedFor() ) && f.canGetTriggersSource() );
-        target.addComponent( triggersSourceContainer );
+        target.add( triggersSourceContainer );
         flowDescription.setEnabled(
                 ( isSend() && f.isNotification() || !isSend() && f.isAskedFor() ) && isLockedByUser( getFlow() ) );
-        target.addComponent( flowDescription );
+        target.add( flowDescription );
         makeVisible( issuesPanel, getAnalyst().hasIssues( getQueryService(), getFlow(), false ) );
-        target.addComponent( issuesPanel );
+        target.add( issuesPanel );
     }
 
     private boolean canSetIfTaskFails() {
@@ -536,9 +536,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssuesAnnotation( nameField, getFlow(), "name" );
-                target.addComponent( nameField );
+                target.add( nameField );
                 addOtherChoice();
-                target.addComponent( otherChoice );
+                target.add( otherChoice );
                 update( target, new Change( Change.Type.Updated, getFlow(), "name" ) );
             }
         } );
@@ -598,15 +598,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             protected void onUpdate( AjaxRequestTarget target ) {
 /*
                 makeVisible( channelRow, isChannelRelevant( getFlow() ) );
-                target.addComponent( channelRow );
+                target.add( channelRow );
 */
                 makeVisible( ifTaskFailsContainer, canGetIfTaskFails() );
                 ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
-                target.addComponent( ifTaskFailsContainer );
+                target.add( ifTaskFailsContainer );
                 addSignificanceToTarget();
-                target.addComponent( significanceToTargetLabel );
+                target.add( significanceToTargetLabel );
                 addSignificanceToSource();
-                target.addComponent( significanceToSourceContainer );
+                target.add( significanceToSourceContainer );
                 update( target, new Change( Change.Type.Updated, getFlow(), "askedFor" ) );
             }
         } );
@@ -871,7 +871,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 setShowSimpleForm( !isShowSimpleForm() );
                 adjustSimpleAdvancedFields( target );
                 addSimpleAdvanced();
-                target.addComponent( simpleAdvanced );
+                target.add( simpleAdvanced );
             }
         } );
         addOrReplace( simpleAdvanced );
@@ -881,22 +881,22 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         Flow f = getFlow();
         boolean showSimpleForm = isShowSimpleForm();
         makeVisible( tagsContainer, !showSimpleForm );
-        target.addComponent( tagsContainer );
+        target.add( tagsContainer );
         makeVisible( classificationContainer, !showSimpleForm );
-        target.addComponent( classificationContainer );
+        target.add( classificationContainer );
         makeVisible( restrictionContainer, !showSimpleForm );
-        target.addComponent( restrictionContainer );
+        target.add( restrictionContainer );
         makeVisible( referencesEventPhaseContainer, !showSimpleForm );
-        target.addComponent( referencesEventPhaseContainer );
+        target.add( referencesEventPhaseContainer );
         makeVisible( canBypassIntermediateContainer, !showSimpleForm
                 && f.canGetCanBypassIntermediate() );
-        target.addComponent( canBypassIntermediateContainer );
+        target.add( canBypassIntermediateContainer );
         makeVisible( receiptConfirmationRequestedContainer, !showSimpleForm && f.canGetReceiptConfirmationRequested() );
-        target.addComponent( receiptConfirmationRequestedContainer );
+        target.add( receiptConfirmationRequestedContainer );
         makeVisible( timingContainer, !showSimpleForm );
-        target.addComponent( timingContainer );
+        target.add( timingContainer );
         makeVisible( significanceToSourceContainer, !showSimpleForm );
-        target.addComponent( significanceToSourceContainer );
+        target.add( significanceToSourceContainer );
     }
 
 
@@ -1655,7 +1655,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 if ( flow != null ) {
                     adjustFieldsOnUpdate( flow, target );
                     addHeader();
-                    target.addComponent( titlePanel );
+                    target.add( titlePanel );
                 }
             }
             super.updateWith( target, change, updated );

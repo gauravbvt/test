@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
 import org.apache.wicket.AttributeModifier;
@@ -109,7 +109,7 @@ public class EventListPanel extends AbstractCommandablePanel {
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addConfirmedCell( item );
-                target.addComponent( item );
+                target.add( item );
             }
         } );
         nameContainer.add( nameField );
@@ -138,7 +138,7 @@ public class EventListPanel extends AbstractCommandablePanel {
         confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 eventsDiv.addOrReplace( makeEventsTable() );
-                target.addComponent( eventsDiv );
+                target.add( eventsDiv );
                 update( target, new Change(
                         Change.Type.Updated,
                         getPlan(),

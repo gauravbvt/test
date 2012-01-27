@@ -1,13 +1,15 @@
 package com.mindalliance.channels.pages.png;
 
+import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.PlanPage;
-import com.mindalliance.channels.core.query.QueryService;
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,12 +21,12 @@ import org.slf4j.LoggerFactory;
  * Date: Jan 20, 2010
  * Time: 7:56:20 PM
  */
-public class FailureImpactsPage extends PngWebPage {
+public class FailureImpactsPng extends DiagramPng {
 
     /**
      * Class logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( FailureImpactsPage.class );
+    private static final Logger LOG = LoggerFactory.getLogger( FailureImpactsPng.class );
     /**
      * Parameter.
      */
@@ -38,22 +40,22 @@ public class FailureImpactsPage extends PngWebPage {
      */
     public static final String ASSUME_FAILS = "assume_fails";
 
-    /**
-     * The hypothetical failure.
-     */
-    private SegmentObject segmentObject;
-    /**
-     * WHether alternate flows assumed to fail.
-     */
-    private boolean assumeFails;
 
-    public FailureImpactsPage( PageParameters parameters ) {
-        super( parameters );
-        QueryService queryService = getQueryService();
-        Segment segment = PlanPage.findSegment( queryService, parameters );
-        if ( segment != null && parameters.containsKey( FAILURE ) ) {
+    /**
+     * {@inheritDoc}
+     */
+    protected Diagram makeDiagram( double[] size,
+                                   String orientation,
+                                   PageParameters parameters,
+                                   PlanService planService,
+                                   DiagramFactory diagramFactory,
+                                   Analyst analyst ) throws DiagramException {
+        SegmentObject segmentObject = null;
+        boolean assumeFails;
+        Segment segment = PlanPage.findSegment( planService, parameters );
+        if ( segment != null && parameters.getNamedKeys().contains( FAILURE ) ) {
             try {
-                long id = parameters.getLong( FAILURE );
+                long id = parameters.get( FAILURE ).toLong();
                 try {
                     segmentObject = segment.findFlow( id );
                 } catch ( NotFoundException e ) {
@@ -65,17 +67,11 @@ public class FailureImpactsPage extends PngWebPage {
                 LOG.warn( "Invalid failed segment object specified in parameters." );
             }
         }
-        assumeFails = parameters.getAsBoolean( ASSUME_FAILS, false );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected Diagram makeDiagram( double[] size, String orientation ) throws DiagramException {
-        if ( segmentObject == null )
+        assumeFails = parameters.get( ASSUME_FAILS).toBoolean( false );
+       if ( segmentObject == null )
             throw new DiagramException( "Can't find failed segment object" );
         else
-            return getDiagramFactory().newEssentialFlowMapDiagram(
+            return diagramFactory.newEssentialFlowMapDiagram(
                     segmentObject,
                     assumeFails,
                     size,

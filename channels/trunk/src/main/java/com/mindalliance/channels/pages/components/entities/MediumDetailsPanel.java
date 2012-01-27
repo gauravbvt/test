@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -145,8 +145,8 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addCastReset();
                 addDelegatedToMedia();
-                target.addComponent( castResetLink );
-                target.addComponent( delegatedToMediaPanel );
+                target.add( castResetLink );
+                target.add( delegatedToMediaPanel );
                 update( target, new Change( Change.Type.Updated, getMedium(), "cast" ) );
             }
         } );
@@ -161,9 +161,9 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
                 addCastChoice();
                 addDelegatedToMedia();
                 addCastReset();
-                target.addComponent( castChoice );
-                target.addComponent( castResetLink );
-                target.addComponent( delegatedToMediaPanel );
+                target.add( castChoice );
+                target.add( castResetLink );
+                target.add( delegatedToMediaPanel );
                 update( target, new Change( Change.Type.Updated, getMedium(), "cast" ) );
             }
         };
@@ -230,8 +230,8 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
         qualificationField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addQualificationLink();
-                target.addComponent( qualificationLink );
-                target.addComponent( qualificationField );
+                target.add( qualificationLink );
+                target.add( qualificationField );
                 update( target, new Change( Change.Type.Updated, getMedium(), "qualification" ) );
             }
         } );
@@ -352,7 +352,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
         super.typesChanged( target );
         addCastChoice();
         addDelegatedToMedia();
-        target.addComponent( castChoice );
-        target.addComponent( delegatedToMediaPanel );
+        target.add( castChoice );
+        target.add( delegatedToMediaPanel );
     }
 }

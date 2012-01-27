@@ -5,6 +5,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,16 +30,22 @@ public class ErrorPage extends AbstractChannelsWebPage {
     @SpringBean
     private MailSender mailSender;
 
+
     public ErrorPage() {
         init();
     }
 
-    public ErrorPage( RuntimeException e ) {
+
+    public ErrorPage( Exception e ) {
         exception = e;
         init();
     }
 
     private void init() {
+        //todo - unhack
+        if ( exception == null ) {
+            exception = ( (Channels) Channels.get() ).getExceptionOnce();
+        }
         addStacktrace();
     }
 
@@ -46,7 +53,7 @@ public class ErrorPage extends AbstractChannelsWebPage {
         StringWriter writer = new StringWriter();
         exc.printStackTrace( new PrintWriter( writer ) );
         return writer.toString();
-     }
+    }
 
     private void addStacktrace() {
         WebMarkupContainer stackTraceDiv = new WebMarkupContainer( "stackTraceContainer" );
@@ -54,22 +61,22 @@ public class ErrorPage extends AbstractChannelsWebPage {
         stackTraceDiv.add( new Label(
                 "stackTrace",
                 exception == null
-                    ? ""
-                    : stackTraceToString( exception ) ) );
+                        ? ""
+                        : stackTraceToString( exception ) ) );
         stackTraceDiv.add( new AttributeModifier(
                 "style",
                 true,
                 new Model<String>(
                         ( User.current().isAdmin() )
-                        ? "padding-top: 20px;display:block;"
-                        : "display:none;"
+                                ? "padding-top: 20px;display:block;"
+                                : "display:none;"
                 ) )
-         );
+        );
     }
 
     @Override
-    protected void configureResponse() {
-        super.configureResponse();
+    protected void configureResponse( WebResponse response ) {
+        super.configureResponse( response );
         String supportCommunity = getSupportCommunity();
         if ( exception != null ) {
             emailException(
@@ -77,7 +84,7 @@ public class ErrorPage extends AbstractChannelsWebPage {
                     mailSender,
                     supportCommunity );
         }
-        getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
+        response.setStatus(
                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
     }
 

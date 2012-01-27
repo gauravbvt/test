@@ -195,7 +195,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     private void adjustFields() {
         if ( getEntity().hasImage() ) {
             String url = getEntity().getImageUrl();
-            image.add( new AttributeModifier( "src", true, new Model<String>( url ) ) );
+            image.add( new AttributeModifier( "src", new Model<String>( url ) ) );
             int[] size = imagingService.getImageSize( getPlan(), url );
             int height = size[1];
             if ( height > MAX_IMAGE_HEIGHT ) {
@@ -296,18 +296,18 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUpdated() && change.isForProperty( "types" ) ) {
             addTypesPanel();
-            target.addComponent( typesPanel );
+            target.add( typesPanel );
             typesChanged( target );
         }
         if ( change.isUpdated() && change.isForProperty( "attachments" ) ) {
             addImage();
             adjustFields();
-            target.addComponent( image );
+            target.add( image );
         }
         if ( change.isUpdated() ) {
             addIssuesPanel();
             adjustFields();
-            target.addComponent( issuesPanel );
+            target.add( issuesPanel );
         }
         super.updateWith( target, change, updated );
     }

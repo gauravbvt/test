@@ -1,42 +1,46 @@
 package com.mindalliance.channels.pages;
 
+import com.google.code.jqwicket.JQComponentOnBeforeRenderListener;
+import com.google.code.jqwicket.JQContributionConfig;
+import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.geo.GeoService;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.playbook.ContactPage;
 import com.mindalliance.channels.pages.playbook.VCardPage;
-import com.mindalliance.channels.pages.png.DisseminationPage;
-import com.mindalliance.channels.pages.png.EntitiesNetworkPage;
-import com.mindalliance.channels.pages.png.EntityNetworkPage;
-import com.mindalliance.channels.pages.png.FailureImpactsPage;
-import com.mindalliance.channels.pages.png.FlowMapPage;
-import com.mindalliance.channels.pages.png.HierarchyPage;
-import com.mindalliance.channels.pages.png.PlanMapPage;
-import com.mindalliance.channels.pages.png.ProceduresPage;
-import com.mindalliance.channels.pages.png.RequiredNetworkingPage;
+import com.mindalliance.channels.pages.png.DisseminationPng;
+import com.mindalliance.channels.pages.png.EntitiesNetworkPng;
+import com.mindalliance.channels.pages.png.EntityNetworkPng;
+import com.mindalliance.channels.pages.png.FailureImpactsPng;
+import com.mindalliance.channels.pages.png.FlowMapPng;
+import com.mindalliance.channels.pages.png.HierarchyPng;
+import com.mindalliance.channels.pages.png.IconPng;
+import com.mindalliance.channels.pages.png.PlanMapPng;
+import com.mindalliance.channels.pages.png.PngReference;
+import com.mindalliance.channels.pages.png.ProceduresPng;
+import com.mindalliance.channels.pages.png.RequiredNetworkingPng;
 import com.mindalliance.channels.pages.procedures.AssignmentReportPage;
 import com.mindalliance.channels.pages.procedures.CommitmentReportPage;
 import com.mindalliance.channels.pages.procedures.ProcedureMapPage;
 import com.mindalliance.channels.pages.procedures.ProceduresReportPage;
+import com.mindalliance.channels.pages.reports.guidelines.AllGuidelinesPage;
 import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage;
-import org.apache.wicket.Page;
-import org.apache.wicket.Request;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.Response;
+import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
+import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
-import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.slf4j.Logger;
@@ -53,7 +57,7 @@ import org.springframework.security.core.session.SessionIdentifierAware;
  * Application object for Channels.
  * Initialized in /WEB-INF/applicationContext.xml.
  *
- * @TODO split into a bonified service-level object
+ * TODO split into a bonified service-level object
  */
 public class Channels extends WebApplication
         implements ApplicationListener, ApplicationContextAware {
@@ -96,7 +100,16 @@ public class Channels extends WebApplication
 
     private PlanManager planManager;
 
+    private PlanServiceFactory planServiceFactory;
+
+    private ImagingService imagingService;
+
+    private AttachmentManager attachmentManager;
+
+    private Exception exception = null;
+
     //-------------------------------
+
     /**
      * Default Constructor.
      */
@@ -129,7 +142,7 @@ public class Channels extends WebApplication
                 ? NoAccessPage.class
                 : UserPage.class;
     }
-    
+
     /**
      * Get the active plan's lock manager.
      *
@@ -150,55 +163,62 @@ public class Channels extends WebApplication
 
         getRequestCycleSettings().setGatherExtendedBrowserInfo( true );
 
-        addComponentInstantiationListener( getInjector() );
-
-        getMarkupSettings().setStripWicketTags( true );
-
-        mount( new QueryStringUrlCodingStrategy( "procedures", ProceduresReportPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "participants", GuidelinesPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "mapped", ProcedureMapPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "task", AssignmentReportPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "flow", CommitmentReportPage.class ) );
-
-        mount( new IndexedParamUrlCodingStrategy( "vcards", VCardPage.class ) );
-        mount( new IndexedParamUrlCodingStrategy( "contacts", ContactPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "plan", PlanPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "admin", AdminPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "nosops.html", NoAccessPage.class ) );
-
-        mount( new IndexedParamUrlCodingStrategy( "uploads", UploadPage.class ) );
-        mount( new IndexedParamUrlCodingStrategy( "icons", IconPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "login.html", LoginPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "newPasswordRequest.html", NewPasswordPage.class ) );
-
-        mount( new QueryStringUrlCodingStrategy( "segment.xml", ExportPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "segment.png", FlowMapPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "plan.png", PlanMapPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "network.png", EntityNetworkPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "entities.png", EntitiesNetworkPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "hierarchy.png", HierarchyPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "geomap.html", GeoMapPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "essential.png", FailureImpactsPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "dissemination.png", DisseminationPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "procedures.png", ProceduresPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "required.png", RequiredNetworkingPage.class ) );
-        mount( new QueryStringUrlCodingStrategy( "home", UserPage.class ) );
+        getRequestCycleListeners().add( new AbstractRequestCycleListener() {
+            @Override
+            public IRequestHandler onException( RequestCycle requestCycle, Exception e ) {
+                exception = e;  //todo - unhack
+                requestCycle.setResponsePage(
+                        e instanceof PageExpiredException
+                                ? new ExpiredPage()
+                                : new ErrorPage( e ) );
+                return requestCycle.getActiveRequestHandler();
+            }
+        } );
 
         getApplicationSettings().setInternalErrorPage( ErrorPage.class );
         getExceptionSettings().setUnexpectedExceptionDisplay( IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE );
         getApplicationSettings().setPageExpiredErrorPage( ExpiredPage.class );
 
-    }
+        // JQuery Wicket initialization
+        //getComponentPreOnBeforeRenderListeners().add( new JQComponentOnBeforeRenderListener() );
+        getComponentPreOnBeforeRenderListeners().add( new JQComponentOnBeforeRenderListener(
+                new JQContributionConfig().withDefaultJQueryUi() ) );
 
-    @Override
-    public final RequestCycle newRequestCycle( final Request request, final Response response ) {
-        return new WebRequestCycle( this, (WebRequest) request, (WebResponse) response ) {
-            @Override
-            public Page onRuntimeException( Page cause, RuntimeException e ) {
-                // obviously you can check the instanceof the exception and return the appropriate page if desired
-                return e instanceof PageExpiredException ? new ExpiredPage() : new ErrorPage( e );
-            }
-        };
+        getComponentInstantiationListeners().add( getInjector() );
+
+        getMarkupSettings().setStripWicketTags( true );
+
+        mountPage( "procedures", ProceduresReportPage.class );
+        mountPage( "allGuidelines", AllGuidelinesPage.class );
+        mountPage( "allInfoNeeds", AllInfoNeedsPage.class );
+        mountPage( "guidelines", GuidelinesPage.class );
+        mountPage( "infoNeeds", InfoNeedsPage.class );
+        mountPage( "mapped", ProcedureMapPage.class );
+        mountPage( "task", AssignmentReportPage.class );
+        mountPage( "flow", CommitmentReportPage.class );
+        mountPage( "vcards", VCardPage.class );
+        mountPage( "contacts", ContactPage.class );
+        mountPage( "plan", PlanPage.class );
+        mountPage( "admin", AdminPage.class );
+        mountPage( "nosops.html", NoAccessPage.class );
+        mountPage( "login.html", LoginPage.class );
+        mountPage( "newPasswordRequest.html", NewPasswordPage.class );
+        mountPage( "segment.xml", ExportPage.class );
+        mountPage( "geomap", GeoMapPage.class );
+        mountPage( "home", UserPage.class );
+
+        mountResource( "uploads/${name}", new PngReference( UploadedImage.class ) );
+        mountResource( "icons/${name}", new PngReference( IconPng.class ) );
+        mountResource( "segment.png", new PngReference( FlowMapPng.class ) );
+        mountResource( "plan.png", new PngReference( PlanMapPng.class ) );
+        mountResource( "network.png", new PngReference( EntityNetworkPng.class ) );
+        mountResource( "entities.png", new PngReference( EntitiesNetworkPng.class ) );
+        mountResource( "hierarchy.png", new PngReference( HierarchyPng.class ) );
+        mountResource( "essential.png", new PngReference( FailureImpactsPng.class ) );
+        mountResource( "dissemination.png", new PngReference( DisseminationPng.class ) );
+        mountResource( "procedures.png", new PngReference( ProceduresPng.class ) );
+        mountResource( "required.png", new PngReference( RequiredNetworkingPng.class ) );
+
     }
 
     @Override
@@ -279,9 +299,39 @@ public class Channels extends WebApplication
         this.planManager = planManager;
     }
 
+    public PlanServiceFactory getPlanServiceFactory() {
+        return planServiceFactory;
+    }
+
+    public void setPlanServiceFactory( PlanServiceFactory planServiceFactory ) {
+        this.planServiceFactory = planServiceFactory;
+    }
+
+    public ImagingService getImagingService() {
+        return imagingService;
+    }
+
+    public void setImagingService( ImagingService imagingService ) {
+        this.imagingService = imagingService;
+    }
+
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+
+    public void setAttachmentManager( AttachmentManager attachmentManager ) {
+        this.attachmentManager = attachmentManager;
+    }
+
     // FOR TESTING ONLY
     public void setDiagramFactory( DiagramFactory dm ) {
         diagramFactory = dm;
     }
 
+    //todo - unhack
+    public Exception getExceptionOnce() {
+        Exception oneTime = exception;
+        exception = null;
+        return oneTime;
+    }
 }

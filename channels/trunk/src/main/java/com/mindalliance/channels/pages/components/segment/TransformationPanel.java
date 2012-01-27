@@ -70,7 +70,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addSubjectsList();
                 adjustFields();
-                target.addComponent( subjectsContainer );
+                target.add( subjectsContainer );
                 update( target, new Change( Change.Type.Updated, getFlow(), "eois" ) );
             }
         } );
@@ -125,7 +125,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 if ( wrapper.isMarkedForCreation() ) {
                     addSubjectsList();
-                    target.addComponent( subjectsContainer );
+                    target.add( subjectsContainer );
                 }
                 update( target, new Change( Change.Type.Updated, getFlow(), "eois" ) );
             }
@@ -164,7 +164,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 wrapper.removeSubject();
                 addSubjectsList();
-                target.addComponent( subjectsContainer );
+                target.add( subjectsContainer );
                 update( target,
                         new Change( Change.Type.Updated, getFlow(), "eois" ) );
             }

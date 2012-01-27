@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.dao.Importer;
 import com.mindalliance.channels.core.dao.Journal;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.model.Segment;
+import org.apache.wicket.markup.MarkupType;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -75,8 +76,8 @@ public class DummyExporter implements ImportExportFactory, Importer, Exporter {
      *
      * @return -- a mime type
      */
-    public String getMimeType() {
-        return "text/plain";
+    public MarkupType getMimeType() {
+        return new MarkupType( "txt", "text/plain" );
     }
 
     /**

@@ -3,9 +3,9 @@
 package com.mindalliance.channels.pages.procedures;
 
 import com.mindalliance.channels.core.model.Identifiable;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.Calendar;
 
@@ -25,7 +25,9 @@ public class CommitmentReportPage extends AbstractReportPage {
                 new BookmarkablePageLink<ProceduresReportPage>( "top-link",
                         ProceduresReportPage.class, getTopParameters() ),
                 new AnchoredLink<ProceduresReportPage>( "event-link",
-                             ProceduresReportPage.class, getTopParameters(), getEvent() )
+                             ProceduresReportPage.class,
+                            getTopParameters(),
+                            getEvent() )
                     .add( new Label( "assignment.part.segment.event.name" )
                             .setRenderBodyOnly( true ) ),
 

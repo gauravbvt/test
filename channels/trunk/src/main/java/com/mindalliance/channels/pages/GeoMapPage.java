@@ -1,5 +1,8 @@
 package com.mindalliance.channels.pages;
 
+import com.google.code.jqwicket.ui.gmap.GMapMarker;
+import com.google.code.jqwicket.ui.gmap.GMapOptions;
+import com.google.code.jqwicket.ui.gmap.GMapWebMarkupContainer;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.GeoLocation;
 import com.mindalliance.channels.core.model.Job;
@@ -11,20 +14,15 @@ import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.geo.GeoService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.collections.ArrayListStack;
-import wicket.contrib.gmap.GMap2;
-import wicket.contrib.gmap.api.GControl;
-import wicket.contrib.gmap.api.GLatLng;
-import wicket.contrib.gmap.api.GMarker;
-import wicket.contrib.gmap.api.GMarkerOptions;
+import org.apache.wicket.util.string.StringValue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -45,6 +43,8 @@ public class GeoMapPage extends AbstractChannelsWebPage {
 
     private static final String MARKER_SEP = "||";
 
+    private static final String LABEL_SEP = "---";
+
     private static final int MAX_QUERY_SIZE = 2000;
 
     private static final String TITLE_PARAM = "t";
@@ -61,26 +61,31 @@ public class GeoMapPage extends AbstractChannelsWebPage {
         super( pageParameters );
 
         geoMarkers = getGeoMarkers( pageParameters );
-        String title = pageParameters.getString( TITLE_PARAM );
+        String title = pageParameters.get( TITLE_PARAM ).toString();
 
         boolean hideMap = !geoService.isConfigured() || geoMarkers.isEmpty();
-        add( new Label( "title", title ), new Label( "caption", title ), new WebMarkupContainer( "nothing" ).setVisible(
-                hideMap ),
-
-             hideMap ? new Label( "map", "" ).setVisible( false ) : createGmap() );
+        add( new Label( "title", title ),
+                new Label( "caption", title ),
+                new WebMarkupContainer( "nothing" ).setVisible( hideMap ),
+                hideMap ? new Label( "map", "" ).setVisible( false ) : createGmap() );
     }
 
     private static List<GeoMarker> getGeoMarkers( PageParameters params ) {
         List<GeoMarker> markers = new ArrayList<GeoMarker>();
-        String[] values = params.getStringArray( MARKER_PARAM );
+        List<StringValue> values = params.getValues( MARKER_PARAM );
         if ( values != null )
-            for ( String value : values )
-                markers.add( new GeoMarker( value ) );
+            for ( StringValue value : values )
+                markers.add( new GeoMarker( value.toString() ) );
 
         return markers;
     }
 
-    private GMap2 createGmap() {
+    private GMapWebMarkupContainer createGmap() {
+        GMapWebMarkupContainer map = new GMapWebMarkupContainer(
+                "map",
+                makeGMapOptions()
+        );
+/*
         GMap2 map = new GMap2( "map", getGoogleMapsAPIkey() );
         map.addControl( GControl.GMapTypeControl );
         map.addControl( GControl.GLargeMapControl );
@@ -95,7 +100,27 @@ public class GeoMapPage extends AbstractChannelsWebPage {
         map.fitMarkers( gLatLngs, false );
         map.setDoubleClickZoomEnabled( true );
         map.setScrollWheelZoomEnabled( true );
+*/
         return map;
+    }
+
+    private GMapOptions makeGMapOptions() {
+        GMapOptions options = new GMapOptions( getGoogleMapsAPIkey() );
+        options.zoom( 6 );
+        options.markers( makeMarkers() );
+        return options;
+    }
+
+    private GMapMarker[] makeMarkers() {
+        List<GMapMarker> markers = new ArrayList<GMapMarker>();
+        for ( GeoMarker geoMarker : geoMarkers ) {
+            GMapMarker marker = new GMapMarker();
+            marker.latitude( geoMarker.getLatitude() );
+            marker.longitude( geoMarker.getLongitude() );
+            marker.html( geoMarker.getHtmlLabel() ).popup( true );
+            markers.add( marker );
+        }
+        return markers.toArray( new GMapMarker[markers.size()] );
     }
 
     private String getGoogleMapsAPIkey() {
@@ -114,7 +139,7 @@ public class GeoMapPage extends AbstractChannelsWebPage {
         if ( geo instanceof Job ) {
             Place jurisdiction = ( (Job) geo ).getJurisdiction();
             return jurisdiction == null ? new ArrayList<Place>()
-                                        : queryService.listEntitiesNarrowingOrEqualTo( jurisdiction );
+                    : queryService.listEntitiesNarrowingOrEqualTo( jurisdiction );
         } else if ( geo instanceof Organization ) {
             List<Organization> result = new ArrayList<Organization>();
             for ( Organization org : queryService.listEntitiesNarrowingOrEqualTo( (Organization) geo ) )
@@ -160,15 +185,15 @@ public class GeoMapPage extends AbstractChannelsWebPage {
         popupSettings.setTop( 100 );
         popupSettings.setLeft( 100 );
         BookmarkablePageLink<GeoMapPage> geomapLink = new BookmarkablePageLink<GeoMapPage>( id, GeoMapPage.class, params );
-        geomapLink.add( new AttributeModifier( "target", true, new Model<String>( "geomap" ) ) );
+        geomapLink.add( new AttributeModifier( "target", new Model<String>( "geomap" ) ) );
         return geomapLink;
     }
 
     private static PageParameters makeGeoMapParameters( IModel<String> titleModel, GeoLocation geoLocation ) {
         PageParameters params = new PageParameters();
-        params.put( TITLE_PARAM, titleModel.getObject() );
+        params.set( TITLE_PARAM, titleModel.getObject() );
         String value = makeMarkerParam( geoLocation.toString(), geoLocation );
-        params.put( MARKER_PARAM, value );
+        params.set( MARKER_PARAM, value );
         return params;
     }
 
@@ -192,24 +217,19 @@ public class GeoMapPage extends AbstractChannelsWebPage {
         }
 
         PageParameters params = new PageParameters();
-        params.put( TITLE_PARAM, titleModel.getObject() );
+        params.set( TITLE_PARAM, titleModel.getObject() );
         int querySize = 0;
         Iterator<GeoLocation> iter = locatedGeos.keySet().iterator();
         while ( iter.hasNext() && querySize < MAX_QUERY_SIZE ) {
             GeoLocation geoLocation = iter.next();
             StringBuilder sb = new StringBuilder();
             Set<String> labels = new HashSet<String>();
-
             for ( GeoLocatable geo : locatedGeos.get( geoLocation ) ) {
                 String label = getGeoMarkerLabel( queryService, geo );
                 if ( !labels.contains( label ) ) {
-                    if ( !sb.toString().isEmpty() && !sb.toString().endsWith( " - " ) )
-                        sb.append( " - " );
-
                     labels.add( label );
-                    sb.append( labels.size() );
-                    sb.append( ". " );
                     sb.append( label );
+                    sb.append( LABEL_SEP );
                 }
             }
 
@@ -233,8 +253,7 @@ public class GeoMapPage extends AbstractChannelsWebPage {
                 sb.append( location.getName() );
             }
             return sb.toString();
-        }
-        else
+        } else
             return geo.getGeoMarkerLabel();
     }
 
@@ -252,28 +271,40 @@ public class GeoMapPage extends AbstractChannelsWebPage {
 
         private final String label;
 
-        private final double latitude;
+        private final float latitude;
 
-        private final double longitude;
+        private final float longitude;
 
         private GeoMarker( String param ) {
             String[] vals = StringUtils.split( param, MARKER_SEP );
             assert vals.length == 3;
             label = vals[0];
-            latitude = Double.valueOf( vals[1] );
-            longitude = Double.valueOf( vals[2] );
+            latitude = Float.valueOf( vals[1] );
+            longitude = Float.valueOf( vals[2] );
         }
 
         public String getLabel() {
             return label;
         }
 
-        public double getLatitude() {
+        public float getLatitude() {
             return latitude;
         }
 
-        public double getLongitude() {
+        public float getLongitude() {
             return longitude;
+        }
+
+        public String getHtmlLabel() {
+            StringBuilder sb = new StringBuilder();
+            sb.append( "<ol>" );
+            for ( String item : getLabel().split( LABEL_SEP ) ) {
+                sb.append( "<li>" );
+                sb.append( item.replaceAll( "<", "(" ).replaceAll( ">", ")" ) );
+                sb.append( "</li>" );
+            }
+            sb.append( "</ol>" );
+            return sb.toString();
         }
     }
 }

@@ -80,7 +80,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         involvedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addScopeIndex();
-                target.addComponent( scopeIndexPanel );
+                target.add( scopeIndexPanel );
                 updateCheckBoxes( target );
             }
         } );
@@ -93,7 +93,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         uninvolvedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addScopeIndex();
-                target.addComponent( scopeIndexPanel );
+                target.add( scopeIndexPanel );
                 updateCheckBoxes( target );
             }
         } );
@@ -109,7 +109,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         expectedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addScopeIndex();
-                target.addComponent( scopeIndexPanel );
+                target.add( scopeIndexPanel );
                 updateCheckBoxes( target );
             }
         } );
@@ -118,9 +118,9 @@ public class PlanScopePanel extends AbstractCommandablePanel {
     }
 
     private void updateCheckBoxes( AjaxRequestTarget target ) {
-        target.addComponent( expectedCheckBox );
-        target.addComponent( involvedCheckBox );
-        target.addComponent( uninvolvedCheckBox );
+        target.add( expectedCheckBox );
+        target.add( involvedCheckBox );
+        target.add( uninvolvedCheckBox );
     }
 
     private void addToScope() {
@@ -144,10 +144,10 @@ public class PlanScopePanel extends AbstractCommandablePanel {
                 involveNewOrganization();
                 newInvolvedName = null;
                 addSelectedOrganization();
-                target.addComponent( organizationContainer );
+                target.add( organizationContainer );
                 addScopeIndex();
-                target.addComponent( scopeIndexPanel );
-                target.addComponent( addInvolvedField );
+                target.add( scopeIndexPanel );
+                target.add( addInvolvedField );
             }
         } );
         newInvolvedContainer.add( addInvolvedField );
@@ -206,9 +206,9 @@ public class PlanScopePanel extends AbstractCommandablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 changeExpectation();
                 addScopeIndex();
-                target.addComponent( scopeIndexPanel );
+                target.add( scopeIndexPanel );
                 addSelectedOrganization();
-                target.addComponent( organizationContainer );
+                target.add( organizationContainer );
                 // update( target, new Change( Change.Type.Updated, getPlan(), "organizations" ) );
             }
         };
@@ -339,7 +339,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() && change.isForInstanceOf( Organization.class ) ) {
             addSelectedOrganization();
-            target.addComponent( organizationContainer );
+            target.add( organizationContainer );
         } else {
             super.updateWith( target, change, updated );
         }

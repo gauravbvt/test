@@ -88,7 +88,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
                     public void onClick( AjaxRequestTarget target ) {
                         setSelectedTab( index );
                         if ( target != null ) {
-                            target.addComponent( tabbedPanel );
+                            target.add( tabbedPanel );
                         }
                         onAjaxUpdate( target );
                     }
@@ -181,7 +181,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
                 || action.equals( EMAIL_MESSAGE ) ) {
             if ( !getSelectedTabTitle().equals( getMessagesTabTitle() ) ) {
                 selectTabTitled( getMessagesTabTitle() );
-                target.addComponent( tabbedPanel );
+                target.add( tabbedPanel );
             }
 
             if ( object instanceof String && action.equals( SEND_MESSAGE ) ) {
@@ -197,7 +197,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     }
 
     private void selectTabTitled( String title ) {
-        List<ITab> tabs = tabbedPanel.getTabs();
+        List<? extends ITab> tabs = tabbedPanel.getTabs();
         for ( int i = 0; i < tabs.size(); i++) {
             if ( tabs.get(i).getTitle().getObject().equals( title )) {
                 tabbedPanel.setSelectedTab( i );
@@ -211,7 +211,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
         String sendTo = change.getProperty();
         selectTabTitled( getMessagesTabTitle() );
         plannerMessageListPanel.newMessage( sendTo == null ? "" : sendTo, about, target );
-        target.addComponent( tabbedPanel );
+        target.add( tabbedPanel );
     }
 
     public boolean isCollapsible() {

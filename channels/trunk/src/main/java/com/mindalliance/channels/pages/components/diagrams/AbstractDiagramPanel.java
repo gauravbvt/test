@@ -15,12 +15,11 @@ import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,16 +113,16 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
                     @Override
                     protected void respond( AjaxRequestTarget target ) {
                         RequestCycle requestCycle = RequestCycle.get();
-                        String graphId = requestCycle.getRequest().getParameter( "graph" );
-                        String vertexId = requestCycle.getRequest().getParameter( "vertex" );
-                        String edgeId = requestCycle.getRequest().getParameter( "edge" );
-                        String width = requestCycle.getRequest().getParameter( "width" );
-                        String height = requestCycle.getRequest().getParameter( "height" );
+                        String graphId = requestCycle.getRequest().getQueryParameters().getParameterValue( "graph" ).toString();
+                        String vertexId = requestCycle.getRequest().getQueryParameters().getParameterValue( "vertex" ).toString();
+                        String edgeId = requestCycle.getRequest().getQueryParameters().getParameterValue( "edge" ).toString();
+                        String width = requestCycle.getRequest().getQueryParameters().getParameterValue( "width" ).toString();
+                        String height = requestCycle.getRequest().getQueryParameters().getParameterValue( "height" ).toString();
                         Map<String, String> extras = new HashMap<String, String>();
                         List<String> standardArgs = Arrays.asList( STANDARD_ARGS );
-                        for ( String argName : requestCycle.getRequest().getParameterMap().keySet() )
+                        for ( String argName : requestCycle.getRequest().getQueryParameters().getParameterNames() )
                             if ( !standardArgs.contains( argName ) )
-                                extras.put( argName, requestCycle.getRequest().getParameter( argName ) );
+                                extras.put( argName, requestCycle.getRequest().getQueryParameters().getParameterValue( argName ).toString() );
 
                         if ( graphId != null ) {
                             if ( vertexId == null && edgeId == null )
@@ -165,8 +164,8 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
             }
 
             @Override
-            protected void onRender( MarkupStream markupStream ) {
-                super.onRender( markupStream );
+            protected void onRender(  ) {
+                super.onRender(  );
                 if ( isWithImageMap() ) {
                     try {
                         LOG.debug( "Rendering image map " );
@@ -259,8 +258,8 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      * @param target an ajax request target
      */
     public void refreshImage( AjaxRequestTarget target ) {
-        add( new AttributeModifier( "src", true, new Model<String>( makeDiagramUrl() + makeSeed() ) ) );
-        target.addComponent( this );
+        add( new AttributeModifier( "src", new Model<String>( makeDiagramUrl() + makeSeed() ) ) );
+        target.add( this );
     }
 
     /**

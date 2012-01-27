@@ -5,8 +5,8 @@ import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Available;
-import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -56,7 +56,7 @@ public class TimeSpinner extends AbstractCommandablePanel {
         AjaxLink decButton = new AjaxLink( "dec" ) {
             public void onClick( AjaxRequestTarget target ) {
                 setTime( getTime() - increment );
-                target.addComponent( timeField );
+                target.add( timeField );
                 update( target, new Change( Change.Type.Updated, getAvailable(),  pathToTime ) );
             }
         };
@@ -69,7 +69,7 @@ public class TimeSpinner extends AbstractCommandablePanel {
         AjaxLink incButton = new AjaxLink( "inc" ) {
             public void onClick( AjaxRequestTarget target ) {
                 setTime( getTime() + increment );
-                target.addComponent( timeField );
+                target.add( timeField );
                 update( target, new Change( Change.Type.Updated, getAvailable(),  pathToTime ) );
             }
         };
@@ -84,7 +84,7 @@ public class TimeSpinner extends AbstractCommandablePanel {
                 new PropertyModel<String>( this, "timeString" ) );
         timeField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                target.addComponent( timeField );
+                target.add( timeField );
                 update( target, new Change( Change.Type.Updated, getAvailable(),  pathToTime ) );
             }
         } );

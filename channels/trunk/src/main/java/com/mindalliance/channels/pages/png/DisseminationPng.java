@@ -1,14 +1,16 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
+import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.PlanPage;
-import com.mindalliance.channels.core.query.QueryService;
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,12 +21,12 @@ import org.slf4j.LoggerFactory;
  * Date: Oct 21, 2010
  * Time: 1:38:08 PM
  */
-public class DisseminationPage extends PngWebPage {
+public class DisseminationPng extends DiagramPng {
 
     /**
      * Class logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( DisseminationPage.class );
+    private static final Logger LOG = LoggerFactory.getLogger( DisseminationPng.class );
     /**
      * Parameter.
      */
@@ -45,17 +47,22 @@ public class DisseminationPage extends PngWebPage {
      * Parameter.
      */
     public static final String SHOW_TARGETS = "showTargets";
-    private SegmentObject segmentObject;
-    private boolean showTargets;
-    private Subject subject;
 
-    public DisseminationPage( PageParameters parameters ) {
-        super( parameters );
-        QueryService queryService = getQueryService();
-        Segment segment = PlanPage.findSegment( queryService, parameters );
-        if ( segment != null && parameters.containsKey( OBJECT ) ) {
+    /**
+     * {@inheritDoc}
+     */
+    protected Diagram makeDiagram( 
+            double[] size, 
+            String orientation,
+            PageParameters parameters,
+            PlanService planService,
+            DiagramFactory diagramFactory,
+            Analyst analyst ) throws DiagramException {
+        Segment segment = PlanPage.findSegment( planService, parameters );
+        SegmentObject segmentObject = null;
+        if ( segment != null && parameters.getNamedKeys().contains( OBJECT ) ) {
             try {
-                long id = parameters.getLong( OBJECT );
+                long id = parameters.get( OBJECT ).toLong();
                 try {
                     segmentObject = segment.findFlow( id );
                 } catch ( NotFoundException e ) {
@@ -67,20 +74,14 @@ public class DisseminationPage extends PngWebPage {
                 LOG.warn( "Invalid failed segment object specified in parameters." );
             }
         }
-        showTargets = parameters.getAsBoolean( SHOW_TARGETS );
-        String info = parameters.getString( INFO );
-        String content = parameters.getString( CONTENT );
-        subject = new Subject( info, content );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected Diagram makeDiagram( double[] size, String orientation ) throws DiagramException {
-        if ( segmentObject == null || subject == null ) {
+        boolean showTargets = parameters.get( SHOW_TARGETS ).toBoolean();
+        String info = parameters.get( INFO ).toString();
+        String content = parameters.get( CONTENT ).toString();
+        Subject subject = new Subject( info, content );
+        if ( segmentObject == null ) {
             throw new DiagramException( "Missing parameters" );
         } else {
-            return getDiagramFactory().newDisseminationDiagram(
+            return diagramFactory.newDisseminationDiagram(
                     segmentObject,
                     subject,
                     showTargets,

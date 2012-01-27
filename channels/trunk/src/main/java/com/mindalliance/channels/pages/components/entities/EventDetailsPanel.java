@@ -10,11 +10,11 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -203,7 +203,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
             filters.add( identifiable );
         }
         addEventReferenceTable();
-        target.addComponent( eventReferenceTable );
+        target.add( eventReferenceTable );
     }
 
     /**

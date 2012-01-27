@@ -6,6 +6,10 @@
 
 package com.mindalliance.channels.pages.components.segment;
 
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.commands.AddPart;
+import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -14,10 +18,6 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.Command;
-import com.mindalliance.channels.core.command.commands.AddPart;
-import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
@@ -242,8 +242,8 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         overridesImage = new WebMarkupContainer( "overrides" );
         overridesImage.setOutputMarkupId( true );
         if ( overridden || overriding ) {
-            overridesImage.add( new AttributeModifier( "src", true, new Model<String>( "images/" + image ) ) );
-            overridesImage.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
+            overridesImage.add( new AttributeModifier( "src", new Model<String>( "images/" + image ) ) );
+            overridesImage.add( new AttributeModifier( "title", new Model<String>( title ) ) );
         }
         makeVisible( overridesImage, overridden || overriding );
         addOrReplace( overridesImage );
@@ -295,7 +295,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 props += isHidingNoop() ? " hideNoop" : "";
                 maximized = !maximized;
                 addFlowMapViewingControls();
-                target.addComponent( getControlsContainer() );
+                target.add( getControlsContainer() );
                 update( target, new Change( Change.Type.Maximized, getSegment(), props ) );
             }
         } );
@@ -315,7 +315,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             protected void onEvent( AjaxRequestTarget target ) {
                 minimized = !minimized;
                 addFlowMapViewingControls();
-                target.addComponent( getControlsContainer() );
+                target.add( getControlsContainer() );
             }
         } );
         getControlsContainer().add( shrinkExpand );
@@ -400,7 +400,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                     if ( (Boolean) change.getQualifier( "updated" ) ) {
                         addFlowDiagram();
                         setPartOrFlowUpdated( false );
-                        target.addComponent( flowMapDiagramPanel );
+                        target.add( flowMapDiagramPanel );
                     }
                     stopUpdates = true;
                 }
@@ -414,21 +414,21 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 addPartMediaPanel();
                 addOverridesImage();
                 addPartTitleContainer();
-                target.addComponent( taskTitleContainer );
-                target.addComponent( partMediaPanel );
-                target.addComponent( overridesImage );
+                target.add( taskTitleContainer );
+                target.add( partMediaPanel );
+                target.add( overridesImage );
                 addFlowMapViewingControls();
                 addFlowDiagram();
                 setPartOrFlowUpdated( false );
-                target.appendJavascript( PlanPage.IE7CompatibilityScript );
+                target.appendJavaScript( PlanPage.IE7CompatibilityScript );
                 resizePartPanels( target );
-                target.addComponent( getControlsContainer() );
-                target.addComponent( flowMapDiagramPanel );
-                target.addComponent( taskTitleContainer );
-                target.addComponent( partMediaPanel );
-                target.addComponent( overridesImage );
-                target.addComponent( partActionsMenu );
-                target.addComponent( partShowMenu );
+                target.add( getControlsContainer() );
+                target.add( flowMapDiagramPanel );
+                target.add( taskTitleContainer );
+                target.add( partMediaPanel );
+                target.add( overridesImage );
+                target.add( partActionsMenu );
+                target.add( partShowMenu );
             }
         }
     }
@@ -450,8 +450,8 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     public void refreshMenus( AjaxRequestTarget target ) {
         addPartActionsMenu();
         addPartShowMenu();
-        target.addComponent( partShowMenu );
-        target.addComponent( partActionsMenu );
+        target.add( partShowMenu );
+        target.add( partActionsMenu );
     }
 
     /**
@@ -467,7 +467,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
 
     public void resizePartPanels( AjaxRequestTarget target ) {
         addPartPanel();
-        target.addComponent( partPanel );
+        target.add( partPanel );
         adjustPartPanelSizes( target, getPartPanelSizes() );
     }
 
@@ -483,7 +483,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 + "$(\"" + RECEIVE_PANEL_ID + "\")" + ".css(\"left\",\"" + rl + "\")" + ".css(\"right\",\"" + rr
                 + "\");" + "$(\"" + SEND_PANEL_ID + "\")" + ".css(\"left\",\"" + sl + "\")" + ".css(\"right\",\"" + sr
                 + "\");";
-        target.prependJavascript( script );
+        target.prependJavaScript( script );
     }
 
     private String[] getPartPanelSizes() {
@@ -577,8 +577,8 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             final String script =
                     "$(\"" + SEGMENT_PANEL_ID + "\")" + ".css(\"width\",\"" + segmentPanelWidth + "\");" + "$(\""
                     + SOCIAL_PANEL_ID + "\")" + ".css(\"width\",\"" + socialPanelWidth + "\");";
-            target.prependJavascript( script );
-            target.addComponent( flowMapDiagramPanel );
+            target.prependJavaScript( script );
+            target.add( flowMapDiagramPanel );
         }
     }
 
@@ -606,9 +606,9 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         }
         addFlowDiagram();
         setPartOrFlowUpdated( false );
-        target.addComponent( flowMapDiagramPanel );
+        target.add( flowMapDiagramPanel );
         addFlowMapViewingControls();
-        target.addComponent( getControlsContainer() );
+        target.add( getControlsContainer() );
     }
 
     /**
@@ -636,10 +636,10 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 if ( change.isUpdated() || change.isSelected() ) {
                     addPartMediaPanel();
                     addOverridesImage();
-                    target.addComponent( partMediaPanel );
-                    target.addComponent( overridesImage );
+                    target.add( partMediaPanel );
+                    target.add( overridesImage );
                     addPartTitleContainer();
-                    target.addComponent( taskTitleContainer );
+                    target.add( taskTitleContainer );
                     if ( partPanel instanceof ExpandedPartPanel ) {
                         ( (ExpandedPartPanel) partPanel ).refresh( target, change, updated );
                     }
@@ -649,7 +649,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             }
             if ( change.isExists() && identifiable instanceof Issue ) {
                 addPartPanel();
-                target.addComponent( partPanel );
+                target.add( partPanel );
             }
             if ( identifiable instanceof Flow && change.isDisplay() ) {
                 receivesFlowPanel.refresh( target );
@@ -660,7 +660,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 if ( change.isCollapsed() && isPartOrFlowUpdated() ) {
                     addFlowDiagram();
                     setPartOrFlowUpdated( false );
-                    target.addComponent( flowMapDiagramPanel );
+                    target.add( flowMapDiagramPanel );
                 }
                 stopUpdates = change.isDisplay() && !isPartOrFlowUpdated();
             }

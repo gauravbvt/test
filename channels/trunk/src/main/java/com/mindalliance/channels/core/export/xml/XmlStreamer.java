@@ -48,6 +48,7 @@ import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.io.xml.XppReader;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.wicket.markup.MarkupType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,8 +129,8 @@ public class XmlStreamer implements ImportExportFactory {
      * Return the mime type of imported/exported files.
      * @return application/xml
      */
-    public String getMimeType() {
-        return "application/xml";
+    public MarkupType getMimeType() {
+        return new MarkupType( "xml", "application/xml");
     }
 
     public IdGenerator getIdGenerator() {
@@ -464,7 +465,7 @@ public class XmlStreamer implements ImportExportFactory {
         }
 
         @Override
-        public String getMimeType() {
+        public MarkupType getMimeType() {
             return XmlStreamer.this.getMimeType();
         }
 

@@ -111,8 +111,8 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
                 nameRange = new NameRange();
                 addNameRangePanel();
                 addWhosWhoTable();
-                target.addComponent( nameRangePanel );
-                target.addComponent( whosWhoTable );
+                target.add( nameRangePanel );
+                target.add( whosWhoTable );
             }
         } );
         addOrReplace( indexedOnChoices );
@@ -273,7 +273,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
         nameRange = range;
         nameRangePanel.setSelected( target, range );
         addWhosWhoTable();
-        target.addComponent( whosWhoTable );
+        target.add( whosWhoTable );
     }
 
     /**
@@ -287,7 +287,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
             filters.add( identifiable );
         }
         addWhosWhoTable();
-        target.addComponent( whosWhoTable );
+        target.add( whosWhoTable );
     }
 
     /**

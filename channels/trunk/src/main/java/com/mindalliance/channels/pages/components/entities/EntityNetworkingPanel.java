@@ -126,8 +126,8 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
             } else {
                 addEntityNetworkPanel();
                 addEntityFlowsPanel();
-                target.addComponent( entityNetworkPanel );
-                target.addComponent( entityFlowPanel );
+                target.add( entityNetworkPanel );
+                target.add( entityFlowPanel );
             }
         } else {
             super.updateWith( target, change, updated );

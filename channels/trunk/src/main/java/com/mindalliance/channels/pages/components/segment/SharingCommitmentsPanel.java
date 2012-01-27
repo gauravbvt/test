@@ -143,7 +143,7 @@ public class SharingCommitmentsPanel extends FloatingCommandablePanel {
         if ( change.isUnknown() || change.isModified() ) {
             addAbout();
             addCommitmentsTable();
-            target.addComponent( commitmentsTablePanel );
+            target.add( commitmentsTablePanel );
         }
     }
 

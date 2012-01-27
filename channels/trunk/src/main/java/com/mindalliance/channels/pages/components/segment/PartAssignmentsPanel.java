@@ -147,8 +147,8 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
         if ( change.isUnknown() || change.isModified() ) {
             addAbout();
             addAssignmentsTable();
-            target.addComponent( partTitleLabel );
-            target.addComponent( assignmentsTablePanel );
+            target.add( partTitleLabel );
+            target.add( assignmentsTablePanel );
         }
     }
 
@@ -225,7 +225,7 @@ public class PartAssignmentsPanel extends FloatingCommandablePanel {
          */
         protected void resetTable( AjaxRequestTarget target ) {
             init();
-            target.addComponent( this );
+            target.add( this );
         }
     }
 

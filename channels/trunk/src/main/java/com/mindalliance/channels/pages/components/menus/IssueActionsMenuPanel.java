@@ -108,8 +108,8 @@ public class IssueActionsMenuPanel extends MenuPanel {
                                                              LoggerFactory.getLogger( getClass() ).warn(
                                                                      "Error clicking on survey link",
                                                                      e );
-                                                             target.addComponent( IssueActionsMenuPanel.this );
-                                                             target.prependJavascript(
+                                                             target.add( IssueActionsMenuPanel.this );
+                                                             target.prependJavaScript(
                                                                      "alert('Oops -- " + e.getMessage() + "');" );
                                                          }
                                                      }

@@ -91,7 +91,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 makePhasesTable();
-                target.addComponent( phasesDiv );
+                target.add( phasesDiv );
                 update( target, new Change( Change.Type.Updated, getPlan(), "phases" ) );
             }
         } );
@@ -111,7 +111,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
                 Phase deletedPhase = wrapper.getPhase();
                 wrapper.deletePhase();
                 makePhasesTable();
-                target.addComponent( phasesDiv );
+                target.add( phasesDiv );
                 update( target,
                         new Change(
                                 Change.Type.Collapsed,

@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.pages.components.diagrams.AbstractDiagramPanel;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 import java.util.Set;
 
@@ -84,12 +84,12 @@ abstract public class AbstractResizableDiagramPanel extends AbstractUpdatablePan
                 if ( !reducedToFit ) {
                     String domIdentifier = DOM_IDENTIFIER;
                     script = "wicketAjaxGet('"
-                            + getCallbackUrl( true )
+                            + getCallbackUrl(  )
                             + "&width='+$('" + domIdentifier + "').width()+'"
                             + "&height='+$('" + domIdentifier + "').height()";
                 } else {
                     script = "wicketAjaxGet('"
-                            + getCallbackUrl( true )
+                            + getCallbackUrl(  )
                             + "'";
                 }
                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
@@ -100,8 +100,8 @@ abstract public class AbstractResizableDiagramPanel extends AbstractUpdatablePan
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
                 if ( !reducedToFit ) {
-                    String swidth = requestCycle.getRequest().getParameter( "width" );
-                    String sheight = requestCycle.getRequest().getParameter( "height" );
+                    String swidth = requestCycle.getRequest().getQueryParameters().getParameterValue( "width" ).toString();
+                    String sheight = requestCycle.getRequest().getQueryParameters().getParameterValue( "height" ).toString();
                     diagramSize[0] = ( Double.parseDouble( swidth ) - 20 ) / DPI;
                     diagramSize[1] = ( Double.parseDouble( sheight ) - 20 ) / DPI;
                 } else {
@@ -109,9 +109,9 @@ abstract public class AbstractResizableDiagramPanel extends AbstractUpdatablePan
                 }
                 reducedToFit = !reducedToFit;
                 addDiagramPanel();
-                target.addComponent( getDiagramPanel() );
+                target.add( getDiagramPanel() );
                 addDiagramSizing();
-                target.addComponent( sizingLabel );
+                target.add( sizingLabel );
             }
         } );
         addOrReplace( sizingLabel );

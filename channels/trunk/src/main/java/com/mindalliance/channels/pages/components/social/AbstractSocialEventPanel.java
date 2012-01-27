@@ -120,7 +120,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     private void addPhoto( WebMarkupContainer socialItemContainer ) {
         WebMarkupContainer pic = new WebMarkupContainer( "pic" );
-        pic.add( new AttributeModifier( "src", true, new PropertyModel( this, "photoUrl" ) ) );
+        pic.add( new AttributeModifier( "src", new PropertyModel( this, "photoUrl" ) ) );
         socialItemContainer.add( pic );
     }
 

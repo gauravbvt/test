@@ -236,9 +236,9 @@ public class AssignedLocationPanel extends AbstractCommandablePanel {
 
     private void adjustFields( AjaxRequestTarget target ) {
         adjustFields();
-        target.addComponent( placeReferencePanel );
-        target.addComponent( subjectContainer );
-        target.addComponent( eoiContainer );
+        target.add( placeReferencePanel );
+        target.add( subjectContainer );
+        target.add( eoiContainer );
     }
 
     public AssignedLocation.Kind getKind() {

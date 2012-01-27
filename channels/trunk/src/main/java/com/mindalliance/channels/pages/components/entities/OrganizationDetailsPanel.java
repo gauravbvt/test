@@ -1,6 +1,9 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Channelable;
@@ -10,11 +13,8 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
-import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
@@ -169,8 +169,8 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         actualParentField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addParentLink();
-                target.addComponent( parentLink );
-                target.addComponent( actualParentField );
+                target.add( parentLink );
+                target.add( actualParentField );
                 update( target, new Change( Change.Type.Updated, getModel().getObject(), "parent" ) );
             }
         } );
@@ -268,7 +268,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addMediaNotDeployedPanel();
-                target.addComponent( mediaNotDeployedContainer );
+                target.add( mediaNotDeployedContainer );
                 update( target, new Change( Change.Type.Updated, getOrganization(), "mediaNotDeployed" ) );
             }
         } );
@@ -291,7 +291,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                         medium,
                         UpdateObject.Action.Remove ) );
                 addMediaNotDeployedPanel();
-                target.addComponent( mediaNotDeployedContainer );
+                target.add( mediaNotDeployedContainer );
                 update( target,
                         new Change(
                                 Change.Type.Updated,
@@ -402,9 +402,9 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 addAssignmentsPanel();
                 addCommitmentsPanel();
                 adjustFields();
-                target.addComponent( moreContainer );
-                target.addComponent( assignmentsContainer );
-                target.addComponent( commitmentsContainer );
+                target.add( moreContainer );
+                target.add( assignmentsContainer );
+                target.add( commitmentsContainer );
             }
         };
         moreContainer.add( moreLink );
@@ -714,7 +714,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             String property = change.getProperty();
             if ( property.equals( "parent" ) ) {
                 addParentLink();
-                target.addComponent( parentLink );
+                target.add( parentLink );
                 super.updateWith(
                         target,
                         new Change( Change.Type.Updated, getOrganization(), "types" ),
@@ -814,7 +814,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
          */
         protected void resetTable( AjaxRequestTarget target ) {
             init();
-            target.addComponent( this );
+            target.add( this );
         }
     }
 
@@ -912,7 +912,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
          */
         protected void resetTable( AjaxRequestTarget target ) {
             init();
-            target.addComponent( this );
+            target.add( this );
         }
     }
 

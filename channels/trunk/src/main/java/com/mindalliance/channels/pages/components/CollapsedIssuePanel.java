@@ -70,8 +70,8 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
                     update( target, new Change( Change.Type.Expanded, survey ) );
                 } catch ( SurveyException e ) {
                     e.printStackTrace();
-                    target.prependJavascript( "alert('Oops -- " + e.getMessage() + "');" );
-                    target.addComponent( CollapsedIssuePanel.this );
+                    target.prependJavaScript( "alert('Oops -- " + e.getMessage() + "');" );
+                    target.add( CollapsedIssuePanel.this );
                 }
             }
         };
