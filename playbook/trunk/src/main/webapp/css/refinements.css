@@ -1,0 +1,95 @@
+html {
+}
+
+body {
+    font-size: 10pt;
+}
+
+.ui-li-heading {
+    margin: 0;
+}
+
+a.send img {
+    left: inherit;
+    right: 32px;
+}
+a.send {
+    padding-left: 15px !important;
+}
+
+.inactive {
+    color: gray;
+}
+
+div.error, ul.feedbackPanel {
+    color: red;
+    margin: 0 2em 2em;
+}
+
+img.captcha {
+    display: block;
+    margin: 0 auto;    
+}
+
+/* ---------------------------------------------------------- */
+span.timing {
+    float: right;
+    margin: 0 15px 0 0;
+    color: gray;
+}
+span.tags {
+    display: block;
+    color: gray;
+    font-size: 9pt;
+}
+
+span.late {
+    color: red !important;
+}
+
+div.quote {
+    margin-left: 3em;
+    padding: 5px;
+    border: 1px solid lightgray;
+    white-space: pre;
+}
+
+div.contact {
+    
+}
+
+div.contact div.details {
+    display: block;
+    float: left;
+    margin: 0 5px 5px;    
+}
+
+div.details h3 {
+    margin: 0;
+}
+
+div.details .job {
+    margin-top: 0;    
+}
+div.details .address {   
+}
+
+img.contactPic {
+    float: left;
+}
+
+.play-inset-list {
+    display: inline-block;
+    width: 60%;
+    margin: 0 !important;
+}
+
+.contact-popup {
+    z-index: 1000;
+    background-color: white;
+    border: 2px inset gray;
+}
+
+#contact-autocomplete li.selected {
+    background-color: #f5deb3;
+}

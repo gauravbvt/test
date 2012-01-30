@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div data-role="header" data-position="fixed">
+        <img src="images/logo.png" align="left" alt="(logo)">
+        <h1 wicket:id="title">Playbook - Plays</h1>
+        <a wicket:id="settingsLink" class="ui-btn-right" data-icon="gear" data-role="button" data-rel="dialog" href="#">Settings</a>
+    </div>
+
+    <div data-role="content">
+        <ul data-role="listview">
+            <li wicket:id="playbook.plays"><a wicket:id="editlink" href="#">
+                <h3 wicket:id="title">Fire evacuation</h3>
+                <span wicket:id="tags" class="tags">Work, Emergency</span>
+            </a></li>
+        </ul>
+        
+        <p><a wicket:id="addPlay" data-icon="add" data-role="button" data-inline="true">Add...</a></p>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a wicket:id="todos" href="#">Do It Now</a></li>
+                <li><a class="ui-btn-active" href="#">Plan Ahead</a></li>
+                <li><a wicket:id="collaborate" href="#">Collaborate</a></li>
+            </ul>
+        </div>
+    </div>
+</wicket:extend>
+</body>
+</html>
+        

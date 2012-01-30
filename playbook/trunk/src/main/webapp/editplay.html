@@ -1,0 +1,88 @@
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html>
+<head>
+    <title>Playbook - Edit play</title>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+    <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript">
+        // do not handle links via ajax by default
+        $(document).bind("mobileinit", function () { $.mobile.ajaxEnabled = false; });
+    </script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
+    <link rel="stylesheet" href="css/refinements.css">
+    <script src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+</head>
+<body>
+    <div data-role="page">
+        <div data-theme="b" data-role="header" data-position="fixed">
+            <h1>Weekly Meeting</h1>
+        </div>
+
+        <div data-role="content">
+            <form>
+                <div data-role="fieldcontain">
+                    <label for="title">Title:</label>                    
+                    <input id="title" type="text" value="Weekly meeting">                    
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="due">Schedule:</label>
+                    <input id="due" type="text" value="every Thursday at 9am">
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="descr">Description:</label>
+                    <textarea id="descr" rows="3" cols="40"></textarea>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="tags">Tags:</label>
+                    <input id="tags" type="text" value="Work">
+                </div>
+                <h3>Steps:</h3>
+                <ul data-role="listview" data-inset="true">
+                    <li><a class="send" href="editplaystep2.html">
+                        <img src="images/john_drummond.jpeg"/>
+                        <h3><span class="seq">1.</span> Call John and ask about status</h3>
+                    </a></li>
+                    <li>
+                        <h3><span class="seq">2.</span> Prepare agenda</h3>
+                        <ul>
+                            <li><a>
+                                <h3><span class="seq">1.</span> Ask team members opinion</h3>
+                            </a></li>
+                            <li><a>
+                                <span class="timing">(in 1 hours)</span>
+                                <h3><span class="seq">2.</span> Write document</h3>
+                            </a></li>                    
+                        </ul>
+                    </li>
+                    <li><a>
+                        <h3><span class="seq">3.</span> Do conference call</h3>
+                    </a></li>
+                    <li><a>
+                        <h3><span class="seq">4.</span> Write summary</h3>
+                    </a></li>
+                    <li><a class="send">
+                        <img src="images/john_drummond.jpeg"/>
+                        <h3><span class="seq">5.</span> Email summary</h3>
+                    </a></li>
+                </ul>                    
+            </form>
+
+            <p><a data-icon="add" data-inline="true" data-role="button">Add step</a></p>
+            
+            <div data-role="controlgroup" data-type="horizontal">
+                <a href="transfer.html" data-icon="forward" data-role="button">Transfer to...</a>
+                <a data-icon="delete"  data-role="button">Delete</a>
+                <a data-icon="check"  data-role="button">Save</a>
+                <a data-icon="delete"  data-role="button">Cancel</a>
+            </div>
+        </div>
+    
+    </div>
+    
+</body>
+</html>

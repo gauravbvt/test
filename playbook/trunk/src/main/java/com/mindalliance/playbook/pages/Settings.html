@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+        <div data-role="header" data-theme="b">
+            <h1>Settings</h1>
+        </div>
+        <div data-role="content" data-theme="c">
+            <form wicket:id="form" method="post" action="#">
+                <div class="contact" wicket:id="playbook.me">
+                    (My contact info)
+                </div>
+                
+                <div data-role="fieldcontain">
+                    <label for="byTag">View by tags</label>
+                    <input wicket:id="viewByTags" id="byTag" name="byTag" type="checkbox"/>
+                </div>
+
+                <div data-role="fieldcontain">
+                    <label for="showInactive">Show inactive items</label>
+                    <input wicket:id="showInactive" id="showInactive" name="showInactive" type="checkbox"/>
+                </div>
+                
+                <div data-role="fieldcontain">
+                    <label for="contactUpload">Upload contacts:</label>
+                    <input wicket:id="contactUpload" id="contactUpload" name="contactUpload" type="file"/>
+                    <span>(<span wicket:id="contacts.size">0</span> contacts on file)</span>
+                </div>
+                
+                <div>
+                    <input data-inline="true" type="submit" value="Save"/>
+                    <a data-role="button" data-inline="true" wicket:id="password" href="#">Change password</a>
+                    <a data-role="button" data-inline="true" href="/logout">Logout <span wicket:id="email">email</span></a>
+                </div>
+                
+            </form>            
+        </div>
+</wicket:extend>
+</body>
+</html>
+        

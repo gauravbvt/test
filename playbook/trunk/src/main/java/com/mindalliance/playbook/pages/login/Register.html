@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div data-role="header" data-position="fixed">
+        <img src="/images/logo.png" align="left" alt="(logo)">
+
+        <h1>Playbook - Registration</h1>
+    </div>
+
+    <div data-role="content">
+        <p>Thanks for your interest in Playbook.</p>
+
+        <p> To register, enter your email address in the form below.
+            An activation link will be sent to you in a few moments.
+            Use the link to complete your registration by entering a password.</p>
+
+        <p wicket:id="error" class="error">Error message.</p>
+
+        <form wicket:id="form" method="post" action="#">
+            <div data-role="fieldcontain">
+                <label for="email">Email:</label>
+                <input wicket:id="email" id="email" name="email" type="text"/>
+            </div>
+
+            <div data-role="fieldcontain">
+                <label for="password">Verify the text in the box below:</label>
+                <input wicket:id="captcha" id="password" name="j_captcha" type="text"/>
+                <img class="captcha" width="300" height="100" src="jcaptcha.jpg" alt="Captcha!">
+            </div>
+
+            <input type="submit" value="Register"/>
+        </form>
+    </div>
+</wicket:extend>
+
+</body>
+</html>

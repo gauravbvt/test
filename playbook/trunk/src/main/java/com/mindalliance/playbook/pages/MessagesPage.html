@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div data-role="header" data-position="fixed">
+        <img src="images/logo.png" align="left" alt="(logo)">
+        <h1 wicket:id="title">Playbook - Plays</h1>
+        <a wicket:id="settingsLink" class="ui-btn-right" data-icon="gear" data-role="button" data-rel="dialog" href="#">Settings</a>
+    </div>
+
+    <div data-role="content">
+        <div wicket:id="empty">
+            <p>(No messages)</p>
+        </div>
+        <div data-role="collapsible-set">
+            <div wicket:id="outgoing" data-role="collapsible">
+                <h3>Outgoing requests</h3>
+                <ul data-role="listview" data-inset="true">
+                    <li wicket:id="pending"><a wicket:id="link" href="editplaystep2b.html">
+                            <img wicket:id="photo" src="images/john_drummond.jpeg"/>                
+                                <h3 wicket:id="title">Call John and ask about status</h3>
+                                <p></p>
+                    </a></li>
+                </ul>
+            </div>
+                
+            <div wicket:id="incoming" data-role="collapsible">
+                <h3>Incoming requests</h3>
+                <ul data-role="listview" data-inset="true">
+                    <li wicket:id="pending"><a wicket:id="link" href="request2.html">
+                        <img wicket:id="photo" src="images/john_drummond.jpeg"/>                
+                            <h3 wicket:id="title">Transfer: Insurance claim</h3>
+                    </a></li>
+                </ul>
+            </div>
+
+            <!--<div data-role="collapsible">-->
+                <!--<h3>Notifications</h3>-->
+                <!--<ul data-role="listview" data-inset="true">-->
+                    <!--<li><a class="send">-->
+                        <!--<img src="images/john_drummond.jpeg"/>                -->
+                            <!--<h3>John Drummond changed their phone number</h3>-->
+                    <!--</a></li>-->
+                <!--</ul>-->
+            <!--</div>                -->
+        </div>
+    </div>
+    
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a wicket:id="todos" href="#">Do It Now</a></li>
+                <li><a wicket:id="plays" href="#">Plan Ahead</a></li>
+                <li><a class="ui-btn-active" href="#">Collaborate</a></li>
+            </ul>
+        </div>
+    </div>
+</wicket:extend>
+</body>
+</html>
+        

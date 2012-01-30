@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div data-theme="b" data-role="header">
+        <h1 wicket:id="hTitle">1. Call John and ask about status</h1>
+    </div>
+
+    <div data-role="content">
+        <p wicket:id="feedback" class="error">(Error messages go here)</p>
+        
+        <form id="stepForm" wicket:id="form">
+            <div data-role="fieldcontain">
+                <label for="title">Title:</label>
+                <input wicket:id="title"  id="title" type="text" value="Call John and ask about status">
+            </div>
+            <div data-role="fieldcontain">
+                <label for="descr">Description:</label>
+                <textarea wicket:id="description" id="descr" rows="3" cols="40">Daily discussion</textarea>
+            </div>
+            <div data-role="fieldcontain">
+                <div wicket:id="stepType" data-role="fieldcontain">
+                    <fieldset data-role="controlgroup" data-type="horizontal">
+                        <legend>Step type:</legend>
+                        <input wicket:id="typeTask" checked="checked" type="radio" id="steptype-a"/>
+                        <label for="steptype-a">Task</label>
+                    
+                        <input wicket:id="typeSend" type="radio" id="steptype-b"/>
+                        <label for="steptype-b">Send</label>
+
+                        <input wicket:id="typeReceive" type="radio" id="steptype-c"/>
+                        <label for="steptype-c">Receive</label>
+
+                        <input wicket:id="typePlay" type="radio" id="steptype-d"/>
+                        <label for="steptype-d">Play</label>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div wicket:id="details"></div>
+                
+            <div data-role="fieldcontain">
+                <label for="due">Duration:</label>
+                <input wicket:id="duration" id="due" type="text" value="">
+            </div>
+            <div data-role="fieldcontain">
+                <label for="depends">Depends On:</label>
+                <input id="depends" type="text" value="">
+            </div>
+            
+            <div>
+                <a wicket:id="delete" data-icon="delete" data-role="button" data-inline="true">Delete</a>
+                <input data-icon="check" data-role="button" type="submit" value="Save" data-inline="true"/>
+                <a wicket:id="cancel" data-icon="delete" data-role="button" data-inline="true">Cancel</a>
+                <input data-icon="forward" data-role="button" type="submit" value="Confirm" data-inline="true" 
+                       wicket:id="confirm"/>
+            </div>
+        </form>
+    </div>
+
+</wicket:extend>
+</body>
+</html>

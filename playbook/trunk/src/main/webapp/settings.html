@@ -1,0 +1,46 @@
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+        <!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html>
+<head>
+    <title>Playbook - Active plays</title>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+    <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript">
+        // do not handle links via ajax by default
+        $(document).bind("mobileinit", function () { $.mobile.ajaxEnabled = false; });
+    </script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
+    <link rel="stylesheet" href="css/refinements.css">
+    <script src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+</head>
+<body>
+    <div data-role="page">
+        <div data-theme="b" data-role="header" data-position="fixed">
+            <a data-role="button" data-icon="back" data-rel="back">Back</a>
+            <h1>Playbook - Settings</h1>
+        </div>
+
+        <div data-role="content">
+            <form>
+                <label>Full name: <input name="fullName" type="text"/></label>
+                <label>Email: <input name="email" type="text"/></label>
+                <label>Password: <input name="password" type="text"/></label>
+                <label>Verification code: <input name="code" type="text"/></label>
+                
+                <input data-role="button" data-inline="true" type="submit" value="Submit">
+                
+            </form>
+        </div>
+    
+</body>
+</html>

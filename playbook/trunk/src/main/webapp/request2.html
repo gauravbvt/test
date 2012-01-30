@@ -1,0 +1,73 @@
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Transfer request for: Insurance claim</title>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+    <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript">
+        // do not handle links via ajax by default
+        $(document).bind("mobileinit", function () { $.mobile.ajaxEnabled = false; });
+    </script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
+    <link rel="stylesheet" href="css/refinements.css">
+    <script src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+</head>
+<body>
+    <div data-role="page">
+        <div data-role="header" data-theme="b">
+            <h1>Transfer request for: Insurance claim</h1>
+        </div>
+        <div data-role="content" data-theme="c">
+            <div>
+                <h3>The following message was received from John Drummond:</h3>
+                <div class="quote">
+                    <p>Hi,</p>
+                    <p>Here is my play for insurance claims.</p>
+                </div>
+            </div>
+
+            <form>
+                <div data-role="fieldcontain">
+                    <input checked="checked" name="type" type="radio" id="accept"/> 
+                    <label for="accept">Accept. </label>
+                    <div data-role="fieldcontain">
+                        <label for="name">Name:</label>
+                        <input id="name" type="text" value="Insurance claim">  
+                    </div>
+                </div>
+
+                <div data-role="fieldcontain">
+                    <input name="type" type="radio" id="refer"/> 
+                    <label for="refer">Maybe. </label>
+                    <div data-role="fieldcontain">
+                        <label for="rt">Transfer to:</label>
+                        <input id="rt" type="text">
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="note">Note:</label>
+                        <textarea id="note" rows="4" cols="20"></textarea>
+                    </div>
+                </div>
+
+                <div data-role="fieldcontain">
+                    <input name="type" type="radio" id="no"/> 
+                    <label for="no">Refuse. </label>
+                    <div data-role="fieldcontain">
+                        <label for="reason">Reason:</label>
+                        <textarea id="reason" rows="4" cols="20"></textarea>
+                    </div>
+                </div>
+         
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

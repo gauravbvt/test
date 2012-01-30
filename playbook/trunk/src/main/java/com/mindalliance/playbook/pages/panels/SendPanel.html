@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:panel>
+
+    <div data-role="fieldcontain">
+        <label for="contact">To contact:</label>
+        <input wicket:id="contact" id="contact" type="text" value="John Drummond"/>
+    </div>
+    
+    <div wicket:id="mediaDiv" data-role="fieldcontain" >
+        <div wicket:id="radioGroup">
+            <fieldset data-role="controlgroup">
+                <legend>Using:</legend>
+                <div wicket:id="media">
+                    <input wicket:id="value" type="radio" id="officeType"/> 
+                    <label wicket:id="label" for="officeType">
+                        <span wicket:id="type">Type</span>:
+                        <span wicket:id="address">(Address)</span>
+                    </label>
+                </div>
+            </fieldset>                    
+        </div>
+    </div>
+    
+
+    <!--<div wicket:id="mediaDiv" class="ui-field-contain ui-body ui-br" data-role="fieldcontain" >-->
+        <!--<div wicket:id="radioGroup">-->
+            <!--<fieldset class="ui-corner-all ui-controlgroup ui-controlgroup-vertical" data-role="controlgroup">-->
+                <!--<div class="ui-controlgroup-label" role="heading">Using:</div>-->
+                <!--<div class="ui-controlgroup-controls" wicket:id="media">-->
+                    <!--<div class="ui-controlgroup-controls">-->
+                        <!--<input wicket:id="value" type="radio" id="officeType"/> -->
+                        <!--<label class="ui-btn ui-btn-icon-left ui-radio-off ui-corner-top ui-btn-up-c" wicket:id="label" -->
+                               <!--for="officeType">-->
+                            <!--<span wicket:id="type">Type</span>:-->
+                            <!--<span wicket:id="address">(Address)</span>-->
+                        <!--</label>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</fieldset>                    -->
+        <!--</div>-->
+    <!--</div>-->
+
+</wicket:panel>
+</body>
+</html>

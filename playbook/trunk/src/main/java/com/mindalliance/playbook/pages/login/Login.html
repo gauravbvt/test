@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div data-role="header" data-position="fixed">
+        <img src="/images/logo.png" align="left" alt="(logo)"/>
+
+        <h1>Playbook - Login</h1>
+    </div>
+
+    <div data-role="content">
+        <div wicket:id="error" class="error">
+            <p>Wrong credentials. Try again.</p>
+        </div>
+        <form method="post" action="login.do">
+            <div data-role="fieldcontain">
+                <label for="user">Email:</label>
+                <input id="user" name="j_username" type="text"/>
+            </div>
+            <div data-role="fieldcontain">
+                <label for="password">Password:</label>
+                <input id="password" name="j_password" type="password"/>
+            </div>
+            <div data-role="fieldcontain">
+                <input id="remember_me" name="_spring_security_remember_me" type="checkbox"/>
+                <label for="remember_me">Stay signed in</label>
+            </div>
+
+            <input type="submit" value="Login"/>
+        </form>
+
+        <ul>
+            <li>Don&lsquo;t have an account? <a wicket:id="reglink" href="register.html">Register for free!</a></li>
+            <li>Forgot your password? <a href="reset.html">Reset it here</a></li>
+        </ul>
+    </div>
+
+</wicket:extend>
+</body>
+</html>

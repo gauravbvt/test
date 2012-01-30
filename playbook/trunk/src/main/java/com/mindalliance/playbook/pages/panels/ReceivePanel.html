@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:panel>
+
+    <div data-role="fieldcontain">
+        <label for="contact">From contact:</label>
+        <input wicket:id="with" id="contact" type="text" value="John Drummond"/>
+    </div>
+    
+    <div data-role="fieldcontain">
+        <div wicket:id="using">
+            <fieldset data-role="controlgroup">
+                <legend>Using:</legend>
+                <div wicket:id="media">
+                    <input wicket:id="value" type="radio" id="officeType"/> 
+                    <label wicket:id="label" for="officeType">
+                        <span wicket:id="type">Type</span>:
+                        <span wicket:id="address">(Address)</span>
+                    </label>
+                </div>
+            </fieldset>                    
+        </div>
+    </div>
+    
+    <div data-role="fieldcontain">
+        <input wicket:id="startingPlay" id="startingPlay" type="checkbox"/>
+        <label for="startingPlay">Start this play when received</label>
+    </div>
+
+</wicket:panel>
+</body>
+</html>

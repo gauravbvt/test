@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div data-theme="b" data-role="header">
+        <h1 wicket:id="hTitle">Weekly Meeting</h1>
+    </div>
+
+    <div data-role="content">
+        <form wicket:id="form">
+            <div data-role="fieldcontain">
+                <label for="title">Title:</label>                    
+                <input wicket:id="title" id="title" type="text" value="Weekly meeting">                    
+            </div>
+            <div data-role="fieldcontain">
+                <label for="due">Schedule:</label>
+                <input wicket:id="schedule" id="due" type="text" value="every Thursday at 9am">
+            </div>
+            <div data-role="fieldcontain">
+                <label for="descr">Description:</label>
+                <textarea wicket:id="description" id="descr" rows="3" cols="40"></textarea>
+            </div>
+            <div data-role="fieldcontain">
+                <label for="tags">Tags:</label>
+                <input wicket:id="tagString" id="tags" type="text" value="Work">
+            </div>
+
+            <div data-role="fieldcontain">
+                <label class="ui-input-text" for="plays">Steps:</label>
+                <ul class="play-inset-list" data-role="listview" data-inset="true">
+                    <li wicket:id="steps"><a wicket:id="editStep" class="send" href="editplaystep2.html">
+                        <img wicket:id="photo" src="images/john_drummond.jpeg"/>
+                        <h3><span wicket:id="sequence" class="seq">1</span>. <span wicket:id="title">Call John and ask about status</span></h3>
+                    </a></li>
+                </ul>                                        
+            </div>
+
+            <div data-role="fieldcontain">
+                <label for="newStep">New step:</label>
+                <input wicket:id="newStep" id="newStep" name="newStep" value=""/>
+            </div>
+            
+            <div>
+                <a href="transfer.html" data-icon="forward" data-role="button" data-inline="true">Transfer to...</a>
+                <a wicket:id="deletePlay" data-icon="delete"  data-role="button" data-inline="true">Delete</a>
+                <input type="submit" data-role="button" data-icon="check" value="Save" data-inline="true"/>
+                <a wicket:id="cancel" data-icon="delete"  data-role="button" data-inline="true">Cancel</a>
+                <input type="submit" data-role="button" data-icon="check" value="Do it now!" data-inline="true"/>
+            </div>
+        </form>
+    </div>
+</wicket:extend>
+</body>
+</html>
