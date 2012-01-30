@@ -138,6 +138,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           </value>
         </objProp>
         <stringProp name="filename"></stringProp>
+        <boolProp name="useGroupName">true</boolProp>
       </ResultCollector>
       <hashTree/>
       <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
@@ -1073,7 +1074,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1322114114000</longProp>
         <longProp name="ThreadGroup.end_time">1322114114000</longProp>
@@ -3764,7 +3765,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1322115492000</longProp>
         <longProp name="ThreadGroup.end_time">1322115492000</longProp>
@@ -6232,7 +6233,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1322117028000</longProp>
         <longProp name="ThreadGroup.end_time">1322117028000</longProp>
@@ -8358,7 +8359,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322117787000</longProp>
         <longProp name="ThreadGroup.end_time">1322117787000</longProp>
@@ -9274,7 +9275,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322118247000</longProp>
         <longProp name="ThreadGroup.end_time">1322118247000</longProp>
@@ -10535,7 +10536,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322118600000</longProp>
         <longProp name="ThreadGroup.end_time">1322118600000</longProp>
@@ -11619,7 +11620,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322119549000</longProp>
         <longProp name="ThreadGroup.end_time">1322119549000</longProp>
@@ -12544,7 +12545,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322121486000</longProp>
         <longProp name="ThreadGroup.end_time">1322121486000</longProp>
@@ -13995,7 +13996,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322123665000</longProp>
         <longProp name="ThreadGroup.end_time">1322123665000</longProp>
@@ -15372,7 +15373,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322123973000</longProp>
         <longProp name="ThreadGroup.end_time">1322123973000</longProp>
@@ -16837,7 +16838,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322124569000</longProp>
         <longProp name="ThreadGroup.end_time">1322124569000</longProp>
@@ -18032,7 +18033,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322125081000</longProp>
         <longProp name="ThreadGroup.end_time">1322125081000</longProp>
@@ -19121,7 +19122,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322125732000</longProp>
         <longProp name="ThreadGroup.end_time">1322125732000</longProp>
@@ -20910,7 +20911,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322126533000</longProp>
         <longProp name="ThreadGroup.end_time">1322126533000</longProp>
@@ -22517,7 +22518,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322127052000</longProp>
         <longProp name="ThreadGroup.end_time">1322127052000</longProp>
@@ -23832,7 +23833,7 @@ Consider that User A is accessing the component of the channels first.</stringPr
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <longProp name="ThreadGroup.start_time">1322127360000</longProp>
         <longProp name="ThreadGroup.end_time">1322127360000</longProp>
