@@ -1,8 +1,6 @@
 package com.mindalliance.playbook.pages.login;
 
 import com.octo.captcha.service.image.ImageCaptchaService;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.http.WebResponse;
@@ -11,7 +9,8 @@ import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -50,17 +49,18 @@ public class JCaptchaImage extends WebPage {
         response.setContentType( "image/jpeg" );
     }
 
-    private static byte[] encode( BufferedImage image ) {
-        ByteArrayOutputStream jpegOutputStream = new ByteArrayOutputStream();
+    private static byte[] encode( RenderedImage image ) {
+        // TODO resize and convert to PNG
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();       
         try {
-            JPEGImageEncoder jpegEncoder = JPEGCodec.createJPEGEncoder( jpegOutputStream );
-            jpegEncoder.encode( image );
+            ImageIO.write( image, "jpg", outputStream );
  
         } catch ( IOException e ) {
             LOG.error( "Error generating catpcha", e );
         }
 
-        return jpegOutputStream.toByteArray();
+        return outputStream.toByteArray();
     }
     
     

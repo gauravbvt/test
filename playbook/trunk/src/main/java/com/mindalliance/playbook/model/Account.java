@@ -11,6 +11,7 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -30,8 +31,10 @@ import java.util.List;
     uniqueConstraints = @UniqueConstraint( columnNames = "EMAIL" )
 )
 public class Account implements Serializable, Timestamped {
-    
-    @Id @GeneratedValue
+
+    private static final long serialVersionUID = 1861272453366746780L;
+
+    @Id @GeneratedValue( strategy = GenerationType.AUTO )
     private long id;
 
     private String email;
@@ -142,6 +145,7 @@ public class Account implements Serializable, Timestamped {
      *
      * @param lastModified the new value of lastModified
      */
+    @Override
     public void setLastModified( Date lastModified ) {
         this.lastModified = lastModified;
     }
@@ -151,6 +155,7 @@ public class Account implements Serializable, Timestamped {
      *
      * @return the value of lastModified
      */
+    @Override
     public Date getLastModified() {
         return lastModified;
     }

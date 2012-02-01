@@ -5,15 +5,37 @@
     <groupId>com.mindalliance.playbook</groupId>
     <artifactId>playbook</artifactId>
     <packaging>war</packaging>
-    <version>1.0</version>
-    <!-- TODO project name  -->
-    <name>playbook</name>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>Playbook</name>
     <description>Mobile app mockup</description>
+    <url>https://dev.mind-alliance.com/playbook/</url>
 
     <organization>
         <name>Mind-Alliance Systems LLC</name>
         <url>http://www.mind-alliance.com</url>
     </organization>
+
+    <developers>
+        <developer>
+            <id>denis</id>
+            <name>Denis Ranger</name>
+            <email>denis@mind-alliance.com</email>
+            <roles>
+                <role>Architect</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <id>romit</id>
+            <name>Romit Chatterjee</name>
+            <email>romit@mind-alliance.com</email>
+            <roles>
+                <role>UI designer</role>
+            </roles>
+            <timezone>+5</timezone>
+        </developer>
+    </developers>
 
     <licenses>
         <license>
@@ -22,7 +44,23 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    
+
+    <scm>
+        <connection>scm:svn:https://wush.net/svn/mindalliance/playbook/trunk</connection>
+        <developerConnection>scm:svn:https://wush.net/svn/mindalliance/playbook/trunk</developerConnection>
+        <url>https://wush.net/trac/mindalliance/browser/playbook/trunk</url>
+    </scm>
+
+    <ciManagement>
+        <system>jenkins</system>
+        <url>https://dev.mind-alliance.com/hudson/job/playbook/</url>
+    </ciManagement>
+
+    <issueManagement>
+        <system>Trac</system>
+        <url>https://wush.net/trac/mindalliance</url>
+    </issueManagement>
+
     <repositories>
         <repository>
             <id>jahia.org</id>
@@ -46,7 +84,7 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.1</version>
         </dependency>
-        
+
         <!--  WICKET DEPENDENCIES -->
         <dependency>
             <groupId>org.apache.wicket</groupId>
@@ -136,7 +174,7 @@
             <artifactId>hibernate-core</artifactId>
             <version>4.0.1.Final</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search</artifactId>
             <version>4.1.0.Alpha1</version>
@@ -166,30 +204,29 @@
             <artifactId>jcaptcha</artifactId>
             <version>2.0-alpha-1</version>
         </dependency>
-        
-        <dependency>
-          <groupId>org.mnode.ical4j</groupId>
-          <artifactId>ical4j</artifactId>
-          <version>1.0.2</version>
-          <exclusions>
-              <exclusion>
-                  <groupId>commons-logging</groupId>
-                  <artifactId>commons-logging</artifactId>
-              </exclusion>
-          </exclusions>
-        </dependency>
-        <dependency>
-          <groupId>org.mnode.ical4j</groupId>
-          <artifactId>ical4j-vcard</artifactId>
-          <version>0.9.4</version>
-        </dependency>
-        <dependency>
 
+        <dependency>
+            <groupId>org.mnode.ical4j</groupId>
+            <artifactId>ical4j</artifactId>
+            <version>1.0.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.mnode.ical4j</groupId>
+            <artifactId>ical4j-vcard</artifactId>
+            <version>0.9.4</version>
+        </dependency>
+        <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4.3</version>
         </dependency>
-              
+
         <!-- LOGGING DEPENDENCIES - LOG4J -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -288,8 +325,50 @@
                     <stopKey>CloseSesame</stopKey>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <stylesheet>maven</stylesheet>
+                    <encoding>UTF-8</encoding>
+                    <links>
+                        <link>http://wicket.apache.org/apidocs/1.5/</link>
+                        <link>http://static.springsource.org/spring/docs/3.1.x/javadoc-api/</link>
+                        <link>http://docs.jboss.org/hibernate/core/4.0/javadocs/</link>
+                        <link>http://docs.jboss.org/hibernate/search/4.1/api/</link>
+                    </links>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changelog-plugin</artifactId>
+                <configuration>
+                    <username>${trac.user}</username>
+                    <password>${trac.password}</password>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <query>status!=closed&amp;order=priority&amp;component=${project.artifactId}</query>
+                    <tracUser>${trac.user}</tracUser>
+                    <tracPassword>${trac.password}</tracPassword>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>

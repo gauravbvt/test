@@ -62,7 +62,6 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
           init-method="start" destroy-method="stop">
         <constructor-arg value="-tcp,-tcpAllowOthers"/>
     </bean>
-
     
     <!-- ==================================================================== Mail -->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
