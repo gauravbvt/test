@@ -6,6 +6,7 @@
 <redoRemoveRequirement>Redo remove requirement</redoRemoveRequirement>
 <undoAddNewRequirement>Undo add new requirement</undoAddNewRequirement>
 <redoAddNewRequirement>Redo add new requirement</redoAddNewRequirement>
+<myInformationNeeds>My information needs</myInformationNeeds>
 <info>Info</info>
 <adminPageTitle>Channels - Administration</adminPageTitle>
 <requirements>Requirements</requirements>
