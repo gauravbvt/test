@@ -165,9 +165,9 @@ public class MAP0019_deleteAttachFile
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-					// And acknowledge the alert (equivalent to clicking "OK")
-					alert.accept();
+//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//					// And acknowledge the alert (equivalent to clicking "OK")
+//					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -209,8 +209,8 @@ public class MAP0019_deleteAttachFile
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
-					alert = GlobalVariables.oDriver.switchTo().alert();
-					alert.accept();
+//					alert = GlobalVariables.oDriver.switchTo().alert();
+//					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

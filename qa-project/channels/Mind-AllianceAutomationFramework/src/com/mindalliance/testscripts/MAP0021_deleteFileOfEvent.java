@@ -179,9 +179,9 @@ public class MAP0021_deleteFileOfEvent
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Delete an Attachment of event";
 					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
-					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-					// And acknowledge the alert (equivalent to clicking "OK")
-					alert.accept();
+//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//					// And acknowledge the alert (equivalent to clicking "OK")
+//					alert.accept();
 					// Assertion: verify that file is deleted
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("grouped"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
@@ -223,8 +223,8 @@ public class MAP0021_deleteFileOfEvent
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
-					alert = GlobalVariables.oDriver.switchTo().alert();
-					alert.accept();
+//					alert = GlobalVariables.oDriver.switchTo().alert();
+//					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(8000);

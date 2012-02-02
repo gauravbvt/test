@@ -150,9 +150,9 @@ public class MAC0018_CopyAttachment
 					Thread.sleep(5000);
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-					// Get a handle to the open alert, prompt or confirmation
-					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-					alert.accept();
+//					// Get a handle to the open alert, prompt or confirmation
+//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

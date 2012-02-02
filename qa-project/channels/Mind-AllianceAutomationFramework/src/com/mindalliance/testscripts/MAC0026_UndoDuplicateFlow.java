@@ -159,8 +159,9 @@ public class MAC0026_UndoDuplicateFlow
 				Thread.currentThread();
 				Thread.sleep(3000);
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
+				// Get a handle to the open alert, prompt or confirmation
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
