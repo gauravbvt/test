@@ -140,21 +140,11 @@ public class Account implements Serializable, Timestamped {
         return created;
     }
 
-    /**
-     * Set the value of lastModified.
-     *
-     * @param lastModified the new value of lastModified
-     */
     @Override
-    public void setLastModified( Date lastModified ) {
-        this.lastModified = lastModified;
+    public void setLastModified( Date date ) {
+        this.lastModified = date;
     }
 
-    /**
-     * Get the value of lastModified.
-     *
-     * @return the value of lastModified
-     */
     @Override
     public Date getLastModified() {
         return lastModified;

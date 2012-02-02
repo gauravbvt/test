@@ -40,14 +40,13 @@ public class WicketApplication extends WebApplication implements ApplicationCont
     protected void init() {
         super.init();
         getMarkupSettings().setStripWicketTags( true );
-        getComponentInstantiationListeners().add(
-            new SpringComponentInjector( this, applicationContext ) );
+        getComponentInstantiationListeners().add( new SpringComponentInjector( this, applicationContext ) );
 
         // Allow placing html templates under src/webapp, for easier fine-tuning
         getResourceSettings().addResourceFolder( "" );
 
         getRequestCycleSettings().setRenderStrategy( RenderStrategy.ONE_PASS_RENDER );
-        
+
         mountPage( "login.html", Login.class );
         mountPage( "todo.html", TodoPage.class );
         mountPage( "plays.html", PlaysPage.class );
@@ -60,7 +59,7 @@ public class WicketApplication extends WebApplication implements ApplicationCont
         mountPage( "jcaptcha.jpg", JCaptchaImage.class );
         mountPage( "contacts/${id}", ContactPic.class );
         mountPage( "collaborate.html", MessagesPage.class );
-        
+
         mountPage( "settings.html", Settings.class );
     }
 

@@ -22,6 +22,8 @@ public class PlaysPage extends MobilePage {
 
     private static final Logger LOG = LoggerFactory.getLogger( PlaysPage.class );
 
+    private static final long serialVersionUID = -7557454314650272142L;
+
     @SpringBean
     Account account;
     

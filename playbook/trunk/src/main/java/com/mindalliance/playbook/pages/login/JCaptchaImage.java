@@ -57,7 +57,7 @@ public class JCaptchaImage extends WebPage {
             ImageIO.write( image, "jpg", outputStream );
  
         } catch ( IOException e ) {
-            LOG.error( "Error generating catpcha", e );
+            LOG.error( "Error converting captcha to jpg", e );
         }
 
         return outputStream.toByteArray();

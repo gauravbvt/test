@@ -15,8 +15,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.validation.validator.StringValidator.MinimumLengthValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class Confirm extends MobilePage {
 
-    private static final Logger LOG = LoggerFactory.getLogger( Confirm.class );
+    private static final long serialVersionUID = 5708040952911417703L;
 
     @SpringBean
     private AccountDao accountDao;

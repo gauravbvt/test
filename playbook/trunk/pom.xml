@@ -63,13 +63,6 @@
 
     <repositories>
         <repository>
-            <id>jahia.org</id>
-            <url>http://maven.jahia.org/maven2/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-        <repository>
             <id>Sonatype</id>
             <url>http://oss.sonatype.org/content/groups/sourceforge/</url>
             <releases>
@@ -106,6 +99,13 @@
             <artifactId>wicket-request</artifactId>
             <version>${wicket.version}</version>
         </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!-- SPRING DEPENDENCIES -->
         <dependency>
@@ -249,28 +249,14 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.2</version>
+            <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
-
-        <!--  JETTY DEPENDENCIES FOR TESTING  -->
         <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty</artifactId>
-            <version>${jetty.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty-util</artifactId>
-            <version>${jetty.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty-management</artifactId>
-            <version>${jetty.version}</version>
-            <scope>provided</scope>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.8.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -316,28 +302,30 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-                <configuration>
-                    <contextPath>/</contextPath>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <stopPort>8082</stopPort>
-                    <stopKey>CloseSesame</stopKey>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.5</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tomcat-maven-plugin</artifactId>
+                <configuration>
+                    <server>dev</server>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
-
+    
     <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.8.1</version>
                 <configuration>
                     <stylesheet>maven</stylesheet>
                     <encoding>UTF-8</encoding>
@@ -348,6 +336,14 @@
                         <link>http://docs.jboss.org/hibernate/search/4.1/api/</link>
                     </links>
                 </configuration>
+                <reportSets>
+                    <reportSet>
+                        <id>default</id>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

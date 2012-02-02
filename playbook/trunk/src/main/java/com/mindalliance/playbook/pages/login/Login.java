@@ -16,6 +16,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class Login extends MobilePage {
 
+    private static final long serialVersionUID = -2921882090778907159L;
+
     public Login( PageParameters parameters ) {
         super( parameters );
         
