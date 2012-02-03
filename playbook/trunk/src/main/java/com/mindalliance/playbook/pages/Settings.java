@@ -106,6 +106,8 @@ public class Settings extends MobilePage {
         form.setMultiPart( true );
 
         add(
+            new BookmarkablePageLink( "home", PlaysPage.class ),
+
             form.add(
                 new Label( "email" ),
                 new Label( "contacts.size" ),
