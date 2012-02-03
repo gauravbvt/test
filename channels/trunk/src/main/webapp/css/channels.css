@@ -356,6 +356,7 @@ div.issues li {
 	padding:5px 0 10px 0;
 	margin:0 0 10px 0;
 	border-bottom:2px solid #C9252C;
+	font-family: monospace;
 }
 
 div.issues div.section-title ul.menu {
@@ -1681,34 +1682,19 @@ input[disabled] {
     font-style: italic;
 }
 
-.flow .even {
-	border-bottom:1px solid #BCBEC0;
-}
-
-.flow:first-child .even {
-	border-bottom:1px solid #BCBEC0;
-	/*border-top:1px solid #BCBEC0;*/
-}
-
-/*
-.flow .even:hover {
-	border-bottom:1px solid #666666;
-}
-
-*/
-
+.flow .even,
 .flow .odd {
 	border-bottom:1px solid #BCBEC0;
 }
 
-/*
 
-.flow .odd:hover {
-	border-bottom:1px solid #666666;
+.flow div.extreme:hover,
+.flow div.major:hover,
+.flow div.minor:hover,
+.flow div.severe:hover,
+.flow div.none:hover {
+	background-color: #e8e8e8;
 }
-
-*/
-
 
 
 .flow .info , .summary .task {
@@ -1864,17 +1850,35 @@ span.none {
 /* ----- Sends and Receives Channels ----- */
 
 span.channels-summary {
-	color:#333333;
-	text-transform:lowercase;
-	cursor:pointer;
+    background: none repeat scroll 0 0 #CCD3E5;
+    border: 1px solid #999999;
+    border-radius: 5px 5px 5px 5px;
+    color: #333333;
+    cursor: pointer;
+    font-size: 9px;
+    padding: 2px 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
 div.section-content > div.flow > div > span.pointer {
-	padding-right:2px;
+    font-family: sans-serif;
+    font-size: 13px;
+    text-transform: capitalize;
+    line-height: 22px;
+}
+
+div.section-content > div.flow > div > span.pointer > img.warning {
+	float: right;
+	padding: 2px 3px 10px 15px;
+}
+
+div.section-content > div.flow > div > span.pointer > span.title {
+
 }
 
 div.section-content > div.flow > div > img {
-	padding-right:5px;
+	float: right;
 }
 
 /* ---- Social ----- */

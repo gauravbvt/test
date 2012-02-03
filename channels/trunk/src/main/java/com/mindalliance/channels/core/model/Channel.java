@@ -132,6 +132,17 @@ public class Channel implements Serializable, Comparable<Channel> {
      * @return channels as string
      */
     public static String toString( List<Channel> channels ) {
+        return toString(  channels, ", " );
+    }
+
+    /**
+     * Get string collating channels
+     *
+     * @param channels a set of channels
+     * @param sep  a string
+     * @return channels as string
+     */
+    public static String toString( List<Channel> channels, String sep ) {
         if ( channels.isEmpty() ) {
             return "No channel";
         } else {
@@ -140,7 +151,7 @@ public class Channel implements Serializable, Comparable<Channel> {
             while ( iter.hasNext() ) {
                 Channel channel = iter.next();
                 sb.append( channel.getLabel() );
-                if ( iter.hasNext() ) sb.append( ", " );
+                if ( iter.hasNext() ) sb.append( sep );
             }
             return sb.toString();
         }

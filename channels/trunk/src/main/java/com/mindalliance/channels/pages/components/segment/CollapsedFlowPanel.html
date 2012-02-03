@@ -6,10 +6,11 @@
         lang="en">
 <body>
 <wicket:panel>
-    <span class="pointer"><span wicket:id="title">[flow title panel]</span></span>
-    <img wicket:id="warning" class="inline" src="images/warning.png" alt="Issues detected" />
-	<br />
-    <span class="channels-summary" wicket:id="channels">(555-1212)</span>
+    <span class="pointer">
+		<img wicket:id="warning" class="warning" src="images/warning.png" alt="Issues detected" />
+		<span wicket:id="title">[flow title panel]</span>
+		<span class="channels-summary" wicket:id="channels">(555-1212)</span>
+    </span>
     <span wicket:id="flowMedia" class="flowMediaRefs">[media references panel]</span>
 </wicket:panel>
 </body>

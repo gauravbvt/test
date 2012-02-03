@@ -45,13 +45,13 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
                 update( target, new Change( Change.Type.Selected, getFlow() ) );
             }
         } );
-        final String c = Channel.toString( getFlow().getEffectiveChannels() );
+        final String c = Channel.toString( getFlow().getEffectiveChannels(), " / " );
         Label channel = new Label( "channels", new AbstractReadOnlyModel() {
 
             @Override
             public Object getObject() {
                 return c != null && c.isEmpty() ? ""
-                        : MessageFormat.format( "[via {0}]", c );
+                        : MessageFormat.format( "{0}", c );
             }
         } );
         makeVisible( channel, c != null && !c.isEmpty() );
