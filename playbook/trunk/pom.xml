@@ -315,7 +315,6 @@
                 <version>2.0-beta-1</version>
                 <configuration>
                     <server>dev</server>
-                    <url>https://dev.mind-alliance.com/manager</url>
                 </configuration>
             </plugin>
             <plugin>
