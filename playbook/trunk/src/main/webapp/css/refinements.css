@@ -10,15 +10,16 @@ body {
 }
 
 a.send img {
-    left: inherit;
-    right: 32px;
 }
 a.send {
-    padding-left: 15px !important;
 }
 
 .inactive {
     color: gray;
+}
+
+.right {
+    float: right;
 }
 
 div.error, ul.feedbackPanel {
@@ -75,7 +76,6 @@ div.details .address {
 }
 
 img.contactPic {
-    float: left;
 }
 
 .play-inset-list {

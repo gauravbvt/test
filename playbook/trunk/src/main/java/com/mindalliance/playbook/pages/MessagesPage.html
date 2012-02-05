@@ -10,6 +10,7 @@
 <wicket:extend>
     <div data-role="header" data-position="fixed">
         <img src="images/logo.png" align="left" alt="(logo)">
+
         <h1 wicket:id="title">Playbook - Plays</h1>
         <a wicket:id="settingsLink" class="ui-btn-right" data-icon="gear" data-role="button" data-rel="dialog" href="#">Settings</a>
     </div>
@@ -20,38 +21,40 @@
         </div>
         <div data-role="collapsible-set">
             <div wicket:id="outgoing" data-role="collapsible">
+                <!--<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" wicket:id="count">0</span>-->
                 <h3>Outgoing requests</h3>
                 <ul data-role="listview" data-inset="true">
                     <li wicket:id="pending"><a wicket:id="link" href="editplaystep2b.html">
-                            <img wicket:id="photo" src="images/john_drummond.jpeg"/>                
-                                <h3 wicket:id="title">Call John and ask about status</h3>
-                                <p></p>
+                        <img wicket:id="photo" src="images/john_drummond.jpeg"/>
+                        <h3 wicket:id="title">Call John and ask about status</h3>
+                        <p></p>
                     </a></li>
                 </ul>
             </div>
-                
+
             <div wicket:id="incoming" data-role="collapsible">
+                <!--<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" wicket:id="count">0</span>-->
                 <h3>Incoming requests</h3>
                 <ul data-role="listview" data-inset="true">
                     <li wicket:id="pending"><a wicket:id="link" href="request2.html">
-                        <img wicket:id="photo" src="images/john_drummond.jpeg"/>                
-                            <h3 wicket:id="title">Transfer: Insurance claim</h3>
+                        <img wicket:id="photo" src="images/john_drummond.jpeg"/>
+                        <h3 wicket:id="title">Transfer: Insurance claim</h3>
                     </a></li>
                 </ul>
             </div>
 
             <!--<div data-role="collapsible">-->
-                <!--<h3>Notifications</h3>-->
-                <!--<ul data-role="listview" data-inset="true">-->
-                    <!--<li><a class="send">-->
-                        <!--<img src="images/john_drummond.jpeg"/>                -->
-                            <!--<h3>John Drummond changed their phone number</h3>-->
-                    <!--</a></li>-->
-                <!--</ul>-->
+            <!--<h3>Notifications</h3>-->
+            <!--<ul data-role="listview" data-inset="true">-->
+            <!--<li><a class="send">-->
+            <!--<img src="images/john_drummond.jpeg"/>                -->
+            <!--<h3>John Drummond changed their phone number</h3>-->
+            <!--</a></li>-->
+            <!--</ul>-->
             <!--</div>                -->
         </div>
     </div>
-    
+
     <div data-role="footer" data-position="fixed">
         <div data-role="navbar">
             <ul>

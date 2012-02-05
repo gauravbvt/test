@@ -4,6 +4,8 @@ import com.mindalliance.playbook.model.Contact;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -27,4 +29,12 @@ public interface ContactMerger {
      */
     @Transactional
     void merge( List<Contact> contacts );
+
+    /**
+     * Import a stream of VCards.
+     * 
+     * @param inputStream  the stream
+     * @throws IOException on errors
+     */
+    void importVCards( InputStream inputStream ) throws IOException;
 }

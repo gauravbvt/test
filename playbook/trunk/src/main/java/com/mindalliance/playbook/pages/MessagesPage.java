@@ -4,6 +4,7 @@ import com.mindalliance.playbook.dao.ConfirmationReqDao;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.ConfirmationReq;
+import com.mindalliance.playbook.model.Contact;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -30,29 +31,31 @@ public class MessagesPage extends MobilePage {
 
     @SpringBean
     Account account;
-    
+
     @SpringBean
     ConfirmationReqDao reqDao;
-    
+
     public MessagesPage( PageParameters parameters ) {
         super( parameters );
         LOG.debug( "Generating for account: {}", account.getEmail() );
         setDefaultModel( new CompoundPropertyModel<Account>( account ) );
-        
+
         List<ConfirmationReq> outgoing = reqDao.getOutgoingRequests();
         List<ConfirmationReq> incoming = reqDao.getIncomingRequests();
 
         add(
             new Label( "title", new PropertyModel<String>( this, "pageTitle" ) ),
-            
+
             new WebMarkupContainer( "empty" ).setVisible( outgoing.isEmpty() && incoming.isEmpty() ),
 
-            new WebMarkupContainer( "outgoing" ).add( 
-                new ListView<ConfirmationReq>( "pending",  outgoing ) {
+            new WebMarkupContainer( "outgoing" ).add(
+                new Label( "count", String.valueOf( incoming.size() ) ),
+                new ListView<ConfirmationReq>( "pending", outgoing ) {
                     @Override
                     protected void populateItem( ListItem<ConfirmationReq> item ) {
                         final Collaboration collaboration = item.getModelObject().getCollaboration();
-                        item.add( 
+                        Contact contact = collaboration.getWith();
+                        item.add(
                             new StatelessLink( "link" ) {
                                 @Override
                                 public void onClick() {
@@ -60,26 +63,25 @@ public class MessagesPage extends MobilePage {
                                 }
                             }.add(
                                 new Label( "title", collaboration.getTitle() ),
-                                
+
                                 // TODO figure out what is the right way of doing this...
-                                new WebMarkupContainer( "photo" ).add( 
-                                    new AttributeModifier( "src", 
-                                                           new Model<String>( "/contacts/" 
-                                                                              + collaboration.getWith().getId() ) ) )
-                            )
-                        );
-
+                                new WebMarkupContainer( "photo" ).add(
+                                    new AttributeModifier(
+                                        "src", new Model<String>(
+                                        "contacts/" + contact.getId() ) ) ).setVisible(
+                                    contact.getPhoto() != null ) ) );
                     }
-                }
-            ).setVisible( !outgoing.isEmpty() ),
+                } ).setVisible( !outgoing.isEmpty() ),
 
-            new WebMarkupContainer( "incoming" ).add( 
-                new ListView<ConfirmationReq>( "pending",  incoming ) {
+            new WebMarkupContainer( "incoming" ).add(
+                new Label( "count", String.valueOf( incoming.size() ) ),
+                new ListView<ConfirmationReq>( "pending", incoming ) {
                     @Override
                     protected void populateItem( ListItem<ConfirmationReq> item ) {
                         final ConfirmationReq req = item.getModelObject();
                         final Collaboration collaboration = req.getCollaboration();
-                        item.add( 
+                        Contact contact = collaboration.getPlay().getPlaybook().getMe();
+                        item.add(
                             new StatelessLink( "link" ) {
                                 @Override
                                 public void onClick() {
@@ -87,19 +89,14 @@ public class MessagesPage extends MobilePage {
                                 }
                             }.add(
                                 new Label( "title", collaboration.getTitle() ),
-                                
-                                // TODO figure out what is the right way of doing this...
-                                new WebMarkupContainer( "photo" ).add( 
-                                    new AttributeModifier( "src", 
-                                                           new Model<String>( "/contacts/" 
-                                                                              + collaboration.getPlay().getPlaybook()
-                                                               .getMe().getId() ) ) )
-                            )
-                        );
 
+                                // TODO figure out what is the right way of doing this...
+                                new WebMarkupContainer( "photo" ).add(
+                                    new AttributeModifier(
+                                        "src", new Model<String>(
+                                        "contacts/" + contact.getId() ) ) ) ) );
                     }
-                }
-            ).setVisible( !incoming.isEmpty() ),
+                } ).setVisible( !incoming.isEmpty() ),
 
             new BookmarkablePageLink<Settings>( "settingsLink", Settings.class ),
             new BookmarkablePageLink<PlaysPage>( "plays", PlaysPage.class ),

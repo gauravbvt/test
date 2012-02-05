@@ -15,18 +15,21 @@ public abstract class AbstractPageTest {
 
     protected WicketTester tester;
 
+    protected ApplicationContextMock context;
+
     @Before
     public void setUp() {
         tester = new WicketTester();
 
-        ApplicationContextMock context = new ApplicationContextMock();
+        context = new ApplicationContextMock();
         init( context );
-        
-        WebApplication application = tester.getApplication();        
+
+        WebApplication application = tester.getApplication();
         application.getComponentInstantiationListeners().add( new SpringComponentInjector( application, context ) );
     }
 
     protected abstract Class<? extends WebPage> getTestedClass();
+
     protected abstract void init( ApplicationContextMock context );
 
     @Test

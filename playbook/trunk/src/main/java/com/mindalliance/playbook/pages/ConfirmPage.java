@@ -7,9 +7,10 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.link.StatelessLink;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,8 @@ public class ConfirmPage extends MobilePage {
         
         add(
             new Label( "hTitle", getPageTitle() ),
-            new Label( "collaboration.with.fullName" ), 
+            new Label( "collaboration.with.fullName" ),
+            new BookmarkablePageLink<EditStep>( "cancel", EditStep.class, new PageParameters().add( "id", req.getCollaboration().getId() ) ),
             new StatelessForm<ConfirmationReq>( "form", model ) {
                 @Override
                 protected void onSubmit() {
@@ -46,15 +48,7 @@ public class ConfirmPage extends MobilePage {
             }.add(
                 new Label( "collaboration.with.givenName" ),
                 new TextArea<String>( "description" ),
-                new CheckBox( "forwardable" ),
-                new StatelessLink( "cancel" ) {
-                    @Override
-                    public void onClick() {
-                        // TODO find the proper way of doing this
-                        LOG.debug( "Cancelled" );
-                        ConfirmPage.this.continueToOriginalDestination();
-                    }
-                }
+                new CheckBox( "forwardable" )
             )
         );
             

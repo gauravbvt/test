@@ -9,7 +9,7 @@
 <body>
 <wicket:extend>
     <div data-role="header" data-position="fixed">
-        <img src="/images/logo.png" align="left" alt="(logo)">
+        <img src="images/logo.png" align="left" alt="(logo)">
 
         <h1>Playbook - Password</h1>
     </div>
@@ -23,12 +23,12 @@
         <form wicket:id="form" method="post">
             <div data-role="fieldcontain">
                 <label for="email">Email:</label>
-                <input wicket:id="email" id="email" name="email" type="text"/>
+                <input autofocus="autofocus" wicket:id="email" id="email" name="email" type="text"/>
             </div>
 
             <div data-role="fieldcontain">
                 <label for="captcha">Verify the text in the box below:</label>
-                <input wicket:id="captcha" id="captcha" name="j_captcha" type="text"/>
+                <input autocomplete="off" wicket:id="captcha" id="captcha" name="j_captcha" type="text"/>
                 <img class="captcha" width="300" height="100" src="jcaptcha.jpg" alt="Captcha!">
             </div>
 

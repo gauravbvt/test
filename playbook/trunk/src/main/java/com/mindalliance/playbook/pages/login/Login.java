@@ -23,6 +23,7 @@ public class Login extends MobilePage {
         
         add(
             new BookmarkablePageLink<Register>( "reglink", Register.class ),
+            new BookmarkablePageLink<Reset>( "reset", Reset.class ),
             new WebMarkupContainer( "error" )
                 .setVisible( !parameters.get( "login_error" ).isEmpty() ) 
         );

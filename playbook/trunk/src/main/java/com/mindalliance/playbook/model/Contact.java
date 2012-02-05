@@ -448,4 +448,15 @@ public class Contact implements Serializable, Comparable<Contact> {
         
         return null;
     }
+
+    @Override
+    public boolean equals( Object obj ) {
+        return this == obj 
+            || obj instanceof Contact && id == ( (Contact) obj ).getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) ( id ^ id >>> 32 );
+    }
 }

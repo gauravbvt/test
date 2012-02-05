@@ -9,6 +9,7 @@
 <body>
 <wicket:extend>
     <div data-theme="b" data-role="header">
+        <a wicket:id="cancel" data-role="button" data-icon="back" data-inline="true" >Back</a>
         <h1 wicket:id="hTitle">1. Call John and ask about status</h1>
     </div>
     <div data-role="content" data-theme="c">
@@ -24,7 +25,6 @@ Please confirm that you agree that I will call you using your office phone every
             </div>
             
             <div>
-                <a wicket:id="cancel" data-role="button" data-icon="delete" data-inline="true" >Cancel</a>
                 <input type="submit" data-role="button" data-icon="check" data-inline="true" value="Request 
                 Confirmation"/>
             </div>

@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -111,6 +112,8 @@ public abstract class Collaboration extends Step {
 
     public void setUsing( Medium using ) {
         LOG.debug( "Updating 'using' to {}", using );
+        if ( this.using != null && !this.using.equals( using ) )
+            confirmed = false;
         this.using = using;
     }
 
@@ -120,9 +123,13 @@ public abstract class Collaboration extends Step {
 
     public void setWith( Contact with ) {
         LOG.debug( "Updating 'with' to {}", with );
+        if ( this.with != null && !this.with.equals( with ) )
+            confirmed = false;
+            
         this.with = with;
     }
     
+    @Override
     @Transient
     public boolean isCollaboration() {
         return true;
@@ -134,7 +141,7 @@ public abstract class Collaboration extends Step {
     }
     
     public List<ConfirmationReq> getRequests() {
-        return requests;
+        return Collections.unmodifiableList( requests );
     }
     
     public void addRequest( ConfirmationReq request ) {

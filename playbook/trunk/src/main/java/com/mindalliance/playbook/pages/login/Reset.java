@@ -48,7 +48,7 @@ public class Reset extends MobilePage {
 
     private String captcha;
 
-    @SpringBean
+    @SpringBean( name = "serverUrl" )
     private String serverUrl;
 
     @SpringBean( name = "from" )

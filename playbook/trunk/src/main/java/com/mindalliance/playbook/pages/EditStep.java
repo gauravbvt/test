@@ -4,6 +4,7 @@ import com.mindalliance.playbook.dao.PlayDao;
 import com.mindalliance.playbook.dao.StepDao;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Collaboration;
+import com.mindalliance.playbook.model.Play;
 import com.mindalliance.playbook.model.Step;
 import com.mindalliance.playbook.model.Step.Type;
 import com.mindalliance.playbook.pages.panels.ReceivePanel;
@@ -20,6 +21,7 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -67,8 +69,6 @@ public class EditStep extends MobilePage {
         stepType = step.getType();
 
         add(
-            new Label( "hTitle", new PropertyModel<String>( step, "title" ) ), 
-            new FeedbackPanel( "feedback" ),
 
             new StatelessForm( "form" ) {
                 @Override
@@ -76,6 +76,10 @@ public class EditStep extends MobilePage {
                     save( step );
                 }
             }.add(
+                new Label( "hTitle", new PropertyModel<String>( step, "title" ) ),
+                new FeedbackPanel( "feedback" ),
+                new BookmarkablePageLink<EditPlay>( "cancel", EditPlay.class,
+                                                    new PageParameters().add( "id", step.getPlay().getId() )),
                 new TextField<String>( "title" ),
                 new TextArea<String>( "description" ),
                 new TextField<String>( "duration" ),
@@ -113,13 +117,7 @@ public class EditStep extends MobilePage {
                     @Override
                     public void onClick() {
                         stepDao.delete( step );
-                        gotoPlay( step );
-                    }
-                },
-                new StatelessLink( "cancel" ) {
-                    @Override
-                    public void onClick() {
-                        gotoPlay( step );
+                        gotoPlay( step.getPlay() );
                     }
                 },
                 
@@ -145,9 +143,9 @@ public class EditStep extends MobilePage {
                 if ( collaboration.getWith() == null || collaboration.getUsing() == null )
                     gotoStep( step );
                 else
-                    gotoPlay( step );
+                    gotoPlay( step.getPlay() );
             } else
-                gotoPlay( step );
+                gotoPlay( step.getPlay() );
         } else {
             gotoStep( stepDao.switchStep( stepType, step ) );
         }
@@ -185,18 +183,19 @@ public class EditStep extends MobilePage {
         return step;
     }
 
-    private void gotoPlay( Step step ) {
-        long playId = step.getPlay().getId();
+    private void gotoPlay( Play play ) {
+        long playId = play.getId();
 
         // TODO find the proper way of doing this
-        WebResponse response = (WebResponse) getResponse();
-        response.sendRedirect( "/plays/" + Long.toString( playId ) );
+        setResponsePage( EditPlay.class, new PageParameters().add( "id", playId ) );
+//        WebResponse response = (WebResponse) getResponse();
+//        response.sendRedirect( "../plays/" + Long.toString( playId ) );
     }
 
     private void gotoStep( Step step ) {
         // TODO find the proper way of doing this
         WebResponse response = (WebResponse) getResponse();
-        response.sendRedirect( "/steps/" + Long.toString( step.getId() ) );
+        response.sendRedirect( Long.toString( step.getId() ) );
     }
 
     @Override

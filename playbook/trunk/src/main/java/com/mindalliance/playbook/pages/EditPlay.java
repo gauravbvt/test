@@ -57,6 +57,7 @@ public class EditPlay extends MobilePage {
                 new PropertyModel<Object>(
                     play,
                     "title" ) ),
+            new BookmarkablePageLink<PlaysPage>( "back", PlaysPage.class ),
             new StatelessForm( "form" ) {
                 @Override
                 protected void onSubmit() {
@@ -97,14 +98,6 @@ public class EditPlay extends MobilePage {
                         response.sendRedirect( "../plays.html" );
                     }
                 },
-                new StatelessLink( "cancel" ) {
-                    @Override
-                    public void onClick() {
-                        // TODO find the proper way of doing this
-                        WebResponse response = (WebResponse) getResponse();
-                        response.sendRedirect( "../plays.html" );
-                    }
-                },
                 new TextField( "tagString" ),
 
                 new ListView<Step>( "steps" ) {
@@ -113,10 +106,13 @@ public class EditPlay extends MobilePage {
                         Step step = item.getModelObject();
 
                         long contactId = 0L;
+                        boolean hasPhoto = false;
                         if ( step.isCollaboration() ) {
                             Contact with = ( (Collaboration) step ).getWith();
-                            if ( with != null )
+                            if ( with != null ) {
                                 contactId = with.getId();
+                                hasPhoto = with.getPhoto() != null;
+                            }
                         }
                         
                         item.add( new BookmarkablePageLink<EditStep>( "editStep",
@@ -126,8 +122,8 @@ public class EditPlay extends MobilePage {
                             // TODO figure out what is the right way of doing this...
                             new WebMarkupContainer( "photo" ).add( new AttributeModifier( "src",
                                                                                           new Model<String>(
-                                                                                              "/contacts/" + contactId ) ) )
-                                                             .setVisible( step.isCollaboration() && contactId != 0L ),
+                                                                                              "../contacts/" + contactId ) ) )
+                                                             .setVisible( contactId != 0L && hasPhoto ),
 
                             new Label( "sequence", new PropertyModel<Integer>( step, "sequence" ) ),
                             new Label( "title", new PropertyModel<String>( step, "title" ) ) ) );
