@@ -17,7 +17,7 @@ import com.mindalliance.globallibrary.GlobalVariables;
 public class UpdatePlannerInPerformance 
 {
     public UpdatePlannerInPerformance() {
-    		String sChannelURL = "http://192.168.4.126:8081/channels";
+    		String sChannelURL = "http://192.168.4.127:8081/channels";
     		String sUserName = "jf";
     		String sPassword = "Mind-Alliance";
 		try {
@@ -50,13 +50,17 @@ public class UpdatePlannerInPerformance
 					tds = tr.findElements(By.tagName("td"));
 					for(WebElement td: tds)
 					{
-						if(td.getText().contains("planner")){
+						if(td.getText().contains("user")){
 							GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:"+ (countUsers - 1) +":group:fullName"));
 							for (int i = 0; i <= 10; i++)
 								GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-							GlobalVariables.oElement.sendKeys("Planner"+(countUsers - 5));
+							GlobalVariables.oElement.sendKeys("User"+(countUsers - 6));
+							GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("item:" + (countUsers - 1) + ":group:email"));
+							GlobalVariables.oElement.clear();
+							GlobalVariables.oElement.sendKeys("user"+(countUsers-1)+"@example.com");
 							GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:" + (countUsers - 1) + ":group:password"));
 							GlobalVariables.oElement.sendKeys("@test123");
+							
 							GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody/tr[" + (countUsers) + "]/td[6]/input")).click();
 							countPlanners++;
 						}
