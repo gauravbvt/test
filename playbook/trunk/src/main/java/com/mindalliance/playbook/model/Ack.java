@@ -21,4 +21,9 @@ public class Ack extends ConfirmationAck {
     //
     public Ack() {
     }
+
+    @Override
+    public boolean isAck() {
+        return true;
+    }
 }

@@ -24,6 +24,11 @@ public class NAck extends ConfirmationAck {
     public NAck() {
     }
 
+    @Override
+    public boolean isAck() {
+        return false;
+    }
+
     public String getReason() {
         return reason;
     }

@@ -27,10 +27,6 @@ public abstract class Collaboration extends Step {
 
     private static final long serialVersionUID = -2318735159254336969L;
 
-    private boolean confirmed;
-
-    private boolean pending;
-
     @ManyToOne
     private Medium using;
 
@@ -63,7 +59,6 @@ public abstract class Collaboration extends Step {
             if ( request.isPending() )
                 return request;
 
-        pending = false;
         ConfirmationReq req = new ConfirmationReq( this );
         req.setDescription( getDefaultDescription() );        
         
@@ -86,34 +81,11 @@ public abstract class Collaboration extends Step {
         return sb.toString();
     }
 
-    public boolean isConfirmed() {
-        return confirmed;
-    }
-
-    public void setConfirmed( boolean confirmed ) {
-        this.confirmed = confirmed;
-    }
-
-    /**
-     * Test if this collaboration is waiting to be confirmed.
-     * @return true if there are some pending confirmation requests.
-     */
-    public boolean isPending() {
-        return pending;
-    }
-
-    public void setPending( boolean pending ) {
-        this.pending = pending;
-    }
-
     public Medium getUsing() {
         return using;
     }
 
     public void setUsing( Medium using ) {
-        LOG.debug( "Updating 'using' to {}", using );
-        if ( this.using != null && !this.using.equals( using ) )
-            confirmed = false;
         this.using = using;
     }
 
@@ -122,10 +94,6 @@ public abstract class Collaboration extends Step {
     }
 
     public void setWith( Contact with ) {
-        LOG.debug( "Updating 'with' to {}", with );
-        if ( this.with != null && !this.with.equals( with ) )
-            confirmed = false;
-            
         this.with = with;
     }
     
@@ -135,19 +103,8 @@ public abstract class Collaboration extends Step {
         return true;
     }
 
-    @Override
-    public boolean isConfirmable() {
-        return !confirmed && !pending;
-    }
-    
     public List<ConfirmationReq> getRequests() {
         return Collections.unmodifiableList( requests );
-    }
-    
-    public void addRequest( ConfirmationReq request ) {
-        requests.add( request );
-        confirmed = false;
-        pending = true;
     }
     
 }

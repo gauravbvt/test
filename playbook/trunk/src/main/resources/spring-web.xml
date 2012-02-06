@@ -136,7 +136,8 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
     </bean>
     <bean name="captchaService" class="com.octo.captcha.service.image.DefaultManageableImageCaptchaService"/>
 
-    <bean name="account" class="com.mindalliance.playbook.dao.impl.AccountDaoImpl" factory-method="currentAccount"
+    <bean name="account" 
+          class="com.mindalliance.playbook.dao.impl.AccountDaoImpl" factory-method="currentAccount"
           scope="request" autowire="no">
         <constructor-arg ref="accountDao"/> 
     </bean>

@@ -15,10 +15,15 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue( "redirect" )
 public class RedirectAck extends ConfirmationAck {
-
+    
     //
     // Constructors
     //
     public RedirectAck() {
+    }
+
+    @Override
+    public boolean isAck() {
+        return true;
     }
 }

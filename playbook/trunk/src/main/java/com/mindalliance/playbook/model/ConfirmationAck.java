@@ -14,15 +14,17 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * A response to a request.
  */
-@Entity
-@Inheritance( strategy = InheritanceType.SINGLE_TABLE )
 @DiscriminatorColumn( discriminatorType = DiscriminatorType.STRING )
-abstract public class ConfirmationAck {
+@Inheritance( strategy = InheritanceType.SINGLE_TABLE )
+@Entity
+public abstract class ConfirmationAck implements Serializable {
 
     @Id @GeneratedValue
     private long id;
@@ -57,4 +59,7 @@ abstract public class ConfirmationAck {
     public long getId() {
         return id;
     }
+    
+    @Transient
+    public abstract boolean isAck();
 }

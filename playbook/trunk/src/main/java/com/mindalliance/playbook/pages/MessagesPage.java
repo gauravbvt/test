@@ -49,7 +49,7 @@ public class MessagesPage extends MobilePage {
             new WebMarkupContainer( "empty" ).setVisible( outgoing.isEmpty() && incoming.isEmpty() ),
 
             new WebMarkupContainer( "outgoing" ).add(
-                new Label( "count", String.valueOf( incoming.size() ) ),
+//                new Label( "count", String.valueOf( incoming.size() ) ),
                 new ListView<ConfirmationReq>( "pending", outgoing ) {
                     @Override
                     protected void populateItem( ListItem<ConfirmationReq> item ) {
@@ -59,7 +59,7 @@ public class MessagesPage extends MobilePage {
                             new StatelessLink( "link" ) {
                                 @Override
                                 public void onClick() {
-                                    redirectToInterceptPage( new ConfirmPage( collaboration ) );
+                                    setResponsePage( new ConfirmPage( collaboration ) );
                                 }
                             }.add(
                                 new Label( "title", collaboration.getTitle() ),
@@ -74,7 +74,7 @@ public class MessagesPage extends MobilePage {
                 } ).setVisible( !outgoing.isEmpty() ),
 
             new WebMarkupContainer( "incoming" ).add(
-                new Label( "count", String.valueOf( incoming.size() ) ),
+//                new Label( "count", String.valueOf( incoming.size() ) ),
                 new ListView<ConfirmationReq>( "pending", incoming ) {
                     @Override
                     protected void populateItem( ListItem<ConfirmationReq> item ) {

@@ -2,6 +2,7 @@ package com.mindalliance.playbook.pages;
 
 import com.mindalliance.playbook.dao.PlayDao;
 import com.mindalliance.playbook.dao.StepDao;
+import com.mindalliance.playbook.dao.StepDao.Status;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.Play;
@@ -10,6 +11,7 @@ import com.mindalliance.playbook.model.Step.Type;
 import com.mindalliance.playbook.pages.panels.ReceivePanel;
 import com.mindalliance.playbook.pages.panels.SendPanel;
 import com.mindalliance.playbook.pages.panels.SubplayPanel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -68,6 +70,8 @@ public class EditStep extends MobilePage {
         setDefaultModel( model );
         stepType = step.getType();
 
+        Status status = stepDao.getStatus( step );
+
         add(
 
             new StatelessForm( "form" ) {
@@ -78,8 +82,9 @@ public class EditStep extends MobilePage {
             }.add(
                 new Label( "hTitle", new PropertyModel<String>( step, "title" ) ),
                 new FeedbackPanel( "feedback" ),
-                new BookmarkablePageLink<EditPlay>( "cancel", EditPlay.class,
-                                                    new PageParameters().add( "id", step.getPlay().getId() )),
+                new BookmarkablePageLink<EditPlay>(
+                    "cancel", EditPlay.class, new PageParameters().add(
+                    "id", step.getPlay().getId() ) ),
                 new TextField<String>( "title" ),
                 new TextArea<String>( "description" ),
                 new TextField<String>( "duration" ),
@@ -120,7 +125,7 @@ public class EditStep extends MobilePage {
                         gotoPlay( step.getPlay() );
                     }
                 },
-                
+
                 new Button( "confirm" ) {
                     @Override
                     public void onSubmit() {
@@ -128,10 +133,20 @@ public class EditStep extends MobilePage {
                         save( step );
                         redirectToInterceptPage( new ConfirmPage( (Collaboration) step ) );
                     }
-                }
+                }.add( new AttributeModifier( "value", getText( status ) ) )
                     .setVisible( step.isCollaboration() )
-                    .setEnabled( step.isConfirmable() )
-            ) );
+                    .setEnabled( status == Status.UNCONFIRMED ) ) );
+    }
+
+    private static String getText( Status status ) {
+        switch ( status ) {
+        case CONFIRMED: return "Confirmed";
+        case REJECTED: return "Rejected";
+        case PENDING:  return "Pending";
+        case UNCONFIRMED: 
+        default:
+            return "Confirm";
+        }
     }
 
     private void save( Step step ) {

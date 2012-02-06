@@ -96,4 +96,8 @@ public class ConfirmationReq implements Serializable, Timestamped {
     public void setForwardable( boolean forwardable ) {
         this.forwardable = forwardable;
     }
+
+    public long getId() {
+        return id;
+    }
 }

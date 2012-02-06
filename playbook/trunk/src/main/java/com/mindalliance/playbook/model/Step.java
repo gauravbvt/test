@@ -111,12 +111,4 @@ public abstract class Step implements Serializable {
     
     @Transient
     public abstract Type getType();
-
-    /**
-     * @return True if this step can be confirmed.
-     */
-    public boolean isConfirmable() {
-        return false;
-    }
-
 }

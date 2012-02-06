@@ -9,65 +9,72 @@
 <body>
 <wicket:extend>
     <div data-role="header" data-theme="b">
+        <a wicket:id="cancel" data-inline="true" data-role="button" data-icon="back">Back</a>
         <h1 wicket:id="hTitle">Request</h1>
     </div>
     <div data-role="content" data-theme="c">
         <div>
-            <h3>The following message was received from <span wicket:id="collaboration.play.playbook.me">Jane 
+            <h3>The following message was received from <span wicket:id="req.collaboration.play.playbook.me">Jane 
                 Doe</span> 
                 :</h3>
-            <div wicket:id="description" class="quote">
+            <img class="left-icon" wicket:id="photo"/>
+            <div wicket:id="req.description" class="quote">
                 <p>Hi,</p>
                 <p>Can you sent me the weekly meeting summary?</p>
             </div>
-        </div>
+        </div>        
 
-        <form wicket:id="form">
-            <div data-role="fieldcontain">
-                <input checked="checked" name="type" type="radio" id="newplay"/> 
-                <label for="newplay">Yes. </label>
+        <form id="replyForm" wicket:id="form">
+            <ul wicket:id="formList" id="formList" data-role="listview" data-inset="true">
+                <li data-role="fieldcontain">
+                    <div wicket:id="answerType">
+                        <fieldset data-role="controlgroup" data-type="horizontal">
+                            <legend>Reply:</legend>
+                            <input wicket:id="typeYes" type="radio" id="reply-a"/>
+                            <label for="reply-a">Yes</label>
 
-                <div data-role="fieldcontain">
-                    <label for="npt">Add in a new play named:</label>
-                    <input wicket:id="newPlay" id="npt" type="text">
-                </div>                    
-            </div>
-            <div data-role="fieldcontain">
-                <input name="type" type="radio" id="addplay"/> 
-                <label for="addplay">Yes. </label>
-                <div data-role="fieldcontain">
-                    <label for="play">Add to play:</label>
-                    <select id="play" wicket:id="play">
-                        <wicket:container wicket:id="plays">
-                            <option wicket:id="option">(A play)</option>
-                        </wicket:container>
-                    </select>                    
+                            <input wicket:id="typeNo" type="radio" id="reply-b"/>
+                            <label for="reply-b">No</label>
+
+                            <input wicket:id="typeMaybe" type="radio" id="reply-c"/>
+                            <label for="reply-c">Maybe</label>
+                        </fieldset>
+                    </div>
+                </li>
+
+                <div wicket:id="yesDiv">
+                    <li data-role="fieldcontain">
+                        <label for="npt">Add in a new play named:</label>
+                        <input wicket:id="newPlay" id="npt" type="text">
+                    </li>
+
+                    <li data-role="fieldcontain">
+                        <label for="play">Add to play:</label>
+                        <select id="play" wicket:id="existingPlay">
+                            <wicket:container wicket:id="plays">
+                                <option wicket:id="option">(A play)</option>
+                            </wicket:container>
+                        </select>
+                    </li>
                 </div>
-            </div>
 
-            <div data-role="fieldcontain">
-                <input name="type" type="radio" id="refer"/> 
-                <label for="refer">Maybe. </label>
-                <div data-role="fieldcontain">
-                    <label for="rt">Refer to:</label>
-                    <input id="rt" type="text">
-                </div>
-                <div data-role="fieldcontain">
-                    <label for="note">Note:</label>
-                    <textarea id="note" rows="4" cols="20"></textarea>
-                </div>
-            </div>
-
-            <div data-role="fieldcontain">
-                <input name="type" type="radio" id="no"/> 
-                <label for="no">No. </label>
-                <div data-role="fieldcontain">
+                <li data-role="fieldcontain" wicket:id="noDiv">
                     <label for="reason">Reason:</label>
-                    <textarea id="reason" rows="4" cols="20"></textarea>
+                    <textarea wicket:id="nAck.reason" id="reason" rows="4" cols="20"></textarea>
+                </li>
+
+                <div wicket:id="maybeDiv">
+                    <li data-role="fieldcontain">
+                        <label for="rt">Refer to:</label>
+                        <input data-role="search" wicket:id="referral" id="rt" type="text">
+                    </li>
+
+                    <li data-role="fieldcontain">
+                        <label for="note">Note:</label>
+                        <textarea wicket:id="referralNote"  id="note" rows="4" cols="20"></textarea>
+                    </li>
                 </div>
-            </div>
-         
-            <a wicket:id="cancel" data-inline="true" data-role="button" data-icon="delete">Cancel</a>
+            </ul>
             <input data-inline="true" data-icon="check" type="submit" value="Submit">
         </form>
     </div>
