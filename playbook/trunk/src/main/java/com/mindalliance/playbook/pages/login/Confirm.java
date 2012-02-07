@@ -64,9 +64,9 @@ public class Confirm extends MobilePage {
                 accountDao.save( account );
 
                 WebResponse response = (WebResponse) getResponse();
-                response.sendRedirect( "/logout" );
+                response.sendRedirect( "logout" );
             }
-        };
+        };                                                         
 
         add(
             new FeedbackPanel( "feedback" ),
