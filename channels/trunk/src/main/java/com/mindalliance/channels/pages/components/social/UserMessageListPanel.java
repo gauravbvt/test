@@ -8,8 +8,8 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.social.PlannerMessage;
-import com.mindalliance.channels.social.PlannerMessagingService;
+import com.mindalliance.channels.social.model.UserMessage;
+import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -41,10 +41,10 @@ import java.util.List;
  * Date: Jul 5, 2010
  * Time: 1:32:35 PM
  */
-public class PlannerMessageListPanel extends AbstractSocialListPanel {
+public class UserMessageListPanel extends AbstractSocialListPanel {
 
     @SpringBean
-    private PlannerMessagingService plannerMessagingService;
+    private UserMessageService userMessageService;
 
     @SpringBean
     private UserDao userDao;
@@ -58,7 +58,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private boolean privateOnly = false;
     private boolean showReceived = true;
     private boolean allShown;
-    private WebMarkupContainer plannerMessagesContainer;
+    private WebMarkupContainer userMessagesContainer;
     private User newMessageRecipient;
     private ModelObject newMessageAbout;
     private String newMessageText = "";
@@ -74,11 +74,11 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private Date whenLastRefreshed;
 
     static {
-        ALL_PLANNERS = new User( new UserInfo( PlannerMessagingService.PLANNERS, "bla,Anonymous,bla" ) );
-        ALL_USERS = new User( new UserInfo( PlannerMessagingService.USERS, "bla,Anonymous,bla" ) );
+        ALL_PLANNERS = new User( new UserInfo( UserMessageService.PLANNERS, "bla,Anonymous,bla" ) );
+        ALL_USERS = new User( new UserInfo( UserMessageService.USERS, "bla,Anonymous,bla" ) );
     }
 
-    public PlannerMessageListPanel( String id, Updatable updatable, boolean collapsible ) {
+    public UserMessageListPanel( String id, Updatable updatable, boolean collapsible ) {
         super( id, collapsible );
         this.updatable = updatable;
         newMessageRecipient = ALL_PLANNERS;
@@ -91,10 +91,10 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         addShowHideBroadcastsLabel();
         addShowReceivedSentLink();
         addShowReceivedSentLabel();
-        plannerMessagesContainer = new WebMarkupContainer( "plannerMessagesContainer" );
-        plannerMessagesContainer.setOutputMarkupId( true );
-        add( plannerMessagesContainer );
-        int numberListed = addPlannerMessages();
+        userMessagesContainer = new WebMarkupContainer( "userMessagesContainer" );
+        userMessagesContainer.setOutputMarkupId( true );
+        add( userMessagesContainer );
+        int numberListed = addUserMessages();
         addAboutMessages( numberListed );
         addShowMore();
         addShowAFew();
@@ -108,7 +108,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
             public void onClick( AjaxRequestTarget target ) {
                 privateOnly = !privateOnly;
                 addShowHideBroadcastsLabel();
-                addPlannerMessages();
+                addUserMessages();
                 target.add( showHideBroadcastsLabel );
                 adjustComponents( target );
             }
@@ -134,7 +134,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
             public void onClick( AjaxRequestTarget target ) {
                 showReceived = !showReceived;
                 addShowReceivedSentLabel();
-                addPlannerMessages();
+                addUserMessages();
                 target.add( sentReceivedLabel );
                 adjustComponents( target );
             }
@@ -151,24 +151,24 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         sentReceivedLink.addOrReplace( sentReceivedLabel );
     }
 
-    private  int addPlannerMessages() {
-        List<PlannerMessage> plannerMessages = getPlannerMessages();
-        ListView<PlannerMessage> plannerMessageListView = new ListView<PlannerMessage>(
-                "plannerMessages",
-                plannerMessages ) {
-            protected void populateItem( ListItem<PlannerMessage> item ) {
-                PlannerMessage plannerMessage = item.getModelObject();
-                PlannerMessagePanel plannerMessagePanel = new PlannerMessagePanel(
-                        "plannerMessage",
-                        new Model<PlannerMessage>( plannerMessage ),
+    private  int addUserMessages() {
+        List<UserMessage> userMessages = getUserMessages();
+        ListView<UserMessage> userMessageListView = new ListView<UserMessage>(
+                "userMessages",
+                userMessages ) {
+            protected void populateItem( ListItem<UserMessage> item ) {
+                UserMessage userMessage = item.getModelObject();
+                UserMessagePanel userMessagePanel = new UserMessagePanel(
+                        "userMessage",
+                        new Model<UserMessage>( userMessage ),
                         isShowReceived(),
                         item.getIndex(),
                         updatable );
-                item.add( plannerMessagePanel );
+                item.add( userMessagePanel );
             }
         };
-        plannerMessagesContainer.addOrReplace( plannerMessageListView );
-        return plannerMessages.size();
+        userMessagesContainer.addOrReplace( userMessageListView );
+        return userMessages.size();
     }
 
     private void addAboutMessages( int numberListed ) {
@@ -197,12 +197,12 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         showMore = new AjaxFallbackLink( "showMore" ) {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow += MORE;
-                addPlannerMessages();
+                addUserMessages();
                 adjustComponents( target );
             }
         };
         showMore.setOutputMarkupId( true );
-        plannerMessagesContainer.add( showMore );
+        userMessagesContainer.add( showMore );
     }
 
     private void addShowAFew() {
@@ -210,12 +210,12 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow = A_FEW;
                 showAFew.setEnabled( false );
-                addPlannerMessages();
+                addUserMessages();
                 adjustComponents( target );
             }
         };
         showAFew.setOutputMarkupId( true );
-        plannerMessagesContainer.add( showAFew );
+        userMessagesContainer.add( showAFew );
     }
 
     private void addNewMessage() {
@@ -332,7 +332,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 if ( !getNewMessageText().isEmpty() ) {
                     sendNewMessage( false );
                     resetNewMessage( target );
-                    addPlannerMessages();
+                    addUserMessages();
                     adjustComponents( target );
                     update(
                             target,
@@ -353,7 +353,7 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
                 if ( !getNewMessageText().isEmpty() ) {
                     boolean success = sendNewMessage( true );
                     resetNewMessage( target );
-                    addPlannerMessages();
+                    addUserMessages();
                     adjustComponents( target );
                     update(
                             target,
@@ -380,11 +380,11 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
     private boolean sendNewMessage( boolean emailIt ) {
         String text = getNewMessageText();
         if ( !text.isEmpty() ) {
-            PlannerMessage plannerMessage = new PlannerMessage( text, planUrn() );
-            plannerMessage.setToUsername( getNewMessageRecipient().getUsername() );
+            UserMessage userMessage = new UserMessage( text );
+            userMessage.setToUsername( getNewMessageRecipient().getUsername() );
             if ( getNewMessageAbout() != null )
-                plannerMessage.setAbout( getNewMessageAbout() );
-            return plannerMessagingService.sendMessage( plannerMessage, emailIt, planUrn() );
+                userMessage.setAbout( getNewMessageAbout() );
+            return userMessageService.sendMessage( userMessage, emailIt );
         } else {
             return false;
         }
@@ -392,18 +392,17 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
 
     private void adjustComponents( AjaxRequestTarget target ) {
         adjustComponents();
-        target.add( plannerMessagesContainer );
+        target.add( userMessagesContainer );
         target.add( showAFew );
         target.add( showMore );
         target.add( aboutMessagesLabel );
     }
 
     private void adjustComponents() {
-        List<PlannerMessage> plannerMessages = getPlannerMessages();
-        addAboutMessages( plannerMessages.size() );
-        //makeVisible( plannerMessagesContainer, !plannerMessages.isEmpty() );
+        List<UserMessage> userMessages = getUserMessages();
+        addAboutMessages( userMessages.size() );
         makeVisible( showMore, !allShown );
-        makeVisible( showAFew, plannerMessages.size() > A_FEW );
+        makeVisible( showAFew, userMessages.size() > A_FEW );
     }
 
     public void newMessage( String username, AjaxRequestTarget target ) {
@@ -418,44 +417,45 @@ public class PlannerMessageListPanel extends AbstractSocialListPanel {
         target.add( newMessageContainer );
     }
 
-    public void deleteMessage( PlannerMessage message, AjaxRequestTarget target ) {
-        plannerMessagingService.deleteMessage( message, planUrn() );
+    public void deleteMessage( UserMessage message, AjaxRequestTarget target ) {
+        userMessageService.deleteMessage( message );
         refresh( target, new Change( Change.Type.Communicated ) );
     }
 
-    public void emailMessage( PlannerMessage message, AjaxRequestTarget target ) {
-        boolean success = plannerMessagingService.email( message, planUrn() );
-        addPlannerMessages();
+    public void emailMessage( UserMessage message, AjaxRequestTarget target ) {
+        boolean success = userMessageService.email( message );
+        addUserMessages();
         adjustComponents( target );
         update( target, Change.message( success
                 ? ( "Message emailed to " + ( message.isBroadcast() ? "all planners" : message.getToUsername() ) )
                 : "Message NOT emailed" ) );
     }
 
-    public List<PlannerMessage> getPlannerMessages() {
-        List<PlannerMessage> plannerMessages = new ArrayList<PlannerMessage>();
-        Iterator<PlannerMessage> iterator;
+    public List<UserMessage> getUserMessages() {
+        String username = User.current().getUsername();
+        List<UserMessage> userMessages = new ArrayList<UserMessage>();
+        Iterator<UserMessage> iterator;
         if ( isShowReceived() ) {
-            iterator = plannerMessagingService.getReceivedMessages( planUrn() );
+            iterator = userMessageService.getReceivedMessages( username, planUrn() );
         } else {
-            iterator = plannerMessagingService.getSentMessages( planUrn() );
+            iterator = userMessageService.getSentMessages( username, planUrn() );
         }
-        while ( iterator.hasNext() && plannerMessages.size() < numberToShow ) {
-            PlannerMessage plannerMessage = iterator.next();
-            if ( plannerMessage != null ) {
-                if ( !( privateOnly && plannerMessage.isBroadcast() ) ) {
-                    plannerMessages.add( plannerMessage );
+        while ( iterator.hasNext() && userMessages.size() < numberToShow ) {
+            UserMessage userMessage = iterator.next();
+            if ( userMessage != null ) {
+                if ( !( privateOnly && userMessage.isBroadcast() ) ) {
+                    userMessages.add( userMessage );
                 }
             }
         }
         allShown = !iterator.hasNext();
-        return plannerMessages;
+        return userMessages;
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {
-        Date whenLastChanged = plannerMessagingService.getWhenLastChanged( planUrn() );
+        Date whenLastChanged = userMessageService.getWhenLastChanged( planUrn() );
         if ( whenLastChanged != null && whenLastChanged.after( whenLastRefreshed ) ) {
-            addPlannerMessages();
+            addUserMessages();
             adjustComponents( target );
             whenLastRefreshed = new Date();
         }

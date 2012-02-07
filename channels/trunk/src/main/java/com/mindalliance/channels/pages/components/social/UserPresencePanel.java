@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.social.PresenceEvent;
+import com.mindalliance.channels.social.model.PresenceRecord;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -35,8 +35,8 @@ public class UserPresencePanel extends AbstractSocialEventPanel {
 
     @Override
     public Date getDate() {
-        PresenceEvent presenceEvent = getLatestPresenceEvent();
-        return presenceEvent == null ? null : presenceEvent.getDate();
+        PresenceRecord presenceRecord = getLatestPresenceRecord();
+        return presenceRecord == null ? null : presenceRecord.getCreated();
     }
 
     private void addTime( WebMarkupContainer socialItemContainer ) {
@@ -50,7 +50,6 @@ public class UserPresencePanel extends AbstractSocialEventPanel {
         if ( !timeLabelString.isEmpty() ) {
             timeLabel.add( new AttributeModifier(
                     "title",
-                    true,
                     new PropertyModel<String>( this, "longTime" ) ) );
         }
         timeLabel.setVisible( isPresent() );
@@ -58,7 +57,6 @@ public class UserPresencePanel extends AbstractSocialEventPanel {
         if ( !present & !time.isEmpty() ) {
             getNameLabel().add( new AttributeModifier(
                     "title",
-                    true,
                     new Model<String>( "left " + time ) ) );
         }
     }

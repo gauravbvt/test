@@ -4,9 +4,8 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.social.PlannerMessage;
-import com.mindalliance.channels.social.PlannerMessagingService;
-import com.mindalliance.channels.social.PlanningEventService;
+import com.mindalliance.channels.social.model.UserMessage;
+import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
@@ -33,10 +32,7 @@ import java.util.List;
 public class SocialPanel extends AbstractUpdatablePanel {
 
     @SpringBean
-    private PlannerMessagingService plannerMessagingService;
-
-    @SpringBean
-    private PlanningEventService planningEventService;
+    private UserMessageService userMessageService;
 
     public static final String PRESENCE = "Presence";
     public static final String ACTIVITIES = "Activities";
@@ -49,8 +45,8 @@ public class SocialPanel extends AbstractUpdatablePanel {
     public static final String EMAIL_MESSAGE = "emailMessage";
 
     private AjaxTabbedPanel tabbedPanel;
-    private PlannerMessageListPanel plannerMessageListPanel;
-    private CommandEventListPanel commandEventListPanel;
+    private UserMessageListPanel plannerMessageListPanel;
+    private ExecutedCommandsListPanel commandEventListPanel;
     private UserPresenceListPanel plannerPresenceListPanel;
     private SurveyListPanel surveyListPanel;
     private CalendarPanel calendarPanel;
@@ -111,14 +107,14 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( showTabs.contains( ACTIVITIES ) )
             tabs.add( new AbstractTab( new Model<String>( "Activities" ) ) {
                 public Panel getPanel( String id ) {
-                    commandEventListPanel = new CommandEventListPanel( id, SocialPanel.this, collapsible );
+                    commandEventListPanel = new ExecutedCommandsListPanel( id, SocialPanel.this, collapsible );
                     return commandEventListPanel;
                 }
             } );
         if ( showTabs.contains( MESSAGES ) )
             tabs.add( new AbstractTab( new Model<String>( getMessagesTabTitle() ) ) {
                 public Panel getPanel( String id ) {
-                    plannerMessageListPanel = new PlannerMessageListPanel( id, SocialPanel.this, collapsible );
+                    plannerMessageListPanel = new UserMessageListPanel( id, SocialPanel.this, collapsible );
                     return plannerMessageListPanel;
                 }
             } );
@@ -168,7 +164,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( plannerMessageListPanel != null && getSelectedTabTitle().equals( getMessagesTabTitle() )  ) {
             plannerMessageListPanel.refresh( target, change );
         }
-        Date whenLastReceived = plannerMessagingService.getWhenLastReceived( planUrn() );
+        Date whenLastReceived = userMessageService.getWhenLastReceived( User.current().getUsername(), planUrn() );
         if ( whenLastReceived != null && whenLastReceived.after( whenLastRefreshed ) ) {
             update( target, Change.message( "New message" ) );
         }
@@ -187,11 +183,11 @@ public class SocialPanel extends AbstractUpdatablePanel {
             if ( object instanceof String && action.equals( SEND_MESSAGE ) ) {
                 plannerMessageListPanel.newMessage( (String) object, target );
             }
-            if ( object instanceof PlannerMessage && action.equals( DELETE_MESSAGE ) ) {
-                plannerMessageListPanel.deleteMessage( (PlannerMessage) object, target );
+            if ( object instanceof UserMessage && action.equals( DELETE_MESSAGE ) ) {
+                plannerMessageListPanel.deleteMessage( (UserMessage) object, target );
             }
-            if ( object instanceof PlannerMessage && action.equals( EMAIL_MESSAGE ) ) {
-                plannerMessageListPanel.emailMessage( (PlannerMessage) object, target );
+            if ( object instanceof UserMessage && action.equals( EMAIL_MESSAGE ) ) {
+                plannerMessageListPanel.emailMessage( (UserMessage) object, target );
             }
         }
     }

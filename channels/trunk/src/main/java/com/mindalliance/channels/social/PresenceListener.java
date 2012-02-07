@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.command;
+package com.mindalliance.channels.social;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public interface PresenceListener {
     void killIfAlive( String username, String uri );
 
     /**
-     * Take not of heart beat signalling user since in a plan.
+     * Take note of heart beat signalling user since in a plan.
      *
      * @param username     a string
      * @param uri a sanitized plan uri

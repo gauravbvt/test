@@ -7,8 +7,58 @@ CONFIGURATION NOTES:
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd"
        default-autowire="byName">
+
+    <context:property-placeholder location="file:${user.home}/channels.properties"/>
+    <context:annotation-config/>
+    <context:component-scan base-package="com.mindalliance.channels"/>
+
+    <!-- ==================================================================== Hibernate persistence -->
+    <tx:annotation-driven order="200"/>
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager"/>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" depends-on="dbserver">
+        <property name="driverClassName" value="org.h2.Driver"/>
+        <property name="url" value="${dataSource.url}"/>
+        <property name="username" value="${dataSource.user}"/>
+        <property name="password" value="${dataSource.password}"/>
+    </bean>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.ddl}</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.search.lucene_version">LUCENE_35</prop>
+                <prop key="hibernate.search.default.directory_provider">filesystem</prop>
+                <prop key="hibernate.search.default.indexBase">data/lucene/</prop>
+            </props>
+        </property>
+
+        <property name="packagesToScan">
+            <list>
+                <value>com.mindalliance.channels.social.model</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="entityInterceptor" class="com.mindalliance.channels.core.orm.model.CustomInterceptor"/>
+
+    <bean id="dbserver" class="org.h2.tools.Server" factory-method="createTcpServer"
+          init-method="start" destroy-method="stop">
+        <constructor-arg value="-tcp,-tcpAllowOthers"/>
+    </bean>
+
+    <!-- ==================================================================-->
+
 
     <!-- =========================== Main Components -->
     <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels"/>
@@ -106,21 +156,20 @@ CONFIGURATION NOTES:
 
     <bean id="commanderFactory" class="com.mindalliance.channels.core.command.CommanderFactoryImpl">
         <property name="timeout" value="300"/>
-        <property name="commonListeners">
+ <!--       <property name="commonListeners">
             <list value-type="com.mindalliance.channels.core.command.CommandListener">
                 <ref bean="planManager"/>
                 <ref bean="analyst"/>
-                <ref bean="planningEventService"/>
             </list>
         </property>
         <property name="presenceListeners">
-            <list value-type="com.mindalliance.channels.core.command.PresenceListener">
-                <ref bean="planningEventService"/>
+            <list value-type="com.mindalliance.channels.social.PresenceListener">
             </list>
         </property>
-    </bean>
+-->    </bean>
 
-    <bean id="planServiceFactory" class="com.mindalliance.channels.core.query.PlanServiceFactoryImpl" destroy-method="destroy"/>
+    <bean id="planServiceFactory" class="com.mindalliance.channels.core.query.PlanServiceFactoryImpl"
+          destroy-method="destroy"/>
 
     <!-- Note: don't use planService directly... Use through the factory... Here for proper aspect initialization. -->
     <bean id="planService" class="com.mindalliance.channels.core.query.PlanService" scope="prototype" autowire="no">
@@ -263,13 +312,13 @@ CONFIGURATION NOTES:
     <bean id="fax" class="com.mindalliance.channels.core.model.TransmissionMedium">
         <property name="name" value="Fax"/>
         <property name="kind" value="Type"/>
-<!--
-        <property name="types">
-            <list value-type="java.util.ArrayList">
-                <ref bean="phone"/>
-            </list>
-        </property>
--->
+        <!--
+                <property name="types">
+                    <list value-type="java.util.ArrayList">
+                        <ref bean="phone"/>
+                    </list>
+                </property>
+        -->
         <property name="cast" value="Unicast"/>
         <property name="synchronous" value="false"/>
     </bean>
@@ -414,22 +463,6 @@ CONFIGURATION NOTES:
 
     </bean>
 
-    <!-- Collaboration services -->
-
-    <bean id="databaseFactory" class="com.mindalliance.channels.core.odb.ODBDaoFactory">
-        <property name="odbDir" value="${channels.home}${file.separator}data"/>
-    </bean>
-
-    <bean id="plannerMessagingService" class="com.mindalliance.channels.social.DefaultPlannerMessagingService">
-        <property name="databaseFactory" ref="databaseFactory"/>
-        <property name="mailSender" ref="mailSender"/>
-        <property name="userDao" ref="userDao"/>
-    </bean>
-
-    <bean id="planningEventService" class="com.mindalliance.channels.social.DefaultPlanningEventService">
-        <property name="databaseFactory" ref="databaseFactory"/>
-    </bean>
-
     <!-- REST API -->
     <bean id="channelsService" class="com.mindalliance.channels.api.ChannelsServiceImpl">
         <property name="planManager" ref="planManager"/>
@@ -438,5 +471,6 @@ CONFIGURATION NOTES:
         <property name="attachmentManager" ref="attachmentManager"/>
         <property name="analyst" ref="analyst"/>
     </bean>
+
 
 </beans>

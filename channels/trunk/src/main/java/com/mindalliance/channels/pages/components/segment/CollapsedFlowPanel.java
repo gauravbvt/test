@@ -39,7 +39,7 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
     private void addFlowTitlePanel() {
         FlowTitlePanel titlePanel = new FlowTitlePanel( "title", getFlow() ,isSend() );
         // Add style classes
-        titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses(  ) ) ) );
+        titlePanel.add( new AttributeModifier( "class", new Model<String>( getCssClasses(  ) ) ) );
         titlePanel.add( new AjaxEventBehavior( "onclick" ) {
             protected void onEvent( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Selected, getFlow() ) );
@@ -65,7 +65,6 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
         boolean hasIssues = hasIssues();
         warning.add( new AttributeModifier(
                 "src",
-                true ,
                 new Model<String>(
                         !summary.isEmpty()
                            ? "images/warning.png"
@@ -75,7 +74,6 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
                 )) );
         warning.add( new AttributeModifier(
                 "alt",
-                true ,
                 new Model<String>(
                         !summary.isEmpty()
                            ? "issues detected"
@@ -85,12 +83,12 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
                 )) );
         if ( !summary.isEmpty() ) {
             warning.add(
-                    new AttributeModifier( "title", true, new Model<String>( summary ) ) );
+                    new AttributeModifier( "title", new Model<String>( summary ) ) );
         } else {
             if ( hasIssues ) {
                 // All waived issues
                 warning.add(
-                        new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
+                        new AttributeModifier( "title", new Model<String>( "All issues waived" ) ) );
             }
         }
         warning.setVisible( hasIssues );

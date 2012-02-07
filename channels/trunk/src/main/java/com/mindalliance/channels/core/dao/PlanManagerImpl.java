@@ -6,7 +6,6 @@
 
 package com.mindalliance.channels.core.dao;
 
-import com.mindalliance.channels.core.PersistentObjectDaoFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.Commander;
@@ -48,10 +47,6 @@ public class PlanManagerImpl implements PlanManager {
 
     /** Plan persistence manager. */
     private final DefinitionManager definitionManager;
-    /**
-     * Persistent object database factory.
-     */
-    private PersistentObjectDaoFactory databaseFactory;
     /**
      * All the plans, indexed by version uri (uri:version).
      */
@@ -118,14 +113,6 @@ public class PlanManagerImpl implements PlanManager {
 
     public void setUserDao( UserDao userDao ) {
         this.userDao = userDao;
-    }
-
-    public PersistentObjectDaoFactory getDatabaseFactory() {
-        return databaseFactory;
-    }
-
-    public void setDatabaseFactory( PersistentObjectDaoFactory databaseFactory ) {
-        this.databaseFactory = databaseFactory;
     }
 
     public ImportExportFactory getImportExportFactory() {
@@ -223,8 +210,6 @@ public class PlanManagerImpl implements PlanManager {
                 dao.load( importExportFactory.createImporter( "daemon", dao ) );
             else
                 dao.validate();
-
-            createPersistentObjectDB( dao.getPlan() );
             listeners.fireLoaded( dao );
             return dao;
 
@@ -232,11 +217,6 @@ public class PlanManagerImpl implements PlanManager {
             LOG.error( "Unable to load plan " + version, e );
             return null;
         }
-    }
-
-    private void createPersistentObjectDB( Plan plan ) {
-        String planUri = plan.getUri();
-        databaseFactory.check( plan.getUrn() );
     }
 
     @Override

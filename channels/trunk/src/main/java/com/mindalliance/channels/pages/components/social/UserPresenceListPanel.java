@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserDao;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.social.PlanningEventService;
+import com.mindalliance.channels.social.services.PresenceRecordService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -33,7 +33,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
     UserDao userDao;
 
     @SpringBean
-    private PlanningEventService planningEventService;
+    private PresenceRecordService presenceRecordService;
 
     private Updatable updatable;
     private WebMarkupContainer presencesContainer;
@@ -112,7 +112,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
     }
 
     private boolean isHere( String username ) {
-        return planningEventService.isAlive( username, planUrn() );
+        return presenceRecordService.isAlive( username, planUrn() );
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {

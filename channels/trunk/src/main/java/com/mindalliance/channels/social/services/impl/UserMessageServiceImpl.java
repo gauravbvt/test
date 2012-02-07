@@ -1,21 +1,22 @@
-/*
- * Copyright (C) 2011 Mind-Alliance Systems LLC.
- * All rights reserved.
- * Proprietary and Confidential.
- */
+package com.mindalliance.channels.social.services.impl;
 
-package com.mindalliance.channels.social;
-
-import com.mindalliance.channels.core.PersistentObjectDao;
-import com.mindalliance.channels.core.PersistentObjectDaoFactory;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.dao.UserDao;
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.social.model.UserMessage;
+import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,41 +26,96 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Default implementation of the planner messaging service.
+ * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: 2/2/12
+ * Time: 3:51 PM
  */
-public class DefaultPlannerMessagingService implements PlannerMessagingService {
+
+@Repository
+public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage,Long> implements UserMessageService{
+
     private static final int SUMMARY_MAX = 25;
 
     /**
      * The logger.
      */
-    private final Logger LOG = LoggerFactory.getLogger( DefaultPlannerMessagingService.class );
+    private final Logger LOG = LoggerFactory.getLogger( UserMessageServiceImpl.class );
     /**
      * Mail sender.
      */
+    @Autowired
     private MailSender mailSender;
+    @Autowired
     private UserDao userDao;
-    private PersistentObjectDaoFactory databaseFactory;
-    private Map<String,Date> whenLastChanged;
-
-    //-------------------------------
-    public DefaultPlannerMessagingService() {
-        whenLastChanged = new HashMap<String, Date>();
-    }
-
-    //-------------------------------
-    @Override
-    public void deleteMessage( PlannerMessage message, String urn ) {
-        getOdb( urn ).delete( PlannerMessage.class, message.getId() );
-        changed( urn );
-    }
+    private Map<String,Date> whenLastChanged = new HashMap<String, Date>();
 
     @Override
-    public boolean email( PlannerMessage message, String urn ) {
+    @Transactional
+    public boolean sendMessage( UserMessage message, boolean emailIt ) {
+        boolean success = true;
+        save( message );
+        if ( emailIt ) {
+            success = email( message );
+        }
+        changed( message.getPlanUri() );
+        return success;
+    }
+
+    @Override
+    @Transactional
+    public void deleteMessage( UserMessage message ) {
+        delete( message );
+        changed(  message.getPlanUri() );
+    }
+
+    @Override
+    @Transactional
+    public Iterator<UserMessage> getReceivedMessages( String username, String planUri ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", planUri ) );
+        criteria.add( Restrictions.eq( "toUsername", username ) );
+        criteria.addOrder( Order.desc( "created" ) );
+        return (Iterator<UserMessage>)criteria.list( ).iterator();
+    }
+
+    @Override
+    @Transactional
+    public Iterator<UserMessage> getSentMessages( String username, String planUri ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", planUri ) );
+        criteria.add( Restrictions.eq( "username", username ) );
+        criteria.addOrder( Order.desc( "created" ) );
+        return (Iterator<UserMessage>)criteria.list( ).iterator();
+    }
+
+    @Override
+    @Transactional
+    public Date getWhenLastReceived( String username, String planUri ) {
+        Iterator<UserMessage> received = getReceivedMessages( username, planUri );
+        if ( received.hasNext() ) {
+            return received.next().getCreated();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Date getWhenLastChanged( String planUri ) {
+        return whenLastChanged.get( planUri );
+    }
+
+    @Override
+    @Transactional
+    public boolean email( UserMessage message ) {
         List<User> recipients = new ArrayList<User>();
         String username = message.getToUsername();
         String text = "";
         User currentUser = User.current();
+        String urn = currentUser.getPlanUri();
         String summary = StringUtils.abbreviate( message.getText(), SUMMARY_MAX );
         if ( username == null || username.equals( PLANNERS ) )
             recipients = userDao.getPlanners( urn );
@@ -84,7 +140,7 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                     text = "About " + aboutString + "\n\n";
 
                 text += message.getText();
-                text += "\n\n -- Message first sent in Channels " + getLongTimeElapsedString( message.getDate(), now )
+                text += "\n\n -- Message first sent in Channels " + getLongTimeElapsedString( message.getCreated(), now )
                         + " --";
                 email.setText( text );
                 mailSender.send( email );
@@ -92,7 +148,8 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
                         + " emailed message to "
                         + recipient.getUsername() );
             }
-            getOdb( urn ).update( message.getClass(), message.getId(), "emailed", true );
+            message.setEmailed( true );
+            save(  message );
             return true;
         } catch ( Exception e ) {
             LOG.warn( currentUser.getUsername()
@@ -141,81 +198,13 @@ public class DefaultPlannerMessagingService implements PlannerMessagingService {
         return sb.toString();
     }
 
-    private PersistentObjectDao getOdb( String urn ) {
-        return databaseFactory.getDao( urn );
-    }
-
-    @Override
-    public Iterator<PlannerMessage> getReceivedMessages( String urn ) {
-        return getOdb( urn ).findAllExceptUser(
-                PlannerMessage.class, User.current().getUsername(), User.current().isPlanner(), PlannerMessagingService.USERS, PlannerMessagingService.PLANNERS );
-    }
-
-    @Override
-    public Iterator<PlannerMessage> getSentMessages( String urn ) {
-        return getOdb( urn ).findAllFrom( PlannerMessage.class, getUsername() );
-    }
-
-    private String getUsername() {
-        return User.current().getUsername();
-    }
-
-    protected User getUser( String username ) {
-        return userDao.getUserNamed( username );
-    }
-
-    @Override
-    public Date getWhenLastChanged( String urn ) {
-        return whenLastChanged.get( urn );
-    }
-
-    @Override
-    public Date getWhenLastReceived( String urn ) {
-        Iterator<PlannerMessage> received = getReceivedMessages( urn );
-        if ( received.hasNext() ) {
-            return received.next().getDate();
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public boolean sendMessage( PlannerMessage message, boolean emailIt, String urn ) {
-        boolean success = true;
-        addSentMessage( message, urn );
-        if ( emailIt ) {
-            success = email( message, urn );
-        }
-        return success;
-    }
-
-    private void addSentMessage( PlannerMessage message, String urn ) {
-        getOdb( urn ).store( message );
-        changed( urn );
-    }
-
     private void changed( String urn ) {
         whenLastChanged.put( urn, new Date() );
     }
 
-    //-------------------------------
-    public MailSender getMailSender() {
-        return mailSender;
-    }
 
-    public void setMailSender( MailSender mailSender ) {
-        this.mailSender = mailSender;
-    }
-
-    public UserDao getUserDao() {
-        return userDao;
-    }
-
-    public void setUserDao( UserDao userDao ) {
-        this.userDao = userDao;
-    }
-
-    public void setDatabaseFactory( PersistentObjectDaoFactory databaseFactory ) {
-        this.databaseFactory = databaseFactory;
+    @Override
+    public Class<UserMessage> getPersistentClass() {
+        return UserMessage.class;
     }
 }

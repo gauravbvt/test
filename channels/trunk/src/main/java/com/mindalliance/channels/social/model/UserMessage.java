@@ -1,53 +1,43 @@
-package com.mindalliance.channels.social;
+package com.mindalliance.channels.social.model;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.social.services.UserMessageService;
+
+import javax.persistence.Entity;
 
 /**
- * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
+ * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: Jul 1, 2010
- * Time: 2:04:30 PM
+ * Date: 2/2/12
+ * Time: 11:28 AM
  */
-public class PlannerMessage extends AbstractPersistentObject {
+@Entity
+public class UserMessage extends AbstractPersistentPlanObject {
 
-    private String urn;
-    private String fromUsername;
-    // broadcast if null
     private String toUsername;
     private String text = "";
-    private ModelObjectRef aboutRef;
+    private String about;
     private String aboutString = "";
     private boolean emailed = false;
+    
+    public UserMessage() {} 
 
-    public PlannerMessage( String text, String urn ) {
+    public UserMessage( String text ) {
         super();
-        User user = User.current();
         this.text = text;
-        fromUsername = user.getUsername();
-        this.urn = urn;
     }
 
-    public PlannerMessage( String text, ModelObject modelObject, String urn ) {
-        this( text, urn );
-        aboutRef = new ModelObjectRef( modelObject );
+    public UserMessage( String text, ModelObject modelObject ) {
+        this( text );
+        about = new ModelObjectRef( modelObject ).asString();
     }
 
-    public String getUrn() {
-        return urn;
-    }
-
-    public void setUrn( String urn ) {
-        this.urn = urn;
-    }
-
-    public String getFromUsername() {
-        return fromUsername;
-    }
 
     public String getToUsername() {
         return toUsername;
@@ -60,20 +50,24 @@ public class PlannerMessage extends AbstractPersistentObject {
     public String getText() {
         return text;
     }
-
+    
+    public void setText( String text ) {
+        this.text = text;
+    }
+    
     public ModelObjectRef getAboutRef() {
-        return aboutRef;
+        return about == null ? null : ModelObjectRef.fromString( about );
     }
 
     public boolean isBroadcast() {
         User current = User.current();
         return toUsername == null // legacy - all planners
-                || toUsername.equals( PlannerMessagingService.PLANNERS ) && current.isPlanner()
-                || toUsername.equals( PlannerMessagingService.USERS );
+                || toUsername.equals( UserMessageService.PLANNERS ) && current.isPlanner()
+                || toUsername.equals( UserMessageService.USERS );
     }
 
     public void setAbout( ModelObject modelObject ) {
-        aboutRef = new ModelObjectRef( modelObject );
+        about = new ModelObjectRef( modelObject ).asString();
         aboutString = aboutDescription( modelObject );
     }
 
@@ -89,6 +83,7 @@ public class PlannerMessage extends AbstractPersistentObject {
     }
 
     public ModelObject getAbout( QueryService queryService ) {
+        ModelObjectRef aboutRef = getAboutRef();
         return aboutRef == null ? null : (ModelObject) aboutRef.resolve( queryService );
     }
 
@@ -106,5 +101,9 @@ public class PlannerMessage extends AbstractPersistentObject {
 
     public void setEmailed( boolean emailed ) {
         this.emailed = emailed;
+    }
+
+    public String getFromUsername() {
+        return getUsername();
     }
 }

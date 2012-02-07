@@ -1,18 +1,18 @@
 package com.mindalliance.channels.pages.components.social.menus;
 
-import com.mindalliance.channels.core.PersistentObject;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
-import com.mindalliance.channels.social.PlannerMessage;
+import com.mindalliance.channels.social.model.UserMessage;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -34,7 +34,7 @@ import java.util.List;
 public class SocialItemMenuPanel extends MenuPanel {
 
     private String username;
-    private IModel<? extends PersistentObject> poModel;
+    private IModel<? extends PersistentPlanObject> poModel;
     private Updatable updatable;
     private IModel<Participation> participationModel;
 
@@ -42,7 +42,7 @@ public class SocialItemMenuPanel extends MenuPanel {
             String id,
             IModel<Participation> participationModel,
             String username,
-            IModel<? extends PersistentObject> poModel,
+            IModel<? extends PersistentPlanObject> poModel,
             Updatable updatable ) {
         super( id, "more", participationModel );
         this.participationModel = participationModel;
@@ -90,9 +90,9 @@ public class SocialItemMenuPanel extends MenuPanel {
                         link ) );
             }
         }
-        final PersistentObject po = getPersistentObject();
-        if ( po != null && po instanceof PlannerMessage ) {
-            PlannerMessage message = (PlannerMessage) po;
+        final PersistentPlanObject po = getPersistentObject();
+        if ( po != null && po instanceof UserMessage ) {
+            UserMessage message = (UserMessage) po;
             if ( message.getFromUsername().equals( currentUsername ) ) {
                 Link deleteLink = new ConfirmedAjaxFallbackLink( "link", "Delete this message? (\"Unsend\" it)" ) {
                     public void onClick( AjaxRequestTarget target ) {
@@ -124,7 +124,7 @@ public class SocialItemMenuPanel extends MenuPanel {
         return ( (Component) updatable ).getPage().getClass().isAssignableFrom( PlanPage.class );
     }
 
-    private PersistentObject getPersistentObject() {
+    private PersistentPlanObject getPersistentObject() {
         return poModel == null ? null : poModel.getObject();
     }
 

@@ -1,15 +1,14 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.social.CommandEvent;
-import com.mindalliance.channels.social.PlanningEventService;
+import com.mindalliance.channels.social.model.ExecutedCommand;
+import com.mindalliance.channels.social.services.ExecutedCommandService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -30,52 +29,51 @@ import java.util.Date;
  * Date: Jul 7, 2010
  * Time: 10:36:10 AM
  */
-public class CommandEventPanel extends AbstractSocialEventPanel {
+public class ExecutedCommandPanel extends AbstractSocialEventPanel {
 
     @SpringBean
-    PlanningEventService planningEventService;
+    ExecutedCommandService executedCommandService;
 
     @SpringBean
     QueryService queryService;
 
-    private IModel<CommandEvent> commandEventModel;
+    private IModel<ExecutedCommand> executedCommandModel;
 
-    public CommandEventPanel( String id, IModel<CommandEvent> commandEventModel, int index, Updatable updatable ) {
-        super( id, commandEventModel.getObject().getUsername(), index, commandEventModel, updatable );
-        this.commandEventModel = commandEventModel;
+    public ExecutedCommandPanel( String id, IModel<ExecutedCommand> executedCommandModel, int index, Updatable updatable ) {
+        super( id, executedCommandModel.getObject().getUsername(), index, executedCommandModel, updatable );
+        this.executedCommandModel = executedCommandModel;
         init();
     }
 
     protected void moreInit( WebMarkupContainer socialItemContainer ) {
-        addCommandEvent( socialItemContainer );
-        addSubject( socialItemContainer );
+        addExecutedCommand( socialItemContainer );
+        addCommandTarget( socialItemContainer );
         addTime( socialItemContainer );
     }
 
-    private void addCommandEvent( WebMarkupContainer socialItemContainer ) {
-        Label eventLabel = new Label( "commandEvent", new Model<String>( getcommandEventString() ) );
+    private void addExecutedCommand( WebMarkupContainer socialItemContainer ) {
+        Label eventLabel = new Label( "executedCommand", new Model<String>( getExecutedCommandString() ) );
         socialItemContainer.add( eventLabel );
     }
 
-    private String getcommandEventString() {
-        CommandEvent commandEvent = getCommandEvent();
-        Command command = commandEvent.getCommand();
-        String eventString = commandEvent.isDone()
-                ? "Doing " + command.getName()
-                : commandEvent.isUndone()
-                ? ( "Undoing " + command.getUndoes() )
-                : ( "Redoing " + command.getName() );
+    private String getExecutedCommandString() {
+        ExecutedCommand executedCommand = getExecutedCommand();
+        String eventString = executedCommand.isDone()
+                ? "Doing " + executedCommand.getCommandName()
+                : executedCommand.isUndone()
+                ? ( "Undoing " + executedCommand.getCommandUndoes() )
+                : ( "Redoing " + executedCommand.getCommandName() );
         return StringUtils.capitalize( eventString );
     }
 
-    private void addSubject( WebMarkupContainer socialItemContainer ) {
+    private void addCommandTarget( WebMarkupContainer socialItemContainer ) {
         Identifiable identifiable;
-        CommandEvent commandEvent = getCommandEvent();
-        String subject = getTargetDescription( commandEvent );
-        Change change = commandEvent.getChange();
+        ExecutedCommand executedCommand = getExecutedCommand();
+        String subject = getTargetDescription( executedCommand );
+        ModelObjectRef modelObjectRef = executedCommand.getCommandTarget();
         Component modelObjectComponent = null;
-        if ( change != null ) {
-            identifiable = change.getSubject( getQueryService() );
+        if ( modelObjectRef != null ) {
+            identifiable = modelObjectRef.resolve( getQueryService() );
             if ( identifiable != null && identifiable instanceof ModelObject ) {
                 ModelObject mo = (ModelObject) identifiable;
                 modelObjectComponent = new ModelObjectLink(
@@ -83,7 +81,7 @@ public class CommandEventPanel extends AbstractSocialEventPanel {
                         new Model<ModelObject>( mo ),
                         new Model<String>( subject ) );
             }
-            String property = change.getProperty();
+            String property = executedCommand.getChangeProperty();
             if ( property != null ) {
                 subject += " (" + property + ")";
             }
@@ -95,11 +93,13 @@ public class CommandEventPanel extends AbstractSocialEventPanel {
         socialItemContainer.setVisible( !subject.isEmpty() );
     }
 
-    private String getTargetDescription( CommandEvent commandEvent ) {
-        String description = commandEvent.getCommand().getTargetDescription();
+    private String getTargetDescription( ExecutedCommand executedCommand ) {
+        String description = executedCommand.getCommandTargetDescription();
         if ( description.isEmpty() ) {
             // Try to compute it
-            Identifiable subject = commandEvent.getChange().getSubject( queryService );
+            ModelObjectRef modelObjectRef = executedCommand.getCommandTarget();
+            Identifiable subject = null;
+            if ( modelObjectRef != null ) subject = modelObjectRef.resolve( queryService );
             if ( subject != null && subject instanceof ModelObject ) {
                 ModelObject mo = (ModelObject) subject;
                 description = "\"" + mo.getLabel() + "\"";
@@ -133,7 +133,7 @@ public class CommandEventPanel extends AbstractSocialEventPanel {
     }
 
     private String getCommandEventType() {
-        CommandEvent commandEvent = getCommandEvent();
+        ExecutedCommand commandEvent = getExecutedCommand();
         return commandEvent.isDone()
                 ? "doing"
                 : commandEvent.isUndone()
@@ -143,10 +143,10 @@ public class CommandEventPanel extends AbstractSocialEventPanel {
 
     @Override
     public Date getDate() {
-        return getCommandEvent().getDate();
+        return getExecutedCommand().getCreated();
     }
 
-    private CommandEvent getCommandEvent() {
-        return commandEventModel.getObject();
+    private ExecutedCommand getExecutedCommand() {
+        return executedCommandModel.getObject();
     }
 }

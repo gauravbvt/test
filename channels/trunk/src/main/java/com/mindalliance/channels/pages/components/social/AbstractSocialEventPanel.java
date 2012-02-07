@@ -1,17 +1,17 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.core.PersistentObject;
 import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.menus.SocialItemMenuPanel;
-import com.mindalliance.channels.social.PlannerMessagingService;
-import com.mindalliance.channels.social.PlanningEventService;
-import com.mindalliance.channels.social.PresenceEvent;
+import com.mindalliance.channels.social.model.PresenceRecord;
+import com.mindalliance.channels.social.services.PresenceRecordService;
+import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -35,16 +35,16 @@ import java.util.Set;
 public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     @SpringBean
-    private PlanningEventService planningEventService;
+    private PresenceRecordService presenceRecordService;
 
     @SpringBean
     private ImagingService imagingService;
 
-    private PresenceEvent latestPresenceEvent = null;
+    private PresenceRecord latestPresenceRecord = null;
 
     private String username;
     private int index;
-    private IModel<? extends PersistentObject> poModel;
+    private IModel<? extends PersistentPlanObject> poModel;
     private Updatable updatable;
 
     private Label nameLabel;
@@ -57,7 +57,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
             String id,
             String username,
             int index,
-            IModel<? extends PersistentObject> poModel,
+            IModel<? extends PersistentPlanObject> poModel,
             Updatable updatable ) {
         super( id );
         this.username = username;
@@ -77,8 +77,8 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 : " odd";
         if ( index == 0 )
             cssClasses += " first";
-        PresenceEvent presenceEvent = getLatestPresenceEvent( );
-        cssClasses += presenceEvent != null && presenceEvent.isEntering()
+        PresenceRecord presenceRecord = getLatestPresenceRecord();
+        cssClasses += presenceRecord != null && presenceRecord.isEntering()
                 ? " joining"
                 : " leaving";
         return cssClasses;
@@ -157,9 +157,9 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
             String userName = getUsername();
             if ( username == null ) {
                 return "?";
-            } else if ( username.equals( PlannerMessagingService.PLANNERS ) ) {
+            } else if ( username.equals( UserMessageService.PLANNERS ) ) {
                 return "All planners";
-            } else if ( username.equals( PlannerMessagingService.USERS ) ) {
+            } else if ( username.equals( UserMessageService.USERS ) ) {
                 return "Everyone";
             } else {
                 String name = getQueryService().findUserFullName( userName );
@@ -243,8 +243,8 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         return getQueryService().findParticipation( getUsername() );
     }
 
-    public PlanningEventService getPlanningEventService() {
-        return planningEventService;
+    public PresenceRecordService getPresenceRecordService() {
+        return presenceRecordService;
     }
 
     protected Label getNameLabel() {
@@ -252,17 +252,17 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
     public boolean isPresent( ) {
-        PresenceEvent presenceEvent = getLatestPresenceEvent( );
-        return presenceEvent != null && presenceEvent.isEntering();
+        PresenceRecord presenceRecord = getLatestPresenceRecord();
+        return presenceRecord != null && presenceRecord.isEntering();
     }
 
-    protected PresenceEvent getLatestPresenceEvent( ) {
-        if ( latestPresenceEvent == null ) {
-            latestPresenceEvent = getPlanningEventService().findLatestPresence(
+    protected PresenceRecord getLatestPresenceRecord() {
+        if ( latestPresenceRecord == null ) {
+            latestPresenceRecord = getPresenceRecordService().findLatestPresence(
                     getUsername(),
                     planUrn() );
         }
-        return latestPresenceEvent;
+        return latestPresenceRecord;
     }
 
     public String getShortTimeElapsedString( Date date ) {

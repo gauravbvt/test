@@ -25,6 +25,8 @@ public class ModelObjectRef implements Serializable {
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( ModelObjectRef.class );
+    
+    public static final String SEPARATOR = "::";
 
     /**
      * A model object's id.
@@ -46,6 +48,10 @@ public class ModelObjectRef implements Serializable {
       * The identifiable itself if not a model object.
      */
     private Identifiable identifiable;
+    
+    public ModelObjectRef( ) {
+
+    }
 
     public ModelObjectRef( Identifiable identifiable ) {
         assert identifiable != null;
@@ -71,6 +77,26 @@ public class ModelObjectRef implements Serializable {
 
     public String getClassName() {
         return className;
+    }
+
+    public void setId( long id ) {
+        this.id = id;
+    }
+
+    public void setClassName( String className ) {
+        this.className = className;
+    }
+
+    public void setEntityName( String entityName ) {
+        this.entityName = entityName;
+    }
+
+    public void setEntityKind( String entityKind ) {
+        this.entityKind = entityKind;
+    }
+
+    public boolean isSerializable() {
+        return identifiable == null;
     }
 
     /**
@@ -148,6 +174,40 @@ public class ModelObjectRef implements Serializable {
         } catch ( NotFoundException e ) {
             return false;
         }
+    }
+    
+    public String asString() {
+        StringBuilder sb = new StringBuilder(  );
+        if ( identifiable == null )  {
+            sb.append( getClassName() );
+            sb.append( SEPARATOR );
+            sb.append( getId() );
+            if ( entityKind != null ) {
+                sb.append( SEPARATOR );
+                sb.append( entityKind );
+                sb.append( SEPARATOR );
+                sb.append( entityName );
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Builds a modelObjectRef from string.
+     * Can be an empty one if it was built from an Identifiable which was not a ModelObject.
+     * @param s
+     * @return
+     */
+    public static ModelObjectRef fromString( String s ) {
+        String[] items = s.split( SEPARATOR );
+        ModelObjectRef moref = new ModelObjectRef(  );
+        moref.setClassName( items[0] );
+        moref.setId( Long.parseLong( items[1] ) );
+        if ( items.length > 2 ) {
+            moref.setEntityKind( items[2] );
+            moref.setEntityName( items[3] );
+        }
+        return moref;
     }
 
 

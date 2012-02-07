@@ -12,9 +12,14 @@ import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.social.PresenceListener;
+import com.mindalliance.channels.social.services.ExecutedCommandService;
+import com.mindalliance.channels.social.services.PresenceRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +34,7 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
 
     private static final Logger LOG = LoggerFactory.getLogger( CommanderFactoryImpl.class );
 
-    private final Map<Plan, Commander> commanders = new ConcurrentHashMap<Plan, Commander> ();
+    private final Map<Plan, Commander> commanders = new ConcurrentHashMap<Plan, Commander>();
 
     private List<CommandListener> commonListeners = new ArrayList<CommandListener>();
 
@@ -39,12 +44,24 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
 
     private PlanServiceFactory planServiceFactory;
 
-    private List<PresenceListener> presenceListeners;
+    private List<PresenceListener> presenceListeners = new ArrayList<PresenceListener>();
 
     private int timeout;
 
+    @Autowired
+    private PresenceRecordService presenceRecordService;
+
+    @Autowired
+    private ExecutedCommandService executedCommandService;
+
+    @Autowired
+    private Analyst analyst;
+
+
     @Override
     public void afterPropertiesSet() {
+        initPresenceListeners();
+        initCommonListeners();
         planManager.assignPlans();
     }
 
@@ -81,20 +98,22 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
 
     /**
      * Listeners on all commanders.
-     *
-     * @param commonListeners command listeners
      */
-    public void setCommonListeners( List<CommandListener> commonListeners ) {
-        this.commonListeners = Collections.unmodifiableList( commonListeners );
+    public void initCommonListeners() {
+        List<CommandListener> listeners = new ArrayList<CommandListener>();
+        listeners.add( analyst );
+        listeners.add( planManager );
+        listeners.add( executedCommandService );
+        commonListeners = Collections.unmodifiableList( listeners );
     }
 
     /**
      * Presence listeners on all commanders.
-     *
-     * @param presenceListeners the listeners
      */
-    public void setPresenceListeners( List<PresenceListener> presenceListeners ) {
-        this.presenceListeners = Collections.unmodifiableList( presenceListeners );
+    public void initPresenceListeners() {
+        List<PresenceListener> listeners = new ArrayList<PresenceListener>();
+        listeners.add( presenceRecordService );
+        presenceListeners = Collections.unmodifiableList( listeners );
     }
 
     //-------------------------------
@@ -108,6 +127,30 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
         this.importExportFactory = importExportFactory;
     }
 
+    public Analyst getAnalyst() {
+        return analyst;
+    }
+
+    public void setAnalyst( Analyst analyst ) {
+        this.analyst = analyst;
+    }
+
+    public PresenceRecordService getPresenceRecordService() {
+        return presenceRecordService;
+    }
+
+    public void setPresenceRecordService( PresenceRecordService presenceRecordService ) {
+        this.presenceRecordService = presenceRecordService;
+    }
+
+    public ExecutedCommandService getExecutedCommandService() {
+        return executedCommandService;
+    }
+
+    public void setExecutedCommandService( ExecutedCommandService executedCommandService ) {
+        this.executedCommandService = executedCommandService;
+    }
+
     /**
      * Specify the common plan manager for all commanders.
      *
@@ -115,6 +158,10 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
      */
     public void setPlanManager( PlanManager planManager ) {
         this.planManager = planManager;
+    }
+
+    public PlanManager getPlanManager() {
+        return planManager;
     }
 
     /**

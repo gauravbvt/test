@@ -12,10 +12,10 @@ package jwsl;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.Hits;
-import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.util.Version;
 
 import java.io.IOException;
 
@@ -67,36 +67,29 @@ public class IndexBroker {
 	 */
 	private static IndexBroker _instance;
 
-	/**
+    private static final int MAX_HITS = 1000;
+
+    /**
 	 * The Constructor. Has private access to allow the implementation of the
 	 * singleton design pattern. Points the searcher to the index directory,
 	 * sets the default field to lookup and the defualt operator that is to be
 	 * assumed when more than one token is given.
 	 */
-	private IndexBroker(String indexDir) {
-		try {
-			_searcher = new IndexSearcher(indexDir);
-			_parser = new QueryParser(WORDS, new WhitespaceAnalyzer());
+	private IndexBroker(String indexDir, Searcher searcher) {
+			_searcher = searcher;
+			_parser = new QueryParser( Version.LUCENE_35, WORDS, new WhitespaceAnalyzer());
 
-
-
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			System.err.println("");
-			System.err.println("Please place the " + indexDir
-					+ " in the working directory.");
-		}
 	}
 
 	/**
-	 * Static method that allows other objects to aquire a reference to an
+	 * Static method that allows other objects to acquire a reference to an
 	 * existing broker. If no broker exists than a new one is created.
 	 * 
 	 * @return IndexBroker
 	 */
-	public static IndexBroker getInstance(String indexDir) {
+	public static IndexBroker getInstance(String indexDir, Searcher searcher) {
 		if (_instance == null) {
-			_instance = new IndexBroker(indexDir);
+			_instance = new IndexBroker(indexDir, searcher);
         }
 
 		return _instance;
@@ -109,12 +102,12 @@ public class IndexBroker {
 	 *            String The query to be searched
 	 * @return Hits A list of hits
 	 */
-	public Hits getHits(String query) {
+	public TopDocs getHits(String query) {
 		Query q;
 		try {
 			q = _parser.parse(query);
 
-			return _searcher.search(q);
+			return _searcher.search(q, MAX_HITS);
 		} catch (ParseException ex) {
 			ex.printStackTrace();
 		} catch (IOException ex) {

@@ -157,6 +157,7 @@ public class Channel implements Serializable, Comparable<Channel> {
         }
     }
 
+
     /**
      * Tests if address is valid for the medium
      *

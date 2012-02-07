@@ -1,11 +1,10 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.util.PeekAheadIterator;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.social.CommandEvent;
-import com.mindalliance.channels.social.PlanningEventService;
+import com.mindalliance.channels.social.model.ExecutedCommand;
+import com.mindalliance.channels.social.services.ExecutedCommandService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -27,10 +26,10 @@ import java.util.List;
  * Date: Jul 5, 2010
  * Time: 1:31:46 PM
  */
-public class CommandEventListPanel extends AbstractSocialListPanel {
+public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
 
     @SpringBean
-    private PlanningEventService planningEventService;
+    private ExecutedCommandService executedCommandService;
 
     private static final int A_FEW = 7;
     private static final int MORE = 7;
@@ -46,7 +45,7 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
     private Updatable updatable;
     private Date whenLastRefreshed;
 
-    public CommandEventListPanel( String id, Updatable updatable, boolean collapsible ) {
+    public ExecutedCommandsListPanel( String id, Updatable updatable, boolean collapsible ) {
         super( id, collapsible );
         this.updatable = updatable;
         init();
@@ -56,10 +55,10 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
         super.init();
         addShowHideLink();
         addShowHideLabel();
-        planningEventsContainer = new WebMarkupContainer( "planningEventsContainer" );
+        planningEventsContainer = new WebMarkupContainer( "executedCommandsContainer" );
         planningEventsContainer.setOutputMarkupId( true );
         add( planningEventsContainer );
-        addCommandEvents();
+        addExecutedCommands();
         addShowMore();
         addShowAFew();
         adjustComponents();
@@ -72,7 +71,7 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
                 othersOnly = !othersOnly;
                 addShowHideLabel();
                 target.add( showHideLabel );
-                addCommandEvents();
+                addExecutedCommands();
                 adjustComponents( target );
             }
         };
@@ -96,29 +95,29 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
     }
 
     private void adjustComponents() {
-        List<CommandEvent> commandEvents = getCommandEvents();
-        makeVisible( noCommandContainer, commandEvents.isEmpty() );
-        makeVisible( planningEventsContainer, !commandEvents.isEmpty() );
+        List<ExecutedCommand> executedCommands = getExecutedCommands();
+        makeVisible( noCommandContainer, executedCommands.isEmpty() );
+        makeVisible( planningEventsContainer, !executedCommands.isEmpty() );
         makeVisible( showMore, !allShown );
-        makeVisible( showAFew, commandEvents.size() > A_FEW );
+        makeVisible( showAFew, executedCommands.size() > A_FEW );
     }
 
-    private void addCommandEvents() {
-        List<CommandEvent> commandEvents = getCommandEvents();
-        ListView<CommandEvent> commandEventListView = new ListView<CommandEvent>(
-                "commandEvents",
-                commandEvents ) {
-            protected void populateItem( ListItem<CommandEvent> item ) {
-                CommandEvent commandEvent = item.getModelObject();
-                CommandEventPanel commandEventPanel = new CommandEventPanel(
-                        "commandEvent",
-                        new Model<CommandEvent>( commandEvent ),
+    private void addExecutedCommands() {
+        List<ExecutedCommand> executedCommands = getExecutedCommands();
+        ListView<ExecutedCommand> executedCommandListView = new ListView<ExecutedCommand>(
+                "executedCommands",
+                executedCommands ) {
+            protected void populateItem( ListItem<ExecutedCommand> item ) {
+                ExecutedCommand executedCommand = item.getModelObject();
+                ExecutedCommandPanel executedCommandPanel = new ExecutedCommandPanel(
+                        "executedCommand",
+                        new Model<ExecutedCommand>( executedCommand ),
                         item.getIndex(),
                         updatable );
-                item.add( commandEventPanel );
+                item.add( executedCommandPanel );
             }
         };
-        planningEventsContainer.addOrReplace( commandEventListView );
+        planningEventsContainer.addOrReplace( executedCommandListView );
         noCommandContainer = new WebMarkupContainer( "noCommands" );
         noCommandContainer.setOutputMarkupId( true );
         addOrReplace( noCommandContainer );
@@ -128,7 +127,7 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
         showMore = new AjaxFallbackLink( "showMore" ) {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow += MORE;
-                addCommandEvents();
+                addExecutedCommands();
                 adjustComponents( target );
             }
         };
@@ -140,7 +139,7 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
         showAFew = new AjaxFallbackLink( "showFew" ) {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow = A_FEW;
-                addCommandEvents();
+                addExecutedCommands();
                 adjustComponents( target );
             }
         };
@@ -148,37 +147,37 @@ public class CommandEventListPanel extends AbstractSocialListPanel {
         planningEventsContainer.add( showAFew );
     }
 
-    public List<CommandEvent> getCommandEvents() {
-        List<CommandEvent> commandEvents = new ArrayList<CommandEvent>();
-        PeekAheadIterator<CommandEvent> iterator = new PeekAheadIterator<CommandEvent>(
-                planningEventService.getCommandEvents( planUrn() ) );
-        while ( iterator.hasNext() && commandEvents.size() < numberToShow ) {
-            CommandEvent commandEvent = iterator.next();
-            if ( commandEvent != null ) {
-                CommandEvent nextCommandEvent = iterator.peek();
-                if ( !( isOthersOnly() && commandEvent.getCommand().getUserName().equals( getUsername() ) )
-                        && !isFollwedByAnotherUpdate( commandEvent, nextCommandEvent ) )
-                    commandEvents.add( commandEvent );
+    public List<ExecutedCommand> getExecutedCommands() {
+        List<ExecutedCommand> executedCommands = new ArrayList<ExecutedCommand>();
+        PeekAheadIterator<ExecutedCommand> iterator = new PeekAheadIterator<ExecutedCommand>(
+                executedCommandService.getExecutedCommands( planUrn() ) );
+        while ( iterator.hasNext() && executedCommands.size() < numberToShow ) {
+            ExecutedCommand executedCommand = iterator.next();
+            if ( executedCommand != null ) {
+                ExecutedCommand nextExecutedCommand = iterator.peek();
+                if ( !( isOthersOnly() && executedCommand.getUsername().equals( getUsername() ) )
+                        && !isFollwedByAnotherUpdate( executedCommand, nextExecutedCommand ) )
+                    executedCommands.add( executedCommand );
             }
         }
         allShown = !iterator.hasNext();
-        return commandEvents;
+        return executedCommands;
     }
 
-    private boolean isFollwedByAnotherUpdate( CommandEvent commandEvent, CommandEvent nextCommandEvent ) {
-        if ( !commandEvent.isDone() ) return false;
-        if ( !( commandEvent.getCommand() instanceof UpdateObject ) ) return false;
-        if ( nextCommandEvent == null ) return false;
-        if ( !nextCommandEvent.isDone() ) return false;
-        if ( !( nextCommandEvent.getCommand() instanceof UpdateObject ) ) return false;
-        if ( commandEvent.getChange().getId() != nextCommandEvent.getChange().getId() ) return false;
+    private boolean isFollwedByAnotherUpdate( ExecutedCommand executedCommand, ExecutedCommand nextExecutedCommand ) {
+        if ( !executedCommand.isDone() ) return false;
+        if ( !( executedCommand.isUpdate() ) ) return false;
+        if ( nextExecutedCommand == null ) return false;
+        if ( !nextExecutedCommand.isDone() ) return false;
+        if ( !( nextExecutedCommand.isUpdate() ) ) return false;
+        if ( executedCommand.getChangeId() != nextExecutedCommand.getChangeId() ) return false;
         return true;
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {
-        Date whenLastChanged = planningEventService.getWhenLastChanged( planUrn() );
+        Date whenLastChanged = executedCommandService.getWhenLastChanged( planUrn() );
         if ( whenLastChanged != null && whenLastChanged.after( whenLastRefreshed ) ) {
-            addCommandEvents();
+            addExecutedCommands();
             adjustComponents( target );
             whenLastRefreshed = new Date();
         }
