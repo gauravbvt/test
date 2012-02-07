@@ -114,12 +114,12 @@ public class MAV0138_viewIssueOfEvent
 				}
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);				
+				Thread.sleep(2000);
 				// Close Event Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 			    // WebElement Synchronization
 				Thread.currentThread();

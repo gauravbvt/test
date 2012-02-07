@@ -41,7 +41,8 @@ public class MAV0124_sendMessage
 			    // Clicks on "add info receive" located on the "Receives" Pane
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="add info receive";
-			    GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+//			    GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 			    // Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

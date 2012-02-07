@@ -78,6 +78,18 @@ public class MAV0134_viewNetworkOfAgent
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
+				
+				// Click on done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Done";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 
 				// Click on Index under show pop up menu
 				GlobalVariables.iStepNo++ ;

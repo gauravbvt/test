@@ -57,7 +57,8 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
-				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+//				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -87,9 +88,9 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// Click on 'OK" button of message box in order to confirm it
-				alert.accept();
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				// Click on 'OK" button of message box in order to confirm it
+//				alert.accept();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -107,7 +108,8 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions
 				// Click 'Add info received' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Received' Link Clicked";
-				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+//				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -137,9 +139,9 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),"Remove info need");
-				alert = GlobalVariables.oDriver.switchTo().alert();
-				// Click on 'OK" button of message box in order to confirm it
-				alert.accept();
+//				alert = GlobalVariables.oDriver.switchTo().alert();
+//				// Click on 'OK" button of message box in order to confirm it
+//				alert.accept();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -154,9 +156,9 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Get a handle to the open alert, prompt or confirmation
-				alert = GlobalVariables.oDriver.switchTo().alert();
-				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
+//				alert = GlobalVariables.oDriver.switchTo().alert();
+//				// And acknowledge the alert (equivalent to clicking "OK")
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

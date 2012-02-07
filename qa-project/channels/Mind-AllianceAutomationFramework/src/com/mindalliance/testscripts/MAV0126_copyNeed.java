@@ -40,7 +40,8 @@ public class MAV0126_copyNeed
 			    // Clicks on "add info receive" located on the "Receives" Pane
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="add info receive";
-			    GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+//			    GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 			    // Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -51,7 +52,7 @@ public class MAV0126_copyNeed
 			    
 			    // Clicks on "Copy  need" option under "more" pop up menu located on the "Receives" Pane
 			    GlobalVariables.iStepNo++;
-			    GlobalVariables.sDescription="Send Message";
+			    GlobalVariables.sDescription="Copy Need";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("copyNeed"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -60,7 +61,33 @@ public class MAV0126_copyNeed
 			    // WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);
-			  
+			    
+			    // Assertion: Verify that message "Need copied" is displayed on the heading section of "Plan" page
+			    GlobalVariables.iStepNo++;
+			    GlobalVariables.sDescription="Verify that message 'Need copied' is displayed on the heading section of 'Plan' page";
+			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[14]/span/span"));
+			    if(GlobalVariables.oElement.getText().equals("Need copied")){
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Flow copied' "+" Actual "+GlobalVariables.oElement.getText();
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }		
+			    // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(1000);
+			    // Remove Info need
+			    ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("removeInfoNeed"));
+			    // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(1000);
+			    
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

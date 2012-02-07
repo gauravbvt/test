@@ -39,7 +39,7 @@ public class MAV0123_closeElementsOfInformation
 				// Click on add receive info
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Receives Informations";
-				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

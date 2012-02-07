@@ -52,9 +52,6 @@ public class MAV0078_pasteTaskUnderAction
 			    Thread.currentThread();
 			    Thread.sleep(1000);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
-//				// select category
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:category"));
-//				GlobalVariables.oElement.sendKeys("Audit");
 		    	// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -67,8 +64,8 @@ public class MAV0078_pasteTaskUnderAction
 			    GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Cut task";
 		    	ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskActionsMenu"),GlobalVariables.viewElements.get("cutTask"));
-		    	Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
+//		    	Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				alert.accept();
 		    	// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -94,15 +91,13 @@ public class MAV0078_pasteTaskUnderAction
 			    Thread.currentThread();
 			    Thread.sleep(1000);
 			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(task));
-			    if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("task1234")))
-			    {
+			    if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("task1234"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
-			    else
-			    {
+			    else{
 			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("task1234")+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);

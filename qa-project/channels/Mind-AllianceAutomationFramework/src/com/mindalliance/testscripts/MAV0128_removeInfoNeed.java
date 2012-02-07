@@ -53,7 +53,7 @@ public class MAV0128_removeInfoNeed
 			    // Click on Show details
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="show details";
-			    ApplicationFunctionLibrary.MouseOverAndClick("/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/span/span/span/span","Show details");
+			    ApplicationFunctionLibrary.MouseOverAndClick("//span/div/div[3]/div[2]/div[2]/div/div/span/span/span/span","Show details");
 			    // Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

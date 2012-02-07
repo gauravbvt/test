@@ -48,7 +48,7 @@ public class MAV0016_viewAllWhoForm
 					  GlobalVariables.sBlank, GlobalVariables.sBlank);
 			  // WebElement Synchronization
 			  Thread.currentThread();
-			  Thread.sleep(1000);
+			  Thread.sleep(2000);
 			  
 			  // Clicks on 'all who's who' link under show pop up menu option on About plan window 
 			  GlobalVariables.iStepNo++ ;
@@ -60,7 +60,7 @@ public class MAV0016_viewAllWhoForm
 					  GlobalVariables.sBlank, GlobalVariables.sBlank);
 			  // WebElement Synchronization
 			  Thread.currentThread();
-			  Thread.sleep(1000);
+			  Thread.sleep(2000);
 			  
 			  // Assertion: Verify that "All who's who" page loaded 
 			  GlobalVariables.iStepNo++;

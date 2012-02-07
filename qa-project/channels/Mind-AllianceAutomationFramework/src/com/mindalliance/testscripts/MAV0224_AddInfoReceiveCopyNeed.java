@@ -50,10 +50,11 @@ public class MAV0224_AddInfoReceiveCopyNeed
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click 'Add Info Sent' Link. 
+				// Click 'Add Info Receive' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Receive' Link Clicked";
-				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+//				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -64,7 +65,7 @@ public class MAV0224_AddInfoReceiveCopyNeed
 				
 				// Copy Need
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Sent Info Copy Need";
+				GlobalVariables.sDescription = "Receive Info Copy Need";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"), GlobalVariables.viewElements.get("copyNeed"));
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -88,8 +89,8 @@ public class MAV0224_AddInfoReceiveCopyNeed
 				// Click on 'Remove this segment' under 'Actions' pop up menu
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);

@@ -41,7 +41,8 @@ public class MAV0125_copyFlow
 				// Click on add receive info
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Receives Informations";
-				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+//				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(8000);
@@ -109,6 +110,14 @@ public class MAV0125_copyFlow
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 			    }					
+			    // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(1000);
+			    // Remove Info need
+			    ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("removeInfoNeed"));
+			    // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(1000);
 			    
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;

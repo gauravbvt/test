@@ -76,7 +76,19 @@ public class MAV0133_viewAgentDetails
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
+				
+				// Click on done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Done";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 
 				// Click on Index under show pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -88,7 +100,7 @@ public class MAV0133_viewAgentDetails
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Select the plan from 'Switch to Agent' drop down, located on the top right corner
 				GlobalVariables.iStepNo++ ;

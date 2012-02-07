@@ -54,7 +54,8 @@ public class MAV0217_AddInfoSentShowPopUpMenu
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
-				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+//				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -89,8 +90,8 @@ public class MAV0217_AddInfoSentShowPopUpMenu
 				// Click on 'Remove this segment' under 'Actions' pop up menu
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);

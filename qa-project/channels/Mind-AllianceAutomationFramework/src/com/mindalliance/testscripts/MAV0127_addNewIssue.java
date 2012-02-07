@@ -40,7 +40,8 @@ public class MAV0127_addNewIssue
 			    // Clicks on "add info receive" located on the "Receives" Pane
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="add info receive";
-			    GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+//			    GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 			    // Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -57,6 +58,11 @@ public class MAV0127_addNewIssue
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(1000);
+			    // Remove Info need
+			    ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("removeInfoNeed"));
 			    // WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);

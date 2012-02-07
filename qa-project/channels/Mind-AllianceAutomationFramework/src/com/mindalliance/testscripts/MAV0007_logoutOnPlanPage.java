@@ -43,8 +43,8 @@ public class MAV0007_logoutOnPlanPage
 				  GlobalVariables.iStepNo++;
 				  GlobalVariables.sDescription="Logout";
 				  ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),"Sign out "+GlobalVariables.login.get("sUsername"));
-				  Alert alert=GlobalVariables.oDriver.switchTo().alert();
-				  alert.accept();
+//				  Alert alert=GlobalVariables.oDriver.switchTo().alert();
+//				  alert.accept();
 			      // Write Results
 				  LogFunctions.writeLogs(GlobalVariables.sDescription);
 				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
