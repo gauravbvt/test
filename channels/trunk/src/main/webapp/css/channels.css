@@ -108,7 +108,6 @@ div.part-header div.section-content {
     padding-bottom: 5px;
     padding-left: 23px;
     padding-top: 10px;
-	text-decoration:underline;
 }
 
 #part .summary:hover {
@@ -1854,7 +1853,7 @@ span.channels-summary {
     border: 1px solid #999999;
     border-radius: 5px 5px 5px 5px;
     color: #333333;
-    cursor: pointer;
+    cursor: default;
     font-size: 9px;
     padding: 2px 4px;
     text-transform: uppercase;
