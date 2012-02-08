@@ -72,7 +72,8 @@ public class MAC0023_UndoAddInfoNeed {
 					// Add info need flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Add info need added";
-					GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+//					GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

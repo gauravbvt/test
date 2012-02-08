@@ -17,7 +17,7 @@ import com.mindalliance.globallibrary.GlobalVariables;
 public class UpdatePlannerInPerformance 
 {
     public UpdatePlannerInPerformance() {
-    		String sChannelURL = "http://192.168.4.127:8081/channels";
+    		String sChannelURL = "http://192.168.4.126:8081/channels";
     		String sUserName = "jf";
     		String sPassword = "Mind-Alliance";
 		try {

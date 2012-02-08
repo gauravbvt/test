@@ -104,7 +104,8 @@ public class MAC0011_UndoDisintermediateTask {
 					// Add info sent flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Sent Flow added";
-					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+//					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
