@@ -15,14 +15,14 @@
     <div data-role="content" data-theme="c">
         <p>The following message will be sent to <span wicket:id="collaboration.with.fullName">other user</span>:</p>
         <form wicket:id="form">
-            <textarea wicket:id="description" rows="20" cols="10">John,
+            <textarea wicket:id="description">John,
 Please confirm that you agree that I will call you using your office phone every week to discuss our status in the context of the weekly meeting.</textarea>
 
-            <div data-role="fieldcontain" data-inset="true">
-                <input wicket:id="forwardable" id="forwardable" type="checkbox"/>
-                <label for="forwardable">Allow <span wicket:id="collaboration.with.givenName">other user</span> to 
-                    forward my request to another user.</label>             
-            </div>
+            <input wicket:id="forwardable" id="forwardable" type="checkbox"/>
+            <label for="forwardable">Allow <span wicket:id="collaboration.with.givenName">other user</span> to
+                forward my request to another user.</label>
+            <!--<div data-role="fieldcontain" data-inset="true">-->
+            <!--</div>-->
             
             <div>
                 <input type="submit" data-role="button" data-icon="check" data-inline="true" value="Request 

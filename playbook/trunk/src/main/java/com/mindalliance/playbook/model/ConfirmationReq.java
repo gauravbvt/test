@@ -6,10 +6,10 @@
 
 package com.mindalliance.playbook.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -30,14 +30,12 @@ public class ConfirmationReq implements Serializable, Timestamped {
 
     private Date date = new Date();
 
-    private boolean pending = true;
-    
     private boolean forwardable;
     
-    @ManyToOne
+    @OneToOne
     private Collaboration collaboration;
     
-    @OneToOne( optional = true )
+    @OneToOne( optional = true, cascade = CascadeType.ALL )
     private ConfirmationAck confirmation;
 
     //
@@ -62,12 +60,9 @@ public class ConfirmationReq implements Serializable, Timestamped {
         this.description = description;
     }
 
+    @Transient
     public boolean isPending() {
-        return pending;
-    }
-
-    public void setPending( boolean pending ) {
-        this.pending = pending;
+        return confirmation == null;
     }
 
     public ConfirmationAck getConfirmation() {

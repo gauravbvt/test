@@ -18,9 +18,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -74,7 +74,7 @@ public class EditStep extends MobilePage {
 
         add(
 
-            new StatelessForm( "form" ) {
+            new Form( "form" ) {
                 @Override
                 protected void onSubmit() {
                     save( step );
@@ -133,17 +133,23 @@ public class EditStep extends MobilePage {
                         save( step );
                         redirectToInterceptPage( new ConfirmPage( (Collaboration) step ) );
                     }
-                }.add( new AttributeModifier( "value", getText( status ) ) )
-                    .setVisible( step.isCollaboration() )
-                    .setEnabled( status == Status.UNCONFIRMED ) ) );
+                }.add(
+                    new AttributeModifier( "value", getText( status ) ) 
+                )   .setVisible( step.isCollaboration() )
+                    .setEnabled( stepDao.isConfirmable( step ) ) ) );
     }
 
     private static String getText( Status status ) {
         switch ( status ) {
-        case CONFIRMED: return "Confirmed";
-        case REJECTED: return "Rejected";
-        case PENDING:  return "Pending";
-        case UNCONFIRMED: 
+        case CONFIRMED:
+            return "Confirmed";
+        case REJECTED:
+            return "Rejected";
+        case PENDING:
+            return "Pending";
+        case AGREED:
+            return "As Agreed";
+        case UNCONFIRMED:
         default:
             return "Confirm";
         }
@@ -171,14 +177,13 @@ public class EditStep extends MobilePage {
 
         case SEND:
             return new SendPanel( "details", stepModel ).setOutputMarkupId( true );
-        
-        case RECEIVE:            
+
+        case RECEIVE:
             return new ReceivePanel( "details", stepModel ).setOutputMarkupId( true );
 
         case SUBPLAY:
             return new SubplayPanel( "details", stepModel ).setOutputMarkupId( true );
-            
-        
+
         default:
             return new WebMarkupContainer( "details" ).setOutputMarkupId( true );
         }
@@ -203,8 +208,8 @@ public class EditStep extends MobilePage {
 
         // TODO find the proper way of doing this
         setResponsePage( EditPlay.class, new PageParameters().add( "id", playId ) );
-//        WebResponse response = (WebResponse) getResponse();
-//        response.sendRedirect( "../plays/" + Long.toString( playId ) );
+        //        WebResponse response = (WebResponse) getResponse();
+        //        response.sendRedirect( "../plays/" + Long.toString( playId ) );
     }
 
     private void gotoStep( Step step ) {

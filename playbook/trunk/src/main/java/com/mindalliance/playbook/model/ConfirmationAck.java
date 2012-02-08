@@ -24,7 +24,9 @@ import java.util.Date;
 @DiscriminatorColumn( discriminatorType = DiscriminatorType.STRING )
 @Inheritance( strategy = InheritanceType.SINGLE_TABLE )
 @Entity
-public abstract class ConfirmationAck implements Serializable {
+public abstract class ConfirmationAck implements Serializable, Timestamped {
+
+    private static final long serialVersionUID = -5913838102025317501L;
 
     @Id @GeneratedValue
     private long id;
@@ -37,7 +39,7 @@ public abstract class ConfirmationAck implements Serializable {
     //
     // Constructors
     //
-    public ConfirmationAck() {
+    protected ConfirmationAck() {
     }
 
     protected ConfirmationAck( ConfirmationReq request ) {
@@ -62,4 +64,14 @@ public abstract class ConfirmationAck implements Serializable {
     
     @Transient
     public abstract boolean isAck();
+
+    @Override
+    public Date getLastModified() {
+        return date;
+    }
+
+    @Override
+    public void setLastModified( Date date ) {
+        this.date = date;
+    }
 }

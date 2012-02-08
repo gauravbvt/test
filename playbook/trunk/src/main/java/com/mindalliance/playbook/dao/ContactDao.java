@@ -1,6 +1,7 @@
 package com.mindalliance.playbook.dao;
 
 import com.mindalliance.playbook.model.Account;
+import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.Contact;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,5 +51,18 @@ public interface ContactDao extends IndexedDao<Contact,Long> {
      */
     @Transactional( readOnly = true )
     List<Contact> findAliases( Account account );
-    
+
+    /**
+     * Make sure contact is present in current account. 
+     * If not, copy information relevant to a collaboration.
+     *
+     *
+     *
+     *
+     * @param foreignContact the foreign contact
+     * @param collaboration the collaboration
+     * @return a private contact, possibly new
+     */
+    @Transactional
+    Contact privatize( Contact foreignContact, Collaboration collaboration );
 }

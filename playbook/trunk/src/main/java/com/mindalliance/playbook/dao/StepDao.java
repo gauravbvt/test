@@ -18,7 +18,8 @@ public interface StepDao extends GenericDao<Step,Long> {
         UNCONFIRMED,
         CONFIRMED,
         PENDING,
-        REJECTED        
+        REJECTED,
+        AGREED
     }
 
     /**

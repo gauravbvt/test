@@ -1,8 +1,9 @@
 package com.mindalliance.playbook.pages;
 
 import com.mindalliance.playbook.dao.AckDao;
+import com.mindalliance.playbook.dao.PlayDao;
+import com.mindalliance.playbook.dao.StepDao;
 import com.mindalliance.playbook.model.Account;
-import com.mindalliance.playbook.model.Ack;
 import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.ConfirmationReq;
 import com.mindalliance.playbook.model.Contact;
@@ -25,10 +26,12 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.StatelessLink;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +45,15 @@ public class AckPage extends MobilePage {
 
     private static final Logger LOG = LoggerFactory.getLogger( AckPage.class );
 
-    private final Collaboration collaboration;
+    private static final long serialVersionUID = -268665698142575634L;
 
     private final ConfirmationReq req;
+
+    @SpringBean
+    private PlayDao playDao;
+
+    @SpringBean
+    private StepDao stepDao;
 
     public enum AnswerType {
         UNKNOWN,
@@ -53,13 +62,11 @@ public class AckPage extends MobilePage {
         MAYBE
     }
 
-    private final Ack ack;
-
     private Contact referral;
     
     private String referralNote;
 
-    private final NAck nAck;
+    private String nAckReason;
     
     private String newPlay;
     
@@ -78,12 +85,9 @@ public class AckPage extends MobilePage {
 
         // Build all possible answers.
         // Actually save only the one specified by answerType.
-        ack = new Ack();
-        nAck = new NAck();
 
         req = request;
-        collaboration = this.req.getCollaboration();
-        Contact contact = getContact( collaboration );
+        final Contact contact = getContact( getCollaboration() );
 
         long contactId = contact.getId();
         boolean hasPhoto = contact.getPhoto() != null;
@@ -108,8 +112,9 @@ public class AckPage extends MobilePage {
                     } ) ) ).setRenderBodyOnly( true ).setVisible( false );
 
         final Component noDiv = new WebMarkupContainer( "noDiv" ).add( 
-                new TextArea( "nAck.reason" )
+                new TextArea( "nAckReason" )
             ).setVisible( false );
+        
         final Component maybeDiv = new WebMarkupContainer( "maybeDiv" ).add(
                 new ContactField( "referral", new PropertyModel<Contact>( this, "referral" ) ),
                 new TextArea( "referralNote" )
@@ -156,15 +161,37 @@ public class AckPage extends MobilePage {
             @Override
             protected void onSubmit() {
                 // TODO implement this
-                if ( canSubmit() ) {
-                    LOG.debug( "Submitted" );
+
+                switch ( answerType ) {
+
+                case YES:
+                    Collaboration collaboration = getCollaboration();
+
+                    Play play = newPlay != null && !newPlay.trim().isEmpty() ?
+                                    ackDao.saveInPlay( newPlay.trim(), collaboration, req ) :
+                                    existingPlay == null ? ackDao.saveInPlay( (String) null, collaboration, req ) :
+                                                           ackDao.saveInPlay( existingPlay, collaboration, req );
+                        
+                    setResponsePage( EditPlay.class, new PageParameters().add( "id", play.getId() ) );
+
+                    break;
+
+                case NO:
+                    NAck nAck = new NAck( req );
+                    nAck.setReason( nAckReason );
+                    ackDao.save( nAck );
+
+                case UNKNOWN:
+                case MAYBE:
                     setResponsePage( MessagesPage.class );
-                }
+                    break;
+                }                
             }
         }.add( formList );
 
         add(
             new Label( "hTitle", getPageTitle() ), 
+            new FeedbackPanel( "feedback" ),
             new StatelessLink( "cancel" ) {
                 @Override
                 public void onClick() {
@@ -184,7 +211,7 @@ public class AckPage extends MobilePage {
 
             form );
     }
-    
+
     private boolean canSubmit() {
         return answerType == AnswerType.YES && ( newPlay != null || existingPlay != null )
             || answerType == AnswerType.NO
@@ -232,15 +259,7 @@ public class AckPage extends MobilePage {
     public void setAnswerType( AnswerType answerType ) {
         this.answerType = answerType;
     }
-
-    public Ack getAck() {
-        return ack;
-    }
-
-    public NAck getNAck() {
-        return nAck;
-    }
-
+   
     public Contact getReferral() {
         return referral;
     }
@@ -250,7 +269,7 @@ public class AckPage extends MobilePage {
     }
 
     public Collaboration getCollaboration() {
-        return collaboration;
+        return req.getCollaboration();
     }
 
     public String getReferralNote() {
@@ -263,5 +282,13 @@ public class AckPage extends MobilePage {
 
     public ConfirmationReq getReq() {
         return req;
+    }
+
+    public String getNAckReason() {
+        return nAckReason;
+    }
+
+    public void setNAckReason( String nAckReason ) {
+        this.nAckReason = nAckReason;
     }
 }

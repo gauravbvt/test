@@ -1,17 +1,17 @@
 package com.mindalliance.playbook.dao.impl;
 
-import com.mindalliance.playbook.dao.PlayDao;
+import com.mindalliance.playbook.dao.AccountDao;
 import com.mindalliance.playbook.dao.StepDao;
-import com.mindalliance.playbook.model.Ack;
 import com.mindalliance.playbook.model.Collaboration;
-import com.mindalliance.playbook.model.ConfirmationAck;
 import com.mindalliance.playbook.model.ConfirmationReq;
+import com.mindalliance.playbook.model.Contact;
 import com.mindalliance.playbook.model.Receive;
 import com.mindalliance.playbook.model.Send;
 import com.mindalliance.playbook.model.Step;
 import com.mindalliance.playbook.model.Step.Type;
 import com.mindalliance.playbook.model.Subplay;
 import com.mindalliance.playbook.model.Task;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -25,10 +25,10 @@ import java.util.List;
  */
 @Repository
 public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepDao {
-    
+
     @Autowired
-    private PlayDao playDao;
-    
+    private AccountDao accountDao;
+
     @Override
     public Step switchStep( Type stepType, Step oldStep ) {
         Step newStep;
@@ -50,14 +50,7 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
             newStep = new Task( oldStep );
             break;
         }
-
-//        refresh( oldStep );
-//        Play play = oldStep.getPlay();
-//
-//        play.removeStep( oldStep );
-//        play.addStep( newStep );
-//        playDao.save( play );
-        
+       
         delete( oldStep );
         save( newStep );
 
@@ -67,14 +60,29 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
     @Override
     public boolean isConfirmable( Step step ) {
         if ( !step.isCollaboration() )
-            return false;
+           return false;
 
         Collaboration collaboration = (Collaboration) step;
-        if ( collaboration.getWith() == null || collaboration.getUsing() == null )
+        Contact contact = collaboration.getWith();
+        if ( contact == null || collaboration.getUsing() == null )
+            return false;
+
+
+        if ( collaboration.isAgreed() )
             return false;
 
         ConfirmationReq request = getLastRequest( collaboration );
-        return request == null || request.getConfirmation() == null;
+        if ( request != null && request.getConfirmation() != null )
+            return false;
+
+        // Contact must be a register playbook user for now...
+        // TODO remove this when email invitations are enabled
+
+        for ( String email : contact.getEmails() )
+            if ( accountDao.findByEmail( email ) != null )
+                    return true;
+
+        return false;
     }
 
     @Override
@@ -85,8 +93,14 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
         Collaboration collaboration = (Collaboration) step;
         if ( collaboration.getWith() == null || collaboration.getUsing() == null )
             return Status.UNCONFIRMED;
+        
+        if ( collaboration.isAgreed() )
+            return Status.AGREED;
 
-        ConfirmationReq request = getLastRequest( collaboration );
+        return getStatus( getLastRequest( collaboration ) );
+    }
+
+    private static Status getStatus( ConfirmationReq request ) {
         return request == null                   ? Status.UNCONFIRMED 
              : request.getConfirmation() == null ? Status.PENDING 
              : request.getConfirmation().isAck() ? Status.CONFIRMED 
@@ -101,8 +115,8 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
     private ConfirmationReq getLastRequest( Collaboration collaboration ) {
         Criteria criteria = getSession().createCriteria( ConfirmationReq.class )
             .add( Restrictions.eq( "collaboration", collaboration ) )
-            .add( Restrictions.isNull( "confirmation" ) ) 
-            .addOrder( Order.desc( "date" ) );
+            .addOrder( Order.desc( "date" ) )
+            .setMaxResults( 1 );
 
         List list = criteria.list();
         return list.isEmpty() ? null : (ConfirmationReq) list.get( 0 );

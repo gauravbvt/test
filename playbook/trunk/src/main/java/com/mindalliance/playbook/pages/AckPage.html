@@ -13,6 +13,7 @@
         <h1 wicket:id="hTitle">Request</h1>
     </div>
     <div data-role="content" data-theme="c">
+        <p class="error" wicket:id="feedback">(Error messages would go here</p>
         <div>
             <h3>The following message was received from <span wicket:id="req.collaboration.play.playbook.me">Jane 
                 Doe</span> 
@@ -60,7 +61,7 @@
 
                 <li data-role="fieldcontain" wicket:id="noDiv">
                     <label for="reason">Reason:</label>
-                    <textarea wicket:id="nAck.reason" id="reason" rows="4" cols="20"></textarea>
+                    <textarea wicket:id="nAckReason" id="reason" rows="4" cols="20"></textarea>
                 </li>
 
                 <div wicket:id="maybeDiv">

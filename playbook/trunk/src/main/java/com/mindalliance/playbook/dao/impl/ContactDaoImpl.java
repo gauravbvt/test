@@ -3,7 +3,9 @@ package com.mindalliance.playbook.dao.impl;
 import com.mindalliance.playbook.dao.AccountDao;
 import com.mindalliance.playbook.dao.ContactDao;
 import com.mindalliance.playbook.model.Account;
+import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.Receive;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Conjunction;
@@ -97,5 +99,40 @@ public class ContactDaoImpl extends IndexedHibernateDao<Contact, Long> implement
             "select c.contact from OtherMedium as c where c.type = 'EMAIL' and c.address = :email"
         ).setParameter( "email", account.getEmail() );
         return (List<Contact>) query.list();
+    }
+
+    private Contact privatize( Contact localContact, Contact foreignContact, Account account, Collaboration collaboration ) {
+
+        localContact.merge( new Contact( account, foreignContact ) );
+        if ( collaboration instanceof Receive )
+            localContact.addPrivate( collaboration.getUsing() );
+        else
+            account.getPlaybook().getMe().addPrivate( collaboration.getUsing() );        
+        
+        return save( localContact );
+    }
+
+    /**
+     * Make sure contact is present in current account. 
+     * If not, copy information relevant to a collaboration.
+     *
+     * @param foreignContact the foreign contact
+     * @param collaboration the collaboration
+     * @return a private contact, possibly new
+     */
+    @Override
+    public Contact privatize( Contact foreignContact, Collaboration collaboration ) {
+        Account account = accountDao.getCurrentAccount();
+        
+        for ( String email : foreignContact.getEmails() )
+            for ( Contact myContact : findByEmail( email ) )
+                if ( myContact.isMergeableWith( foreignContact ) )
+                    return privatize( myContact, foreignContact, account, collaboration );
+
+        for ( Contact myContact : findByName( foreignContact ) )
+            if ( myContact.isMergeableWith( foreignContact ) )
+                return privatize( myContact, foreignContact, account, collaboration );
+
+        return privatize( new Contact( account ), foreignContact, account, collaboration );
     }
 }

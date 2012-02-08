@@ -98,6 +98,7 @@ abstract class GenericHibernateDao<T, ID extends Serializable> implements Generi
 
     @Override
     public T save( T entity ) {
+        LOG.debug( "Saving {}", getPersistentClass().getSimpleName() );
         getSession().saveOrUpdate( deproxy( entity ) );
         return entity;
     }

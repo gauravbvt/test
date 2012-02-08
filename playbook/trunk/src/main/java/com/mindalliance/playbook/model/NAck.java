@@ -24,6 +24,10 @@ public class NAck extends ConfirmationAck {
     public NAck() {
     }
 
+    public NAck( ConfirmationReq request ) {
+        super( request );
+    }
+
     @Override
     public boolean isAck() {
         return false;

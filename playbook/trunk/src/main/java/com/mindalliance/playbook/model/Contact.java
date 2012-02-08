@@ -42,6 +42,8 @@ import java.util.List;
     indexes = { @Index( name = "byName", columnNames = { "ACCOUNT_ID", "FAMILYNAME", "GIVENNAME" } ) } )
 public class Contact implements Serializable, Comparable<Contact> {
 
+    private static final long serialVersionUID = 197714519234753545L;
+
     @Id
     @GeneratedValue
     private long id;
@@ -90,6 +92,24 @@ public class Contact implements Serializable, Comparable<Contact> {
     public Contact( Account account, String email ) {
         this( account );
         media.add( new OtherMedium( this, "EMAIL", email ) );
+    }
+
+    /**
+     * Create a minimal contact based on a foreign contact.
+     * @param account the account
+     * @param foreignContact the contact
+     */
+    public Contact( Account account, Contact foreignContact ) {
+        this( account );
+
+        prefixes = foreignContact.getPrefixes();
+        givenName = foreignContact.getGivenName();
+        additionalNames = foreignContact.getAdditionalNames();
+        familyName = foreignContact.getFamilyName();
+        suffixes = foreignContact.getSuffixes();
+        organization = foreignContact.getOrganization();
+        title = foreignContact.getTitle();
+        photo = foreignContact.getPhoto();
     }
 
     @Transient
@@ -288,8 +308,8 @@ public class Contact implements Serializable, Comparable<Contact> {
     }
 
     @Transient
-    public List<Object> getEmails() {
-        List<Object> result = new ArrayList<Object>();
+    public List<String> getEmails() {
+        List<String> result = new ArrayList<String>();
         for ( Medium medium : media )
             if ( medium.getMediumType() == MediumType.OTHER 
                  && "EMAIL".equals( medium.getType() ) )
@@ -447,6 +467,24 @@ public class Contact implements Serializable, Comparable<Contact> {
         }
         
         return null;
+    }
+    /**
+     * Return corresponding medium in a contact. If not present, add one.
+     *
+     * @param using a foreign medium
+     * @return a medium, possibly new
+     */
+    public Medium addPrivate( Medium using ) {
+        for ( Medium medium : media )
+            if ( medium.equals( using ) )
+                return medium;
+
+        Medium result = using instanceof AddressMedium ?
+                        new AddressMedium( this, (AddressMedium) using ) :
+                        new OtherMedium( this, (OtherMedium) using );
+
+        addMedium( result );
+        return result;
     }
 
     @Override

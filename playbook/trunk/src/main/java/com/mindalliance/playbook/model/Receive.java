@@ -30,6 +30,10 @@ public class Receive extends Collaboration {
         super( step );
     }
 
+    public Receive( Play play ) {
+        super( play );
+    }
+
     @Override
     public Type getType() {
         return Type.RECEIVE;

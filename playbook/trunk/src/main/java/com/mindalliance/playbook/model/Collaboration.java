@@ -6,24 +6,17 @@
 
 package com.mindalliance.playbook.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * A step involving some collaboration with another party.
  */
 @Entity
 public abstract class Collaboration extends Step {
-
-    private static final Logger LOG = LoggerFactory.getLogger( Collaboration.class );
 
     private static final long serialVersionUID = -2318735159254336969L;
 
@@ -33,8 +26,11 @@ public abstract class Collaboration extends Step {
     @ManyToOne
     private Contact with;
     
-    @OneToMany( mappedBy = "collaboration", cascade = CascadeType.ALL )
-    private List<ConfirmationReq> requests;
+    @OneToOne( mappedBy = "collaboration", cascade = CascadeType.ALL, optional = true )
+    private ConfirmationReq request;
+    
+    @OneToOne( mappedBy = "step", cascade = CascadeType.ALL, optional = true )
+    private Ack agreement;
 
     //
     // Constructors
@@ -54,10 +50,14 @@ public abstract class Collaboration extends Step {
 
     }
 
+    protected Collaboration( Play play ) {
+        super( play );
+    }
+
     public ConfirmationReq createRequest() {
-        for ( ConfirmationReq request : requests )
-            if ( request.isPending() )
-                return request;
+
+        if ( request != null )
+            return request;
 
         ConfirmationReq req = new ConfirmationReq( this );
         req.setDescription( getDefaultDescription() );        
@@ -103,8 +103,20 @@ public abstract class Collaboration extends Step {
         return true;
     }
 
-    public List<ConfirmationReq> getRequests() {
-        return Collections.unmodifiableList( requests );
+    public ConfirmationReq getRequest() {
+        return request;
     }
-    
+
+    /**
+     * Get the agreement that originated this step.
+     * @return a 'yes' answer to a collaboration request.
+     */
+    public Ack getAgreement() {
+        return agreement;
+    }
+
+    @Transient
+    public boolean isAgreed() {
+        return agreement != null;
+    }
 }

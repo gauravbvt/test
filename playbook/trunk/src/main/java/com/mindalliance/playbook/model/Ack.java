@@ -8,6 +8,7 @@ package com.mindalliance.playbook.model;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 /**
  * An agreement for a request.
@@ -16,14 +17,31 @@ import javax.persistence.Entity;
 @DiscriminatorValue( "ack" )
 public class Ack extends ConfirmationAck {
 
+    private static final long serialVersionUID = 5441056549097062102L;
+
+    @ManyToOne
+    private Collaboration step;
+    
     //
     // Constructors
     //
     public Ack() {
     }
 
+    public Ack( ConfirmationReq request, Collaboration step ) {
+        super( request );
+        this.step = step;
+    }
+
     @Override
     public boolean isAck() {
         return true;
+    }
+
+    /**
+     * @return the step that was created as a result of answering yes to a request.
+     */
+    public Collaboration getStep() {
+        return step;
     }
 }

@@ -48,7 +48,7 @@ public class Register extends MobilePage {
     private static final long serialVersionUID = 2536370629247274187L;
 
     @SpringBean( name = "serverUrl" )
-    String serverUrl;
+    private String serverUrl;
     
     private String email = "";
 

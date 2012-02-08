@@ -28,6 +28,10 @@ public class Send extends Collaboration {
         super( step );
     }
 
+    public Send( Play play ) {
+        super( play );
+    }
+
     @Override
     public Type getType() {
         return Type.SEND;
