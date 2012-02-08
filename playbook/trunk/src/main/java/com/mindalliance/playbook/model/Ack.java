@@ -8,7 +8,7 @@ package com.mindalliance.playbook.model;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  * An agreement for a request.
@@ -19,7 +19,7 @@ public class Ack extends ConfirmationAck {
 
     private static final long serialVersionUID = 5441056549097062102L;
 
-    @ManyToOne
+    @OneToOne( optional = true ) 
     private Collaboration step;
     
     //

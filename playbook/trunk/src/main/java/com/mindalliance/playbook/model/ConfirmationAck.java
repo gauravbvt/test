@@ -74,4 +74,8 @@ public abstract class ConfirmationAck implements Serializable, Timestamped {
     public void setLastModified( Date date ) {
         this.date = date;
     }
+
+    public void setRequest( ConfirmationReq request ) {
+        this.request = request;
+    }
 }

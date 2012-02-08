@@ -1,8 +1,12 @@
 package com.mindalliance.playbook.dao.impl;
 
 import com.mindalliance.playbook.dao.AccountDao;
+import com.mindalliance.playbook.dao.AckDao;
+import com.mindalliance.playbook.dao.ConfirmationReqDao;
 import com.mindalliance.playbook.dao.StepDao;
+import com.mindalliance.playbook.model.Ack;
 import com.mindalliance.playbook.model.Collaboration;
+import com.mindalliance.playbook.model.ConfirmationAck;
 import com.mindalliance.playbook.model.ConfirmationReq;
 import com.mindalliance.playbook.model.Contact;
 import com.mindalliance.playbook.model.Receive;
@@ -11,13 +15,13 @@ import com.mindalliance.playbook.model.Step;
 import com.mindalliance.playbook.model.Step.Type;
 import com.mindalliance.playbook.model.Subplay;
 import com.mindalliance.playbook.model.Task;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,6 +32,18 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
 
     @Autowired
     private AccountDao accountDao;
+
+    @Autowired
+    private AckDao ackDao;
+
+    @Autowired
+    private ConfirmationReqDao reqDao;
+
+    @Override
+    public List<Collaboration> getUnconfirmed() {
+        // TODO unconfirmed steps list
+        return Collections.emptyList();
+    }
 
     @Override
     public Step switchStep( Type stepType, Step oldStep ) {
@@ -120,5 +136,42 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
 
         List list = criteria.list();
         return list.isEmpty() ? null : (ConfirmationReq) list.get( 0 );
+    }
+
+    /**
+     * Deleting a collaboration step means having to properly delete the links
+     * between confirmation requests and acknowledgement.
+     * 
+     * Hibernate does not support "on delete set null", unfortunately...
+     * 
+     * @param entity the step being deleted
+     */
+    @Override
+    public void delete( Step entity ) {
+        if ( entity instanceof Collaboration ) {
+            Collaboration collaboration = (Collaboration) entity;
+            ConfirmationReq request = collaboration.getRequest();
+            if ( request != null ) {
+                ConfirmationAck confirmation = request.getConfirmation();
+                request.setConfirmation( null );
+                reqDao.save( request );
+                if ( confirmation != null ) {
+                    confirmation.setRequest( null );
+                    ackDao.delete( confirmation );
+                }    
+            }
+
+            Ack agreement = collaboration.getAgreement();
+            if ( agreement != null ) {
+                ConfirmationReq req = agreement.getRequest();
+                req.setConfirmation( null );
+                reqDao.save( req );
+                collaboration.setAgreement( null );
+                ackDao.delete( agreement );
+            }
+        }
+        
+        
+        super.delete( entity );
     }
 }

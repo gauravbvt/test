@@ -1,9 +1,12 @@
 package com.mindalliance.playbook.dao;
 
+import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.Step;
 import com.mindalliance.playbook.model.Step.Type;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Direct accessor to a play steps.
@@ -21,6 +24,13 @@ public interface StepDao extends GenericDao<Step,Long> {
         REJECTED,
         AGREED
     }
+
+    /**
+     * Find all unconfirmed step in any play of current user.
+     * @return a list of collaborations
+     */
+    @Transactional
+    List<Collaboration> getUnconfirmed();
 
     /**
      * Change the type of a step.

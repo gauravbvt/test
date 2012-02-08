@@ -35,7 +35,7 @@ public class ConfirmationReq implements Serializable, Timestamped {
     @OneToOne
     private Collaboration collaboration;
     
-    @OneToOne( optional = true, cascade = CascadeType.ALL )
+    @OneToOne( optional = true, cascade = CascadeType.REMOVE )
     private ConfirmationAck confirmation;
 
     //

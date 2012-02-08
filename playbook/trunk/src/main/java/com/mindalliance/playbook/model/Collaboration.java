@@ -26,10 +26,10 @@ public abstract class Collaboration extends Step {
     @ManyToOne
     private Contact with;
     
-    @OneToOne( mappedBy = "collaboration", cascade = CascadeType.ALL, optional = true )
+    @OneToOne( mappedBy = "collaboration", cascade = CascadeType.REMOVE, optional = true )
     private ConfirmationReq request;
     
-    @OneToOne( mappedBy = "step", cascade = CascadeType.ALL, optional = true )
+    @OneToOne( mappedBy = "step", cascade = CascadeType.REMOVE, optional = true )
     private Ack agreement;
 
     //
@@ -113,6 +113,10 @@ public abstract class Collaboration extends Step {
      */
     public Ack getAgreement() {
         return agreement;
+    }
+
+    public void setAgreement( Ack agreement ) {
+        this.agreement = agreement;
     }
 
     @Transient

@@ -30,7 +30,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -120,7 +119,7 @@ public class EditStep extends MobilePage {
 
                 new StatelessLink( "delete" ) {
                     @Override
-                    public void onClick() {
+                    public void onClick() {                        
                         stepDao.delete( step );
                         gotoPlay( step.getPlay() );
                     }
@@ -158,15 +157,7 @@ public class EditStep extends MobilePage {
     private void save( Step step ) {
         if ( step.getType() == stepType ) {
             stepDao.save( step );
-
-            if ( step.isCollaboration() ) {
-                Collaboration collaboration = (Collaboration) step;
-                if ( collaboration.getWith() == null || collaboration.getUsing() == null )
-                    gotoStep( step );
-                else
-                    gotoPlay( step.getPlay() );
-            } else
-                gotoPlay( step.getPlay() );
+            gotoStep( step );
         } else {
             gotoStep( stepDao.switchStep( stepType, step ) );
         }
@@ -204,18 +195,11 @@ public class EditStep extends MobilePage {
     }
 
     private void gotoPlay( Play play ) {
-        long playId = play.getId();
-
-        // TODO find the proper way of doing this
-        setResponsePage( EditPlay.class, new PageParameters().add( "id", playId ) );
-        //        WebResponse response = (WebResponse) getResponse();
-        //        response.sendRedirect( "../plays/" + Long.toString( playId ) );
+        setResponsePage( EditPlay.class, new PageParameters().add( "id", play.getId() ) );
     }
 
     private void gotoStep( Step step ) {
-        // TODO find the proper way of doing this
-        WebResponse response = (WebResponse) getResponse();
-        response.sendRedirect( Long.toString( step.getId() ) );
+        setResponsePage( EditStep.class, new PageParameters().add( "id", step.getId() ) );
     }
 
     @Override

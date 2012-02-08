@@ -1,6 +1,7 @@
 package com.mindalliance.playbook.pages;
 
 import com.mindalliance.playbook.dao.ConfirmationReqDao;
+import com.mindalliance.playbook.dao.StepDao;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.ConfirmationReq;
@@ -35,6 +36,9 @@ public class MessagesPage extends MobilePage {
     @SpringBean
     ConfirmationReqDao reqDao;
 
+    @SpringBean
+    private StepDao stepDao;
+
     public MessagesPage( PageParameters parameters ) {
         super( parameters );
         LOG.debug( "Generating for account: {}", account.getEmail() );
@@ -42,14 +46,14 @@ public class MessagesPage extends MobilePage {
 
         List<ConfirmationReq> outgoing = reqDao.getOutgoingRequests();
         List<ConfirmationReq> incoming = reqDao.getIncomingRequests();
-
+        List<Collaboration> unconfirmed = stepDao.getUnconfirmed();
+        
         add(
             new Label( "title", new PropertyModel<String>( this, "pageTitle" ) ),
 
             new WebMarkupContainer( "empty" ).setVisible( outgoing.isEmpty() && incoming.isEmpty() ),
 
             new WebMarkupContainer( "outgoing" ).add(
-//                new Label( "count", String.valueOf( incoming.size() ) ),
                 new ListView<ConfirmationReq>( "pending", outgoing ) {
                     @Override
                     protected void populateItem( ListItem<ConfirmationReq> item ) {
@@ -73,8 +77,32 @@ public class MessagesPage extends MobilePage {
                     }
                 } ).setVisible( !outgoing.isEmpty() ),
 
+            new WebMarkupContainer( "unconfirmed" ).add(
+                new ListView<Collaboration>( "pending", unconfirmed ) {
+                    @Override
+                    protected void populateItem( ListItem<Collaboration> item ) {
+                        final Collaboration collaboration = item.getModelObject();
+                        Contact contact = collaboration.getWith();
+                        item.add(
+                            new StatelessLink( "link" ) {
+                                @Override
+                                public void onClick() {
+                                    setResponsePage( EditStep.class, new PageParameters().add( "id", 
+                                        collaboration.getId() ) );
+                                }
+                            }.add(
+                                new Label( "title", collaboration.getTitle() ),
+
+                                // TODO figure out what is the right way of doing this...
+                                new WebMarkupContainer( "photo" ).add(
+                                    new AttributeModifier(
+                                        "src", new Model<String>(
+                                        "contacts/" + contact.getId() ) ) ).setVisible(
+                                    contact.getPhoto() != null ) ) );
+                    }
+                } ).setVisible( !unconfirmed.isEmpty() ),
+
             new WebMarkupContainer( "incoming" ).add(
-//                new Label( "count", String.valueOf( incoming.size() ) ),
                 new ListView<ConfirmationReq>( "pending", incoming ) {
                     @Override
                     protected void populateItem( ListItem<ConfirmationReq> item ) {
