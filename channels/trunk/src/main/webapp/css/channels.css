@@ -73,13 +73,11 @@ div.section-content {
 
 div.part-header div.section-content {
     bottom: 0;
-    left: 10px;
     overflow: auto;
+    padding: 10px;
     position: absolute;
-    right: 0;
     top: 39px;
 }
-
 
 #graph, #part {
     position: absolute;
@@ -102,16 +100,17 @@ div.part-header div.section-content {
 }
 
 #part .summary {
+    background: #E8E8E8;
+    border-bottom: 1px solid #999999;
+    border-top: 1px solid #999999;
     display: block;
     font-size: 15px;
-    line-height: 140%;
-    padding-bottom: 5px;
-    padding-left: 23px;
-    padding-top: 10px;
+    line-height: 150%;
+    padding: 5px 10px;
 }
 
 #part .summary:hover {
-	color:#333;
+	background-color: #dddddd;
 }
 
 .simple-advanced {
@@ -325,7 +324,7 @@ div.issues {
     position: relative;
     border: 3px solid #C9252C;
     padding: 0;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 div.issues div.section-title {
@@ -333,9 +332,11 @@ div.issues div.section-title {
     border-bottom: 1px solid #C25036;
 }
 
+/*
 #part div.issues {
     margin-right: 7px;
 }
+*/
 
 div.issues h4 {
     background: url("../images/warning.png") no-repeat scroll 8px 5px transparent;
@@ -467,12 +468,13 @@ table {
 
 #part td {
     width: 100%;
-    padding:5px;
 }
 
+/*
 #part table {
     width: 98%;
 }
+*/
 
 tbody {
 }
@@ -616,6 +618,7 @@ ul.menu, div.caption, span.menubar, ul.ranges {
 .receives .flow > div, .sends .flow > div {
     position: relative;
     padding: 10px;
+    cursor: pointer;
 }
 
 /*
@@ -1786,23 +1789,23 @@ h3.task-title-noop {
 
 
 span.extreme {
-	background: url( '../images/bullet-red-big.png' ) no-repeat 0 13px;
+	border-left: 10px solid #ff8c73;
 }
 
 span.major {
-	background: url( '../images/bullet-yellow-big.png' ) no-repeat 0 13px;
+	border-left: 10px solid #ffe27b;
 }
 
 span.minor {
-	background: url( '../images/bullet-blue-big.png' ) no-repeat 0 13px;
+	border-left: 10px solid #7ac4f1;
 }
 
 span.severe {
-	background: url( '../images/bullet-orange-big.png' ) no-repeat 0 13px;
+	border-left: 10px solid #ffb658;
 }
 
 span.none {
-	background: url( '../images/bullet-black-big.png' ) no-repeat 0 13px;
+	border-left: 10px solid #929498;
 }
 
 
@@ -1853,7 +1856,6 @@ span.channels-summary {
     border: 1px solid #999999;
     border-radius: 5px 5px 5px 5px;
     color: #333333;
-    cursor: default;
     font-size: 9px;
     padding: 2px 4px;
     text-transform: uppercase;
