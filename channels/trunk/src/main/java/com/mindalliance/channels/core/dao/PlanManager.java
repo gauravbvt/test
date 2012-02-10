@@ -8,6 +8,7 @@ package com.mindalliance.channels.core.dao;
 
 import com.mindalliance.channels.core.command.CommandListener;
 import com.mindalliance.channels.core.dao.PlanDefinition.Version;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
@@ -203,7 +204,7 @@ public interface PlanManager extends CommandListener {
      * @param user the user of concern
      * @return a list of plans
      */
-    List<Plan> getPlannablePlans( User user );
+    List<Plan> getPlannablePlans( ChannelsUser user );
 
     /**
      * Return the list of plans the user has at least user privileges to.
@@ -211,7 +212,7 @@ public interface PlanManager extends CommandListener {
      * @param user the user
      * @return a list of plans
      */
-    List<Plan> getReadablePlans( User user );
+    List<Plan> getReadablePlans( ChannelsUser user );
 
     /**
      * Get a plan the uer can edit, else one the user can read, else the default plan.
@@ -219,7 +220,7 @@ public interface PlanManager extends CommandListener {
      * @param user a user
      * @return a plan, or null if none
      */
-    Plan getDefaultPlan( User user );
+    Plan getDefaultPlan( ChannelsUser user );
 
     /**
      * Set the permissions for a user.
@@ -229,7 +230,7 @@ public interface PlanManager extends CommandListener {
      * @param uri either a plan uri or null for all.
      */
     @Secured( "ROLE_ADMIN" )
-    void setAuthorities( User user, String role, String uri );
+    void setAuthorities( ChannelsUser user, String role, String uri );
 
     /**
      * Get the resource directory for a given plan.

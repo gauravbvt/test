@@ -94,9 +94,9 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
 
     private void addIssueTypeChoice() {
         DropDownChoice<String> issueTypeChoice = new DropDownChoice<String>( "issueType",
-                                                                             new PropertyModel<String>( this,
-                                                                                                        "issueType" ),
-                                                                             getIssueTypeChoices() );
+                new PropertyModel<String>( this,
+                        "issueType" ),
+                getIssueTypeChoices() );
         issueTypeChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -190,10 +190,10 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             // columns
             columns.add( makeColumn( "Kind", "detectorLabel", EMPTY ) );
             columns.add( makeFilterableLinkColumn( "About",
-                                                   "about",
-                                                   "about.label",
-                                                   EMPTY,
-                                                   AbstractIssueTablePanel.this ) );
+                    "about",
+                    "about.label",
+                    EMPTY,
+                    AbstractIssueTablePanel.this ) );
             columns.add( makeColumn( "Severity", "severity.negativeLabel", null, EMPTY, null, "severity.ordinal" ) );
             columns.add( makeColumn( "Description", "description", EMPTY ) );
             columns.add( makeColumn( "Remediation", "remediation", EMPTY ) );
@@ -204,9 +204,9 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             }
             // provider and table
             add( new AjaxFallbackDefaultDataTable( "issues",
-                                                   columns,
-                                                   new SortableBeanProvider<Issue>( issuesModel.getObject(), "kind" ),
-                                                   getPageSize() ) );
+                    columns,
+                    new SortableBeanProvider<Issue>( issuesModel.getObject(), "kind" ),
+                    getPageSize() ) );
         }
 
         private AbstractColumn<Issue> makeSurveyColumn( String name ) {
@@ -230,9 +230,11 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
                     try {
-                        Survey survey = surveyService.getOrCreateSurvey( getQueryService(), Survey.Type.Remediation,
-                                                                         issue,
-                                                                         getPlan() );
+                        Survey survey = surveyService.getOrCreateSurvey(
+                                getQueryService(), Survey.Type.Remediation,
+                                issue,
+                                getPlan(),
+                                getUser() );
                         update( target, new Change( Change.Type.Expanded, survey ) );
                     } catch ( SurveyException e ) {
                         LOG.error( "Fail to get or create survey on " + issue.getDetectorLabel() );
@@ -244,13 +246,13 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             add( link );
             WebMarkupContainer image = new WebMarkupContainer( "image" );
             image.add( new AttributeModifier( "src",
-                                              new Model<String>( surveyed ?
-                                                                 "images/survey_small.png" :
-                                                                 "images/survey_add_small.png" ) ) );
+                    new Model<String>( surveyed ?
+                            "images/survey_small.png" :
+                            "images/survey_add_small.png" ) ) );
             image.add( new AttributeModifier( "alt",
-                                              new Model<String>( surveyed ? "View survey" : "Create new survey" ) ) );
+                    new Model<String>( surveyed ? "View survey" : "Create new survey" ) ) );
             image.add( new AttributeModifier( "title",
-                                              new Model<String>( surveyed ? "View survey" : "Create new survey" ) ) );
+                    new Model<String>( surveyed ? "View survey" : "Create new survey" ) ) );
             link.add( image );
         }
     }

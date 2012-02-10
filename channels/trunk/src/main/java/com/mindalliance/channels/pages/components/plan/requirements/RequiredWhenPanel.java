@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.plan.requirements;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Phase;
@@ -206,7 +205,7 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
      */
     public void setTimingName( String name ) {
         Phase.Timing timing = Phase.Timing.translateTiming( name );
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getRequirement(), propertyPath( "timing" ), timing ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getRequirement(), propertyPath( "timing" ), timing ) );
     }
 
     public List<String> getAllEventNames() {

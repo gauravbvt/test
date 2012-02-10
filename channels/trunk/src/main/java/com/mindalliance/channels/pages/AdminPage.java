@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.dao.DefinitionManager;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
-import com.mindalliance.channels.core.dao.UserInfo;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.surveys.SurveyService;
@@ -72,11 +72,11 @@ public class AdminPage extends AbstractChannelsWebPage {
      * The user service.
      */
     @SpringBean
-    private UserDao userDao;
+    private ChannelsUserDao userDao;
 
-    private ListView<User> userList;
+    private ListView<ChannelsUser> userList;
 
-    private List<User> toDelete = new ArrayList<User>();
+    private List<ChannelsUser> toDelete = new ArrayList<ChannelsUser>();
 
     private String newPlanUri;
 
@@ -97,12 +97,12 @@ public class AdminPage extends AbstractChannelsWebPage {
 
     private void init() {
         setStatelessHint( true );
-        userList = new ListView<User>( "item",
-                new PropertyModel<List<User>>( userDao, "users" ) ) {
+        userList = new ListView<ChannelsUser>( "item",
+                new PropertyModel<List<ChannelsUser>>( userDao, "users" ) ) {
             private static final long serialVersionUID = 2266583072592123487L;
 
             @Override
-            protected void populateItem( ListItem<User> item ) {
+            protected void populateItem( ListItem<ChannelsUser> item ) {
                 item.add(
                         createUserRow(
                                 new PropertyModel<String>( AdminPage.this, "plan.uri" ), item ) );
@@ -346,7 +346,7 @@ public class AdminPage extends AbstractChannelsWebPage {
     }
 
     private void submit() {
-        for ( User u : toDelete ) {
+        for ( ChannelsUser u : toDelete ) {
             getPlanManager().setAuthorities( u, null, null );
             userDao.deleteUser( u );
         }
@@ -367,11 +367,13 @@ public class AdminPage extends AbstractChannelsWebPage {
 
         getPlanManager().revalidateProducers( getPlan() );
         getPlanManager().save( getPlan() );
+/*
         try {
             userDao.save();
         } catch ( IOException e ) {
             LOG.error( "Unable to save user definitions", e );
         }
+*/
         setResponsePageWithPlan();
     }
 
@@ -410,9 +412,9 @@ public class AdminPage extends AbstractChannelsWebPage {
         this.newPlanUri = Plan.sanitize( newPlanUri );
     }
 
-    private MarkupContainer createUserRow( IModel<String> uriModel, final ListItem<User> item ) {
-        IModel<User> userModel = item.getModel();
-        boolean notMe = !userModel.getObject().equals( User.current() );
+    private MarkupContainer createUserRow( IModel<String> uriModel, final ListItem<ChannelsUser> item ) {
+        IModel<ChannelsUser> userModel = item.getModel();
+        boolean notMe = !userModel.getObject().equals( getUser() );
         return new RadioGroup<Access>( "group", new RadioModel( userModel, uriModel ) ).add(
 
                 new Radio<Access>( "admin", new Model<Access>( Access.Admin ) ).setEnabled( notMe ),
@@ -425,9 +427,21 @@ public class AdminPage extends AbstractChannelsWebPage {
 
                 new Label( "username", new PropertyModel<String>( userModel, "username" ) ),
                 new TextField<String>( "fullName",
-                        new PropertyModel<String>( userModel, "userInfo.fullName" ) ),
+                        new PropertyModel<String>( userModel, "userInfo.fullName" ) ) {
+                    @Override
+                    protected void onModelChanged() {
+                        super.onModelChanged();
+                        userDao.save( item.getModelObject().getUserInfo() );
+                    }
+                },
                 new TextField<String>( "email",
-                        new PropertyModel<String>( userModel, "userInfo.email" ) )
+                        new PropertyModel<String>( userModel, "userInfo.email" ) ){
+                    @Override
+                    protected void onModelChanged() {
+                        super.onModelChanged();
+                        userDao.save( item.getModelObject().getUserInfo() );
+                    }
+                }
                         .add( EmailAddressValidator.getInstance() )
                         .add( new ValidationStyler() ),
 
@@ -437,8 +451,10 @@ public class AdminPage extends AbstractChannelsWebPage {
                     @Override
                     protected void onModelChanged() {
                         String pwd = getModelObject();
-                        if ( pwd != null && !pwd.trim().isEmpty() )
+                        if ( pwd != null && !pwd.trim().isEmpty() )  {
                             item.getModelObject().getUserInfo().setPassword( pwd );
+                            userDao.save( item.getModelObject().getUserInfo() );
+                        }
                     }
                 }
                         .setRequired( false ),
@@ -491,10 +507,10 @@ public class AdminPage extends AbstractChannelsWebPage {
 
         private final IModel<String> uriModel;
 
-        private final IModel<User> userModel;
+        private final IModel<ChannelsUser> userModel;
 
 
-        private RadioModel( IModel<User> userModel, IModel<String> uriModel ) {
+        private RadioModel( IModel<ChannelsUser> userModel, IModel<String> uriModel ) {
             this.userModel = userModel;
             this.uriModel = uriModel;
         }
@@ -510,7 +526,7 @@ public class AdminPage extends AbstractChannelsWebPage {
             return getObject( userModel.getObject().getUserInfo() );
         }
 
-        private Access getObject( UserInfo info ) {
+        private Access getObject( ChannelsUserInfo info ) {
             return info.isAdmin() ? Access.Admin
                     : info.isPlanner() ? Access.Planner
                     : info.isUser() ? Access.User
@@ -522,22 +538,22 @@ public class AdminPage extends AbstractChannelsWebPage {
 
         public void setObject( Access object ) {
             if ( object != null ) {
-                User rowUser = userModel.getObject();
+                ChannelsUser rowUser = userModel.getObject();
                 switch ( object ) {
                     case Admin:
-                        getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_ADMIN, null );
+                        getPlanManager().setAuthorities( rowUser, ChannelsUserInfo.ROLE_ADMIN, null );
                         break;
                     case Planner:
-                        getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_PLANNER, null );
+                        getPlanManager().setAuthorities( rowUser, ChannelsUserInfo.ROLE_PLANNER, null );
                         break;
                     case User:
-                        getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_USER, null );
+                        getPlanManager().setAuthorities( rowUser, ChannelsUserInfo.ROLE_USER, null );
                         break;
                     case LPlanner:
-                        getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_PLANNER, getUri() );
+                        getPlanManager().setAuthorities( rowUser, ChannelsUserInfo.ROLE_PLANNER, getUri() );
                         break;
                     case LUser:
-                        getPlanManager().setAuthorities( rowUser, UserInfo.ROLE_USER, getUri() );
+                        getPlanManager().setAuthorities( rowUser, ChannelsUserInfo.ROLE_USER, getUri() );
                         break;
                     case LDisabled:
                         getPlanManager().setAuthorities( rowUser, null, getUri() );

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -65,9 +65,8 @@ public class ErrorPage extends AbstractChannelsWebPage {
                         : stackTraceToString( exception ) ) );
         stackTraceDiv.add( new AttributeModifier(
                 "style",
-                true,
                 new Model<String>(
-                        ( User.current().isAdmin() )
+                        ( getUser().isAdmin() )
                                 ? "padding-top: 20px;display:block;"
                                 : "display:none;"
                 ) )
@@ -82,7 +81,8 @@ public class ErrorPage extends AbstractChannelsWebPage {
             emailException(
                     exception,
                     mailSender,
-                    supportCommunity );
+                    supportCommunity,
+                    getUser() );
         }
         response.setStatus(
                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
@@ -91,22 +91,22 @@ public class ErrorPage extends AbstractChannelsWebPage {
     static public void emailException(
             Exception exception,
             MailSender mailSender,
-            String supportCommunity ) {
-        User currentUser = User.current();
+            String supportCommunity,
+            ChannelsUser user ) {
         try {
             SimpleMailMessage email = new SimpleMailMessage();
             email.setTo( supportCommunity );
-            email.setFrom( currentUser.getEmail() );
-            email.setReplyTo( currentUser.getEmail() );
-            String subject = "SERVER ERROR from " + currentUser.getFullName();
+            email.setFrom( user.getEmail() );
+            email.setReplyTo( user.getEmail() );
+            String subject = "SERVER ERROR from " + user.getFullName();
             email.setSubject( subject );
             email.setText( stackTraceToString( exception ) );
-            LOG.info( currentUser.getUsername()
+            LOG.info( user.getUsername()
                     + " emailing \"" + subject + "\" to "
                     + supportCommunity );
             mailSender.send( email );
         } catch ( Exception exc ) {
-            LOG.warn( currentUser.getUsername()
+            LOG.warn( user.getUsername()
                     + " failed to email server error ", exc );
         }
     }

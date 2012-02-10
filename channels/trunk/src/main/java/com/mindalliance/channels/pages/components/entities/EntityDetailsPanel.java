@@ -9,7 +9,6 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.Updatable;
@@ -252,7 +251,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
      */
     public void setDescription( String val ) {
         String desc = val == null ? "" : val;
-        doCommand( new UpdatePlanObject( User.current().getUsername(),
+        doCommand( new UpdatePlanObject( getUser().getUsername(),
                                          getEntity(),
                                          "description",
                                          desc,
@@ -274,7 +273,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                 while ( namesTaken.contains( uniqueName ) ) {
                     uniqueName = name + "(" + count++ + ")";
                 }
-                doCommand( new UpdatePlanObject( User.current().getUsername(),
+                doCommand( new UpdatePlanObject( getUser().getUsername(),
                                                  getEntity(),
                                                  "name",
                                                  uniqueName,

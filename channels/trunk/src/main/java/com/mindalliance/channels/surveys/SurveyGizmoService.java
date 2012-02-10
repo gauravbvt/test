@@ -1,6 +1,6 @@
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.surveys.Survey.Status;
@@ -243,7 +243,7 @@ public class SurveyGizmoService extends AbstractSurveyService {
     @Override
     protected SurveyResponse findSurveyResponse(
             Survey survey,
-            User user ) throws SurveyException {
+            ChannelsUser user ) throws SurveyException {
         SurveyResponse surveyResponse;
         // completed overrides partial overrides abandoned
         String status = "complete";
@@ -261,7 +261,7 @@ public class SurveyGizmoService extends AbstractSurveyService {
 
     private SurveyResponse doFindSurveyResponse(
             Survey survey,
-            User user,
+            ChannelsUser user,
             String status ) throws SurveyException {
         int start = 0;
         int count = 0;
@@ -277,7 +277,7 @@ public class SurveyGizmoService extends AbstractSurveyService {
 
     private int getSurveyResponse(
             Survey survey,
-            User user,
+            ChannelsUser user,
             int start,
             String status,
             SurveyResponse surveyResponse ) throws SurveyException {

@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -176,19 +175,19 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @return a menu item component
      */
     protected Component getUndoMenuItem( String id ) {
-        return getCommander().canUndo( User.current().getUsername() ) ?
+        return getCommander().canUndo( getUser().getUsername() ) ?
                 new LinkMenuItem(
                         id,
-                        new Model<String>( getCommander().getUndoTitle( User.current().getUsername() ) ),
+                        new Model<String>( getCommander().getUndoTitle( getUser().getUsername() ) ),
                         new AjaxFallbackLink( "link" ) {
                             @Override
                             public void onClick( AjaxRequestTarget target ) {
-                                update( target, getCommander().undo( User.current().getUsername() ) );
+                                update( target, getCommander().undo( getUser().getUsername() ) );
                             }
                         } )
 
                 : new Label( id, "Undo" )
-                .add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+                .add( new AttributeModifier( "class", new Model<String>( "disabled" ) ) );
     }
 
     /**
@@ -198,20 +197,20 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @return a menu item component
      */
     protected Component getRedoMenuItem( String id ) {
-        return getCommander().canRedo( User.current().getUsername() ) ?
+        return getCommander().canRedo( getUser().getUsername() ) ?
                 new LinkMenuItem(
                         id,
-                        new Model<String>( getCommander().getRedoTitle( User.current().getUsername() ) ),
+                        new Model<String>( getCommander().getRedoTitle( getUser().getUsername() ) ),
                         new AjaxFallbackLink( "link" ) {
                             @Override
                             public void onClick( AjaxRequestTarget target ) {
                                 update(
-                                        target, getCommander().redo( User.current().getUsername() ) );
+                                        target, getCommander().redo( getUser().getUsername() ) );
                             }
                         } )
 
                 : new Label( id, "Redo" )
-                .add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+                .add( new AttributeModifier( "class", new Model<String>( "disabled" ) ) );
     }
 
     /**
@@ -235,7 +234,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                         } )
 
                 : new Label( id, "Send message" )
-                .add( new AttributeModifier( "class", true, new Model<String>( "disabled" ) ) );
+                .add( new AttributeModifier( "class", new Model<String>( "disabled" ) ) );
     }
 
     /**
@@ -270,7 +269,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
 
                                 : new Label( id, new Model<String>( label ) )
                                 .add( new AttributeModifier(
-                                        "class", true, new Model<String>( "disabled" ) ) ) );
+                                        "class", new Model<String>( "disabled" ) ) ) );
 
             } catch ( CommandException e ) {
                 LoggerFactory.getLogger( getClass() ).warn( "Unable to get command label", e );

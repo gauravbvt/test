@@ -10,6 +10,8 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.dao.PlanDefinition.Version;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
@@ -66,7 +68,7 @@ public class PlanManagerImpl implements PlanManager {
      */
     private List<TransmissionMedium> builtInMedia = new ArrayList<TransmissionMedium>();
 
-    private UserDao userDao;
+    private ChannelsUserDao userDao;
 
     private ImportExportFactory importExportFactory;
     /**
@@ -107,11 +109,11 @@ public class PlanManagerImpl implements PlanManager {
         listeners.removeListener( listener );
     }
 
-    public UserDao getUserDao() {
+    public ChannelsUserDao getUserDao() {
         return userDao;
     }
 
-    public void setUserDao( UserDao userDao ) {
+    public void setUserDao( ChannelsUserDao userDao ) {
         this.userDao = userDao;
     }
 
@@ -289,7 +291,7 @@ public class PlanManagerImpl implements PlanManager {
 
         // Assign default plan to users
         if ( userDao != null )
-            for ( User user : userDao.getUsers() ) {
+            for ( ChannelsUser user : userDao.getUsers() ) {
                 Plan plan = user.getPlan();
                 if ( plan == null )
                     user.setPlan( getDefaultPlan( user ) );
@@ -356,7 +358,7 @@ public class PlanManagerImpl implements PlanManager {
     public void delete( Plan plan ) {
         String uri = plan.getUri();
 
-        for ( User user : userDao.getUsers() )
+        for ( ChannelsUser user : userDao.getUsers() )
             user.getUserInfo().clearAuthority( uri );
 
         assignPlans();
@@ -453,7 +455,7 @@ public class PlanManagerImpl implements PlanManager {
     @Override
     public boolean revalidateProducers( Plan plan ) {
         List<String> producers = plan.getProducers();
-        for ( User user : userDao.getUsers() )
+        for ( ChannelsUser user : userDao.getUsers() )
             if ( user.isPlanner( plan.getUri() ) && !producers.contains( user.getUsername() ) )
                 return false;
 // TODO reenable production voting
@@ -482,7 +484,7 @@ public class PlanManagerImpl implements PlanManager {
     }
 
     @Override
-    public List<Plan> getPlannablePlans( User user ) {
+    public List<Plan> getPlannablePlans( ChannelsUser user ) {
         List<Plan> planList = getPlans();
         List<Plan> result = new ArrayList<Plan>( planList.size() );
 
@@ -494,7 +496,7 @@ public class PlanManagerImpl implements PlanManager {
     }
 
     @Override
-    public List<Plan> getReadablePlans( User user ) {
+    public List<Plan> getReadablePlans( ChannelsUser user ) {
         List<Plan> planList = getPlans();
         List<Plan> result = new ArrayList<Plan>( planList.size() );
 
@@ -506,7 +508,7 @@ public class PlanManagerImpl implements PlanManager {
     }
 
     @Override
-    public Plan getDefaultPlan( User user ) {
+    public Plan getDefaultPlan( ChannelsUser user ) {
         for ( PlanDefinition planDefinition : definitionManager ) {
             String uri = planDefinition.getUri();
             if ( user.isPlanner( uri ) )
@@ -526,7 +528,7 @@ public class PlanManagerImpl implements PlanManager {
 
     @Override
     @Secured( "ROLE_ADMIN" )
-    public void setAuthorities( User user, String role, String uri ) {
+    public void setAuthorities( ChannelsUser user, String role, String uri ) {
         synchronized ( user ) {
             user.getUserInfo().setAuthorities( role, uri, getPlans() );
             user.setPlan( uri != null ? getDefaultPlan( user ) : null );

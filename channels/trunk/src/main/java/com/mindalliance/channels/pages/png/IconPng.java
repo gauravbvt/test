@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.core.dao.User;
+
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.io.IOUtils;
@@ -31,7 +32,7 @@ public class IconPng extends DynamicImageResource {
         PageParameters parameters = attributes.getParameters();
         String encodedPath = parameters.get( "name" ).toString();
         try {
-            File iconFile = imagingService.findIcon( User.plan(), encodedPath );
+            File iconFile = imagingService.findIcon( ChannelsUser.plan(), encodedPath );
             FileInputStream in = new FileInputStream( iconFile );
             return IOUtils.toByteArray( in );
         } catch ( Exception e ) {

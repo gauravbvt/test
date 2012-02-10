@@ -1,14 +1,13 @@
 package com.mindalliance.channels.pages.components.entities;
 
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.model.Agreement;
-import com.mindalliance.channels.core.model.Commitment;
-import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.model.Agreement;
+import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.segment.CommitmentsTablePanel;
@@ -277,12 +276,12 @@ public class AgreementsPanel extends AbstractCommandablePanel {
 
         public void setConfirmed( boolean confirmed ) {
             if ( confirmed ) {
-                doCommand( new UpdatePlanObject( User.current().getUsername(), organization,
+                doCommand( new UpdatePlanObject( getUser().getUsername(), organization,
                         "agreements",
                         agreement,
                         UpdateObject.Action.Add ) );
             } else {
-                doCommand( new UpdatePlanObject( User.current().getUsername(), organization,
+                doCommand( new UpdatePlanObject( getUser().getUsername(), organization,
                         "agreements",
                         agreement,
                         UpdateObject.Action.Remove ) );

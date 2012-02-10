@@ -8,7 +8,6 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AddUserIssue;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.Updatable;
@@ -61,7 +60,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
         AjaxFallbackLink<?> newIssueLink = new AjaxFallbackLink( "new-issue" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                Change change = doCommand( new AddUserIssue( User.current().getUsername(), model.getObject() ) );
+                Change change = doCommand( new AddUserIssue( getUser().getUsername(), model.getObject() ) );
                 /*
                                 makeVisible( this, Channels.analyst().hasIssues( model.getObject(), false ) );
                                 target.add( this );

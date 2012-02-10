@@ -6,8 +6,8 @@
 
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
@@ -168,8 +168,14 @@ abstract public class Survey implements Identifiable, Serializable {
 
     public Survey() {
         status = Status.In_design;
-        userName = User.current().getUsername();
+        userName = "???";
     }
+
+    public Survey( ChannelsUser currentUser ) {
+        status = Status.In_design;
+        userName = currentUser.getUsername();
+    }
+
 
     @Override
     public long getId() {
@@ -440,8 +446,8 @@ abstract public class Survey implements Identifiable, Serializable {
         return getTitle() + " (in " + planUri + ")";
     }
 
-    public String getPlanText() {
-        return User.current().getPlan().getName();
+    public String getPlanText( Plan plan ) {
+        return plan.getName();
     }
 
     public String getDeadlineText() {
@@ -517,9 +523,9 @@ abstract public class Survey implements Identifiable, Serializable {
 
     protected Map<String, Object> getSurveyContext( SurveyService surveyService, Plan plan,
                                                     QueryService queryService ) {
-        User issuer = getIssuer( surveyService.getUserDao() );
+        ChannelsUser issuer = getIssuer( surveyService.getUserDao() );
         Map<String, Object> context = new HashMap<String, Object>();
-        context.put( "plan", getPlanText() );
+        context.put( "plan", getPlanText( plan ) );
         context.put( "deadline", getDeadlineText() );
         context.put(
                 "issuer", issuer != null ? issuer.getFullName() : "(unknown)" );
@@ -529,11 +535,11 @@ abstract public class Survey implements Identifiable, Serializable {
         return context;
     }
 
-    protected User getIssuer( UserDao userDao ) {
+    protected ChannelsUser getIssuer( ChannelsUserDao userDao ) {
         return userDao.getUserNamed( getUserName() );
     }
 
-    public Map<String, Object> getInvitationContext( SurveyService surveyService, User user, User issuer, Plan plan,
+    public Map<String, Object> getInvitationContext( SurveyService surveyService, ChannelsUser user, ChannelsUser issuer, Plan plan,
                                                      QueryService queryService ) {
         Map<String, Object> context = new HashMap<String, Object>();
         context.put( "user", user );
@@ -543,7 +549,7 @@ abstract public class Survey implements Identifiable, Serializable {
         return context;
     }
 
-    public String getSurveyLink( User user ) {
+    public String getSurveyLink( ChannelsUser user ) {
         return getSurveyData() == null
                 ? ""
                 : getSurveyData().getPublishLink() + "?sgUID=" + user.getEmail();

@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components.plan;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Participation;
@@ -453,7 +452,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         }
 
         public void setActor( Actor val ) {
-            doCommand( new UpdatePlanObject( User.current().getUsername(),
+            doCommand( new UpdatePlanObject( getUser().getUsername(),
                                              participation, "actor", val, UpdateObject.Action.Set ) );
         }
     }

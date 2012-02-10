@@ -9,7 +9,6 @@ import com.mindalliance.channels.core.command.commands.DuplicateFlow;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.command.commands.RemoveCapability;
 import com.mindalliance.channels.core.command.commands.RemoveNeed;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
@@ -59,7 +58,7 @@ public class FlowActionsMenuPanel extends MenuPanel {
             menuItems.add( getUndoMenuItem( "menuItem" ) );
             menuItems.add( getRedoMenuItem( "menuItem" ) );
 
-            if ( getCommander().isTimedOut( User.current().getUsername() ) )
+            if ( getCommander().isTimedOut( getUser().getUsername() ) )
                 menuItems.add( timeOutLabel( "menuItem" ) );
             else if ( isLockedByUser( getFlow() ) || getLockOwner( flow ) == null )
                 menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers( flow ) ) );
@@ -72,24 +71,24 @@ public class FlowActionsMenuPanel extends MenuPanel {
     private List<CommandWrapper> getCommandWrappers( Flow flow ) {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
 
-        commandWrappers.add( wrap( new CopyFlow( User.current().getUsername(), flow, getPart() ), false ) );
+        commandWrappers.add( wrap( new CopyFlow( getUser().getUsername(), flow, getPart() ), false ) );
 
             if ( flow.isSharing() )
-                commandWrappers.add( wrap( new DuplicateFlow( User.current().getUsername(), flow, isSend ), false ) );
+                commandWrappers.add( wrap( new DuplicateFlow( getUser().getUsername(), flow, isSend ), false ) );
 
-            commandWrappers.add( wrap( new AddUserIssue( User.current().getUsername(), flow ), false ) );
+            commandWrappers.add( wrap( new AddUserIssue( getUser().getUsername(), flow ), false ) );
 
-            commandWrappers.add( wrap( new PasteAttachment( User.current().getUsername(), flow ), false ) );
+            commandWrappers.add( wrap( new PasteAttachment( getUser().getUsername(), flow ), false ) );
 
             commandWrappers.add( wrap(
-                  flow.isSharing() ? new DisconnectFlow( User.current().getUsername(), flow )
-                                   : flow.isNeed()    ? new RemoveNeed( User.current().getUsername(), flow )
-                                                      : new RemoveCapability( User.current().getUsername(), flow ),
+                  flow.isSharing() ? new DisconnectFlow( getUser().getUsername(), flow )
+                                   : flow.isNeed()    ? new RemoveNeed( getUser().getUsername(), flow )
+                                                      : new RemoveCapability( getUser().getUsername(), flow ),
                   CONFIRM ) );
 
             if ( flow.isSharing() ) {
-                commandWrappers.add( wrap( new AddIntermediate( User.current().getUsername(), flow ), false ) );
-                commandWrappers.add( wrap( new BreakUpFlow( User.current().getUsername(), flow ), CONFIRM ) );
+                commandWrappers.add( wrap( new AddIntermediate( getUser().getUsername(), flow ), false ) );
+                commandWrappers.add( wrap( new BreakUpFlow( getUser().getUsername(), flow ), CONFIRM ) );
             }
 
         return commandWrappers;

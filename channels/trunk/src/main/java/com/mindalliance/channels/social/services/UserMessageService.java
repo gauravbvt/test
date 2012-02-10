@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.services;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 import com.mindalliance.channels.social.model.UserMessage;
 
@@ -18,7 +19,7 @@ public interface UserMessageService extends GenericSqlService<UserMessage, Long>
     public static final String PLANNERS = "__planners__";
     public static final String USERS = "__users__";
 
-    boolean sendMessage( UserMessage message, boolean emailIt );
+    boolean sendMessage( UserMessage message, boolean emailIt, ChannelsUser sender );
     
     void deleteMessage( UserMessage message );
     
@@ -30,5 +31,5 @@ public interface UserMessageService extends GenericSqlService<UserMessage, Long>
     
     Date getWhenLastReceived( String username, String planUri );
 
-    boolean email( UserMessage message );
+    boolean email( UserMessage message, ChannelsUser user );
 }

@@ -2,10 +2,10 @@
 // All rights reserved.
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import com.mindalliance.channels.core.dao.User;
 
 /**
  * Shown to non-planner users when no production plans are available on the server.
@@ -17,7 +17,7 @@ public class NoAccessPage extends WebPage {
 
     /** Current user. */
     @SpringBean
-    private User user;
+    private ChannelsUser user;
 
     public NoAccessPage() {
         add(

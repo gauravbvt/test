@@ -6,11 +6,11 @@
 
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.core.io.Resource;
 
@@ -134,7 +134,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
      */
     protected Plan getPlan() {
         // TODO -- Demeter's law...
-        return User.plan();
+        return ChannelsUser.plan();
     }
 
     /**

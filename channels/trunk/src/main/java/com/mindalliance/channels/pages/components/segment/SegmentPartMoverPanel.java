@@ -9,7 +9,6 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.commands.MoveParts;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
@@ -194,7 +193,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
 
     private Change moveSelectedParts() {
         Change change;
-        change = getCommander().doCommand( new MoveParts( User.current().getUsername(),
+        change = getCommander().doCommand( new MoveParts( getUser().getUsername(),
                                                           selectedParts,
                                                           getSegment(),
                                                           destinationSegment ) );
@@ -263,7 +262,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
             Part part = parts.next();
             MovablePart movablePart = new MovablePart( part );
             movablePart.setMovable(
-                    commander.isLockedByUser( User.current().getUsername(), part ) || commander.isUnlocked( part ) );
+                    commander.isLockedByUser( getUser().getUsername(), part ) || commander.isUnlocked( part ) );
             movablePart.setSelected( selectedParts.contains( part ) );
             movableParts.add( movablePart );
         }

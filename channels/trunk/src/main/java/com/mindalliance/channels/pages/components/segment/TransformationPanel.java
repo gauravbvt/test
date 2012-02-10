@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
@@ -204,7 +203,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
     public void setTypeLabel( String val ) {
         Transformation.Type type = Transformation.Type.valueOfLabel( val );
         doCommand(
-                UpdateObject.makeCommand( User.current().getUsername(), getFlow(),
+                UpdateObject.makeCommand( getUser().getUsername(), getFlow(),
                         "eois[" + getEoiIndex() + "].transformation.type",
                         type,
                         UpdateObject.Action.Set )
@@ -250,7 +249,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
         public void removeSubject() {
             assert !isMarkedForCreation();
             doCommand(
-                    UpdateObject.makeCommand( User.current().getUsername(), getFlow(),
+                    UpdateObject.makeCommand( getUser().getUsername(), getFlow(),
                             "eois[" + getEoiIndex() + "].transformation.subjects",
                             getSubject(),
                             UpdateObject.Action.Remove )
@@ -267,7 +266,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
             assert isMarkedForCreation();
             if ( subject != null )
                 doCommand(
-                        UpdateObject.makeCommand( User.current().getUsername(), getFlow(),
+                        UpdateObject.makeCommand( getUser().getUsername(), getFlow(),
                                 "eois[" + getEoiIndex() + "].transformation.subjects",
                                 subject,
                                 UpdateObject.Action.Add )

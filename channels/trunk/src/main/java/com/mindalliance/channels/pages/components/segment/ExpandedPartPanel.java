@@ -8,7 +8,6 @@ package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Event;
@@ -800,7 +799,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldActor == null || !isSame( name, oldName ) )
                 newActor = getQueryService().findOrCreate( Actor.class, name );
         }
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "actor", newActor ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "actor", newActor ) );
         getCommander().cleanup( Actor.class, oldName );
     }
 
@@ -819,7 +818,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldPlace == null || !isSame( name, oldName ) )
                 newPlace = getQueryService().findOrCreate( Place.class, name );
         }
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "jurisdiction", newPlace ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "jurisdiction", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
     }
 
@@ -838,7 +837,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldOrg == null || !isSame( name, oldName ) )
                 newOrg = getQueryService().findOrCreate( Organization.class, name );
         }
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "organization", newOrg ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "organization", newOrg ) );
         getCommander().cleanup( Organization.class, oldName );
     }
 
@@ -857,7 +856,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             if ( oldRole == null || !isSame( name, oldName ) )
                 newRole = getQueryService().findOrCreate( Role.class, name );
         }
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "role", newRole ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "role", newRole ) );
         getCommander().cleanup( Role.class, oldName );
     }
 
@@ -867,7 +866,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param task the task
      */
     public void setTask( String task ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "task", task ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "task", task ) );
     }
 
     public Delay getRepeatsEvery() {
@@ -880,7 +879,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param delay a delay
      */
     public void setRepeatsEvery( Delay delay ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "repeatsEvery", delay ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "repeatsEvery", delay ) );
     }
 
     public Delay getCompletionTime() {
@@ -893,7 +892,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param delay a delay
      */
     public void setCompletionTime( Delay delay ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "completionTime", delay ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "completionTime", delay ) );
     }
 
     /**
@@ -911,7 +910,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setSelfTerminating( boolean val ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "selfTerminating", val ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "selfTerminating", val ) );
     }
 
     /**
@@ -929,7 +928,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setRepeating( boolean val ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "repeating", val ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "repeating", val ) );
     }
 
     /**
@@ -947,7 +946,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setStartsWithSegment( boolean val ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "startsWithSegment", val ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "startsWithSegment", val ) );
     }
 
     /**
@@ -965,7 +964,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setOngoing( boolean val ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "ongoing", val ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "ongoing", val ) );
     }
 
     /**
@@ -983,7 +982,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setAsTeam( boolean val ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "asTeam", val ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "asTeam", val ) );
     }
 
     /**
@@ -1001,7 +1000,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a boolean
      */
     public void setTerminatesEventPhase( boolean val ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "terminatesEventPhase", val ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "terminatesEventPhase", val ) );
     }
 
     /**
@@ -1057,7 +1056,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * @param val a string
      */
     public void setDescription( String val ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "description", val ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "description", val ) );
     }
 
     /**
@@ -1079,7 +1078,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         if ( label != null ) {
             Part.Category category;
             category = label.equals( NO_CATEGORY ) ? null : Part.Category.valueOfLabel( label );
-            doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "category", category ) );
+            doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "category", category ) );
         }
     }
 
@@ -1089,7 +1088,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     public void setProhibited( boolean val ) {
         if ( val != isProhibited() ) {
-            doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "prohibited", val ) );
+            doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "prohibited", val ) );
         }
     }
 

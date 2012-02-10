@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Commitment;
@@ -286,7 +285,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 "deleteNotDeployedMedium",
                 "Remove medium from list?" ) {
             public void onClick( AjaxRequestTarget target ) {
-                doCommand( new UpdatePlanObject( User.current().getUsername(), getOrganization(),
+                doCommand( new UpdatePlanObject( getUser().getUsername(), getOrganization(),
                         "mediaNotDeployed",
                         medium,
                         UpdateObject.Action.Remove ) );
@@ -314,7 +313,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                     TransmissionMedium.class,
                     name,
                     null );
-            doCommand( new UpdatePlanObject( User.current().getUsername(), getOrganization(),
+            doCommand( new UpdatePlanObject( getUser().getUsername(), getOrganization(),
                     "mediaNotDeployed",
                     medium,
                     UpdateObject.Action.Add ) );
@@ -586,7 +585,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                 }
             }
         }
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getOrganization(), "parent", newOrg ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getOrganization(), "parent", newOrg ) );
         getCommander().cleanup( Organization.class, oldName );
     }
 
@@ -616,7 +615,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             if ( oldPlace == null || !isSame( name, oldName ) )
                 newPlace = doSafeFindOrCreate( Place.class, name );
         }
-        doCommand( new UpdatePlanObject( User.current().getUsername(), org, "location", newPlace ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), org, "location", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
     }
 
@@ -655,7 +654,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      */
     public void setActorsRequired( boolean val ) {
         doCommand(
-                new UpdatePlanObject( User.current().getUsername(), getOrganization(),
+                new UpdatePlanObject( getUser().getUsername(), getOrganization(),
                         "actorsRequired",
                         val,
                         UpdateObject.Action.Set ) );
@@ -677,7 +676,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
      */
     public void setAgreementsRequired( boolean val ) {
         doCommand(
-                new UpdatePlanObject( User.current().getUsername(), getOrganization(),
+                new UpdatePlanObject( getUser().getUsername(), getOrganization(),
                         "agreementsRequired",
                         val,
                         UpdateObject.Action.Set ) );
@@ -700,7 +699,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     public void setMission( String val ) {
         if ( val != null )
             doCommand(
-                    new UpdatePlanObject( User.current().getUsername(), getEntity(),
+                    new UpdatePlanObject( getUser().getUsername(), getEntity(),
                             "mission",
                             val,
                             UpdateObject.Action.Set ) );

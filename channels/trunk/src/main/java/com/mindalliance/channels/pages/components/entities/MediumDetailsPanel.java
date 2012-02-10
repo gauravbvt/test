@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -259,7 +258,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     public void setCast( TransmissionMedium.Cast value ) {
         TransmissionMedium medium = getMedium();
         if ( medium.getCast() != value ) {
-            doCommand( new UpdatePlanObject( User.current().getUsername(), medium, "cast", value ) );
+            doCommand( new UpdatePlanObject( getUser().getUsername(), medium, "cast", value ) );
         }
     }
 
@@ -289,7 +288,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     public void setAddressPattern( String value ) {
         TransmissionMedium medium = getMedium();
         if ( !medium.getAddressPattern().equals( value ) ) {
-            doCommand( new UpdatePlanObject( User.current().getUsername(), getMedium(), "addressPattern", value ) );
+            doCommand( new UpdatePlanObject( getUser().getUsername(), getMedium(), "addressPattern", value ) );
         }
     }
 
@@ -310,7 +309,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     public void setSynchronous( boolean value ) {
         TransmissionMedium medium = getMedium();
         if ( medium.isSynchronous() != value ) {
-            doCommand( new UpdatePlanObject( User.current().getUsername(), medium, "synchronous", value ) );
+            doCommand( new UpdatePlanObject( getUser().getUsername(), medium, "synchronous", value ) );
         }
     }
 
@@ -336,7 +335,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
         if ( !isSame( oldName, newName ) ) {
             Actor newQualification = newName.isEmpty() ? null : doSafeFindOrCreateType( Actor.class, name );
             doCommand(
-                    new UpdatePlanObject( User.current().getUsername(), getEntity(),
+                    new UpdatePlanObject( getUser().getUsername(), getEntity(),
                             "qualification",
                             newQualification,
                             UpdateObject.Action.Set ) );

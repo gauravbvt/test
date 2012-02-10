@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -174,7 +173,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     private void adjustFields() {
         boolean editable =
                 getPlan().isDevelopment()
-                        && getLockManager().isLockedByUser( User.current().getUsername(), getEntity().getId() )
+                        && getLockManager().isLockedByUser( getUser().getUsername(), getEntity().getId() )
                         && !ModelObject.areIdentical( getPlan().getLocale(), getEntity() );
         if ( !editable ) {
             planCheckBox.setEnabled( false );
@@ -200,7 +199,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
             placeReferenced = false;
             eventReferenced = false;
             getPlaceReference().setPlanReferenced( val );
-            doCommand( new UpdatePlanObject( User.current().getUsername(), getEntity(), property, getPlaceReference() ) );
+            doCommand( new UpdatePlanObject( getUser().getUsername(), getEntity(), property, getPlaceReference() ) );
         } else {
             resetPlaceReference();
         }
@@ -235,7 +234,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
     }
 
     private void resetPlaceReference() {
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getEntity(), property, new PlaceReference() ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getEntity(), property, new PlaceReference() ) );
         reset = true;
     }
 
@@ -245,7 +244,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
 
     public void setRefEvent( Event event ) {
         getPlaceReference().setEvent( event );
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getEntity(), property, getPlaceReference() ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getEntity(), property, getPlaceReference() ) );
     }
 
     public Place getRefPlace() {

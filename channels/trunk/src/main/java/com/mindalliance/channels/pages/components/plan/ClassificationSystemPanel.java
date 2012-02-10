@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Flow;
@@ -146,7 +145,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
         int index = getPlan().getClassifications().indexOf( classification );
         int level = getPlan().topLevelFor( classification.getSystem() );
         if ( index >= 0 ) {
-            doCommand( UpdateObject.makeCommand( User.current().getUsername(), getPlan(),
+            doCommand( UpdateObject.makeCommand( getUser().getUsername(), getPlan(),
                     "classifications[" + index + "].level",
                     level - 1,
                     UpdateObject.Action.Set ) );
@@ -154,7 +153,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
     }
 
     public void delete( Classification classification ) {
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getPlan(),
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getPlan(),
                 "classifications",
                 classification,
                 UpdateObject.Action.Remove ) );
@@ -213,7 +212,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
             classification.setName( newClassificationName );
             classification.setSystem( classificationSystem );
             classification.setLevel( getPlan().classificationsFor( classificationSystem ).size() );
-            doCommand( new UpdatePlanObject( User.current().getUsername(), getPlan(),
+            doCommand( new UpdatePlanObject( getUser().getUsername(), getPlan(),
                     "classifications",
                     classification,
                     UpdateObject.Action.Add ) );

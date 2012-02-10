@@ -11,7 +11,6 @@ import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.command.commands.RemoveIssue;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.surveys.Survey;
@@ -103,7 +102,8 @@ public class IssueActionsMenuPanel extends MenuPanel {
                                                                                          getQueryService(),
                                                                                          Survey.Type.Remediation,
                                                                                                                   getIssue(),
-                                                                                                                  getPlan() ) ) );
+                                                                                                                  getPlan(),
+                                                                                         getUser() ) ) );
                                                          } catch ( SurveyException e ) {
                                                              LoggerFactory.getLogger( getClass() ).warn(
                                                                      "Error clicking on survey link",
@@ -117,7 +117,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
             }
 
             // Commands
-            if ( commander.isTimedOut( User.current().getUsername() ) )
+            if ( commander.isTimedOut( getUser().getUsername() ) )
                 menuItems.add( newStyledLabel( "Timed out", "disabled locked" ) );
 
             else if ( isLockedByUser( getIssue() ) || getLockOwner( getIssue() ) == null )
@@ -142,7 +142,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         Issue issue = getIssue();
         if ( !issue.isDetected() ) {
-            commandWrappers.add( new CommandWrapper( new RemoveIssue( User.current().getUsername(), (UserIssue)issue ) ) {
+            commandWrappers.add( new CommandWrapper( new RemoveIssue( getUser().getUsername(), (UserIssue)issue ) ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
@@ -150,7 +150,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
             } );
 
             if ( !isCollapsed )
-                commandWrappers.add( new CommandWrapper( new PasteAttachment( User.current().getUsername(),
+                commandWrappers.add( new CommandWrapper( new PasteAttachment( getUser().getUsername(),
                                                                               (UserIssue) issue ) ) {
                     @Override
                     public void onExecuted( AjaxRequestTarget target, Change change ) {

@@ -1,8 +1,9 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserInfo;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Participation;
@@ -44,11 +45,14 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     private static final Logger LOG = LoggerFactory.getLogger( UserInfoPanel.class );
 
     private WebMarkupContainer userInfoContainer;
-    private UserInfo temp;
+    private ChannelsUserInfo temp;
     private static final String EMAIL_REGEX = "[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}";
 
     @SpringBean
-    private User user;
+    private ChannelsUser user;
+
+    @SpringBean
+    private ChannelsUserDao userDao;
 
     private Pattern emailPattern;
     private boolean passwordOk = false;
@@ -85,7 +89,11 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     private void resetTemp() {
-        temp = new UserInfo( user.getUsername(), user.getUserInfo().toString() );
+        temp = new ChannelsUserInfo( 
+                user.getUsername(),
+                user.getFullName(),
+                user.getEmail()
+                );
         newPassword = "";
         repeatNewPassword = "";
     }
@@ -106,11 +114,12 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                     }
                 } )
         );
-        TextField<String> emailText = new TextField<String>( "email", new PropertyModel<String>( this, "email" ) );
+        final TextField<String> emailText = new TextField<String>( "email", new PropertyModel<String>( this, "email" ) );
         emailText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields( target );
+                target.add( emailText );
             }
         } );
         userInfoContainer.add( emailText );
@@ -311,8 +320,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             temp.setPassword( newPassword );
         }
         if ( canSave() ) {
-            user.setUserInfo( temp );
-            getQueryService().getUserDao().save();
+            userDao.updateIdentity( user.getUserInfo(), temp );
             return true;
         } else {
             return false;

@@ -1,7 +1,5 @@
 package com.mindalliance.channels.core.orm.model;
 
-import com.mindalliance.channels.core.dao.User;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,10 +29,6 @@ public class AbstractPersistentPlanObject implements PersistentPlanObject {
 
 
     public AbstractPersistentPlanObject() {
-        created = new Date();
-        User user = User.current();
-        username = user.getUsername();
-        planUri = user.getPlanUri();
     }
     
     public AbstractPersistentPlanObject( String uri, String username ) {
@@ -46,6 +40,14 @@ public class AbstractPersistentPlanObject implements PersistentPlanObject {
     @Override
     public Date getCreated() {
         return created;
+    }
+
+    public void setCreated( Date created ) {
+        this.created = created;
+    }
+
+    public void setPlanUri( String planUri ) {
+        this.planUri = planUri;
     }
 
     @Override

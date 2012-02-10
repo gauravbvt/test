@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.GeoLocation;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -478,7 +477,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
 
     private void updatePlace( String property, Object value ) {
         Place place = getPlace();
-        doCommand( new UpdatePlanObject( User.current().getUsername(), place, property, value ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), place, property, value ) );
         geoService.validate( place );
 
     }

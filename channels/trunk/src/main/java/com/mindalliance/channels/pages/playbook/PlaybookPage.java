@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.playbook;
 
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.ExternalFlow;
@@ -41,7 +41,7 @@ public abstract class PlaybookPage extends AbstractChannelsWebPage {
 
     /** The logged-in user. */
     @SpringBean
-    private User user;
+    private ChannelsUser user;
 
 
     /** The actor of this page. */

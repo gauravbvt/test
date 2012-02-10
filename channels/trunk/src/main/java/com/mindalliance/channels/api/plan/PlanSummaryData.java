@@ -2,7 +2,8 @@ package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
@@ -26,13 +27,15 @@ import java.util.List;
 public class PlanSummaryData {
 
     private PlanService planService;
+    private ChannelsUserDao userDao;
 
     public PlanSummaryData() {
         // required
     }
 
-    public PlanSummaryData( PlanService planService ) {
+    public PlanSummaryData( PlanService planService, ChannelsUserDao userDao  ) {
         this.planService = planService;
+        this.userDao = userDao;
     }
 
     @XmlElement
@@ -48,7 +51,7 @@ public class PlanSummaryData {
     @XmlElement
     public List<UserData> getPlanners() {
         List<UserData> planners = new ArrayList<UserData>(  );
-        for ( User planner : planService.getUserDao().getPlanners( getPlan().getUri() ) ) {
+        for ( ChannelsUser planner : planService.getUserDao().getPlanners( getPlan().getUri() ) ) {
               planners.add( new UserData( planner ) );
         }
         return planners;
@@ -56,7 +59,7 @@ public class PlanSummaryData {
 
     @XmlElement( name = "participatingAs" )
     public ParticipationData getParticipation() {
-        User user = User.current();
+        ChannelsUser user = ChannelsUser.current( userDao );
         Participation participation = planService.findParticipation( user.getUsername() );
         return participation == null || participation.getActor() == null
                 ? null
@@ -78,7 +81,7 @@ public class PlanSummaryData {
     }
 
     private Actor getParticipant() {
-        Participation participation = planService.findParticipation( User.current().getUsername() );
+        Participation participation = planService.findParticipation( ChannelsUser.current( userDao ).getUsername() );
         if ( participation != null ) {
             return participation.getActor();
         } else {

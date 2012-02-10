@@ -11,7 +11,6 @@ import com.mindalliance.channels.core.command.commands.PlanRename;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.DefinitionManager;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
@@ -164,7 +163,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
      */
     public void setName( String name ) {
         if ( name != null && !isSame( getName(), name ) )
-            doCommand( new PlanRename( User.current().getUsername(),
+            doCommand( new PlanRename( getUser().getUsername(),
                                        getPlan(), definitionManager.makeUniqueName( name ) ) );
     }
 
@@ -185,7 +184,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     public void setDefaultLanguage( String defaultLanguage ) {
         if ( defaultLanguage != null && !isSame( getDefaultLanguage(), defaultLanguage ) )
             doCommand(
-                    new UpdatePlanObject( User.current().getUsername(), getPlan(),
+                    new UpdatePlanObject( getUser().getUsername(), getPlan(),
                             "defaultLanguage",
                             defaultLanguage,
                             UpdateObject.Action.Set ) );
@@ -208,7 +207,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     public void setDescription( String desc ) {
         if ( desc != null )
             doCommand(
-                    new UpdatePlanObject( User.current().getUsername(), getPlan(),
+                    new UpdatePlanObject( getUser().getUsername(), getPlan(),
                             "description",
                             desc,
                             UpdateObject.Action.Set ) );
@@ -221,7 +220,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     public void setTemplate( boolean val ) {
         if ( val != isTemplate() ) {
             doCommand(
-                    new UpdatePlanObject( User.current().getUsername(), getPlan(),
+                    new UpdatePlanObject( getUser().getUsername(), getPlan(),
                             "template",
                             val,
                             UpdateObject.Action.Set )

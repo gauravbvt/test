@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.TransferJobs;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -14,14 +13,14 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
-import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.pages.components.NameRangePanel;
-import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.core.query.Play;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.NameRangePanel;
+import com.mindalliance.channels.pages.components.NameRangeable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -280,7 +279,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         if ( transferredJobs.isEmpty() ) {
             return false;
         } else {
-            doCommand( new TransferJobs( User.current().getUsername(), getTransferFrom(),
+            doCommand( new TransferJobs( getUser().getUsername(), getTransferFrom(),
                     getOrganization(),
                     transferredJobs,
                     copying ) );
@@ -595,14 +594,14 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         public void setConfirmed( boolean confirmed ) {
             this.confirmed = confirmed;
             if ( confirmed ) {
-                doCommand( new UpdatePlanObject( User.current().getUsername(), getOrganization(),
+                doCommand( new UpdatePlanObject( getUser().getUsername(), getOrganization(),
                         "jobs",
                         job,
                         UpdateObject.Action.Add ) );
                 selectedJob = job;
             } else if ( !markedForCreation ) {
                 unconfirmedJob = job;
-                doCommand( new UpdatePlanObject( User.current().getUsername(), getOrganization(),
+                doCommand( new UpdatePlanObject( getUser().getUsername(), getOrganization(),
                         "jobs",
                         job,
                         UpdateObject.Action.Remove ) );
@@ -631,7 +630,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 if ( !isSame( title, oldTitle ) ) {
                     int index = getOrganization().getJobs().indexOf( job );
                     if ( index >= 0 ) {
-                        doCommand( new UpdatePlanObject( User.current().getUsername(), getOrganization(),
+                        doCommand( new UpdatePlanObject( getUser().getUsername(), getOrganization(),
                                 "jobs[" + index + "].title",
                                 title,
                                 UpdateObject.Action.Set ) );

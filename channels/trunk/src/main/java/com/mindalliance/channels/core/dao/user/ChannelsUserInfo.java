@@ -1,12 +1,16 @@
-// Copyright (C) 2010 Mind-Alliance Systems LLC.
-// All rights reserved.
-package com.mindalliance.channels.core.dao;
+package com.mindalliance.channels.core.dao.user;
 
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import org.apache.commons.validator.EmailValidator;
+import org.hibernate.search.annotations.Indexed;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
 
-import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,9 +18,16 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
- * Holder of raw info from the property file.
+ * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: 2/7/12
+ * Time: 2:19 PM
  */
-public final class UserInfo implements Serializable {
+@Entity
+@Indexed
+@Table( uniqueConstraints = @UniqueConstraint( columnNames = {"EMAIL", "USERNAME"} ) )
+public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     /**
      * The admin role string.
@@ -33,36 +44,38 @@ public final class UserInfo implements Serializable {
      */
     public static final String ROLE_USER = "ROLE_USER";
 
-    /** The serialization constant. */
-    private static final long serialVersionUID = -7672037364749386902L;
-
-    /** The username. */
-    private String username;
+    /** The email. */
+    private String email = "";
 
     /** The password. */
     private String password;
 
     /** The fullName. */
-    private String fullName;
-
-    /** The email. */
-    private String email;
+    private String fullName = "";
 
     /** The user's access (ROLE_USER|ROLE_PLANNER|ROLE_ADMIN), indexed by plan uri. */
+    @Transient
     private Map<String,String> planAccess = new HashMap<String, String>();
+    /**
+     * Plan accesses as string.
+     */
+    private String planAccesses;
 
     /** The user's global access role (ROLE_USER|ROLE_PLANNER|ROLE_ADMIN|null). */
     private String globalAccess;
 
 
     //---------------------------------
-    public UserInfo( String username, String values ) {
-        this.username = username;
+
+    public ChannelsUserInfo() {}
+
+    public ChannelsUserInfo( String username, String values ) {
+        super( null, username );
         StringTokenizer tokens = new StringTokenizer( values, "," );
 
         password = tokens.nextToken();
-        fullName = tokens.nextToken();
-        email = tokens.nextToken();
+        if ( tokens.hasMoreTokens() ) fullName = tokens.nextToken();
+        if ( tokens.hasMoreTokens() ) email = tokens.nextToken();
         globalAccess = null;
 
         while ( tokens.hasMoreTokens() ) {
@@ -75,39 +88,48 @@ public final class UserInfo implements Serializable {
 
                 String uri = access.nextToken();
                 planAccess.put( uri,
-                    access.hasMoreTokens() && ROLE_PLANNER.equals( access.nextToken() ) ?
-                        ROLE_PLANNER : ROLE_USER );
+                        access.hasMoreTokens() && ROLE_PLANNER.equals( access.nextToken() ) ?
+                                ROLE_PLANNER : ROLE_USER );
 
             } else if ( token.equals( ROLE_ADMIN ) || token.equals( ROLE_PLANNER )
-                                                   || token.equals( ROLE_USER ) )
+                    || token.equals( ROLE_USER ) )
                 globalAccess = token;
 
             else
                 LoggerFactory.getLogger( getClass() ).warn(
                         "Discarding invalid user definition part: {}", token );
         }
+        processPlanAccesses();
+    }
 
-        simplify();
+    public ChannelsUserInfo( String username, String fullName, String email ) {
+        super( null, username );
+        this.fullName = fullName;
+        this.email = email == null ? "" : email;
+        processPlanAccesses();
     }
 
     /**
      * Remove redundant declarations.
      */
-    private void simplify() {
+    private void processPlanAccesses() {
         if ( ROLE_ADMIN.equals( globalAccess ) || ROLE_PLANNER.equals( globalAccess ) ) {
             planAccess.clear();
-        } else if ( ROLE_USER.equals( globalAccess ) )
+        } else if ( ROLE_USER.equals( globalAccess ) ) {
             for ( String uri : new HashSet<String>( planAccess.keySet() ) )
                 if ( ROLE_USER.equals( planAccess.get( uri ) ) )
                     planAccess.remove( uri );
+        }
+        planAccesses = planAccessesToString();
     }
 
     public String getEmail() {
-        return email;
+        return email == null ? "" : email;
     }
 
     public void setEmail( String email ) {
-        this.email = email;
+        if ( email != null && EmailValidator.getInstance().isValid( email.trim() ) )
+            this.email = email.trim();
     }
 
     public String getFullName() {
@@ -122,17 +144,31 @@ public final class UserInfo implements Serializable {
         return password;
     }
 
+    public String getPlanAccesses() {
+        return planAccesses;
+    }
+
+    public void setPlanAccesses( String planAccesses ) {
+        this.planAccesses = planAccesses;
+    }
+
+    public String getGlobalAccess() {
+        return globalAccess;
+    }
+
+    public void setGlobalAccess( String globalAccess ) {
+        this.globalAccess = globalAccess;
+    }
+
     /**
      * Set the password.
      * @param password unencrypted.
      */
     public void setPassword( String password ) {
-        Md5PasswordEncoder encoder = new Md5PasswordEncoder();
-        this.password = encoder.encodePassword( password, null );
-    }
-
-    public String getUsername() {
-        return username;
+        if ( password != null
+                && !password.trim().isEmpty() )  {
+            this.password = digestPassword( password.trim() );
+        }
     }
 
     /**
@@ -162,7 +198,7 @@ public final class UserInfo implements Serializable {
      */
     public boolean isUser( String uri ) {
         return globalAccess != null
-            || uri != null && planAccess.containsKey( uri );
+                || uri != null && planAccess.containsKey( uri );
     }
 
     /**
@@ -172,8 +208,8 @@ public final class UserInfo implements Serializable {
      */
     public boolean isPlanner( String uri ) {
         return isAdmin()
-            || isPlanner()
-            || uri != null && ROLE_PLANNER.equals( planAccess.get( uri ) );
+                || isPlanner()
+                || uri != null && ROLE_PLANNER.equals( planAccess.get( uri ) );
     }
 
     /**
@@ -192,11 +228,22 @@ public final class UserInfo implements Serializable {
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
-        buffer.append( password );
+        buffer.append( getPassword() );
         buffer.append( ',' );
-        buffer.append( fullName );
+        buffer.append( getFullName() );
         buffer.append( ',' );
-        buffer.append( email );
+        buffer.append( getEmail() );
+        buffer.append( planAccessesToString() );
+        if ( getGlobalAccess() != null ) {
+            buffer.append( ',' );
+            buffer.append( getGlobalAccess() );
+        }
+
+        return buffer.toString();
+    }
+
+    private String planAccessesToString() {
+        StringBuilder buffer = new StringBuilder();
         for ( Map.Entry<String, String> access : planAccess.entrySet() ) {
             buffer.append( ",[" );
             buffer.append( access.getKey() );
@@ -206,13 +253,8 @@ public final class UserInfo implements Serializable {
             }
             buffer.append( ']' );
         }
-        if ( globalAccess != null ) {
-            buffer.append( ',' );
-            buffer.append( globalAccess );
-        }
-
         return buffer.toString();
-    }
+   }
 
     /**
      * Give a role to this user for all plans.
@@ -221,7 +263,6 @@ public final class UserInfo implements Serializable {
      */
     private void grantGlobalAccess( String role ) {
         globalAccess = null;
-
         if ( ROLE_USER.equals( role ) ) {
             globalAccess = role;
             for ( String uri : new HashSet<String>( planAccess.keySet() ) )
@@ -233,17 +274,18 @@ public final class UserInfo implements Serializable {
             if ( ROLE_ADMIN.equals( role ) || ROLE_PLANNER.equals( role ) )
                 globalAccess = role;
         }
+        planAccesses = planAccessesToString();
     }
 
     /**
      * Grant proper authorities to a plan.
-     * @see PlanManagerImpl#setAuthorities
+     * @see com.mindalliance.channels.core.dao.PlanManagerImpl#setAuthorities
      *
      * @param role either ROLE_ADMIN, ROLE_PLANNER, ROLE_USER or null for none
      * @param uri the plan's uri or null for all
      * @param planList available plans
      */
-    void setAuthorities( String role, String uri, List<Plan> planList ) {
+    public void setAuthorities( String role, String uri, List<Plan> planList ) {
         if ( uri == null || ROLE_ADMIN.equals( role ) )
             grantGlobalAccess( role );
 
@@ -267,14 +309,16 @@ public final class UserInfo implements Serializable {
                 grantOthers( planList, ROLE_USER );
             planAccess.remove( uri );
         }
+        planAccesses = planAccessesToString();
     }
 
     /**
      * Remove any specific access to a plan.
      * @param uri the plan uri
      */
-    void clearAuthority( String uri ) {
-        planAccess.remove( uri );       
+    public void clearAuthority( String uri ) {
+        planAccess.remove( uri );
+        planAccesses = planAccessesToString();
     }
 
     private void grantOthers( List<Plan> planList, String role ) {
@@ -283,7 +327,18 @@ public final class UserInfo implements Serializable {
             if ( !planAccess.containsKey( uri ) )
                 planAccess.put( uri, role );
         }
-
         globalAccess = null;
+        planAccesses = planAccessesToString();
     }
+
+    static public String digestPassword( String password ) {
+        MessageDigestPasswordEncoder encoder = new MessageDigestPasswordEncoder(
+                "sha",
+                true );
+        return encoder.encodePassword(
+                password,
+                null );
+    }
+
+
 }

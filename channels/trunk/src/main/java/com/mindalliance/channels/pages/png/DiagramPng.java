@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.Diagram;
@@ -95,7 +95,7 @@ public abstract class DiagramPng extends DynamicImageResource {
     private byte[] generatePng(
             PageParameters parameters ) {
         Channels channels = (Channels)Channels.get();
-        PlanService planService = channels.getPlanServiceFactory().getService( User.plan() );
+        PlanService planService = channels.getPlanServiceFactory().getService( ChannelsUser.plan() );
         double[] size = null;
         String orientation = null;
         if ( parameters.getNamedKeys().contains( "size" ) )

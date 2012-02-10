@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.support;
 
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
@@ -217,7 +217,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
     private boolean sendFeedback() {
-        User currentUser = User.current();
+        ChannelsUser currentUser = getUser();
         Plan plan = getPlan();
         String toAddress = currentUser.isPlanner()
                 ? plan.getPlannerSupportCommunity( getPlanManager().getDefaultSupportCommunity() )
@@ -244,7 +244,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
 
     }
 
-    private String makeContent( Plan plan, User user ) {
+    private String makeContent( Plan plan, ChannelsUser user ) {
         return "Plan: " + plan.getUri()
                 + "\nUser: " + user.getFullName()
                 + "\n"
@@ -287,7 +287,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
     private String getClientProperties() {
-        WebClientInfo clientInfo = User.current().getClientInfo();
+        WebClientInfo clientInfo = getUser().getClientInfo();
         if ( clientInfo != null ) {
             return clientInfo.getProperties().toString();
         } else {

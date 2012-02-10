@@ -3,6 +3,8 @@ package com.mindalliance.channels.core.dao;
 import com.mindalliance.channels.core.Attachable;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.dao.PlanDefinition.Version;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Connector;
@@ -87,7 +89,7 @@ public class PlanDao {
     /**
      * The user service.
      */
-    private UserDao userDao;
+    private ChannelsUserDao userDao;
 
     /**
      * The plan version.
@@ -445,7 +447,7 @@ public class PlanDao {
         throw new NotFoundException();
     }
 
-    public UserDao getUserDetailsService() {
+    public ChannelsUserDao getUserDetailsService() {
         return userDao;
     }
 
@@ -500,7 +502,7 @@ public class PlanDao {
             // Participations are not referenced per se but are not obsolete if they name a
             // registered user.
             Participation participation = (Participation) mo;
-            User user = userDao.getUserNamed( participation.getUsername() );
+            ChannelsUser user = userDao.getUserNamed( participation.getUsername() );
             return user != null;
         } else if ( plan.references( mo ) )
             return true;
@@ -664,7 +666,7 @@ public class PlanDao {
         }
     }
 
-    public void setUserDetailsService( UserDao userDao ) {
+    public void setUserDetailsService( ChannelsUserDao userDao ) {
         this.userDao = userDao;
     }
 

@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Taggable;
@@ -214,7 +213,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
      * @param desc a string
      */
     public void setDescription( String desc ) {
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getIssue(), "description", desc ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getIssue(), "description", desc ) );
     }
 
     public String getRemediation() {
@@ -227,7 +226,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
      * @param rem a string
      */
     public void setRemediation( String rem ) {
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getIssue(), "remediation", rem ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getIssue(), "remediation", rem ) );
     }
 
     /**
@@ -244,7 +243,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
      * @param type an issue severity level
      */
     public void setType( String type ) {
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getIssue(), "type", type ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getIssue(), "type", type ) );
     }
 
     /**
@@ -261,7 +260,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
      * @param severity an issue severity level
      */
     public void setSeverity( Level severity ) {
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getIssue(), "severity", severity ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getIssue(), "severity", severity ) );
     }
 
 }

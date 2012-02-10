@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
@@ -187,7 +187,7 @@ public class PlanMapDiagramPanel extends AbstractDiagramPanel {
      */
     @Override
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, User.plan() ) );
+        update( target, new Change( Change.Type.Selected, ChannelsUser.plan() ) );
     }
 
     /**

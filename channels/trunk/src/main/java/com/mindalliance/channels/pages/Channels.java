@@ -7,7 +7,8 @@ import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -105,6 +106,8 @@ public class Channels extends WebApplication
     private ImagingService imagingService;
 
     private AttachmentManager attachmentManager;
+    
+    private ChannelsUserDao userDao;
 
     private Exception exception = null;
 
@@ -132,7 +135,7 @@ public class Channels extends WebApplication
      */
     @Override
     public Class<? extends WebPage> getHomePage() {
-        User user = User.current();
+        ChannelsUser user = ChannelsUser.current( userDao );
         Plan plan = user.getPlan();
         if ( plan == null ) {
             plan = planManager.getDefaultPlan( user );
@@ -321,6 +324,14 @@ public class Channels extends WebApplication
 
     public void setAttachmentManager( AttachmentManager attachmentManager ) {
         this.attachmentManager = attachmentManager;
+    }
+
+    public void setUserDao( ChannelsUserDao userDao ) {
+        this.userDao = userDao;
+    }
+
+    public ChannelsUserDao getUserDao() {
+        return userDao;
     }
 
     // FOR TESTING ONLY

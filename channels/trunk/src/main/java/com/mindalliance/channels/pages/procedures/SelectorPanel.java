@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.procedures;
 
 import com.mindalliance.channels.core.AttachmentManager;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
@@ -98,7 +98,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     private boolean showingIssues;
 
     @SpringBean
-    private User user;
+    private ChannelsUser user;
 
     @SpringBean
     private AttachmentManager attachmentManager;
@@ -107,7 +107,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     private ImagingService imagingService;
 
     @SpringBean
-    private UserDao userDao;
+    private ChannelsUserDao userDao;
 
     @SpringBean
     private SemanticMatcher semanticMatcher;
@@ -211,7 +211,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
     private void setReportedOnActor() {
         Actor paramActor = null;
         Actor participationActor = null;
-        User user = this.user;
+        ChannelsUser user = this.user;
         Participation participation = getQueryService().findParticipation( user.getUsername() );
         if ( participation != null ) {
             participationActor = participation.getActor();
@@ -546,7 +546,7 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
         this.showingIssues = showingIssues;
     }
 
-    public User getUser() {
+    public ChannelsUser getUser() {
         return user;
     }
 

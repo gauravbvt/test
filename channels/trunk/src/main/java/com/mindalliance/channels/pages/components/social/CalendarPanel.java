@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -63,7 +62,7 @@ public class CalendarPanel extends AbstractSocialListPanel {
                  );
         loginInfo.add( calendarLoginLink );
         add( loginInfo );
-        loginInfo.setVisible( User.current().isPlanner() );
+        loginInfo.setVisible( getUser().isPlanner() );
     }
 
     private String getCalendarPrivateTicket() {

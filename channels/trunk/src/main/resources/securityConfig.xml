@@ -7,18 +7,31 @@
 
        default-autowire="byName">
 
-    <bean name="user" class="com.mindalliance.channels.core.dao.User" factory-method="current" scope="session"
+    <!--
+
+        <bean name="account" class="com.mindalliance.playbook.dao.impl.AccountDaoImpl" factory-method="currentAccount"
+          scope="request" autowire="no">
+        <constructor-arg ref="accountDao"/>
+    </bean>
+
+    -->
+
+<!--
+    <bean name="user" class="com.mindalliance.channels.core.dao.user.ChannelsUser" factory-method="current" scope="session"
           autowire="no"/>
+-->
+
+    <bean name="user" class="com.mindalliance.channels.core.dao.user.ChannelsUser" factory-method="current" scope="request"
+          autowire="no">
+        <constructor-arg ref="userDao"/>
+    </bean>
+
 
     <bean name="plan" class="com.mindalliance.channels.core.model.Plan" factory-bean="user" factory-method="getPlan"
-          scope="session"/>
+          scope="request"/>
 
-    <bean id="userDao" class="com.mindalliance.channels.core.dao.FileUserDao">
-        <property name="base" value="${channels.home}"/>
-        <property name="userDefinitions" value="users.properties"/>
-        <property name="defaultDefinitions" value="/WEB-INF/users.properties"/>
-    </bean>
-    
+    <bean id="userDao" class="com.mindalliance.channels.core.dao.user.ChannelsUserDaoImpl"/>
+
     <sec:http pattern="/**/*.css" security="none"/>
     <sec:http pattern="/**/*.js" security="none"/>
     <sec:http pattern="/**/*.ico" security="none"/>
@@ -62,7 +75,7 @@
 
     <sec:authentication-manager alias="authenticationManager">
         <sec:authentication-provider user-service-ref="userDao">
-            <sec:password-encoder hash="md5"/>
+            <sec:password-encoder hash="sha" base64="true"/>
         </sec:authentication-provider>
     </sec:authentication-manager>
 

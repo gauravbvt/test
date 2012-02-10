@@ -3,8 +3,8 @@ package com.mindalliance.channels.core.query;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
@@ -1205,9 +1205,9 @@ public interface QueryService {
     /**
      * Get file user details service.
      *
-     * @return a file user details service
+     * @return a persistent  user details service
      */
-    UserDao getUserDao();
+    ChannelsUserDao getUserDao();
 
     /**
      * Find the participation by a user.
@@ -1488,7 +1488,7 @@ public interface QueryService {
      * @param actor an actor
      * @return a list of users
      */
-    List<User> findUsersParticipatingAs( Actor actor );
+    List<ChannelsUser> findUsersParticipatingAs( Actor actor );
 
     /**
      * Find all participations where users are identified as a given actor.

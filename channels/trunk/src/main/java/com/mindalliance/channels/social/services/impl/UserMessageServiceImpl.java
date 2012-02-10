@@ -1,11 +1,12 @@
 package com.mindalliance.channels.social.services.impl;
 
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.UserMessage;
 import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.validator.EmailValidator;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -34,7 +35,7 @@ import java.util.Map;
  */
 
 @Repository
-public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage,Long> implements UserMessageService{
+public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, Long> implements UserMessageService {
 
     private static final int SUMMARY_MAX = 25;
 
@@ -48,16 +49,16 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage,Lo
     @Autowired
     private MailSender mailSender;
     @Autowired
-    private UserDao userDao;
-    private Map<String,Date> whenLastChanged = new HashMap<String, Date>();
+    private ChannelsUserDao userDao;
+    private Map<String, Date> whenLastChanged = new HashMap<String, Date>();
 
     @Override
     @Transactional
-    public boolean sendMessage( UserMessage message, boolean emailIt ) {
+    public boolean sendMessage( UserMessage message, boolean emailIt, ChannelsUser sender ) {
         boolean success = true;
         save( message );
         if ( emailIt ) {
-            success = email( message );
+            success = email( message, sender );
         }
         changed( message.getPlanUri() );
         return success;
@@ -67,7 +68,7 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage,Lo
     @Transactional
     public void deleteMessage( UserMessage message ) {
         delete( message );
-        changed(  message.getPlanUri() );
+        changed( message.getPlanUri() );
     }
 
     @Override
@@ -78,7 +79,7 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage,Lo
         criteria.add( Restrictions.eq( "planUri", planUri ) );
         criteria.add( Restrictions.eq( "toUsername", username ) );
         criteria.addOrder( Order.desc( "created" ) );
-        return (Iterator<UserMessage>)criteria.list( ).iterator();
+        return (Iterator<UserMessage>) criteria.list().iterator();
     }
 
     @Override
@@ -89,7 +90,7 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage,Lo
         criteria.add( Restrictions.eq( "planUri", planUri ) );
         criteria.add( Restrictions.eq( "username", username ) );
         criteria.addOrder( Order.desc( "created" ) );
-        return (Iterator<UserMessage>)criteria.list( ).iterator();
+        return (Iterator<UserMessage>) criteria.list().iterator();
     }
 
     @Override
@@ -110,11 +111,10 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage,Lo
 
     @Override
     @Transactional
-    public boolean email( UserMessage message ) {
-        List<User> recipients = new ArrayList<User>();
+    public boolean email( UserMessage message, ChannelsUser currentUser ) {
+        List<ChannelsUser> recipients = new ArrayList<ChannelsUser>();
         String username = message.getToUsername();
         String text = "";
-        User currentUser = User.current();
         String urn = currentUser.getPlanUri();
         String summary = StringUtils.abbreviate( message.getText(), SUMMARY_MAX );
         if ( username == null || username.equals( PLANNERS ) )
@@ -126,30 +126,34 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage,Lo
 
         try {
             Date now = new Date();
-            for ( User recipient : recipients ) {
-                SimpleMailMessage email = new SimpleMailMessage();
-                email.setTo( recipient.getEmail() );
-                email.setSubject( "["
-                        + urn
-                        + "] "
-                        + summary );
-                email.setFrom( currentUser.getEmail() );
-                email.setReplyTo( currentUser.getEmail() );
-                String aboutString = message.getAboutString();
-                if ( !aboutString.isEmpty() )
-                    text = "About " + aboutString + "\n\n";
+            for ( ChannelsUser recipient : recipients ) {
+                String recipientEmailAddress = recipient.getEmail();
+                if ( !recipientEmailAddress.isEmpty()
+                        && EmailValidator.getInstance().isValid( recipientEmailAddress ) ) {
+                    SimpleMailMessage email = new SimpleMailMessage();
+                    email.setTo( recipient.getEmail() );
+                    email.setSubject( "["
+                            + urn
+                            + "] "
+                            + summary );
+                    email.setFrom( currentUser.getEmail() );
+                    email.setReplyTo( currentUser.getEmail() );
+                    String aboutString = message.getAboutString();
+                    if ( !aboutString.isEmpty() )
+                        text = "About " + aboutString + "\n\n";
 
-                text += message.getText();
-                text += "\n\n -- Message first sent in Channels " + getLongTimeElapsedString( message.getCreated(), now )
-                        + " --";
-                email.setText( text );
-                mailSender.send( email );
-                LOG.info( currentUser.getUsername()
-                        + " emailed message to "
-                        + recipient.getUsername() );
+                    text += message.getText();
+                    text += "\n\n -- Message first sent in Channels " + getLongTimeElapsedString( message.getCreated(), now )
+                            + " --";
+                    email.setText( text );
+                    mailSender.send( email );
+                    LOG.info( currentUser.getUsername()
+                            + " emailed message to "
+                            + recipient.getUsername() );
+                }
             }
             message.setEmailed( true );
-            save(  message );
+            save( message );
             return true;
         } catch ( Exception e ) {
             LOG.warn( currentUser.getUsername()

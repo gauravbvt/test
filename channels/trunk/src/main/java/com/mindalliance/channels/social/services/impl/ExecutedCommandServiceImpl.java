@@ -52,7 +52,7 @@ public class ExecutedCommandServiceImpl
    @Override
    @Transactional
     public void commandDone( Commander commander, Command command, Change change ) {
-        saveExecutedCommand( commander, ExecutedCommand.Type.Done, command, change );
+        saveExecutedCommand( commander, ExecutedCommand.Type.Done, command, change);
     }
 
     @Override

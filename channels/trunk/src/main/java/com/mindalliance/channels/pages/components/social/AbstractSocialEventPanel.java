@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Participation;
@@ -87,7 +87,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     protected void init() {
         WebMarkupContainer socialItemContainer = new WebMarkupContainer( "socialItem" );
         String cssClasses = getCssClasses();
-        if ( getUsername() != null && getUsername().equals( User.current().getUsername() ) ) {
+        if ( getUsername() != null && getUsername().equals( getUser().getUsername() ) ) {
             cssClasses += " self";
         }
         if ( !getJobTitles().isEmpty() ) {
@@ -115,7 +115,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
     private boolean isPlanner() {
-        return User.current().isPlanner();
+        return getUser().isPlanner();
     }
 
     private void addPhoto( WebMarkupContainer socialItemContainer ) {
@@ -169,9 +169,9 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 else
                     return name
                             + (
-                            userRole.equals( User.PLANNER )
+                            userRole.equals( ChannelsUser.PLANNER )
                                     ? " (planner)"
-                                    : userRole.equals( User.ADMIN )
+                                    : userRole.equals( ChannelsUser.ADMIN )
                                     ? " (admin)"
                                     : ""
                     );

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.plan;
 
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -16,13 +16,13 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType( propOrder = {"username", "fullName", "email"} )
 public class UserData {
 
-    private User user;
+    private ChannelsUser user;
 
     public UserData() {
         // required
     }
 
-    public UserData( User user ) {
+    public UserData( ChannelsUser user ) {
         this.user = user;
     }
 

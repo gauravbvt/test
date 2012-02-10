@@ -9,8 +9,8 @@ package com.mindalliance.channels.surveys;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanListener;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -59,7 +59,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
      */
     Map<Plan, List<Survey>> surveys = new HashMap<Plan, List<Survey>>();
 
-    private UserDao userDao;
+    private ChannelsUserDao userDao;
 
     /**
      * Default email address for survey help.
@@ -94,11 +94,11 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     protected AbstractSurveyService() {
     }
 
-    private Survey makeSurvey( QueryService queryService, Type type, Identifiable identifiable )
+    private Survey makeSurvey( QueryService queryService, Type type, Identifiable identifiable, ChannelsUser user )
             throws SurveyException {
         Survey survey = null;
         if ( type == Type.Remediation && identifiable instanceof Issue )
-            survey = new IssueRemediationSurvey( (Issue) identifiable );
+            survey = new IssueRemediationSurvey( (Issue) identifiable, user );
 
         if ( survey == null )
             throw new SurveyException( "No known survey for " + type + " and " + identifiable );
@@ -117,7 +117,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         this.surveysFile = surveysFile;
     }
 
-    public void setUserDetailsService( UserDao userDao ) {
+    public void setUserDetailsService( ChannelsUserDao userDao ) {
         this.userDao = userDao;
     }
 
@@ -137,7 +137,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         velocityEngine = engine;
     }
 
-    public UserDao getUserDao() {
+    public ChannelsUserDao getUserDao() {
         return userDao;
     }
 
@@ -246,9 +246,9 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     private void save() {
         PrintWriter out = null;
         try {
-            File file = new File( getDataDirectory( User.plan() ), surveysFile );
+            File file = new File( getDataDirectory( ChannelsUser.plan() ), surveysFile );
             out = new PrintWriter( new FileWriter( file ) );
-            for ( Survey survey : getSurveys( User.plan() ) ) {
+            for ( Survey survey : getSurveys( ChannelsUser.plan() ) ) {
                 out.println( survey.toString() );
             }
             LOG.info( "Survey records saved" );
@@ -272,7 +272,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     @SuppressWarnings( "unchecked" )
     private Survey findOpenSurvey( final Type type, final Identifiable identifiable ) {
         Survey latestSurvey = null;
-        List<Survey> planSurveys = (List<Survey>) CollectionUtils.select( getSurveys( User.plan() ), new Predicate() {
+        List<Survey> planSurveys = (List<Survey>) CollectionUtils.select( getSurveys( ChannelsUser.plan() ), new Predicate() {
             @Override
             public boolean evaluate( Object obj ) {
                 Survey survey = (Survey) obj;
@@ -307,17 +307,22 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     }
 
     @Override
-    public Survey getOrCreateSurvey( QueryService queryService, Type type, Identifiable identifiable, Plan plan )
+    public Survey getOrCreateSurvey( 
+            QueryService queryService, 
+            Type type, 
+            Identifiable identifiable, 
+            Plan plan, 
+            ChannelsUser user )
             throws SurveyException {
         Survey survey = findOpenSurvey( type, identifiable );
         if ( survey == null ) {
-            survey = makeSurvey( queryService, type, identifiable );
+            survey = makeSurvey( queryService, type, identifiable, user );
             survey.setCreationDate( new Date() );
             long id = registerSurvey( survey, plan, queryService );
             survey.setId( id );
             survey.setStatus( Status.In_design );
             survey.setIssuer( getIssuerName( survey ) );
-            addSurvey( User.plan(), survey );
+            addSurvey( ChannelsUser.plan(), survey );
             save();
         }
         survey.updateSurveyData( this, plan );
@@ -340,7 +345,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         if ( survey.isRegistered() ) {
             unregisterSurvey( survey );
         }
-        getSurveys( User.plan() ).remove( survey );
+        getSurveys( ChannelsUser.plan() ).remove( survey );
         save();
     }
 
@@ -385,11 +390,11 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
 
     @Override
     public List<Survey> getSurveys() {
-        return new ArrayList<Survey>( surveys.get( User.plan() ) );
+        return new ArrayList<Survey>( surveys.get( ChannelsUser.plan() ) );
     }
 
     protected String getIssuerName( Survey survey ) {
-        User user = userDao.getUserNamed( survey.getUserName() );
+        ChannelsUser user = userDao.getUserNamed( survey.getUserName() );
         if ( user == null )
             return "unknown user";
         else
@@ -427,10 +432,10 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
 
     private void emailInvitationTo( Contact contact, Survey survey, Plan plan, QueryService queryService )
             throws SurveyException {
-        User user = getUser( contact.getUsername() );
+        ChannelsUser user = getUser( contact.getUsername() );
         if ( user == null )
             throw new SurveyException( "Unknown contact " + contact.getUsername() );
-        User issuer = getUser( survey.getUserName() );
+        ChannelsUser issuer = getUser( survey.getUserName() );
         if ( issuer == null )
             throw new SurveyException( "Unknown issuer " );
         Identifiable identifiable = findIdentifiable( survey, queryService );
@@ -441,7 +446,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
             Map<String, Object> context = survey.getInvitationContext( this, user, issuer, plan, queryService );
             SimpleMailMessage email = new SimpleMailMessage();
             email.setTo( user.getEmail() );
-            email.setSubject( "Survey: " + survey.getPlanText() );
+            email.setSubject( "Survey: " + survey.getPlanText( plan ) );
             email.setFrom( issuer.getEmail() );
             email.setReplyTo( issuer.getEmail() );
             String invitation = resolveTemplate( survey.getInvitationTemplate(), context );
@@ -454,7 +459,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
         }
     }
 
-    protected User getUser( String username ) {
+    protected ChannelsUser getUser( String username ) {
         return userDao.getUserNamed( username );
     }
 
@@ -495,7 +500,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     }
 
     @Override
-    public List<SurveyResponse> findSurveysResponses( User user, int maxNumber, boolean showCompleted )
+    public List<SurveyResponse> findSurveysResponses( ChannelsUser user, int maxNumber, boolean showCompleted )
             throws SurveyException {
         List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();
         List<Survey> openSurveys = findOpenSurveysFor( user );
@@ -520,7 +525,7 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<Survey> findOpenSurveysFor( User user ) {
+    private List<Survey> findOpenSurveysFor( ChannelsUser user ) {
         final String userName = user.getUsername();
         return (List<Survey>) CollectionUtils.select( getSurveys( user.getPlan() ), new Predicate() {
             @Override
@@ -538,6 +543,6 @@ public abstract class AbstractSurveyService implements SurveyService, Initializi
 
     protected abstract void doCloseSurvey( Survey survey, Plan plan ) throws SurveyException;
 
-    protected abstract SurveyResponse findSurveyResponse( Survey survey, User user ) throws SurveyException;
+    protected abstract SurveyResponse findSurveyResponse( Survey survey, ChannelsUser user ) throws SurveyException;
 }
 

@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AddPart;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
@@ -268,7 +267,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
             if ( node != null ) {
                 selectedOtherNode = node;
             } else {
-                Change change = doCommand( new AddPart( User.current().getUsername(), getSegment(), nodeName ) );
+                Change change = doCommand( new AddPart( getUser().getUsername(), getSegment(), nodeName ) );
                 selectedOtherNode = (Part) change.getSubject( getQueryService() );
             }
         }

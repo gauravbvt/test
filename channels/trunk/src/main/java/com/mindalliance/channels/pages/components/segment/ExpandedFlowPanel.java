@@ -11,7 +11,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.RedirectFlow;
 import com.mindalliance.channels.core.command.commands.SatisfyNeed;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.ExternalFlow;
@@ -1310,12 +1309,12 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             Connector connector = (Connector) other;
             Flow need = isSend() ? connector.getInnerFlow() : getFlow();
             Flow capability = isSend() ? getFlow() : connector.getInnerFlow();
-            change = doCommand( new SatisfyNeed( User.current().getUsername(), need,
+            change = doCommand( new SatisfyNeed( getUser().getUsername(), need,
                     capability,
                     SatisfyNeed.KEEP_CAPABILITY,
                     SatisfyNeed.KEEP_NEED ) );
         } else {
-            change = doCommand( new RedirectFlow( User.current().getUsername(), getFlow(), other, isSend() ) );
+            change = doCommand( new RedirectFlow( getUser().getUsername(), getFlow(), other, isSend() ) );
         }
         Flow newFlow = (Flow) change.getSubject( getQueryService() );
         assert newFlow != null; // TODO Find out why this has happened...
@@ -1360,7 +1359,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param name a string
      */
     public void setName( String name ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "name", name ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "name", name ) );
     }
 
     /**
@@ -1378,7 +1377,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param val a string
      */
     public void setDescription( String val ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "description", val ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "description", val ) );
     }
 
 
@@ -1392,7 +1391,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param val a boolean
      */
     public void setAskedFor( boolean val ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "askedFor", val ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "askedFor", val ) );
     }
 
     public boolean isAll() {
@@ -1405,7 +1404,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param value a boolean
      */
     public void setAll( boolean value ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "all", value ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "all", value ) );
     }
 
     public Flow.Significance getSignificanceToTarget() {
@@ -1418,7 +1417,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param val a flow significance
      */
     public void setSignificanceToTarget( Flow.Significance val ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "significanceToTarget", val ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "significanceToTarget", val ) );
     }
 
     public Flow.Significance getSignificanceToSource() {
@@ -1431,7 +1430,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param val a flow significance
      */
     public void setSignificanceToSource( Flow.Significance val ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "significanceToSource", val ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "significanceToSource", val ) );
     }
 
     /**
@@ -1496,7 +1495,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     public void setIntentLabel( String label ) {
         if ( label != null ) {
             Flow.Intent intent = label.equals( NO_INTENT ) ? null : Flow.Intent.valueOfLabel( label );
-            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "intent", intent ) );
+            doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "intent", intent ) );
         }
     }
 
@@ -1517,7 +1516,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     public void setRestricted( boolean val ) {
         this.restricted = val;
         if ( !val && getFlow().getRestriction() != null ) {
-            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "restriction", null ) );
+            doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "restriction", null ) );
         }
     }
 
@@ -1542,7 +1541,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             Flow.Restriction restriction = label.equals( NO_RESTRICTION )
                     ? null
                     : Flow.Restriction.valueOfLabel( label, isSend() );
-            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "restriction", restriction ) );
+            doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "restriction", restriction ) );
         }
     }
 
@@ -1557,7 +1556,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     public void setIfTaskFails( boolean val ) {
         if ( val != getFlow().isIfTaskFails() ) {
-            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "ifTaskFails", val ) );
+            doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "ifTaskFails", val ) );
         }
     }
 
@@ -1572,7 +1571,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     public void setProhibited( boolean val ) {
         if ( val != getFlow().isProhibited() ) {
-            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "prohibited", val ) );
+            doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "prohibited", val ) );
         }
     }
 
@@ -1587,7 +1586,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     public void setReferencesEventPhase( boolean val ) {
         if ( val != getFlow().isReferencesEventPhase() ) {
-            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "referencesEventPhase", val ) );
+            doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "referencesEventPhase", val ) );
         }
     }
 
@@ -1602,7 +1601,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     public void setCanBypassIntermediate( boolean val ) {
         if ( val != getFlow().isCanBypassIntermediate() ) {
-            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "canBypassIntermediate", val ) );
+            doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "canBypassIntermediate", val ) );
         }
     }
 
@@ -1617,7 +1616,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     public void setReceiptConfirmationRequested( boolean val ) {
         if ( val != getFlow().isReceiptConfirmationRequested() ) {
-            doCommand( new UpdateSegmentObject( User.current().getUsername(), getFlow(), "receiptConfirmationRequested", val ) );
+            doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "receiptConfirmationRequested", val ) );
         }
     }
 

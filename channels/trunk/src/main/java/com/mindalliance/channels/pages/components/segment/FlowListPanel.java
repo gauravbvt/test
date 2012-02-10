@@ -10,7 +10,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.commands.AddCapability;
 import com.mindalliance.channels.core.command.commands.AddNeed;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Node;
@@ -114,8 +113,8 @@ public class FlowListPanel extends AbstractCommandablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 Part n = (Part) getNode();
                 Command command = isSends()
-                        ? new AddCapability( User.current().getUsername(), n )
-                        : new AddNeed( User.current().getUsername(), n );
+                        ? new AddCapability( getUser().getUsername(), n )
+                        : new AddNeed( getUser().getUsername(), n );
                 Change change = doCommand( command );
                 update( target, change );
             }

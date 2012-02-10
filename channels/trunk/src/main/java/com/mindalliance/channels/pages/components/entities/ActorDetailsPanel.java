@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Available;
@@ -282,7 +282,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 "deleteLanguage",
                 "Remove language?" ) {
             public void onClick( AjaxRequestTarget target ) {
-                doCommand( new UpdatePlanObject( User.current().getUsername(), getActor(),
+                doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(),
                         "languages",
                         language,
                         UpdateObject.Action.Remove ) );
@@ -315,7 +315,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
 
     public void setLanguage( String name ) {
         if ( name != null && !name.isEmpty() ) {
-            doCommand( new UpdatePlanObject( User.current().getUsername(), getActor(),
+            doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(),
                     "languages",
                     name.toLowerCase(),
                     UpdateObject.Action.Add ) );
@@ -491,14 +491,14 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         Component participantsTable = getActor().isActual()
                 ? new ParticipantsTable(
                 "participants",
-                new PropertyModel<List<User>>( this, "participants" ),
+                new PropertyModel<List<ChannelsUser>>( this, "participants" ),
                 MAX_ROWS )
                 : new Label( "participants", "" );
         participantsTable.setOutputMarkupId( true );
         participantsContainer.add( participantsTable );
     }
 
-    public List<User> getParticipants() {
+    public List<ChannelsUser> getParticipants() {
         return getQueryService().findUsersParticipatingAs( getActor() );
     }
 
@@ -714,7 +714,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     public void setSystem( boolean isSystem ) {
         Actor actor = getActor();
         if ( actor.isSystem() != isSystem )
-            doCommand( new UpdatePlanObject( User.current().getUsername(), actor, "system", isSystem ) );
+            doCommand( new UpdatePlanObject( getUser().getUsername(), actor, "system", isSystem ) );
     }
 
     /**
@@ -736,7 +736,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     public void setArchetype( boolean val ) {
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getActor(), "archetype", val ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "archetype", val ) );
     }
 
     /**
@@ -749,7 +749,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     public void setPlaceHolder( boolean val ) {
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getActor(), "placeHolder", val ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "placeHolder", val ) );
     }
 
     /**
@@ -762,7 +762,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     public void setPlaceHolderSingular( boolean val ) {
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getActor(), "placeHolderSingular", val ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "placeHolderSingular", val ) );
     }
 
 
@@ -1004,9 +1004,9 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
 
     private class ParticipantsTable extends AbstractTablePanel {
 
-        private final IModel<List<User>> participants;
+        private final IModel<List<ChannelsUser>> participants;
 
-        public ParticipantsTable( String id, IModel<List<User>> participants, int maxRows ) {
+        public ParticipantsTable( String id, IModel<List<ChannelsUser>> participants, int maxRows ) {
             super( id, maxRows );
             this.participants = participants;
             init();
@@ -1028,7 +1028,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "participants",
                     columns,
-                    new SortableBeanProvider<User>(
+                    new SortableBeanProvider<ChannelsUser>(
                             participants.getObject(),
                             "normalizedFullName" ),
                     getPageSize() ) );

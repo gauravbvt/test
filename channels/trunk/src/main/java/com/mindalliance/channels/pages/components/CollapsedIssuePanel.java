@@ -9,7 +9,6 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
@@ -65,8 +64,12 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         IndicatingAjaxFallbackLink surveyLink = new IndicatingAjaxFallbackLink( "surveyLink" ) {
             public void onClick( AjaxRequestTarget target ) {
                 try {
-                    Survey survey = surveyService.getOrCreateSurvey( getQueryService(),
-                                                                     Survey.Type.Remediation, issue, getPlan() );
+                    Survey survey = surveyService.getOrCreateSurvey(
+                            getQueryService(),
+                            Survey.Type.Remediation,
+                            issue,
+                            getPlan(),
+                            getUser() );
                     update( target, new Change( Change.Type.Expanded, survey ) );
                 } catch ( SurveyException e ) {
                     e.printStackTrace();
@@ -188,7 +191,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
      * @param waive a boolean
      */
     public void setWaived( boolean waive ) {
-        Command command = UpdateObject.makeCommand( User.current().getUsername(), getIssue().getAbout(),
+        Command command = UpdateObject.makeCommand( getUser().getUsername(), getIssue().getAbout(),
                 "waivedIssueDetections",
                 getIssue().getKind(),
                 waive ? UpdateObject.Action.Add : UpdateObject.Action.Remove );

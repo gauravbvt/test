@@ -1,11 +1,11 @@
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.surveys.Survey.Type;
 
 import java.util.List;
@@ -28,10 +28,11 @@ public interface SurveyService {
      * @param type         a survey type
      * @param identifiable an identifiable
      * @param plan         a plan
+     * @param user  a user
      * @return a survey
      * @throws SurveyException if fails
      */
-    Survey getOrCreateSurvey( QueryService queryService, Type type, Identifiable identifiable, Plan plan ) throws SurveyException;
+    Survey getOrCreateSurvey( QueryService queryService, Type type, Identifiable identifiable, Plan plan, ChannelsUser user ) throws SurveyException;
 
     /**
      * Whether one or more surveys of a given type, created, launched or closed, is already associated with an identifiable.
@@ -153,7 +154,7 @@ public interface SurveyService {
      *
      * @return a user service
      */
-    UserDao getUserDao();
+    ChannelsUserDao getUserDao();
 
     /**
      * Get analyst.
@@ -170,5 +171,5 @@ public interface SurveyService {
      * @return  a list of survey responses
      * @throws SurveyException if fails
      */
-    List<SurveyResponse> findSurveysResponses( User user, int maxNumber, boolean showCompleted ) throws SurveyException;
+    List<SurveyResponse> findSurveysResponses( ChannelsUser user, int maxNumber, boolean showCompleted ) throws SurveyException;
 }

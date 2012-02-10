@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.dao;
+package com.mindalliance.channels.core.dao.user;
 
 import com.mindalliance.channels.core.model.Plan;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
@@ -14,23 +14,29 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A user of the system.
+ * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: 2/7/12
+ * Time: 1:55 PM
  */
-public class User implements UserDetails {
+
+public class ChannelsUser implements UserDetails {
 
     public static final String ADMIN = "Admin";
     public static final String PLANNER = "Planner";
     public static final String PARTICIPANT = "Participant";
     public static final String UNAUTHORIZED = "Unauthorized";
+    
+    public static final String DEFAULT_ADMIN_USERNAME = "admin";
+    public static final String DEFAULT_ADMIN_PASSWORD = "admin";
 
-    private static final User ANONYMOUS = new User();
-
-    private static final long serialVersionUID = -5817912937367287500L;
+    private static final ChannelsUser ANONYMOUS = new ChannelsUser();
 
     /**
-     * Raw information from the property file.
+     * Persistent information from database.
      */
-    private UserInfo userInfo;
+    private ChannelsUserInfo userInfo;
 
     /**
      * True if user is anonymous.
@@ -47,13 +53,13 @@ public class User implements UserDetails {
     private WebClientInfo clientInfo;
 
     //----------------------------------------
-    public User() {
+    public ChannelsUser() {
         anonymous = true;
-        userInfo = new UserInfo( "(Anonymous)", "bla,Anonymous,bla" );
+        userInfo = new ChannelsUserInfo( "(Anonymous)", "bla,Anonymous,bla" );
     }
 
 
-    public User( UserInfo userInfo ) {
+    public ChannelsUser( ChannelsUserInfo userInfo ) {
         this.userInfo = userInfo;
         anonymous = false;
     }
@@ -70,13 +76,18 @@ public class User implements UserDetails {
         return anonymous;
     }
 
-    public UserInfo getUserInfo() {
+    public ChannelsUserInfo getUserInfo() {
         return userInfo;
     }
 
-//    @Secured( "ROLE_ADMIN" )
-    public void setUserInfo( UserInfo userInfo ) {
+    //    @Secured( "ROLE_ADMIN" )
+    public void setUserInfo( ChannelsUserInfo userInfo ) {
         this.userInfo = userInfo;
+    }
+
+    @Override
+    public String getUsername() {
+        return userInfo.getUsername();
     }
 
     public String getEmail() {
@@ -90,11 +101,6 @@ public class User implements UserDetails {
     @Override
     public String getPassword() {
         return userInfo.getPassword();
-    }
-
-    @Override
-    public String getUsername() {
-        return userInfo.getUsername();
     }
 
     @Override
@@ -115,13 +121,13 @@ public class User implements UserDetails {
     public Collection<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> result = new ArrayList<GrantedAuthority>();
         if ( userInfo.isAdmin() )
-            result.add( new GrantedAuthorityImpl( UserInfo.ROLE_ADMIN ) );
+            result.add( new GrantedAuthorityImpl( ChannelsUserInfo.ROLE_ADMIN ) );
 
         String uri = plan == null ? null : plan.getUri();
         if ( userInfo.isPlanner( uri ) )
-            result.add( new GrantedAuthorityImpl( UserInfo.ROLE_PLANNER ) );
+            result.add( new GrantedAuthorityImpl( ChannelsUserInfo.ROLE_PLANNER ) );
         if ( userInfo.isUser( uri ) )
-            result.add( new GrantedAuthorityImpl( UserInfo.ROLE_USER ) );
+            result.add( new GrantedAuthorityImpl( ChannelsUserInfo.ROLE_USER ) );
 
         return Collections.unmodifiableList( result );
     }
@@ -162,18 +168,42 @@ public class User implements UserDetails {
     /**
      * Get the current user of this session.
      *
+     * @param userDao user dao
      * @return a user called "Anonymous", if not authenticated.
      */
-    // TODO minimize uses of direct calls to User.current(). Use DI...
-    public static User current() {
+    // TODO minimize uses of direct calls to User.current(...). Use DI...
+    public static ChannelsUser current( ChannelsUserDao userDao ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ( authentication != null ) {
             Object obj = authentication.getPrincipal();
-            if ( obj instanceof User )
-                return (User) obj;
+            if ( obj instanceof ChannelsUser ) {
+                ChannelsUser user = (ChannelsUser) obj;
+                userDao.refresh( user.getUserInfo() );
+                return user;
+            }
         }
 
-        // return new User();
+        // return new ChannelsUser();
+        return ANONYMOUS;
+    }
+
+    /**
+     * Get the current user of this session.
+     *
+     * @return a user called "Anonymous", if not authenticated.
+     */
+    // TODO minimize uses of direct calls to User.current(...). Use DI...
+    public static ChannelsUser current(  ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ( authentication != null ) {
+            Object obj = authentication.getPrincipal();
+            if ( obj instanceof ChannelsUser ) {
+                ChannelsUser user = (ChannelsUser) obj;
+                return user;
+            }
+        }
+
+        // return new ChannelsUser();
         return ANONYMOUS;
     }
 
@@ -218,7 +248,7 @@ public class User implements UserDetails {
         if ( obj == null || !getClass().isAssignableFrom( obj.getClass() ) )
             return false;
 
-        User user = (User) obj;
+        ChannelsUser user = (ChannelsUser) obj;
         return anonymous == user.isAnonymous()
                 && getUsername().equals( user.getUsername() );
     }
@@ -307,7 +337,7 @@ public class User implements UserDetails {
 //        if ( Thread.currentThread() instanceof IssueScanner.Daemon ) {
 //            return ( (IssueScanner.Daemon) Thread.currentThread() ).getPlan();
 //        } else {
-        User user = current();
+        ChannelsUser user = current();
         return user == null ? null : user.getPlan();
 //        }
     }
@@ -319,4 +349,6 @@ public class User implements UserDetails {
     public void setClientInfo( WebClientInfo clientInfo ) {
         this.clientInfo = clientInfo;
     }
+
 }
+

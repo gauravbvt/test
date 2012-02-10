@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.plan.menus;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
@@ -57,7 +57,7 @@ public class PlanShowMenuPanel extends MenuPanel {
     @Override
     public List<Component> getMenuItems() {
         synchronized ( getCommander() ) {
-            Plan plan = User.plan();
+            Plan plan = ChannelsUser.plan();
             List<Component> menuItems = new ArrayList<Component>();
 
             menuItems.addAll(

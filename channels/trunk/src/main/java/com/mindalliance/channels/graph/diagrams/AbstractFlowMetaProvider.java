@@ -1,15 +1,15 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.slf4j.Logger;
@@ -223,7 +223,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
                                         ? ImagingService.NEGATED
                                         : "";
                 iconName = imagingService.findIconName(
-                        User.plan(),
+                        ChannelsUser.plan(),
                         part,
                         getQueryService().getAssignments() );
             }

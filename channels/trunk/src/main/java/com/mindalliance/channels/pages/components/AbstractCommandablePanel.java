@@ -10,7 +10,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.commands.CreateEntityIfNew;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -69,7 +68,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     protected boolean isLockedByUser( Identifiable identifiable ) {
         return noLockRequired( identifiable )
                || ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
-                  && !isImmutable( identifiable ) && getLockManager().isLockedByUser( User.current().getUsername(),
+                  && !isImmutable( identifiable ) && getLockManager().isLockedByUser( getUser().getUsername(),
                                                                                       identifiable.getId() );
     }
 
@@ -121,7 +120,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     @SuppressWarnings( "unchecked" )
     protected <T extends ModelEntity> T doSafeFindOrCreate( Class<T> clazz, String name ) {
         String safeName = ChannelsUtils.cleanUpName( name );
-        return (T) doCommand( new CreateEntityIfNew( User.current().getUsername(),
+        return (T) doCommand( new CreateEntityIfNew( getUser().getUsername(),
                                                      clazz,
                                                      safeName,
                                                      ModelEntity.Kind.Actual ) ).getSubject( getQueryService() );
@@ -137,7 +136,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     @SuppressWarnings( "unchecked" )
     protected <T extends ModelEntity> T doSafeFindOrCreateType( Class<T> clazz, String name ) {
         String safeName = ChannelsUtils.cleanUpName( name );
-        return (T) doCommand( new CreateEntityIfNew( User.current().getUsername(),
+        return (T) doCommand( new CreateEntityIfNew( getUser().getUsername(),
                                                      clazz,
                                                      safeName,
                                                      ModelEntity.Kind.Type ) ).getSubject( getQueryService() );

@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Tag;
@@ -108,8 +107,8 @@ public class TagsPanel extends AbstractCommandablePanel {
         String val = s == null ? "" : s;
         Identifiable mo = getModel().getObject();
         Command updateCommand = mo instanceof SegmentObject
-                ? new UpdateSegmentObject( User.current().getUsername(), mo, tagsProperty, Tag.tagsFromString( val ) )
-                : new UpdatePlanObject( User.current().getUsername(), mo, tagsProperty, Tag.tagsFromString( val ) );
+                ? new UpdateSegmentObject( getUser().getUsername(), mo, tagsProperty, Tag.tagsFromString( val ) )
+                : new UpdatePlanObject( getUser().getUsername(), mo, tagsProperty, Tag.tagsFromString( val ) );
         doCommand( updateCommand );
     }
 

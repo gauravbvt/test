@@ -59,7 +59,7 @@ public class UserMessagePanel extends AbstractSocialEventPanel {
 
 
     protected String getCssClasses() {
-        String cssClasses = getUserMessage().isBroadcast()
+        String cssClasses = getUserMessage().isBroadcast( getUser() )
                 ? "broadcast"
                 : "private";
         return cssClasses + super.getCssClasses();

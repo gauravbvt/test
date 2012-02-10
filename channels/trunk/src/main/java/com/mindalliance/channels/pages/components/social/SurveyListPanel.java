@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.surveys.SurveyException;
 import com.mindalliance.channels.surveys.SurveyResponse;
@@ -170,7 +170,7 @@ public class SurveyListPanel extends AbstractSocialListPanel {
 
     private List<SurveyResponse> getSurveyReminders() {
         if ( surveyResponses == null ) {
-            User user = User.current();
+            ChannelsUser user = getUser();
             try {
                 surveyResponses = surveyService.findSurveysResponses(
                         user,

@@ -6,14 +6,14 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.core.dao.UserInfo;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class NonParticipatingNormalUser extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Plan plan = queryService.getPlan();
         for ( String username : queryService.getUserDao().getUsernames( plan.getUri() ) ) {
-            if ( queryService.findUserRole( username ).equals( UserInfo.ROLE_USER ) ) {
+            if ( queryService.findUserRole( username ).equals( ChannelsUserInfo.ROLE_USER ) ) {
                 Participation participation = queryService.findOrCreate( Participation.class, username );
                 if ( participation.getActor() == null ) {
                     Issue issue = makeIssue( queryService, Issue.COMPLETENESS, plan );

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.issues;
 
 import com.mindalliance.channels.api.plan.PlanSummaryData;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
@@ -27,18 +28,19 @@ public class IssuesData {
 
     private PlanService planService;
     private Analyst analyst;
+    private ChannelsUserDao userDao;
 
     public IssuesData() {
     }
 
-    public IssuesData( PlanService planService, Analyst analyst ) {
+    public IssuesData( PlanService planService, Analyst analyst, ChannelsUserDao userDao ) {
         this.planService = planService;
         this.analyst = analyst;
     }
 
     @XmlElement( name = "plan" )
-    public PlanSummaryData getPlanSummary() {
-        return new PlanSummaryData( planService );
+    public PlanSummaryData getPlanSummary( ) {
+        return new PlanSummaryData( planService, userDao );
     }
 
     @XmlElement

@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components.segment.menus;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AddUserIssue;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
@@ -35,12 +34,12 @@ public class SegmentActionsMenuPanel extends ActionMenuPanel {
     protected List<CommandWrapper> getCommandWrappers() {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         if ( isLockable() ) {
-            commandWrappers.add( new CommandWrapper( new PasteAttachment( User.current().getUsername(), getSegment() ) ) {
+            commandWrappers.add( new CommandWrapper( new PasteAttachment( getUser().getUsername(), getSegment() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
-            commandWrappers.add( new CommandWrapper( new AddUserIssue( User.current().getUsername(), getSegment() ) ) {
+            commandWrappers.add( new CommandWrapper( new AddUserIssue( getUser().getUsername(), getSegment() ) ) {
                 public void onExecuted(
                         AjaxRequestTarget target,
                         Change change ) {

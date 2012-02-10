@@ -3,7 +3,7 @@ package com.mindalliance.channels.core.model;
 import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManagerImpl;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import junit.framework.TestCase;
 import org.springframework.core.io.FileSystemResource;
 
@@ -39,7 +39,7 @@ public class TestNode extends TestCase {
 
         Plan plan = planManager.getPlans().get( 0 );
         planDao = planManager.getDao( plan );
-        User user = new User();
+        ChannelsUser user = new ChannelsUser();
         user.setPlan( plan );
 
         segment = plan.getDefaultSegment();

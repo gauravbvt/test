@@ -3,13 +3,12 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Availability;
 import com.mindalliance.channels.core.model.Available;
 import com.mindalliance.channels.core.model.TimePeriod;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -221,7 +220,7 @@ public class TimePeriodPanel extends AbstractCommandablePanel {
     }
 
     public void setDayOn( boolean dayOn ) {
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getAvailable(),
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getAvailable(),
                 pathToTimePeriod(),
                 dayOn ? TimePeriod.allDayPeriod() : TimePeriod.nilTimePeriod(),
                 UpdateObject.Action.Set ) );

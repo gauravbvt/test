@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.api.entities.AgentData;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 
@@ -19,14 +19,14 @@ import javax.xml.bind.annotation.XmlType;
 public class ParticipationData {
 
     private Participation participation;
-    private User user;
+    private ChannelsUser user;
     private Plan plan;
 
     public ParticipationData() {
         // required
     }
 
-    public ParticipationData( Participation participation, User user, Plan plan ) {
+    public ParticipationData( Participation participation, ChannelsUser user, Plan plan ) {
         this.participation = participation;
         this.user = user;
         this.plan = plan;

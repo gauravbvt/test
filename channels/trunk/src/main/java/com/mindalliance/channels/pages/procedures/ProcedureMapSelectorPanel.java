@@ -4,8 +4,7 @@ import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -19,10 +18,10 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanProcedureMapPanel;
@@ -65,7 +64,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     private PlanManager planManager;
 
     @SpringBean
-    private UserDao userDao;
+    private ChannelsUserDao userDao;
 
     @SpringBean
     private CommanderFactory commanderFactory;
@@ -275,7 +274,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     @Override
     public boolean isPlanner() {
-        return User.current().isPlanner();
+        return getUser().isPlanner();
     }
 
     @Override

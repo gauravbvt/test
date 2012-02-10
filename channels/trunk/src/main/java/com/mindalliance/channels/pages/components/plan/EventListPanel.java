@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
@@ -221,17 +221,17 @@ public class EventListPanel extends AbstractCommandablePanel {
 
         public void setConfirmed( boolean confirmed ) {
             this.confirmed = confirmed;
-            Plan plan = User.plan();
+            Plan plan = ChannelsUser.plan();
             if ( confirmed ) {
                 Event confirmedEvent = doSafeFindOrCreateType( Event.class, getName() );
-                doCommand( new UpdatePlanObject( User.current().getUsername(), plan,
+                doCommand( new UpdatePlanObject( getUser().getUsername(), plan,
                         "incidents",
                         confirmedEvent,
                         UpdateObject.Action.Add ) );
 
             } else if ( !markedForCreation && getPlan().getIncidents().size() > 1 ) {
                 Event confirmedEvent = doSafeFindOrCreateType( Event.class, getName() );
-                doCommand( new UpdatePlanObject( User.current().getUsername(), plan,
+                doCommand( new UpdatePlanObject( getUser().getUsername(), plan,
                         "incidents",
                         confirmedEvent,
                         UpdateObject.Action.Remove ) );

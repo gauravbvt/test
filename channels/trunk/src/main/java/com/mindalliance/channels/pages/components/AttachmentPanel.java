@@ -9,7 +9,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AttachDocument;
 import com.mindalliance.channels.core.command.commands.CopyAttachment;
 import com.mindalliance.channels.core.command.commands.DetachDocument;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -288,15 +287,14 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 Attachment a = item.getModelObject();
                 ExternalLink documentLink = new ExternalLink( "attachment",
                         a.getUrl(), attachmentManager.getLabel( getPlan(), a ) );
-                documentLink.add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) );
+                documentLink.add( new AttributeModifier( "target", new Model<String>( "_" ) ) );
                 item.add( documentLink );
                 addCopyImage( item );
                 addDeleteImage( item );
                 item.add( new AttributeModifier(
-                        "class", true, new Model<String>( a.getType().getStyle() ) ) );
+                        "class", new Model<String>( a.getType().getStyle() ) ) );
                 item.add( new AttributeModifier(
                         "title",
-                        true,
                         new Model<String>(
                                 a.getType().getLabel() + " - " + a.getUrl()
                         ) ) );
@@ -310,7 +308,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         final Attachment attachment = item.getModelObject();
         AjaxFallbackLink deletelink = new AjaxFallbackLink( "copy" ) {
             public void onClick( AjaxRequestTarget target ) {
-                Change change = doCommand( new CopyAttachment( User.current().getUsername(), attachment ) );
+                Change change = doCommand( new CopyAttachment( getUser().getUsername(), attachment ) );
                 change.setType( Change.Type.Copied );
                 update( target, change );
             }
@@ -324,7 +322,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 "delete",
                 "Delete attachment?" ) {
             public void onClick( AjaxRequestTarget target ) {
-                doCommand( new DetachDocument( User.current().getUsername(), getAttachee(),
+                doCommand( new DetachDocument( getUser().getUsername(), getAttachee(),
                         attachablePath,
                         attachment ) );
                 if ( attachment.isPicture() ) {
@@ -422,7 +420,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                         } );
                 // Only add non-redundant attachment.
                 if ( attachment != null ) {
-                    doCommand( new AttachDocument( User.current().getUsername(), mo, attachablePath, attachment ) );
+                    doCommand( new AttachDocument( getUser().getUsername(), mo, attachablePath, attachment ) );
                     postProcess( attachment );
                 }
             }
@@ -473,7 +471,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             try {
                 new URL( value );
                 Attachment attachment = new AttachmentImpl( value, getSelectedType(), getName() );
-                doCommand( new AttachDocument( User.current().getUsername(), mo, attachablePath, attachment ) );
+                doCommand( new AttachDocument( getUser().getUsername(), mo, attachablePath, attachment ) );
                 postProcess( attachment );
                 this.url = null;
                 this.name = "";

@@ -10,8 +10,8 @@ import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
@@ -107,7 +107,7 @@ public abstract class DefaultQueryService implements QueryService {
     /**
      * File user details service.
      */
-    private UserDao userDao;
+    private ChannelsUserDao userDao;
 
     //-------------------------------
 
@@ -118,7 +118,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     protected DefaultQueryService( PlanManager planManager, AttachmentManager attachmentManager,
-                                   SemanticMatcher semanticMatcher, UserDao userDao ) {
+                                   SemanticMatcher semanticMatcher, ChannelsUserDao userDao ) {
         this.planManager = planManager;
         this.attachmentManager = attachmentManager;
         this.semanticMatcher = semanticMatcher;
@@ -2756,7 +2756,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public String findUserEmail( String userName ) {
-        User user = userDao.getUserNamed( userName );
+        ChannelsUser user = userDao.getUserNamed( userName );
         if ( user != null ) {
             return user.getEmail();
         } else {
@@ -2769,7 +2769,7 @@ public abstract class DefaultQueryService implements QueryService {
         if ( userDao == null ) {
             System.out.println( "OOPS!" );
         }
-        User user = userDao.getUserNamed( userName );
+        ChannelsUser user = userDao.getUserNamed( userName );
         if ( user != null ) {
             return user.getFullName();
         } else {
@@ -2779,7 +2779,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public String findUserNormalizedFullName( String userName ) {
-        User user = userDao.getUserNamed( userName );
+        ChannelsUser user = userDao.getUserNamed( userName );
         if ( user != null ) {
             return user.getNormalizedFullName();
         } else {
@@ -2789,7 +2789,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public String findUserRole( String userName ) {
-        User user = userDao.getUserNamed( userName );
+        ChannelsUser user = userDao.getUserNamed( userName );
         if ( user != null ) {
             return user.getRole( user.getPlanUri() );
         } else {
@@ -2798,8 +2798,8 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public List<User> findUsersParticipatingAs( Actor actor ) {
-        List<User> users = new ArrayList<User>();
+    public List<ChannelsUser> findUsersParticipatingAs( Actor actor ) {
+        List<ChannelsUser> users = new ArrayList<ChannelsUser>();
         for ( String userName : userDao.getUsernames( getPlan().getUri() ) ) {
             Participation participation = findParticipation( userName );
             if ( participation != null && participation.getActor() != null && participation.getActor().equals( actor ) )
@@ -2957,7 +2957,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public Plan getPlan() {
-        return User.plan();
+        return ChannelsUser.plan();
     }
 
     @Override
@@ -3522,11 +3522,11 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public UserDao getUserDao() {
+    public ChannelsUserDao getUserDao() {
         return userDao;
     }
 
-    public void setUserDao( UserDao userDao ) {
+    public void setUserDao( ChannelsUserDao userDao ) {
         this.userDao = userDao;
     }
 }

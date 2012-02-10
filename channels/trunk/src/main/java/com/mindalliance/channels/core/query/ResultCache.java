@@ -1,12 +1,12 @@
 package com.mindalliance.channels.core.query;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Plan;
 import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-import net.sf.ehcache.CacheException;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ public class ResultCache {
      */
     public void cache( MethodInvocation invocation, Object result ) {
 
-        Plan plan = User.plan();
+        Plan plan = ChannelsUser.plan();
         LOG.trace(
             MessageFormat.format(
                 "Caching result {0} of {1} in {2}",
@@ -66,7 +66,7 @@ public class ResultCache {
      * @return null when no previous value was found
      */
     public Element getCached( MethodInvocation invocation ) {
-        String key = getKey( invocation, User.plan() );
+        String key = getKey( invocation, ChannelsUser.plan() );
         Element element = null;
         try {
             element = getCache().get( key );
@@ -92,7 +92,7 @@ public class ResultCache {
      * @param invocation the invocation
      */
     public void forget( MethodInvocation invocation ) {
-        getCache().remove( getKey( invocation, User.plan() ) );
+        getCache().remove( getKey( invocation, ChannelsUser.plan() ) );
     }
 
     /** Forget all cached results. */

@@ -8,7 +8,6 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.LockManager;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -215,7 +214,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
         annotateHeaderTitle( getObject(), ( (Channels) getApplication() ).getAnalyst() );
         String objectClassName = getObjectClass();
         if ( objectClassName != null && !objectClassName.isEmpty() ) {
-            banner.add( new AttributeModifier( "class", true, new Model<String>( objectClassName ) ) );
+            banner.add( new AttributeModifier( "class", new Model<String>( objectClassName ) ) );
         }
     }
 
@@ -233,9 +232,9 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
             menu = makeActionMenu( menuId );
         } else {
             LockManager lockManager = getLockManager();
-            if ( lockManager.isLockedByUser( User.current().getUsername(), getObject().getId() ) ) {
+            if ( lockManager.isLockedByUser( getUser().getUsername(), getObject().getId() ) ) {
                 menu = makeActionMenu( menuId );
-            } else if ( getCommander().isTimedOut( User.current().getUsername() )
+            } else if ( getCommander().isTimedOut( getUser().getUsername() )
                         || getLockOwner( getObject() ) == null )
             {
                 menu = timeOutLabel( menuId );
@@ -443,7 +442,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
     @Override
     public void release() {
         for ( Identifiable identifiable : lockedIdentifiables ) {
-            getCommander().releaseAnyLockOn( User.current().getUsername(), identifiable );
+            getCommander().releaseAnyLockOn( getUser().getUsername(), identifiable );
         }
         lockedIdentifiables = new HashSet<Identifiable>();
     }
@@ -455,7 +454,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      */
     @Override
     public void releaseAnyLockOn( Identifiable identifiable ) {
-        getCommander().releaseAnyLockOn( User.current().getUsername(), identifiable );
+        getCommander().releaseAnyLockOn( getUser().getUsername(), identifiable );
         lockedIdentifiables.remove( identifiable );
     }
 
@@ -466,7 +465,7 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
      */
     @Override
     public void requestLockOn( Identifiable identifiable ) {
-        getCommander().requestLockOn( User.current().getUsername(), identifiable );
+        getCommander().requestLockOn( getUser().getUsername(), identifiable );
         lockedIdentifiables.add( identifiable );
     }
 }

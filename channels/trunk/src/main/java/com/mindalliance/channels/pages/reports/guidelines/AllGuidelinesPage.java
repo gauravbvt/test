@@ -8,8 +8,8 @@ import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.command.LockingException;
 import com.mindalliance.channels.core.command.commands.UpdateObject.Action;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
@@ -45,7 +45,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
 
     protected void initComponents( QueryService service, final Plan plan ) {
         List<Plan> otherPlans = findOtherPlans( plan );
-        List<User> otherPlanners = findOtherPlanners( getUserDao(), plan );
+        List<ChannelsUser> otherPlanners = findOtherPlanners( getUserDao(), plan );
         add(
             new Label( "userName", user.getUsername() ),
             new Label( "planName", plan.toString() ),
@@ -62,7 +62,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                         parameters.set( "agent", actor.getId() );
                         String userName = p.getUsername();
                         parameters.set( "user", userName );
-                        User otherUser = getUserDao().getUserNamed( userName );
+                        ChannelsUser otherUser = getUserDao().getUserNamed( userName );
                         item.add(
                             new BookmarkablePageLink<GuidelinesPage>(
                                 "responder", GuidelinesPage.class, parameters )
@@ -78,7 +78,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                                             Commander commander = getCommander( plan );
                                             LockManager lockManager = commander.getLockManager();
                                             lockManager.lock( user.getUsername(), plan.getId() );
-                                            assign( commander, participation, null );
+                                            assign( commander, participation, null, getUser() );
                                             lockManager.release( user.getUsername(), plan.getId() );
                                         } catch ( LockingException e ) {
                                             LoggerFactory.getLogger( getClass() ).warn(
@@ -95,7 +95,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                         );
 
                         if ( item.getIndex() == getViewSize() - 1 )
-                            item.add( new AttributeAppender( "class", true,
+                            item.add( new AttributeAppender( "class",
                                                              new Model<String>( "last" ), " " ) );
                     }
                 }
@@ -111,11 +111,11 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
 
                         item.add(
                             new WebMarkupContainer( "assign" )
-                                .add( new ListView<User>( "addUser", getUnassigned() ) {
+                                .add( new ListView<ChannelsUser>( "addUser", getUnassigned() ) {
                                     @Override
-                                    protected void populateItem( ListItem<User> tListItem ) {
-                                        User u = tListItem.getModelObject();
-                                        tListItem.add( new Link<User>( "addLink", tListItem.getModel() ) {
+                                    protected void populateItem( ListItem<ChannelsUser> tListItem ) {
+                                        ChannelsUser u = tListItem.getModelObject();
+                                        tListItem.add( new Link<ChannelsUser>( "addLink", tListItem.getModel() ) {
                                             @Override
                                             public void onClick() {
                                                 try {
@@ -123,7 +123,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                                                     String username = getModelObject().getUsername();
                                                     LockManager lockManager = cmdr.getLockManager();
                                                     lockManager.lock( user.getUsername(), plan.getId() );
-                                                    assign( cmdr, findParticipation( cmdr, username ), actor );
+                                                    assign( cmdr, findParticipation( cmdr, username, getUser() ), actor, getUser() );
                                                     lockManager.release( user.getUsername(), plan.getId() );
                                                 } catch ( LockingException e ) {
                                                     LoggerFactory.getLogger( getClass() ).warn( "Unable to get plan lock", e );
@@ -147,7 +147,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                         ).setOutputMarkupId( true );
 
                         if ( item.getIndex() == getViewSize() - 1 )
-                            item.add( new AttributeAppender( "class", true,
+                            item.add( new AttributeAppender( "class",
                                                              new Model<String>( "last" ), " " ) );
 
                     }
@@ -169,22 +169,22 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                                                 .setRenderBodyOnly( true ) ) );
 
                         if ( item.getIndex() == getViewSize() - 1 )
-                            item.add( new AttributeAppender( "class", true,
+                            item.add( new AttributeAppender( "class",
                                                              new Model<String>( "last" ), " " ) );
                     }
                 }
             ).setVisible( !otherPlans.isEmpty() ),
 
             new WebMarkupContainer( "plannersDiv" ).add(
-                new ListView<User>( "otherPlanners", otherPlanners ) {
+                new ListView<ChannelsUser>( "otherPlanners", otherPlanners ) {
                     @Override
-                    protected void populateItem( ListItem<User> item ) {
-                        User user = item.getModelObject();
+                    protected void populateItem( ListItem<ChannelsUser> item ) {
+                        ChannelsUser user = item.getModelObject();
                         item.add(
                             new ExternalLink( "planner", "mailTo:" + user.getEmail(),
                                               user.getFullName() ) );
                         if ( item.getIndex() == getViewSize() - 1 )
-                            item.add( new AttributeAppender( "class", true,
+                            item.add( new AttributeAppender( "class",
                                                              new Model<String>( "last" ), " " ) );
                     }
                 }
@@ -193,9 +193,9 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
         );
     }
 
-    private static void assign( Commander commander, Participation participation, Actor actor ) {
+    private static void assign( Commander commander, Participation participation, Actor actor, ChannelsUser currentUser ) {
         participation.setActor( actor );
-        commander.doUnsafeCommand( new UpdatePlanObject( User.current().getUsername(), participation,
+        commander.doUnsafeCommand( new UpdatePlanObject( currentUser.getUsername(), participation,
                                                    "actor",
                                                    actor,
                                                    Action.Set ) );
@@ -214,13 +214,13 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
         return answer;
     }
 
-    private List<User> findOtherPlanners(
-        UserDao userDao, Plan plan ) {
+    private List<ChannelsUser> findOtherPlanners(
+            ChannelsUserDao userDao, Plan plan ) {
         String me = user.getUsername();
 
-        Collection<User> planners = userDao.getPlanners( plan.getUri() );
-        List<User> answer = new ArrayList<User>( planners.size());
-        for ( User u : planners )
+        Collection<ChannelsUser> planners = userDao.getPlanners( plan.getUri() );
+        List<ChannelsUser> answer = new ArrayList<ChannelsUser>( planners.size());
+        for ( ChannelsUser u : planners )
             if ( !me.equals( u.getUsername() ) )
                 answer.add( u );
 

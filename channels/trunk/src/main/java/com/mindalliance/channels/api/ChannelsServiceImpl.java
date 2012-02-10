@@ -7,8 +7,8 @@ import com.mindalliance.channels.api.plan.PlanSummaryData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
@@ -47,7 +47,7 @@ public class ChannelsServiceImpl implements ChannelsService {
 
     private PlanManager planManager;
     private SemanticMatcher semanticMatcher;
-    private UserDao userDao;
+    private ChannelsUserDao userDao;
     private AttachmentManager attachmentManager;
     private Analyst analyst;
 
@@ -58,13 +58,13 @@ public class ChannelsServiceImpl implements ChannelsService {
      */
     public PlanSummariesData getPlans() {
         LOG.info( "Getting summaries for all visible plans" );
-        User user = User.current();
+        ChannelsUser user = ChannelsUser.current( userDao );
         List<PlanSummaryData> result = new ArrayList<PlanSummaryData>();
         for ( Plan plan : planManager.getPlans() ) {
             String uri = plan.getUri();
-            if ( !user.getRole( uri ).equals( User.UNAUTHORIZED )
+            if ( !user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED )
                     && ( user.isPlanner( uri ) || plan.isProduction() ) ) {
-                result.add( new PlanSummaryData( getPlanService( plan ) ) );
+                result.add( new PlanSummaryData( getPlanService( plan ), userDao ) );
             }
         }
         return new PlanSummariesData( result );
@@ -81,7 +81,7 @@ public class ChannelsServiceImpl implements ChannelsService {
     public PlanScopeData getPlanScope( String uri, String version ) {
         LOG.info( "Getting scope for plan " + uri + " version " + version );
         try {
-            User user = User.current();
+            ChannelsUser user = ChannelsUser.current( userDao );
             Plan plan = planManager.getPlan( uri, Integer.parseInt( version ) );
             if ( plan == null || !user.isPlanner( uri ) ) {
                 throw new Exception( "Plan " + uri + " is not available" );
@@ -100,11 +100,11 @@ public class ChannelsServiceImpl implements ChannelsService {
     @Override
     public ProceduresData getProcedures( String uri, String actorId ) {
         LOG.info( "Getting user procedures of agent " + actorId + " for production version of plan " + uri );
-        User user = User.current();
+        ChannelsUser user = ChannelsUser.current( userDao );
         Plan plan = null;
         try {
             plan = planManager.findProductionPlan( uri );
-            if ( plan == null || user.getRole( uri ).equals( User.UNAUTHORIZED ) ) {
+            if ( plan == null || user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED ) ) {
                 throw new Exception( "No plan available with uri " + uri );
             }
             PlanService planService = getPlanService( plan );
@@ -130,9 +130,9 @@ public class ChannelsServiceImpl implements ChannelsService {
     public ProceduresData getMyProcedures( String uri ) {
         LOG.info( "Getting user procedures for production version of plan " + uri );
         try {
-            User user = User.current();
+            ChannelsUser user = ChannelsUser.current( userDao );
             Plan plan = planManager.findProductionPlan( uri );
-            if ( plan == null || user.getRole( uri ).equals( User.UNAUTHORIZED ) ) {
+            if ( plan == null || user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED ) ) {
                 throw new Exception( user.getUsername() + " is not authorized to access production plan " + uri );
             }
             PlanService planService = getPlanService( plan );
@@ -157,7 +157,7 @@ public class ChannelsServiceImpl implements ChannelsService {
     @Override
     public IssuesData getIssues( String uri, String version ) {
         LOG.info( "Getting issues in plan " + uri + " version " + version );
-        User user = User.current();
+        ChannelsUser user = ChannelsUser.current( userDao );
         Plan plan = null;
         try {
             plan = planManager.getPlan( uri, Integer.parseInt( version ) );
@@ -173,11 +173,11 @@ public class ChannelsServiceImpl implements ChannelsService {
                             .build() );
         } else {
             PlanService planService = getPlanService( plan );
-            return new IssuesData( planService, analyst );
+            return new IssuesData( planService, analyst, userDao );
         }
     }
 
-    private boolean canSeeProcedures( User user, Actor actor, PlanService planService ) {
+    private boolean canSeeProcedures( ChannelsUser user, Actor actor, PlanService planService ) {
         // Planner can see any actor's procedures
         Plan plan = planService.getPlan();
         if ( plan.isTemplate() || user.isPlanner( plan.getUri() ) )
@@ -202,7 +202,7 @@ public class ChannelsServiceImpl implements ChannelsService {
     }
 
     @WebMethod( exclude = true )
-    public void setUserDao( UserDao userDao ) {
+    public void setUserDao( ChannelsUserDao userDao ) {
         this.userDao = userDao;
     }
 

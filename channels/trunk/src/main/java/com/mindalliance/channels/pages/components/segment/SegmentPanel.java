@@ -10,7 +10,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.commands.AddPart;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
@@ -169,7 +168,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         addPartShowMenu();
         AjaxFallbackLink addPartLink = new AjaxFallbackLink( "addPart" ) {
             public void onClick( AjaxRequestTarget target ) {
-                Command command = new AddPart( User.current().getUsername(), getSegment() );
+                Command command = new AddPart( getUser().getUsername(), getSegment() );
                 Change change = doCommand( command );
                 update( target, change );
             }
@@ -184,7 +183,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
             partActionsMenu = new Label( "partActionsMenu", new Model<String>( "" ) );
         } else if ( isLockedByUser( getPart() ) ) {
             partActionsMenu = new PartActionsMenuPanel( "partActionsMenu", partModel, getExpansions() );
-        } else if ( getCommander().isTimedOut( User.current().getUsername() ) || getLockOwner( getPart() ) == null ) {
+        } else if ( getCommander().isTimedOut( getUser().getUsername() ) || getLockOwner( getPart() ) == null ) {
             partActionsMenu = timeOutLabel( "partActionsMenu" );
         } else {
             String otherUser = getLockOwner( getPart() );
@@ -588,7 +587,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      * @param description a string
      */
     public void setPartDescription( String description ) {
-        doCommand( new UpdateSegmentObject( User.current().getUsername(), getPart(), "description", description ) );
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "description", description ) );
     }
 
     /**

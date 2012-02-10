@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
-import com.mindalliance.channels.core.dao.UserInfo;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -47,19 +47,19 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private UserMessageService userMessageService;
 
     @SpringBean
-    private UserDao userDao;
+    private ChannelsUserDao userDao;
 
     private static final int A_FEW = 5;
     private static final int MORE = 5;
 
-    private static final User ALL_PLANNERS;
-    private static final User ALL_USERS;
+    private static final ChannelsUser ALL_PLANNERS;
+    private static final ChannelsUser ALL_USERS;
     private int numberToShow = A_FEW;
     private boolean privateOnly = false;
     private boolean showReceived = true;
     private boolean allShown;
     private WebMarkupContainer userMessagesContainer;
-    private User newMessageRecipient;
+    private ChannelsUser newMessageRecipient;
     private ModelObject newMessageAbout;
     private String newMessageText = "";
     private Label aboutMessagesLabel;
@@ -74,8 +74,8 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private Date whenLastRefreshed;
 
     static {
-        ALL_PLANNERS = new User( new UserInfo( UserMessageService.PLANNERS, "bla,Anonymous,bla" ) );
-        ALL_USERS = new User( new UserInfo( UserMessageService.USERS, "bla,Anonymous,bla" ) );
+        ALL_PLANNERS = new ChannelsUser( new ChannelsUserInfo(  UserMessageService.PLANNERS, "bla,Anonymous,bla" ) );
+        ALL_USERS = new ChannelsUser( new ChannelsUserInfo( UserMessageService.USERS, "bla,Anonymous,bla" ) );
     }
 
     public UserMessageListPanel( String id, Updatable updatable, boolean collapsible ) {
@@ -118,7 +118,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     private boolean isPlanner() {
-        return  User.current().isPlanner();
+        return  getUser().isPlanner();
     }
 
     private void addShowHideBroadcastsLabel() {
@@ -151,8 +151,8 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         sentReceivedLink.addOrReplace( sentReceivedLabel );
     }
 
-    private  int addUserMessages() {
-        List<UserMessage> userMessages = getUserMessages();
+    private int addUserMessages() {
+        List<UserMessage> userMessages = getUserMessages( getUser() );
         ListView<UserMessage> userMessageListView = new ListView<UserMessage>(
                 "userMessages",
                 userMessages ) {
@@ -232,12 +232,12 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     private void addRecipientChoice( WebMarkupContainer newMessageContainer ) {
-        DropDownChoice<User> recipientChoice = new DropDownChoice<User>(
+        DropDownChoice<ChannelsUser> recipientChoice = new DropDownChoice<ChannelsUser>(
                 "recipient",
-                new PropertyModel<User>( this, "newMessageRecipient" ),
+                new PropertyModel<ChannelsUser>( this, "newMessageRecipient" ),
                 getCandidateRecipients(),
-                new ChoiceRenderer<User>() {
-                    public Object getDisplayValue( User user ) {
+                new ChoiceRenderer<ChannelsUser>() {
+                    public Object getDisplayValue( ChannelsUser user ) {
                         return user == ALL_PLANNERS
                                 ? "All planners"
                                 : user == ALL_USERS
@@ -245,7 +245,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                                 : user.getFullName() + " (" + user.getUsername() + ")";
                     }
 
-                    public String getIdValue( User object, int index ) {
+                    public String getIdValue( ChannelsUser object, int index ) {
                         return "" + index;
                     }
                 }
@@ -259,16 +259,16 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
 
-    private List<User> getCandidateRecipients() {
-        List<User> recipients = new ArrayList<User>();
-        for ( User user : userDao.getPlanners( getPlan().getUri() ) ) {
-            if ( !user.getUsername().equals( User.current().getUsername() ) ) {
+    private List<ChannelsUser> getCandidateRecipients() {
+        List<ChannelsUser> recipients = new ArrayList<ChannelsUser>();
+        for ( ChannelsUser user : userDao.getPlanners( getPlan().getUri() ) ) {
+            if ( !user.getUsername().equals( getUser().getUsername() ) ) {
                 recipients.add( user );
             }
         }
         final Collator collator = Collator.getInstance();
-        Collections.sort( recipients, new Comparator<User>() {
-            public int compare( User user1, User user2 ) {
+        Collections.sort( recipients, new Comparator<ChannelsUser>() {
+            public int compare( ChannelsUser user1, ChannelsUser user2 ) {
                 return collator.compare( user2.getNormalizedFullName(), user1.getNormalizedFullName() );
             }
         } );
@@ -330,7 +330,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         AjaxFallbackLink sendLink = new AjaxFallbackLink( "send" ) {
             public void onClick( AjaxRequestTarget target ) {
                 if ( !getNewMessageText().isEmpty() ) {
-                    sendNewMessage( false );
+                    sendNewMessage( false, getUser() );
                     resetNewMessage( target );
                     addUserMessages();
                     adjustComponents( target );
@@ -351,7 +351,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         AjaxFallbackLink sendAndEmailLink = new IndicatingAjaxFallbackLink( "sendAndEmail" ) {
             public void onClick( AjaxRequestTarget target ) {
                 if ( !getNewMessageText().isEmpty() ) {
-                    boolean success = sendNewMessage( true );
+                    boolean success = sendNewMessage( true, getUser() );
                     resetNewMessage( target );
                     addUserMessages();
                     adjustComponents( target );
@@ -377,29 +377,29 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         target.add( newMessageContainer );
     }
 
-    private boolean sendNewMessage( boolean emailIt ) {
+    private boolean sendNewMessage( boolean emailIt, ChannelsUser sender ) {
         String text = getNewMessageText();
         if ( !text.isEmpty() ) {
-            UserMessage userMessage = new UserMessage( text );
+            UserMessage userMessage = new UserMessage( getPlan().getUri(), sender.getUsername(), text );
             userMessage.setToUsername( getNewMessageRecipient().getUsername() );
             if ( getNewMessageAbout() != null )
                 userMessage.setAbout( getNewMessageAbout() );
-            return userMessageService.sendMessage( userMessage, emailIt );
+            return userMessageService.sendMessage( userMessage, emailIt, sender );
         } else {
             return false;
         }
     }
 
-    private void adjustComponents( AjaxRequestTarget target ) {
-        adjustComponents();
+    private void adjustComponents( AjaxRequestTarget target) {
+        adjustComponents( );
         target.add( userMessagesContainer );
         target.add( showAFew );
         target.add( showMore );
         target.add( aboutMessagesLabel );
     }
 
-    private void adjustComponents() {
-        List<UserMessage> userMessages = getUserMessages();
+    private void adjustComponents(  ) {
+        List<UserMessage> userMessages = getUserMessages( getUser() );
         addAboutMessages( userMessages.size() );
         makeVisible( showMore, !allShown );
         makeVisible( showAFew, userMessages.size() > A_FEW );
@@ -422,17 +422,17 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         refresh( target, new Change( Change.Type.Communicated ) );
     }
 
-    public void emailMessage( UserMessage message, AjaxRequestTarget target ) {
-        boolean success = userMessageService.email( message );
+    public void emailMessage( UserMessage message, AjaxRequestTarget target, ChannelsUser sender ) {
+        boolean success = userMessageService.email( message, sender );
         addUserMessages();
         adjustComponents( target );
         update( target, Change.message( success
-                ? ( "Message emailed to " + ( message.isBroadcast() ? "all planners" : message.getToUsername() ) )
+                ? ( "Message emailed to " + ( message.isBroadcast( sender ) ? "all planners" : message.getToUsername() ) )
                 : "Message NOT emailed" ) );
     }
 
-    public List<UserMessage> getUserMessages() {
-        String username = User.current().getUsername();
+    public List<UserMessage> getUserMessages( ChannelsUser user ) {
+        String username = getUser().getUsername();
         List<UserMessage> userMessages = new ArrayList<UserMessage>();
         Iterator<UserMessage> iterator;
         if ( isShowReceived() ) {
@@ -443,7 +443,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         while ( iterator.hasNext() && userMessages.size() < numberToShow ) {
             UserMessage userMessage = iterator.next();
             if ( userMessage != null ) {
-                if ( !( privateOnly && userMessage.isBroadcast() ) ) {
+                if ( !( privateOnly && userMessage.isBroadcast( user ) ) ) {
                     userMessages.add( userMessage );
                 }
             }
@@ -461,11 +461,11 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         }
     }
 
-    public User getNewMessageRecipient() {
+    public ChannelsUser getNewMessageRecipient() {
         return newMessageRecipient == null ? ALL_PLANNERS : newMessageRecipient;
     }
 
-    public void setNewMessageRecipient( User newMessageRecipient ) {
+    public void setNewMessageRecipient( ChannelsUser newMessageRecipient ) {
         this.newMessageRecipient = newMessageRecipient;
     }
 

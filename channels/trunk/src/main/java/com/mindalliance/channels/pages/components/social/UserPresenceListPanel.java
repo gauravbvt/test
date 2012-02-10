@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.services.PresenceRecordService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -30,7 +30,7 @@ import java.util.List;
 public class UserPresenceListPanel extends AbstractSocialListPanel {
 
     @SpringBean
-    UserDao userDao;
+    ChannelsUserDao userDao;
 
     @SpringBean
     private PresenceRecordService presenceRecordService;
@@ -79,11 +79,11 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
     }
 
     private void addPresences() {
-        ListView<User> presenceList = new ListView<User>(
+        ListView<ChannelsUser> presenceList = new ListView<ChannelsUser>(
                 "presences",
                 getUsersPresent() ) {
-            protected void populateItem( ListItem<User> item ) {
-                User planner = item.getModelObject();
+            protected void populateItem( ListItem<ChannelsUser> item ) {
+                ChannelsUser planner = item.getModelObject();
                 UserPresencePanel presencePanel = new UserPresencePanel(
                         "presence",
                         planner.getUsername(),
@@ -95,16 +95,16 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
         presencesContainer.addOrReplace( presenceList );
     }
 
-    public List<User> getUsersPresent() {
-        List<User> usersPresent = new ArrayList<User>();
-        for ( User user : userDao.getUsers( getPlan().getUri() ) ) {
+    public List<ChannelsUser> getUsersPresent() {
+        List<ChannelsUser> usersPresent = new ArrayList<ChannelsUser>();
+        for ( ChannelsUser user : userDao.getUsers( getPlan().getUri() ) ) {
             if ( !showHereOnly || isHere( user.getUsername() ) ) {
                 usersPresent.add( user );
             }
         }
         final Collator collator = Collator.getInstance();
-        Collections.sort( usersPresent, new Comparator<User>() {
-            public int compare( User user1, User user2 ) {
+        Collections.sort( usersPresent, new Comparator<ChannelsUser>() {
+            public int compare( ChannelsUser user1, ChannelsUser user2 ) {
                 return collator.compare( user1.getNormalizedFullName(), user2.getNormalizedFullName() );
             }
         } );

@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -14,9 +14,9 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.DetectedIssue;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -55,8 +55,12 @@ public class IssueRemediationSurvey extends Survey {
         super();
     }
 
-    public IssueRemediationSurvey( Issue issue ) {
-        super();
+    public IssueRemediationSurvey( ChannelsUser user ) {
+        super( user );
+    }
+
+    public IssueRemediationSurvey( Issue issue, ChannelsUser user ) {
+        super( user );
         issueSpec = new IssueSpec( issue );
     }
 
@@ -145,7 +149,7 @@ public class IssueRemediationSurvey extends Survey {
     }
 
     @Override
-    public Map<String, Object> getInvitationContext( SurveyService surveyService, User user, User issuer, Plan plan,
+    public Map<String, Object> getInvitationContext( SurveyService surveyService, ChannelsUser user, ChannelsUser issuer, Plan plan,
                                                      QueryService queryService ) {
         Map<String, Object> context = super.getInvitationContext( surveyService, user, issuer, plan, queryService );
         Issue issue = getIssue( surveyService.getAnalyst(), queryService );

@@ -11,7 +11,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -57,6 +57,9 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     @SpringBean
     private DiagramFactory diagramFactory;
+
+    @SpringBean
+    private ChannelsUser user;
 
     /**
      * String comparator for equality tests.
@@ -168,7 +171,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a string
      */
     protected String getUsername() {
-        return User.current().getUsername();
+        return user.getUsername();
     }
 
     protected Change getChange() {
@@ -340,6 +343,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                     new AttributeModifier( "title", true, new Model<String>( summary ) ) );
     }
 
+    public ChannelsUser getUser() {
+        return user;
+    }
+
     /**
      * Get current plan.
      *
@@ -347,8 +354,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     @Override
     public Plan getPlan() {
-        // TODO Get rid of this ASAP
-        return User.plan();
+        return user.plan();
     }
 
     /**

@@ -11,8 +11,8 @@ import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
@@ -96,10 +96,10 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     private SemanticMatcher semanticMatcher;
 
     @SpringBean
-    private User user;
+    private ChannelsUser user;
 
     @SpringBean
-    private UserDao userDao;
+    private ChannelsUserDao userDao;
 
     //-------------------------------
     public AbstractChannelsWebPage() {
@@ -113,12 +113,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     //-------------------------------
     public static void addPlanParameters( BookmarkablePageLink link, Plan plan ) {
         try {
-            link.setParameter( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
+            link.getPageParameters().set( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
         }
-        link.setParameter( VERSION_PARM, plan.getVersion() );
+        link.getPageParameters().set( VERSION_PARM, plan.getVersion() );
     }
 
     @Override
@@ -154,7 +154,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     }
 
     public static BookmarkablePageLink<? extends WebPage> getGuidelinesLink(
-            String id, QueryService queryService, Plan plan, User user, boolean samePage ) {
+            String id, QueryService queryService, Plan plan, ChannelsUser user, boolean samePage ) {
 
         Actor actor = findActor( queryService, user.getUsername() );
         String uri = plan.getUri();
@@ -184,7 +184,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     //---------------- getGuidelinesLink
 
     public static BookmarkablePageLink<? extends WebPage> getInfoNeedsLink(
-            String id, QueryService queryService, Plan plan, User user, boolean samePage ) {
+            String id, QueryService queryService, Plan plan, ChannelsUser user, boolean samePage ) {
         Actor actor = findActor( queryService, user.getUsername() );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
@@ -262,7 +262,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     }
 
     //-----------------------------------
-    public static ResourceSpec getProfile( QueryService service, User user ) throws NotFoundException {
+    public static ResourceSpec getProfile( QueryService service, ChannelsUser user ) throws NotFoundException {
 
         Participation participation = service.findParticipation( user.getUsername() );
         if ( participation == null || participation.getActor() == null )
@@ -272,7 +272,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     }
 
     protected String getSupportCommunity() {
-        Plan plan = User.current().getPlan();
+        Plan plan = user.getPlan();
         if ( plan != null ) {
             return plan.getPlannerSupportCommunity( planManager.getDefaultSupportCommunity() );
         } else {
@@ -426,7 +426,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
             LOG.warn( "PANIC: selecting first plan" );
             plan = plans.get( 0 );
         }
-        User.current().setPlan( plan );
+        user.setPlan( plan );
         getQueryService();
     }
 
@@ -497,19 +497,19 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         this.analyst = analyst;
     }
 
-    public User getUser() {
+    public ChannelsUser getUser() {
         return user;
     }
 
-    public void setUser( User user ) {
+    public void setUser( ChannelsUser user ) {
         this.user = user;
     }
 
-    public UserDao getUserDao() {
+    public ChannelsUserDao getUserDao() {
         return userDao;
     }
 
-    public void setUserDao( UserDao userDao ) {
+    public void setUserDao( ChannelsUserDao userDao ) {
         this.userDao = userDao;
     }
 }

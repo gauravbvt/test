@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -117,7 +116,7 @@ public class SegmentImportPanel extends AbstractCommandablePanel {
         if ( uploads != null ) {
             for ( FileUpload upload : uploads ) {
                 try {
-                    getPlanManager().importSegment( User.current().getUsername(), User.plan(), upload.getInputStream() );
+                    getPlanManager().importSegment( getUser().getUsername(), getPlan(), upload.getInputStream() );
                 } catch ( IOException e ) {
                     LoggerFactory.getLogger( getClass() ).warn( "Unable to get upload stream", e );
                 }

@@ -386,6 +386,19 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.3.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
         <!-- Semantic proximity matching -->
         <dependency>
             <groupId>jwnl</groupId>

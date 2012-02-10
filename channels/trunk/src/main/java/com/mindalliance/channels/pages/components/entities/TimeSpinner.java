@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Available;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -111,7 +110,7 @@ public class TimeSpinner extends AbstractCommandablePanel {
 
     private void setTime( int val ) {
         if ( val != getTime() && val >= minValue &&  val <= maxValue ) {
-            doCommand( new UpdatePlanObject( User.current().getUsername(), getAvailable(),
+            doCommand( new UpdatePlanObject( getUser().getUsername(), getAvailable(),
                     pathToTime,
                     val,
                     UpdateObject.Action.Set ) );

@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.social.menus;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.CommandException;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
@@ -63,7 +62,7 @@ public class SocialItemMenuPanel extends MenuPanel {
     public List<Component> getMenuItems() throws CommandException {
         List<Component> menuItems = new ArrayList<Component>();
         Participation participation = getParticipation();
-        final String currentUsername = User.current().getUsername();
+        final String currentUsername = getUser().getUsername();
         if ( participation != null ) {
             final Actor actor = participation.getActor();
             if ( actor != null && canShowAgentProfile() ) {

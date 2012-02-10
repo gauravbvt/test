@@ -1,9 +1,8 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.surveys.SurveyResponse;
 import com.mindalliance.channels.surveys.Survey;
+import com.mindalliance.channels.surveys.SurveyResponse;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -67,7 +66,7 @@ public class SurveyResponsePanel extends AbstractSocialEventPanel {
     private void addSurveyLink( WebMarkupContainer socialItemContainer ) {
         ExternalLink surveyLink = new ExternalLink(
                 "surveyLink",
-                new Model<String>( getSurvey().getSurveyLink( User.current() ) ),
+                new Model<String>( getSurvey().getSurveyLink( getUser() ) ),
                 new Model<String>( getSurvey().getTitle() )
         );
         socialItemContainer.add( surveyLink );

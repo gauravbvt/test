@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -268,9 +267,9 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
         }
         Identifiable referencer = getReferencer();
         if ( referencer instanceof SegmentObject ) {
-            doCommand( new UpdateSegmentObject( User.current().getUsername(), getReferencer(), property, newEntity ) );
+            doCommand( new UpdateSegmentObject( getUser().getUsername(), getReferencer(), property, newEntity ) );
         } else if ( referencer instanceof ModelObject ) {
-            doCommand( new UpdatePlanObject( User.current().getUsername(), getReferencer(), property, newEntity ) );
+            doCommand( new UpdatePlanObject( getUser().getUsername(), getReferencer(), property, newEntity ) );
         } else {
             // Probably some wrapper is the referencer
             try {

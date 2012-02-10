@@ -1,7 +1,7 @@
 package com.mindalliance.channels.social.model;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
@@ -28,13 +28,13 @@ public class UserMessage extends AbstractPersistentPlanObject {
     
     public UserMessage() {} 
 
-    public UserMessage( String text ) {
-        super();
+    public UserMessage( String planUri, String username, String text ) {
+        super( planUri, username);
         this.text = text;
     }
 
-    public UserMessage( String text, ModelObject modelObject ) {
-        this( text );
+    public UserMessage( String planUri, String username, String text, ModelObject modelObject ) {
+        this( planUri, username, text );
         about = new ModelObjectRef( modelObject ).asString();
     }
 
@@ -59,10 +59,9 @@ public class UserMessage extends AbstractPersistentPlanObject {
         return about == null ? null : ModelObjectRef.fromString( about );
     }
 
-    public boolean isBroadcast() {
-        User current = User.current();
+    public boolean isBroadcast( ChannelsUser currentUser ) {
         return toUsername == null // legacy - all planners
-                || toUsername.equals( UserMessageService.PLANNERS ) && current.isPlanner()
+                || toUsername.equals( UserMessageService.PLANNERS ) && currentUser.isPlanner()
                 || toUsername.equals( UserMessageService.USERS );
     }
 

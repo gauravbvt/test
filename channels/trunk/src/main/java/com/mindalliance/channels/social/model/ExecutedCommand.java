@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 
 import javax.persistence.Entity;
@@ -39,7 +38,7 @@ public class ExecutedCommand extends AbstractPersistentPlanObject {
     public ExecutedCommand() {}
 
     public ExecutedCommand( Type type, Command command, Change change, String planUri ) {
-        super( planUri, User.current().getUsername() );
+        super( planUri, command.getUserName() );
         this.type = type;
         commandName = command.getName();
         if ( type == Type.Undone )  commandUndoes = command.getUndoes();

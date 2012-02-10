@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.AttachmentManager;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import org.apache.commons.io.IOUtils;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -41,7 +41,7 @@ public class UploadedImage extends DynamicImageResource {
 
     protected File getFile( String fileName ) {
         AttachmentManager attachmentManager = ((Channels)Channels.get()).getAttachmentManager();
-        return new File( attachmentManager.getUploadDirectory( User.plan() ), fileName );
+        return new File( attachmentManager.getUploadDirectory( ChannelsUser.plan() ), fileName );
     }
 
 }

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.util.ResponseOutputStream;
 import org.apache.wicket.Page;
@@ -9,6 +9,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,9 @@ import java.io.OutputStream;
 public abstract class AbstractImageFilePage extends Page {
 
     private String filename;
+    
+    @SpringBean
+    private ChannelsUser user;
 
     public AbstractImageFilePage( PageParameters parameters ) {
         super( parameters );
@@ -90,7 +94,7 @@ public abstract class AbstractImageFilePage extends Page {
     }
 
     protected Plan getPlan() {
-        return User.current().getPlan();
+        return user.getPlan();
     }
 
 }

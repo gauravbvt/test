@@ -9,7 +9,7 @@ package com.mindalliance.channels.pages.components.segment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Level;
@@ -143,7 +143,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
 
     public void setEventLevel( String val ) {
         Level level = val.equals( ANY ) ? null : Level.valueOf( val );
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(), "eventLevel", level ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(), "eventLevel", level ) );
     }
 
     private List<String> getEventLevelChoices() {
@@ -278,7 +278,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
      */
     public void setName( String name ) {
         if ( name != null && !name.isEmpty() )
-            doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(), "name", name ) );
+            doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(), "name", name ) );
     }
 
     /**
@@ -296,7 +296,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
      * @param desc a string
      */
     public void setDescription( String desc ) {
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(), "description", desc ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(), "description", desc ) );
     }
 
     /**
@@ -319,12 +319,12 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
         String oldName = oldEvent == null ? "" : oldEvent.getName();
         Event newEvent = null;
         if ( name == null || name.trim().isEmpty() )
-            newEvent = User.plan().getDefaultEvent();
+            newEvent = ChannelsUser.plan().getDefaultEvent();
         else {
             if ( oldEvent == null || !isSame( name, oldName ) )
                 newEvent = getQueryService().findOrCreateType( Event.class, name );
         }
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(), "event", newEvent ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(), "event", newEvent ) );
         getCommander().cleanup( Event.class, oldName );
     }
 
@@ -343,7 +343,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
      * @param phase a phase
      */
     public void setPhase( Phase phase ) {
-        doCommand( new UpdatePlanObject( User.current().getUsername(), getSegment(), "phase", phase ) );
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(), "phase", phase ) );
     }
 
     private Event getEvent() {

@@ -4,8 +4,8 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.commands.AddProducer;
 import com.mindalliance.channels.core.command.commands.RemoveProducer;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.PlanPage;
@@ -54,7 +54,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
     private SimpleDateFormat dateFormat;
 
     @SpringBean
-    private UserDao userDao;
+    private ChannelsUserDao userDao;
 
     public PlanVersionsPanel(
             String id,
@@ -121,13 +121,12 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
         ListView<Vote> voteList = new ListView<Vote>( "votes", votes ) {
             protected void populateItem( ListItem<Vote> item ) {
                 final Vote vote = item.getModelObject();
-                boolean isCurrentUser = vote.getUsername().equals( User.current().getUsername() );
+                boolean isCurrentUser = vote.getUsername().equals( getUser().getUsername() );
                 Label nameLabel = new Label( "plannerName", vote.getPlannerName() );
                 if ( isCurrentUser ) {
                     nameLabel.add(
                             new AttributeModifier(
                                     "style",
-                                    true,
                                     new Model<String>( "font-weight: bold" ) ) );
                 }
                 item.add( nameLabel );
@@ -149,7 +148,6 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
                 voteCheckBox.setEnabled( isCurrentUser );
                 item.add( new AttributeModifier(
                         "class",
-                        true,
                         new Model<String>( itemCssClasses( item.getIndex(), votes.size() ) ) ) );
 
             }
@@ -166,7 +164,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
 
     public List<Vote> getVotes() {
         List<Vote> votes = new ArrayList<Vote>();
-        for ( User planner : userDao.getPlanners( getPlan().getUri() ) )
+        for ( ChannelsUser planner : userDao.getPlanners( getPlan().getUri() ) )
             votes.add( new Vote( planner ) );
 
         return votes;
@@ -203,17 +201,17 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
         /**
          * A user with planning privileges.
          */
-        private User planner;
+        private ChannelsUser planner;
         /**
          * Change caused by change to vote.
          */
         private Change change;
 
-        public Vote( User planner ) {
+        public Vote( ChannelsUser planner ) {
             this.planner = planner;
         }
 
-        public User getPlanner() {
+        public ChannelsUser getPlanner() {
             return planner;
         }
 
@@ -224,9 +222,9 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
         public void setInFavor( boolean inFavor ) {
             Command command;
             if ( inFavor ) {
-                command = new AddProducer( User.current().getUsername(), planner.getUsername() );
+                command = new AddProducer( getUser().getUsername(), planner.getUsername() );
             } else {
-                command = new RemoveProducer( User.current().getUsername(), getPlan(), planner.getUsername() );
+                command = new RemoveProducer( getUser().getUsername(), getPlan(), planner.getUsername() );
             }
             change = getCommander().doCommand( command );
         }

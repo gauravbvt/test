@@ -8,8 +8,8 @@ package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanListener;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserInfo;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -203,7 +203,7 @@ public class IssueScanner implements Scanner, PlanListener {
          */
         @Override
         public void run() {
-            User user = setupUser();
+            ChannelsUser user = setupUser();
             try {
                 LOG.debug( "Current user = {}, plan = {}", user, plan );
                 long startTime = System.currentTimeMillis();
@@ -261,14 +261,13 @@ public class IssueScanner implements Scanner, PlanListener {
             }
         }
 
-        private User setupUser() {
-            User principal = new User( new UserInfo( "daemon", "*,Issue Scanner,*,ROLE_ADMIN" ) );
+        private ChannelsUser setupUser() {
+            ChannelsUser principal = new ChannelsUser( new ChannelsUserInfo( "daemon", "*,Issue Scanner,*,ROLE_ADMIN" ) );
             principal.setPlan( plan );
             List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
             authorities.add( new GrantedAuthorityImpl( "ROLE_ADMIN" ) );
             SecurityContextHolder.getContext().setAuthentication(
                 new AnonymousAuthenticationToken( "daemon", principal, authorities ) );
-
             return principal;
         }
 

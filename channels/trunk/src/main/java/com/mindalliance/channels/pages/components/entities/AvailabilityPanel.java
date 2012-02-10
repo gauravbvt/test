@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Availability;
 import com.mindalliance.channels.core.model.Available;
 import com.mindalliance.channels.core.model.TimePeriod;
@@ -103,7 +102,7 @@ public class AvailabilityPanel extends AbstractCommandablePanel {
     public void setTwentyFourSeven( boolean val ) {
         twentyFourSeven = val;
         if ( val )
-            doCommand( new UpdatePlanObject( User.current().getUsername(), getAvailable(),
+            doCommand( new UpdatePlanObject( getUser().getUsername(), getAvailable(),
                     "availability",
                     new Availability(),
                     UpdateObject.Action.Set ) );

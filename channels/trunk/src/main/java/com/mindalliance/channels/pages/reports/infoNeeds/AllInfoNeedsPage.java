@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports.infoNeeds;
 
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
@@ -53,7 +53,7 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                         parameters.set( "agent", actor.getId() );
                         String userName = p.getUsername();
                         parameters.set( "user", userName );
-                        User otherUser = getUserDao().getUserNamed( userName );
+                        ChannelsUser otherUser = getUserDao().getUserNamed( userName );
                         item.add(
                             new BookmarkablePageLink<InfoNeedsPage>(
                                 "responder", InfoNeedsPage.class, parameters )
@@ -65,7 +65,7 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                         );
 
                         if ( item.getIndex() == getViewSize() - 1 )
-                            item.add( new AttributeAppender( "class", true,
+                            item.add( new AttributeAppender( "class",
                                                              new Model<String>( "last" ), " " ) );
                     }
                 }
@@ -91,7 +91,7 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                         ).setOutputMarkupId( true );
 
                         if ( item.getIndex() == getViewSize() - 1 )
-                            item.add( new AttributeAppender( "class", true,
+                            item.add( new AttributeAppender( "class",
                                                              new Model<String>( "last" ), " " ) );
 
                     }

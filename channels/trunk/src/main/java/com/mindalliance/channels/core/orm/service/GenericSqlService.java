@@ -1,7 +1,6 @@
 package com.mindalliance.channels.core.orm.service;
 
 import org.hibernate.search.FullTextQuery;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -43,7 +42,6 @@ public interface GenericSqlService<T, ID extends Serializable> {
      *
      * @param object the object
      */
-    @Transactional( readOnly = true )
     void refresh( T object );
 }
 

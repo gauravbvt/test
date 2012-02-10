@@ -46,6 +46,7 @@ CONFIGURATION NOTES:
         <property name="packagesToScan">
             <list>
                 <value>com.mindalliance.channels.social.model</value>
+                <value>com.mindalliance.channels.core.dao.user</value>
             </list>
         </property>
     </bean>

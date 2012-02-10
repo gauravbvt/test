@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -29,7 +29,7 @@ public class ConfigPage extends WebPage {
     private Config config;
 
     @SpringBean
-    private User user;
+    private ChannelsUser user;
 
     public ConfigPage() {
         try {

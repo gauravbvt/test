@@ -7,7 +7,6 @@
 package com.mindalliance.channels.pages.components.segment.menus;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
@@ -138,7 +137,7 @@ public class FlowShowMenuPanel extends MenuPanel {
             }
 
 
-            if ( getCommander().isTimedOut( User.current().getUsername() ) )
+            if ( getCommander().isTimedOut( getUser().getUsername() ) )
                 menuItems.add( timeOutLabel( "menuItem" ) );
             else if ( !( isLockedByUser( getFlow() ) || getLockOwner( flow ) == null ) )
                 menuItems.add( editedByLabel( "menuItem", flow, getLockOwner( flow ) ) );

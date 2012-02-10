@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -195,7 +194,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
             if ( name != null && !name.trim().isEmpty() ) {
                 Phase phase = getQueryService().findOrCreate( Phase.class, name.trim() );
                 if ( !plan.getPhases().contains( phase ) ) {
-                    doCommand( new UpdatePlanObject( User.current().getUsername(), plan,
+                    doCommand( new UpdatePlanObject( getUser().getUsername(), plan,
                             "phases",
                             phase,
                             UpdateObject.Action.Add ) );
@@ -208,7 +207,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
                     && getQueryService().countReferences( phase ) <= 1 ) {
                 // Possible but unlikely race condition if another command executed here
                 // that alters the results of the above test.
-                doCommand( new UpdatePlanObject( User.current().getUsername(), getPlan(),
+                doCommand( new UpdatePlanObject( getUser().getUsername(), getPlan(),
                         "phases",
                         phase,
                         UpdateObject.Action.RemoveExceptLast ) );

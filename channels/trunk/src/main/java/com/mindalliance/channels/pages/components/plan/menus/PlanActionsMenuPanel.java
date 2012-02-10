@@ -8,7 +8,6 @@ import com.mindalliance.channels.core.command.commands.AddUserIssue;
 import com.mindalliance.channels.core.command.commands.DisconnectAndRemoveSegment;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.command.commands.PastePart;
-import com.mindalliance.channels.core.dao.User;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
@@ -50,7 +49,7 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
             // Move parts across segments
             if ( getPlan().isDevelopment()
                     && getPlan().getSegmentCount() > 1
-                    && getLockManager().isLockableByUser( User.current().getUsername(), getSegment() ) )
+                    && getLockManager().isLockableByUser( getUser().getUsername(), getSegment() ) )
                 menuItems.add(
                         new LinkMenuItem(
                                 "menuItem",
@@ -68,11 +67,11 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
             menuItems.add(
                     new LinkMenuItem(
                             "menuItem",
-                            new Model<String>( "Sign out " + User.current().getUsername() ),
+                            new Model<String>( "Sign out " + getUser().getUsername() ),
                             new ConfirmedAjaxFallbackLink( "link", "Sign out?" ) {
                                 @Override
                                 public void onClick( AjaxRequestTarget target ) {
-                                    getCommander().userLeftPlan( User.current().getUsername() );
+                                    getCommander().userLeftPlan( getUser().getUsername() );
                                     getRequestCycle().
                                             scheduleRequestHandlerAfterCurrent( new RedirectRequestHandler( "logout" ) );
                                 }
@@ -86,16 +85,16 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
     protected List<CommandWrapper> getCommandWrappers() {
         final Segment segment = getSegment();
 
-        String userName = User.current().getUsername();
+        String userName = getUser().getUsername();
         List<CommandWrapper> menuItems = new ArrayList<CommandWrapper>();
         menuItems.addAll( Arrays.asList(
-                newWrapper( new PastePart( User.current().getUsername(), segment ) ),
+                newWrapper( new PastePart( getUser().getUsername(), segment ) ),
                 newWrapper( new PasteAttachment( userName, segment ) ),
                 newWrapper( new AddPart( userName, segment ) ),
                 newWrapper( new AddUserIssue( userName, segment ) ),
                 newWrapper( new AddSegment( userName ) ) ) );
-        if ( getLockManager().isLockableByUser( User.current().getUsername(), segment ) ) {
-            menuItems.add( new CommandWrapper( new DisconnectAndRemoveSegment( User.current().getUsername(), segment ), CONFIRM ) {
+        if ( getLockManager().isLockableByUser( getUser().getUsername(), segment ) ) {
+            menuItems.add( new CommandWrapper( new DisconnectAndRemoveSegment( getUser().getUsername(), segment ), CONFIRM ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );

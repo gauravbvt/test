@@ -1,7 +1,7 @@
 package com.mindalliance.channels.engine.imaging;
 
 import com.mindalliance.channels.core.AttachmentManager;
-import com.mindalliance.channels.core.dao.User;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -239,7 +239,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         try {
             File squareIconFile = getIconFile( modelObject, "_squared.png" );
             if ( squareIconFile.exists() ) {
-                String prefix = getIconFilePrefix( User.plan() );
+                String prefix = getIconFilePrefix( ChannelsUser.plan() );
 
                 String absolutePath = squareIconFile.getAbsolutePath();
                 String relPath = absolutePath.substring( prefix.length() );
@@ -380,7 +380,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     private String getIconsAbsolutePathFor( ModelObject modelObject ) throws IOException {
-        File subDir = new File( getBaseIconDirectory(), getFlattenedPlanUri( User.plan() ) );
+        File subDir = new File( getBaseIconDirectory(), getFlattenedPlanUri( ChannelsUser.plan() ) );
         if ( subDir.mkdir() )
             LOG.info( "Created {}", subDir );
 
@@ -461,7 +461,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
             return actorIcon;
 
         String roleIcon = findSpecificIcon( plan, part.getRole(), assignments.getRoles() );
-        return roleIcon == null ? findSpecificOrgIcon( User.plan(), part.getOrganization(),
+        return roleIcon == null ? findSpecificOrgIcon( ChannelsUser.plan(), part.getOrganization(),
                 assignments.getOrganizations() )
                 : roleIcon;
     }

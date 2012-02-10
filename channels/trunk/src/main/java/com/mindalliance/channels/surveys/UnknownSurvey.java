@@ -1,9 +1,10 @@
 package com.mindalliance.channels.surveys;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,12 @@ public class UnknownSurvey extends Survey {
     private UnknownSurvey() {
         setId( UNKNOWN_ID );
     }
+
+    private UnknownSurvey( ChannelsUser user ) {
+        super( user );
+        setId( UNKNOWN_ID );
+    }
+
 
     public static UnknownSurvey getInstance() {
         if ( INSTANCE == null )

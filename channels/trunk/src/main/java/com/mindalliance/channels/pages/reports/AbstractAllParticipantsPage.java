@@ -11,8 +11,8 @@ import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.commands.CreateEntityIfNew;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.User;
-import com.mindalliance.channels.core.dao.UserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Participation;
@@ -51,7 +51,7 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
     protected static final String VERSION = "v";
 
     @SpringBean
-    protected User user;
+    protected ChannelsUser user;
 
     @SpringBean
     private PlanManager planManager;
@@ -63,7 +63,7 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
     private CommanderFactory commanderFactory;
 
     @SpringBean
-    private UserDao userDao;
+    private ChannelsUserDao userDao;
 
     private String uri;
 
@@ -73,7 +73,7 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
 
     private List<Actor> actors;
 
-    private List<User> unassigned;
+    private List<ChannelsUser> unassigned;
 
  /*   public AbstractAllParticipantsPage( Class<? extends AbstractParticipantPage> clazz ) {
 
@@ -110,7 +110,7 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
         }
     }
 
-    protected User getUser() {
+    protected ChannelsUser getUser() {
         return user;
     }
 
@@ -130,7 +130,7 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
         return actors;
     }
 
-    protected List<User> getUnassigned() {
+    protected List<ChannelsUser> getUnassigned() {
         return unassigned;
     }
 
@@ -138,7 +138,7 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
         return planManager;
     }
 
-    protected UserDao getUserDao() {
+    protected ChannelsUserDao getUserDao() {
         return userDao;
     }
 
@@ -174,19 +174,19 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
         return user.getPlan();
     }
 
-    protected List<User> findUnassignedUsers( QueryService service ) {
+    protected List<ChannelsUser> findUnassignedUsers( QueryService service ) {
         String uri = service.getPlan().getUri();
-        Collection<User> inputCollection = service.getUserDao().getUsers( uri );
-        List<User> answer = new ArrayList<User>( inputCollection.size() );
-        for ( User u : inputCollection ) {
+        Collection<ChannelsUser> inputCollection = service.getUserDao().getUsers( uri );
+        List<ChannelsUser> answer = new ArrayList<ChannelsUser>( inputCollection.size() );
+        for ( ChannelsUser u : inputCollection ) {
             Participation participation = service.findParticipation( u.getUsername() );
             if ( participation == null || participation.getActor() == null )
                 answer.add( u );
         }
 
-        Collections.sort( answer, new Comparator<User>() {
+        Collections.sort( answer, new Comparator<ChannelsUser>() {
             @Override
-            public int compare( User o1, User o2 ) {
+            public int compare( ChannelsUser o1, ChannelsUser o2 ) {
                 return o1.getFullName().compareTo( o2.getFullName() );
             }
         } );
@@ -227,7 +227,7 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
      * @return filtered list
      */
     protected static List<Participation> validate(
-            UserDao userDao, Collection<Participation> participations ) {
+            ChannelsUserDao userDao, Collection<Participation> participations ) {
 
         List<Participation> answer = new ArrayList<Participation>( participations.size() );
         for ( Participation item : participations ) {
@@ -252,12 +252,12 @@ public abstract class AbstractAllParticipantsPage extends WebPage {
         return commanderFactory.getCommander( plan );
     }
 
-    protected static Participation findParticipation( Commander cmdr, String username ) {
+    protected static Participation findParticipation( Commander cmdr, String username, ChannelsUser currentUser ) {
         QueryService planService = cmdr.getQueryService();
         Participation participation = planService.findParticipation( username );
         if ( participation == null ) {
             Participation newPart = (Participation) cmdr
-                    .doUnsafeCommand( new CreateEntityIfNew( User.current().getUsername(),
+                    .doUnsafeCommand( new CreateEntityIfNew( currentUser.getUsername(),
                                                              Participation.class, username, ModelEntity.Kind.Actual ) )
                     .getSubject( planService );
 
