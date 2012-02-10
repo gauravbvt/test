@@ -52,9 +52,7 @@ public class EditPlay extends MobilePage {
         setDefaultModel( new CompoundPropertyModel<Play>( play ) );
 
         add(
-            new Label(
-                "hTitle", new PropertyModel<Object>(
-                play, "title" ) ),
+            new Label( "hTitle", new PropertyModel<Object>( play, "title" ) ),
             new BookmarkablePageLink<PlaysPage>( "back", PlaysPage.class ),
             new StatelessForm( "form" ) {
                 @Override
@@ -87,10 +85,7 @@ public class EditPlay extends MobilePage {
                     @Override
                     public void onClick() {
                         playDao.delete( play );
-
-                        // TODO find the proper way of doing this
-                        WebResponse response = (WebResponse) getResponse();
-                        response.sendRedirect( "../plays.html" );
+                        setResponsePage( PlaysPage.class );
                     }
                 }, 
                 

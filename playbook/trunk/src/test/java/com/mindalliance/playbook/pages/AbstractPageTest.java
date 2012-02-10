@@ -2,9 +2,11 @@ package com.mindalliance.playbook.pages;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,11 +33,22 @@ public abstract class AbstractPageTest {
     protected abstract Class<? extends WebPage> getTestedClass();
 
     protected abstract void init( ApplicationContextMock context );
+    
+    protected PageParameters getParameters() {
+        return null;
+    }
 
     @Test
     public void render() {
         Class<? extends WebPage> pageClass = getTestedClass();
-        tester.startPage( pageClass );
+
+        PageParameters parameters = getParameters();
+        if ( parameters == null )
+            tester.startPage( pageClass );
+        else
+            tester.startPage( pageClass, parameters );
+        
+        Assert.assertEquals( 200, tester.getLastResponse().getStatus() );
         tester.assertRenderedPage( pageClass );
     }
 }

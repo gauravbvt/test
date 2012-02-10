@@ -142,6 +142,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <constructor-arg ref="accountDao"/> 
     </bean>
 
+    <sec:http pattern="/favicon.ico" security="none"/>
     <sec:http pattern="/css/**" security="none"/>
     <sec:http pattern="/images/**" security="none"/>
     <sec:http pattern="/scripts/**" security="none"/>

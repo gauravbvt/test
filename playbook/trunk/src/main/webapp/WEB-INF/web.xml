@@ -50,6 +50,11 @@
 		<param-value>classpath:/spring-web.xml</param-value>
 	</context-param>
 
+    <context-param>
+        <param-name>configuration</param-name>
+        <param-value>deployment</param-value>
+    </context-param>
+
     <listener>
         <description>spring context loader listener</description>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -60,5 +65,10 @@
     <listener>
         <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
     </listener>
+
+    <mime-mapping>
+        <extension>ico</extension>
+        <mime-type>image/x-icon</mime-type>
+    </mime-mapping>
  
 </web-app>

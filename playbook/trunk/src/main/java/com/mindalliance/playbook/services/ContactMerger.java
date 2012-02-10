@@ -36,5 +36,6 @@ public interface ContactMerger {
      * @param inputStream  the stream
      * @throws IOException on errors
      */
+    @Transactional
     void importVCards( InputStream inputStream ) throws IOException;
 }
