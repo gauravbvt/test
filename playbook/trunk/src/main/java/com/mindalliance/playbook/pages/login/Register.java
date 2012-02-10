@@ -13,8 +13,8 @@ import com.octo.captcha.service.CaptchaServiceException;
 import com.octo.captcha.service.image.ImageCaptchaService;
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.wicket.Session;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RequiredTextField;
-import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -39,6 +39,7 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  * The registration page.
@@ -53,6 +54,11 @@ public class Register extends MobilePage {
     private String email = "";
 
     private String captcha = "";
+    
+    // TODO externalize this list
+    private static final String[] RESTRICTIONS = {
+        ".*@mind-alliance\\.com"
+    };
 
     @SpringBean
     private AccountDao accountDao;
@@ -71,78 +77,19 @@ public class Register extends MobilePage {
     @SuppressWarnings( "unchecked" )
     public Register( PageParameters parameters ) {
         super( parameters );
-        setStatelessHint( true );
         setDefaultModel( new CompoundPropertyModel<Register>( this ) );
 
         LOG.debug( "Creating page for session {}", getSession().getId() );
 
         add(
             new FeedbackPanel( "error" ),
-            new RegistrationForm().add(
-                new RequiredTextField<String>( "email" ).add( 
-                    (IValidator<String>) EmailAddressValidator.getInstance(),
-                    new AbstractValidator<String>() {
-                        @Override
-                        protected void onValidate( IValidatable<String> validatable ) {
-                            Account account = accountDao.findByEmail( validatable.getValue() );
-                            if ( account != null ) {
-                                ValidationError error = new ValidationError();
-                                error.setMessage( "Email address already registered." );
-                                validatable.error( error );
-                            }
-                        }
-                    } ),
-                new RequiredTextField( "captcha" ).add(
-                    new AbstractValidator<String>() {
-                        @Override
-                        protected void onValidate( IValidatable<String> validatable ) {
-                            Session session = getSession();
-                            LOG.debug( "Validating for session {}", session.getId() );
-                            try {
-
-                                if ( !captchaService.validateResponseForID( session.getId(),
-                                                                            validatable.getValue() ) ) {
-                                    ValidationError error = new ValidationError();
-                                    error.setMessage( "Incorrect key. Reload page and try again." );
-                                    validatable.error( error );
-                                    session.invalidate();
-                                }
-                            } catch ( CaptchaServiceException e ) {
-                                LOG.warn( "Captcha exception", e );
-                                ValidationError error = new ValidationError();
-                                error.setMessage( "Incorrect key. Reload page and try again." );
-                                validatable.error( error );
-                                session.invalidate();
-                            }
-                        }
-                    } )
-
-            ) );
+            new RegistrationForm()
+        );
     }
 
     @Override
     public String getPageTitle() {
         return "Playbook - Registration";
-    }
-
-    private void createAccount( String email ) throws MessagingException, IOException {
-        Date date = new Date();
-        String key = getKey( email, date );
-
-        Account account = new Account( email, date );
-        account.setConfirmation( key );
-        accountDao.save( account );
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper( message );
-
-        helper.setFrom( from );
-        helper.setTo( email );
-        helper.setSubject( "Playbook registration" );
-        helper.setText( getContent( serverUrl, "registration.html", key ), true );
-
-        mailSender.send( message );
-        LOG.info( "Sent activation message to {}", email );
     }
 
     static String getKey( String email, Date date ) {
@@ -207,12 +154,75 @@ public class Register extends MobilePage {
     }
 
     //================================================
-    private class RegistrationForm extends StatelessForm {
+    private class RegistrationForm extends Form {
 
         private static final long serialVersionUID = 8440840123115080779L;
 
         private RegistrationForm() {
             super( "form" );
+
+            add(
+                new RequiredTextField<String>( "email" ).add(
+                    (IValidator<String>) EmailAddressValidator.getInstance(), new AbstractValidator<String>() {
+                        @Override
+                        protected void onValidate( IValidatable<String> validatable ) {
+                            Account account = accountDao.findByEmail( validatable.getValue() );
+                            if ( account != null ) {
+                                ValidationError error = new ValidationError();
+                                error.setMessage( "Email address already registered." );
+                                validatable.error( error );
+                            }
+                        }
+                    }, new AbstractValidator<String>() {
+                    @Override
+                    protected void onValidate( IValidatable<String> validatable ) {
+                        String newEmail = validatable.getValue();
+                        for ( String restriction : RESTRICTIONS )
+                            if ( Pattern.matches( restriction, newEmail ) )
+                                return;
+
+                        ValidationError error = new ValidationError();
+                        error.setMessage(
+                            "This server is restricted to certain email addresses." + " This is not one of them..." );
+                        validatable.getModel().setObject( null );
+                        validatable.error( error );
+                    }
+                }
+                ),
+
+                new RequiredTextField( "captcha" ).add(
+                    new AbstractValidator<String>() {
+                        @Override
+                        protected void onValidate( IValidatable<String> validatable ) {
+                            Session session = getSession();
+                            LOG.debug( "Validating for session {}", session.getId() );
+                            try {
+    
+                                if ( !captchaService.validateResponseForID(
+                                    session.getId(), validatable.getValue() ) )
+                                {
+                                    ValidationError error = new ValidationError();
+                                    error.setMessage( "Incorrect key. Try again." );
+                                    validatable.error( error );
+                                    session.invalidate();
+                                }
+                            } catch ( CaptchaServiceException e ) {
+                                LOG.warn( "Captcha exception", e );
+                                ValidationError error = new ValidationError();
+                                error.setMessage( "Incorrect key. Reload page and try again." );
+                                validatable.error( error );
+                                session.invalidate();
+                            }
+                        }
+                    } )
+
+            );
+        }
+
+        @Override
+        protected void onError() {
+            getPageParameters().remove( "captcha" );
+            super.onError();
         }
 
         @Override
@@ -234,6 +244,26 @@ public class Register extends MobilePage {
             PageParameters parms = new PageParameters();
             parms.set( "error", code );
             setResponsePage( Register.class, parms );
+        }
+
+        private void createAccount( String email ) throws MessagingException, IOException {
+            Date date = new Date();
+            String key = getKey( email, date );
+
+            Account account = new Account( email, date );
+            account.setConfirmation( key );
+            accountDao.save( account );
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper( message );
+
+            helper.setFrom( from );
+            helper.setTo( email );
+            helper.setSubject( "Playbook registration" );
+            helper.setText( getContent( serverUrl, "registration.html", key ), true );
+
+            mailSender.send( message );
+            LOG.info( "Sent activation message to {}", email );
         }
     }
 }
