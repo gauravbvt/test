@@ -203,6 +203,7 @@ public class MAC0006_UndoCutTask {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to undo cut task"+ReportFunctions.getScreenShot("Undo undo cut task failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -216,6 +217,7 @@ public class MAC0006_UndoCutTask {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo cut task"+ReportFunctions.getScreenShot("Undo undo cut task failed"));
 		}
 	}
 }

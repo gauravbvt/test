@@ -62,7 +62,7 @@ public class MAC0002_UndoRemoveThisSegment {
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 					for (int i = 0; i <= 8; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Undo Remove This Segment"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Undo remove this segment failed"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -111,7 +111,7 @@ public class MAC0002_UndoRemoveThisSegment {
 				GlobalVariables.bIsSuccess = Boolean.FALSE;
 				for(WebElement option : options) {
 					GlobalVariables.sStrCheck = option.getText();
-					if(GlobalVariables.testData.get("Segment For Undo Remove This Segment").equals(option.getText())){
+					if(GlobalVariables.testData.get("Segment For Undo remove this segment failed").equals(option.getText())){
 						GlobalVariables.bIsSuccess = Boolean.TRUE;
 						break;
 					}
@@ -133,9 +133,9 @@ public class MAC0002_UndoRemoveThisSegment {
 				Thread.currentThread();
 				Thread.sleep(5000);
 				
-				// Click on 'Undo remove this segment' under 'Actions' pop up menu
+				// Click on 'Undo remove this segment failed' under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Undo remove this segment done";
+				GlobalVariables.sDescription = "Undo remove this segment failed done";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoRemoveThisSegment"));
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -146,7 +146,7 @@ public class MAC0002_UndoRemoveThisSegment {
 				GlobalVariables.bIsSuccess = Boolean.TRUE;
 				for(WebElement option : options){
 					GlobalVariables.sStrCheck=option.getText();
-					if("Segment For Undo Remove This Segment".equals(option.getText())){
+					if("Segment For Undo remove this segment failed".equals(option.getText())){
 						GlobalVariables.bIsSuccess = Boolean.FALSE;
 						option.setSelected();
 						// WebElement Synchronization
@@ -210,6 +210,7 @@ public class MAC0002_UndoRemoveThisSegment {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
 				ApplicationFunctionLibrary.logout();	
+				System.out.println("Unable to Undo remove this segment failed"+ReportFunctions.getScreenShot("Undo remove this segment failed"));
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 		}
@@ -225,6 +226,7 @@ public class MAC0002_UndoRemoveThisSegment {
 			catch (Exception oException) {
 				// TODO Auto-generated catch block
 				oException.printStackTrace();
+				System.out.println("Unable to Undo remove this segment failed"+ReportFunctions.getScreenShot("Undo remove this segment failed"));
 			}
 		}
 }

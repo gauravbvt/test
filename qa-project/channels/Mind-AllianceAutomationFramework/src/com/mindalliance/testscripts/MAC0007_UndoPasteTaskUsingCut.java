@@ -298,6 +298,7 @@ public class MAC0007_UndoPasteTaskUsingCut {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to undo paste task using cut"+ReportFunctions.getScreenShot("Undo paste task using cut failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -311,6 +312,7 @@ public class MAC0007_UndoPasteTaskUsingCut {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo paste task using cut"+ReportFunctions.getScreenShot("Undo paste task using cut failed"));
 		}
 	}
 }

@@ -209,6 +209,7 @@ public class MAC0005_UndoAddNewTask {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to undo add new task"+ReportFunctions.getScreenShot("Undo add new task failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -222,6 +223,7 @@ public class MAC0005_UndoAddNewTask {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo add new task"+ReportFunctions.getScreenShot("Undo add new task failed"));
 		}
 	}
 }

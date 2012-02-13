@@ -152,6 +152,7 @@ public class MAC0001_UndoAddSegment {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
 				ApplicationFunctionLibrary.logout();	
+				System.out.println("Unable to undo add new segment"+ReportFunctions.getScreenShot("Undo add new segment failedr"));
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 		}
@@ -167,6 +168,7 @@ public class MAC0001_UndoAddSegment {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo add new segment"+ReportFunctions.getScreenShot("Undo add new segment failedr"));
 		}
 	}
 }

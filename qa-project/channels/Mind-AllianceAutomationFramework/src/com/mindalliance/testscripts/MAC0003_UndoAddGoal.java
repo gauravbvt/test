@@ -212,6 +212,7 @@ public class MAC0003_UndoAddGoal {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to undo add goal"+ReportFunctions.getScreenShot("undo add goal failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -225,6 +226,7 @@ public class MAC0003_UndoAddGoal {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo add goal"+ReportFunctions.getScreenShot("undo add goal failed"));
 		}
 	}
 }

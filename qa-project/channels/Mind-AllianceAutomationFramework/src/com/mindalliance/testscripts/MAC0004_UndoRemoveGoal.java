@@ -227,8 +227,10 @@ public class MAC0004_UndoRemoveGoal {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
 				ApplicationFunctionLibrary.logout();	
+				System.out.println("Unable to undo remove goal"+ReportFunctions.getScreenShot("Undo remove goal failed"));
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to undo remove goal"+ReportFunctions.getScreenShot("Undo remove goal failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -242,6 +244,7 @@ public class MAC0004_UndoRemoveGoal {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo remove goal"+ReportFunctions.getScreenShot("Undo remove goal failed"));
 		}
 	}
 }

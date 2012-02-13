@@ -299,6 +299,7 @@ public class MAC0011_UndoDisintermediateTask {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to undo disintermediate task"+ReportFunctions.getScreenShot("Undo disintermediate task failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -312,6 +313,7 @@ public class MAC0011_UndoDisintermediateTask {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo disintermediate task"+ReportFunctions.getScreenShot("Undo disintermediate task failed"));
 		}
 	}
 }
