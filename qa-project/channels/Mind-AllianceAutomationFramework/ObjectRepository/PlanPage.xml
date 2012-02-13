@@ -25,7 +25,7 @@
 <xPathAllSegmentShowMenu>//div[4]/div/span/div/div/div/span/span/span/span</xPathAllSegmentShowMenu>
 <xPathTaskMoverDetail>//div[5]/div/span/div/div[2]/h3/span</xPathTaskMoverDetail>
 <xPathDeleteOrgs>//div[4]/div/span/div/div[2]/div/div[2]/span/a/span</xPathDeleteOrgs>
-<xPathDefaultTask>//div[@class='section-title']/span[2]/a</xPathDefaultTask>
+<xPathDefaultTask>//span/div/div[3]/div[@class='part-header']/div[@class='section-content']/table/tbody/tr/td[@class='pointer']/span[@class='summary minor']/span</xPathDefaultTask>
 <xPathTaskShowMenu>//div[@class='section-title']/span[@class='menubar']/span/span/span</xPathTaskShowMenu>
 <xPathTaskActionsMenu>//div[@class='section-title']/span[@class='menubar']/span[2]/span/span</xPathTaskActionsMenu>
 <xPathAddInfoReceive>//div[@class='receives']/div/a/span</xPathAddInfoReceive>
