@@ -235,7 +235,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
             }
 
             for ( Participation participation : list )
-                if ( actor.equals( participation.getActor() ) )
+                if ( actor != null && actor.equals( participation.getActor() ) )
                     return participation;
 
             return null;

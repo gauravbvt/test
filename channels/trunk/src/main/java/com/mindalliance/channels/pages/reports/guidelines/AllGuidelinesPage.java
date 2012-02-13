@@ -86,7 +86,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                                                 e );
                                         }
                                         getPage().detachModels();
-                                        setResponsePage( GuidelinesPage.class, getPage().getPageParameters() );
+                                        setResponsePage( AllGuidelinesPage.class, getPage().getPageParameters() );
                                     }
                                 } )
                                 .setOutputMarkupId( true ),
@@ -129,7 +129,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                                                     LoggerFactory.getLogger( getClass() ).warn( "Unable to get plan lock", e );
                                                 }
                                                 getPage().detachModels();
-                                                setResponsePage( GuidelinesPage.class,
+                                                setResponsePage( AllGuidelinesPage.class,
                                                                  getPage().getPageParameters() );
                                             }
                                         }.add( new Label( "userLink", u.getFullName() ) ) );
