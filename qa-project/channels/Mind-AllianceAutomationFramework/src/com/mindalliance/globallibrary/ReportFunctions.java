@@ -8,8 +8,13 @@ import java.io.OutputStream;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.commons.io.FileUtils;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
+import org.junit.Assert;
+import org.openqa.selenium.OutputType;
+
 import com.csvreader.CsvReader;
 
 public class ReportFunctions {
@@ -954,5 +959,16 @@ public class ReportFunctions {
 			System.out.println("\nError Occured in generateAutomationReportForFunctionalTestCases() function.");
 			e.printStackTrace();
 		}
+	}
+	public static String getScreenShot(String fileName){
+		try{
+   	 		fileName=GlobalVariables.fCurrentDir.getCanonicalPath() + File.separator + "Reports_Snapshot" + File.separator+fileName + ".png";
+   	 		File scrFile = ((org.openqa.selenium.TakesScreenshot)GlobalVariables.oDriver).getScreenshotAs(OutputType.FILE);
+   	 		FileUtils.copyFile(scrFile, new File(fileName));
+		} catch(IOException io){
+			GlobalVariables.oDriver.quit();
+			Assert.fail("Unable to create file '"+fileName+".png'" +io.getMessage());
+		}
+   	 	return fileName;
 	}
 }
