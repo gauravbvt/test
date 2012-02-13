@@ -37,7 +37,7 @@ public class CA006_CreatePlanWithExistingOwner
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				// Create New Plan	
+				// Create New Plan
 				GlobalVariables.oDriver.findElement(By.name("newPlanUri")).clear();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("newPlanUri"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Test Plan"));
@@ -172,6 +172,7 @@ public class CA006_CreatePlanWithExistingOwner
 		} 
 		catch (Exception oException) {
 			oException.printStackTrace();
+			System.out.println("Unable to create plan with existing owner name"+ReportFunctions.getScreenShot("Plan with existing owner"));
 		}
 	}
 }
