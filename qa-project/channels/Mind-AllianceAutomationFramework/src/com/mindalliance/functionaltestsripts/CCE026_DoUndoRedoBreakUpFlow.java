@@ -87,7 +87,8 @@ public class CCE026_DoUndoRedoBreakUpFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+//				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
@@ -133,8 +134,8 @@ public class CCE026_DoUndoRedoBreakUpFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -203,8 +204,8 @@ public class CCE026_DoUndoRedoBreakUpFlow
 				Thread.currentThread();
 				Thread.sleep(3000);
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-				alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
+//				alert = GlobalVariables.oDriver.switchTo().alert();
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

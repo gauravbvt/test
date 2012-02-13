@@ -109,11 +109,11 @@ public class TE009_RemoveAgentCategory
 				GlobalVariables.sDescription="Agent Category Removed";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteAgentCategory"))).click();
 				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				Thread.currentThread();
-				Thread.sleep(1000);
-				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				Thread.currentThread();
+//				Thread.sleep(1000);
+//				// And acknowledge the alert (equivalent to clicking "OK")
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

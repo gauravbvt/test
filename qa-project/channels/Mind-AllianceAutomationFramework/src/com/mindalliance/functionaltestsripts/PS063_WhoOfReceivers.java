@@ -101,9 +101,9 @@ public class PS063_WhoOfReceivers
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				alert.accept();
+//				// Get a handle to the open alert, prompt or confirmation
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

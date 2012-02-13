@@ -125,9 +125,9 @@ public class TE038_AddLocaleCategory
 				Thread.sleep(2000);
 				// Remove Locale's Category
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteAgentCategory"))).click();
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// Click on 'OK" button of message box in order to confirm it
-				alert.accept();
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				// Click on 'OK" button of message box in order to confirm it
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

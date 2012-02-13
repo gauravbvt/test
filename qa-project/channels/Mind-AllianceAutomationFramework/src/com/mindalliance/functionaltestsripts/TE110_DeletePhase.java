@@ -66,9 +66,9 @@ public class TE110_DeletePhase
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase Deleted";
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
-					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-					// And acknowledge the alert (equivalent to clicking "OK")
-					alert.accept();
+//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//					// And acknowledge the alert (equivalent to clicking "OK")
+//					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

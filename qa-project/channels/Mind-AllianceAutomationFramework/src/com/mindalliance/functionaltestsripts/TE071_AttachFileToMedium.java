@@ -126,9 +126,9 @@ public class TE071_AttachFileToMedium
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				// And acknowledge the alert (equivalent to clicking "OK")
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
@@ -146,9 +146,9 @@ public class TE071_AttachFileToMedium
 				Thread.sleep(3000);		
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
-				alert = GlobalVariables.oDriver.switchTo().alert();
-				// Click on 'OK" button of message box in order to confirm it
-				alert.accept();
+//				alert = GlobalVariables.oDriver.switchTo().alert();
+//				// Click on 'OK" button of message box in order to confirm it
+//				alert.accept();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

@@ -123,12 +123,12 @@ public class TE007_AddAgentCategory
 				Thread.sleep(2000);
 				//Delete Agent Category
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteAgentCategory"))).click();
-				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
+//				// Get a handle to the open alert, prompt or confirmation
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				Thread.currentThread();
+//				Thread.sleep(2000);
+//				// And acknowledge the alert (equivalent to clicking "OK")
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

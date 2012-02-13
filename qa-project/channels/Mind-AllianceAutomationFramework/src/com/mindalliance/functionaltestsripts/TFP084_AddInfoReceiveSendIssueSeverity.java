@@ -58,7 +58,8 @@ public class TFP084_AddInfoReceiveSendIssueSeverity
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
-				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+//				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -100,7 +101,8 @@ public class TFP084_AddInfoReceiveSendIssueSeverity
 				// Click 'Add info received' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Received' Link Clicked";
-				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+//				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -143,10 +145,10 @@ public class TFP084_AddInfoReceiveSendIssueSeverity
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Get a handle to the open alert, prompt or confirmation
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
+//				// Get a handle to the open alert, prompt or confirmation
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				// And acknowledge the alert (equivalent to clicking "OK")
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

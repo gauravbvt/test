@@ -37,7 +37,8 @@ public class TFP003_AddInfoReceive
 				// Click on add info receive link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add info receive Clicked";
-				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+//				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -64,9 +65,9 @@ public class TFP003_AddInfoReceive
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),"Remove info need");
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// Click on 'OK" button of message box in order to confirm it
-				alert.accept();
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				// Click on 'OK" button of message box in order to confirm it
+//				alert.accept();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

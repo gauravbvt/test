@@ -115,9 +115,9 @@ public class TE072_DeleteMediumAttachment
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				// And acknowledge the alert (equivalent to clicking "OK")
+//				alert.accept();
 				// Assertion: verify that file is deleted
 				try {
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathMediumDeleteAttachmentAssertion")));
@@ -149,9 +149,9 @@ public class TE072_DeleteMediumAttachment
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
-				alert = GlobalVariables.oDriver.switchTo().alert();
-				// Click on 'OK" button of message box in order to confirm it
-				alert.accept();
+//				alert = GlobalVariables.oDriver.switchTo().alert();
+//				// Click on 'OK" button of message box in order to confirm it
+//				alert.accept();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

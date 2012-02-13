@@ -83,17 +83,17 @@ public class CA001_HomePage
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 			}
 		}
-		public static void main(String args[]) {
-			try {
-				GenericFunctionLibrary.initializeTestData();
-				GenericFunctionLibrary.loadObjectRepository();
-				new CA001_HomePage();
-				GenericFunctionLibrary.tearDownTestData();
-				ReportFunctions.generateAutomationReport();
-			} 
-			catch (Exception oException) {
-				// TODO Auto-generated catch block
-				oException.printStackTrace();
-			}
+	public static void main(String args[]) {
+		try {
+			GenericFunctionLibrary.initializeTestData();
+			GenericFunctionLibrary.loadObjectRepository();
+			new CA001_HomePage();
+			GenericFunctionLibrary.tearDownTestData();
+			ReportFunctions.generateAutomationReport();
+		} 
+		catch (Exception oException) {
+			// TODO Auto-generated catch block
+			oException.printStackTrace();
 		}
+	}
 }

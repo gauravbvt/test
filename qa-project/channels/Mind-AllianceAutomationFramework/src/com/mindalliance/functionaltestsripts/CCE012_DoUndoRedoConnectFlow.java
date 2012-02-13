@@ -104,7 +104,8 @@ public class CCE012_DoUndoRedoConnectFlow
 					// Add info sends flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Send Flow added";
-					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+//					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -240,11 +241,11 @@ public class CCE012_DoUndoRedoConnectFlow
 					Thread.currentThread();
 					Thread.sleep(3000);
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					alert.accept();
+//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//					// WebElement Synchronization
+//					Thread.currentThread();
+//					Thread.sleep(1000);
+//					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

@@ -109,7 +109,8 @@ public class CCE010_DoUndoRedoDisintermediateTask
 					// Add info sent flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Sent Flow added";
-					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+//					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -299,9 +300,9 @@ public class CCE010_DoUndoRedoDisintermediateTask
 					GlobalVariables.oDriver.navigate().refresh();
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
-					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-					// And acknowledge the alert (equivalent to clicking "OK")
-					alert.accept();
+//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//					// And acknowledge the alert (equivalent to clicking "OK")
+//					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

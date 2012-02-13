@@ -132,9 +132,9 @@ public class TE075_TransmissionMediumURLAttachment
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				// And acknowledge the alert (equivalent to clicking "OK")
+//				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);				
@@ -152,9 +152,9 @@ public class TE075_TransmissionMediumURLAttachment
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
-				alert = GlobalVariables.oDriver.switchTo().alert();
-				// Click on 'OK" button of message box in order to confirm it
-				alert.accept();
+//				alert = GlobalVariables.oDriver.switchTo().alert();
+//				// Click on 'OK" button of message box in order to confirm it
+//				alert.accept();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

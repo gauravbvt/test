@@ -37,7 +37,8 @@ public class TFP004_AddInfoSend
 				// Click on add info send link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add info send Clicked";
-				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+//				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -61,9 +62,9 @@ public class TFP004_AddInfoSend
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// Click on 'OK" button of message box in order to confirm it
-				alert.accept();
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				// Click on 'OK" button of message box in order to confirm it
+//				alert.accept();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
