@@ -7,10 +7,14 @@
 package com.mindalliance.playbook.model;
 
 import com.mindalliance.playbook.model.Medium.MediumType;
+import org.apache.solr.analysis.EdgeNGramTokenizerFactory;
 import org.hibernate.annotations.Index;
+import org.hibernate.search.annotations.AnalyzerDef;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.TokenizerDef;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.PropertyAccessor;
 
@@ -37,6 +41,7 @@ import java.util.List;
  */
 @Entity
 @Indexed
+@AnalyzerDef( name = "fname", tokenizer = @TokenizerDef( factory = EdgeNGramTokenizerFactory.class ) )
 @org.hibernate.annotations.Table( 
     appliesTo = "Contact",
     indexes = { @Index( name = "byName", columnNames = { "ACCOUNT_ID", "FAMILYNAME", "GIVENNAME" } ) } )
@@ -194,7 +199,7 @@ public class Contact implements Serializable, Comparable<Contact> {
         this.id = id;
     }
 
-    @Field( boost = @Boost( 3.0F )  )
+    @Field( boost = @Boost( 3.0F ) )
     public String getFamilyName() {
         return familyName;
     }
@@ -282,6 +287,7 @@ public class Contact implements Serializable, Comparable<Contact> {
         this.photo = photo;
     }
 
+    @IndexedEmbedded
     public List<Medium> getMedia() {
         return media;
     }

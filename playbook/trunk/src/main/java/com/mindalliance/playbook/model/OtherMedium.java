@@ -1,5 +1,8 @@
 package com.mindalliance.playbook.model;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -7,6 +10,7 @@ import javax.persistence.Entity;
  * Generic medium.
  */
 @Entity
+@Indexed
 @DiscriminatorValue( "0" )
 public class OtherMedium extends Medium {
 
@@ -34,6 +38,7 @@ public class OtherMedium extends Medium {
         return MediumType.OTHER;
     }
 
+    @Field
     @Override
     public String getAddress() {
         return address;

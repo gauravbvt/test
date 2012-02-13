@@ -50,7 +50,7 @@ public class AccountDaoImpl extends GenericHibernateDao<Account,Long> implements
         if ( account == null )
             throw new UsernameNotFoundException( "No user by this name" );
 
-        return new AccountDetails( account );
+        return getDetails( account );
     }
 
     /**
@@ -76,6 +76,12 @@ public class AccountDaoImpl extends GenericHibernateDao<Account,Long> implements
     public Account getCurrentAccount() {
         return currentAccount( this );
     }
+
+    @Override
+    public UserDetails getDetails( Account account ) {
+        return new AccountDetails( account );    
+    }
+    
 
     /** 
      * Spring security wrapper.

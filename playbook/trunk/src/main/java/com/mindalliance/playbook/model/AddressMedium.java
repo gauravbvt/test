@@ -1,5 +1,9 @@
 package com.mindalliance.playbook.model;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -7,6 +11,7 @@ import javax.persistence.Entity;
  * A snail mail address.
  */
 @Entity
+@Indexed
 @DiscriminatorValue( "1" )
 public class AddressMedium extends Medium {
 
@@ -34,6 +39,7 @@ public class AddressMedium extends Medium {
         return MediumType.ADDRESS;
     }
 
+    @IndexedEmbedded
     @Override
     public Address getAddress() {
         return address;

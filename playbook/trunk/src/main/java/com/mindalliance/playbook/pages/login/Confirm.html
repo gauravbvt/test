@@ -7,36 +7,5 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <body>
-<wicket:extend>
-    <div data-role="header" data-position="fixed">
-        <img src="images/logo.png" align="left" alt="(logo)">
-
-        <h1>Playbook - Activation</h1>
-    </div>
-
-    <div data-role="content">
-        <p>You&rsquo;re almost there!</p>
-
-        <p class="error" wicket:id="feedback">feedback messages will be put here</p>
-
-        <p> Enter your new password below:</p>
-
-        <form wicket:id="form" method="post">
-            <div data-role="fieldcontain">
-                <label for="password">Password:</label>
-                <input wicket:id="password" autofocus="autofocus" autocomplete="off" id="password" name="password" type="password"/>
-            </div>
-
-            <div data-role="fieldcontain">
-                <label for="confirm">Confirm:</label>
-                <input wicket:id="confirm" autocomplete="off" id="confirm" name="confirm" type="password"/>
-            </div>
-
-            <p><em>Note:</em> You will need to login after pressing the button below.</p>
-
-            <input type="submit" value="Activate"/>
-        </form>
-    </div>
-</wicket:extend>
 </body>
 </html>

@@ -6,6 +6,8 @@ import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.Contact;
 import com.mindalliance.playbook.model.Receive;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Conjunction;
@@ -31,6 +33,8 @@ public class ContactDaoImpl extends IndexedHibernateDao<Contact, Long> implement
     @Autowired
     private AccountDao accountDao;
 
+    private final Analyzer analyzer = new StandardAnalyzer( LUCENE_VERSION );
+
     @SuppressWarnings( "unchecked" )
     @Override
     public List<Contact> findByEmail( Object email ) {
@@ -41,6 +45,11 @@ public class ContactDaoImpl extends IndexedHibernateDao<Contact, Long> implement
         query.setParameter( "account", accountDao.getCurrentAccount() );
         query.setMaxResults( getMaxResults() );
         return (List<Contact>) query.list();
+    }
+
+    @Override
+    protected Analyzer getAnalyzer() {
+        return analyzer;
     }
 
     @SuppressWarnings( "unchecked" )

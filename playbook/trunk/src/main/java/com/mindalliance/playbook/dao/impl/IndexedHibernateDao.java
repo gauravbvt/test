@@ -1,7 +1,7 @@
 package com.mindalliance.playbook.dao.impl;
 
 import com.mindalliance.playbook.dao.IndexedDao;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.MatchAllDocsQuery;
@@ -18,9 +18,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.InitializingBean;
 
+import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,17 +34,21 @@ public abstract class IndexedHibernateDao<T, ID extends Serializable> extends Ge
 
     private static final Logger LOG = LoggerFactory.getLogger( IndexedHibernateDao.class );
 
-    private static final Version LUCENE_VERSION = Version.LUCENE_35;
+    protected static final Version LUCENE_VERSION = Version.LUCENE_35;
 
     /**
      * Indexed search fields annotated with @Field.
      */
     private String[] fields;
 
-    private final StandardAnalyzer analyzer = new StandardAnalyzer( LUCENE_VERSION );
-
     private int maxResults = 20;
 
+    /**
+     * Specify how to parse and match string queries.
+     * @return an analyzer
+     */
+    protected abstract Analyzer getAnalyzer();
+    
     @Override
     public FullTextQuery makeQuery() {
         FullTextSession session = Search.getFullTextSession( getSession() );
@@ -85,8 +91,7 @@ public abstract class IndexedHibernateDao<T, ID extends Serializable> extends Ge
 
     
     protected Query parse( String search ) throws ParseException {
-        MultiFieldQueryParser parser = new MultiFieldQueryParser( LUCENE_VERSION, fields, analyzer );
-
+        MultiFieldQueryParser parser = new MultiFieldQueryParser( LUCENE_VERSION, fields, getAnalyzer() );
         return parser.parse( search );
     }
 
@@ -96,13 +101,23 @@ public abstract class IndexedHibernateDao<T, ID extends Serializable> extends Ge
         index( aClass );
 
         List<String> fieldNames = new ArrayList<String>();
-        for ( Method method : aClass.getMethods() )
-            if ( method.getAnnotation( Field.class ) != null )
-                fieldNames.add( BeanUtils.findPropertyForMethod( method ).getName() );
+        addFields( aClass, fieldNames, "" );
 
         fields = fieldNames.toArray( new String[fieldNames.size()] );
     }
-    
+
+    private void addFields( Class<?> aClass, Collection<String> fieldNames, String prefix ) {
+        for ( Method method : aClass.getMethods() ) {
+            PropertyDescriptor propertyForMethod = BeanUtils.findPropertyForMethod( method );
+            if ( method.getAnnotation( Field.class ) != null ) {
+                fieldNames.add( prefix + propertyForMethod.getName() );
+            }
+            // TODO follow indexed embedded
+//            if ( method.getAnnotation( IndexedEmbedded.class ) != null )
+//                addFields( method.getReturnType(), fieldNames, prefix + propertyForMethod.getName() + "." );
+        }
+    }
+
     @SuppressWarnings( "unchecked" )
     @Override
     public List<T> find( String query ) {

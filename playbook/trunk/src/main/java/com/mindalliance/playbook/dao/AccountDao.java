@@ -7,6 +7,7 @@
 package com.mindalliance.playbook.dao;
 
 import com.mindalliance.playbook.model.Account;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -34,5 +35,11 @@ public interface AccountDao extends GenericDao<Account,Long> {
      * @return an account or null
      */
     Account getCurrentAccount();
-        
+
+    /**
+     * Return the user authentication details for an account.
+     * @param account the account
+     * @return the security information
+     */
+    UserDetails getDetails( Account account );
 }

@@ -9,11 +9,10 @@ package com.mindalliance.playbook.pages.login;
 import com.mindalliance.playbook.dao.AccountDao;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.pages.MobilePage;
-import com.octo.captcha.service.CaptchaServiceException;
 import com.octo.captcha.service.image.ImageCaptchaService;
 import org.apache.commons.codec.binary.Base64OutputStream;
-import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -25,10 +24,13 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.AbstractValidator;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
+import org.apache.wicket.validation.validator.StringValidator.MinimumLengthValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -50,11 +52,11 @@ public class Register extends MobilePage {
 
     @SpringBean( name = "serverUrl" )
     private String serverUrl;
-    
+
     private String email = "";
 
-    private String captcha = "";
-    
+    private String password;
+
     // TODO externalize this list
     private static final String[] RESTRICTIONS = {
         ".*@mind-alliance\\.com"
@@ -82,9 +84,7 @@ public class Register extends MobilePage {
         LOG.debug( "Creating page for session {}", getSession().getId() );
 
         add(
-            new FeedbackPanel( "error" ),
-            new RegistrationForm()
-        );
+            new FeedbackPanel( "error" ), new RegistrationForm() );
     }
 
     @Override
@@ -102,10 +102,8 @@ public class Register extends MobilePage {
             digest.update( Long.valueOf( date.getTime() ).toString().getBytes() );
 
             return encode( digest.digest() );
-            
         } catch ( NoSuchAlgorithmException e ) {
             LOG.error( "Missing SHA-1 digest", e );
-
         } catch ( IOException e ) {
             LOG.error( "Exception", e );
         }
@@ -120,7 +118,6 @@ public class Register extends MobilePage {
             out.write( digested, 0, digested.length );
             out.flush();
             return bytes.toString( "UTF8" );
-            
         } finally {
             out.close();
         }
@@ -130,8 +127,8 @@ public class Register extends MobilePage {
         InputStream stream = Register.class.getResourceAsStream( template );
         try {
             String text = Streams.readString( stream );
-            return text.replace( "%link%",
-                                 serverUrl + "/confirm.html?key=" + URLEncoder.encode( key, "UTF8" ) );
+            return text.replace(
+                "%link%", serverUrl + "/confirm.html?key=" + URLEncoder.encode( key, "UTF8" ) );
         } finally {
             stream.close();
         }
@@ -145,12 +142,12 @@ public class Register extends MobilePage {
         this.email = email;
     }
 
-    public String getCaptcha() {
-        return captcha;
+    public String getPassword() {
+        return password;
     }
 
-    public void setCaptcha( String captcha ) {
-        this.captcha = captcha;
+    public void setPassword( String password ) {
+        this.password = password;
     }
 
     //================================================
@@ -160,6 +157,12 @@ public class Register extends MobilePage {
 
         private RegistrationForm() {
             super( "form" );
+
+            PasswordTextField pwField = new PasswordTextField( "password" );
+            pwField.setRequired( true );
+            pwField.add( new MinimumLengthValidator( 5 ) );
+            //            PasswordTextField cField = new PasswordTextField( "confirm" );
+            //            cField.setRequired( true );
 
             add(
                 new RequiredTextField<String>( "email" ).add(
@@ -173,70 +176,73 @@ public class Register extends MobilePage {
                                 validatable.error( error );
                             }
                         }
-                    }, new AbstractValidator<String>() {
-                    @Override
-                    protected void onValidate( IValidatable<String> validatable ) {
-                        String newEmail = validatable.getValue();
-                        for ( String restriction : RESTRICTIONS )
-                            if ( Pattern.matches( restriction, newEmail ) )
-                                return;
-
-                        ValidationError error = new ValidationError();
-                        error.setMessage(
-                            "This server is restricted to certain email addresses." + " This is not one of them..." );
-                        validatable.getModel().setObject( null );
-                        validatable.error( error );
-                    }
-                }
-                ),
-
-                new RequiredTextField( "captcha" ).add(
+                    }, 
                     new AbstractValidator<String>() {
                         @Override
                         protected void onValidate( IValidatable<String> validatable ) {
-                            Session session = getSession();
-                            LOG.debug( "Validating for session {}", session.getId() );
-                            try {
+                            String newEmail = validatable.getValue();
+                            for ( String restriction : RESTRICTIONS )
+                                if ( Pattern.matches( restriction, newEmail ) )
+                                    return;
     
-                                if ( !captchaService.validateResponseForID(
-                                    session.getId(), validatable.getValue() ) )
-                                {
-                                    ValidationError error = new ValidationError();
-                                    error.setMessage( "Incorrect key. Try again." );
-                                    validatable.error( error );
-                                    session.invalidate();
-                                }
-                            } catch ( CaptchaServiceException e ) {
-                                LOG.warn( "Captcha exception", e );
-                                ValidationError error = new ValidationError();
-                                error.setMessage( "Incorrect key. Reload page and try again." );
-                                validatable.error( error );
-                                session.invalidate();
-                            }
+                            ValidationError error = new ValidationError();
+                            error.setMessage(
+                                "This server is restricted to certain email addresses." + " This is not one of them..." );
+                            validatable.getModel().setObject( null );
+                            validatable.error( error );
                         }
-                    } )
+                    }
+                ),
+
+                //                cField,
+                pwField
+
+                //                new RequiredTextField( "captcha" ).add(
+                //                    new AbstractValidator<String>() {
+                //                        @Override
+                //                        protected void onValidate( IValidatable<String> validatable ) {
+                //                            Session session = getSession();
+                //                            LOG.debug( "Validating for session {}", session.getId() );
+                //                            try {
+                //    
+                //                                if ( !captchaService.validateResponseForID(
+                //                                    session.getId(), validatable.getValue() ) )
+                //                                {
+                //                                    ValidationError error = new ValidationError();
+                //                                    error.setMessage( "Incorrect key. Try again." );
+                //                                    validatable.error( error );
+                //                                    session.invalidate();
+                //                                }
+                //                            } catch ( CaptchaServiceException e ) {
+                //                                LOG.warn( "Captcha exception", e );
+                //                                ValidationError error = new ValidationError();
+                //                                error.setMessage( "Incorrect key. Reload page and try again." );
+                //                                validatable.error( error );
+                //                                session.invalidate();
+                //                            }
+                //                        }
+                //                    } )
 
             );
-        }
 
-        @Override
-        protected void onError() {
-            getPageParameters().remove( "captcha" );
-            super.onError();
+            //            add(
+            //                new EqualPasswordInputValidator(
+            //                    pwField,
+            //                    cField ) );
+
         }
 
         @Override
         public void onSubmit() {
             try {
                 createAccount( email );
+                setResponsePage( Thanks.class );
 
             } catch ( MessagingException e ) {
-                redirect( e, "Error creating mail message", "2" );
+                LOG.error( "Unable to send registration email", e );
             } catch ( IOException e ) {
-                redirect( e, "Error sending mail message", "3" );
+                LOG.error( "Unable to send registration email", e );
             }
-
-            setResponsePage( Thanks.class );
         }
 
         private void redirect( Exception e, String msg, String code ) {
@@ -252,6 +258,7 @@ public class Register extends MobilePage {
 
             Account account = new Account( email, date );
             account.setConfirmation( key );
+            account.setPassword( getHash( password ) );
             accountDao.save( account );
 
             MimeMessage message = mailSender.createMimeMessage();
@@ -264,6 +271,11 @@ public class Register extends MobilePage {
 
             mailSender.send( message );
             LOG.info( "Sent activation message to {}", email );
+        }
+
+        private String getHash( String password ) {
+            PasswordEncoder encoder = new MessageDigestPasswordEncoder( "sha", true );
+            return encoder.encodePassword( password, null );
         }
     }
 }
