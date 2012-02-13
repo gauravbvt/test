@@ -2,12 +2,14 @@ package com.mindalliance.testscripts;
 
 import java.util.List;
 
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.mindalliance.globallibrary.GlobalVariables;
+import com.mindalliance.globallibrary.ReportFunctions;
 /**
  * Summary: Update Planners information under Admin web-page
  * @author AfourTech
@@ -16,6 +18,7 @@ import com.mindalliance.globallibrary.GlobalVariables;
 
 public class UpdatePlannerInPerformance 
 {
+	
     public UpdatePlannerInPerformance() {
     		String sChannelURL = "http://192.168.4.126:8081/channels";
     		String sUserName = "jf";
@@ -84,6 +87,7 @@ public class UpdatePlannerInPerformance
 	} 
 		catch (Exception e) {
 			System.out.println(e.getMessage());
+			System.out.println(GlobalVariables.oDriver.getTitle()+ " already present. See Screenshot : " + ReportFunctions.getScreenShot("Cannot find"));
 		}
 	}
     public static void main(String args[]) {

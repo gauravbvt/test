@@ -22,7 +22,7 @@ import com.mindalliance.globallibrary.ReportFunctions;
  * 
  */
 public class MAC0001_UndoAddSegment {
-   public MAC0001_UndoAddSegment(){
+	public MAC0001_UndoAddSegment(){
 		try {
 			GlobalVariables.sTestCaseId = "MAC0001_UndoAddSegment";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
