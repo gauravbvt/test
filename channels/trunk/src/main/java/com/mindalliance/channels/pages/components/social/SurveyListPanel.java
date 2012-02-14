@@ -14,7 +14,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +38,7 @@ public class SurveyListPanel extends AbstractSocialListPanel {
      */
     public static final Logger LOG = LoggerFactory.getLogger( SurveyListPanel.class );
 
-    @SpringBean
+ /*   @SpringBean    */
     private SurveyService surveyService;
 
     private static final int A_FEW = 5;

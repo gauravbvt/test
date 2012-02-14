@@ -32,7 +32,6 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -131,7 +130,7 @@ public class SurveysPanel extends FloatingCommandablePanel implements Filterable
     /**
      * Survey service.
      */
-    @SpringBean
+//    @SpringBean
     private SurveyService surveyService;
 
     /**

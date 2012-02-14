@@ -6,29 +6,17 @@
 
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
-import com.mindalliance.channels.surveys.Survey;
-import com.mindalliance.channels.surveys.SurveyException;
-import com.mindalliance.channels.surveys.SurveyService;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
-import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,8 +59,10 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
     /**
      * Survey service.
      */
+/*
     @SpringBean
     SurveyService surveyService;
+*/
 
     public AbstractIssueTablePanel( String id, IModel<? extends ModelObject> model, int maxRows ) {
         super( id, model );
@@ -199,9 +189,11 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             columns.add( makeColumn( "Remediation", "remediation", EMPTY ) );
             columns.add( makeColumn( "Reported by", "reportedBy", EMPTY ) );
             columns.add( makeColumn( "Waived", "waivedString", EMPTY ) );
+/*
             if ( getPlan().isDevelopment() ) {
                 columns.add( makeSurveyColumn( "Survey" ) );
             }
+*/
             // provider and table
             add( new AjaxFallbackDefaultDataTable( "issues",
                     columns,
@@ -209,6 +201,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                     getPageSize() ) );
         }
 
+/*
         private AbstractColumn<Issue> makeSurveyColumn( String name ) {
             return new AbstractColumn<Issue>( new Model<String>( name ) ) {
                 @Override
@@ -220,9 +213,10 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                 }
             };
         }
+*/
     }
 
-    private class SurveyLinkPanel extends AbstractUpdatablePanel {
+/*    private class SurveyLinkPanel extends AbstractUpdatablePanel {
 
         private SurveyLinkPanel( String id, boolean surveyed, final Issue issue ) {
             super( id );
@@ -255,5 +249,5 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                     new Model<String>( surveyed ? "View survey" : "Create new survey" ) ) );
             link.add( image );
         }
-    }
+    }*/
 }

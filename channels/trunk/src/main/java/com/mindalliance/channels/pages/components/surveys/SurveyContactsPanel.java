@@ -31,7 +31,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ import java.util.Map;
 public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filterable {
 
     private IModel<Survey> surveyModel;
-    @SpringBean
+//    @SpringBean
     private SurveyService surveyService;
     /**
      * Maximum number of rows of contacts to show at a time.

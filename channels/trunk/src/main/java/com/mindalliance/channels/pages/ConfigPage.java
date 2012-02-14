@@ -98,14 +98,14 @@ public class ConfigPage extends WebPage {
 
         private final MailConfig mail;
         private final GeoConfig geo;
-        private final SurveyConfig survey;
+//        private final SurveyConfig survey;
 
         private Config( Properties properties ) {
             home = properties.getProperty( HOME );
             dotPath = properties.getProperty( DOT_PATH, DEFAULT_DOT_PATH );
             mail = new MailConfig( properties );
             geo = new GeoConfig( properties );
-            survey = new SurveyConfig( properties );
+//            survey = new SurveyConfig( properties );
         }
 
         public void saveTo( Properties properties ) {
@@ -116,7 +116,7 @@ public class ConfigPage extends WebPage {
 
             mail.saveTo( properties );
             geo.saveTo( properties );
-            survey.saveTo( properties );
+//            survey.saveTo( properties );
         }
 
         public MailConfig getMail() {
@@ -127,9 +127,11 @@ public class ConfigPage extends WebPage {
             return geo;
         }
 
+/*
         public SurveyConfig getSurvey() {
             return survey;
         }
+*/
 
         public String getHome() {
             return home;
@@ -291,7 +293,7 @@ public class ConfigPage extends WebPage {
             }
         }
 
-        private static final class SurveyConfig {
+/*        private static final class SurveyConfig {
 
             private String key;
             private String user;
@@ -347,6 +349,6 @@ public class ConfigPage extends WebPage {
             public void setTemplate( String template ) {
                 this.template = template;
             }
-        }
+        }*/
     }
 }

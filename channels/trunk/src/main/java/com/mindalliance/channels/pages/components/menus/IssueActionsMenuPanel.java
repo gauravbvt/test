@@ -13,9 +13,6 @@ import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.command.commands.RemoveIssue;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.surveys.Survey;
-import com.mindalliance.channels.surveys.SurveyException;
-import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -23,8 +20,6 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +34,10 @@ public class IssueActionsMenuPanel extends MenuPanel {
     /**
      * The survey service.
      */
+/*
     @SpringBean
     private SurveyService surveyService;
+*/
 
     public IssueActionsMenuPanel( String s, IModel<? extends Issue> model, boolean isCollapsed ) {
         super( s, "Menu", model, null );
@@ -81,7 +78,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
                                              } ) );
 
             // Create/view survey
-            if ( getPlan().isDevelopment() ) {
+ /*           if ( getPlan().isDevelopment() ) {
                 String itemLabel = surveyService.isSurveyed( Survey.Type.Remediation, getIssue() ) ?
                                    "View survey" :
                                    "Create survey";
@@ -115,7 +112,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
                                                      }
                                                  } ) );
             }
-
+*/
             // Commands
             if ( commander.isTimedOut( getUser().getUsername() ) )
                 menuItems.add( newStyledLabel( "Timed out", "disabled locked" ) );

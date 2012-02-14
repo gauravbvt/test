@@ -46,7 +46,6 @@ import com.mindalliance.channels.pages.components.segment.SharingCommitmentsPane
 import com.mindalliance.channels.pages.components.support.FlowLegendPanel;
 import com.mindalliance.channels.pages.components.surveys.SurveysPanel;
 import com.mindalliance.channels.surveys.Survey;
-import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -349,8 +348,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * Survey service.
      */
+/*
     @SpringBean
     private SurveyService surveyService;
+*/
 
     /**
      * The mail sender.
@@ -461,7 +462,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addOverridesPanel();
         addSegmentEditPanel();
         addPlanEditPanel( null );
-        addSurveysPanel( Survey.UNKNOWN );
+//        addSurveysPanel( Survey.UNKNOWN );
         addFlowLegendPanel();
 
         updateSelectorsVisibility();
@@ -1044,6 +1045,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         form.addOrReplace( planEditPanel );
     }
 
+/*
     private void addSurveysPanel( Survey survey ) {
         boolean showSurveys = survey != null && expansions.contains( survey.getId() )
                 || expansions.contains( Survey.UNKNOWN.getId() );
@@ -1056,6 +1058,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
         form.addOrReplace( surveysPanel );
     }
+*/
 
     private ModelEntity findExpandedEntity() {
         for ( long id : expansions ) {
@@ -2153,7 +2156,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             Survey viewedSurvey = ( expandedSurvey == null || expandedSurvey.isUnknown() )
                     ? Survey.UNKNOWN
                     : expandedSurvey;
-            addSurveysPanel( viewedSurvey );
+           // addSurveysPanel( viewedSurvey );
             target.add( surveysPanel );
         } else if ( surveysPanel instanceof SurveysPanel ) {
             ( (SurveysPanel) surveysPanel ).refresh( target,

@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
-import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -59,8 +58,8 @@ public class AdminPage extends AbstractChannelsWebPage {
      */
     private static final Logger LOG = LoggerFactory.getLogger( AdminPage.class );
 
-    @SpringBean
-    private SurveyService surveyService;
+/*    @SpringBean
+    private SurveyService surveyService;*/
 
     /**
      * The plan definition manager.
@@ -189,7 +188,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                         new TextField<String>( "newPlanClient",
                                 new PropertyModel<String>( this, "newPlanClient" ) ),
 
-                        new TextField<String>( "surveyApiKey",
+ /*                       new TextField<String>( "surveyApiKey",
                                 new PropertyModel<String>( this, "surveyApiKey" ) ),
                         new TextField<String>( "surveyUserKey",
                                 new PropertyModel<String>( this, "surveyUserKey" ) ),
@@ -197,7 +196,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                                 new PropertyModel<String>( this, "surveyTemplate" ) ),
                         new TextField<String>( "surveyDefaultEmailAddress",
                                 new PropertyModel<String>( this, "surveyDefaultEmailAddress" ) ),
-
+*/
                         new DropDownChoice<Plan>( "plan-sel",
                                 new PropertyModel<Plan>( this, "plan" ),
                                 new PropertyModel<List<? extends Plan>>( this, "activePlans" ) )
@@ -297,6 +296,7 @@ public class AdminPage extends AbstractChannelsWebPage {
     }
 
 
+/*
     public String getSurveyApiKey() {
         String s = getPlan().getSurveyApiKey();
         return s.isEmpty() ? surveyService.getApiKey( getPlan() ) : s;
@@ -332,8 +332,9 @@ public class AdminPage extends AbstractChannelsWebPage {
         }
     }
 
+*/
 
-    public String getSurveyDefaultEmailAddress() {
+ /*   public String getSurveyDefaultEmailAddress() {
         String s = getPlan().getSurveyDefaultEmailAddress();
         return s.isEmpty() ? surveyService.getDefaultEmailAddress( getPlan() ) : s;
     }
@@ -344,6 +345,8 @@ public class AdminPage extends AbstractChannelsWebPage {
             getPlan().setSurveyDefaultEmailAddress( val );
         }
     }
+
+*/
 
     private void submit() {
         for ( ChannelsUser u : toDelete ) {

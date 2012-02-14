@@ -12,15 +12,11 @@ import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
-import com.mindalliance.channels.surveys.Survey;
-import com.mindalliance.channels.surveys.SurveyException;
-import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -28,15 +24,16 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 public class CollapsedIssuePanel extends AbstractCommandablePanel {
 
     /**
      * Survey service.
      */
+/*
     @SpringBean
     private SurveyService surveyService;
+*/
     /**
      * Issue in panel.
      */
@@ -54,9 +51,10 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         addMenubar( issue );
         addSummary();
         addWaiving( issue );
-        addSurveying( issue );
+//        addSurveying( issue );
     }
 
+/*
     private void addSurveying( final Issue issue ) {
         WebMarkupContainer surveyLinkContainer = new WebMarkupContainer( "surveyLinkContainer" );
         surveyLinkContainer.setVisible( issue.isDetected() && !issue.isWaived() );
@@ -89,6 +87,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         surveyLink.add( surveyActionLabel );
         surveyLink.setVisible( getPlan().isDevelopment() );
     }
+*/
 
     private void addMenubar( Issue issue ) {
         WebMarkupContainer menubar = new WebMarkupContainer( "menubar" );

@@ -4,11 +4,8 @@
 
 <beans
         xmlns="http://www.springframework.org/schema/beans"
-        xmlns:util="http://www.springframework.org/schema/util"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
-            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
-            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
 
         default-autowire="byName">
 
@@ -46,11 +43,11 @@
         </property>
     </bean>
 
-    <bean id="surveyService" class="com.mindalliance.channels.surveys.SurveyGizmoService">
+ <!--   <bean id="surveyService" class="com.mindalliance.channels.surveys.SurveyGizmoService">
         <property name="template" value="1800"/>
         <property name="surveysFile" value="isp_surveys"/>
         <property name="userDetailsService" ref="userDao"/>
     </bean>
-
+-->
 
 </beans>

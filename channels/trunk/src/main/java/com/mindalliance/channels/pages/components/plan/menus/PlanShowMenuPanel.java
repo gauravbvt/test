@@ -12,8 +12,6 @@ import com.mindalliance.channels.pages.HelpPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
-import com.mindalliance.channels.surveys.Survey;
-import com.mindalliance.channels.surveys.SurveyService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -44,9 +42,9 @@ public class PlanShowMenuPanel extends MenuPanel {
     /**
      * Survey service.
      */
-    @SpringBean
+ /*   @SpringBean
     private SurveyService surveyService;
-
+*/
     public PlanShowMenuPanel( String s, IModel<? extends Segment> model, Set<Long> expansions ) {
         super( s, "Show", model, expansions );
     }
@@ -67,8 +65,10 @@ public class PlanShowMenuPanel extends MenuPanel {
                             collapsible(
                                     getSegment(), "Hide about plan segment", "About plan segment" ) ) );
 
+/*
             if ( plan.isDevelopment() )
                 menuItems.add( collapsible( Survey.UNKNOWN, "Hide surveys", "Surveys" ) );
+*/
 
             menuItems.addAll(
                     Arrays.asList(

@@ -15,7 +15,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +33,7 @@ public class SurveyPanel extends AbstractUpdatablePanel {
      */
     public static final Logger LOG = LoggerFactory.getLogger( SurveyPanel.class );
 
-    @SpringBean
+//    @SpringBean
     /**
      * Survey service.
      */
