@@ -72,6 +72,15 @@ public abstract class Step implements Serializable {
         return play;
     }
 
+    /**
+     * Get the owner of this step.
+     * @return a contact, local to the owner
+     */
+    @Transient
+    public Contact getOwner() {
+        return play.getOwner();
+    }
+
     public int getSequence() {
         return sequence;
     }

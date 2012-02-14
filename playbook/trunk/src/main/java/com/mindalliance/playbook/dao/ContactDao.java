@@ -56,9 +56,6 @@ public interface ContactDao extends IndexedDao<Contact,Long> {
      * Make sure contact is present in current account. 
      * If not, copy information relevant to a collaboration.
      *
-     *
-     *
-     *
      * @param foreignContact the foreign contact
      * @param collaboration the collaboration
      * @return a private contact, possibly new

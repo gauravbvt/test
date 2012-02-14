@@ -176,4 +176,13 @@ public class Play implements Serializable {
     public void removeStep( Step step ) {
         steps.remove( step );
     }
+
+    /**
+     * Get the owner of this play.
+     * @return a contact, local to the owner.
+     */
+    @Transient
+    public Contact getOwner() {
+        return playbook.getMe();
+    }
 }

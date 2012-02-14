@@ -44,14 +44,18 @@ public class MessagesPage extends MobilePage {
         LOG.debug( "Generating for account: {}", account.getEmail() );
         setDefaultModel( new CompoundPropertyModel<Account>( account ) );
 
-        List<ConfirmationReq> outgoing = reqDao.getOutgoingRequests();
+        final List<ConfirmationReq> outgoing = reqDao.getOutgoingRequests();
         List<ConfirmationReq> incoming = reqDao.getIncomingRequests();
         List<Collaboration> unconfirmed = stepDao.getUnconfirmed();
-        
+        List<Collaboration> rejected = stepDao.getRejected();
+        List<Collaboration> incomplete = stepDao.getIncomplete();
+
         add(
             new Label( "title", new PropertyModel<String>( this, "pageTitle" ) ),
 
-            new WebMarkupContainer( "empty" ).setVisible( outgoing.isEmpty() && incoming.isEmpty() ),
+            new WebMarkupContainer( "empty" )
+                .setVisible( outgoing.isEmpty() && incoming.isEmpty() 
+                             && unconfirmed.isEmpty() && rejected.isEmpty() ),
 
             new WebMarkupContainer( "outgoing" ).add(
                 new ListView<ConfirmationReq>( "pending", outgoing ) {
@@ -71,36 +75,19 @@ public class MessagesPage extends MobilePage {
                                 // TODO figure out what is the right way of doing this...
                                 new WebMarkupContainer( "photo" ).add(
                                     new AttributeModifier(
-                                        "src", new Model<String>(
-                                        "contacts/" + contact.getId() ) ) ).setVisible(
+                                        "src", new Model<String>( "contacts/" + contact.getId() ) ) ).setVisible(
                                     contact.getPhoto() != null ) ) );
                     }
                 } ).setVisible( !outgoing.isEmpty() ),
 
             new WebMarkupContainer( "unconfirmed" ).add(
-                new ListView<Collaboration>( "pending", unconfirmed ) {
-                    @Override
-                    protected void populateItem( ListItem<Collaboration> item ) {
-                        final Collaboration collaboration = item.getModelObject();
-                        Contact contact = collaboration.getWith();
-                        item.add(
-                            new StatelessLink( "link" ) {
-                                @Override
-                                public void onClick() {
-                                    setResponsePage( EditStep.class, new PageParameters().add( "id", 
-                                        collaboration.getId() ) );
-                                }
-                            }.add(
-                                new Label( "title", collaboration.getTitle() ),
+                newStepList( unconfirmed ) ).setVisible( !unconfirmed.isEmpty() ),
 
-                                // TODO figure out what is the right way of doing this...
-                                new WebMarkupContainer( "photo" ).add(
-                                    new AttributeModifier(
-                                        "src", new Model<String>(
-                                        "contacts/" + contact.getId() ) ) ).setVisible(
-                                    contact.getPhoto() != null ) ) );
-                    }
-                } ).setVisible( !unconfirmed.isEmpty() ),
+            new WebMarkupContainer( "rejected" ).add(
+                newStepList( rejected ) ).setVisible( !rejected.isEmpty() ),
+
+            new WebMarkupContainer( "incomplete" ).add(
+                newStepList( incomplete ) ).setVisible( !incomplete.isEmpty() ),
 
             new WebMarkupContainer( "incoming" ).add(
                 new ListView<ConfirmationReq>( "pending", incoming ) {
@@ -108,7 +95,7 @@ public class MessagesPage extends MobilePage {
                     protected void populateItem( ListItem<ConfirmationReq> item ) {
                         final ConfirmationReq req = item.getModelObject();
                         final Collaboration collaboration = req.getCollaboration();
-                        Contact contact = collaboration.getPlay().getPlaybook().getMe();
+                        Contact contact = req.getSender();
                         item.add(
                             new StatelessLink( "link" ) {
                                 @Override
@@ -121,8 +108,8 @@ public class MessagesPage extends MobilePage {
                                 // TODO figure out what is the right way of doing this...
                                 new WebMarkupContainer( "photo" ).add(
                                     new AttributeModifier(
-                                        "src", new Model<String>(
-                                        "contacts/" + contact.getId() ) ) ) ) );
+                                        "src", new Model<String>( "contacts/" + contact.getId() ) ) ) 
+                            ) );
                     }
                 } ).setVisible( !incoming.isEmpty() ),
 
@@ -131,8 +118,34 @@ public class MessagesPage extends MobilePage {
             new BookmarkablePageLink<TodoPage>( "todos", TodoPage.class ) );
     }
 
+    private ListView<Collaboration> newStepList( final List<Collaboration> unconfirmed ) {
+        return new ListView<Collaboration>( "pending", unconfirmed ) {
+            @Override
+            protected void populateItem( ListItem<Collaboration> item ) {
+                final Collaboration collaboration = item.getModelObject();
+                Contact contact = collaboration.getWith();
+                long id = contact == null ? 0L : contact.getId();
+                item.add(
+                    new StatelessLink( "link" ) {
+                        @Override
+                        public void onClick() {
+                            setResponsePage( EditStep.class, new PageParameters().add( "id",
+                                collaboration.getId() ) );
+                        }
+                    }.add(
+                        new Label( "title", collaboration.getTitle() ),
+
+                        // TODO figure out what is the right way of doing this...
+                        new WebMarkupContainer( "photo" ).add(
+                            new AttributeModifier(
+                                "src", new Model<String>( "contacts/" + id ) )
+                        ).setVisible( contact != null && contact.getPhoto() != null ) ) );
+            }
+        };
+    }
+
     @Override
     public String getPageTitle() {
-        return "Playbook - Collaboration";
+        return "Messages";
     }
 }

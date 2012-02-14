@@ -1,14 +1,15 @@
 package com.mindalliance.playbook.pages;
 
 import com.mindalliance.playbook.dao.AckDao;
+import com.mindalliance.playbook.dao.ConfirmationReqDao;
 import com.mindalliance.playbook.dao.PlayDao;
 import com.mindalliance.playbook.dao.StepDao;
 import com.mindalliance.playbook.model.Account;
-import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.ConfirmationReq;
 import com.mindalliance.playbook.model.Contact;
 import com.mindalliance.playbook.model.NAck;
 import com.mindalliance.playbook.model.Play;
+import com.mindalliance.playbook.model.RedirectReq;
 import com.mindalliance.playbook.pages.panels.ContactField;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -55,6 +56,9 @@ public class AckPage extends MobilePage {
     @SpringBean
     private StepDao stepDao;
 
+    @SpringBean
+    private ConfirmationReqDao reqDao;
+
     public enum AnswerType {
         UNKNOWN,
         YES,
@@ -87,7 +91,7 @@ public class AckPage extends MobilePage {
         // Actually save only the one specified by answerType.
 
         req = request;
-        final Contact contact = getContact( getCollaboration() );
+        final Contact contact = request.getSender();
 
         long contactId = contact.getId();
         boolean hasPhoto = contact.getPhoto() != null;
@@ -116,9 +120,8 @@ public class AckPage extends MobilePage {
             ).setVisible( false );
         
         final Component maybeDiv = new WebMarkupContainer( "maybeDiv" ).add(
-                new ContactField( "referral", new PropertyModel<Contact>( this, "referral" ) ),
-                new TextArea( "referralNote" )
-            )
+            new ContactField( "referral", new PropertyModel<Contact>( this, "referral" ) ),
+            new TextArea( "referralNote" ) )
                 .setRenderBodyOnly( true )
                 .setVisible( false );
 
@@ -151,7 +154,7 @@ public class AckPage extends MobilePage {
                             setAnswerType( AnswerType.MAYBE );
                             setSubpane( target, formList, yesDiv, noDiv, maybeDiv );
                         }
-                    } )
+                    } ).setEnabled( req.isForwardable() )
 
             ).setRenderBodyOnly( true ), yesDiv, noDiv, maybeDiv );
 
@@ -165,24 +168,27 @@ public class AckPage extends MobilePage {
                 switch ( answerType ) {
 
                 case YES:
-                    Collaboration collaboration = getCollaboration();
-
                     Play play = newPlay != null && !newPlay.trim().isEmpty() ?
-                                    ackDao.saveInPlay( newPlay.trim(), collaboration, req ) :
-                                    existingPlay == null ? ackDao.saveInPlay( (String) null, collaboration, req ) :
-                                                           ackDao.saveInPlay( existingPlay, collaboration, req );
+                                    ackDao.saveInPlay( newPlay.trim(), req ) :
+                                    existingPlay == null ? ackDao.saveInPlay( (String) null, req ) :
+                                                           ackDao.saveInPlay( existingPlay, req );
                         
                     setResponsePage( EditPlay.class, new PageParameters().add( "id", play.getId() ) );
 
                     break;
 
+                case MAYBE:
+                    RedirectReq redirectReq = new RedirectReq( req, referral );
+                    redirectReq.setDescription( referralNote );
+                    reqDao.save( redirectReq );
+                    setResponsePage( MessagesPage.class );
+                    
+                    break;                    
+
                 case NO:
-                    NAck nAck = new NAck( req );
-                    nAck.setReason( nAckReason );
-                    ackDao.save( nAck );
+                    ackDao.refuse( new NAck( req, nAckReason ) );
 
                 case UNKNOWN:
-                case MAYBE:
                     setResponsePage( MessagesPage.class );
                     break;
                 }                
@@ -199,16 +205,14 @@ public class AckPage extends MobilePage {
                 }
             },
 
-            new Label( "req.collaboration.play.playbook.me" ),
+            new Label( "req.sender" ),
 
             // TODO figure out what is the right way of doing this...
             new WebMarkupContainer( "photo" ).add(
-                new AttributeModifier(
-                    "src", new Model<String>(
-                    "contacts/" + contactId ) ) ).setVisible( contactId != 0L && hasPhoto ),
+                new AttributeModifier( "src", new Model<String>( "contacts/" + contactId ) ) 
+                ).setVisible( contactId != 0L && hasPhoto ),
 
             new Label( "req.description" ),
-
             form );
     }
 
@@ -216,10 +220,6 @@ public class AckPage extends MobilePage {
         return answerType == AnswerType.YES && ( newPlay != null || existingPlay != null )
             || answerType == AnswerType.NO
             ;
-    }
-
-    private static Contact getContact( Collaboration collaboration ) {
-        return collaboration.getPlay().getPlaybook().getMe();
     }
 
     private void setSubpane( AjaxRequestTarget target, Component formList, Component yesDiv, Component noDiv,
@@ -266,10 +266,6 @@ public class AckPage extends MobilePage {
 
     public void setReferral( Contact referral ) {
         this.referral = referral;
-    }
-
-    public Collaboration getCollaboration() {
-        return req.getCollaboration();
     }
 
     public String getReferralNote() {

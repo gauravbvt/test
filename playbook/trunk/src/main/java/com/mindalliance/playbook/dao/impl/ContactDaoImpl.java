@@ -116,7 +116,7 @@ public class ContactDaoImpl extends IndexedHibernateDao<Contact, Long> implement
         if ( collaboration instanceof Receive )
             localContact.addPrivate( collaboration.getUsing() );
         else
-            account.getPlaybook().getMe().addPrivate( collaboration.getUsing() );        
+            account.getOwner().addPrivate( collaboration.getUsing() );        
         
         return save( localContact );
     }

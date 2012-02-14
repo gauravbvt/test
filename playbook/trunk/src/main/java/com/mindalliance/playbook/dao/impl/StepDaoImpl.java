@@ -16,6 +16,7 @@ import com.mindalliance.playbook.model.Step.Type;
 import com.mindalliance.playbook.model.Subplay;
 import com.mindalliance.playbook.model.Task;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +40,37 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
     @Autowired
     private ConfirmationReqDao reqDao;
 
+    @SuppressWarnings( "unchecked" )
     @Override
     public List<Collaboration> getUnconfirmed() {
-        // TODO unconfirmed steps list
-        return Collections.emptyList();
+        return getSession().createQuery(
+            "select c from Collaboration c left join c.request r " 
+            + "where c.play.playbook.account = :account" 
+            + " and r is null and c.with is not null and c.using is not null"
+        )
+            .setParameter( "account", accountDao.getCurrentAccount() )
+            .list();
+    }
+
+    @SuppressWarnings( "unchecked" )
+    @Override
+    public List<Collaboration> getRejected() {
+        return getSession().createQuery(
+            "select n.request.collaboration from NAck n where n.request.collaboration.play.playbook.account = :account"
+            )
+            .setParameter( "account", accountDao.getCurrentAccount() )
+            .list();
+    }
+
+    @SuppressWarnings( "unchecked" )
+    @Override
+    public List<Collaboration> getIncomplete() {
+        return getSession().createQuery(
+            "select c from Collaboration c where c.play.playbook.account = :account" 
+            + " and ( c.with is null or c.using is null )"
+        )
+            .setParameter( "account", accountDao.getCurrentAccount() )
+            .list();
     }
 
     @Override
@@ -91,7 +119,7 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
         if ( request != null && request.getConfirmation() != null )
             return false;
 
-        // Contact must be a register playbook user for now...
+        // Contact must be a registered playbook user for now...
         // TODO remove this when email invitations are enabled
 
         for ( String email : contact.getEmails() )

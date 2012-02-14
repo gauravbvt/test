@@ -12,6 +12,7 @@ import java.util.List;
  * Direct accessor to a play steps.
  */
 @Secured( "ROLE_USER" )
+@Transactional
 public interface StepDao extends GenericDao<Step,Long> {
 
     /**
@@ -26,11 +27,22 @@ public interface StepDao extends GenericDao<Step,Long> {
     }
 
     /**
-     * Find all unconfirmed step in any play of current user.
+     * Find all unconfirmed steps in any play of current user.
      * @return a list of collaborations
      */
-    @Transactional
     List<Collaboration> getUnconfirmed();
+
+    /**
+     * Find all steps of current user that were rejected.
+     * @return a list of collaborations
+     */
+    List<Collaboration> getRejected();
+
+    /**
+     * Find all steps that are missing contact information.
+     * @return a list of steps
+     */
+    List<Collaboration> getIncomplete();
 
     /**
      * Change the type of a step.
@@ -39,7 +51,6 @@ public interface StepDao extends GenericDao<Step,Long> {
      * @param oldStep the step
      * @return the new step
      */
-    @Transactional
     Step switchStep( Type stepType, Step oldStep );
 
     /**
@@ -49,7 +60,6 @@ public interface StepDao extends GenericDao<Step,Long> {
      * @return true if step is a collaboration that has valid contact and medium information
      * that has not been confirmed or rejected.
      */
-    @Transactional
     boolean isConfirmable( Step step );
 
     /**
@@ -58,6 +68,5 @@ public interface StepDao extends GenericDao<Step,Long> {
      * @param step the step
      * @return either "Confirm", "Pending" or "Rejected"
      */
-    @Transactional
     Status getStatus( Step step );
 }

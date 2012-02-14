@@ -43,7 +43,7 @@ public class ConfirmationReqDaoImpl extends GenericHibernateDao<ConfirmationReq,
             + "where c.confirmation is null and d.with in (:contacts)" )
             .setParameterList( "contacts", contactDao.findAliases( accountDao.getCurrentAccount() )
                  );
-//   
+   
         return (List<ConfirmationReq>) query.list();
     }
 

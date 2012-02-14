@@ -12,7 +12,8 @@
         <img src="images/logo.png" align="left" alt="(logo)">
 
         <h1 wicket:id="title">Playbook - Plays</h1>
-        <a wicket:id="settingsLink" class="ui-btn-right" data-icon="gear" data-role="button" data-rel="dialog" href="#">Settings</a>
+        <a wicket:id="settingsLink" class="ui-btn-right" data-iconpos="notext" data-icon="gear" data-role="button" data-rel="dialog"
+           href="#">Settings</a>
     </div>
 
     <div data-role="content">
@@ -31,9 +32,33 @@
                 </ul>
             </div>
 
+            <div wicket:id="rejected" data-role="collapsible">
+                <!--<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" wicket:id="count">0</span>-->
+                <h3>Rejected steps</h3>
+                <ul data-role="listview" data-inset="true">
+                    <li wicket:id="pending"><a wicket:id="link" href="editplaystep2b.html">
+                        <img wicket:id="photo" src="images/john_drummond.jpeg"/>
+                        <h3 wicket:id="title">Call John and ask about status</h3>
+                        <p></p>
+                    </a></li>
+                </ul>
+            </div>
+
             <div wicket:id="unconfirmed" data-role="collapsible">
                 <!--<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" wicket:id="count">0</span>-->
                 <h3>Unconfirmed steps</h3>
+                <ul data-role="listview" data-inset="true">
+                    <li wicket:id="pending"><a wicket:id="link" href="editplaystep2b.html">
+                        <img wicket:id="photo" src="images/john_drummond.jpeg"/>
+                        <h3 wicket:id="title">Call John and ask about status</h3>
+                        <p></p>
+                    </a></li>
+                </ul>
+            </div>
+
+            <div wicket:id="incomplete" data-role="collapsible">
+                <!--<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" wicket:id="count">0</span>-->
+                <h3>Incomplete steps</h3>
                 <ul data-role="listview" data-inset="true">
                     <li wicket:id="pending"><a wicket:id="link" href="editplaystep2b.html">
                         <img wicket:id="photo" src="images/john_drummond.jpeg"/>

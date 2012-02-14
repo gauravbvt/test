@@ -11,6 +11,7 @@ import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.ConfirmationAck;
 import com.mindalliance.playbook.model.ConfirmationReq;
 import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.NAck;
 import com.mindalliance.playbook.model.Play;
 import com.mindalliance.playbook.model.Receive;
 import com.mindalliance.playbook.model.Send;
@@ -39,9 +40,10 @@ public class AckDaoImpl extends GenericHibernateDao<ConfirmationAck, Long> imple
     private ConfirmationReqDao reqDao;
 
     @Override
-    public Play saveInPlay( Play existingPlay, Collaboration collaboration, ConfirmationReq request ) {
+    public Play saveInPlay( Play existingPlay, ConfirmationReq request ) {
+        Collaboration collaboration = request.getCollaboration();
 
-        Contact privateContact = contactDao.privatize( collaboration.getPlay().getPlaybook().getMe(), collaboration );
+        Contact privateContact = contactDao.privatize( collaboration.getOwner(), collaboration );
         boolean isSend = collaboration instanceof Send;
         
         Collaboration matchingStep = isSend ? new Receive( existingPlay ) 
@@ -60,14 +62,22 @@ public class AckDaoImpl extends GenericHibernateDao<ConfirmationAck, Long> imple
     }
 
     @Override
-    public Play saveInPlay( String newPlay, Collaboration collaboration, ConfirmationReq request ) {
+    public Play saveInPlay( String newPlay, ConfirmationReq request ) {
 
-        Play play = new Play(
-            accountDao.getCurrentAccount().getPlaybook(),
-            newPlay == null || newPlay.trim().isEmpty() ? "Untitled play" : newPlay.trim() );
+        return saveInPlay(
+            playDao.save(
+                new Play(
+                    accountDao.getCurrentAccount().getPlaybook(),
+                    newPlay == null || newPlay.trim().isEmpty() ? "Untitled play" : newPlay.trim() ) ), 
+            request );
+    }
 
-        playDao.save( play );
-
-        return saveInPlay( play, collaboration, request );
+    @Override
+    public void refuse( NAck nAck ) {
+        save( nAck );
+        
+        ConfirmationReq req = nAck.getRequest();
+        req.setConfirmation( nAck );
+        reqDao.save( req );
     }
 }

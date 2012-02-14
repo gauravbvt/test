@@ -44,6 +44,15 @@ public class ConfirmationReq implements Serializable, Timestamped {
     public ConfirmationReq() {
     }
 
+    /**
+     * Get the sender of the collaboration request.
+     * @return a contact information, local to the sender
+     */
+    @Transient
+    public Contact getSender() {
+        return collaboration.getOwner();
+    }
+
     public ConfirmationReq( Collaboration collaboration ) {
         this.collaboration = collaboration;
     }

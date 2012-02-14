@@ -67,6 +67,6 @@ public class PlaysPage extends MobilePage {
 
     @Override
     public String getPageTitle() {
-        return "Playbook - Plays";
+        return "Plays";
     }
 }

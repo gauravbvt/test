@@ -178,6 +178,7 @@ public class Account implements Serializable, Timestamped {
 
     /**
      * Return default playbook.
+     * @return the first playbook available.
      */
     @Transient
     public Playbook getPlaybook() {
@@ -222,5 +223,14 @@ public class Account implements Serializable, Timestamped {
     
     public void addContact( Contact contact ) {
         contacts.add( contact );       
+    }
+
+    /**
+     * Get the contact information of the owner of this account.
+     * @return a contact
+     */
+    @Transient
+    public Contact getOwner() {
+        return getPlaybook().getMe();
     }
 }

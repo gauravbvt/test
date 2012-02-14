@@ -24,8 +24,9 @@ public class NAck extends ConfirmationAck {
     public NAck() {
     }
 
-    public NAck( ConfirmationReq request ) {
+    public NAck( ConfirmationReq request, String reason ) {
         super( request );
+        this.reason = reason;
     }
 
     @Override
