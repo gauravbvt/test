@@ -9,7 +9,6 @@ import com.mindalliance.playbook.model.Contact;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -29,6 +28,8 @@ import java.util.List;
 public class MessagesPage extends MobilePage {
 
     private static final Logger LOG = LoggerFactory.getLogger( MessagesPage.class );
+
+    private static final long serialVersionUID = 879820312918620140L;
 
     @SpringBean
     Account account;
@@ -111,11 +112,7 @@ public class MessagesPage extends MobilePage {
                                         "src", new Model<String>( "contacts/" + contact.getId() ) ) ) 
                             ) );
                     }
-                } ).setVisible( !incoming.isEmpty() ),
-
-            new BookmarkablePageLink<Settings>( "settingsLink", Settings.class ),
-            new BookmarkablePageLink<PlaysPage>( "plays", PlaysPage.class ),
-            new BookmarkablePageLink<TodoPage>( "todos", TodoPage.class ) );
+                } ).setVisible( !incoming.isEmpty() ) );
     }
 
     private ListView<Collaboration> newStepList( final List<Collaboration> unconfirmed ) {

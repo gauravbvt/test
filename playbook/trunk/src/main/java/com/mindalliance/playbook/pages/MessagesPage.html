@@ -9,7 +9,7 @@
 <body>
 <wicket:extend>
     <div data-role="header" data-theme="b">
-        <a href="#" data-icon="arrow-l" data-direction="reverse">Back</a>
+        <a href="javascript:history.go(-1)"  onMouseOver="self.status=document.referrer;return true" data-icon="arrow-l" data-direction="reverse">Back</a>
         <h1 wicket:id="title">Messages</h1>
         <a href="todo.html" data-role="button" data-direction="reverse" data-icon="home" data-iconpos="notext">Home</a>
     </div>
@@ -87,17 +87,6 @@
             <!--</a></li>-->
             <!--</ul>-->
             <!--</div>                -->
-        </div>
-    </div>
-
-    <div data-role="footer" data-position="fixed" data-theme="b">
-        <div data-role="navbar">
-            <ul>
-                <li><a wicket:id="todos" href="#">Do</a></li>
-                <li><a wicket:id="plays" href="#">Plan</a></li>
-                <li><a class="ui-btn-active" href="#">Messages</a></li>
-                <li><a wicket:id="settingsLink" href="#">More</a></li>
-            </ul>
         </div>
     </div>
 </wicket:extend>

@@ -8,7 +8,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -40,16 +39,6 @@ public class ConfirmPage extends MobilePage {
         add(
             new Label( "hTitle", getPageTitle() ),
             new Label( "collaboration.with.fullName" ),
-            new StatelessLink( "cancel" ) {
-                @Override
-                public void onClick() {
-                    if ( req.getId() == 0L )
-                        setResponsePage( EditStep.class, new PageParameters().add( "id", 
-                            req.getCollaboration().getId() ) );
-                    else
-                        setResponsePage( MessagesPage.class );
-                }
-            },
             new StatelessForm<ConfirmationReq>( "form", model ) {
                 @Override
                 protected void onSubmit() {

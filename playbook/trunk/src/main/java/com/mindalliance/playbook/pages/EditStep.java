@@ -23,7 +23,6 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -81,9 +80,6 @@ public class EditStep extends MobilePage {
             }.add(
                 new Label( "hTitle", new PropertyModel<String>( step, "title" ) ),
                 new FeedbackPanel( "feedback" ),
-                new BookmarkablePageLink<EditPlay>(
-                    "cancel", EditPlay.class, new PageParameters().add(
-                    "id", step.getPlay().getId() ) ),
                 new TextField<String>( "title" ),
                 new TextArea<String>( "description" ),
                 new TextField<String>( "duration" ),

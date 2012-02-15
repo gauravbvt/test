@@ -70,15 +70,15 @@ public class PlaysPageTest extends AbstractPageTest {
         verify( oldPlay ).getTagString();
     }
     
-    @Test
     /**
      * Test some essential links.
      */
+    @Test
     public void links() {
         tester.startPage( getTestedClass() );
         tester.assertBookmarkablePageLink( "settingsLink", Settings.class, new PageParameters() );
         tester.assertBookmarkablePageLink( "todos", TodoPage.class, new PageParameters() );
-        tester.assertBookmarkablePageLink( "collaborate", MessagesPage.class, new PageParameters() );
+        tester.assertBookmarkablePageLink( "messages", MessagesPage.class, new PageParameters() );
         tester.assertBookmarkablePageLink( "playbook.plays:0:editlink", EditPlay.class, new PageParameters().add( "id", 123L ) );
     }
 }

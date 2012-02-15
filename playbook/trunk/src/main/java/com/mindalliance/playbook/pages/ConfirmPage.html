@@ -9,7 +9,7 @@
 <body>
 <wicket:extend>
     <div data-role="header" data-position="fixed">
-        <a wicket:id="cancel" data-role="button" data-icon="back" data-inline="true" >Back</a>
+        <a href="javascript:history.go(-1)"  onMouseOver="self.status=document.referrer;return true" data-role="button" data-icon="back" data-inline="true" >Back</a>
         <h1 wicket:id="hTitle">1. Call John and ask about status</h1>
     </div>
     <div data-role="content">

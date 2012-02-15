@@ -10,7 +10,7 @@
 <wicket:extend>
     <form id="stepForm" wicket:id="form">
         <div data-role="header" data-theme="b">
-            <a wicket:id="cancel" data-icon="arrow-l" data-role="button" data-inline="true">Back</a>
+            <a href="javascript:history.go(-1)"  onMouseOver="self.status=document.referrer;return true" data-icon="arrow-l" data-role="button" data-inline="true">Back</a>
             <h1 wicket:id="hTitle">1. Call John and ask about status</h1>
             <div class="ui-btn-right">
                 <input id="confirm" data-icon="forward" data-role="button" type="submit" value="Confirm" data-inline="true"
@@ -66,18 +66,6 @@
             </div>
         </div>
     </form>
-    <div data-role="footer" data-position="fixed" data-theme="b">
-        <div data-role="navbar">
-            <ul>
-                <li><a href="#">Do</a></li>
-                <li><a href="#">Plan</a></li>
-                <li><a href="#">Messages</a></li>
-                <li><a href="#">More</a></li>
-            </ul>
-        </div>
-    </div>
-
-
 </wicket:extend>
 </body>
 </html>

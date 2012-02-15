@@ -58,11 +58,7 @@ public class PlaysPage extends MobilePage {
                      playDao.save( play );
                      setResponsePage( EditPlay.class, new PageParameters().add( "id", play.getId() ) );                    
                  }
-             },
-
-             new BookmarkablePageLink<Settings>( "settingsLink", Settings.class ),
-             new BookmarkablePageLink<MessagesPage>( "collaborate", MessagesPage.class ),
-             new BookmarkablePageLink<PlaysPage>( "todos", TodoPage.class ) );
+             } );
     }
 
     @Override
