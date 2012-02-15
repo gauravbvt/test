@@ -392,7 +392,6 @@ public class GuidelinesPage extends AbstractParticipantPage {
                                 .add( new Label( "spec",
                                         spec.getLabel() ).setRenderBodyOnly( true ) )
                                 .add( new AttributeModifier( "name",
-                                        true,
                                         new Model<String>( spec.getLink() ) ) ),
 
                         new ListView<AggregatedContact>( "perFlowContact", contactList ) {

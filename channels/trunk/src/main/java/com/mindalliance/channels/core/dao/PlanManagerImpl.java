@@ -542,6 +542,15 @@ public class PlanManagerImpl implements PlanManager {
     }
 
     @Override
+    public List<String> getPlanUris() {
+        List<String> uris = new ArrayList<String>(  );
+        for ( Plan plan : getPlans() ) {
+            uris.add(  plan.getUri() );
+        }
+        return uris;
+    }
+
+    @Override
     public void commandDone( Commander commander, Command command, Change change ) {
         if ( !commander.isReplaying() && command.isTop() && !change.isNone() )
             onAfterCommand( commander.getPlan(), command );

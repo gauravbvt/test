@@ -90,9 +90,4 @@ public class ExecutedCommandServiceImpl
         
     }
 
-
-    @Override
-    public Class<ExecutedCommand> getPersistentClass() {
-        return ExecutedCommand.class;
-    }
 }

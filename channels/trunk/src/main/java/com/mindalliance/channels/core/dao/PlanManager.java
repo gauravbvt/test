@@ -238,4 +238,10 @@ public interface PlanManager extends CommandListener {
      * @return the directory
      */
     File getVersionDirectory( Plan plan );
+
+    /**
+     * Return list of uris of all plans on Channels instances
+     * @return a list of uris
+     */
+    List<String> getPlanUris();
 }

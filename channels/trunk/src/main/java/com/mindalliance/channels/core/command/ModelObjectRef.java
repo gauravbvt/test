@@ -4,6 +4,8 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +27,7 @@ public class ModelObjectRef implements Serializable {
      * Class logger.
      */
     public static final Logger LOG = LoggerFactory.getLogger( ModelObjectRef.class );
-    
+
     public static final String SEPARATOR = "::";
 
     /**
@@ -37,29 +39,39 @@ public class ModelObjectRef implements Serializable {
      */
     private String className;
     /**
+     * Kind of model object.
+     */
+    private String typeName;
+    /**
      * The entity's name, if an entity is referenced.
      */
-    private String entityName;
+    private String name;
     /**
      * Kind of entity
      */
     private String entityKind;
+    /**
+     * Segment name.
+     */
+    private String segmentName;
     /* *
       * The identifiable itself if not a model object.
      */
     private Identifiable identifiable;
-    
-    public ModelObjectRef( ) {
+
+    public ModelObjectRef() {
 
     }
 
     public ModelObjectRef( Identifiable identifiable ) {
         assert identifiable != null;
         if ( identifiable instanceof ModelEntity ) {
-            entityName = identifiable.getName();
+            ModelEntity mo = (ModelEntity) identifiable;
+            name = identifiable.getName();
             ModelEntity.Kind kind = ( (ModelEntity) identifiable ).getKind();
             // TODO - hack: remove this patch once all Phases are correctly initialized
-            if ( kind == null ) kind = ModelEntity.defaultKindFor( (Class<? extends ModelEntity>)identifiable.getClass() );
+            if ( kind == null )
+                kind = ModelEntity.defaultKindFor( (Class<? extends ModelEntity>) identifiable.getClass() );
             entityKind = kind.name();
         }
         id = identifiable.getId();
@@ -68,6 +80,13 @@ public class ModelObjectRef implements Serializable {
         // TODO - hack: a referenced identifiable should always be, ugh, referenced to be later resolved from id if still exists.
         if ( !( identifiable instanceof ModelObject ) ) {
             this.identifiable = identifiable;
+        } else {
+            ModelObject mo = (ModelObject) identifiable;
+            typeName = mo.getTypeName();
+            name = mo instanceof Part ? ( (Part) mo ).getTask() : mo.getName();
+            if ( identifiable instanceof SegmentObject ) {
+                segmentName = ( (SegmentObject) identifiable ).getSegment().getName();
+            }
         }
     }
 
@@ -87,12 +106,36 @@ public class ModelObjectRef implements Serializable {
         this.className = className;
     }
 
-    public void setEntityName( String entityName ) {
-        this.entityName = entityName;
+    public void setName( String name ) {
+        this.name = name;
+    }
+
+    public String getEntityKind() {
+        return entityKind;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setEntityKind( String entityKind ) {
         this.entityKind = entityKind;
+    }
+
+    public String getTypeName() {
+        return typeName == null ? className : typeName;
+    }
+
+    public void setTypeName( String typeName ) {
+        this.typeName = typeName;
+    }
+
+    public String getSegmentName() {
+        return segmentName == null ? "" : segmentName;
+    }
+
+    public void setSegmentName( String segmentName ) {
+        this.segmentName = segmentName;
     }
 
     public boolean isSerializable() {
@@ -137,25 +180,25 @@ public class ModelObjectRef implements Serializable {
                 Identifiable mo;
                 Class<? extends Identifiable> clazz = getIdentifiableClass();
                 assert ModelObject.class.isAssignableFrom( clazz );
-                if ( entityName == null ) {
+                if ( entityKind == null || entityKind.isEmpty() ) {
                     mo = queryService.find( (Class<? extends ModelObject>) clazz, id );
                 } else {
                     assert ModelEntity.class.isAssignableFrom( clazz );
                     if ( entityKind.equals( ModelEntity.Kind.Actual.name() ) ) {
                         mo = queryService.findOrCreate(
                                 (Class<ModelEntity>) getIdentifiableClass(),
-                                entityName,
+                                name,
                                 id );
                     } else {
                         mo = queryService.findOrCreateType(
                                 (Class<ModelEntity>) getIdentifiableClass(),
-                                entityName,
+                                name,
                                 id );
                     }
                 }
                 return mo;
             } catch ( NotFoundException e ) {
-                LOG.debug( className + " not found at " + id);
+                LOG.debug( className + " not found at " + id );
                 return null;
             }
         }
@@ -168,26 +211,28 @@ public class ModelObjectRef implements Serializable {
      * @return a boolean
      */
     public boolean isForInstanceOf
-            ( Class<? extends Identifiable> clazz ) {
+    ( Class<? extends Identifiable> clazz ) {
         try {
             return clazz.isAssignableFrom( getIdentifiableClass() );
         } catch ( NotFoundException e ) {
             return false;
         }
     }
-    
+
     public String asString() {
-        StringBuilder sb = new StringBuilder(  );
-        if ( identifiable == null )  {
+        StringBuilder sb = new StringBuilder();
+        if ( identifiable == null ) {
             sb.append( getClassName() );
             sb.append( SEPARATOR );
             sb.append( getId() );
-            if ( entityKind != null ) {
-                sb.append( SEPARATOR );
-                sb.append( entityKind );
-                sb.append( SEPARATOR );
-                sb.append( entityName );
-            }
+            sb.append( SEPARATOR );
+            sb.append( name );
+            sb.append( SEPARATOR );
+            sb.append( typeName );
+            sb.append( SEPARATOR );
+            sb.append( entityKind == null ? "" : entityKind );
+            sb.append( SEPARATOR );
+            sb.append( getSegmentName() );
         }
         return sb.toString();
     }
@@ -195,18 +240,19 @@ public class ModelObjectRef implements Serializable {
     /**
      * Builds a modelObjectRef from string.
      * Can be an empty one if it was built from an Identifiable which was not a ModelObject.
+     *
      * @param s
      * @return
      */
     public static ModelObjectRef fromString( String s ) {
         String[] items = s.split( SEPARATOR );
-        ModelObjectRef moref = new ModelObjectRef(  );
+        ModelObjectRef moref = new ModelObjectRef();
         moref.setClassName( items[0] );
         moref.setId( Long.parseLong( items[1] ) );
-        if ( items.length > 2 ) {
-            moref.setEntityKind( items[2] );
-            moref.setEntityName( items[3] );
-        }
+        moref.setName( items[2] );
+        moref.setTypeName( items[3] );
+        moref.setEntityKind( items[4] );
+        moref.setSegmentName( items[5] );
         return moref;
     }
 

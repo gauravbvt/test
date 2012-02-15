@@ -206,9 +206,4 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
         whenLastChanged.put( urn, new Date() );
     }
 
-
-    @Override
-    public Class<UserMessage> getPersistentClass() {
-        return UserMessage.class;
-    }
 }

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.Iterator;
 import java.util.List;
 
@@ -112,7 +113,10 @@ public abstract class GenericSqlServiceImpl<T, ID extends Serializable> implemen
         return entity;
     }
 
-    public abstract Class<T> getPersistentClass();
+    @SuppressWarnings( "unchecked" )
+    protected Class<T> getPersistentClass() {
+        return (Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass() ).getActualTypeArguments()[0];
+    }
 
     public SessionFactory getSessionFactory() {
         return sessionFactory;

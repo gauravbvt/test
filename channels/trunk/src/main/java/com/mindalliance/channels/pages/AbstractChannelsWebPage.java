@@ -303,7 +303,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
      * @param visible   a boolean
      */
     protected static void makeVisible( Component component, boolean visible ) {
-        component.add( new AttributeModifier( "style", true, new Model<String>( visible ? "" : "display:none" ) ) );
+        component.add( new AttributeModifier( "style", new Model<String>( visible ? "" : "display:none" ) ) );
     }
 
     public static <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
@@ -311,7 +311,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
 
         BookmarkablePageLink<T> link = new BookmarkablePageLink<T>( id, pageClass );
         addPlanParameters( link, plan );
-        link.add( new AttributeModifier( "target", true, new Model<String>( target ) ) );
+        link.add( new AttributeModifier( "target", new Model<String>( target ) ) );
         if ( popupSettings != null )
             link.setPopupSettings( popupSettings );
 
@@ -324,7 +324,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
 
         BookmarkablePageLink<T> link = newTargetedLink( id, target, pageClass, popupSettings, plan );
         for ( String name : parameters.getNamedKeys() ) {
-            link.setParameter( name, "" + parameters.get( name ) );
+            link.getPageParameters().set( name, "" + parameters.get( name ) );
         }
         return link;
     }
@@ -386,8 +386,9 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     protected void setPlanFromParameters( PageParameters parameters ) {
         String encodedPlanUri = parameters.get( PLAN_PARM ).toString( null );
         if ( encodedPlanUri == null ) {
+            String userPlanUri =  user.getPlanUri() == null ? "" : user.getPlanUri();
             try {
-                encodedPlanUri = URLEncoder.encode( user.getPlanUri(), "UTF-8" );
+                encodedPlanUri = URLEncoder.encode( userPlanUri, "UTF-8" );
             } catch ( UnsupportedEncodingException e ) {
                 LOG.error( "Failed to encode plan uri", e );
                 encodedPlanUri = "";

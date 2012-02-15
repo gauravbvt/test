@@ -221,12 +221,6 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
         return sb.toString();
     }
 
-
-    @Override
-    public Class<ChannelsUserInfo> getPersistentClass() {
-        return ChannelsUserInfo.class;
-    }
-
     @Override
     @Transactional
     public UserDetails loadUserByUsername( String identifier ) throws UsernameNotFoundException, DataAccessException {

@@ -1,15 +1,13 @@
 package com.mindalliance.channels.pages.components.support;
 
+import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.community.Feedback;
+import com.mindalliance.channels.core.community.FeedbackService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
-import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.AjaxIndicatorAwareContainer;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -23,10 +21,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Feedback panel.
@@ -47,6 +41,9 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     @SpringBean
     private MailSender mailSender;
 
+    @SpringBean
+    private FeedbackService feedbackService;
+
     private Identifiable about;
     private WebMarkupContainer feedbackContainer;
     private boolean question = true;
@@ -56,12 +53,9 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     private String content = "";
     private TextArea<String> contentText;
     private AjaxLink sendButton;
-    private SimpleDateFormat dateFormat;
     private AjaxCheckBox suggestionCheckBox;
     private AjaxCheckBox problemCheckBox;
     private AjaxCheckBox questionCheckBox;
-    private static final int MAX_SUBJECT_LENGTH = 60;
-    private String clientInfo = "";
     private String feedbackLabel;
     private String topic;
 
@@ -84,7 +78,6 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
 
 
     private void init() {
-        dateFormat = new SimpleDateFormat( "yyyy/MM/dd HH:mm:ss" );
         addNewFeedbackLink();
         AjaxIndicatorAwareContainer indicatorAware = new AjaxIndicatorAwareContainer( "aware", "spinner" );
         add( indicatorAware );
@@ -100,7 +93,6 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
         AjaxLink<String> newFeedback = new AjaxLink<String>( "newFeedback" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                clientInfo = getClientProperties();
                 makeVisible( feedbackContainer, true );
                 target.add( feedbackContainer );
             }
@@ -178,7 +170,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 if ( !getContent().isEmpty() ) {
-                    boolean success = sendFeedback();
+                    boolean success = saveFeedback();
                     String alert = success
                             ? "Feedback sent. Thank you!"
                             : "Oops! Your feedback could not be sent. Sorry.";
@@ -208,83 +200,37 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
         feedbackContainer.add( cancelButton );
     }
 
-    private String contentType() {
-        return isQuestion()
-                ? "question"
-                : isProblem()
-                ? "problem"
-                : "suggestion";
-    }
-
-    private boolean sendFeedback() {
+    private boolean saveFeedback() {
         ChannelsUser currentUser = getUser();
         Plan plan = getPlan();
-        String toAddress = currentUser.isPlanner()
-                ? plan.getPlannerSupportCommunity( getPlanManager().getDefaultSupportCommunity() )
-                : plan.getUserSupportCommunity( getPlanManager().getDefaultSupportCommunity() );
+        Feedback feedback = new Feedback( currentUser.getUsername(), plan.getUri(), feedbackType() );
+        feedback.setTopic( topic );
+        feedback.setContent( getContent() );
+        feedback.setFromEmail( currentUser.getEmail() );
+        feedback.setUrgent( isAsap() );
+        if ( about != null ) {
+            feedback.setAbout( new ModelObjectRef( about ).asString() );
+        }
         try {
-            SimpleMailMessage email = new SimpleMailMessage();
-            email.setTo( toAddress );
-            email.setFrom( currentUser.getEmail() );
-            email.setReplyTo( currentUser.getEmail() );
-            String subject = makeEmailSubject();
-            email.setSubject( subject );
-            email.setText( makeContent( plan, currentUser ) );
-            LOG.info( currentUser.getUsername()
-                    + " emailing \"" + subject + "\" to "
-                    + toAddress );
-            mailSender.send( email );
+            feedbackService.save( feedback );
             return true;
         } catch ( Exception e ) {
             LOG.warn( currentUser.getUsername()
-                    + " failed to email feedback ", e );
+                    + " failed to record feedback ", e );
             return false;
-
         }
 
     }
 
-    private String makeContent( Plan plan, ChannelsUser user ) {
-        return "Plan: " + plan.getUri()
-                + "\nUser: " + user.getFullName()
-                + "\n"
-                + dateFormat.format( new Date() )
-                + aboutString()
-                + "\n----------------------------------------------------------------------------\n\n"
-                + getContent()
-                + "\n\n----------------------------------------------------------------------------\n"
-                + clientInfo;
-
+    private Feedback.Type feedbackType() {
+        return isProblem()
+                ? Feedback.Type.PROBLEM
+                : isQuestion()
+                    ? Feedback.Type.QUESTION
+                    : Feedback.Type.SUGGESTION;
     }
 
-    private String aboutString() {
-        if ( about == null ) {
-            return "";
-        } else {
-            StringBuilder sb = new StringBuilder();
-            sb.append( "\nAbout: " );
-            sb.append( about.getTypeName() );
-            sb.append( " \"" );
-            sb.append( about instanceof Part ? ( (Part) about ).getTask() : about.getName() );
-            sb.append( "\" [" );
-            sb.append( about.getId() );
-            sb.append( "]" );
-            if ( about instanceof SegmentObject ) {
-                SegmentObject segObj = (SegmentObject) about;
-                sb.append( " in segment \"" );
-                sb.append( segObj.getSegment().getName() );
-                sb.append( "\" [" );
-                sb.append( segObj.getSegment().getId() );
-                sb.append( "]" );
-            }
-            if ( topic != null ) {
-                sb.append( " (" );
-                sb.append( topic );
-                sb.append( ')' );
-            }
-            return sb.toString();
-        }
-    }
+
 
     private String getClientProperties() {
         WebClientInfo clientInfo = getUser().getClientInfo();
@@ -295,32 +241,12 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
         }
     }
 
-    private String makeEmailSubject() {
-        StringBuilder sb = new StringBuilder();
-        sb.append( "Feedback" );
-        if ( isAsap() ) sb.append( " [ASAP]" );
-        sb.append( " - " );
-        sb.append( WordUtils.capitalize( contentType() ) );
-        sb.append( " - " );
-        sb.append( contentAbbreviated() );
-        return sb.toString();
-    }
-
-    private String contentAbbreviated() {
-        String summary = getContent().replaceAll( "\\s", " " );
-        return StringUtils.abbreviate( summary, MAX_SUBJECT_LENGTH );
-    }
-
     private void resetFeedback() {
         question = true;
         problem = false;
         suggestion = false;
         asap = false;
         content = "";
-    }
-
-    private Channels getApp() {
-        return (Channels) getApplication();
     }
 
     public boolean isQuestion() {

@@ -163,9 +163,4 @@ public class PresenceRecordServiceImpl
         latestPresences.put( urn, new HashMap<String, PresenceRecord>() );
     }
 
-
-    @Override
-    public Class<PresenceRecord> getPersistentClass() {
-        return PresenceRecord.class;
-    }
 }
