@@ -8,11 +8,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <body>
 <wicket:extend>
-    <div data-role="header" data-theme="b">
+    <div data-role="header" data-position="fixed">
         <a wicket:id="cancel" data-inline="true" data-role="button" data-icon="back">Back</a>
         <h1 wicket:id="hTitle">Request</h1>
     </div>
-    <div data-role="content" data-theme="c">
+    <div data-role="content">
         <p class="error" wicket:id="feedback">(Error messages would go here</p>
         <div>
             <h3>The following message was received from <span wicket:id="req.sender">Jane Doe</span> 

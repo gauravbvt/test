@@ -9,10 +9,11 @@
 <body>
 <wicket:extend>
         <div data-role="header" data-theme="b">
-            <a data-role="button" data-inline="true" data-icon="back" wicket:id="home" href="#">Back</a>          
+            <a href="#" data-icon="arrow-l" data-direction="reverse">Back</a>
             <h1>Settings</h1>
+            <a wicket:id="home" href="#" data-role="button" data-direction="reverse" data-icon="home" data-iconpos="notext">Home</a>
         </div>
-        <div data-role="content" data-theme="c">
+        <div data-role="content"data-theme="c">
             <form wicket:id="form" method="post" action="#">
                 <div class="contact" wicket:id="playbook.me">
                     (My contact info)
@@ -42,6 +43,19 @@
                 
             </form>            
         </div>
+
+        <div data-role="footer" data-position="fixed" data-theme="b">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="todo.html">Do</a></li>
+                    <li><a href="plays.html">Plan</a></li>
+                    <li><a href="collaborate.html">Messages</a></li>
+                    <li><a class="ui-btn-active" href="settings.html">More</a></li>
+                </ul>
+            </div>
+        </div>
+
+        
 </wicket:extend>
 </body>
 </html>

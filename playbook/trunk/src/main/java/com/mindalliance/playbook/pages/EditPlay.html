@@ -8,13 +8,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <body>
 <wicket:extend>
-    <div data-theme="b" data-role="header">
-        <a wicket:id="back" data-role="button" data-inline="true" data-icon="back">Back</a>
+    <div data-role="header" data-theme="b">
+        <a href="#" data-icon="arrow-l" data-direction="reverse" wicket:id="back">Back</a>
         <h1 wicket:id="hTitle">Weekly Meeting</h1>
-        <a class="right" data-role="button" data-icon="check" data-inline="true" href="#">Do it now!</a>
+        <a href="todo.html" data-role="button" data-direction="reverse" data-icon="home" data-iconpos="notext">Home</a>        
     </div>
 
-    <div data-role="content">
+    <div data-role="content" data-theme="c">
         <form wicket:id="form">
             <div data-role="fieldcontain">
                 <label for="title">Title:</label>                    
@@ -51,11 +51,25 @@
 
             <div>
                 <a href="transfer.html" data-icon="forward" data-role="button" data-inline="true">Transfer to...</a>
-                <a wicket:id="deletePlay" data-icon="delete"  data-role="button" data-inline="true">Delete</a>
-                <input type="submit" data-role="button" data-icon="check" value="Save" data-inline="true"/>
+                <a wicket:id="deletePlay" data-icon="delete" data-role="button" data-inline="true">Delete</a>
+                <input type="submit" data-role="button" data-icon="check" value="Save" data-inline="true" />
+                <a data-icon="check" data-role="button" href="#" data-inline="true">Do it now!</a>
             </div>
         </form>
     </div>
+
+    <div data-role="footer" data-position="fixed" data-theme="b">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#">Do</a></li>
+                <li><a href="#">Plan</a></li>
+                <li><a href="#">Messages</a></li>
+                <li><a href="#">More</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    
 </wicket:extend>
 </body>
 </html>

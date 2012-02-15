@@ -8,30 +8,33 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <body>
 <wicket:extend>
-    <div data-role="header" data-position="fixed">
-        <img src="images/logo.png" align="left" alt="(logo)">
-        <h1 wicket:id="title">Playbook - Plays</h1>
-        <a wicket:id="settingsLink" class="ui-btn-right" data-iconpos="notext" data-icon="gear" data-role="button" data-rel="dialog"
-           href="#">Settings</a>
+    <div data-role="header" data-theme="b">
+        <a href="#" data-icon="arrow-l" data-direction="reverse">Back</a>
+        <h1 wicket:id="title">Plays</h1>
+        <a href="todo.html" data-role="button" data-direction="reverse" data-icon="home" data-iconpos="notext">Home</a>
     </div>
 
-    <div data-role="content">
-        <ul data-role="listview">
-            <li wicket:id="playbook.plays"><a wicket:id="editlink" href="#">
-                <h3 wicket:id="title">Fire evacuation</h3>
-                <span wicket:id="tags" class="tags">Work, Emergency</span>
-            </a></li>
+    <div data-role="content"data-theme="c">
+
+        <a wicket:id="addPlay" data-icon="add" data-role="button">Add play...</a>
+  
+        <ul data-role="listview" data-inset="true">
+            <li wicket:id="playbook.plays">
+            <a wicket:id="editlink" href="#">
+                <h3 wicket:id="title" class="ui-li-heading">Fire evacuation</h3>
+                <p wicket:id="tags" class="ui-li-desc">Work, Emergency</p>
+            </a>
+            </li>
         </ul>
-        
-        <p><a wicket:id="addPlay" data-icon="add" data-role="button" data-inline="true">Add play...</a></p>
     </div>
 
-    <div data-role="footer" data-position="fixed">
+    <div data-role="footer" data-position="fixed" data-theme="b">
         <div data-role="navbar">
             <ul>
-                <li><a wicket:id="todos" href="#">Do It Now</a></li>
-                <li><a class="ui-btn-active" href="#">Plan Ahead</a></li>
-                <li><a wicket:id="collaborate" href="#">Collaborate</a></li>
+                <li><a wicket:id="todos" href="#">Do</a></li>
+                <li><a class="ui-btn-active" href="#">Plan</a></li>
+                <li><a wicket:id="collaborate" href="#">Messages</a></li>
+                <li><a wicket:id="settingsLink" href="#">More</a></li>
             </ul>
         </div>
     </div>

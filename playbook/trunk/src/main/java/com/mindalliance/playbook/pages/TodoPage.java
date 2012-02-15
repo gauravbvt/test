@@ -48,6 +48,6 @@ public class TodoPage extends MobilePage {
 
     @Override
     public String getPageTitle() {
-        return "Active plays";
+        return "Active Plays";
     }
 }
