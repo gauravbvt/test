@@ -178,9 +178,7 @@ public class AckPage extends MobilePage {
                     break;
 
                 case MAYBE:
-                    RedirectReq redirectReq = new RedirectReq( req, referral );
-                    redirectReq.setDescription( referralNote );
-                    reqDao.save( redirectReq );
+                    reqDao.redirect( new RedirectReq( req, referral, referralNote ) );
                     setResponsePage( MessagesPage.class );
                     
                     break;                    

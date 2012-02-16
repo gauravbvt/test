@@ -9,6 +9,7 @@ import com.mindalliance.playbook.model.Contact;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -52,6 +53,7 @@ public class MessagesPage extends MobilePage {
         List<Collaboration> incomplete = stepDao.getIncomplete();
 
         add(
+            new BookmarkablePageLink<TodoPage>( "home", TodoPage.class ),
             new Label( "title", new PropertyModel<String>( this, "pageTitle" ) ),
 
             new WebMarkupContainer( "empty" )

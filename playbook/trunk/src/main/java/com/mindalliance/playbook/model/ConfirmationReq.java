@@ -32,11 +32,14 @@ public class ConfirmationReq implements Serializable, Timestamped {
 
     private boolean forwardable;
     
-    @OneToOne
+    @OneToOne( optional = true )
     private Collaboration collaboration;
     
     @OneToOne( optional = true, cascade = CascadeType.REMOVE )
     private ConfirmationAck confirmation;
+    
+    @OneToOne( optional = true, cascade = CascadeType.REMOVE )
+    private RedirectReq redirect;
 
     //
     // Constructors
@@ -99,6 +102,14 @@ public class ConfirmationReq implements Serializable, Timestamped {
 
     public void setForwardable( boolean forwardable ) {
         this.forwardable = forwardable;
+    }
+
+    public RedirectReq getRedirect() {
+        return redirect;
+    }
+
+    public void setRedirect( RedirectReq redirect ) {
+        this.redirect = redirect;
     }
 
     public long getId() {

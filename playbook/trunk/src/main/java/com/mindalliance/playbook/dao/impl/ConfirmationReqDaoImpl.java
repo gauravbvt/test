@@ -4,6 +4,7 @@ import com.mindalliance.playbook.dao.AccountDao;
 import com.mindalliance.playbook.dao.ConfirmationReqDao;
 import com.mindalliance.playbook.dao.ContactDao;
 import com.mindalliance.playbook.model.ConfirmationReq;
+import com.mindalliance.playbook.model.RedirectReq;
 import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -38,13 +39,25 @@ public class ConfirmationReqDaoImpl extends GenericHibernateDao<ConfirmationReq,
     public List<ConfirmationReq> getIncomingRequests() {
 
         Query query = getSession().createQuery( 
-            "select c from ConfirmationReq as c " 
-            + "left join fetch c.collaboration as d " 
-            + "where c.confirmation is null and d.with in (:contacts)" )
+            "select r from ConfirmationReq as r " 
+            + "left join fetch r.collaboration as c " 
+            + "where r.confirmation is null and r.redirect is null and c.with in (:contacts)" )
             .setParameterList( "contacts", contactDao.findAliases( accountDao.getCurrentAccount() )
                  );
    
         return (List<ConfirmationReq>) query.list();
     }
 
+    /**
+     * Save a redirect request.
+     * @param request the request
+     * 
+     */
+    public void redirect( RedirectReq request ) {
+        save( request );
+
+        ConfirmationReq originalRequest = request.getOriginalRequest();
+        originalRequest.setRedirect( request );
+        save( originalRequest );
+    }
 }

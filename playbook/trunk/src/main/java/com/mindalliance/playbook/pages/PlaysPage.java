@@ -36,7 +36,8 @@ public class PlaysPage extends MobilePage {
         LOG.debug( "Generating for account: {}", account.getEmail() );
         setDefaultModel( new CompoundPropertyModel<Account>( account ) );
 
-        add( new Label( "title", new PropertyModel<String>( this, "pageTitle" ) ),
+        add( new BookmarkablePageLink<TodoPage>( "home", TodoPage.class ),
+             new Label( "title", new PropertyModel<String>( this, "pageTitle" ) ),
 
              new ListView<Play>( "playbook.plays" ) {
                  @Override

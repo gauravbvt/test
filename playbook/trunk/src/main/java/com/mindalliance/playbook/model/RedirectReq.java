@@ -19,7 +19,7 @@ public class RedirectReq extends ConfirmationReq {
 
     private static final long serialVersionUID = 7424188101027819583L;
 
-    @OneToOne
+    @OneToOne( mappedBy = "redirect" )
     private ConfirmationReq originalRequest;
 
     @ManyToOne
@@ -31,10 +31,10 @@ public class RedirectReq extends ConfirmationReq {
     public RedirectReq() {
     }
 
-    public RedirectReq( ConfirmationReq originalRequest, Contact recipient ) {
-        super( originalRequest.getCollaboration() );
+    public RedirectReq( ConfirmationReq originalRequest, Contact recipient, String description ) {
         this.originalRequest = originalRequest;
         this.recipient = recipient;
+        setDescription( description );
     }
 
     /**

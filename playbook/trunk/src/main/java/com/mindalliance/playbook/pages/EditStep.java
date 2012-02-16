@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -71,13 +72,13 @@ public class EditStep extends MobilePage {
         Status status = stepDao.getStatus( step );
 
         add(
-
             new Form( "form" ) {
                 @Override
                 protected void onSubmit() {
                     save( step );
                 }
             }.add(
+                new BookmarkablePageLink<TodoPage>( "home", TodoPage.class ),
                 new Label( "hTitle", new PropertyModel<String>( step, "title" ) ),
                 new FeedbackPanel( "feedback" ),
                 new TextField<String>( "title" ),

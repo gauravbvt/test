@@ -8,6 +8,7 @@ package com.mindalliance.playbook.pages;
 
 import com.mindalliance.playbook.model.Account;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -38,6 +39,7 @@ public class TodoPage extends MobilePage {
         setDefaultModel( new CompoundPropertyModel<Account>( account ) );
         
         add(
+            new BookmarkablePageLink<TodoPage>( "home", TodoPage.class ),
             new Label( "title", new PropertyModel<String>( this, "pageTitle" ) )
         );
     }
