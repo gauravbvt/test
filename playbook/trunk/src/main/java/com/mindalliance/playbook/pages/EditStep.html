@@ -12,11 +12,7 @@
         <div data-role="header" data-theme="b">
             <a href="javascript:history.go(-1)"  onMouseOver="self.status=document.referrer;return true" data-icon="arrow-l" data-role="button" data-inline="true">Back</a>
             <h1 wicket:id="hTitle">1. Call John and ask about status</h1>
-            <div class="ui-btn-right">
-                <input id="confirm" data-icon="forward" data-role="button" type="submit" value="Confirm" data-inline="true"
-                       wicket:id="confirm"/>               
-            </div>
-
+            <a href="todo.html" data-role="button" data-direction="reverse" data-icon="home" data-iconpos="notext">Home</a>
         </div>
 
         <div data-role="content" data-theme="c">
@@ -63,6 +59,7 @@
             <div>
                 <a wicket:id="delete" data-icon="delete" data-role="button" data-inline="true">Delete</a>
                 <input data-icon="check" data-role="button" type="submit" value="Save" data-inline="true"/>
+                <input id="confirm" data-icon="forward" data-role="button" type="submit" value="Confirm" data-inline="true" wicket:id="confirm"/>               
             </div>
         </div>
     </form>

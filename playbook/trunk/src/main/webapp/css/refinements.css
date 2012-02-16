@@ -1,3 +1,5 @@
+/*
+
 html {
 }
 
@@ -12,6 +14,8 @@ a.send img {
 }
 a.send {
 }
+
+*/
 
 .inactive {
     color: gray;
@@ -31,12 +35,13 @@ div.error, ul.feedbackPanel {
     margin: 0 2em 2em;
 }
 
+/*
+
 img.captcha {
     display: block;
     margin: 0 auto;    
 }
 
-/* ---------------------------------------------------------- */
 span.timing {
     float: right;
     margin: 0 15px 0 0;
@@ -47,6 +52,8 @@ span.tags {
     color: gray;
     font-size: 9pt;
 }
+
+*/
 
 span.late {
     color: red !important;
@@ -59,9 +66,13 @@ div.quote {
     white-space: pre;
 }
 
+/*
+
 div.contact {
     
 }
+
+*/
 
 div.contact div.details {
     display: block;
@@ -76,11 +87,16 @@ div.details h3 {
 div.details .job {
     margin-top: 0;    
 }
+
+/*
+
 div.details .address {   
 }
 
 img.contactPic {
 }
+
+*/
 
 .play-inset-list {
     display: inline-block;
