@@ -317,6 +317,7 @@ public class MAC0029_UndoTransferJobs
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to undo transfer jobs"+ReportFunctions.getScreenShot("Undo transfer job failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -330,6 +331,7 @@ public class MAC0029_UndoTransferJobs
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo transfer jobs"+ReportFunctions.getScreenShot("Undo transfer job failed"));
 		}
 	}
 }

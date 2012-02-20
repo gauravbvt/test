@@ -21,8 +21,8 @@ public class UpdatePlannerInPerformance
 	
     public UpdatePlannerInPerformance() {
     		String sChannelURL = "http://192.168.4.126:8081/channels";
-    		String sUserName = "jf";
-    		String sPassword = "Mind-Alliance";
+    		String sUserName = "admin";
+    		String sPassword = "admin";
 		try {
 				GlobalVariables.oDriver = new FirefoxDriver();
 				GlobalVariables.oDriver.get(sChannelURL);
@@ -43,9 +43,9 @@ public class UpdatePlannerInPerformance
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);				
-				// get list under Actions pop up menu
+				// get list
 				int countUsers = 1 , countPlanners = 0;
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody"));
 				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				List<WebElement> tds;
 				for(WebElement tr: trs)
@@ -57,14 +57,14 @@ public class UpdatePlannerInPerformance
 							GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:"+ (countUsers - 1) +":group:fullName"));
 							for (int i = 0; i <= 10; i++)
 								GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-							GlobalVariables.oElement.sendKeys("User"+(countUsers - 6));
+							GlobalVariables.oElement.sendKeys("User"+(countUsers - 1));
 							GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("item:" + (countUsers - 1) + ":group:email"));
 							GlobalVariables.oElement.clear();
 							GlobalVariables.oElement.sendKeys("user"+(countUsers-1)+"@example.com");
 							GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("item:" + (countUsers - 1) + ":group:password"));
 							GlobalVariables.oElement.sendKeys("@test123");
 							
-							GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody/tr[" + (countUsers) + "]/td[6]/input")).click();
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody/tr[" + (countUsers) + "]/td[6]/input")).click();
 							countPlanners++;
 						}
 					}

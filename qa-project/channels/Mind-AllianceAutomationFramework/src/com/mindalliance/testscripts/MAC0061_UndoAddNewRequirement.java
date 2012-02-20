@@ -155,6 +155,7 @@ public class MAC0061_UndoAddNewRequirement
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo add new requirement"+ReportFunctions.getScreenShot("Undo add new requirement failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -168,6 +169,7 @@ public class MAC0061_UndoAddNewRequirement
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo add new requirement"+ReportFunctions.getScreenShot("Undo add new requirement failed"));
 		}
 	}
 }

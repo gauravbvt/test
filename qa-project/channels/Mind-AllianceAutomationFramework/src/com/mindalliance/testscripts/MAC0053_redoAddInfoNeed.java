@@ -201,6 +201,7 @@ public class MAC0053_redoAddInfoNeed {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo add info need"+ReportFunctions.getScreenShot("Redo add info need failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -214,6 +215,7 @@ public class MAC0053_redoAddInfoNeed {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo add info need"+ReportFunctions.getScreenShot("Redo add info need failed"));
 		}
 	}
 }

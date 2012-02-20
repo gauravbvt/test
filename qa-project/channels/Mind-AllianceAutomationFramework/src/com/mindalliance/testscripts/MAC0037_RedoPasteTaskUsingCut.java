@@ -310,6 +310,7 @@ public class MAC0037_RedoPasteTaskUsingCut {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo paste task using copy"+ReportFunctions.getScreenShot("Redo paste task using copy failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -323,6 +324,7 @@ public class MAC0037_RedoPasteTaskUsingCut {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo paste task using copy"+ReportFunctions.getScreenShot("Redo paste task using copy failed"));
 		}
 	}
 }

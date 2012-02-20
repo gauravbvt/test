@@ -223,6 +223,7 @@ public class MAC0036_RedoCutTask {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo cut task"+ReportFunctions.getScreenShot("Redo cut task failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -236,6 +237,7 @@ public class MAC0036_RedoCutTask {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo cut task"+ReportFunctions.getScreenShot("Redo cut task failed"));
 		}
 	}
 }

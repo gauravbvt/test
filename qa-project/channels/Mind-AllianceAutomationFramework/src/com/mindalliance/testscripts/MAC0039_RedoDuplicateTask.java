@@ -211,6 +211,7 @@ public class MAC0039_RedoDuplicateTask {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo duplicate task"+ReportFunctions.getScreenShot("Redo duplicate task failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -224,6 +225,7 @@ public class MAC0039_RedoDuplicateTask {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo duplicate task"+ReportFunctions.getScreenShot("Redo duplicate task failed"));
 		}
 	}
 }

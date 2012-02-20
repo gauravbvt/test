@@ -236,6 +236,7 @@ public class MAC0028_CopyFlow
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to copy flow"+ReportFunctions.getScreenShot("Copy flow failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -249,6 +250,7 @@ public class MAC0028_CopyFlow
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to copy flow"+ReportFunctions.getScreenShot("Copy flow failed"));
 		}
 	}
 }

@@ -220,6 +220,7 @@ public class MAC0033_RedoAddGoal {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo add goal"+ReportFunctions.getScreenShot("Redo add goal failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -233,6 +234,7 @@ public class MAC0033_RedoAddGoal {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo add goal"+ReportFunctions.getScreenShot("Redo add goal failed"));
 		}
 	}
 }

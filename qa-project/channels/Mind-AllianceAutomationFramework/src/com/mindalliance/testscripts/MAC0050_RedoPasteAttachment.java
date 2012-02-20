@@ -382,6 +382,7 @@ public class MAC0050_RedoPasteAttachment {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo paste attachment"+ReportFunctions.getScreenShot("Redo paste attachment failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -395,6 +396,7 @@ public class MAC0050_RedoPasteAttachment {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo paste attachment"+ReportFunctions.getScreenShot("Redo paste attachment failed"));
 		}
 	}
 }

@@ -230,6 +230,7 @@ public class MAC0047_RedoAttachDocument {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo attach document"+ReportFunctions.getScreenShot("Redo attach document failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -243,6 +244,7 @@ public class MAC0047_RedoAttachDocument {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo attach document"+ReportFunctions.getScreenShot("Redo attach document failed"));
 		}
 	}
 }

@@ -157,6 +157,7 @@ public class MAC0023_UndoAddInfoNeed {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to undo add info need"+ReportFunctions.getScreenShot("Undo add info need failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -170,6 +171,7 @@ public class MAC0023_UndoAddInfoNeed {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo add info need"+ReportFunctions.getScreenShot("Undo add info need failed"));
 		}
 	}
 }

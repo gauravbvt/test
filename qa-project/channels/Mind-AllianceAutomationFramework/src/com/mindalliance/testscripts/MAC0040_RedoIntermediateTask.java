@@ -294,6 +294,7 @@ public class MAC0040_RedoIntermediateTask {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo intermediate task"+ReportFunctions.getScreenShot("Redo intermediate task failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -307,6 +308,7 @@ public class MAC0040_RedoIntermediateTask {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo intermediate task"+ReportFunctions.getScreenShot("Redo intermediate task failed"));
 		}
 	}
 }

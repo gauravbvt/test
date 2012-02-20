@@ -245,6 +245,7 @@ public class MAC0035_RedoAddNewTask {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo add new task"+ReportFunctions.getScreenShot("Redo add new task failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -258,6 +259,7 @@ public class MAC0035_RedoAddNewTask {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo add new task"+ReportFunctions.getScreenShot("Redo add new task failed"));
 		}
 	}
 }

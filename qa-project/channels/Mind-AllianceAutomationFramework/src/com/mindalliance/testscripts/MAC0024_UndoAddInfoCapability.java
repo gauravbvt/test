@@ -183,6 +183,7 @@ public class MAC0024_UndoAddInfoCapability {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to undo add info capability"+ReportFunctions.getScreenShot("Undo add info capability failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -196,6 +197,7 @@ public class MAC0024_UndoAddInfoCapability {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo add info capability"+ReportFunctions.getScreenShot("Undo add info capability failed"));
 		}
 	}
 }

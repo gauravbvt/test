@@ -125,6 +125,7 @@ public class MAP0001_addPlan
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to add plan"+ReportFunctions.getScreenShot("Add plan failed"));
 		}
 	}
     public static void main(String args[]) {
@@ -138,6 +139,7 @@ public class MAP0001_addPlan
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to add plan"+ReportFunctions.getScreenShot("Add plan failed"));
 		}
 	}
 }

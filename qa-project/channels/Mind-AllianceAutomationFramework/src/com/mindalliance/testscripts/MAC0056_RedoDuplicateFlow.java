@@ -235,6 +235,7 @@ public class MAC0056_RedoDuplicateFlow
 			ApplicationFunctionLibrary.logout();	
 		}
 		System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+		System.out.println("Unable to redo duplicate flow"+ReportFunctions.getScreenShot("Redo duplicate flow failed"));
 	}
   }
     public static void main(String args[]) {
@@ -248,6 +249,7 @@ public class MAC0056_RedoDuplicateFlow
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo duplicate flow"+ReportFunctions.getScreenShot("Redo duplicate flow failed"));
 		}
 	}
 }

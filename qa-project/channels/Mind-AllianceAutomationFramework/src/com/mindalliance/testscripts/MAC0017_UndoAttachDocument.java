@@ -219,6 +219,7 @@ public class MAC0017_UndoAttachDocument {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to undo remove issue"+ReportFunctions.getScreenShot("Undo remove issue failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -232,6 +233,7 @@ public class MAC0017_UndoAttachDocument {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo remove issue"+ReportFunctions.getScreenShot("Undo remove issue failed"));
 		}
 	}
 }

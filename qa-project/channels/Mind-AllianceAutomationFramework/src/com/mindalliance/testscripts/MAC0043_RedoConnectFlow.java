@@ -258,6 +258,7 @@ public class MAC0043_RedoConnectFlow {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo connect flow"+ReportFunctions.getScreenShot("Redo connect flow failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -271,6 +272,7 @@ public class MAC0043_RedoConnectFlow {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo connect flow"+ReportFunctions.getScreenShot("Redo connect flow failed"));
 		}
 	}
 }

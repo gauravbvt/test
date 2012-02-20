@@ -162,6 +162,7 @@ public class MAC0021_CopyTask
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to copy task"+ReportFunctions.getScreenShot("Copy task failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -175,6 +176,7 @@ public class MAC0021_CopyTask
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to copy task"+ReportFunctions.getScreenShot("Copy task failed"));
 		}
 	}
 }

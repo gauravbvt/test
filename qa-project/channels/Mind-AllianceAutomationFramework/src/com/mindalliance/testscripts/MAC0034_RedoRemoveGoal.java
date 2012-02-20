@@ -245,6 +245,7 @@ public class MAC0034_RedoRemoveGoal {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo remove goal"+ReportFunctions.getScreenShot("Redo remove this goal failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -258,6 +259,7 @@ public class MAC0034_RedoRemoveGoal {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo remove goal"+ReportFunctions.getScreenShot("Redo remove this goal failed"));
 		}
 	}
 }

@@ -232,6 +232,7 @@ public class MAC0025_UndoRemoveFlow
 			ApplicationFunctionLibrary.logout();	
 		}
 		System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+		System.out.println("Unable to undo remove flow"+ReportFunctions.getScreenShot("Undo remove flow failed"));
 	}
   }
     public static void main(String args[]) {
@@ -245,6 +246,7 @@ public class MAC0025_UndoRemoveFlow
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo remove flow"+ReportFunctions.getScreenShot("Undo remove flow failed"));
 		}
 	}
 }

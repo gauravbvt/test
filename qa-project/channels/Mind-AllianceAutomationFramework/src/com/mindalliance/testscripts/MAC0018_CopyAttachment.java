@@ -187,6 +187,7 @@ public class MAC0018_CopyAttachment
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to copy attachment"+ReportFunctions.getScreenShot("Copy attachment failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -200,6 +201,7 @@ public class MAC0018_CopyAttachment
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to copy attachment"+ReportFunctions.getScreenShot("Copy attachment failed"));
 		}
 	}
 }

@@ -181,6 +181,7 @@ public class MAC0015_UndoAddIssue {
 			ApplicationFunctionLibrary.logout();	
 		}
 		System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+		System.out.println("Unable to undo add issue"+ReportFunctions.getScreenShot("Undo add new issue failed"));
 	}
   }
 	public static void main(String args[]) {
@@ -194,6 +195,7 @@ public class MAC0015_UndoAddIssue {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo add issue"+ReportFunctions.getScreenShot("Undo add new issue failed"));
 		}
 	}
 }

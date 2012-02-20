@@ -242,6 +242,7 @@ public class MAC0057_RedoBreakUpFlow
 			ApplicationFunctionLibrary.logout();	
 		}
 		System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+		System.out.println("Unable to redo break up flow"+ReportFunctions.getScreenShot("Redo break up flow failed"));
 	}
   }
     public static void main(String args[]) {
@@ -255,6 +256,7 @@ public class MAC0057_RedoBreakUpFlow
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo break up flow"+ReportFunctions.getScreenShot("Redo break up flow failed"));
 		}
 	}
 }

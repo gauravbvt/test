@@ -370,6 +370,7 @@ public class MAC0020_UndoPasteAttachment {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to undo paste attachment"+ReportFunctions.getScreenShot("Undo paste attachment failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -383,6 +384,7 @@ public class MAC0020_UndoPasteAttachment {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo paste attachment"+ReportFunctions.getScreenShot("Undo paste attachment failed"));
 		}
 	}
 }

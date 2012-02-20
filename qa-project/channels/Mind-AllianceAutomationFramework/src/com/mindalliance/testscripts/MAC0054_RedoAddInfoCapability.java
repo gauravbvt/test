@@ -185,6 +185,7 @@ public class MAC0054_RedoAddInfoCapability {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to redo add info capability"+ReportFunctions.getScreenShot("Redo add info capability failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -198,6 +199,7 @@ public class MAC0054_RedoAddInfoCapability {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to redo add info capability"+ReportFunctions.getScreenShot("Redo add info capability failed"));
 		}
 	}
 }

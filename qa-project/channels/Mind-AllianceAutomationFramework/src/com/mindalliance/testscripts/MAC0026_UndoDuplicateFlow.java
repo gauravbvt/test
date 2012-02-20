@@ -197,6 +197,7 @@ public class MAC0026_UndoDuplicateFlow
 			ApplicationFunctionLibrary.logout();	
 		}
 		System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+		System.out.println("Unable to undo duplicate flow"+ReportFunctions.getScreenShot("Undo duplicate flow failed"));
 	}
   }
     public static void main(String args[]) {
@@ -210,6 +211,7 @@ public class MAC0026_UndoDuplicateFlow
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo duplicate flow"+ReportFunctions.getScreenShot("Undo duplicate flow failed"));
 		}
 	}
 }
