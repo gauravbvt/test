@@ -503,4 +503,9 @@ public class Contact implements Serializable, Comparable<Contact> {
     public int hashCode() {
         return (int) ( id ^ id >>> 32 );
     }
+
+    @Transient
+    public boolean hasPhoto() {
+        return photo != null;
+    }
 }

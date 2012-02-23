@@ -28,7 +28,7 @@ import java.util.ArrayList;
 /**
  * Settings popup.
  */
-public class Settings extends MobilePage {
+public class Settings extends NavigablePage {
 
     private static final Logger LOG = LoggerFactory.getLogger( Settings.class );
 

@@ -18,76 +18,28 @@
         <div wicket:id="empty">
             <p>(No messages)</p>
         </div>
-        <div data-role="collapsible-set">
-            <div wicket:id="incoming" data-role="collapsible" data-collapsed="false">
-                <!--<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" wicket:id="count">0</span>-->
-                <h3>Incoming requests</h3>
-                <ul data-role="listview" data-inset="true">
-                    <li wicket:id="pending"><a wicket:id="link" href="request2.html">
-                        <img wicket:id="photo" src="images/john_drummond.jpeg"/>
-                        <h3 wicket:id="title">Transfer: Insurance claim</h3>
-                    </a></li>
-                </ul>
+        <ul data-role="listview" data-split-icon="delete">
+            <div wicket:id="incoming">
+                <li data-role="list-divider">Incoming requests</li>
+                <li wicket:id="pending"><span wicket:id="step">a request</span></li>
             </div>
-
-            <div wicket:id="rejected" data-role="collapsible">
-                <!--<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" wicket:id="count">0</span>-->
-                <h3>Rejected steps</h3>
-                <ul data-role="listview" data-inset="true">
-                    <li wicket:id="pending"><a wicket:id="link" href="editplaystep2b.html">
-                        <img wicket:id="photo" src="images/john_drummond.jpeg"/>
-                        <h3 wicket:id="title">Call John and ask about status</h3>
-                        <p></p>
-                    </a></li>
-                </ul>
+            <div wicket:id="rejected">
+                <li data-role="list-divider">Rejected steps</li>
+                <li wicket:id="pending"><span wicket:id="step">a step</span></li>
             </div>
-
-            <div wicket:id="unconfirmed" data-role="collapsible">
-                <!--<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" wicket:id="count">0</span>-->
-                <h3>Unconfirmed steps</h3>
-                <ul data-role="listview" data-inset="true">
-                    <li wicket:id="pending"><a wicket:id="link" href="editplaystep2b.html">
-                        <img wicket:id="photo" src="images/john_drummond.jpeg"/>
-                        <h3 wicket:id="title">Call John and ask about status</h3>
-                        <p></p>
-                    </a></li>
-                </ul>
+            <div wicket:id="unconfirmed">
+                <li data-role="list-divider">Unconfirmed steps</li>
+                <li wicket:id="pending"><span wicket:id="step">a step</span></li>
             </div>
-
-            <div wicket:id="incomplete" data-role="collapsible">
-                <!--<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" wicket:id="count">0</span>-->
-                <h3>Incomplete steps</h3>
-                <ul data-role="listview" data-inset="true">
-                    <li wicket:id="pending"><a wicket:id="link" href="editplaystep2b.html">
-                        <img wicket:id="photo" src="images/john_drummond.jpeg"/>
-                        <h3 wicket:id="title">Call John and ask about status</h3>
-                        <p></p>
-                    </a></li>
-                </ul>
+            <div wicket:id="incomplete">
+                <li data-role="list-divider">Incomplete steps</li>
+                <li wicket:id="pending"><span wicket:id="step">a step</span></li>
             </div>
-
-            <div wicket:id="outgoing" data-role="collapsible">
-                <!--<span class="ui-li-count ui-btn-up-c ui-btn-corner-all" wicket:id="count">0</span>-->
-                <h3>Outgoing requests</h3>
-                <ul data-role="listview" data-inset="true">
-                    <li wicket:id="pending"><a wicket:id="link" href="editplaystep2b.html">
-                        <img wicket:id="photo" src="images/john_drummond.jpeg"/>
-                        <h3 wicket:id="title">Call John and ask about status</h3>
-                        <p></p>
-                    </a></li>
-                </ul>
+            <div wicket:id="outgoing">
+                <li data-role="list-divider">Outgoing requests</li>
+                <li wicket:id="pending"><span wicket:id="step">a request</span></li>
             </div>
-
-            <!--<div data-role="collapsible">-->
-            <!--<h3>Notifications</h3>-->
-            <!--<ul data-role="listview" data-inset="true">-->
-            <!--<li><a class="send">-->
-            <!--<img src="images/john_drummond.jpeg"/>                -->
-            <!--<h3>John Drummond changed their phone number</h3>-->
-            <!--</a></li>-->
-            <!--</ul>-->
-            <!--</div>                -->
-        </div>
+        </ul>
     </div>
 </wicket:extend>
 </body>

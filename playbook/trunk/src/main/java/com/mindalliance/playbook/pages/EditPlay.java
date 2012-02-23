@@ -2,12 +2,10 @@ package com.mindalliance.playbook.pages;
 
 import com.mindalliance.playbook.dao.PlayDao;
 import com.mindalliance.playbook.model.Account;
-import com.mindalliance.playbook.model.Collaboration;
-import com.mindalliance.playbook.model.Contact;
 import com.mindalliance.playbook.model.Play;
 import com.mindalliance.playbook.model.Step;
 import com.mindalliance.playbook.model.Task;
-import org.apache.wicket.AttributeModifier;
+import com.mindalliance.playbook.pages.panels.StepItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.StatelessForm;
@@ -18,7 +16,6 @@ import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
@@ -32,7 +29,7 @@ import java.util.List;
 /**
  * Play editor.
  */
-public class EditPlay extends MobilePage {
+public class EditPlay extends NavigablePage {
 
     private static final long serialVersionUID = 7036708047688040702L;
 
@@ -95,30 +92,7 @@ public class EditPlay extends MobilePage {
                     new ListView<Step>( "steps" ) {
                         @Override
                         protected void populateItem( ListItem<Step> item ) {
-                            Step step = item.getModelObject();
-
-                            long contactId = 0L;
-                            boolean hasPhoto = false;
-                            if ( step.isCollaboration() ) {
-                                Contact with = ( (Collaboration) step ).getWith();
-                                if ( with != null ) {
-                                    contactId = with.getId();
-                                    hasPhoto = with.getPhoto() != null;
-                                }
-                            }
-
-                            item.add(
-                                new BookmarkablePageLink<EditStep>(
-                                    "editStep", EditStep.class, new PageParameters().add( "id", step.getId() ) ).add(
-
-                                    // TODO figure out what is the right way of doing this...
-                                    new WebMarkupContainer( "photo" ).add(
-                                        new AttributeModifier(
-                                            "src", new Model<String>(
-                                            "../contacts/" + contactId ) ) ).setVisible( contactId != 0L && hasPhoto ),
-
-                                    new Label( "sequence", new PropertyModel<Integer>( step, "sequence" ) ),
-                                    new Label( "title", new PropertyModel<String>( step, "title" ) ) ) );
+                            item.add( new StepItem( "step", item.getModel(), false ) );
                         }
                     } ).setVisible( !play.getSteps().isEmpty() )
 

@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Active plays page.
  */
-public class TodoPage extends MobilePage {
+public class TodoPage extends NavigablePage {
 
     private static final Logger LOG = LoggerFactory.getLogger( TodoPage.class );
 

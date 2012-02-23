@@ -16,7 +16,6 @@ import java.io.InputStream;
 
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Settings page test.
@@ -45,7 +44,6 @@ public class SettingsTest extends AbstractPageTest {
 
     @Override
     protected void init( ApplicationContextMock context ) {
-        initMocks( this );
         when( account.getPlaybook() ).thenReturn( playbook );
         when( playbook.getMe() ).thenReturn( contact );
         

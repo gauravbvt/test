@@ -9,6 +9,7 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Test harness for wicket pages with @SpringBeans.
@@ -24,6 +25,7 @@ public abstract class AbstractPageTest {
         tester = new WicketTester();
 
         context = new ApplicationContextMock();
+        MockitoAnnotations.initMocks( this );
         init( context );
 
         WebApplication application = tester.getApplication();
@@ -49,6 +51,7 @@ public abstract class AbstractPageTest {
             tester.startPage( pageClass, parameters );
         
         Assert.assertEquals( 200, tester.getLastResponse().getStatus() );
+        tester.assertNoErrorMessage();
         tester.assertRenderedPage( pageClass );
     }
 }

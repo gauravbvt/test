@@ -24,38 +24,38 @@ public class RedirectReq extends ConfirmationReq {
 
     @ManyToOne
     private Contact recipient;
-
+    
     //
     // Constructors
     //
     public RedirectReq() {
     }
 
-    public RedirectReq( ConfirmationReq originalRequest, Contact recipient, String description ) {
+    public RedirectReq( Playbook playbook, Contact recipient, ConfirmationReq originalRequest, String description ) {
+        super( playbook ); 
         this.originalRequest = originalRequest;
         this.recipient = recipient;
         setDescription( description );
     }
 
-    /**
-     * Get the sender of the redirection request.
-     * @return a contact, local to the owner of the original request
-     */
     @Override
     @Transient
-    public Contact getSender() {
-        return originalRequest.getCollaboration().getWith();
+    public Collaboration getCollaboration() {
+        return originalRequest.getCollaboration();
     }
 
-    /**
-     * Get the recipient of the redirect request.
-     * @return a local contact of the sender
-     */
+    @Override
     public Contact getRecipient() {
         return recipient;
     }
 
     public ConfirmationReq getOriginalRequest() {
         return originalRequest;
+    }
+    
+    @Transient
+    @Override
+    public boolean isRedirect() {
+        return true;
     }
 }

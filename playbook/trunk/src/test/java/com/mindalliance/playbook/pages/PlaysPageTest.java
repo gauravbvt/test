@@ -9,7 +9,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +38,6 @@ public class PlaysPageTest extends AbstractPageTest {
 
     @Override
     protected void init( ApplicationContextMock context ) {
-        MockitoAnnotations.initMocks( this );
-        
         when( account.getEmail() ).thenReturn( "someone@somewhere.com" );
         when( account.getPlaybook() ).thenReturn( playbook );
         when( oldPlay.getId() ).thenReturn( 123L );

@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -24,7 +25,7 @@ public class ConfirmationReq implements Serializable, Timestamped {
     private static final long serialVersionUID = 1171444045850660147L;
 
     @Id @GeneratedValue
-    private long id;
+    private long id ;
 
     private String description;
 
@@ -41,10 +42,22 @@ public class ConfirmationReq implements Serializable, Timestamped {
     @OneToOne( optional = true, cascade = CascadeType.REMOVE )
     private RedirectReq redirect;
 
+    @ManyToOne
+    private Playbook playbook;
+    
     //
     // Constructors
     //
     public ConfirmationReq() {
+    }
+
+    public ConfirmationReq( Playbook playbook ) {
+        this.playbook = playbook;
+    }
+
+    public ConfirmationReq( Collaboration collaboration ) {
+        this( collaboration.getPlay().getPlaybook() );
+        this.collaboration = collaboration;
     }
 
     /**
@@ -53,12 +66,17 @@ public class ConfirmationReq implements Serializable, Timestamped {
      */
     @Transient
     public Contact getSender() {
-        return collaboration.getOwner();
+        return playbook.getMe();
+    }
+    
+    /**
+     * Get the recipient of the redirect request.
+     * @return a local contact of the sender
+     */
+    public Contact getRecipient() {
+        return collaboration.getWith();
     }
 
-    public ConfirmationReq( Collaboration collaboration ) {
-        this.collaboration = collaboration;
-    }
 
     public Collaboration getCollaboration() {
         return collaboration;
@@ -75,6 +93,11 @@ public class ConfirmationReq implements Serializable, Timestamped {
     @Transient
     public boolean isPending() {
         return confirmation == null;
+    }
+    
+    @Transient
+    public boolean isRedirect() {
+        return false;
     }
 
     public ConfirmationAck getConfirmation() {
@@ -114,5 +137,9 @@ public class ConfirmationReq implements Serializable, Timestamped {
 
     public long getId() {
         return id;
+    }
+
+    public Playbook getPlaybook() {
+        return playbook;
     }
 }

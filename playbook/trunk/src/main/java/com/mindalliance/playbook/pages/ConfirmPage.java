@@ -32,6 +32,8 @@ public class ConfirmPage extends MobilePage {
     
     public ConfirmPage( final Collaboration collaboration ) {
         final ConfirmationReq req = collaboration.createRequest();
+        
+        // TODO customize for when user comes back to edit their own request
 
         IModel<ConfirmationReq> model = new CompoundPropertyModel<ConfirmationReq>( req );
         setDefaultModel( model );

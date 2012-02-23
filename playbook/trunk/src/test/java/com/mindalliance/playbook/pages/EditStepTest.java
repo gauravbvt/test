@@ -12,7 +12,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Mockito.when;
 
@@ -46,8 +45,6 @@ public class EditStepTest extends AbstractPageTest {
 
     @Override
     protected void init( ApplicationContextMock context ) {
-        MockitoAnnotations.initMocks( this );
-        
         when( account.getId() ).thenReturn( 123L );
         when( account.getEmail() ).thenReturn( "someone@example.com" );
         

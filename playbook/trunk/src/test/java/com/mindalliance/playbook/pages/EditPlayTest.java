@@ -11,7 +11,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 /**
  * Play edition test.
@@ -40,7 +39,6 @@ public class EditPlayTest extends AbstractPageTest {
 
     @Override
     protected void init( ApplicationContextMock context ) {
-        MockitoAnnotations.initMocks( this );
         Mockito.when( account.getEmail() ).thenReturn( "someone@example.com" );
         
         playbook = new Playbook( account );

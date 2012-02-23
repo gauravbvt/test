@@ -10,7 +10,6 @@ import org.apache.wicket.util.tester.FormTester;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
@@ -46,8 +45,6 @@ public class RegisterTest extends AbstractPageTest {
 
     @Override
     protected void init( ApplicationContextMock context ) {
-        MockitoAnnotations.initMocks( this );
-
         context.putBean( "serverUrl", serverUrl );
         context.putBean( "from", "admin@example.com" );
         context.putBean( accountDao );

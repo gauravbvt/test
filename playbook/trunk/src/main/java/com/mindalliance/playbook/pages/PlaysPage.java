@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Master list of plays.
  */
-public class PlaysPage extends MobilePage {
+public class PlaysPage extends NavigablePage {
 
     private static final Logger LOG = LoggerFactory.getLogger( PlaysPage.class );
 

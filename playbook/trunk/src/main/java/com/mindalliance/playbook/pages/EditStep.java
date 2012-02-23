@@ -42,7 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Play step editor.
  */
-public class EditStep extends MobilePage {
+public class EditStep extends NavigablePage {
 
     private static final Logger LOG = LoggerFactory.getLogger( EditStep.class );
 

@@ -178,7 +178,7 @@ public class AckPage extends MobilePage {
                     break;
 
                 case MAYBE:
-                    reqDao.redirect( new RedirectReq( req, referral, referralNote ) );
+                    reqDao.redirect( new RedirectReq( account.getPlaybook(), referral, req, referralNote ) );
                     setResponsePage( MessagesPage.class );
                     
                     break;                    

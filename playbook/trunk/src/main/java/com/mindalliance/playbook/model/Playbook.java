@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,7 +24,9 @@ import java.util.List;
  */
 @Entity
 public class Playbook implements Serializable {
-    
+
+    private static final long serialVersionUID = 8908306371796636571L;
+
     @Id @GeneratedValue
     private long id;
 
@@ -37,6 +40,9 @@ public class Playbook implements Serializable {
     
     @OneToMany( mappedBy = "playbook", cascade = CascadeType.ALL )
     private List<Play> plays;
+    
+    @OneToMany( mappedBy = "playbook", cascade = CascadeType.ALL )
+    private List<ConfirmationReq> requests;
 
     //
     // Constructors
@@ -102,10 +108,10 @@ public class Playbook implements Serializable {
     }
 
     public List<Play> getPlays() {
-        return plays;
+        return Collections.unmodifiableList( plays );
     }
 
-    public void setPlays( List<Play> plays ) {
-        this.plays = plays;
+    public List<ConfirmationReq> getRequests() {
+        return Collections.unmodifiableList( requests );
     }
 }

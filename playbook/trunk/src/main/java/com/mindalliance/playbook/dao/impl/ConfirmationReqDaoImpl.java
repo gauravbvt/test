@@ -27,9 +27,11 @@ public class ConfirmationReqDaoImpl extends GenericHibernateDao<ConfirmationReq,
     @Override
     public List<ConfirmationReq> getOutgoingRequests() {
         Query query = getSession().createQuery(
-            "select c from ConfirmationReq as c where c.confirmation is null "
-            + "and c.collaboration.play.playbook.account=:account" )
-                .setParameter( "account", accountDao.getCurrentAccount() );
+            "select r from ConfirmationReq r " + "where r.confirmation is null and r.playbook = :playbook"
+
+            //            + "union ( select f from RedirectReq f where f.confirmation is null and f.playbook.account = :account )" 
+        )
+                .setParameter( "playbook", accountDao.getCurrentAccount().getPlaybook() );
 
         return (List<ConfirmationReq>) query.list();
     }
@@ -38,12 +40,12 @@ public class ConfirmationReqDaoImpl extends GenericHibernateDao<ConfirmationReq,
     @Override
     public List<ConfirmationReq> getIncomingRequests() {
 
-        Query query = getSession().createQuery( 
-            "select r from ConfirmationReq as r " 
-            + "left join fetch r.collaboration as c " 
-            + "where r.confirmation is null and r.redirect is null and c.with in (:contacts)" )
-            .setParameterList( "contacts", contactDao.findAliases( accountDao.getCurrentAccount() )
-                 );
+        Query query = getSession().createQuery(
+            "select r from ConfirmationReq as r " + "left join r.collaboration c " + "left join r.redirect f "
+            + "where ( r.redirect is null and r.confirmation is null ) " + "and ( c.with in (:contacts) "
+            + "or r.recipient in (:contacts) )" )
+            .setParameterList( "contacts", contactDao.findAliases( accountDao.getCurrentAccount() ) )
+            ;
    
         return (List<ConfirmationReq>) query.list();
     }
@@ -59,5 +61,16 @@ public class ConfirmationReqDaoImpl extends GenericHibernateDao<ConfirmationReq,
         ConfirmationReq originalRequest = request.getOriginalRequest();
         originalRequest.setRedirect( request );
         save( originalRequest );
+    }
+
+    @Override
+    public void delete( ConfirmationReq entity ) {
+        if ( entity.isRedirect() ) {
+            ConfirmationReq originalRequest = ((RedirectReq) entity).getOriginalRequest();
+            originalRequest.setRedirect( null );
+            save( originalRequest );            
+        }
+        
+        super.delete( entity );
     }
 }
