@@ -243,6 +243,11 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private WebMarkupContainer timingContainer;
 
     /**
+     * Location link.
+     */
+    private ModelObjectLink locationLink;
+
+    /**
      * Show simple vs advanced form label.
      */
     private Label simpleAdvanced;
@@ -526,7 +531,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     private ModelObjectLink addLocationLink(  ) {
         Part part = getPart();
-        ModelObjectLink locationLink = new ModelObjectLink( "location-link",
+        locationLink = new ModelObjectLink( "location-link",
                 new PropertyModel<ModelEntity>( part, "knownLocation" ),
                 new Model<String>( "Location" ) );
         locationLink.setOutputMarkupId( true );
@@ -1152,6 +1157,8 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                     if ( Arrays.asList( EntityProps ).contains( property ) )
                         updateEntityLink( target, change );
                 }
+                addLocationLink();
+                target.add( locationLink );
                 if ( property.equals( "goals" ) ) {
                     addGoals();
                     target.add( taskGoalsPanel );

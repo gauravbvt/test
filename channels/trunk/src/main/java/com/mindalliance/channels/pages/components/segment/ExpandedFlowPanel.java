@@ -941,7 +941,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 new PropertyModel<Part>( this, "otherPart" ),
                 new Model<String>( isSend() ? "To task" : "From task" ) );
         otherLink.setOutputMarkupId( true );
-        otherLink.add( new AttributeModifier( "class", true, new Model<String>( "part-link" ) ) );
+        otherLink.add( new AttributeModifier( "class", new Model<String>( "part-link" ) ) );
         addOrReplace( otherLink );
     }
 
@@ -953,7 +953,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 new PropertyModel<String>( this, "name" ),
                 new PropertyModel<List<Node>>( this, "firstChoices" ),
                 new PropertyModel<List<Node>>( this, "secondChoices" ) );
-        otherChoice.add( new AttributeModifier( "title", true, new Model<String>( getOtherPart().displayString() ) ) );
+        otherChoice.add( new AttributeModifier( "title", new Model<String>( getOtherPart().displayString() ) ) );
         otherChoice.setOutputMarkupId( true );
         addOrReplace( otherChoice );
     }
@@ -1645,7 +1645,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             if ( newFlow != null ) adjustFields( newFlow );
             update( target, new Change( Change.Type.Updated, getNode() ) );
             if ( getFlow() != null && oldFlow != null && !getFlow().equals( oldFlow ) ) {
-                update( target, new Change( Change.Type.Collapsed, oldFlow ) );
+                update( target, new Change( Change.Type.Collapsed, oldFlow.getId() ) );
                 update( target, new Change( Change.Type.Expanded, newFlow ) );
             }
         } else {

@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.community;
+package com.mindalliance.channels.core.community.notification;
 
 import java.util.Date;
 

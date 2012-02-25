@@ -37,7 +37,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     public static final String ACTIVITIES = "Activities";
     public static final String MESSAGES = "Messages";
     public static final String CALENDAR = "Calendar";
-    public static final String SURVEYS = "Surveys";
+    // public static final String SURVEYS = "Surveys";
     public static final String USER = "User";
     public static final String SEND_MESSAGE = "sendMessage";
     public static final String DELETE_MESSAGE = "deleteMessage";
@@ -124,7 +124,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
                     return calendarPanel;
                 }
             } );
-        if ( showTabs.contains( SURVEYS ) ) {
+      /*  if ( showTabs.contains( SURVEYS ) ) {
             AbstractTab tab = new AbstractTab( new Model<String>( "Surveys" ) ) {
                 public Panel getPanel( String id ) {
                     surveyListPanel = new SurveyListPanel( id, SocialPanel.this, collapsible );
@@ -132,7 +132,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
                 }
             };
             tabs.add( tab );
-        }
+        }*/
         if ( showTabs.contains( USER ) ) {
             AbstractTab tab = new AbstractTab( new Model<String>( "About Me") ) {
                 public Panel getPanel( String id ) {

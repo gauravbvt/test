@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.core.community.feedback.Feedback;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import org.apache.wicket.markup.html.WebPage;
 
@@ -20,7 +21,7 @@ public class HelpPage extends WebPage {
     }
 
     private void init() {
-        add( new UserFeedbackPanel( "feedback" ) );
+        add( new UserFeedbackPanel( "feedback", Feedback.PLANNING ) );
     }
 
 }

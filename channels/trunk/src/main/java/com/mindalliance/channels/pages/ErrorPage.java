@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -96,8 +97,15 @@ public class ErrorPage extends AbstractChannelsWebPage {
         try {
             SimpleMailMessage email = new SimpleMailMessage();
             email.setTo( supportCommunity );
-            email.setFrom( user.getEmail() );
-            email.setReplyTo( user.getEmail() );
+            String fromAddress = user.getEmail();
+            if ( ChannelsUtils.isValidEmailAddress( fromAddress ) ) {
+                email.setFrom( fromAddress );
+                email.setReplyTo( fromAddress );
+            }
+            else {
+                LOG.warn( "User " + user.getUsername() + " does not have a valid email address: " + fromAddress );
+                email.setFrom( supportCommunity );
+            }
             String subject = "SERVER ERROR from " + user.getFullName();
             email.setSubject( subject );
             email.setText( stackTraceToString( exception ) );

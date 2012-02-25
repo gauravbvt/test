@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.core.command;
 
+import com.mindalliance.channels.core.ChannelsLockable;
 import com.mindalliance.channels.core.command.commands.DisconnectFlow;
 import com.mindalliance.channels.core.command.commands.RemoveCapability;
 import com.mindalliance.channels.core.command.commands.RemoveNeed;
@@ -367,7 +368,7 @@ public class DefaultCommander implements Commander {
             return false;
         try {
             Class clazz = Class.forName( className );
-            return Identifiable.class.isAssignableFrom( clazz );
+            return ChannelsLockable.class.isAssignableFrom( clazz );
         } catch ( ClassNotFoundException e ) {
             throw new IllegalArgumentException( "Class not found", e );
         }

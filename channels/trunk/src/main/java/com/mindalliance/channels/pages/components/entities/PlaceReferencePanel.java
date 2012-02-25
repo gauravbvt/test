@@ -11,6 +11,8 @@ import com.mindalliance.channels.core.model.PlaceReference;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -146,7 +148,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         eventChoice = new DropDownChoice<Event>(
                 "refEvents",
                 new PropertyModel<Event>( this, "refEvent" ),
-                getQueryService().list( Event.class ) );
+                knownEvents() );
         eventChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields();
@@ -156,6 +158,17 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         } );
         eventChoice.setOutputMarkupId( true );
         add( eventChoice );
+    }
+
+    private List<Event> knownEvents() {
+        return (List<Event>) CollectionUtils.select(
+                getQueryService().list( Event.class ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !( (Event) object ).isUnknown();
+                    }
+                } );
     }
 
     private void addEntityReferencePanel() {

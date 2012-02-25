@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.community;
+package com.mindalliance.channels.core.community.feedback;
 
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
@@ -35,4 +35,14 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
 
     List<Feedback> listNotYetNotifiedUrgentFeedbacks( );
 
+    List<Feedback> getRepliesTo( Feedback feedback );
+    
+    void addReplyTo( Feedback feedback, Feedback reply );
+
+    List<Feedback> select(
+            Boolean urgentOnly,
+            Boolean unresolvedOnly,
+            Boolean notRepliedToOnly,
+            String topic,
+            String containing );
 }

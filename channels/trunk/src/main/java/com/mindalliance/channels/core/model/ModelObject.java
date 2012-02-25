@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.ChannelsLockable;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -17,7 +18,9 @@ import java.util.Map;
 /**
  * An object with name, id and description, comparable by its toString() values.
  */
-public abstract class ModelObject extends AbstractAttachable implements Comparable<ModelObject>, Nameable, Modelable, Taggable {
+public abstract class ModelObject
+        extends AbstractAttachable
+        implements Comparable<ModelObject>, Nameable, Modelable, Taggable, ChannelsLockable {
 
     /**
      * Unique id of this object.

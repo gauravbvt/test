@@ -2,6 +2,9 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -31,6 +34,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +58,9 @@ import java.util.Set;
  *            Time: 10:25:30 AM
  */
 public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
+
+    @SpringBean
+    private ChannelsUserDao userDao;
 
     /**
      * Class logger.
@@ -168,12 +175,12 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 if ( style != null ) {
                     String styleClass = findStyleClass( model.getObject(), style );
                     if ( styleClass != null )
-                        cellItem.add( new AttributeModifier( "class", true, new Model<String>( styleClass ) ) );
+                        cellItem.add( new AttributeModifier( "class", new Model<String>( styleClass ) ) );
                 }
                 if ( titleProperty != null ) {
                     String title = "" + ChannelsUtils.getProperty( model.getObject(), titleProperty, null );
                     if ( !title.isEmpty() )
-                        cellItem.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
+                        cellItem.add( new AttributeModifier( "title", new Model<String>( title ) ) );
                 }
             }
 
@@ -183,6 +190,30 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 } else {
                     return super.getSortProperty();
                 }
+            }
+        };
+    }
+
+    /**
+     * Defines a column containing the full name of a user from its username.
+     *
+     * @param name             the column's name
+     * @param usernameProperty a property path to the username
+     * @param defaultText      default text to show if all else fails
+     * @return a column
+     */
+    protected AbstractColumn<T> makeUserColumn( String name,
+                                                final String usernameProperty,
+                                                final String defaultText ) {
+        return new AbstractColumn<T>( new Model<String>( name ) ) {
+
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      IModel<T> model ) {
+                String username = (String) ChannelsUtils.getProperty( model.getObject(), usernameProperty, null );
+                ChannelsUser user = username == null ? null : userDao.getUserNamed( username );
+                String labelText = ( user == null ) ? ( defaultText == null ? "" : defaultText ) : user.getFullName();
+                cellItem.add( new Label( id, new Model<String>( labelText ) ) );
             }
         };
     }
@@ -274,11 +305,10 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                     if ( styleClass != null )
                         classes = classes + " " + styleClass;
                 }
-                cellItem.add( new AttributeModifier( "class", true, new Model<String>( classes ) ) );
+                cellItem.add( new AttributeModifier( "class", new Model<String>( classes ) ) );
             }
         };
     }
-
 
     private Component cellLinkContent(
             String id,
@@ -286,8 +316,18 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             String moProperty,
             String labelProperty,
             String defaultText,
-            Filterable filterable ) {
-        final ModelObject mo = (ModelObject) ChannelsUtils.getProperty( bean, moProperty, null );
+            Filterable filterable,
+            boolean isMoRefString ) {
+        ModelObject mo = null;
+        if ( isMoRefString ) {
+            String moString = (String) ChannelsUtils.getProperty( bean, moProperty, null );
+            if ( moString != null ) {
+                ModelObjectRef moRef = ModelObjectRef.fromString( moString );
+                mo = (ModelObject) moRef.resolve( getQueryService() );
+            }
+        } else {
+            mo = (ModelObject) ChannelsUtils.getProperty( bean, moProperty, null );
+        }
         if ( mo != null ) {
             String labelText = (String) ChannelsUtils.getProperty(
                     bean,
@@ -324,6 +364,16 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         }
     }
 
+    private Component cellLinkContent(
+            String id,
+            T bean,
+            String moProperty,
+            String labelProperty,
+            String defaultText,
+            Filterable filterable ) {
+        return cellLinkContent( id, bean, moProperty, labelProperty, defaultText, filterable, false );
+    }
+
     private String findStyleClass( Object bean, String style ) {
         String styleClass;
         if ( style.startsWith( "@" ) ) {
@@ -332,6 +382,32 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             styleClass = style;
         }
         return styleClass;
+    }
+
+    protected AbstractColumn<T> makeFilterableLinkColumn( String name,
+                                                          final String moProperty,
+                                                          final String labelProperty,
+                                                          final String defaultText,
+                                                          final Filterable filterable,
+                                                          final boolean isMoRefString ) {
+        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
+
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      final IModel<T> model ) {
+                cellItem.add( cellLinkContent(
+                        id,
+                        model.getObject(),
+                        moProperty,
+                        labelProperty,
+                        defaultText,
+                        filterable,
+                        isMoRefString ) );
+                /*              String classes = "link";
+                                 cellItem.add( new AttributeModifier( "class", true, new Model<String>( classes ) ) );
+                */
+            }
+        };
     }
 
     protected AbstractColumn<T> makeFilterableLinkColumn( String name,

@@ -18,10 +18,10 @@ import java.util.Date;
  */
 @Inheritance( strategy = InheritanceType.TABLE_PER_CLASS )
 @Entity
-public class AbstractPersistentPlanObject implements PersistentPlanObject {
+public abstract class AbstractPersistentPlanObject implements PersistentPlanObject {
 
     @Id @GeneratedValue(strategy = GenerationType.TABLE)
-    private long id;
+    protected long id;
     private Date created;
     private String username;
     private Date lastModified;
@@ -82,6 +82,25 @@ public class AbstractPersistentPlanObject implements PersistentPlanObject {
         lastModified = date;
     }
 
+    // Identifiable
 
+    @Override
+    public String getDescription() {
+        return "";
+    }
 
+    @Override
+    public String getTypeName() {
+        return this.getClass().getSimpleName();
+    }
+
+    @Override
+    public boolean isModifiableInProduction() {
+        return true;
+    }
+
+    @Override
+    public String getName() {
+        return getTypeName() + "[" + getId() + "]";
+    }
 }

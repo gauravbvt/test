@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.community;
+package com.mindalliance.channels.core.community.feedback;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -24,12 +24,12 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
 
     @Override
     @Transactional
-    public void sendFeedback( 
-            String username, 
-            String planUri, 
-            Feedback.Type type, 
-            String topic, 
-            String content, 
+    public void sendFeedback(
+            String username,
+            String planUri,
+            Feedback.Type type,
+            String topic,
+            String content,
             boolean urgent ) {
         Feedback feedback = new Feedback( username, planUri, type );
         feedback.setTopic( topic );
@@ -41,12 +41,12 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     @Override
     @Transactional
     public void sendFeedback(
-            String username, 
-            String planUri, 
-            Feedback.Type type, 
-            String topic, 
-            String content, 
-            boolean urgent, 
+            String username,
+            String planUri,
+            Feedback.Type type,
+            String topic,
+            String content,
+            boolean urgent,
             ModelObject about ) {
         Feedback feedback = new Feedback( username, planUri, type );
         feedback.setTopic( topic );
@@ -58,6 +58,7 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
 
     @Override
     @SuppressWarnings( "unchecked" )
+    @Transactional
     public List<Feedback> listNotYetNotifiedNormalFeedbacks( String planUri ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -69,7 +70,9 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     }
 
     @Override
-    public List<Feedback> listNotYetNotifiedUrgentFeedbacks( ) {
+    @Transactional
+    @SuppressWarnings( "unchecked" )
+    public List<Feedback> listNotYetNotifiedUrgentFeedbacks() {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.isNull( "whenNotified" ) );
@@ -77,4 +80,54 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
         criteria.addOrder( Order.desc( "created" ) );
         return (List<Feedback>) criteria.list();
     }
+
+    @Override
+    @Transactional
+    @SuppressWarnings( "unchecked" )
+    public List<Feedback> getRepliesTo( Feedback feedback ) {
+        return getSession().createQuery( "from FEEDBACK where replyToId = :id " )
+                .setParameter( "id", feedback.getId() )
+                .list();
+    }
+
+    @Override
+    @Transactional
+    public void addReplyTo( Feedback feedback, Feedback reply ) {
+        feedback.addReply( reply );
+        reply.setReplyTo( feedback );
+        feedback.setLastReplied( reply.getCreated() );
+        save( feedback );
+        save( reply );
+    }
+
+    @Override
+    @Transactional
+    @SuppressWarnings( "unchecked" )
+    public List<Feedback> select(
+            Boolean urgentOnly,
+            Boolean notResolvedOnly,
+            Boolean notRepliedToOnly,
+            String topic,
+            String containing ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria(  getPersistentClass() );
+        if ( urgentOnly ) {
+            criteria.add( Restrictions.eq( "urgent", true ) );
+        }
+        if ( notResolvedOnly ) {
+            criteria.add( Restrictions.eq( "resolved", false ) );
+        }
+        if ( notRepliedToOnly ) {
+            criteria.add( Restrictions.eq( "repliedTo", false ) );
+        }
+        if ( topic != null && !topic.isEmpty() ) {
+            criteria.add( Restrictions.eq( "topic", topic ) );
+        }
+        if ( containing != null && !containing.isEmpty() ) {
+            criteria.add( Restrictions.ilike( "%"+"content"+"%", containing ) );
+        }
+        criteria.addOrder( Order.desc( "created" ) );
+        return (List<Feedback>) criteria.list();
+    }
+
 }

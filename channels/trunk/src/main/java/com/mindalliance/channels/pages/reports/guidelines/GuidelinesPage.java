@@ -4,6 +4,7 @@ package com.mindalliance.channels.pages.reports.guidelines;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.community.feedback.Feedback;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Connector;
@@ -116,6 +117,11 @@ public class GuidelinesPage extends AbstractParticipantPage {
         return "Information Sharing Guidelines";
     }
 
+    @Override
+    protected String getFeedbackTopic() {
+        return Feedback.GUIDELINES;
+    }
+
     //-----------------------------------
     protected void initReportBody(
             Plan plan,
@@ -148,7 +154,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
                 item.add(
                         new WebMarkupContainer( "phaseAnchor" )
                                 .add( new Label( "phaseText", segment.getName() ) )
-                                .add( new AttributeModifier( "name", true, segment.getAnchor() ) ),
+                                .add( new AttributeModifier( "name", true,segment.getAnchor() ) ),
                         new UserFeedbackPanel( "segmentFeedback", segment.getSegment(), "Send feedback", "Guidelines" ),
 
                         new Label( "context", segment.getContext() ),
@@ -168,7 +174,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
                                         new UserFeedbackPanel( "contactListFeedback",
                                                 segment.getSegment(),
                                                 "Send feedback",
-                                                "Guidelines contact list" ),
+                                                Feedback.GUIDELINES ),
                                         newContacts( segment.getContactSpecs( service ) ) )
                                 .setVisible( !segment.getContacts().isEmpty() ) );
             }
@@ -188,10 +194,10 @@ public class GuidelinesPage extends AbstractParticipantPage {
                 item.add(
                         new WebMarkupContainer( "taskAnchor" )
                                 .add( new Label( "taskName", task.getTitle() ) )
-                                .add( new AttributeModifier( "name", true, task.getAnchor() ) ),
-                        new UserFeedbackPanel( "taskFeedback", task.getPart(), "Send feedback", "Guidelines" ),
+                                .add( new AttributeModifier( "name", task.getAnchor() ) ),
+                        new UserFeedbackPanel( "taskFeedback", task.getPart(), "Send feedback", Feedback.GUIDELINES ),
                         new WebMarkupContainer( "backTask" )
-                                .add( new AttributeModifier( "href", true, segment.getLink() ) ),
+                                .add( new AttributeModifier( "href", segment.getLink() ) ),
                         new Label( "taskSeq", task.getSeqString() ),
                         new Label( "taskSummary", "The context is " + ChannelsUtils.lcFirst( task.getTaskSummary() ) ),
                         new Label( "taskRole", ChannelsUtils.ensurePeriod( task.getRoleString() ) ),
@@ -363,7 +369,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
                                 new UserFeedbackPanel( "incomingFeedback",
                                         flow.getBasis(),
                                         "Send feedback",
-                                        "Guidelines"),
+                                        Feedback.GUIDELINES ),
                                 new WebMarkupContainer( "eoisRow" ).add( newEoiList( flow.getElementsOfInformation() ) ).setRenderBodyOnly(
                                         true ).setVisible( flow.hasEois() ),
                                 new WebMarkupContainer( "flowEnding" ).setVisible( flow.isTerminatingToTarget() ) );

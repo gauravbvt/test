@@ -7,6 +7,7 @@
 package com.mindalliance.channels.pages.reports.infoNeeds;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.community.feedback.Feedback;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -98,6 +99,11 @@ public class InfoNeedsPage extends AbstractParticipantPage {
     }
 
     @Override
+    protected String getFeedbackTopic() {
+        return Feedback.INFO_NEEDS;
+    }
+
+    @Override
     protected void initReportBody( Plan plan, QueryService queryService, ResourceSpec profile, String override,
                                    AggregatedContact contact ) {
         List<InfoNeedsReportSegment> reportSegments = getReportSegments( queryService, profile );
@@ -123,7 +129,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                         new UserFeedbackPanel( "segmentFeedback",
                                 reportSegment.getSegment(),
                                 "Send feedback",
-                                "Info needs" ),
+                                Feedback.INFO_NEEDS ),
 
                         new Label( "context", reportSegment.getContext() ),
                         new Label( "segDesc",
@@ -142,10 +148,9 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                 QueryService queryService = getQueryService();
 
                 item.add( new WebMarkupContainer( "taskAnchor" ).add( new Label( "taskName", task.getTitle() ) ).add(
-                        new AttributeModifier( "name", true, task.getAnchor() ) ),
-                        new UserFeedbackPanel( "taskFeedback", task.getPart(), "Send feedback", "Info needs" ),
+                        new AttributeModifier( "name", task.getAnchor() ) ),
+                        new UserFeedbackPanel( "taskFeedback", task.getPart(), "Send feedback", Feedback.INFO_NEEDS ),
                         new WebMarkupContainer( "backTask" ).add( new AttributeModifier( "href",
-                                true,
                                 reportSegment.getLink() ) ),
                         new Label( "taskSeq", task.getSeqString() ),
                         new Label( "taskSummary",
@@ -164,7 +169,11 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             @Override
             protected void populateItem( ListItem<TaskInfoNeeds> item ) {
                 TaskInfoNeeds taskInfoNeeds = item.getModelObject();
-                item.add( new UserFeedbackPanel( "infoNeededFeedback", task.getPart(), "Send feedback", "Info needs" ),
+                item.add( new UserFeedbackPanel(
+                        "infoNeededFeedback",
+                        task.getPart(),
+                        "Send feedback",
+                        Feedback.INFO_NEEDS ),
                         new Label( "intent", taskInfoNeeds.getIntentString() ),
                         new Label( "info", taskInfoNeeds.getInfo() ),
                         new Label( "impact", taskInfoNeeds.getImpactString() ),

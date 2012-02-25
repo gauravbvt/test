@@ -267,8 +267,11 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
             if ( node != null ) {
                 selectedOtherNode = node;
             } else {
-                Change change = doCommand( new AddPart( getUser().getUsername(), getSegment(), nodeName ) );
-                selectedOtherNode = (Part) change.getSubject( getQueryService() );
+                // if ... = hack to protect against weird Wicket behavior: visitor updater has nodeName set to selectedOtherNode as string.
+                if ( selectedOtherNode == null || !nodeName.trim().equals( selectedOtherNode.toString().trim() ) ) {
+                    Change change = doCommand( new AddPart( getUser().getUsername(), getSegment(), nodeName ) );
+                    selectedOtherNode = (Part) change.getSubject( getQueryService() );
+                }
             }
         }
     }

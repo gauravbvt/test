@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.support;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
-import com.mindalliance.channels.core.community.Feedback;
-import com.mindalliance.channels.core.community.FeedbackService;
+import com.mindalliance.channels.core.community.feedback.Feedback;
+import com.mindalliance.channels.core.community.feedback.FeedbackService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
@@ -63,6 +63,11 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     public UserFeedbackPanel( String id ) {
         this( id, null, null, null );
     }
+
+    public UserFeedbackPanel( String id, String topic ) {
+        this( id, null, null, topic );
+    }
+
 
     public UserFeedbackPanel( String id, Identifiable about, String label ) {
         this( id, about, label, null );

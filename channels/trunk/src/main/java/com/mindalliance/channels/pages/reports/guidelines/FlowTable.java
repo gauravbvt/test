@@ -2,6 +2,7 @@
 // All rights reserved.
 package com.mindalliance.channels.pages.reports.guidelines;
 
+import com.mindalliance.channels.core.community.feedback.Feedback;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage.AggregatedFlow;
@@ -57,7 +58,8 @@ public class FlowTable extends Panel {
                                         .setVisible( flow.isCritical() ),
                                 new UserFeedbackPanel( "outgoingFlowFeedback",
                                         flow.getBasis(),
-                                        "Send feedback" ),
+                                        "Send feedback",
+                                        Feedback.GUIDELINES ),
                                 new WebMarkupContainer( "eoisRow" )
                                         .add( GuidelinesPage.newEoiList( flow.getElementsOfInformation() ) )
                                         .setRenderBodyOnly( true )

@@ -214,7 +214,7 @@ public class PlanDao {
         idGenerator.setLastAssignedId( IMMUTABLE_RANGE, plan );
         Actor.UNKNOWN = findOrCreate( Actor.class, Actor.UnknownName, null );
         Actor.UNKNOWN.makeImmutable();
-        Event.UNKNOWN = findOrCreate( Event.class, Event.UnknownName, null );
+        Event.UNKNOWN = findOrCreateType( Event.class, Event.UnknownName, null );
         Event.UNKNOWN.makeImmutable();
         Organization.UNKNOWN = findOrCreate( Organization.class, Organization.UnknownName, null );
         Organization.UNKNOWN.setActual();

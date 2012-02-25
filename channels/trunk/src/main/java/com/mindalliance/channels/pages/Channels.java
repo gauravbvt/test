@@ -74,6 +74,11 @@ public class Channels extends WebApplication
     public static final long SOCIAL_ID = -1;
 
     /**
+     * Expansion id for feedbacks panel.
+     */
+    public static final long UNKNOWN_FEEDBACK_ID = Long.MIN_VALUE;
+
+    /**
      * Analyst.
      */
     private Analyst analyst;

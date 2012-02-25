@@ -3,10 +3,10 @@ package com.mindalliance.channels.social.services.impl;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.social.model.UserMessage;
 import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.validator.EmailValidator;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -129,7 +129,7 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
             for ( ChannelsUser recipient : recipients ) {
                 String recipientEmailAddress = recipient.getEmail();
                 if ( !recipientEmailAddress.isEmpty()
-                        && EmailValidator.getInstance().isValid( recipientEmailAddress ) ) {
+                        && ChannelsUtils.isValidEmailAddress( recipientEmailAddress ) ) {
                     SimpleMailMessage email = new SimpleMailMessage();
                     email.setTo( recipient.getEmail() );
                     email.setSubject( "["

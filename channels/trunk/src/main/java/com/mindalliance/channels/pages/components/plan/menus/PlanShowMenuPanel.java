@@ -69,7 +69,7 @@ public class PlanShowMenuPanel extends MenuPanel {
             if ( plan.isDevelopment() )
                 menuItems.add( collapsible( Survey.UNKNOWN, "Hide surveys", "Surveys" ) );
 */
-
+      //      menuItems.add( collapsible( Feedback.UNKNOWN, "Hide feedbacks", "Feedbacks" ) );
             menuItems.addAll(
                     Arrays.asList(
                             newLink( "All segments", plan, PlanEditPanel.MAP ),

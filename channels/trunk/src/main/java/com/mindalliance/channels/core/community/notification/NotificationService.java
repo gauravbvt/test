@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.community;
+package com.mindalliance.channels.core.community.notification;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.

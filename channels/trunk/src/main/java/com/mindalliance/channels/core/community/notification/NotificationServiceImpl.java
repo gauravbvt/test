@@ -1,13 +1,15 @@
-package com.mindalliance.channels.core.community;
+package com.mindalliance.channels.core.community.notification;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.community.feedback.Feedback;
+import com.mindalliance.channels.core.community.feedback.FeedbackService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
-import org.apache.commons.validator.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,7 +130,7 @@ public class NotificationServiceImpl implements NotificationService {
     private boolean emailUrgentFeedbackToPlanner( ChannelsUser planner, Feedback feedback ) {
         boolean success = false;
         String toAddress = planner.getEmail();
-        if ( toAddress != null && EmailValidator.getInstance().isValid( toAddress ) ) {
+        if ( ChannelsUtils.isValidEmailAddress ( toAddress ) ) {
             String fromAddress = feedback.getFromEmail();
             String subject = makeEmailSubject( feedback );
             String content = makeContent( feedback );
@@ -139,11 +141,11 @@ public class NotificationServiceImpl implements NotificationService {
 
     private boolean sendEmail( String toAddress, String fromAddress, String subject, String content ) {
         boolean success = false;
-        if ( toAddress != null && EmailValidator.getInstance().isValid( toAddress ) ) {
+        if ( ChannelsUtils.isValidEmailAddress( toAddress ) ) {
             try {
                 SimpleMailMessage email = new SimpleMailMessage();
                 email.setTo( toAddress );
-                if ( EmailValidator.getInstance().isValid( fromAddress ) )
+                if ( ChannelsUtils.isValidEmailAddress( fromAddress ) )
                     email.setFrom( fromAddress );
                 email.setSubject( subject );
                 email.setText( content );

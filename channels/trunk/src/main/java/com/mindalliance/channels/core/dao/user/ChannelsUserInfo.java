@@ -2,7 +2,7 @@ package com.mindalliance.channels.core.dao.user;
 
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
-import org.apache.commons.validator.EmailValidator;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.hibernate.search.annotations.Indexed;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
@@ -63,7 +63,6 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     /** The user's global access role (ROLE_USER|ROLE_PLANNER|ROLE_ADMIN|null). */
     private String globalAccess;
-
 
     //---------------------------------
 
@@ -128,8 +127,8 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
     }
 
     public void setEmail( String email ) {
-        if ( email != null && EmailValidator.getInstance().isValid( email.trim() ) )
-            this.email = email.trim();
+        if ( ChannelsUtils.isValidEmailAddress( email ) )
+            this.email = email;
     }
 
     public String getFullName() {

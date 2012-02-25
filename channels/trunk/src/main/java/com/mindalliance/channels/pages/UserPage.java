@@ -8,6 +8,7 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.feedback.Feedback;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
@@ -240,7 +241,7 @@ public class UserPage extends AbstractChannelsWebPage {
     }
 
     private void addFeedback() {
-        form.add( new UserFeedbackPanel( "feedback" ) );
+        form.add( new UserFeedbackPanel( "feedback", Feedback.PARTICIPATING ) );
     }
 
     private void addPlanSelector() {
@@ -436,7 +437,7 @@ public class UserPage extends AbstractChannelsWebPage {
     }
 
     private void addSocial() {
-        String[] tabsShown = {SocialPanel.CALENDAR, SocialPanel.SURVEYS, SocialPanel.MESSAGES, SocialPanel.USER};
+        String[] tabsShown = {SocialPanel.CALENDAR, /*SocialPanel.SURVEYS, */SocialPanel.MESSAGES, SocialPanel.USER};
         socialPanel = new SocialPanel( "social", false, tabsShown );
         form.add( socialPanel );
     }

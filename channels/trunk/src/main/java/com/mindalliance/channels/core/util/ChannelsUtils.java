@@ -19,6 +19,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.validator.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -513,6 +514,7 @@ public final class ChannelsUtils {
         return ChannelsUtils.smartUncapitalize( phrase );
     }
 
+
     public static String listToString( List<?> list, String lastSep ) {
         return listToString( list, ", ", lastSep );
     }
@@ -544,5 +546,11 @@ public final class ChannelsUtils {
      */
     public static String cleanUpName( String name ) {
         return name.replaceAll( "\\s\\s*", " " );
+    }
+
+    public static boolean isValidEmailAddress( String address ) {
+        return address != null
+                && !address.isEmpty()
+                && EmailValidator.getInstance().isValid( address );
     }
 }

@@ -79,7 +79,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
             add(
                     new Label( "reportTitle", getReportTitle() + " for " + contact.getActorName() ),
                     new Label( "reportName", getReportName() ),
-                    new UserFeedbackPanel( "planFeedback", plan, "Send overall feedback" ),
+                    new UserFeedbackPanel( "planFeedback", plan, "Send overall feedback", getFeedbackTopic() ),
                     new Label( "reportType", getReportType() ),
                     new Label( "personName", contact.getActorName() ),
                     new Label( "planName", plan.getName() ),
@@ -94,6 +94,8 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
         }
     }
+
+    protected abstract String getFeedbackTopic();
 
     protected abstract void initReportBody(
             Plan plan,

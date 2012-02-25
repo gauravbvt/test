@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.reports.issues;
 
+import com.mindalliance.channels.core.community.feedback.Feedback;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.plan.IssuesSummaryTable;
@@ -46,7 +47,8 @@ public class IssuesPage extends AbstractChannelsWebPage {
         add( new UserFeedbackPanel(
                 "feedback",
                 getPlan(),
-                "Send feedback" ) );
+                "Send feedback",
+                Feedback.ISSUES ) );
         add( new Label( "planDescription", getPlan().getDescription() ) );
     }
 

@@ -8,6 +8,7 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.feedback.Feedback;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -29,6 +30,7 @@ import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareWebContainer;
 import com.mindalliance.channels.pages.components.MessagePanel;
+import com.mindalliance.channels.pages.components.community.FeedbacksPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
@@ -331,6 +333,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private Component flowLegendPanel;
 
     /**
+     * Feedbacks panel.
+     */
+    private Component feedbacksPanel;
+    /**
      * Cumulated change to an expanded identifiable.
      */
     private Map<Long, Change> changes = new HashMap<Long, Change>();
@@ -464,6 +470,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addPlanEditPanel( null );
 //        addSurveysPanel( Survey.UNKNOWN );
         addFlowLegendPanel();
+        addFeedbacksPanel();
 
         updateSelectorsVisibility();
         updateNavigation();
@@ -551,6 +558,28 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
         form.addOrReplace( flowLegendPanel );
     }
+
+    private void addFeedbacksPanel() {
+        addFeedbacksPanel( null );
+    }
+
+    private void addFeedbacksPanel( Feedback feedback ) {
+        if ( !expansions.contains( Feedback.UNKNOWN.getId() ) ) {
+            feedbacksPanel = new Label( "feedbacks", "" );
+            feedbacksPanel.setOutputMarkupId( true );
+            makeVisible( flowLegendPanel, false );
+        } else {
+            feedbacksPanel = new FeedbacksPanel(
+                    "feedbacks",
+                    new Model<Plan>( getPlan() ) );
+            if ( !feedback.isUnknown() ) {
+                ((FeedbacksPanel)feedbacksPanel).select( feedback );
+            }
+        }
+        form.addOrReplace( feedbacksPanel );
+    }
+
+
 
     /**
      * Get aspect of segment shown.
@@ -1842,6 +1871,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
             refreshSegmentPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Survey.class ) ) {
             refreshSurveysPanel( target, change, updated );
+        }  else if ( change.isForInstanceOf( Feedback.class ) ) {
+            refreshFeedbacksPanel( target, change, updated );
         }
         refreshHeadersMenusAndNavigation( target, change, updated );
     }
@@ -1926,6 +1957,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void updateFlowLegend( AjaxRequestTarget target ) {
         addFlowLegendPanel();
         target.add( flowLegendPanel );
+    }
+    
+    private void updateFeedbacksPanel( AjaxRequestTarget target ) {
+        addFeedbacksPanel();
+        target.add( feedbacksPanel );
     }
 
     private void updateRefresh( AjaxRequestTarget target ) {
@@ -2165,6 +2201,28 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     getAspectShown( Survey.UNKNOWN ) );
         }
     }
+
+    private void refreshFeedbacksPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        Identifiable identifiable = change.getSubject( getQueryService() );
+        if ( /*change.isUnknown() ||*/
+                identifiable != null
+                        && change.isDisplay()
+                        && identifiable instanceof Feedback ) {
+            Feedback expandedFeedback = (Feedback) identifiable;
+            Feedback viewedFeedback = ( expandedFeedback == null || expandedFeedback.isUnknown() )
+                    ? Feedback.UNKNOWN
+                    : expandedFeedback;
+            addFeedbacksPanel( viewedFeedback );
+            target.add( feedbacksPanel );
+        } else if ( feedbacksPanel instanceof FeedbacksPanel ) {
+            ( (FeedbacksPanel) feedbacksPanel ).refresh( target,
+                    change,
+                    updated,
+                    getAspectShown( Feedback.UNKNOWN ) );
+        }
+    }
+
 
     private void updateNavigation() {
         goBackContainer.add( new AttributeModifier( "src", new Model<String>( isCanGoBack()
