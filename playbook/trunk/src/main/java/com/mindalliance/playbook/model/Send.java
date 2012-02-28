@@ -33,6 +33,11 @@ public class Send extends Collaboration {
     }
 
     @Override
+    public boolean isSend() {
+        return true;
+    }
+
+    @Override
     public Type getType() {
         return Type.SEND;
     }

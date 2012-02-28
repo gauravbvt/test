@@ -61,6 +61,21 @@ public class ConfirmationReq implements Serializable, Timestamped {
     }
 
     /**
+     * Get a short description of the collaboration.
+     * @param incoming true if seen from the incoming side
+     * @return a description of who and how
+     */
+    public String getSummary( boolean incoming ) {
+        if ( isRedirect() )
+            return "Forwarding request on behalf of " + getCollaboration().getOwner();
+        else {
+            String prefix = incoming ? "Receiving from " + getSender()
+                                     : "Contacting " + getRecipient();
+            return prefix + " using " + getCollaboration().getUsing();
+        }
+    }
+
+    /**
      * Get the sender of the collaboration request.
      * @return a contact information, local to the sender
      */

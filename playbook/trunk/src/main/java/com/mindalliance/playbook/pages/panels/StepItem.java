@@ -50,12 +50,14 @@ public class StepItem extends Panel {
                     new Label( "description", step.getDescription() ) ) );
     }
 
-    private String getSummary( Step step ) {
+    private static String getSummary( Step step ) {
         if ( !step.isCollaboration() )
             return step.getDescription();
         
         Collaboration collaboration = (Collaboration) step;
-        return "With " + collaboration.getWith() + " using " + collaboration.getUsing();
+        return "With " + collaboration.getWith() 
+               + ( collaboration.isSend() ? " using " : " contacting me at " )
+               + collaboration.getUsing();
     }
 
     private Serializable getPhotoUrl( Contact contact ) {

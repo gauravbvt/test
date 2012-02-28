@@ -21,6 +21,7 @@ import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.extensions.markup.html.form.select.SelectOptions;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
@@ -37,6 +38,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -66,14 +68,22 @@ public class AckPage extends MobilePage {
         MAYBE
     }
 
+    public enum PlayType {
+        UNSET,
+        NEW,
+        OLD
+    }
+
     private Contact referral;
-    
+
     private String referralNote;
 
     private String nAckReason;
-    
+
+    private PlayType create = PlayType.UNSET;
+
     private String newPlay;
-    
+
     private Play existingPlay;
 
     private AnswerType answerType = AnswerType.UNKNOWN;
@@ -96,9 +106,12 @@ public class AckPage extends MobilePage {
         long contactId = contact.getId();
         boolean hasPhoto = contact.getPhoto() != null;
 
-        final Component yesDiv = new WebMarkupContainer( "yesDiv" ).add(
-            new TextField<String>( "newPlay" ),
+        final WebMarkupContainer formList = new WebMarkupContainer( "formList" );
 
+        final Component yesNew = new WebMarkupContainer( "yesNew" ).add(
+            new TextField<String>( "newPlay" ) ).setVisible( false );
+
+        final Component yesOld = new WebMarkupContainer( "yesOld" ).add(
             new Select<Play>( "existingPlay" ).add(
                 new SelectOptions<Play>(
                     "plays",
@@ -113,19 +126,50 @@ public class AckPage extends MobilePage {
                         public IModel<Play> getModel( Play value ) {
                             return new Model<Play>( value );
                         }
-                    } ) ) ).setRenderBodyOnly( true ).setVisible( false );
+                    } ) ) ).setVisible( false );
 
-        final Component noDiv = new WebMarkupContainer( "noDiv" ).add( 
-                new TextArea( "nAckReason" )
-            ).setVisible( false );
-        
+        final Component yesButton = new Button( "yesButton" ).setEnabled( false );
+
+        final Component yesDiv = new WebMarkupContainer( "yesDiv" ).add(
+            new RadioGroup<PlayType>( "create" ).add(
+                new Radio<PlayType>( "new", new Model<PlayType>( PlayType.NEW ) ).add( 
+                    new AjaxEventBehavior( "onchange" ) {
+                        @Override
+                        protected void onEvent( AjaxRequestTarget target ) {
+                            setCreate( PlayType.NEW );
+                            yesNew.setVisible( true );
+                            yesOld.setVisible( false );
+                            yesButton.setEnabled( true );
+                            target.add( formList );
+                            target.appendJavaScript( "$('#formList').listview(); $('#formList').trigger('create');" );
+                        }
+                    } ),
+                new Radio<PlayType>( "old", new Model<PlayType>( PlayType.OLD ) ).add(
+                new AjaxEventBehavior( "onchange" ) {
+                    @Override
+                    protected void onEvent( AjaxRequestTarget target ) {
+                        setCreate( PlayType.OLD );
+                        yesNew.setVisible( false );
+                        yesOld.setVisible( true );
+                        yesButton.setEnabled( true );
+                        target.add( formList );
+                        target.appendJavaScript( "$('#formList').listview(); $('#formList').trigger('create');" );
+                    }
+                } ).setEnabled( !account.getPlaybook().getPlays().isEmpty() ) ),
+
+            yesNew,
+            yesOld, 
+            yesButton
+
+        ).setRenderBodyOnly( true ).setVisible( false );
+
+        final Component noDiv = new WebMarkupContainer( "noDiv" ).add(
+            new TextArea( "nAckReason" ) ).setRenderBodyOnly( true ).setVisible( false );
+
         final Component maybeDiv = new WebMarkupContainer( "maybeDiv" ).add(
             new ContactField( "referral", new PropertyModel<Contact>( this, "referral" ) ),
-            new TextArea( "referralNote" ) )
-                .setRenderBodyOnly( true )
-                .setVisible( false );
-
-        final WebMarkupContainer formList = new WebMarkupContainer( "formList" );
+            new TextArea( "referralNote" ), new Button( "maybeButton" )
+        ).setRenderBodyOnly( true ).setVisible( false );
 
         formList.add(
             new RadioGroup<AnswerType>( "answerType" ).add(
@@ -169,10 +213,11 @@ public class AckPage extends MobilePage {
 
                 case YES:
                     Play play = newPlay != null && !newPlay.trim().isEmpty() ?
-                                    ackDao.saveInPlay( newPlay.trim(), req ) :
-                                    existingPlay == null ? ackDao.saveInPlay( (String) null, req ) :
-                                                           ackDao.saveInPlay( existingPlay, req );
-                        
+                                ackDao.saveInPlay( newPlay.trim(), req ) :
+                                existingPlay == null ?
+                                ackDao.saveInPlay( (String) null, req ) :
+                                ackDao.saveInPlay( existingPlay, req );
+
                     setResponsePage( EditPlay.class, new PageParameters().add( "id", play.getId() ) );
 
                     break;
@@ -180,8 +225,8 @@ public class AckPage extends MobilePage {
                 case MAYBE:
                     reqDao.redirect( new RedirectReq( account.getPlaybook(), referral, req, referralNote ) );
                     setResponsePage( MessagesPage.class );
-                    
-                    break;                    
+
+                    break;
 
                 case NO:
                     ackDao.refuse( new NAck( req, nAckReason ) );
@@ -189,35 +234,66 @@ public class AckPage extends MobilePage {
                 case UNKNOWN:
                     setResponsePage( MessagesPage.class );
                     break;
-                }                
+                }
             }
         }.add( formList );
 
         add(
-            new Label( "hTitle", getPageTitle() ), 
-            new FeedbackPanel( "feedback" ),
-            new StatelessLink( "cancel" ) {
-                @Override
-                public void onClick() {
-                    setResponsePage( MessagesPage.class );
-                }
-            },
+            new Label( "hTitle", getPageTitle() ), new FeedbackPanel( "feedback" ), new StatelessLink( "cancel" ) {
+            @Override
+            public void onClick() {
+                setResponsePage( MessagesPage.class );
+            }
+        },
 
             new Label( "req.sender" ),
 
-            // TODO figure out what is the right way of doing this...
             new WebMarkupContainer( "photo" ).add(
-                new AttributeModifier( "src", new Model<String>( "contacts/" + contactId ) ) 
-                ).setVisible( contactId != 0L && hasPhoto ),
+                new AttributeModifier( "src", photoUrl( contactId ) ) ).setVisible( contactId != 0L && hasPhoto ),
 
-            new Label( "req.description" ),
+            new Label( "req.description" ), 
+            
+            createForwardInfo( req ),
             form );
+    }
+
+    private Serializable photoUrl( Long contactId ) {
+        return contactId == null ? "#"
+             : (Serializable) urlFor( ContactPic.class, new PageParameters().add( "id", contactId ) );
+    }
+
+    private Component createForwardInfo( ConfirmationReq req ) {
+        RedirectReq rreq = null;
+        ConfirmationReq originalRequest;
+        Contact sender;
+        Long contactId = null;
+        String description;
+        String fullName;
+        if ( req.isRedirect() ) {
+            rreq = (RedirectReq) req;
+            originalRequest = rreq.getOriginalRequest();
+            sender = originalRequest.getSender();
+            contactId = sender.hasPhoto() ? sender.getId() : null;
+            description = originalRequest.getDescription();
+            fullName = sender.getFullName();
+        }
+        else {
+            description = "";
+            fullName = "";
+        }
+
+        return new WebMarkupContainer( "fwd" ).add(
+            new Label( "sender", fullName ), 
+            new Label( "description", description ),
+            new WebMarkupContainer( "photo" ).add(
+                new AttributeModifier( "src", photoUrl( contactId ) ) ).setVisible( contactId != null )
+
+        ).setVisible( rreq != null );
     }
 
     private boolean canSubmit() {
         return answerType == AnswerType.YES && ( newPlay != null || existingPlay != null )
-            || answerType == AnswerType.NO
-            ;
+               || answerType == AnswerType.NO;
     }
 
     private void setSubpane( AjaxRequestTarget target, Component formList, Component yesDiv, Component noDiv,
@@ -257,7 +333,7 @@ public class AckPage extends MobilePage {
     public void setAnswerType( AnswerType answerType ) {
         this.answerType = answerType;
     }
-   
+
     public Contact getReferral() {
         return referral;
     }
@@ -284,5 +360,13 @@ public class AckPage extends MobilePage {
 
     public void setNAckReason( String nAckReason ) {
         this.nAckReason = nAckReason;
+    }
+
+    public PlayType getCreate() {
+        return create;
+    }
+
+    public void setCreate( PlayType create ) {
+        this.create = create;
     }
 }

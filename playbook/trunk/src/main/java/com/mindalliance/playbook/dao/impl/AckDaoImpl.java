@@ -51,7 +51,7 @@ public class AckDaoImpl extends GenericHibernateDao<ConfirmationAck, Long> imple
 
         matchingStep.setWith( privateContact );
         matchingStep.setUsing( privateContact.addPrivate( collaboration.getUsing() ) );
-        matchingStep.setTitle( ( isSend ? "Answer " : "Call " ) + privateContact.getGivenName() );
+        matchingStep.setTitle( request.getCollaboration().getTitle() );
         matchingStep.setSequence( 1 );
 
         ConfirmationAck ack = save( new Ack( request, (Collaboration) stepDao.save( matchingStep ) ) );

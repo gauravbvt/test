@@ -56,7 +56,7 @@ public class RequestItem extends Panel {
                     .setVisible( contact != null && contact.hasPhoto() ),
 
                 new Label( "title", collaboration.getTitle() ),
-                new Label( "summary", getSummary( req ) ),
+                new Label( "summary", req.getSummary( incoming ) ),
                 new Label( "description", req.getDescription() ) ),
             
             new StatelessLink( "delete" ){
@@ -67,11 +67,6 @@ public class RequestItem extends Panel {
                 }
             }.setVisible( !incoming )
             );
-    }
-
-    private static String getSummary( ConfirmationReq req ) {
-        return req.isRedirect() ? "Forwarding request on behalf of " + req.getCollaboration().getOwner()
-                                : "With " + req.getSender() + " using " + req.getCollaboration().getUsing();
     }
 
     private Serializable getPhotoUrl( Contact contact ) {

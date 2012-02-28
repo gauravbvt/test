@@ -44,9 +44,11 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
     @Override
     public List<Collaboration> getUnconfirmed() {
         return getSession().createQuery(
-            "select c from Collaboration c left join c.request r " 
+            "select c from Collaboration c " 
+            + "left join c.request r " 
+            + "left join c.agreement a " 
             + "where c.play.playbook.account = :account" 
-            + " and r is null and c.with is not null and c.using is not null"
+            + " and r is null and a is null and c.with is not null and c.using is not null"
         )
             .setParameter( "account", accountDao.getCurrentAccount() )
             .list();

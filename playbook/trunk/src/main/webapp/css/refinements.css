@@ -60,10 +60,13 @@ span.late {
 }
 
 div.quote {
-    display: inline-block;
-    padding: 5px;
-    border: 1px solid lightgray;
-    white-space: pre;
+    padding: 0;
+    white-space: pre-wrap;
+    margin-bottom: 1.5em;
+}
+
+h3.ui-li-heading {
+    margin-top: 0;
 }
 
 /*

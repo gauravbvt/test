@@ -58,4 +58,9 @@ public class RedirectReq extends ConfirmationReq {
     public boolean isRedirect() {
         return true;
     }
+
+    @Override
+    public boolean isForwardable() {
+        return originalRequest.isForwardable();
+    }
 }

@@ -75,8 +75,15 @@ public abstract class Collaboration extends Step {
         sb.append( with.getGivenName() );
         sb.append( ',' );
         sb.append( "\n\n" );
-        sb.append( "here would be some cleverly worded generated text " );
-        sb.append( "about what I want to do..." );
+        
+        if ( isSend() )
+            sb.append( "I would like to contact you at " +  getUsing() );
+        else
+            sb.append( "I need you to contact me at " + getUsing() );
+
+        sb.append( " in the context of my task \"" + getTitle() + "\". " );
+        
+        sb.append( "Is that OK?" );
 
         return sb.toString();
     }
@@ -123,4 +130,9 @@ public abstract class Collaboration extends Step {
     public boolean isAgreed() {
         return agreement != null;
     }
+
+    /**
+     * @return true if this collaboration implies calling someone.
+     */
+    public abstract boolean isSend();
 }

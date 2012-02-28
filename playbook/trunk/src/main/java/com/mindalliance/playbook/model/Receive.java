@@ -35,6 +35,11 @@ public class Receive extends Collaboration {
     }
 
     @Override
+    public boolean isSend() {
+        return false;
+    }
+
+    @Override
     public Type getType() {
         return Type.RECEIVE;
     }
