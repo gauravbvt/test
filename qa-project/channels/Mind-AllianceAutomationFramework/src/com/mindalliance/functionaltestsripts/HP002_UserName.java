@@ -12,6 +12,7 @@ public class HP002_UserName
 {
 	public HP002_UserName() {
 		try {
+			
 			GlobalVariables.sTestCaseId = "HP002_UserName";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -19,38 +20,38 @@ public class HP002_UserName
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
-			// Assertion: Verify that Home page displayed logged in user name as "Welcome <User Name>!"
-			GlobalVariables.iStepNo++;
-			GlobalVariables.sDescription="Verify User name";
-			GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[2]/div[2]/div/h1/span"));
-			if(GlobalVariables.oElement.getText().equals(GlobalVariables.login.get("sUsernameFullName"))){
+				// Assertion: Verify that Home page displayed logged in user name as "Welcome <User Name>!"
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Verify User name";
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[2]/div[2]/div/h1/span"));
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.login.get("sUsernameFullName"))){
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.login.get("sUsernameFullName")+"' Actual "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}	
+				// Call logout()
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Logout is successful";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-			}
-			else{
-				GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Channels - Sign in' "+" Actual "+GlobalVariables.oElement.getText();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-			}	
-			// Call logout()
-			GlobalVariables.iStepNo++ ;
-			GlobalVariables.sDescription = "Logout is successful";
-			GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
-			// Write Results
-			LogFunctions.writeLogs(GlobalVariables.sDescription);
-			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
-			// WebElement Synchronization
-			Thread.currentThread();
-			Thread.sleep(3000);
-			GlobalVariables.oDriver.quit();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				GlobalVariables.oDriver.quit();
 		      
-			LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			}
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

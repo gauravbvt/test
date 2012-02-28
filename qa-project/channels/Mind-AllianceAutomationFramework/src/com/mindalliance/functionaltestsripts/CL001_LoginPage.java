@@ -62,27 +62,27 @@ public class CL001_LoginPage
 							e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 					LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
-					ApplicationFunctionLibrary.logout();
+					 GlobalVariables.oDriver.quit();
 				}
 				else {
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							e.getMessage(),GlobalVariables.sBlank);
-					ApplicationFunctionLibrary.logout();	
+					 GlobalVariables.oDriver.quit();
 				}
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 			}
 		}
-		public static void main(String args[]) {
-			try {
-				GenericFunctionLibrary.initializeTestData();
-				GenericFunctionLibrary.loadObjectRepository();
-				new CL001_LoginPage();
-				GenericFunctionLibrary.tearDownTestData();
-				ReportFunctions.generateAutomationReport();
-			} 
-			catch (Exception oException) {
-				// TODO Auto-generated catch block
-				oException.printStackTrace();
-			}
+	public static void main(String args[]) {
+		try {
+			GenericFunctionLibrary.initializeTestData();
+			GenericFunctionLibrary.loadObjectRepository();
+			new CL001_LoginPage();
+			GenericFunctionLibrary.tearDownTestData();
+			ReportFunctions.generateAutomationReport();
+		} 
+		catch (Exception oException) {
+			// TODO Auto-generated catch block
+			oException.printStackTrace();
 		}
+	}
 }
