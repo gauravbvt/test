@@ -3,7 +3,7 @@
 <xPathLogoutHomePage>/html/body/form/div[2]/div/div/div[2]/a</xPathLogoutHomePage>
 <xPathAssignmentsAndCommitmentsSignout>/html/body/div/span[2]/div/ul/li[3]/a</xPathAssignmentsAndCommitmentsSignout>
 <xPathAllParticipantsSignout>/html/body/div/div/ul/li/a</xPathAllParticipantsSignout>
-<xPathSocialAboutMe>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div/ul/li[4]/a/span</xPathSocialAboutMe>
+<xPathSocialAboutMe>//div[2]/div[2]/div[3]/span/div/div[@class='tabpanel']/div[@class='tab-row']/ul/li[@class='tab2 last']/a/span</xPathSocialAboutMe>
 <xPathSocialCalendar>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div/ul/li[2]/a/span</xPathSocialCalendar>
 <xPathSocialMessages>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div/ul/li/a/span</xPathSocialMessages>
 <xPathSocialSurvey>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div/ul/li[3]/a/span</xPathSocialSurvey>

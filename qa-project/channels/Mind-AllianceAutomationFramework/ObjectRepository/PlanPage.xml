@@ -18,7 +18,7 @@
 <xPathReceivedReplyThatOption>//span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label[2]/input</xPathReceivedReplyThatOption>
 <xPathSendInfoNotification>//span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</xPathSendInfoNotification>
 <xPathReceiveInfoNotification>//span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</xPathReceiveInfoNotification>
-<xPathActionsPopUpMenu>//div[13]/span/span[3]/span[@class='dropmenu']/span</xPathActionsPopUpMenu>
+<xPathActionsPopUpMenu>//div[14]/span/span[3]/span[@class='dropmenu']/span</xPathActionsPopUpMenu>
 <xPathAboutPlanShowMenu>//span[@class='menubar']/span/span/span</xPathAboutPlanShowMenu>
 <xPathAbtPlanSegShowMenu>//span[@class='menubar']/span/span/span</xPathAbtPlanSegShowMenu>
 <xPathAboutPlanActionMenu>//span[@class='menubar']/span[2]/span/span</xPathAboutPlanActionMenu>
@@ -243,8 +243,8 @@
 <xPathAssertionCloseDissemination>//div[10]/div/div/div[3]/a/img</xPathAssertionCloseDissemination>
 <xPathAssertionCloseAboutPlanSegment>//div[5]/div/div/div[3]/a/img</xPathAssertionCloseAboutPlanSegment>
 <xPathAssertionDissemination>//div[10]/div/div/div/span</xPathAssertionDissemination>
-<xPathGoBack>//div[15]/img[@class='navigation']</xPathGoBack>
-<xPathGoForward>//div[15]/img[2]</xPathGoForward>
+<xPathGoBack>//div[16]/img[@class='navigation']</xPathGoBack>
+<xPathGoForward>//div[16]/img[2]</xPathGoForward>
 <xPathElementsOfInformation>//span/div/div[3]/div[3]/div[2]/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/table/tbody/tr[4]/th[@class='area']/a[@class='model-object-link']</xPathElementsOfInformation>
 <xPathIssueReport>/html/body/div/div/h1</xPathIssueReport>
 <xPathIssueReportHome>/html/body/div/div/a/img</xPathIssueReportHome>
