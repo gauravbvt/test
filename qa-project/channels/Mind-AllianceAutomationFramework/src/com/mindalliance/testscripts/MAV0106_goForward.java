@@ -90,7 +90,11 @@ public class MAV0106_goForward
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000); 
-			    
+			    GlobalVariables.oDriver.findElement(By.className("close")).click();
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000); 
+				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

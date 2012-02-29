@@ -32,6 +32,18 @@ public class MAV0100_moveTaskUnderAction
 				Thread.currentThread();
 				Thread.sleep(1000);  	
 				
+				// Add new segment to enabled the move task option
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Add new Segment";
+				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Move Task"), "New");
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				
 				// Click on Move task to Segment link under Action popup menu
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Move task to Segment..";
@@ -65,9 +77,6 @@ public class MAV0100_moveTaskUnderAction
 				// WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);
-			    // WebElement Synchronization
-			    Thread.currentThread();
-			    Thread.sleep(1000);
 			    	
 			    // Click on 'done' button
 			    GlobalVariables.iStepNo++;
@@ -77,6 +86,19 @@ public class MAV0100_moveTaskUnderAction
 			    LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(1000);
+			    
+			    // Remove Segment
+			    GlobalVariables.iStepNo++;
+			    GlobalVariables.sDescription="Remove segment";
+			    ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(1000);
+//				alert.accept();
 			    // WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);

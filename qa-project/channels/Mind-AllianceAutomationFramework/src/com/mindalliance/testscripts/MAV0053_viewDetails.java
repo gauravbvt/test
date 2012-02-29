@@ -48,7 +48,7 @@ public class MAV0053_viewDetails
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
+			    Thread.sleep(3000);
 			    
 			    //Clicks on 'details' link under show pop up menu option of "All segments" 	
 				GlobalVariables.iStepNo++ ;
@@ -82,7 +82,7 @@ public class MAV0053_viewDetails
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000); 
-			    
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);

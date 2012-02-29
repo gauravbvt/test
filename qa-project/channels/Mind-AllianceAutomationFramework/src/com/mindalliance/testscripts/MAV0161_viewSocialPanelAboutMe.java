@@ -46,7 +46,8 @@ public class MAV0161_viewSocialPanelAboutMe
 				// Call logout()
 			    GlobalVariables.iStepNo++ ;
 			    GlobalVariables.sDescription = "Logout is successful";
-			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
+//			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
+			    GlobalVariables.oDriver.findElement(By.className("logout")).click();
 			    GlobalVariables.oDriver.quit();
 			    // Write Results
 			    LogFunctions.writeLogs(GlobalVariables.sDescription);

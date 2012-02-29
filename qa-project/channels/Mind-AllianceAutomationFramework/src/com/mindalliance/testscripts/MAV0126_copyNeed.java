@@ -39,7 +39,7 @@ public class MAV0126_copyNeed
 			
 			    // Clicks on "add info receive" located on the "Receives" Pane
 			    GlobalVariables.iStepNo++;
-			    GlobalVariables.sDescription="add info receive";
+			    GlobalVariables.sDescription="Add info receive";
 //			    GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 			    // Write Results
@@ -60,7 +60,7 @@ public class MAV0126_copyNeed
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    // WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
+			    Thread.sleep(5000);
 			    
 			    // Assertion: Verify that message "Need copied" is displayed on the heading section of "Plan" page
 			    GlobalVariables.iStepNo++;
@@ -73,7 +73,7 @@ public class MAV0126_copyNeed
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Flow copied' "+" Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Need Copied' "+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
