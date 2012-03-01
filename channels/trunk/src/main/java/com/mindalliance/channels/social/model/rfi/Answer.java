@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.community.rfi;
+package com.mindalliance.channels.social.model.rfi;
 
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 import org.apache.commons.validator.UrlValidator;

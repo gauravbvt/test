@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components.support;
 
-import com.mindalliance.channels.core.command.ModelObjectRef;
-import com.mindalliance.channels.core.community.feedback.Feedback;
-import com.mindalliance.channels.core.community.feedback.FeedbackService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.AjaxIndicatorAwareContainer;
+import com.mindalliance.channels.social.model.Feedback;
+import com.mindalliance.channels.social.services.FeedbackService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -208,13 +208,13 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     private boolean saveFeedback() {
         ChannelsUser currentUser = getUser();
         Plan plan = getPlan();
-        Feedback feedback = new Feedback( currentUser.getUsername(), plan.getUri(), feedbackType() );
+        Feedback feedback = new Feedback( currentUser.getUsername(), plan.getUri(), plan.getVersion(), feedbackType() );
         feedback.setTopic( topic );
-        feedback.setContent( getContent() );
+        feedback.setText( getContent() );
         feedback.setFromEmail( currentUser.getEmail() );
         feedback.setUrgent( isAsap() );
-        if ( about != null ) {
-            feedback.setAbout( new ModelObjectRef( about ).asString() );
+        if ( about != null && about instanceof ModelObject ) {
+            feedback.setMoRef( (ModelObject)about );
         }
         try {
             feedbackService.save( feedback );

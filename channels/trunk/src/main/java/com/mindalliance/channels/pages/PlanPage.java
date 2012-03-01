@@ -8,7 +8,6 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.community.feedback.Feedback;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -30,7 +29,6 @@ import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareWebContainer;
 import com.mindalliance.channels.pages.components.MessagePanel;
-import com.mindalliance.channels.pages.components.community.FeedbacksPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
@@ -45,8 +43,10 @@ import com.mindalliance.channels.pages.components.segment.PartAssignmentsPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentPanel;
 import com.mindalliance.channels.pages.components.segment.SharingCommitmentsPanel;
+import com.mindalliance.channels.pages.components.social.feedback.AllFeedbackPanel;
 import com.mindalliance.channels.pages.components.support.FlowLegendPanel;
 import com.mindalliance.channels.pages.components.surveys.SurveysPanel;
+import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.surveys.Survey;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -569,11 +569,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
             feedbacksPanel.setOutputMarkupId( true );
             makeVisible( flowLegendPanel, false );
         } else {
-            feedbacksPanel = new FeedbacksPanel(
+            feedbacksPanel = new AllFeedbackPanel(
                     "feedbacks",
                     new Model<Plan>( getPlan() ) );
             if ( !feedback.isUnknown() ) {
-                ((FeedbacksPanel)feedbacksPanel).select( feedback );
+                ((AllFeedbackPanel)feedbacksPanel).select( feedback );
             }
         }
         form.addOrReplace( feedbacksPanel );
@@ -2215,8 +2215,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     : expandedFeedback;
             addFeedbacksPanel( viewedFeedback );
             target.add( feedbacksPanel );
-        } else if ( feedbacksPanel instanceof FeedbacksPanel ) {
-            ( (FeedbacksPanel) feedbacksPanel ).refresh( target,
+        } else if ( feedbacksPanel instanceof AllFeedbackPanel ) {
+            ( (AllFeedbackPanel) feedbacksPanel ).refresh( target,
                     change,
                     updated,
                     getAspectShown( Feedback.UNKNOWN ) );

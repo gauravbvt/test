@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.community.rfi;
+package com.mindalliance.channels.social.services;
 
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 

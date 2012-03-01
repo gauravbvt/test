@@ -14,8 +14,8 @@ import javax.persistence.Entity;
 @Entity
 public class PresenceRecord extends AbstractPersistentPlanObject {
 
-    public PresenceRecord( Type type, String username, String uri ) {
-        super( uri, username );
+    public PresenceRecord( Type type, String username, String planUri, int planVersion ) {
+        super( planUri, planVersion, username );
         this.type = type;
     }
 

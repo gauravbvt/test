@@ -112,7 +112,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
     }
 
     private boolean isHere( String username ) {
-        return presenceRecordService.isAlive( username, planUrn() );
+        return presenceRecordService.isAlive( username, planVersionUri() );
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {

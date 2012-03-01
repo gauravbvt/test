@@ -1,16 +1,15 @@
 package com.mindalliance.channels.social.model;
 
-import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.social.services.UserMessageService;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import java.util.Date;
 
 /**
+ * A message from a user to one or multiple users.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -18,24 +17,23 @@ import javax.persistence.Entity;
  * Time: 11:28 AM
  */
 @Entity
-public class UserMessage extends AbstractPersistentPlanObject {
+public class UserMessage extends UserStatement {
 
     private String toUsername;
-    private String text = "";
-    private String about;
-    private String aboutString = "";
-    private boolean emailed = false;
+    private boolean emailIt;
+    private Date whenEmailed;
+
+    @ManyToOne
+    private Feedback feedback;
     
     public UserMessage() {} 
 
-    public UserMessage( String planUri, String username, String text ) {
-        super( planUri, username);
-        this.text = text;
+    public UserMessage( String planUri, int planVersion, String username, String text ) {
+        super( planUri, planVersion, username, text);
     }
 
-    public UserMessage( String planUri, String username, String text, ModelObject modelObject ) {
-        this( planUri, username, text );
-        about = new ModelObjectRef( modelObject ).asString();
+    public UserMessage( String planUri, int planVersion, String username, String text, ModelObject modelObject ) {
+        super( planUri, planVersion, username, text, modelObject );
     }
 
 
@@ -47,16 +45,20 @@ public class UserMessage extends AbstractPersistentPlanObject {
         this.toUsername = toUsername;
     }
 
-    public String getText() {
-        return text;
+    public boolean isEmailIt() {
+        return emailIt;
     }
-    
-    public void setText( String text ) {
-        this.text = text;
+
+    public void setEmailIt( boolean emailIt ) {
+        this.emailIt = emailIt;
     }
-    
-    public ModelObjectRef getAboutRef() {
-        return about == null ? null : ModelObjectRef.fromString( about );
+
+    public Date getWhenEmailed() {
+        return whenEmailed;
+    }
+
+    public void setWhenEmailed( Date whenEmailed ) {
+        this.whenEmailed = whenEmailed;
     }
 
     public boolean isBroadcast( ChannelsUser currentUser ) {
@@ -65,41 +67,16 @@ public class UserMessage extends AbstractPersistentPlanObject {
                 || toUsername.equals( UserMessageService.USERS );
     }
 
-    public void setAbout( ModelObject modelObject ) {
-        about = new ModelObjectRef( modelObject ).asString();
-        aboutString = aboutDescription( modelObject );
-    }
-
-    private String aboutDescription( ModelObject mo ) {
-        String description = "";
-        if ( mo != null ) {
-            description = mo.getKindLabel() + " \"" + mo.getLabel() + "\"";
-            if ( mo instanceof SegmentObject ) {
-                description += " in segment \"" + ( (SegmentObject) mo ).getSegment().getLabel() + "\"";
-            }
-        }
-        return description;
-    }
-
-    public ModelObject getAbout( QueryService queryService ) {
-        ModelObjectRef aboutRef = getAboutRef();
-        return aboutRef == null ? null : (ModelObject) aboutRef.resolve( queryService );
-    }
-
-    public String getAboutString() {
-        return aboutString;
-    }
-
-    public void setAboutString( String aboutString ) {
-        this.aboutString = aboutString;
-    }
-
     public boolean isEmailed() {
-        return emailed;
+        return emailIt && whenEmailed != null;
     }
 
-    public void setEmailed( boolean emailed ) {
-        this.emailed = emailed;
+    public Feedback getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback( Feedback feedback ) {
+        this.feedback = feedback;
     }
 
     public String getFromUsername() {

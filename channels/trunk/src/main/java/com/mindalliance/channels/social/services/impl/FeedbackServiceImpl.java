@@ -1,8 +1,12 @@
-package com.mindalliance.channels.core.community.feedback;
+package com.mindalliance.channels.social.services.impl;
 
-import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.social.model.Feedback;
+import com.mindalliance.channels.social.model.UserMessage;
+import com.mindalliance.channels.social.services.FeedbackService;
+import com.mindalliance.channels.social.services.UserMessageService;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -26,14 +30,14 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     @Transactional
     public void sendFeedback(
             String username,
-            String planUri,
+            Plan plan,
             Feedback.Type type,
             String topic,
-            String content,
+            String text,
             boolean urgent ) {
-        Feedback feedback = new Feedback( username, planUri, type );
+        Feedback feedback = new Feedback( username, plan.getUri(), plan.getVersion(), type );
         feedback.setTopic( topic );
-        feedback.setContent( content );
+        feedback.setText( text );
         feedback.setUrgent( urgent );
         save( feedback );
     }
@@ -42,28 +46,29 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     @Transactional
     public void sendFeedback(
             String username,
-            String planUri,
+            Plan plan,
             Feedback.Type type,
             String topic,
-            String content,
+            String text,
             boolean urgent,
             ModelObject about ) {
-        Feedback feedback = new Feedback( username, planUri, type );
+        Feedback feedback = new Feedback( username, plan.getUri(), plan.getVersion(), type );
         feedback.setTopic( topic );
-        feedback.setContent( content );
+        feedback.setText( text );
         feedback.setUrgent( urgent );
-        feedback.setAbout( new ModelObjectRef( about ).asString() );
+        feedback.setMoRef( about );
         save( feedback );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional
-    public List<Feedback> listNotYetNotifiedNormalFeedbacks( String planUri ) {
+    public List<Feedback> listNotYetNotifiedNormalFeedbacks( Plan plan ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.isNull( "whenNotified" ) );
-        criteria.add( Restrictions.eq( "planUri", planUri ) );
+        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
         criteria.add( Restrictions.eq( "urgent", false ) );
         criteria.addOrder( Order.desc( "created" ) );
         return (List<Feedback>) criteria.list();
@@ -83,27 +88,18 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
 
     @Override
     @Transactional
-    @SuppressWarnings( "unchecked" )
-    public List<Feedback> getRepliesTo( Feedback feedback ) {
-        return getSession().createQuery( "from FEEDBACK where replyToId = :id " )
-                .setParameter( "id", feedback.getId() )
-                .list();
-    }
-
-    @Override
-    @Transactional
-    public void addReplyTo( Feedback feedback, Feedback reply ) {
+    public void addReplyTo( Feedback feedback, UserMessage reply, UserMessageService messageService ) {
+        messageService.save( reply );
         feedback.addReply( reply );
-        reply.setReplyTo( feedback );
+        reply.setFeedback( feedback );
         feedback.setLastReplied( reply.getCreated() );
         save( feedback );
-        save( reply );
     }
 
     @Override
     @Transactional
     @SuppressWarnings( "unchecked" )
-    public List<Feedback> select(
+    public List<Feedback> selectInitialFeedbacks(
             Boolean urgentOnly,
             Boolean notResolvedOnly,
             Boolean notRepliedToOnly,
@@ -124,7 +120,7 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
             criteria.add( Restrictions.eq( "topic", topic ) );
         }
         if ( containing != null && !containing.isEmpty() ) {
-            criteria.add( Restrictions.ilike( "%"+"content"+"%", containing ) );
+            criteria.add( Restrictions.ilike( "text", "%" + containing + "%" ) );
         }
         criteria.addOrder( Order.desc( "created" ) );
         return (List<Feedback>) criteria.list();

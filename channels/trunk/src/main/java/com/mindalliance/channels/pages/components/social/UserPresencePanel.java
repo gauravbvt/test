@@ -20,12 +20,15 @@ import java.util.Date;
  */
 public class UserPresencePanel extends AbstractSocialEventPanel {
 
+    private String presenceUserName;
+
     public UserPresencePanel(
             String id,
-            String username,
+            String presenceUserName,
             int index,
             Updatable updatable ) {
-        super( id, username, index, updatable );
+        super( id, index, updatable );
+        this.presenceUserName = presenceUserName;
         init();
     }
 
@@ -34,13 +37,18 @@ public class UserPresencePanel extends AbstractSocialEventPanel {
     }
 
     @Override
+    protected String getPersistentPlanObjectUsername() {
+        return presenceUserName;
+    }
+
+    @Override
     public Date getDate() {
-        PresenceRecord presenceRecord = getLatestPresenceRecord();
+        PresenceRecord presenceRecord = getLatestPresenceRecord( getPersistentPlanObjectUsername() );
         return presenceRecord == null ? null : presenceRecord.getCreated();
     }
 
     private void addTime( WebMarkupContainer socialItemContainer ) {
-        boolean present = isPresent();
+        boolean present = isPresent( getPersistentPlanObjectUsername() );
         String time = getTime();
         String timeLabelString = "";
         if ( !time.isEmpty() && present ) {
@@ -52,7 +60,7 @@ public class UserPresencePanel extends AbstractSocialEventPanel {
                     "title",
                     new PropertyModel<String>( this, "longTime" ) ) );
         }
-        timeLabel.setVisible( isPresent() );
+        timeLabel.setVisible( isPresent( getPersistentPlanObjectUsername() ) );
         socialItemContainer.add( timeLabel );
         if ( !present & !time.isEmpty() ) {
             getNameLabel().add( new AttributeModifier(

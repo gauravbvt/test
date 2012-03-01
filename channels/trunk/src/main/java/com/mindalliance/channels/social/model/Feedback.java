@@ -1,13 +1,11 @@
-package com.mindalliance.channels.core.community.feedback;
+package com.mindalliance.channels.social.model;
 
-import com.mindalliance.channels.core.community.notification.Notifiable;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.pages.Channels;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.List;
  * Time: 9:38 AM
  */
 @Entity
-public class Feedback extends AbstractPersistentPlanObject implements Notifiable {
+public class Feedback extends UserStatement implements Notifiable {
 
     public static final Feedback UNKNOWN = new Feedback( Channels.UNKNOWN_FEEDBACK_ID );
     public static final String GUIDELINES = "Guidelines";
@@ -33,30 +31,20 @@ public class Feedback extends AbstractPersistentPlanObject implements Notifiable
     public enum Type {
         QUESTION,
         PROBLEM,
-        SUGGESTION,
-        REPLY
+        SUGGESTION
     }
 
     private String fromEmail;
     private Type type;
     private String topic;
-    /**
-     * A modelObjectRef string.
-     */
-    private String about;
-    private String content;
     private boolean urgent;
     private Date whenNotified;
     private boolean resolved;
     private boolean repliedTo;
     private Date lastReplied;
 
-    @ManyToOne( cascade = CascadeType.ALL )
-    @JoinColumn( name = "replyTo_id" )
-    private Feedback replyTo;
-
-    @OneToMany( mappedBy = "replyTo" )
-    private List<Feedback> replies;
+    @OneToMany( cascade=CascadeType.ALL, mappedBy="feedback" )
+    private List<UserMessage> replies;
 
     public Feedback() {
     }
@@ -65,14 +53,9 @@ public class Feedback extends AbstractPersistentPlanObject implements Notifiable
         this.id = id; // only to be used for unknown feedback
     }
 
-    public Feedback( String username, String planUri, Type type ) {
-        super( planUri, username );
+    public Feedback( String username, String planUri, int planVersion, Type type ) {
+        super( planUri, planVersion, username );
         this.type = type;
-    }
-    
-    public Feedback( String username, String planUri, Feedback feedback ) {
-        this( username, planUri, Type.REPLY );
-        replyTo = feedback;
     }
 
     public boolean isUnknown() {
@@ -85,14 +68,6 @@ public class Feedback extends AbstractPersistentPlanObject implements Notifiable
 
     public void setType( Type type ) {
         this.type = type;
-    }
-
-    public String getContent() {
-        return content == null ? "" : content;
-    }
-
-    public void setContent( String content ) {
-        this.content = content;
     }
 
     public boolean isUrgent() {
@@ -109,14 +84,6 @@ public class Feedback extends AbstractPersistentPlanObject implements Notifiable
 
     public void setTopic( String topic ) {
         this.topic = topic;
-    }
-
-    public String getAbout() {
-        return about;
-    }
-
-    public void setAbout( String about ) {
-        this.about = about;
     }
 
     public Date getWhenNotified() {
@@ -143,31 +110,20 @@ public class Feedback extends AbstractPersistentPlanObject implements Notifiable
         this.resolved = resolved;
     }
 
-    public Feedback getReplyTo() {
-        return replyTo;
-    }
 
-    public void setReplyTo( Feedback replyTo ) {
-        this.replyTo = replyTo;
-    }
-
-    public List<Feedback> getReplies() {
+    public List<UserMessage> getReplies() {
         return replies;
     }
 
-    public void setReplies( List<Feedback> replies ) {
+    public void setReplies( List<UserMessage> replies ) {
         this.replies = replies;
     }
     
-    public void addReply( Feedback reply ) {
+    public void addReply( UserMessage reply ) {
         repliedTo = true;
         replies.add( reply );
     }
 
-    public boolean isReply() {
-        return type == Type.REPLY;
-    }
-    
     public boolean isSuggestion() {
         return type == Type.SUGGESTION;
     }
@@ -188,18 +144,10 @@ public class Feedback extends AbstractPersistentPlanObject implements Notifiable
         this.repliedTo = repliedTo;
     }
     
-    public String getUrgentLabel() {
-        return urgent ? "yes" : "no";
-    }
-    
     public String getTypeLabel() {
         return type.name().toLowerCase();
     }
     
-    public  String getResolvedLabel() {
-        return resolved ? "yes" : "no";
-    }
-
     public Date getLastReplied() {
         return lastReplied;
     }
@@ -207,4 +155,16 @@ public class Feedback extends AbstractPersistentPlanObject implements Notifiable
     public void setLastReplied( Date lastReplied ) {
         this.lastReplied = lastReplied;
     }
+
+    public String getUserFullName( ChannelsUserDao userDao ) {
+        ChannelsUser user = userDao.getUserNamed( getUsername() );
+        if ( user != null ) {
+            String fullName = user.getFullName();
+            return (fullName == null || fullName.isEmpty()) ? getUsername() : fullName;
+        } else {
+            return getUsername();
+        }
+    }
+
+
 }

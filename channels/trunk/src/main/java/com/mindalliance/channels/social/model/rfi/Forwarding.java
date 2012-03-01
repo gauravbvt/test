@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.community.rfi;
+package com.mindalliance.channels.social.model.rfi;
 
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 
@@ -23,8 +23,8 @@ public class Forwarding extends AbstractPersistentPlanObject {
 
     public Forwarding() {}
 
-    public Forwarding( String planUri, String fromUsername, String toUsername ) {
-        super( fromUsername, planUri );
+    public Forwarding( String planUri, int planVersion, String fromUsername, String toUsername ) {
+        super( planUri, planVersion, fromUsername  );
         this.toUsername = toUsername;
     }
 

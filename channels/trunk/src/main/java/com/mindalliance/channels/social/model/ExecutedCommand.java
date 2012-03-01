@@ -37,8 +37,8 @@ public class ExecutedCommand extends AbstractPersistentPlanObject {
 
     public ExecutedCommand() {}
 
-    public ExecutedCommand( Type type, Command command, Change change, String planUri ) {
-        super( planUri, command.getUserName() );
+    public ExecutedCommand( Type type, Command command, Change change, String planUri, int planVersion ) {
+        super( planUri, planVersion, command.getUserName() );
         this.type = type;
         commandName = command.getName();
         if ( type == Type.Undone )  commandUndoes = command.getUndoes();

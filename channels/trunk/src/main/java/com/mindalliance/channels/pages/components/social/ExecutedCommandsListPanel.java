@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.util.PeekAheadIterator;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.model.ExecutedCommand;
@@ -148,9 +149,10 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
     }
 
     public List<ExecutedCommand> getExecutedCommands() {
+        Plan plan = getPlan();
         List<ExecutedCommand> executedCommands = new ArrayList<ExecutedCommand>();
         PeekAheadIterator<ExecutedCommand> iterator = new PeekAheadIterator<ExecutedCommand>(
-                executedCommandService.getExecutedCommands( planUrn() ) );
+                executedCommandService.getExecutedCommands( plan.getUri(), plan.getVersion() ) );
         while ( iterator.hasNext() && executedCommands.size() < numberToShow ) {
             ExecutedCommand executedCommand = iterator.next();
             if ( executedCommand != null ) {
@@ -175,7 +177,7 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {
-        Date whenLastChanged = executedCommandService.getWhenLastChanged( planUrn() );
+        Date whenLastChanged = executedCommandService.getWhenLastChanged( planVersionUri() );
         if ( whenLastChanged != null && whenLastChanged.after( whenLastRefreshed ) ) {
             addExecutedCommands();
             adjustComponents( target );

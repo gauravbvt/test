@@ -36,6 +36,13 @@ public interface PersistentPlanObject extends Timestamped, Identifiable, Seriali
     String getPlanUri();
 
     /**
+     * Get the plan's version.
+     *
+     * @return an int
+     */
+    int getPlanVersion();
+
+    /**
      * Get the username of the owner.
      *
      * @return a string

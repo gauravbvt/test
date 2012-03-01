@@ -1,13 +1,16 @@
-package com.mindalliance.channels.core.community.notification;
+package com.mindalliance.channels.social.services.impl;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
-import com.mindalliance.channels.core.community.feedback.Feedback;
-import com.mindalliance.channels.core.community.feedback.FeedbackService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.social.model.Feedback;
+import com.mindalliance.channels.social.model.UserMessage;
+import com.mindalliance.channels.social.services.FeedbackService;
+import com.mindalliance.channels.social.services.NotificationService;
+import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.slf4j.Logger;
@@ -21,7 +24,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -42,6 +47,12 @@ public class NotificationServiceImpl implements NotificationService {
 
     private static final int MAX_SUBJECT_LENGTH = 60;
 
+    /**
+     * Simple date format.
+     */
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat( "M/d/yyyy HH:mm"  );
+
+
     @Autowired
     private FeedbackService feedbackService;
 
@@ -54,7 +65,152 @@ public class NotificationServiceImpl implements NotificationService {
     @Autowired
     private PlanManager planManager;
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy/MM/dd HH:mm:ss" );
+    @Autowired
+    private UserMessageService userMessageService;
+
+    private static final int SUMMARY_MAX = 25;
+
+
+    //// USER MESSAGES ////
+
+    @Override
+    @Scheduled( fixedDelay = 60000 )     // each minute
+    @Async
+    @Transactional
+    public void emailUserMessages() {
+        Iterator<UserMessage> messagesToEmail = userMessageService.listMessagesToEmail();
+        while ( messagesToEmail.hasNext() ) {
+            UserMessage messageToEmail = messagesToEmail.next();
+            boolean success = email( messageToEmail );
+            if ( success ) userMessageService.emailed( messageToEmail );
+        }
+    }
+
+    private boolean email( UserMessage message ) {
+        ChannelsUser currentUser = userDao.getUserNamed( message.getFromUsername() );
+        List<ChannelsUser> recipients = new ArrayList<ChannelsUser>();
+        String toUsername = message.getToUsername();
+        String urn = message.getPlanUri();
+        String summary = StringUtils.abbreviate( message.getText(), SUMMARY_MAX );
+        if ( toUsername == null || toUsername.equals( UserMessageService.PLANNERS ) )
+            recipients = userDao.getPlanners( urn );
+        else if ( toUsername.equals( UserMessageService.USERS ) )
+            recipients = userDao.getUsers( urn );
+        else
+            recipients.add( userDao.getUserNamed( toUsername ) );
+
+        try {
+            for ( ChannelsUser recipient : recipients ) {
+                String recipientEmailAddress = recipient.getEmail();
+                if ( !recipientEmailAddress.isEmpty()
+                        && ChannelsUtils.isValidEmailAddress( recipientEmailAddress ) ) {
+                    SimpleMailMessage email = new SimpleMailMessage();
+                    email.setTo( recipient.getEmail() );
+                    email.setSubject( "["
+                            + urn
+                            + "] "
+                            + summary );
+                    String fromAddress = currentUser.getEmail();
+                    if ( fromAddress.isEmpty() ) {
+                        fromAddress = getDefaultFormAddress( message );
+                    }
+                    if ( ChannelsUtils.isValidEmailAddress( fromAddress ) ) {
+                    email.setFrom( fromAddress );
+                    email.setReplyTo( fromAddress );
+                    }
+                    email.setText( makeContent( message ) );
+                    mailSender.send( email );
+                    LOG.info( currentUser.getUsername()
+                            + " emailed message to "
+                            + recipient.getUsername() );
+                }
+            }
+            message.setWhenEmailed( new Date() );
+            userMessageService.save( message );
+            return true;
+        } catch ( Exception e ) {
+            LOG.warn( currentUser.getUsername()
+                    + " failed to email message to "
+                    + toUsername, e );
+            return false;
+        }
+    }
+
+    private String makeContent( UserMessage message ) {
+        Date now = new Date();
+        StringBuilder sb = new StringBuilder( );
+        String aboutString = message.getMoLabel();
+        if ( !aboutString.isEmpty() )
+            sb.append( "About " ).append( aboutString ).append( "\n\n" );
+
+        sb.append( message.getText() );
+        Feedback feedback = message.getFeedback();
+        if ( feedback != null ) {
+            sb.append( "\n\n -- In response to the " )
+                    .append( feedback.getTypeLabel() )
+                    .append( " you sent on " );
+            sb.append( dateFormat.format( feedback.getCreated() ) );
+            sb.append( ":\n\n" );
+            sb.append( feedback.getText() );
+            sb.append( "\n\n ---------------- " );
+        }
+        sb.append( "\n\n -- Message first sent in Channels " )
+                .append( getLongTimeElapsedString( message.getCreated(), now ) )
+                .append( " --" );
+         return sb.toString();
+    }
+
+    private String getDefaultFormAddress( UserMessage message ) {
+        Plan plan = getPlan( message.getPlanUri(), message.getPlanVersion() );
+        return plan == null
+                ? ""
+                : plan.getPlannerSupportCommunity( planManager.getDefaultSupportCommunity() );
+    }
+
+    private Plan getPlan( String planUri, int planVersion ) {
+        return planManager.getPlan( planUri, planVersion );
+    }
+
+    private static String getLongTimeElapsedString( Date start, Date end ) {
+        long diffInSeconds = ( end.getTime() - start.getTime() ) / 1000;
+        /* sec */
+        long seconds = diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds;
+        /* min */
+        long minutes = ( diffInSeconds = diffInSeconds / 60 ) >= 60 ? diffInSeconds % 60 : diffInSeconds;
+        /* hours */
+        long hours = ( diffInSeconds = diffInSeconds / 60 ) >= 24 ? diffInSeconds % 24 : diffInSeconds;
+        /* days */
+        long days = diffInSeconds / 24;
+
+        StringBuilder sb = new StringBuilder();
+        if ( days > 0 ) {
+            sb.append( days );
+            sb.append( " day" );
+            sb.append( days > 1 ? "s" : "" );
+        }
+        if ( hours > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( hours );
+            sb.append( " hour" );
+            sb.append( hours > 1 ? "s" : "" );
+        }
+        if ( minutes > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( minutes );
+            sb.append( " minute" );
+            sb.append( minutes > 1 ? "s" : "" );
+        }
+        if ( sb.length() == 0 || seconds > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( seconds );
+            sb.append( " second" );
+            sb.append( seconds > 1 ? "s" : "" );
+        }
+        sb.append( " ago" );
+        return sb.toString();
+    }
+
+    //// FEEDBACK ////
 
     @Override
     @Scheduled( fixedDelay = 60000 )     // each minute
@@ -77,13 +233,12 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     public void sendBatchedFeedbackNotifications() {
         for ( Plan plan : planManager.getPlans() ) {
-            String planUri = plan.getUri();
-            List<Feedback> normalFeedbacks = feedbackService.listNotYetNotifiedNormalFeedbacks( planUri );
+            List<Feedback> normalFeedbacks = feedbackService.listNotYetNotifiedNormalFeedbacks( plan );
             if ( !normalFeedbacks.isEmpty() ) {
                 boolean success = false;
-                String subject = makeBatchedFeedbackSubject( planUri, normalFeedbacks );
+                String subject = makeBatchedFeedbackSubject( plan.getVersionUri(), normalFeedbacks );
                 String content = makeBatchedFeedbackContent( normalFeedbacks );
-                for ( ChannelsUser planner : userDao.getPlanners( planUri ) ) {
+                for ( ChannelsUser planner : userDao.getPlanners( plan.getUri() ) ) {
                     success = sendEmail(
                             planner.getEmail(),
                             plan.getPlannerSupportCommunity( planManager.getDefaultSupportCommunity() ),
@@ -130,7 +285,7 @@ public class NotificationServiceImpl implements NotificationService {
     private boolean emailUrgentFeedbackToPlanner( ChannelsUser planner, Feedback feedback ) {
         boolean success = false;
         String toAddress = planner.getEmail();
-        if ( ChannelsUtils.isValidEmailAddress ( toAddress ) ) {
+        if ( ChannelsUtils.isValidEmailAddress( toAddress ) ) {
             String fromAddress = feedback.getFromEmail();
             String subject = makeEmailSubject( feedback );
             String content = makeContent( feedback );
@@ -164,18 +319,20 @@ public class NotificationServiceImpl implements NotificationService {
 
     private String makeContent( Feedback feedback ) {
         return "Plan: " + feedback.getPlanUri()
+                + ":"
+                + feedback.getPlanVersion()
                 + "\nUser: " + feedback.getUsername()
                 + "\n"
                 + dateFormat.format( feedback.getCreated() )
                 + aboutString( feedback )
                 + "\n----------------------------------------------------------------------------\n\n"
-                + feedback.getContent()
+                + feedback.getText()
                 + "\n\n----------------------------------------------------------------------------\n";
 
     }
 
     private String aboutString( Feedback feedback ) {
-        String about = feedback.getAbout();
+        String about = feedback.getMoRef();
         if ( about == null ) {
             return "";
         } else {
@@ -216,7 +373,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     private String contentAbbreviated( Feedback feedback ) {
-        String summary = feedback.getContent().replaceAll( "\\s", " " );
+        String summary = feedback.getText().replaceAll( "\\s", " " );
         return StringUtils.abbreviate( summary, MAX_SUBJECT_LENGTH );
     }
 

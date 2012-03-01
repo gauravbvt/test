@@ -8,7 +8,6 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.community.feedback.Feedback;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Participation;
@@ -19,6 +18,7 @@ import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.issues.IssuesPage;
+import com.mindalliance.channels.social.model.Feedback;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;

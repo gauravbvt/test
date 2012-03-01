@@ -1,9 +1,7 @@
-package com.mindalliance.channels.pages.components.community;
+package com.mindalliance.channels.pages.components.social.feedback;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.ModelObjectRef;
-import com.mindalliance.channels.core.community.feedback.Feedback;
-import com.mindalliance.channels.core.community.feedback.FeedbackService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -14,7 +12,10 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.social.model.Feedback;
+import com.mindalliance.channels.social.services.FeedbackService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -32,9 +33,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -44,7 +45,7 @@ import java.util.Map;
  * Date: 2/22/12
  * Time: 12:01 PM
  */
-public class FeedbacksPanel extends FloatingCommandablePanel implements Filterable {
+public class AllFeedbackPanel extends FloatingCommandablePanel implements Filterable {
 
     /**
      * Min width on resize.
@@ -59,14 +60,19 @@ public class FeedbacksPanel extends FloatingCommandablePanel implements Filterab
     /**
      * Simple date format.
      */
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat( "EEE MMM dd HH:mm:ss zzz yyyy", Locale.US );
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat( "M/d/yyyy HH:mm"  );
+    
+    private static int MAX_TEXT_LENGTH = 40;
 
     /**
      * Maximum number of rows shown in table at a time.
      */
     private static final int MAX_FEEDBACK_ROWS = 10;
 
+    private static final String ANY = "Any";
+
     static private final String[] TOPIC_CHOICES = {
+            ANY,
             Feedback.GUIDELINES,
             Feedback.INFO_NEEDS,
             Feedback.ISSUES,
@@ -77,7 +83,7 @@ public class FeedbacksPanel extends FloatingCommandablePanel implements Filterab
 
     @SpringBean
     FeedbackService feedbackService;
-    
+
     @SpringBean
     ChannelsUserDao userDao;
 
@@ -86,7 +92,7 @@ public class FeedbacksPanel extends FloatingCommandablePanel implements Filterab
      */
     private Map<String, ModelObject> filters = new HashMap<String, ModelObject>();
 
-    private FeedbacksTable feedbacksTable;
+    private FeedbackTable feedbacksTable;
     private Feedback selectedFeedback;
     private WebMarkupContainer selectedFeedbackContainer;
     boolean urgentOnly;
@@ -95,7 +101,7 @@ public class FeedbacksPanel extends FloatingCommandablePanel implements Filterab
     boolean notRepliedToOnly;
     String containing = "";
 
-    public FeedbacksPanel( String id, Model<Plan> planModel ) {
+    public AllFeedbackPanel( String id, Model<Plan> planModel ) {
         super( id, planModel, null );
         init();
     }
@@ -105,7 +111,7 @@ public class FeedbacksPanel extends FloatingCommandablePanel implements Filterab
         addFeedbacksTable();
         addSelectedFeedback();
     }
-    
+
     public void select( Feedback feedback ) {
         setSelectedFeedback( feedback.isUnknown() ? null : feedback );
     }
@@ -164,21 +170,26 @@ public class FeedbacksPanel extends FloatingCommandablePanel implements Filterab
     }
 
     private void addFeedbacksTable() {
-        feedbacksTable = new FeedbacksTable(
+        feedbacksTable = new FeedbackTable(
                 "feedbacksTable",
-                new PropertyModel<List<Feedback>>( this, "filteredFeedbacks" ) );
+                new PropertyModel<List<FeedbackWrapper>>( this, "filteredFeedbacks" ) );
         feedbacksTable.setOutputMarkupId( true );
         getContentContainer().addOrReplace( feedbacksTable );
     }
 
-    public List<Feedback> getFilteredFeedbacks() {
-        return feedbackService.select(
+    public List<FeedbackWrapper> getFilteredFeedbacks() {
+        List<FeedbackWrapper> wrappers = new ArrayList<FeedbackWrapper>(  );
+        List<Feedback> feedbacks = feedbackService.selectInitialFeedbacks(
                 urgentOnly,
                 unresolvedOnly,
                 notRepliedToOnly,
-                topic,
+                getTopic().equals( ANY ) ? null : getTopic(),
                 containing
         );
+        for ( Feedback f : feedbacks ) {
+            wrappers.add(  new FeedbackWrapper( f ) );
+        }
+        return wrappers;
     }
 
     private void addFeedbackTitle() {
@@ -203,7 +214,7 @@ public class FeedbacksPanel extends FloatingCommandablePanel implements Filterab
             sb.append( user == null ? feedback.getUsername() : user.getFullName() );
             sb.append( " about " );
             sb.append( feedback.getTopic().toLowerCase() );
-            String moRefString = feedback.getAbout();
+            String moRefString = feedback.getMoRef();
             if ( moRefString != null ) {
                 ModelObject mo = ModelObjectRef.resolveFromString( moRefString, getQueryService() );
                 if ( mo != null ) {
@@ -225,12 +236,24 @@ public class FeedbacksPanel extends FloatingCommandablePanel implements Filterab
         selectedFeedbackContainer.setOutputMarkupId( true );
         Feedback feedback = getSelectedFeedback();
         makeVisible( selectedFeedbackContainer, feedback != null );
-        selectedFeedbackContainer.add( new Label(
-                "content",
-                feedback == null ? "" : feedback.getContent() ) );
+        Label resolvedLabel = new Label(
+                "resolved",
+                feedback == null
+                        ? ""
+                        : feedback.isResolved()
+                        ? "Resolved"
+                        : "Not resolved" );
+        resolvedLabel.add( new AttributeModifier(
+                "class",
+                feedback == null || !feedback.isResolved()
+                        ? "not-resolved"
+                        : "resolved" ) );
+        selectedFeedbackContainer.add(  resolvedLabel );
         selectedFeedbackContainer.add( feedback == null
                 ? new Label( "discussion", "" )
-                : new FeedbackDiscussionPanel( "discussion", new Model<Feedback>( feedback ) ) );
+                : new FeedbackDiscussionPanel(
+                "discussion",
+                new Model<Feedback>( feedback ) ) );
         getContentContainer().addOrReplace( selectedFeedbackContainer );
     }
 
@@ -309,11 +332,14 @@ public class FeedbacksPanel extends FloatingCommandablePanel implements Filterab
     }
 
     public String getTopic() {
-        return topic;
+        return topic == null || topic.isEmpty() ? ANY : topic;
     }
 
     public void setTopic( String topic ) {
-        this.topic = topic;
+        if ( topic == null || topic.isEmpty() || topic.equals( ANY ) )
+            this.topic = null;
+        else
+            this.topic = topic;
     }
 
     public boolean isUnresolvedOnly() {
@@ -355,34 +381,118 @@ public class FeedbacksPanel extends FloatingCommandablePanel implements Filterab
 
     @Override
     public void changed( Change change ) {
-        if ( change.isForInstanceOf( Feedback.class ) ) {
-            if ( change.isExpanded() ) {
-                setSelectedFeedback( (Feedback) change.getSubject( getQueryService() ) );
-            }
-            if ( change.isCollapsed() || change.isRemoved() ) {
-                selectedFeedback = null;
-            }
+        if ( change.isForInstanceOf( FeedbackWrapper.class ) && change.isExpanded() ) {
+            FeedbackWrapper fw = (FeedbackWrapper) change.getSubject( getQueryService() );
+            setSelectedFeedback(  fw.getFeedback() );
+        } else {
+            super.changed( change );
         }
-        super.changed( change );
     }
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isForInstanceOf( Feedback.class ) && !change.isCollapsed() ) {
-            updateTableAndSelected( target );
+        if ( change.isForInstanceOf( FeedbackWrapper.class ) && change.isExpanded() ) {
+            addSelectedFeedback();
+            target.add( selectedFeedbackContainer );
         } else
             super.updateWith( target, change, updated );
+    }
+
+    public class FeedbackWrapper implements Identifiable {
+
+        private Feedback feedback;
+        
+        public FeedbackWrapper( Feedback feedback ) {
+            this.feedback = feedback;
+        }
+        
+        public Feedback getFeedback() {
+            return feedback;
+        }
+
+        @Override
+        public long getId() {
+            return feedback.getId();
+        }
+
+        @Override
+        public String getDescription() {
+            return feedback.getDescription();
+        }
+
+        @Override
+        public String getTypeName() {
+            return feedback.getTypeName();
+        }
+
+        @Override
+        public boolean isModifiableInProduction() {
+            return feedback.isModifiableInProduction();
+        }
+
+        @Override
+        public String getName() {
+            return feedback.getName();
+        }
+
+        public Date getCreated() {
+            return feedback.getCreated();
+        }
+        
+        public String getTopic() {
+            return feedback.getTopic();
+        }
+        
+        public String getMoRef() {
+            return feedback.getMoRef();
+        }
+        
+        public String getMoRefLabel() {
+            return feedback.getMoLabel();
+        }
+        
+        public String getText() {
+            return feedback.getText();
+        }
+                
+        public String getTypeLabel() {
+            return feedback.getTypeLabel();
+        }
+
+        public  String getResolvedLabel() {
+            return feedback.isResolved() ? "yes" : "no";
+        }
+
+        public String getUrgentLabel() {
+            return feedback.isUrgent() ? "yes" : "no";
+        }
+
+        public String getFormattedCreated() {
+            return dateFormat.format( feedback.getCreated() );
+        }
+
+        public String getFormattedLastReplied() {
+            return dateFormat.format( feedback.getLastReplied() );
+        }
+
+        public String getAbbreviatedText() {
+            return StringUtils.abbreviate( feedback.getText(), MAX_TEXT_LENGTH );
+        }
+        
+        public String getFullName() {
+            return feedback.getUserFullName( userDao );
+        }
     }
 
 
     /**
      * Feedbacks table.
      */
-    public class FeedbacksTable extends AbstractTablePanel<Feedback> {
+    public class FeedbackTable extends AbstractTablePanel<FeedbackWrapper> {
 
-        private IModel<List<Feedback>> feedbacksModel;
+        private IModel<List<FeedbackWrapper>> feedbacksModel;
 
-        public FeedbacksTable( String id, IModel<List<Feedback>> feedbacksModel ) {
+        public FeedbackTable( String id, IModel<List<FeedbackWrapper>> feedbacksModel ) {
             super( id );
             this.feedbacksModel = feedbacksModel;
             initialize();
@@ -394,17 +504,18 @@ public class FeedbacksPanel extends FloatingCommandablePanel implements Filterab
             // Columns
             columns.add( makeColumn( "Urgent", "urgentLabel", EMPTY ) );
             columns.add( makeColumn( "Type", "typeLabel", EMPTY ) );
-            columns.add( makeUserColumn( "From", "username", EMPTY ) );
+            columns.add( makeUserColumn( "From", "fullName", EMPTY ) );
             columns.add( makeColumn( "Topic", "topic", EMPTY ) );
-            columns.add( makeFilterableLinkColumn( "About", "about", "label", EMPTY, FeedbacksPanel.this, true ) );
-            columns.add( makeColumn( "Received", "created", EMPTY ) );
-            columns.add( makeColumn( "Last replied", "lastReplied", EMPTY ) );
+            columns.add( makeFilterableLinkColumn( "About", "moRef", "moRefLabel", EMPTY, AllFeedbackPanel.this, true ) );
+            columns.add( makeColumn( "Content", "abbreviatedText", null, EMPTY, "text" ) );
+            columns.add( makeColumn( "Received", "formattedCreated", null, EMPTY, null, "created" ) );
+            columns.add( makeColumn( "Last replied", "formattedLastReplied", EMPTY ) );
             columns.add( makeColumn( "Resolved", "resolvedLabel", EMPTY ) );
             columns.add( makeExpandLinkColumn( "", "", "more..." ) );
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "feedbacks",
                     columns,
-                    new SortableBeanProvider<Feedback>( feedbacksModel.getObject(),
+                    new SortableBeanProvider<FeedbackWrapper>( feedbacksModel.getObject(),
                             "created" ),
                     MAX_FEEDBACK_ROWS ) );
         }

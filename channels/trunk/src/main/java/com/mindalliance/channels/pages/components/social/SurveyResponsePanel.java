@@ -31,7 +31,6 @@ public class SurveyResponsePanel extends AbstractSocialEventPanel {
             int index,
             Updatable updatable ) {
         super( id,
-                surveyResponseModel.getObject().getSurvey().getUserName(),
                 index,
                 updatable );
         this.surveyResponseModel = surveyResponseModel;
@@ -54,7 +53,7 @@ public class SurveyResponsePanel extends AbstractSocialEventPanel {
     private void addStatus( WebMarkupContainer socialItemContainer ) {
         String statusString = getSurveyResponse().getStatusLabel();
         Label statusLabel = new Label( "status", statusString );
-        statusLabel.add( new AttributeModifier( "class", true, new Model<String>( statusString ) ) );
+        statusLabel.add( new AttributeModifier( "class", new Model<String>( statusString ) ) );
         socialItemContainer.add( statusLabel );
     }
 
@@ -83,7 +82,6 @@ public class SurveyResponsePanel extends AbstractSocialEventPanel {
         if ( !timeLabelString.isEmpty() ) {
             timeLabel.add( new AttributeModifier(
                     "title",
-                    true,
                     new PropertyModel<String>( this, "longTime" ) ) );
         }
         socialItemContainer.add( timeLabel );

@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.reports.issues;
 
-import com.mindalliance.channels.core.community.feedback.Feedback;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.plan.IssuesSummaryTable;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
+import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 

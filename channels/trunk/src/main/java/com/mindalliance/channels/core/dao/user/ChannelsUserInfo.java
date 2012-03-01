@@ -69,7 +69,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
     public ChannelsUserInfo() {}
 
     public ChannelsUserInfo( String username, String values ) {
-        super( null, username );
+        super( username );
         StringTokenizer tokens = new StringTokenizer( values, "," );
 
         password = tokens.nextToken();
@@ -102,7 +102,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
     }
 
     public ChannelsUserInfo( String username, String fullName, String email ) {
-        super( null, username );
+        super( username );
         this.fullName = fullName;
         this.email = email == null ? "" : email;
         processPlanAccesses();

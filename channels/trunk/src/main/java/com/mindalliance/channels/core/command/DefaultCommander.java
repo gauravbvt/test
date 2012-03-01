@@ -407,7 +407,7 @@ public class DefaultCommander implements Commander {
         Plan plan = getPlan();
         synchronized ( plan ) {
             for ( PresenceListener presenceListener : presenceListeners )
-                presenceListener.keepAlive( userName, plan.getUrn(), refreshDelay );
+                presenceListener.keepAlive( userName, plan, refreshDelay );
             processDeaths();
         }
     }
@@ -417,7 +417,7 @@ public class DefaultCommander implements Commander {
         synchronized ( plan ) {
             Set<String> deads = new HashSet<String>();
             for ( PresenceListener presenceListener : presenceListeners )
-                deads.addAll( presenceListener.giveMeYourDead( plan.getUrn() ) );
+                deads.addAll( presenceListener.giveMeYourDead( plan ) );
 
             for ( String userName : deads )
                 processDeath( userName );
@@ -624,7 +624,7 @@ public class DefaultCommander implements Commander {
         Plan plan = getPlan();
         synchronized ( plan ) {
             for ( PresenceListener presenceListener : presenceListeners )
-                presenceListener.killIfAlive( username, plan.getUrn() );
+                presenceListener.killIfAlive( username, plan );
             processDeath( username );
         }
     }

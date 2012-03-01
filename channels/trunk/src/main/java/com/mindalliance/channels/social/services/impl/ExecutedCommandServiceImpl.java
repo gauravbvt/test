@@ -41,10 +41,11 @@ public class ExecutedCommandServiceImpl
 
     @Override
     @Transactional
-    public Iterator<ExecutedCommand> getExecutedCommands( String planUri ) {
+    public Iterator<ExecutedCommand> getExecutedCommands( String planUri, int planVersion ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "planUri", planUri ) );
+        criteria.add( Restrictions.eq( "planVersion", planVersion ) );
         criteria.addOrder( Order.desc( "created" ) );
         List<ExecutedCommand> results = (List<ExecutedCommand>)criteria.list( );
         return results.iterator();
@@ -84,8 +85,8 @@ public class ExecutedCommandServiceImpl
             Command command,
             Change change) {
         Plan plan = commander.getPlan();
-        changed( plan.getUrn() );
-        ExecutedCommand commandEvent = new ExecutedCommand( type, command, change, plan.getUrn() );
+        changed( plan.getVersionUri() );
+        ExecutedCommand commandEvent = new ExecutedCommand( type, command, change, plan.getUri(), plan.getVersion() );
         save( commandEvent );
         
     }

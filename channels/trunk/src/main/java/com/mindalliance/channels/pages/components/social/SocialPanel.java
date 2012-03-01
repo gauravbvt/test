@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.model.UserMessage;
 import com.mindalliance.channels.social.services.UserMessageService;
@@ -163,7 +164,11 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( plannerMessageListPanel != null && getSelectedTabTitle().equals( getMessagesTabTitle() )  ) {
             plannerMessageListPanel.refresh( target, change );
         }
-        Date whenLastReceived = userMessageService.getWhenLastReceived( getUser().getUsername(), planUrn() );
+        Plan plan = getPlan();
+        Date whenLastReceived = userMessageService.getWhenLastReceived(
+                getUser().getUsername(),
+                plan.getUri(),
+                plan.getVersion() );
         if ( whenLastReceived != null && whenLastReceived.after( whenLastRefreshed ) ) {
             update( target, Change.message( "New message" ) );
         }
@@ -186,7 +191,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
                 plannerMessageListPanel.deleteMessage( (UserMessage) object, target );
             }
             if ( object instanceof UserMessage && action.equals( EMAIL_MESSAGE ) ) {
-                plannerMessageListPanel.emailMessage( (UserMessage) object, target, getUser() );
+                plannerMessageListPanel.emailMessage( (UserMessage) object, target );
             }
         }
     }

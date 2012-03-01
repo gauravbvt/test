@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.community.notification;
+package com.mindalliance.channels.social.model;
 
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.community.notification;
+package com.mindalliance.channels.social.services;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -12,4 +12,6 @@ public interface NotificationService {
     void sendUrgentNotifications();
 
     void sendBatchedFeedbackNotifications();
+
+    void emailUserMessages();
 }

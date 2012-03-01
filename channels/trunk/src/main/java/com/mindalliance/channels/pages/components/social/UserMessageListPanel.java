@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
@@ -380,11 +381,17 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private boolean sendNewMessage( boolean emailIt, ChannelsUser sender ) {
         String text = getNewMessageText();
         if ( !text.isEmpty() ) {
-            UserMessage userMessage = new UserMessage( getPlan().getUri(), sender.getUsername(), text );
+            Plan plan = getPlan();
+            UserMessage userMessage = new UserMessage( 
+                    plan.getUri(), 
+                    plan.getVersion(), 
+                    sender.getUsername(), 
+                    text );
             userMessage.setToUsername( getNewMessageRecipient().getUsername() );
             if ( getNewMessageAbout() != null )
-                userMessage.setAbout( getNewMessageAbout() );
-            return userMessageService.sendMessage( userMessage, emailIt, sender );
+                userMessage.setMoRef( getNewMessageAbout() );
+            userMessageService.sendMessage( userMessage, emailIt );
+            return true;
         } else {
             return false;
         }
@@ -422,23 +429,27 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         refresh( target, new Change( Change.Type.Communicated ) );
     }
 
-    public void emailMessage( UserMessage message, AjaxRequestTarget target, ChannelsUser sender ) {
-        boolean success = userMessageService.email( message, sender );
+    public void emailMessage( UserMessage message, AjaxRequestTarget target ) {
+        userMessageService.email( message );
         addUserMessages();
         adjustComponents( target );
-        update( target, Change.message( success
-                ? ( "Message emailed to " + ( message.isBroadcast( sender ) ? "all planners" : message.getToUsername() ) )
-                : "Message NOT emailed" ) );
+        update(
+                target,
+                Change.message(
+                        "Message will be emailed to " + ( message.isBroadcast( getUser() )
+                                ? "all planners"
+                                : message.getToUsername() ) ) );
     }
 
     public List<UserMessage> getUserMessages( ChannelsUser user ) {
+        Plan plan = getPlan();
         String username = getUser().getUsername();
         List<UserMessage> userMessages = new ArrayList<UserMessage>();
         Iterator<UserMessage> iterator;
         if ( isShowReceived() ) {
-            iterator = userMessageService.getReceivedMessages( username, planUrn() );
+            iterator = userMessageService.getReceivedMessages( username, plan.getUri(), plan.getVersion() );
         } else {
-            iterator = userMessageService.getSentMessages( username, planUrn() );
+            iterator = userMessageService.getSentMessages( username, plan.getUri(), plan.getVersion() );
         }
         while ( iterator.hasNext() && userMessages.size() < numberToShow ) {
             UserMessage userMessage = iterator.next();
@@ -453,7 +464,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {
-        Date whenLastChanged = userMessageService.getWhenLastChanged( planUrn() );
+        Date whenLastChanged = userMessageService.getWhenLastChanged( planVersionUri() );
         if ( whenLastChanged != null && whenLastChanged.after( whenLastRefreshed ) ) {
             addUserMessages();
             adjustComponents( target );

@@ -4,7 +4,6 @@ package com.mindalliance.channels.pages.reports.guidelines;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.AttachmentManager;
-import com.mindalliance.channels.core.community.feedback.Feedback;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Connector;
@@ -33,6 +32,7 @@ import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.ReportSegment;
 import com.mindalliance.channels.pages.reports.ReportTask;
+import com.mindalliance.channels.social.model.Feedback;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.wicket.AttributeModifier;

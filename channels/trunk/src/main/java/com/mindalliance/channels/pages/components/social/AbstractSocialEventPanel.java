@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Participation;
@@ -39,28 +40,28 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     @SpringBean
     private ImagingService imagingService;
+    
+    @SpringBean
+    private ChannelsUserDao userDao;
 
     private PresenceRecord latestPresenceRecord = null;
 
-    private String username;
     private int index;
     private IModel<? extends PersistentPlanObject> poModel;
     private Updatable updatable;
 
     private Label nameLabel;
 
-    public AbstractSocialEventPanel( String id, String username, int index, Updatable updatable ) {
-        this( id, username, index, null, updatable );
+    public AbstractSocialEventPanel( String id, int index, Updatable updatable ) {
+        this( id, index, null, updatable );
     }
 
     public AbstractSocialEventPanel(
             String id,
-            String username,
             int index,
             IModel<? extends PersistentPlanObject> poModel,
             Updatable updatable ) {
         super( id );
-        this.username = username;
         this.index = index;
         this.poModel = poModel;
         this.updatable = updatable;
@@ -71,13 +72,17 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     protected abstract void moreInit( WebMarkupContainer socialItemContainer );
 
+    protected String getPersistentPlanObjectUsername() {
+        return poModel.getObject().getUsername();
+    }
+
     protected String getCssClasses() {
         String cssClasses = index % 2 == 0
                 ? " even"
                 : " odd";
         if ( index == 0 )
             cssClasses += " first";
-        PresenceRecord presenceRecord = getLatestPresenceRecord();
+        PresenceRecord presenceRecord = getLatestPresenceRecord( getUsername() );
         cssClasses += presenceRecord != null && presenceRecord.isEntering()
                 ? " joining"
                 : " leaving";
@@ -93,7 +98,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         if ( !getJobTitles().isEmpty() ) {
             cssClasses += " employed";
         }
-        socialItemContainer.add( new AttributeModifier( "class", true, new Model<String>( cssClasses ) ) );
+        socialItemContainer.add( new AttributeModifier( "class", new Model<String>( cssClasses ) ) );
         add( socialItemContainer );
         addMoreMenu( socialItemContainer );
         addPhoto( socialItemContainer );
@@ -138,7 +143,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     private void addIcon( WebMarkupContainer socialItemContainer ) {
         WebMarkupContainer icon = new WebMarkupContainer( "icon" );
-        icon.setVisible( isPresent() );
+        icon.setVisible( isPresent( getPersistentPlanObjectUsername() ) );
         socialItemContainer.add( icon );
     }
 
@@ -154,18 +159,18 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         if ( getUsername() == null )
             return "all users";
         else {
-            String userName = getUsername();
-            if ( username == null ) {
+            String poUserName = getPersistentPlanObjectUsername();
+            if ( poUserName == null ) {
                 return "?";
-            } else if ( username.equals( UserMessageService.PLANNERS ) ) {
+            } else if ( poUserName.equals( UserMessageService.PLANNERS ) ) {
                 return "All planners";
-            } else if ( username.equals( UserMessageService.USERS ) ) {
+            } else if ( poUserName.equals( UserMessageService.USERS ) ) {
                 return "Everyone";
             } else {
-                String name = getQueryService().findUserFullName( userName );
-                String userRole = getQueryService().findUserRole( userName );
+                String name = getQueryService().findUserFullName( poUserName );
+                String userRole = getQueryService().findUserRole( poUserName );
                 if ( name == null || userRole == null )
-                    return getUsername() + " (removed)";
+                    return poUserName + " (removed)";
                 else
                     return name
                             + (
@@ -234,11 +239,6 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         return url == null ? "images/actor.user.png" : url;
     }
 
-
-    protected String getUsername() {
-        return username;
-    }
-
     public Participation getParticipation() {
         return getQueryService().findParticipation( getUsername() );
     }
@@ -251,16 +251,16 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         return nameLabel;
     }
 
-    public boolean isPresent( ) {
-        PresenceRecord presenceRecord = getLatestPresenceRecord();
+    public boolean isPresent( String username  ) {
+        PresenceRecord presenceRecord = getLatestPresenceRecord( username );
         return presenceRecord != null && presenceRecord.isEntering();
     }
 
-    protected PresenceRecord getLatestPresenceRecord() {
+    protected PresenceRecord getLatestPresenceRecord( String username ) {
         if ( latestPresenceRecord == null ) {
             latestPresenceRecord = getPresenceRecordService().findLatestPresence(
-                    getUsername(),
-                    planUrn() );
+                    username,
+                    planVersionUri() );
         }
         return latestPresenceRecord;
     }
@@ -346,6 +346,10 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         }
         sb.append( " ago" );
         return sb.toString();
+    }
+
+    private PersistentPlanObject getPersistentPlanObject() {
+        return poModel.getObject();
     }
 
 

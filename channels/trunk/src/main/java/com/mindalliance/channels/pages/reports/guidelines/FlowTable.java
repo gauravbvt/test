@@ -2,11 +2,11 @@
 // All rights reserved.
 package com.mindalliance.channels.pages.reports.guidelines;
 
-import com.mindalliance.channels.core.community.feedback.Feedback;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage.AggregatedFlow;
 import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage.ContactSpec;
+import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;

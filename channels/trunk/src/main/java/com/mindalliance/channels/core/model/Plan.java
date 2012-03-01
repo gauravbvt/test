@@ -439,15 +439,6 @@ public class Plan extends ModelObject {
     }
 
     /**
-     * Get sanitized uri.
-     *
-     * @return a string
-     */
-    public String getUrn() {
-        return sanitize( getUri() );
-    }
-
-    /**
      * Add event.
      *
      * @param event an event

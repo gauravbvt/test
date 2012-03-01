@@ -39,10 +39,19 @@ public class ExecutedCommandPanel extends AbstractSocialEventPanel {
 
     private IModel<ExecutedCommand> executedCommandModel;
 
-    public ExecutedCommandPanel( String id, IModel<ExecutedCommand> executedCommandModel, int index, Updatable updatable ) {
-        super( id, executedCommandModel.getObject().getUsername(), index, executedCommandModel, updatable );
+    public ExecutedCommandPanel(
+            String id,
+            IModel<ExecutedCommand> executedCommandModel,
+            int index,
+            Updatable updatable ) {
+        super( id, index, executedCommandModel, updatable );
         this.executedCommandModel = executedCommandModel;
         init();
+    }
+
+    @Override
+    protected String getPersistentPlanObjectUsername() {
+        return executedCommandModel.getObject().getUsername();
     }
 
     protected void moreInit( WebMarkupContainer socialItemContainer ) {

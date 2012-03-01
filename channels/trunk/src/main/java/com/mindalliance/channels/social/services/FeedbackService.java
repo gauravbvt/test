@@ -1,7 +1,10 @@
-package com.mindalliance.channels.core.community.feedback;
+package com.mindalliance.channels.social.services;
 
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
+import com.mindalliance.channels.social.model.Feedback;
+import com.mindalliance.channels.social.model.UserMessage;
 
 import java.util.List;
 
@@ -16,7 +19,7 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
 
     void sendFeedback(
             String username,
-            String planUri,
+            Plan plan,
             Feedback.Type type,
             String topic,
             String content,
@@ -24,22 +27,29 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
 
     void sendFeedback(
             String username,
-            String planUri,
+            Plan plan,
             Feedback.Type type,
             String topic,
-            String content,
+            String text,
             boolean urgent,
-            ModelObject about );
+            ModelObject mo );
 
-    List<Feedback> listNotYetNotifiedNormalFeedbacks( String planUri );
+    List<Feedback> listNotYetNotifiedNormalFeedbacks( Plan plan );
 
     List<Feedback> listNotYetNotifiedUrgentFeedbacks( );
-
-    List<Feedback> getRepliesTo( Feedback feedback );
     
-    void addReplyTo( Feedback feedback, Feedback reply );
+    void addReplyTo( Feedback feedback, UserMessage reply, UserMessageService messageService );
 
-    List<Feedback> select(
+    /**
+     * Select feedbacks that are not replies to other feedbacks.
+     * @param urgentOnly true if urgent only
+     * @param unresolvedOnly true if unresolved only
+     * @param notRepliedToOnly true if not replied to only
+     * @param topic topic or null if any topic
+     * @param containing substring of the contents or null if any
+     * @return
+     */
+    List<Feedback> selectInitialFeedbacks(
             Boolean urgentOnly,
             Boolean unresolvedOnly,
             Boolean notRepliedToOnly,

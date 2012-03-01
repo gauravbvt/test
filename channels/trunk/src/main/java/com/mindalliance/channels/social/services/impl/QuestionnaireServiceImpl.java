@@ -1,6 +1,7 @@
-package com.mindalliance.channels.core.community.rfi;
+package com.mindalliance.channels.social.services.impl;
 
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.social.services.QuestionnaireService;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -8,8 +9,8 @@ import org.springframework.stereotype.Repository;
  * Proprietary and Confidential.
  * User: jf
  * Date: 2/16/12
- * Time: 2:21 PM
+ * Time: 2:22 PM
  */
 @Repository
-public class RFIServiceImpl extends GenericSqlServiceImpl implements RFIService {
+public class QuestionnaireServiceImpl extends GenericSqlServiceImpl implements QuestionnaireService {
 }

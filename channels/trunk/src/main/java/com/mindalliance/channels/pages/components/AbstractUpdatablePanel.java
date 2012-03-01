@@ -357,13 +357,8 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return user.plan();
     }
 
-    /**
-     * Get sanitized plan getUrn (its sanitized uri).
-     *
-     * @return a string
-     */
-    protected String planUrn() {
-        return getPlan().getUrn();
+    protected String planVersionUri() {
+        return getPlan().getVersionUri();
     }
 
     /**

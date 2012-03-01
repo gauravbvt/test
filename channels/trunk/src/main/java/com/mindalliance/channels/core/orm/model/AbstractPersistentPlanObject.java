@@ -26,15 +26,22 @@ public abstract class AbstractPersistentPlanObject implements PersistentPlanObje
     private String username;
     private Date lastModified;
     private String planUri;
+    private int planVersion;
 
 
     public AbstractPersistentPlanObject() {
     }
+
+    public AbstractPersistentPlanObject( String username ) {
+        this(null , 0, username );
+    }
+
     
-    public AbstractPersistentPlanObject( String uri, String username ) {
+    public AbstractPersistentPlanObject( String uri, int version, String username ) {
         created = new Date( );
         this.username = username;
         planUri = uri;
+        planVersion = version;
     }
 
     @Override
@@ -70,6 +77,14 @@ public abstract class AbstractPersistentPlanObject implements PersistentPlanObje
     @Override
     public String getPlanUri() {
         return planUri;
+    }
+
+    public int getPlanVersion() {
+        return planVersion;
+    }
+
+    public void setPlanVersion( int planVersion ) {
+        this.planVersion = planVersion;
     }
 
     @Override

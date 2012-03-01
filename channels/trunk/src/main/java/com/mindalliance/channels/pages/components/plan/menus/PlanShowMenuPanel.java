@@ -12,6 +12,7 @@ import com.mindalliance.channels.pages.HelpPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
+import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -69,7 +70,7 @@ public class PlanShowMenuPanel extends MenuPanel {
             if ( plan.isDevelopment() )
                 menuItems.add( collapsible( Survey.UNKNOWN, "Hide surveys", "Surveys" ) );
 */
-      //      menuItems.add( collapsible( Feedback.UNKNOWN, "Hide feedbacks", "Feedbacks" ) );
+            menuItems.add( collapsible( Feedback.UNKNOWN, "Hide all feedback", "All feedback" ) );
             menuItems.addAll(
                     Arrays.asList(
                             newLink( "All segments", plan, PlanEditPanel.MAP ),

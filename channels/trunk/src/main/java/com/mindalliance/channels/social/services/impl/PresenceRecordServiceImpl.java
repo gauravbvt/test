@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.services.impl;
 
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.PresenceRecord;
 import com.mindalliance.channels.social.services.PresenceRecordService;
@@ -74,23 +75,24 @@ public class PresenceRecordServiceImpl
 
     @Override
    @Transactional
-    public void killIfAlive( String username, String uri ) {
-        if ( isAlive( username, uri ) )
-            kill( username, uri );
+    public void killIfAlive( String username, Plan plan ) {
+        if ( isAlive( username, plan.getVersionUri() ) )
+            kill( username, plan  );
     }
 
-    private void kill( String username, String urn ) {
-        recordAbsence( username, urn );
-        getUserLives( urn ).remove( username );
+    private void kill( String username, Plan plan ) {
+        recordAbsence( username, plan  );
+        getUserLives( plan.getVersionUri()  ).remove( username );
         deaths.add( username );
     }
 
     @Override
     @Transactional
-    public void keepAlive( String username, String uri, int refreshDelay ) {
+    public void keepAlive( String username, Plan plan, int refreshDelay ) {
+        String uri = plan.getVersionUri();
         if ( !getUserLives( uri ).containsKey( username ) ) {
             // Record first sign of life
-            recordPresence( username, uri );
+            recordPresence( username, plan );
         }
         Map<String, Long> lives = getUserLives( uri );
         lives.put( username, System.currentTimeMillis() + ( refreshDelay * 2 * 1000 ) );
@@ -98,35 +100,36 @@ public class PresenceRecordServiceImpl
 
     @Override
     @Transactional
-    public List<String> giveMeYourDead( String uri ) {
-        discoverDeadUsers( uri );
+    public List<String> giveMeYourDead( Plan plan ) {
+        discoverDeadUsers( plan );
         List<String> deathRoll = new ArrayList<String>( deaths );
         deaths = new HashSet<String>();
         return deathRoll;
     }
 
-    private void discoverDeadUsers( String urn ) {
+    private void discoverDeadUsers( Plan plan ) {
+        String uri = plan.getVersionUri();
         List<String> discovered = new ArrayList<String>(  );
-        for ( String username : getUserLives(  urn  ).keySet() ) {
-            if ( !isAlive(  username, urn ) ) {
+        for ( String username : getUserLives(  uri  ).keySet() ) {
+            if ( !isAlive(  username, uri ) ) {
                 discovered.add( username );
             }
         }
         for ( String deadUser : discovered ) {
-            kill( deadUser, urn );
+            kill( deadUser, plan );
         }
     }
 
     @Transactional
-    public void recordPresence( String username, String uri ) {
-        resetLatestPresences( uri );
-        save( new PresenceRecord( PresenceRecord.Type.Active, username, uri ) );
+    public void recordPresence( String username, Plan plan ) {
+        resetLatestPresences( plan.getVersionUri() );
+        save( new PresenceRecord( PresenceRecord.Type.Active, username, plan.getVersionUri(), plan.getVersion() ) );
     }
 
     @Transactional
-    public void recordAbsence( String username, String uri ) {
-        resetLatestPresences( uri );
-        save( new PresenceRecord( PresenceRecord.Type.Inactive, username, uri ) );
+    public void recordAbsence( String username, Plan plan ) {
+        resetLatestPresences( plan.getVersionUri() );
+        save( new PresenceRecord( PresenceRecord.Type.Inactive, username, plan.getVersionUri(), plan.getVersion() ) );
     }
 
     private Map<String, Long> getUserLives( String urn ) {

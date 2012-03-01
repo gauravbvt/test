@@ -20,9 +20,10 @@ public interface ExecutedCommandService extends CommandListener, GenericSqlServi
      * Get an iterator on the command events recorded for a plan.
      *
      * @param planUri a string
+     * @param planVersion an int
      * @return an iterator on command events
      */
-    Iterator<ExecutedCommand> getExecutedCommands( String planUri );
+    Iterator<ExecutedCommand> getExecutedCommands( String planUri, int planVersion );
 
     /**
      * When command execution data for a plan was last modified since server is up.
