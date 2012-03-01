@@ -65,7 +65,7 @@ public class MAV0126_copyNeed
 			    // Assertion: Verify that message "Need copied" is displayed on the heading section of "Plan" page
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="Verify that message 'Need copied' is displayed on the heading section of 'Plan' page";
-			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[14]/span/span"));
+			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[15]/span/span"));
 			    if(GlobalVariables.oElement.getText().equals("Need copied")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
