@@ -60,7 +60,7 @@ public class MAV0054_viewAllEvents
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
+			    Thread.sleep(3000);
 			    
 				// Assertion: Verify that page loaded with heading "All events" 
 			    GlobalVariables.iStepNo++;
