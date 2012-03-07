@@ -1,5 +1,6 @@
 <?xml version="1.0"?>	
 <elements>
+<xPathAddNewIssuseSegmentMenu>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[5]/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathAddNewIssuseSegmentMenu>
 <xPathEditRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/span/table/tbody/tr/td[8]/span/a/span</xPathEditRequirement>
 <xPathRequirementNetwork>//div[4]/div/span/div/div[2]/div/div/ul/li[2]/a/span</xPathRequirementNetwork>
 <xPathNewRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/a</xPathNewRequirement>
@@ -94,9 +95,9 @@
 <xPathActionSignOut>//div[13]/span/span[3]/span/ul/li[10]/span/a/span</xPathActionSignOut>
 <xPathAddInfoSendNewMedium>//span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[9]/td/ol/li/span/a/span</xPathAddInfoSendNewMedium>
 <xPathParticipationNewMedium>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[10]/td/ol/li/span/a/span</xPathParticipationNewMedium>
-<xPathHelpIcon>//div[13]/span/a/img</xPathHelpIcon>
+<xPathHelpIcon>//div[@class='header']/span[@class='menubar']/a/img[@class='help-icon']</xPathHelpIcon>
 <xPathTagsLinkOnTask>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[2]/th/label/a</xPathTagsLinkOnTask>
-<xPathAboutPlanSegmentLink>//div[13]/h1/span</xPathAboutPlanSegmentLink>
+<xPathAboutPlanSegmentLink>//div[14]/h1/span</xPathAboutPlanSegmentLink>
 <xPathAboutPlanShowDetails>//div[4]/div/div[2]/div/div/span/span/span/ul/li/span/a/span</xPathAboutPlanShowDetails>
 <xPathAboutPlanShowAllEvents>//div[4]/div/div[2]/div/div/span/span/span/ul/li[2]/span/a/span</xPathAboutPlanShowAllEvents>
 <xPathAboutPlanShowSecrecyClassification>//div[4]/div/div[2]/div/div/span/span/span/ul/li[3]/span/a/span</xPathAboutPlanShowSecrecyClassification>

@@ -4,7 +4,7 @@
 <xPathSamePlanErrorMessage>/html/body/div/div[2]/div/form/div[2]/ul/li/span</xPathSamePlanErrorMessage>
 <xPathInputUserID>/html/body/div/div[2]/div/form/table[2]/tbody/tr/td[2]/input</xPathInputUserID>
 <xPathUserID>/html/body/div/div[2]/div/form/table[7]/tbody/tr/td/span</xPathUserID>
-<xPathDeleteUser>/html/body/div/div[2]/div/form/table[7]/tbody/tr/td[12]/input</xPathDeleteUser>
+<xPathDeleteUser>/html/body/div/div[2]/div/form/table[6]/tbody/tr/td[12]/input</xPathDeleteUser>
 <xPathAccessPrivilegeAdmin>/html/body/div/div[2]/div/form/table/tbody/tr/td[5]/input</xPathAccessPrivilegeAdmin>
 <xPathUserPassword>/html/body/div/div[2]/div/form/table/tbody/tr/td[4]/input</xPathUserPassword>
 <xPathDisableUser>/html/body/div/div[2]/div/form/table/tbody/tr/td[8]/input</xPathDisableUser>
