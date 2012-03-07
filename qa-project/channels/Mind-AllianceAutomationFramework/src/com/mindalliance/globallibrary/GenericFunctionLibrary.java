@@ -138,6 +138,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.home.put("sXpathFeedbackSend",oXmlEleHomePage.getElementsByTagName("xPathFeedbackSend").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathHideShowAllSurvey",oXmlEleHomePage.getElementsByTagName("xPathHideShowAllSurvey").item(0).getChildNodes().item(0).getNodeValue());
 			//Channels Plan Page
+			GlobalVariables.plan.put("sXpathAddNewIssuseSegmentMenu",oXmlElePlanPage.getElementsByTagName("xPathAddNewIssuseSegmentMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathLocaleViewAllTypes",oXmlElePlanPage.getElementsByTagName("xPathLocaleViewAllTypes").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathCollebrationSentReceiveMessageLink",oXmlElePlanPage.getElementsByTagName("xPathCollebrationSentReceiveMessageLink").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathEditRequirement",oXmlElePlanPage.getElementsByTagName("xPathEditRequirement").item(0).getChildNodes().item(0).getNodeValue());

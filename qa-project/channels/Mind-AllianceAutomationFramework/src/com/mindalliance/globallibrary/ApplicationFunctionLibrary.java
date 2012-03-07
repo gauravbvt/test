@@ -131,6 +131,9 @@ public class ApplicationFunctionLibrary {
 			if (popUpMenu != null && optionName != null) {
 				// Mouse hover on popUpMenu
 				GlobalVariables.oDriver.findElement(By.xpath(popUpMenu)).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000); 
 				// Click on optionName option under xPath
 				GlobalVariables.oDriver.findElement(By.partialLinkText(optionName)).click();
 			}
