@@ -61,7 +61,7 @@ public class CA020_AssignRole
 				//Assign Access Privilege 'Admin' to User
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Assign Access Privilege 'Admin' to User";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody"));
 				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				List<WebElement> tds;
 				int i=-1;
@@ -76,7 +76,7 @@ public class CA020_AssignRole
 							// WebElement Synchronization
 							Thread.currentThread();
 							Thread.sleep(2000);
-							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+(i+1)+"]/td[5]/input")).click();
+							GlobalVariables.oDriver.findElement(By.xpath("//div/div[2]/div/form/table[6]/tbody/tr["+(i+1)+"]/td[5]/input")).click();
 							// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -187,7 +187,7 @@ public class CA020_AssignRole
 			    Thread.currentThread();
 			    Thread.sleep(2000);
 				// Delete Created User
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[6]/tbody"));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				i=0;
 				for(WebElement tr: trs) {
@@ -195,7 +195,7 @@ public class CA020_AssignRole
 					tds = tr.findElements(By.tagName("td"));
 					for(WebElement td: tds) {
 						if(td.getText().contains(GlobalVariables.testData.get("user"))){
-							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+i+"]/td[12]/input")).click();
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody/tr["+i+"]/td[12]/input")).click();
 						}
 					}
 				}

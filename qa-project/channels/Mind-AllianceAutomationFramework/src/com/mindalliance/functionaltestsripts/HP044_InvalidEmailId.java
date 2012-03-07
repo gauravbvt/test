@@ -36,15 +36,27 @@ public class HP044_InvalidEmailId
 				
 				// Click on Email id text filed and Edit it
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Update email id";
-				GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email")).clear();
+				GlobalVariables.sDescription="Update email id with invalid email address";
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000); 
+				GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Afourtech"));
+				for (int i = 0; i <= 20; i++)
+					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+				GlobalVariables.oElement.sendKeys("^%@GFD.COM");
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000); 
+				
 				// Assertion: 1. Verify that error message should be displayed as 'An email address is required'
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Error message displayed";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathEmailNameInvalidErrorMessageAssertion")));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("The email address is invalid")) {
 					// Write Results
@@ -62,32 +74,6 @@ public class HP044_InvalidEmailId
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000); 
-				
-				// Click on Apply
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Apply";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathApplySocialPanel"))).click();
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000); 
-				// Assertion: Verify that error message should be displayed as 'No changes were made'
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("change-message"));
-			    if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("No changes were made"))) {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
-				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'No changes were made' "+" Actual "+GlobalVariables.oElement.getText();
-			    	// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-			    }	
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				
 				// Call logout()
 			    GlobalVariables.iStepNo++ ;

@@ -57,7 +57,7 @@ public class CA027_CreateUserWithSameEmailID
 				//Assign Access Privilege 'Admin' to User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Email Details Entered";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[6]/tbody"));
 				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				List<WebElement> tds;
 				int i=-1;
@@ -108,7 +108,7 @@ public class CA027_CreateUserWithSameEmailID
 				//Assign Access Privilege 'Admin' to User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Email Details Entered";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[6]/tbody"));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				i=-1;
 				for(WebElement tr: trs) {
@@ -139,7 +139,7 @@ public class CA027_CreateUserWithSameEmailID
 
 				// Delete Users
 				// Select First User
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[6]/tbody"));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				i=-1;
 				for(WebElement tr: trs) {
@@ -159,7 +159,7 @@ public class CA027_CreateUserWithSameEmailID
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Select Second User
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[6]/tbody"));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				i=-1;
 				for(WebElement tr: trs) {

@@ -18,12 +18,18 @@ public class HP041_AboutMeTab
 			System.out.println(GlobalVariables.sDescription);
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
+			// WebElement Synchronization
+			Thread.currentThread();
+			Thread.sleep(1000); 
 			if (GlobalVariables.bIsSuccess) {
 				
 				// Click on Message tab on social panel
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="About me tab is present";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialAboutMe"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000); 
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialAboutMe")));
 				// Assertion: Verify that message tab is present on social panel
 				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("aboutMe"))) {

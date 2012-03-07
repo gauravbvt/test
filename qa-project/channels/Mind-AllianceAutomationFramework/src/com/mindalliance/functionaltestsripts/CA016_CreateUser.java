@@ -56,7 +56,7 @@ public class CA016_CreateUser
 				Thread.currentThread();
 				Thread.sleep(2000);				
 			    // Asssertion : Verify that User is created successfully & Delete Created User
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody"));
 				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				List<WebElement> tds;
 				int i=0;
@@ -69,7 +69,7 @@ public class CA016_CreateUser
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 									GlobalVariables.sBlank, GlobalVariables.sBlank);						
-							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+i+"]/td[12]/input")).click();
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody/tr[" + (i) + "]/td[6]/input")).click();
 						}
 					}
 				}

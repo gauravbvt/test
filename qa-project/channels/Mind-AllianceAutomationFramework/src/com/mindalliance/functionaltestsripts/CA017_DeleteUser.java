@@ -56,7 +56,7 @@ public class CA017_DeleteUser
 				// Delete Created User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="User Deleted";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody"));
 				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				List<WebElement> tds;
 				int i=0;
@@ -65,7 +65,7 @@ public class CA017_DeleteUser
 					tds = tr.findElements(By.tagName("td"));
 					for(WebElement td: tds) {
 						if(td.getText().contains(GlobalVariables.testData.get("user"))){
-							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+i+"]/td[12]/input")).click();
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody/tr[" + (i) + "]/td[6]/input")).click();
 						}
 					}
 				}
@@ -77,7 +77,7 @@ public class CA017_DeleteUser
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that User gets deleted successfully
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody"));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				for(WebElement tr: trs) {
 					tds = tr.findElements(By.tagName("td"));

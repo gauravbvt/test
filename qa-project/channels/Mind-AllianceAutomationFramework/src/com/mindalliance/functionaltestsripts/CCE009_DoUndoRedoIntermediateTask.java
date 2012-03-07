@@ -108,7 +108,6 @@ public class CCE009_DoUndoRedoIntermediateTask
 					// Add info sends flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Send Flow added";
-//					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -225,7 +224,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 					tds = GlobalVariables.oElement.findElements(By.tagName("td"));
 					for (WebElement td: tds) {
 						GlobalVariables.sStrCheck=td.getText();
-						if (td.getText().equals("doing something")) {
+						if (td.getText().equals("")) {
 							GlobalVariables.bIsSuccess = Boolean.TRUE;
 							break;
 						}
@@ -280,6 +279,11 @@ public class CCE009_DoUndoRedoIntermediateTask
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					// Click on done
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

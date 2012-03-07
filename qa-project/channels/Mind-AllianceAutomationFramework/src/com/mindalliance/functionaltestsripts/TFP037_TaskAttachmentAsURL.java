@@ -86,6 +86,7 @@ public class TFP037_TaskAttachmentAsURL
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				GlobalVariables.oDriver.navigate().refresh();
 				// Click on Task 
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// WebElement Synchronization
@@ -100,10 +101,11 @@ public class TFP037_TaskAttachmentAsURL
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.testData.get("URL")+"' Actual "+GlobalVariables.oElement.getText();
+		    		// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);	  
 				}
 				// WebElement Synchronization
 				Thread.currentThread();

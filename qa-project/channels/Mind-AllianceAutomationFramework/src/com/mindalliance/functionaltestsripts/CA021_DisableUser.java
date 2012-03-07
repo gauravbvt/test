@@ -47,7 +47,7 @@ public class CA021_DisableUser
 				Thread.currentThread();
 				Thread.sleep(2000);								
 				//Assign Access Privilege 'Admin' to User
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody"));
 				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				List<WebElement> tds;
 				int i=-1;
@@ -62,7 +62,7 @@ public class CA021_DisableUser
 							// WebElement Synchronization
 							Thread.currentThread();
 							Thread.sleep(2000);
-							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+(i+1)+"]/td[5]/input")).click();
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody/tr[" + (i) + "]/td[6]/input")).click();
 						}
 					}
 				}
@@ -77,7 +77,7 @@ public class CA021_DisableUser
 				// Disable Existing User
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Existing User Disabled";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody"));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				i=-1;
 				for(WebElement tr: trs) {
@@ -85,7 +85,7 @@ public class CA021_DisableUser
 					tds = tr.findElements(By.tagName("td"));
 					for(WebElement td: tds) {
 						if(td.getText().contains(GlobalVariables.testData.get("user"))){
-							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+(i+1)+"]/td[8]/input")).click();
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody/tr["+(i+1)+"]/td[8]/input")).click();
 							// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -179,7 +179,7 @@ public class CA021_DisableUser
 			    Thread.currentThread();
 			    Thread.sleep(2000);
 				// Delete Created User
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[7]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody"));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				i=0;
 				for(WebElement tr: trs) {
@@ -187,7 +187,7 @@ public class CA021_DisableUser
 					tds = tr.findElements(By.tagName("td"));
 					for(WebElement td: tds) {
 						if(td.getText().contains(GlobalVariables.testData.get("user"))){
-							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[7]/tbody/tr["+i+"]/td[12]/input")).click();
+							GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody/tr["+i+"]/td[12]/input")).click();
 						}
 					}
 				}

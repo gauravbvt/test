@@ -31,22 +31,21 @@ public class CP002_ShowPlanners
 						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(1000);  
+				  Thread.sleep(3000);  
 				  
-				  // Clicks on Hide planners link under show pop up menu option
+				  //Clicks on About Plan link under show pop up menu option
 				  GlobalVariables.iStepNo++ ;
 				  GlobalVariables.sDescription = "Hide Planners";
-				  ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("hidePlanners"));
+				  ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),"hide planners");
 				  // Write Results
 				  LogFunctions.writeLogs(GlobalVariables.sDescription);
 				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(1000);  					
+				  Thread.sleep(5000);  	 					
 				 
-			 	  
-			 	  // Clicks on Planners link under show pop up menu option 
+				  // Clicks on Planners link under show pop up menu option 
 			 	  GlobalVariables.iStepNo++ ;
 				  GlobalVariables.sDescription = "Show Planners";
 				  ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("planners"));
