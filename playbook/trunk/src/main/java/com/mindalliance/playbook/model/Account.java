@@ -8,6 +8,7 @@ package com.mindalliance.playbook.model;
 
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,17 +28,19 @@ import java.util.List;
  */
 @Entity
 @Indexed
-@Table(
-    uniqueConstraints = @UniqueConstraint( columnNames = "EMAIL" )
-)
+@Table( uniqueConstraints = @UniqueConstraint( columnNames = { "providerId", "userId" } ) )
 public class Account implements Serializable, Timestamped {
 
     private static final long serialVersionUID = 1861272453366746780L;
 
     @Id @GeneratedValue( strategy = GenerationType.AUTO )
     private long id;
+    
+    @Basic( optional = false )
+    private String providerId;
 
-    private String email;
+    @Basic( optional = false )
+    private String userId;
 
     private String password;
 
@@ -65,34 +68,29 @@ public class Account implements Serializable, Timestamped {
     public Account() {
     }
 
-    public Account( String email, Date created ) {
+    public Account( String providerId, String userId, Contact contact ) {
         this();
-        this.email = email;
-        this.created = new Date( created.getTime() );
+
+        this.providerId = providerId;
+        this.userId = userId;
+        created = new Date();
         
-        lastModified = this.created;
+        lastModified = created;
         playbooks = new ArrayList<Playbook>();
-        playbooks.add( new Playbook( this ) );
-        
-        contacts = new ArrayList<Contact>();        
+
+        contacts = new ArrayList<Contact>();
+        addContact( contact );
+
+        playbooks.add( new Playbook( this, contact ) );
     }
 
     /**
-     * Set the value of email.
+     * Get the value of userId.
      *
-     * @param email the new value of email
+     * @return the value of userId
      */
-    public void setEmail( String email ) {
-        this.email = email;
-    }
-
-    /**
-     * Get the value of email.
-     *
-     * @return the value of email
-     */
-    public String getEmail() {
-        return email;
+    public String getUserId() {
+        return userId;
     }
 
     /**
@@ -221,8 +219,10 @@ public class Account implements Serializable, Timestamped {
         this.showInactive = showInactive;
     }
     
-    public void addContact( Contact contact ) {
-        contacts.add( contact );       
+    public final Contact addContact( Contact contact ) {
+        contact.setAccount( this );
+        contacts.add( contact );  
+        return contact;
     }
 
     /**
@@ -232,5 +232,24 @@ public class Account implements Serializable, Timestamped {
     @Transient
     public Contact getOwner() {
         return getPlaybook().getMe();
+    }
+
+    public String getProviderId() {
+        return providerId;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        Contact me = getOwner();
+
+        sb.append( "account #" ).append( getId() );
+        sb.append( " (" ).append( me.getFullName() ).append( ')' );
+        return sb.toString();
+    }
+
+    @Transient
+    public String getUserKey() {
+        return providerId + ':' + userId;
     }
 }

@@ -9,6 +9,7 @@ import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.ConfirmationAck;
 import com.mindalliance.playbook.model.ConfirmationReq;
 import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.Medium;
 import com.mindalliance.playbook.model.Receive;
 import com.mindalliance.playbook.model.Send;
 import com.mindalliance.playbook.model.Step;
@@ -16,13 +17,11 @@ import com.mindalliance.playbook.model.Step.Type;
 import com.mindalliance.playbook.model.Subplay;
 import com.mindalliance.playbook.model.Task;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -124,11 +123,7 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
         // Contact must be a registered playbook user for now...
         // TODO remove this when email invitations are enabled
 
-        for ( String email : contact.getEmails() )
-            if ( accountDao.findByEmail( email ) != null )
-                    return true;
-
-        return false;
+        return accountDao.findByContact( contact ) != null;
     }
 
     @Override

@@ -38,7 +38,7 @@ public class PlaysPageTest extends AbstractPageTest {
 
     @Override
     protected void init( ApplicationContextMock context ) {
-        when( account.getEmail() ).thenReturn( "someone@somewhere.com" );
+        when( account.getUserId() ).thenReturn( "someone@somewhere.com" );
         when( account.getPlaybook() ).thenReturn( playbook );
         when( oldPlay.getId() ).thenReturn( 123L );
         

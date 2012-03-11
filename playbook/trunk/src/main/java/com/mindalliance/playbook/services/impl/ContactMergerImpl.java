@@ -5,8 +5,9 @@ import com.mindalliance.playbook.dao.ContactDao;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.AddressMedium;
 import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.EmailMedium;
 import com.mindalliance.playbook.model.Medium;
-import com.mindalliance.playbook.model.OtherMedium;
+import com.mindalliance.playbook.model.PhoneMedium;
 import com.mindalliance.playbook.services.ContactMerger;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -52,7 +53,7 @@ public class ContactMergerImpl implements ContactMerger {
     private AccountDao accountDao;
 
     private static Contact convert( Account account, VCard card ) {
-        Contact contact = new Contact( account );
+        Contact contact = account.addContact( new Contact() );
 
         N name = (N) card.getProperty( Id.N );
         if ( name != null ) {
@@ -87,23 +88,27 @@ public class ContactMergerImpl implements ContactMerger {
         if ( photo != null )
             contact.setPhoto( photo.getBinary() );
 
-        for ( Property e : card.getProperties( Id.EMAIL ) )
-            contact.addMedium( new OtherMedium( contact, "EMAIL", e.getValue() ) );
+        for ( Property e : card.getProperties( Id.EMAIL ) ) {
+            Parameter parameter = e.getParameter( Parameter.Id.TYPE );
+            String type = parameter == null ? null : parameter.getValue();
+            contact.addMedium( new EmailMedium( type, e.getValue() ) );
+        }
 
-        for ( Property phone : card.getProperties( Id.TEL ) )
-            contact.addMedium( new OtherMedium( contact,
-                                                phone.getParameter( Parameter.Id.TYPE ).getValue(),
-                                                phone.getValue() ) );
+        for ( Property phone : card.getProperties( Id.TEL ) ) {
+            Parameter parameter = phone.getParameter( Parameter.Id.TYPE );
+            String type = parameter == null ? null : parameter.getValue();
+            contact.addMedium( new PhoneMedium( type, phone.getValue() ) );
+        }
 
         for ( Property address : card.getProperties( Id.ADR ) )
-            contact.addMedium( convert( contact, (Address) address ) );
+            contact.addMedium( convertLocal( (Address) address ) );
 
         return contact;
     }
 
-    private static Medium convert( Contact contact, Address address ) {
+    private static Medium convertLocal( Address address ) {
         List<Parameter> parameters = address.getParameters( Parameter.Id.TYPE );
-        String type = "ADDRESS";
+        String type = null;
         boolean preferred = false;
         for ( Parameter parameter : parameters ) {
             if ( "pref".equalsIgnoreCase( parameter.getValue() ) )
@@ -112,7 +117,7 @@ public class ContactMergerImpl implements ContactMerger {
                 type = parameter.getValue();
         }
 
-        Medium medium = new AddressMedium( contact, type, convert( address ) );
+        Medium medium = new AddressMedium( type, convert( address ) );
         medium.setPreferred( preferred );
         return medium;
     }
@@ -144,25 +149,25 @@ public class ContactMergerImpl implements ContactMerger {
 
     @Override
     public void merge( Contact newContact ) {
+        Account currentAccount = accountDao.getCurrentAccount();
 
         // Try matching emails
-        for ( Object email : newContact.getEmails() )
-            for ( Contact oldContact : contactDao.findByEmail( email ) )
-                if ( oldContact.isMergeableWith( newContact ) ) {
-                    LOG.debug( "Merging {} in {}", newContact, oldContact );
-                    oldContact.merge( newContact );
-                    return;
-                }
+        for ( Medium medium : newContact.getKeyMedia() )
+            for ( Contact oldContact : contactDao.findByMedium( medium ) ) {
+                LOG.debug( "Merging into {}", oldContact );
+                oldContact.merge( newContact );
+                return;
+            }
 
         // Try by name, family name etc.
         for ( Contact oldContact : contactDao.findByName( newContact ) )
             if ( oldContact.isMergeableWith( newContact ) ) {
-                LOG.debug( "Merging {} in {}", newContact, oldContact );
+                LOG.debug( "Merging into {}", oldContact );
                 oldContact.merge( newContact );
                 return;
                 }
 
-        accountDao.getCurrentAccount().addContact( newContact );
+        currentAccount.addContact( newContact );
         LOG.debug( "Added {}", newContact );
     }
 
@@ -170,7 +175,7 @@ public class ContactMergerImpl implements ContactMerger {
     public void merge( List<Contact> contacts ) {
         for ( Contact contact : contacts )
             merge( contact );
-        LOG.debug( "Merged {} contacts", contacts.size() );
+        LOG.debug( "Merged {} contacts in account #{}", contacts.size(), accountDao.getCurrentAccount().getId() );
     }
 
     @Override

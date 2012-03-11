@@ -30,7 +30,7 @@ public class Confirm extends WebPage {
         setStatelessHint( true );
 
         final StringValue key = parameters.get( "key" );
-        Account account = accountDao.findByKey( key.toString() );
+        Account account = accountDao.findByConfirmation( key.toString() );
         if ( account == null )
             throw new AbortWithHttpErrorCodeException(
                 HttpServletResponse.SC_FORBIDDEN, "Invalid key" );
@@ -44,6 +44,7 @@ public class Confirm extends WebPage {
         Authentication token = new PreAuthenticatedAuthenticationToken( details, null, details.getAuthorities() );
         token.setAuthenticated( true );
         SecurityContextHolder.getContext().setAuthentication( token );
+               
         setResponsePage( TodoPage.class );
     }
 }

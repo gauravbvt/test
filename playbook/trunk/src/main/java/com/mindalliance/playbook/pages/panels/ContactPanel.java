@@ -1,8 +1,9 @@
 package com.mindalliance.playbook.pages.panels;
 
-import com.mindalliance.playbook.model.Medium;
 import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.Medium;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -18,6 +19,8 @@ import org.apache.wicket.model.Model;
 public class ContactPanel extends Panel {
 
     private static final long serialVersionUID = -7094022058897651369L;
+    
+    private Medium preferred;
 
     public ContactPanel( String id, IModel<Contact> model ) {
         super( id );
@@ -37,8 +40,13 @@ public class ContactPanel extends Panel {
                 @Override
                 protected void populateItem( ListItem<Medium> item ) {
                     Medium medium = item.getModelObject();
-                    item.add( new Label( "type", medium.getType() ), 
-                              new Label( "address", String.valueOf( medium.getAddress() ) ) );
+                    Component component = new Label( "address", medium.toString() ).add(
+                        new AttributeModifier( "class", medium.getCssClass() ) );
+                    
+                    if ( medium.getActionUrl() != null )
+                        component = component.add( new AttributeModifier( "href", medium.getActionUrl() ) );
+                    
+                    item.add( component );
                 }
             } );
     }

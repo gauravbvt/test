@@ -4,6 +4,8 @@ import com.mindalliance.playbook.dao.PlayDao;
 import com.mindalliance.playbook.dao.StepDao;
 import com.mindalliance.playbook.dao.StepDao.Status;
 import com.mindalliance.playbook.model.Account;
+import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.EmailMedium;
 import com.mindalliance.playbook.model.Play;
 import com.mindalliance.playbook.model.Playbook;
 import com.mindalliance.playbook.model.Step;
@@ -46,9 +48,10 @@ public class EditStepTest extends AbstractPageTest {
     @Override
     protected void init( ApplicationContextMock context ) {
         when( account.getId() ).thenReturn( 123L );
-        when( account.getEmail() ).thenReturn( "someone@example.com" );
+        when( account.getUserId() ).thenReturn( "someone@example.com" );
         
-        play = new Play( new Playbook( account ), "Test play" );
+        play = new Play( new Playbook( account, new Contact(
+            new EmailMedium( "EMAIL", account.getUserId() ) ) ), "Test play" );
         step = new Task( play );
         
         when( stepDao.load( 0L ) ).thenReturn( step );

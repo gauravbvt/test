@@ -7,8 +7,9 @@ import com.mindalliance.playbook.dao.PlayDao;
 import com.mindalliance.playbook.dao.StepDao;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.ConfirmationReq;
+import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.EmailMedium;
 import com.mindalliance.playbook.model.Play;
-import com.mindalliance.playbook.model.Playbook;
 import com.mindalliance.playbook.model.Send;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.spring.test.ApplicationContextMock;
@@ -16,13 +17,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Date;
-
 /**
  * Confirmation acknowledgement page.
  */
 public class AckPageTest extends AbstractPageTest {
-    
+
     @Mock
     private PlayDao playDao;
 
@@ -33,7 +32,7 @@ public class AckPageTest extends AbstractPageTest {
     private StepDao stepDao;
 
     private Account account;
-    
+
     @Mock
     private ContactDao contactDao;
 
@@ -49,11 +48,13 @@ public class AckPageTest extends AbstractPageTest {
 
     @Override
     protected void init( ApplicationContextMock context ) {
-        account = new Account( "someone@example.com", new Date() );
-        Playbook playbook = new Playbook( account );
-        Send collaboration = new Send( new Play( playbook, "Test play" ) );
+        account = new Account(
+            "playbook",
+            "someone@example.com",
+            new Contact( new EmailMedium( "EMAIL", "someone@example.com" ) ) );
+        Send collaboration = new Send( new Play( account.getPlaybook(), "Test play" ) );
         req = new ConfirmationReq( collaboration );
-        
+
         context.putBean( playDao );
         context.putBean( ackDao );
         context.putBean( stepDao );
@@ -61,7 +62,7 @@ public class AckPageTest extends AbstractPageTest {
         context.putBean( reqDao );
         context.putBean( contactDao );
     }
-    
+
     @Override
     @Test
     public void render() {

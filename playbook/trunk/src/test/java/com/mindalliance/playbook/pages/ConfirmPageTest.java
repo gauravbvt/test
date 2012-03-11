@@ -5,15 +5,13 @@ import com.mindalliance.playbook.dao.StepDao;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.EmailMedium;
 import com.mindalliance.playbook.model.Play;
-import com.mindalliance.playbook.model.Playbook;
 import com.mindalliance.playbook.model.Send;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.junit.Assert;
 import org.mockito.Mock;
-
-import java.util.Date;
 
 /**
  * Test confirmation requests.
@@ -37,10 +35,11 @@ public class ConfirmPageTest extends AbstractPageTest {
 
     @Override
     protected void init( ApplicationContextMock context ) {
-        Account account = new Account( "someone@example.com", new Date() );
-        Play play = new Play( new Playbook( account ), "Test play" );
+        final EmailMedium email = new EmailMedium( "EMAIL", "someone@example.com" );
+        Account account = new Account( "playbook", "someone@example.com", new Contact( email ) );
+        Play play = new Play( account.getPlaybook(), "Test play" );
         collaboration = new Send( play );
-        Contact with = new Contact( account, EMAIL );
+        Contact with = new Contact( new EmailMedium( "EMAIL", EMAIL ) );
         with.setGivenName( "Bob" );
         collaboration.setWith( with );
         

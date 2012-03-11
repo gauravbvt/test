@@ -1,21 +1,63 @@
-/*
-
-html {
+.ui-icon-pb-linkedin {
+    background-image: url("../images/linkedin.png");
+    background-color: transparent;
+    border-radius: 0;
+}
+.ui-icon-pb-facebook {
+    background-image: url("../images/facebook.png");
+    background-color: transparent;
+    border-radius: 0;
+}
+.ui-icon-pb-twitter {
+    background-image: url("../images/twitter.png");
+    background-color: transparent;
+    border-radius: 0;
+}
+.ui-icon-pb-google {
+    background-image: url("../images/google.png");
+    background-color: transparent;
+    border-radius: 0;
 }
 
-body {
+.m-twitter {
+    background: url("../images/twitter.png") no-repeat transparent;
+    padding-left: 20px;
 }
 
-.ui-li-heading {
-    margin: 0;
+.m-facebook {
+    background: url("../images/facebook.png") no-repeat transparent;
+    padding-left: 20px;
 }
 
-a.send img {
-}
-a.send {
+.m-google {
+    background: url("../images/google.png") no-repeat transparent;
+    padding-left: 20px;
 }
 
-*/
+.m-linkedin {
+    background: url("../images/linkedin.png") no-repeat transparent;
+    padding-left: 20px;
+}
+
+.m-email {
+    background: url("../images/mail.png") no-repeat transparent;
+    padding-left: 20px;
+}
+
+.m-skype {
+    background: url("../images/skype.png") no-repeat transparent;
+    padding-left: 20px;
+}
+
+.m-im {
+    background: url("../images/talk.png") no-repeat transparent;
+    padding-left: 20px;
+}
+
+.m-address {
+    background: url("../images/geo.png") no-repeat transparent;
+    padding-left: 20px;    
+}
 
 .inactive {
     color: gray;
@@ -35,26 +77,6 @@ div.error, ul.feedbackPanel {
     margin: 0 2em 2em;
 }
 
-/*
-
-img.captcha {
-    display: block;
-    margin: 0 auto;    
-}
-
-span.timing {
-    float: right;
-    margin: 0 15px 0 0;
-    color: gray;
-}
-span.tags {
-    display: block;
-    color: gray;
-    font-size: 9pt;
-}
-
-*/
-
 span.late {
     color: red !important;
 }
@@ -69,14 +91,6 @@ h3.ui-li-heading {
     margin-top: 0;
 }
 
-/*
-
-div.contact {
-    
-}
-
-*/
-
 div.contact div.details {
     display: block;
     float: left;
@@ -90,16 +104,6 @@ div.details h3 {
 div.details .job {
     margin-top: 0;    
 }
-
-/*
-
-div.details .address {   
-}
-
-img.contactPic {
-}
-
-*/
 
 .play-inset-list {
     display: inline-block;

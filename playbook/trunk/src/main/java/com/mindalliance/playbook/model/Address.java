@@ -25,6 +25,18 @@ public class Address implements Serializable {
     
     private String poBox;
 
+    public Address() {
+    }
+
+    /**
+     * Build an address string
+     * @param unparsed an address
+     */
+    public Address( String unparsed ) {
+        // TODO Parse more intelligently...
+        this.region = unparsed;
+    }
+
     @Field
     public String getStreet() {
         return street;

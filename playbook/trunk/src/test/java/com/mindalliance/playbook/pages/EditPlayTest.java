@@ -2,6 +2,8 @@ package com.mindalliance.playbook.pages;
 
 import com.mindalliance.playbook.dao.PlayDao;
 import com.mindalliance.playbook.model.Account;
+import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.EmailMedium;
 import com.mindalliance.playbook.model.Play;
 import com.mindalliance.playbook.model.Playbook;
 import org.apache.wicket.markup.html.WebPage;
@@ -39,9 +41,9 @@ public class EditPlayTest extends AbstractPageTest {
 
     @Override
     protected void init( ApplicationContextMock context ) {
-        Mockito.when( account.getEmail() ).thenReturn( "someone@example.com" );
+        Mockito.when( account.getUserId() ).thenReturn( "someone@example.com" );
         
-        playbook = new Playbook( account );
+        playbook = new Playbook( account, new Contact( new EmailMedium( "EMAIL", account.getUserId() ) ) );
         
         play = new Play( playbook, "Test" );
         Mockito.when( playDao.load( 1L ) ).thenReturn( play );

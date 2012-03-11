@@ -8,6 +8,8 @@ package com.mindalliance.playbook.pages.login;
 
 import com.mindalliance.playbook.dao.AccountDao;
 import com.mindalliance.playbook.model.Account;
+import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.EmailMedium;
 import com.mindalliance.playbook.pages.MobilePage;
 import com.octo.captcha.service.image.ImageCaptchaService;
 import org.apache.commons.codec.binary.Base64OutputStream;
@@ -169,7 +171,8 @@ public class Register extends MobilePage {
                     (IValidator<String>) EmailAddressValidator.getInstance(), new AbstractValidator<String>() {
                         @Override
                         protected void onValidate( IValidatable<String> validatable ) {
-                            Account account = accountDao.findByEmail( validatable.getValue() );
+                            Account account = accountDao.findByMedium( 
+                                new EmailMedium( null, validatable.getValue() ) );
                             if ( account != null ) {
                                 ValidationError error = new ValidationError();
                                 error.setMessage( "Email address already registered." );
@@ -256,7 +259,7 @@ public class Register extends MobilePage {
             Date date = new Date();
             String key = getKey( email, date );
 
-            Account account = new Account( email, date );
+            Account account = new Account( "playbook", email, new Contact( new EmailMedium( null, email ) ) );
             account.setConfirmation( key );
             account.setPassword( getHash( password ) );
             accountDao.save( account );

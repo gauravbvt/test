@@ -47,7 +47,10 @@ public class StepItem extends Panel {
                     new Label( "sequence", String.valueOf( step.getSequence() ) ),
                     new Label( "title", step.getTitle() ),
                     new Label( "summary", getSummary( step ) ),
-                    new Label( "description", step.getDescription() ) ) );
+                    new Label( "description", step.getDescription() ) ),
+                    new Label( "action", step.getActionText() )
+                        .add( new AttributeModifier( "href", step.getActionLink() ) )
+                        .setVisible( step.getActionLink() != null ) );
     }
 
     private static String getSummary( Step step ) {
@@ -56,8 +59,7 @@ public class StepItem extends Panel {
         
         Collaboration collaboration = (Collaboration) step;
         return "With " + collaboration.getWith() 
-               + ( collaboration.isSend() ? " using " : " contacting me at " )
-               + collaboration.getUsing();
+               + " " + collaboration.getMediumString();
     }
 
     private Serializable getPhotoUrl( Contact contact ) {

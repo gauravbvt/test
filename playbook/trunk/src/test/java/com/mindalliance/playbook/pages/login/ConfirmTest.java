@@ -2,6 +2,8 @@ package com.mindalliance.playbook.pages.login;
 
 import com.mindalliance.playbook.dao.AccountDao;
 import com.mindalliance.playbook.model.Account;
+import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.EmailMedium;
 import com.mindalliance.playbook.pages.TodoPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -20,7 +22,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 
 import static org.mockito.Mockito.*;
 
@@ -43,9 +44,9 @@ public class ConfirmTest {
         tester = new WicketTester();
         ApplicationContextMock context = new ApplicationContextMock();
         MockitoAnnotations.initMocks( this );
-        
-        account = new Account( EMAIL, new Date() );
-        when( accountDao.findByKey( "12345" ) ).thenReturn( account );
+
+        account = new Account( "playbook", EMAIL, new Contact( new EmailMedium( "EMAIL", EMAIL ) ) );
+        when( accountDao.findByConfirmation( "12345" ) ).thenReturn( account );
         when( accountDao.getDetails( account ) ).thenReturn( new UserDetails() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {

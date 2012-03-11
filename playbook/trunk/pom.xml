@@ -69,6 +69,11 @@
                 <enabled>true</enabled>
             </releases>
         </repository>
+        <repository>
+            <id>org.springframework.maven.milestone</id>
+            <name>Spring Maven Milestone Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -133,13 +138,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -161,6 +164,43 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        
+        <!-- SPRING SOCIAL -->
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-core</artifactId>
+            <version>${spring.social.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-web</artifactId>
+            <version>${spring.social.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-facebook</artifactId>
+            <version>1.0.1.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-twitter</artifactId>
+            <version>1.0.2.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-linkedin</artifactId>
+            <version>1.0.0.RC1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-google</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!-- HIBERNATE DEPENDENCIES -->
@@ -237,6 +277,7 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.6.1</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -319,7 +360,27 @@
                     <scanTargets>
                         <scanTarget>${basedir}/src/main/resources</scanTarget>
                     </scanTargets>
+                    <connectors>
+                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                            <port>8080</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                        </connector>
+                        <!-- Generate keystore with:
+                             cd ~
+                             keytool -genkey -alias jetty6 -keyalg RSA -keystore playbook.keystore -storepass jetty6 -keypass jetty6 -dname "CN=your domain"
+                        -->
+                        <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
+                            <port>8443</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                            <keystore>${user.home}/playbook.keystore</keystore>
+                            <password>jetty6</password>
+                            <keyPassword>jetty6</keyPassword>
+                        </connector>
+                    </connectors>
                 </configuration>
+                
+                <dependencies>
+                </dependencies>
             </plugin>
 
         </plugins>
@@ -445,6 +506,7 @@
         <spring.version>3.1.0.RELEASE</spring.version>
         <wicket.version>1.5.4</wicket.version>
         <jetty.version>6.1.9</jetty.version>
+        <spring.social.version>1.0.2.RELEASE</spring.social.version>
     </properties>
 
 </project>

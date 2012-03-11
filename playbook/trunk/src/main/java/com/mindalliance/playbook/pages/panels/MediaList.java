@@ -15,7 +15,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.List;
 
@@ -40,15 +39,13 @@ public class MediaList extends Panel {
                     IModel<Medium> itemModel = item.getModel();
                     String mediumId = "medium" + item.getId();
 
+                    Medium medium = itemModel.getObject();
                     item.add(
                         new WebMarkupContainer( "label" ).add(
-                            new Label( "type", new PropertyModel<String>( itemModel, "type" ) ),
-                            new Label(
-                                "address",
-                                new PropertyModel<String>( itemModel, "address" ) ) ).add(
-                            new AttributeModifier(
-                                "for",
-                                new Model<String>( mediumId ) ) ),
+                            new Label( "address", medium.toString() )
+                                    .add( new AttributeModifier( "class", medium.getCssClass() ) )
+                            
+                            ).add( new AttributeModifier( "for", new Model<String>( mediumId ) ) ),
 
                         new Radio<Medium>( "value", itemModel ).add(
                             new AttributeModifier( "id", new Model<String>( mediumId ) ) ) ).setRenderBodyOnly( true );

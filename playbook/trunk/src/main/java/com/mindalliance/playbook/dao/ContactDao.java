@@ -1,8 +1,8 @@
 package com.mindalliance.playbook.dao;
 
-import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.Medium;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,16 +13,6 @@ import java.util.List;
  */
 @Secured( "ROLE_USER" )
 public interface ContactDao extends IndexedDao<Contact,Long> {
-
-    /**
-     * Find contacts with a given email.
-     * 
-     * @param email the email
-     * @return all contacts using this email
-     */
-    
-    @Transactional( readOnly = true )
-    List<Contact> findByEmail( Object email );
 
     /**
      * Find a contact by parts of name. If all arguments are null or empty, this will return an empty collection.
@@ -43,14 +33,6 @@ public interface ContactDao extends IndexedDao<Contact,Long> {
      */
     @Transactional( readOnly = true )
     List<Contact> findByName( Contact contact );
-    
-    /**
-     * Find any contact in any account that has the same email address as a specific account.
-     * @param account the account
-     * @return aliases in any other account, including this one.
-     */
-    @Transactional( readOnly = true )
-    List<Contact> findAliases( Account account );
 
     /**
      * Make sure contact is present in current account. 
@@ -62,4 +44,12 @@ public interface ContactDao extends IndexedDao<Contact,Long> {
      */
     @Transactional
     Contact privatize( Contact foreignContact, Collaboration collaboration );
+
+    /**
+     * Find contacts with a specified medium.
+     * @param medium the mediumm
+     * @return some local contacts of current user
+     */
+    @SuppressWarnings( "unchecked" )
+    List<Contact> findByMedium( Medium medium );
 }

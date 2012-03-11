@@ -65,6 +65,16 @@ public abstract class Collaboration extends Step {
         return req;
     }
 
+    @Override
+    public String getActionLink() {
+        return using == null ? null : using.getActionUrl();
+    }
+
+    @Override
+    public String getActionText() {
+        return  using == null ? null : using.getMediumType().getVerb();
+    }
+
     @Transient
     public String getDefaultDescription() {
         // TODO implement this
@@ -135,4 +145,16 @@ public abstract class Collaboration extends Step {
      * @return true if this collaboration implies calling someone.
      */
     public abstract boolean isSend();
+
+    @Transient
+    public String getMediumString() {
+        StringBuilder sb = new StringBuilder();        
+
+        if ( !isSend() )
+            sb.append( "contacting me " );
+        
+        sb.append( using == null ? "somehow" : using.getMediumString() );
+        
+        return sb.toString();
+    }
 }

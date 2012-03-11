@@ -34,14 +34,37 @@
                     <input wicket:id="contactUpload" id="contactUpload" name="contactUpload" type="file"/>
                     <span>(<span wicket:id="contacts.size">0</span> contacts on file)</span>
                 </div>
-                
+                                
                 <div>
                     <input data-inline="true" type="submit" value="Save"/>
-                    <a data-role="button" data-inline="true" wicket:id="password" href="#">Change password</a>
-                    <a data-role="button" data-inline="true" href="logout">Logout <span wicket:id="email">email</span></a>
+                    <a data-role="button" data-inline="true" href="logout">Logout <span wicket:id="userId">userId</span></a>
                 </div>
                 
-            </form>            
+            </form>
+
+            <div>
+                <p>You can add more provider accounts to Playbook by using the following buttons:</p>
+                <ul data-role="listview" data-inset="true">
+                    <li><form action="social/signin/facebook" method="post">
+                        <input type="hidden" name="scope"
+                               value="email,user_location,user_work_history,friends_work_history,friends_location" />
+                        <input type="submit" data-icon="pb-facebook" value="Facebook"/>
+                    </form></li>
+                    <li><form action="social/signin/linkedin" method="post">
+                        <input type="submit" data-icon="pb-linkedin" value="LinkedIn"/>
+                    </form></li>
+                    <li><form action="social/signin/twitter" method="post">
+                        <input type="submit" data-icon="pb-twitter" value="Twitter"/>
+                    </form></li>
+                    <li><form action="social/signin/google" method="post">
+                        <input type="hidden" name="scope"
+                               value="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo#email https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/tasks https://www.google.com/m8/feeds" />
+                        <input type="submit" data-icon="pb-google" value="Google"/>
+                    </form></li>
+                </ul>              
+                
+            </div>
+
         </div>
 </wicket:extend>
 </body>

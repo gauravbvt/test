@@ -1,18 +1,18 @@
 package com.mindalliance.playbook.model;
 
-import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * A snail mail address.
  */
 @Entity
 @Indexed
-@DiscriminatorValue( "1" )
 public class AddressMedium extends Medium {
 
     private static final long serialVersionUID = -7031507461651310787L;
@@ -22,7 +22,11 @@ public class AddressMedium extends Medium {
     public AddressMedium() {
     }
 
-    public AddressMedium( Contact contact, String type, Address address ) {
+    public AddressMedium( String type, Address address ) {
+        this( null, type, address );
+    }
+    
+    private AddressMedium( Contact contact, String type, Address address ) {
         super( contact, type );
 
         if ( address == null )
@@ -46,22 +50,22 @@ public class AddressMedium extends Medium {
     }
 
     @Override
-    public boolean equals( Object obj ) {
-        if ( this == obj )
-            return true;
-        if ( obj == null || !getClass().isAssignableFrom( obj.getClass() ) )
-            return false;
-
-        AddressMedium other = getClass().cast( obj );
-
-        return getType().equals( other.getType() )
-            && address.equals( other.getAddress() );
+    public String getCssClass() {
+        return "m-address";
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + address.hashCode();
-        return result;
+    @Transient
+    public String getMediumString() {
+        return "at " + address;
+    }
+
+    @Override
+    public String getActionUrl() {
+        try {
+            return "http://maps.google.com/maps?q=" + URLEncoder.encode( address.toString(), "UTF8" );
+        } catch ( UnsupportedEncodingException e ) {
+            return null;
+        }
     }
 }

@@ -7,9 +7,10 @@
 package com.mindalliance.playbook.pages.login;
 
 import com.mindalliance.playbook.pages.MobilePage;
+import com.mindalliance.playbook.services.SocialHub;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
  * Custom login page.
@@ -17,15 +18,22 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 public class Login extends MobilePage {
 
     private static final long serialVersionUID = -2921882090778907159L;
+    
+    @SpringBean
+    private SocialHub socialHub;
 
     public Login( PageParameters parameters ) {
         super( parameters );
         
         add(
-            new BookmarkablePageLink<Register>( "reglink", Register.class ),
-            new BookmarkablePageLink<Reset>( "reset", Reset.class ),
             new WebMarkupContainer( "error" )
-                .setVisible( !parameters.get( "login_error" ).isEmpty() ) 
+                .setVisible( !parameters.get( "login_error" ).isEmpty() ),
+            new WebMarkupContainer( "li" )
+                .setVisible( socialHub.isLinkedInEnabled() ),
+            new WebMarkupContainer( "fb" )
+                .setVisible( socialHub.isFacebookEnabled() ),
+            new WebMarkupContainer( "tw" )
+                .setVisible( socialHub.isTwitterEnabled() )
         );
     }
 

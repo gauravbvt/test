@@ -16,6 +16,9 @@
         $( document ).bind( "mobileinit", function () {
             $.mobile.ajaxEnabled = false;
         } );
+
+        // Circumvent a sign-in "feature" of Facebook...
+        if ( window.location.hash == '#_=_' )window.location.hash = null;
     </script>
     <link rel="stylesheet" href="css/jquery.mobile-1.0.1.min.css"/>
     <link rel="stylesheet" href="css/refinements.css">

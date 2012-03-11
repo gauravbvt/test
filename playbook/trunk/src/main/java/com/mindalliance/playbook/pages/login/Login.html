@@ -16,28 +16,28 @@
 
     <div data-role="content">
         <div wicket:id="error" class="error">
-            <p>Wrong credentials. Try again.</p>
+            <p>The connection to the provider was refused.</p>
         </div>
-        <form method="post" action="login.do">
-            <div data-role="fieldcontain">
-                <label for="email">Email:</label>
-                <input autofocus="autofocus" id="email" name="j_username" type="email"/>
-            </div>
-            <div data-role="fieldcontain">
-                <label for="password">Password:</label>
-                <input id="password" name="j_password" type="password"/>
-            </div>
-            <div data-role="fieldcontain">
-                <input id="remember_me" name="_spring_security_remember_me" type="checkbox"/>
-                <label for="remember_me">Stay signed in</label>
-            </div>
-
-            <input type="submit" value="Login"/>
-        </form>
 
         <ul>
-            <li>Don&lsquo;t have an account? <a wicket:id="reglink">Register for free!</a></li>
-            <li>Forgot your password? <a wicket:id="reset">Reset it here</a></li>
+            <li>Sign-in using one of the following services:
+                <form wicket:id="fb" action="social/signin/facebook" method="post">
+                    <input type="hidden" name="scope"
+                           value="email,user_location,user_work_history,friends_work_history,friends_location" />
+                    <input type="submit" data-icon="pb-facebook" data-inline="true" value="Facebook"/>
+                </form>
+                <form wicket:id="tw" action="social/signin/twitter" method="post">
+                    <input type="submit" data-icon="pb-twitter" data-inline="true" value="Twitter"/>
+                </form>
+                <form wicket:id="li" action="social/signin/linkedin" method="post">
+                    <input type="submit" data-icon="pb-linkedin" data-inline="true" value="LinkedIn"/>
+                </form>
+                <form wicket:id="li" action="social/signin/google" method="post">
+                    <input type="hidden" name="scope" 
+                           value="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo#email https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/tasks https://www.google.com/m8/feeds" />
+                    <input type="submit" data-icon="pb-google" data-inline="true" value="Google"/>
+                </form>
+            </li>
         </ul>
     </div>
 

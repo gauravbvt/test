@@ -7,13 +7,20 @@
 package com.mindalliance.playbook.model;
 
 import com.mindalliance.playbook.model.Medium.MediumType;
-import org.apache.solr.analysis.EdgeNGramTokenizerFactory;
+import org.apache.solr.analysis.ClassicFilterFactory;
+import org.apache.solr.analysis.ClassicTokenizerFactory;
+import org.apache.solr.analysis.DoubleMetaphoneFilterFactory;
+import org.apache.solr.analysis.EdgeNGramFilterFactory;
+import org.apache.solr.analysis.LowerCaseFilterFactory;
+import org.apache.solr.analysis.WordDelimiterFilterFactory;
 import org.hibernate.annotations.Index;
+import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.AnalyzerDef;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.Parameter;
+import org.hibernate.search.annotations.TokenFilterDef;
 import org.hibernate.search.annotations.TokenizerDef;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.PropertyAccessor;
@@ -31,17 +38,28 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A contact.
  */
 @Entity
 @Indexed
-@AnalyzerDef( name = "fname", tokenizer = @TokenizerDef( factory = EdgeNGramTokenizerFactory.class ) )
+@AnalyzerDef( name = "fname",
+              filters = { @TokenFilterDef( factory = ClassicFilterFactory.class ),
+                          @TokenFilterDef( factory = WordDelimiterFilterFactory.class ),
+                          @TokenFilterDef( factory = LowerCaseFilterFactory.class ),
+                          @TokenFilterDef( factory = DoubleMetaphoneFilterFactory.class,
+                                           params = @Parameter( name="inject", value = "true" ) ),
+                          @TokenFilterDef( factory = EdgeNGramFilterFactory.class, 
+                                           params = { @Parameter( name="minGramSize", value = "1" ),
+                                                      @Parameter( name="maxGramSize", value = "8" ) } )
+              },
+              tokenizer = @TokenizerDef( factory = ClassicTokenizerFactory.class ) )
+@Analyzer( definition = "fname" )
 @org.hibernate.annotations.Table( 
     appliesTo = "Contact",
     indexes = { @Index( name = "byName", columnNames = { "ACCOUNT_ID", "FAMILYNAME", "GIVENNAME" } ) } )
@@ -51,7 +69,7 @@ public class Contact implements Serializable, Comparable<Contact> {
 
     @Id
     @GeneratedValue
-    private long id;
+    private long id;                       
 
     private String familyName;
 
@@ -72,6 +90,8 @@ public class Contact implements Serializable, Comparable<Contact> {
     private String title;
 
     private String note;
+    
+    private boolean main;
 
     @Lob
     @Basic( fetch = FetchType.LAZY )
@@ -86,26 +106,20 @@ public class Contact implements Serializable, Comparable<Contact> {
     private static final Collator COLLATOR = Collator.getInstance();
 
     public Contact() {
-    }
-
-    public Contact( Account account ) {
-        this();
-        this.account = account;
         media = new ArrayList<Medium>();
     }
 
-    public Contact( Account account, String email ) {
-        this( account );
-        media.add( new OtherMedium( this, "EMAIL", email ) );
+    public Contact( Medium medium ) {
+        this();
+        addMedium( medium );
     }
 
     /**
      * Create a minimal contact based on a foreign contact.
-     * @param account the account
      * @param foreignContact the contact
      */
-    public Contact( Account account, Contact foreignContact ) {
-        this( account );
+    public Contact( Contact foreignContact ) {
+        this();
 
         prefixes = foreignContact.getPrefixes();
         givenName = foreignContact.getGivenName();
@@ -121,74 +135,6 @@ public class Contact implements Serializable, Comparable<Contact> {
     public boolean isNamed() {
         return prefixes != null || givenName != null || additionalNames != null || familyName != null
                || suffixes != null;
-    }
-
-    /**
-     * @param step
-     * @param you
-     * @return ConfirmationReq
-     */
-    public ConfirmationReq confirmReq( Step step, Contact you ) {
-        // TODO
-        return null;
-    }
-
-    /**
-     * @param req
-     * @return Ack
-     */
-    public Ack ack( ConfirmationReq req ) {
-        // TODO
-        return null;
-    }
-
-    /**
-     * @param req
-     * @param reason
-     * @return NAck
-     */
-    public NAck nack( ConfirmationReq req, String reason ) {
-        // TODO
-        return null;
-    }
-
-    /**
-     * @param req
-     * @param other
-     * @return RedirectAck
-     */
-    public RedirectAck redirect( ConfirmationReq req, Contact other ) {
-        // TODO
-        return null;
-    }
-
-    /**
-     * @param req
-     * @param other
-     * @return RedirectReq
-     */
-    public RedirectReq redirectReq( ConfirmationReq req, Contact other ) {
-        // TODO
-        return null;
-    }
-
-    /**
-     * @param req
-     * @return RedirectAck
-     */
-    public RedirectAck redirectAck( RedirectReq req ) {
-        // TODO
-        return null;
-    }
-
-    /**
-     * @param req
-     * @param reason
-     * @return RedirectNAck
-     */
-    public RedirectNAck redirectNack( RedirectReq req, String reason ) {
-        // TODO
-        return null;
     }
 
     public long getId() {
@@ -208,7 +154,7 @@ public class Contact implements Serializable, Comparable<Contact> {
         this.familyName = familyName;
     }
 
-    @Field( boost = @Boost( 2.0F )  )
+    @Field( boost = @Boost( 2.0F ) )
     public String getGivenName() {
         return givenName;
     }
@@ -244,7 +190,6 @@ public class Contact implements Serializable, Comparable<Contact> {
         this.suffixes = suffixes;
     }
 
-    @Field
     public String getOrganization() {
         return organization;
     }
@@ -253,7 +198,6 @@ public class Contact implements Serializable, Comparable<Contact> {
         this.organization = organization;
     }
 
-    @Field
     public String getRole() {
         return role;
     }
@@ -262,7 +206,6 @@ public class Contact implements Serializable, Comparable<Contact> {
         this.role = role;
     }
 
-    @Field
     public String getTitle() {
         return title;
     }
@@ -287,7 +230,6 @@ public class Contact implements Serializable, Comparable<Contact> {
         this.photo = photo;
     }
 
-    @IndexedEmbedded
     public List<Medium> getMedia() {
         return media;
     }
@@ -309,17 +251,16 @@ public class Contact implements Serializable, Comparable<Contact> {
         return account;
     }
 
-    public void addMedium( Medium medium ) {
-        media.add( medium );
+    void setAccount( Account account ) {
+        this.account = account;
     }
 
     @Transient
     public List<String> getEmails() {
         List<String> result = new ArrayList<String>();
         for ( Medium medium : media )
-            if ( medium.getMediumType() == MediumType.OTHER 
-                 && "EMAIL".equals( medium.getType() ) )
-                result.add( ( (OtherMedium) medium ).getAddress() );
+            if ( medium.getMediumType() == MediumType.EMAIL )
+                result.add( ( (EmailMedium) medium ).getAddress() );
 
         return Collections.unmodifiableList( result );
     }
@@ -332,16 +273,18 @@ public class Contact implements Serializable, Comparable<Contact> {
      * property in the other contact.
      */
     public boolean isMergeableWith( Contact other ) {
-        String[] properties = { "givenName", "additionalNames", "familyName", "prefixes", "suffixes", "nickname",
-                                "organization", "role", "title" };
+        String[] properties = { "givenName", "additionalNames", "familyName", "prefixes", "suffixes", "nickname"  };
 
+        Collator collator = Collator.getInstance();
+        collator.setStrength( Collator.PRIMARY );
+        
         PropertyAccessor newContactWrapper  = new BeanWrapperImpl( other );
         PropertyAccessor oldContactWrapper  = new BeanWrapperImpl( this );
         for ( String property : properties ) {
             String newValue = (String) newContactWrapper.getPropertyValue( property );
             if ( newValue != null && !newValue.isEmpty() ) {
                 String oldValue = (String) oldContactWrapper.getPropertyValue( property );
-                if ( oldValue != null && !oldValue.isEmpty() && !newValue.equals( oldValue ) )
+                if ( oldValue != null && !oldValue.isEmpty() && !collator.equals( newValue, oldValue ) )
                     return false;
             }
         }
@@ -355,12 +298,12 @@ public class Contact implements Serializable, Comparable<Contact> {
      * @param contact the other contact
      */
     public void merge( Contact contact ) {
-        if ( contact.getAdditionalNames() != null )
-            additionalNames = contact.getAdditionalNames();
-        if ( contact.getFamilyName() != null )
-            familyName = contact.getFamilyName();
-        if ( contact.getGivenName() != null )
+        if ( givenName == null )
             givenName = contact.getGivenName();
+        if ( additionalNames == null )
+            additionalNames = contact.getAdditionalNames();
+        if ( familyName == null )
+            familyName = contact.getFamilyName();
         if ( contact.getNickname() != null )
             nickname = contact.getNickname();
         if ( contact.getNote() != null )
@@ -378,12 +321,16 @@ public class Contact implements Serializable, Comparable<Contact> {
         if ( contact.getTitle() != null )
             title = contact.getTitle();
 
-        Collection<Medium> mediumSet = new HashSet<Medium>( media );
         for ( Medium medium : contact.getMedia() )
-            if ( !mediumSet.contains( medium ) )
-                addMedium( medium.getMediumType() == MediumType.OTHER ?
-                           new OtherMedium( this, (OtherMedium) medium )
-                         : new AddressMedium( this, (AddressMedium) medium ) );
+            addMedium( medium );
+    }
+
+    public boolean isMain() {
+        return main;
+    }
+
+    public void setMain( boolean main ) {
+        this.main = main;
     }
 
     @Override
@@ -480,16 +427,14 @@ public class Contact implements Serializable, Comparable<Contact> {
      * @param using a foreign medium
      * @return a medium, possibly new
      */
-    public Medium addPrivate( Medium using ) {
+    public Medium addMedium( Medium using ) {
         for ( Medium medium : media )
             if ( medium.equals( using ) )
                 return medium;
 
-        Medium result = using instanceof AddressMedium ?
-                        new AddressMedium( this, (AddressMedium) using ) :
-                        new OtherMedium( this, (OtherMedium) using );
+        Medium result = Medium.copy( this, using );
 
-        addMedium( result );
+        media.add( result );
         return result;
     }
 
@@ -507,5 +452,26 @@ public class Contact implements Serializable, Comparable<Contact> {
     @Transient
     public boolean hasPhoto() {
         return photo != null;
+    }
+
+    /**
+     * Get media that could potentially be matched to an account. 
+     * @return relevant media
+     */
+    @Transient
+    public Set<Medium> getKeyMedia() {
+        Set<Medium> keys = new HashSet<Medium>();
+        for ( Medium medium : media )
+            switch ( medium.getMediumType() ) {  
+                case EMAIL:
+                case FACEBOOK:
+                case TWITTER:
+                case LINKEDIN:
+                    keys.add( medium );
+                    break;
+                default:
+                    break;
+                }
+        return keys;
     }
 }

@@ -5,6 +5,7 @@ import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Contact;
 import com.mindalliance.playbook.model.Playbook;
 import com.mindalliance.playbook.services.ContactMerger;
+import com.mindalliance.playbook.services.SocialHub;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.util.tester.FormTester;
@@ -30,6 +31,9 @@ public class SettingsTest extends AbstractPageTest {
     
     @Mock
     private ContactMerger contactMerger;
+    
+    @Mock
+    private SocialHub socialHub;
 
     @Mock
     private Playbook playbook;
@@ -49,7 +53,8 @@ public class SettingsTest extends AbstractPageTest {
         
         context.putBean( account );
         context.putBean( accountDao );
-        context.putBean( contactMerger );       
+        context.putBean( contactMerger ); 
+        context.putBean( socialHub );
     }
     
     @Test

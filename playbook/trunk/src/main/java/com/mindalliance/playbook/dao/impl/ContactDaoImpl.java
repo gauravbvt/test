@@ -5,9 +5,17 @@ import com.mindalliance.playbook.dao.ContactDao;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.Medium;
+import com.mindalliance.playbook.model.Medium.MediumType;
 import com.mindalliance.playbook.model.Receive;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.solr.analysis.ClassicFilterFactory;
+import org.apache.solr.analysis.ClassicTokenizerFactory;
+import org.apache.solr.analysis.DoubleMetaphoneFilterFactory;
+import org.apache.solr.analysis.LowerCaseFilterFactory;
+import org.apache.solr.analysis.TokenFilterFactory;
+import org.apache.solr.analysis.TokenizerChain;
+import org.apache.solr.schema.IndexSchema;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Conjunction;
@@ -21,6 +29,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Hibernate implementation.
@@ -33,17 +42,47 @@ public class ContactDaoImpl extends IndexedHibernateDao<Contact, Long> implement
     @Autowired
     private AccountDao accountDao;
 
-    private final Analyzer analyzer = new StandardAnalyzer( LUCENE_VERSION );
+    private Analyzer analyzer;
 
-    @SuppressWarnings( "unchecked" )
+    public ContactDaoImpl() {
+        Map<String,String> args = Collections.singletonMap(
+            IndexSchema.LUCENE_MATCH_VERSION_PARAM,
+            LUCENE_VERSION.toString() );
+
+        ClassicTokenizerFactory tokenizer = new ClassicTokenizerFactory();
+        tokenizer.init( args );
+
+        LowerCaseFilterFactory lowerCaseFilterFactory = new LowerCaseFilterFactory();
+        lowerCaseFilterFactory.init( args );
+
+        DoubleMetaphoneFilterFactory doubleMetaphoneFilterFactory = new DoubleMetaphoneFilterFactory();
+        doubleMetaphoneFilterFactory.init( Collections.singletonMap( "inject", "true" ) );
+        
+        analyzer = new TokenizerChain(
+            tokenizer,
+            new TokenFilterFactory[]{
+                new ClassicFilterFactory(), 
+                lowerCaseFilterFactory, 
+                doubleMetaphoneFilterFactory
+            }
+        );
+    }
+
     @Override
-    public List<Contact> findByEmail( Object email ) {
+    @SuppressWarnings( "unchecked" )
+    public List<Contact> findByMedium( Medium medium ) {
+        if ( medium.getMediumType() == MediumType.ADDRESS )
+            return Collections.emptyList();
 
         Query query = getSession().createQuery(
-            "select m.contact from Medium as m where m.type='EMAIL' and m.address=:email and m.contact.account=:account" );
-        query.setParameter( "email", email );
+            "select m.contact from Medium as m where  m.contact.account=:account" 
+            + " and m.class=:class and m.address=:address" );       
+        
+        query.setParameter( "class", medium.getClass().getSimpleName() );
+        query.setParameter( "address", medium.getAddress().toString() );
         query.setParameter( "account", accountDao.getCurrentAccount() );
         query.setMaxResults( getMaxResults() );
+        
         return (List<Contact>) query.list();
     }
 
@@ -101,22 +140,13 @@ public class ContactDaoImpl extends IndexedHibernateDao<Contact, Long> implement
             contact.getGivenName(), contact.getAdditionalNames(), contact.getFamilyName(), contact.getSuffixes() );
     }
 
-    @SuppressWarnings( "unchecked" )
-    @Override
-    public List<Contact> findAliases( Account account ) {
-        Query query = getSession().createQuery(
-            "select c.contact from OtherMedium as c where c.type = 'EMAIL' and c.address = :email"
-        ).setParameter( "email", account.getEmail() );
-        return (List<Contact>) query.list();
-    }
-
-    private Contact privatize( Contact localContact, Contact foreignContact, Account account, Collaboration collaboration ) {
-
-        localContact.merge( new Contact( account, foreignContact ) );
+    private Contact privatize( Contact localContact, Contact foreignContact, Collaboration collaboration ) {
+        Account account = localContact.getAccount();
+        localContact.merge( new Contact( foreignContact ) );
         if ( collaboration instanceof Receive )
-            localContact.addPrivate( collaboration.getUsing() );
+            localContact.addMedium( collaboration.getUsing() );
         else
-            account.getOwner().addPrivate( collaboration.getUsing() );        
+            account.getOwner().addMedium( collaboration.getUsing() );        
         
         return save( localContact );
     }
@@ -133,15 +163,15 @@ public class ContactDaoImpl extends IndexedHibernateDao<Contact, Long> implement
     public Contact privatize( Contact foreignContact, Collaboration collaboration ) {
         Account account = accountDao.getCurrentAccount();
         
-        for ( String email : foreignContact.getEmails() )
-            for ( Contact myContact : findByEmail( email ) )
+        for ( Medium medium : foreignContact.getKeyMedia() )
+            for ( Contact myContact : findByMedium( medium ) )
                 if ( myContact.isMergeableWith( foreignContact ) )
-                    return privatize( myContact, foreignContact, account, collaboration );
+                    return privatize( myContact, foreignContact, collaboration );
 
         for ( Contact myContact : findByName( foreignContact ) )
             if ( myContact.isMergeableWith( foreignContact ) )
-                return privatize( myContact, foreignContact, account, collaboration );
+                return privatize( myContact, foreignContact, collaboration );
 
-        return privatize( new Contact( account ), foreignContact, account, collaboration );
+        return privatize( account.addContact( new Contact() ), foreignContact, collaboration );
     }
 }

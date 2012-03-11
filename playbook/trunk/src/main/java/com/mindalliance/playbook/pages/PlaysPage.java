@@ -33,7 +33,7 @@ public class PlaysPage extends NavigablePage {
     public PlaysPage( PageParameters parameters ) {
         super( parameters );
         setStatelessHint( true );
-        LOG.debug( "Generating for account: {}", account.getEmail() );
+        LOG.debug( "Generating for account: {}", account );
         setDefaultModel( new CompoundPropertyModel<Account>( account ) );
 
         add( new BookmarkablePageLink<TodoPage>( "home", TodoPage.class ),

@@ -50,7 +50,7 @@ public class AckDaoImpl extends GenericHibernateDao<ConfirmationAck, Long> imple
                                             : new Send( existingPlay );
 
         matchingStep.setWith( privateContact );
-        matchingStep.setUsing( privateContact.addPrivate( collaboration.getUsing() ) );
+        matchingStep.setUsing( privateContact.addMedium( collaboration.getUsing() ) );
         matchingStep.setTitle( request.getCollaboration().getTitle() );
         matchingStep.setSequence( 1 );
 

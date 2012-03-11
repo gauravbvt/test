@@ -3,9 +3,9 @@ package com.mindalliance.playbook.pages;
 import com.mindalliance.playbook.dao.AccountDao;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Contact;
-import com.mindalliance.playbook.pages.login.Reset;
 import com.mindalliance.playbook.pages.panels.ContactPanel;
 import com.mindalliance.playbook.services.ContactMerger;
+import com.mindalliance.playbook.services.SocialHub;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
@@ -43,6 +43,9 @@ public class Settings extends NavigablePage {
     @SpringBean
     private ContactMerger contactMerger;
 
+    @SpringBean
+    private SocialHub socialHub;
+
     @SuppressWarnings( "unchecked" )
     public Settings( PageParameters parameters ) {
         super( parameters );
@@ -79,13 +82,12 @@ public class Settings extends NavigablePage {
 
         add( new BookmarkablePageLink( "home", PlaysPage.class ),
 
-             form.add( new Label( "email" ),
+             form.add( new Label( "userId" ),
                        new Label( "contacts.size" ),
                        new CheckBox( "viewByTags" ),
                        new CheckBox( "showInactive" ),
                        new ContactPanel( "playbook.me", new PropertyModel<Contact>( account,
                                                                                     "playbook.me" ) ),
-                       new BookmarkablePageLink<Reset>( "password", Reset.class ),
                        uploadField ) );
     }
 

@@ -30,8 +30,6 @@ public class Playbook implements Serializable {
     @Id @GeneratedValue
     private long id;
 
-    private String email;
-
     @ManyToOne( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private Contact me;
 
@@ -51,34 +49,15 @@ public class Playbook implements Serializable {
         plays = new ArrayList<Play>();
     }
 
-    public Playbook( Account account ) {
+    public Playbook( Account account, Contact me ) {
         this();
         this.account = account;
-        email = account.getEmail();
-        me = new Contact( account, email );
+        this.me = me;
     }
 
     @Transient
     long getAccountId() {
         return account.getId();
-    }
-
-    /**
-     * Set the value of email.
-     *
-     * @param newVar the new value of email
-     */
-    public void setEmail( String newVar ) {
-        email = newVar;
-    }
-
-    /**
-     * Get the value of email.
-     *
-     * @return the value of email
-     */
-    public String getEmail() {
-        return email;
     }
 
     /**

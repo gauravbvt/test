@@ -40,8 +40,7 @@ public class ContactField extends AutoCompleteTextField<Contact> {
                 if ( validatable.getValue() == null ) {
                     LOG.debug( "Invalid: null contact" );
                     validatable.error( new ValidationError().setMessage( "You must enter a valid contact" ) );
-                } else
-                    LOG.debug( "Valid" );
+                }
             }
         } );
     }

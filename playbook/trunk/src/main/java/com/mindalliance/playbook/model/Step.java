@@ -63,7 +63,15 @@ public abstract class Step implements Serializable {
         title = other.getTitle();
         duration = other.getDuration();
     }
-    
+
+    public String getActionLink() {
+        return null;
+    }
+
+    public String getActionText() {
+        return "";
+    }
+
     public long getId() {
         return id;
     }

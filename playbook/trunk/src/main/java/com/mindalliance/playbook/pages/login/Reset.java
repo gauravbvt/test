@@ -2,6 +2,7 @@ package com.mindalliance.playbook.pages.login;
 
 import com.mindalliance.playbook.dao.AccountDao;
 import com.mindalliance.playbook.model.Account;
+import com.mindalliance.playbook.model.EmailMedium;
 import com.mindalliance.playbook.pages.MobilePage;
 import com.octo.captcha.service.CaptchaService;
 import com.octo.captcha.service.CaptchaServiceException;
@@ -86,8 +87,7 @@ public class Reset extends MobilePage {
                     new AbstractValidator<String>() {
                         @Override
                         protected void onValidate( IValidatable<String> validatable ) {
-                            Account account = accountDao.findByEmail( validatable.getValue() );
-                            if ( account == null ) {
+                            if ( accountDao.findByMedium( new EmailMedium( null, validatable.getValue() ) ) == null ) {
                                 ValidationError error = new ValidationError();
                                 error.setMessage( "Invalid email address." );
                                 validatable.error( error );
@@ -131,7 +131,7 @@ public class Reset extends MobilePage {
         Date date = new Date();
         String key = Register.getKey( email, date );
 
-        Account account = accountDao.findByEmail( email );
+        Account account = accountDao.findByMedium( new EmailMedium( null, email ) );
         account.setConfirmation( key );
         accountDao.save( account );
 

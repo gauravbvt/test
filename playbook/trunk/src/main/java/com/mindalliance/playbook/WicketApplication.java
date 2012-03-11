@@ -65,7 +65,7 @@ public class WicketApplication extends WebApplication implements ApplicationCont
 
     @Override
     public Class<? extends Page> getHomePage() {
-        return TodoPage.class;
+        return PlaysPage.class;
     }
 
     @Override

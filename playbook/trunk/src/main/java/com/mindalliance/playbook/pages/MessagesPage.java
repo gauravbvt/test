@@ -41,7 +41,7 @@ public class MessagesPage extends NavigablePage {
 
     public MessagesPage( PageParameters parameters ) {
         super( parameters );
-        LOG.debug( "Generating for account: {}", account.getEmail() );
+        LOG.debug( "Generating for account: {}", account );
         setDefaultModel( new CompoundPropertyModel<Account>( account ) );
 
         final List<ConfirmationReq> outgoing = reqDao.getOutgoingRequests();

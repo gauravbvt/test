@@ -35,7 +35,7 @@ public class TodoPage extends NavigablePage {
      */
     public TodoPage( PageParameters parameters ) {
         super( parameters );
-        LOG.debug( "Generating for account: {}", account.getEmail() );
+        LOG.debug( "Generating for account: {}", account );
         setDefaultModel( new CompoundPropertyModel<Account>( account ) );
         
         add(

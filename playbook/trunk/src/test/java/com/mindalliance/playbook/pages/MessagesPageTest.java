@@ -5,6 +5,8 @@ import com.mindalliance.playbook.dao.StepDao;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.ConfirmationReq;
+import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.EmailMedium;
 import com.mindalliance.playbook.model.Play;
 import com.mindalliance.playbook.model.Playbook;
 import com.mindalliance.playbook.model.Send;
@@ -39,7 +41,7 @@ public class MessagesPageTest extends AbstractPageTest {
 
     @Override
     protected void init( ApplicationContextMock context ) {
-        Mockito.when( account.getEmail() ).thenReturn( "someone@example.com" );
+        Mockito.when( account.getUserId() ).thenReturn( "someone@example.com" );
         
         context.putBean( account );
         context.putBean( reqDao );
@@ -56,7 +58,8 @@ public class MessagesPageTest extends AbstractPageTest {
 
     @Test
     public void unconfirmedList() {
-        Collaboration step = new Send( new Play( new Playbook( account ), "Test play" ) );
+        Collaboration step = new Send( new Play( new Playbook( account, new Contact(
+            new EmailMedium( "EMAIL", account.getUserId() ) ) ), "Test play" ) );
         Mockito.when( stepDao.getUnconfirmed() ).thenReturn( Collections.singletonList( step ) );
 
 
@@ -69,7 +72,8 @@ public class MessagesPageTest extends AbstractPageTest {
 
     @Test
     public void incomingList() {
-        Collaboration step = new Send( new Play( new Playbook( account ), "Test play" ) );
+        Collaboration step = new Send( new Play( new Playbook( account, new Contact(
+            new EmailMedium( "EMAIL", account.getUserId() ) ) ), "Test play" ) );
         ConfirmationReq req = new ConfirmationReq( step );
         Mockito.when( reqDao.getIncomingRequests() ).thenReturn( Collections.singletonList( req ) );
 

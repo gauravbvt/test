@@ -22,7 +22,7 @@ public class TodoPageTest extends AbstractPageTest {
 
     @Override
     protected void init( ApplicationContextMock context ) {
-        when( account.getEmail() ).thenReturn( "someone@somewhere.com" );
+        when( account.getUserId() ).thenReturn( "someone@somewhere.com" );
 
         context.putBean( account );
     }
