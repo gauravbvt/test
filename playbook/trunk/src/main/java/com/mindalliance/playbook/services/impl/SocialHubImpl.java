@@ -790,7 +790,7 @@ public class SocialHubImpl implements InitializingBean, SocialHub, SignInAdapter
             int count = t.countTokens();
             switch ( count ) {
             case 1:
-                contact.setNickname( t.nextToken() );
+                contact.setFamilyName( t.nextToken() );
                 break;
             case 2:
                 contact.setGivenName( t.nextToken() );
