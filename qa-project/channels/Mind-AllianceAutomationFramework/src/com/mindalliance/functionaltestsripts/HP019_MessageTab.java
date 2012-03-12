@@ -100,4 +100,3 @@ public class HP019_MessageTab
 		}
 	}
 }
-

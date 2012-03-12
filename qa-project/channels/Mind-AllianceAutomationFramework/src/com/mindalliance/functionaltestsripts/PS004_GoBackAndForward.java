@@ -65,15 +65,13 @@ public class PS004_GoBackAndForward
 				Thread.sleep(2000);
 				//Assertion : Verify that 'About plan' window gets displayed
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionDetails")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details")))
-				{
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else
-				{
+				else{
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription+" "+GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
