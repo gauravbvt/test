@@ -388,6 +388,12 @@ public class Contact implements Serializable, Comparable<Contact> {
                     sb.append( ' ' );
                 sb.append( additionalNames );
             }
+            
+            if ( nickname != null ) {
+                if ( sb.length() > 0 )
+                    sb.append( ' ' );
+                sb.append( '\"' ).append( additionalNames ).append( '\"' );
+            }
 
             if ( familyName != null ) {
                 if ( sb.length() > 0 )

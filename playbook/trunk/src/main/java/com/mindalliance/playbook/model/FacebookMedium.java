@@ -49,6 +49,6 @@ public class FacebookMedium extends GenericMedium {
 
     @Override
     public String getActionUrl() {
-        return "http://www.facebook.com/profile.php?id=" + getAddress();
+        return "http://www.facebook.com/messages/" + getAddress();
     }
 }

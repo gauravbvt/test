@@ -6,7 +6,7 @@ package com.mindalliance.playbook.model;
 import javax.persistence.Entity;
 
 /**
- * A Twitter connection information
+ * A Twitter connection information.
  */
 @Entity
 public class TwitterMedium extends GenericMedium {
@@ -41,6 +41,6 @@ public class TwitterMedium extends GenericMedium {
 
     @Override
     public String getActionUrl() {
-        return "https://twitter.com/#!/" + getAddress();
+        return "https://twitter.com/direct_messages/create/" + getAddress();
     }
 }

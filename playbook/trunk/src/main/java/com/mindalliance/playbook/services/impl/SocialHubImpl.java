@@ -60,6 +60,7 @@ import org.springframework.social.linkedin.api.LinkedInProfileFull;
 import org.springframework.social.linkedin.api.PhoneNumber;
 import org.springframework.social.linkedin.api.Position;
 import org.springframework.social.linkedin.api.TwitterAccount;
+import org.springframework.social.linkedin.api.UrlResource;
 import org.springframework.social.linkedin.connect.LinkedInConnectionFactory;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.api.TwitterProfile;
@@ -610,11 +611,16 @@ public class SocialHubImpl implements InitializingBean, SocialHub, SignInAdapter
         }
 
         private static Contact newContact( LinkedInProfile myProfile, LinkedInProfileFull fullProfile ) {
-            String url = myProfile.getPublicProfileUrl() != null ? myProfile.getPublicProfileUrl() :
-                         fullProfile == null ? null : fullProfile.getPublicProfileUrl();
+
+            // http://www.linkedin.com/profile?viewProfile=&key=1951574&authToken=PyCo&authType=name&trk=api*a172251
+            // *s180487*
+            String url = myProfile.getSiteStandardProfileRequest().getUrl();
+            int i = url.indexOf( "&key=" );
+
             LinkedInMedium medium = new LinkedInMedium(
                 myProfile.getId(),
-                myProfile.getFirstName() + ' ' + myProfile.getLastName(), url
+                myProfile.getFirstName() + ' ' + myProfile.getLastName(),
+                "https://www.linkedin.com/msgToConns?displayCreate=&connId=" + url.substring( i + 5, url.indexOf( "&", i + 5 ) )
             );
             Contact contact = new Contact( medium );
 
@@ -784,7 +790,7 @@ public class SocialHubImpl implements InitializingBean, SocialHub, SignInAdapter
             int count = t.countTokens();
             switch ( count ) {
             case 1:
-                contact.setFamilyName( t.nextToken() );
+                contact.setNickname( t.nextToken() );
                 break;
             case 2:
                 contact.setGivenName( t.nextToken() );
