@@ -3,7 +3,7 @@
 <xPathAddNewIssuseSegmentMenu>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[5]/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathAddNewIssuseSegmentMenu>
 <xPathEditRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/span/table/tbody/tr/td[8]/span/a/span</xPathEditRequirement>
 <xPathRequirementNetwork>//div[4]/div/span/div/div[2]/div/div/ul/li[2]/a/span</xPathRequirementNetwork>
-<xPathNewRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/a</xPathNewRequirement>
+<xPathNewRequirement>//div[4]/div/span/div/div[2]/div/div[@class='tab-panel']/div[@class='req-defs']/a[@class='button']</xPathNewRequirement>
 <xPathSentElementInformation>//div[@class='sends']/div[2]/div/div/div/table/tbody/tr[4]/th/a</xPathSentElementInformation>
 <xPathReceiveElementInformation>//*[@class='model-object-link']</xPathReceiveElementInformation>
 <xPathAddInfoSendAttachment>//span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[13]/td/ul/span/li/a</xPathAddInfoSendAttachment>
@@ -145,7 +145,7 @@
 <xPathActiveUsers>/html/body/div/div[2]/div[2]/table/tbody/tr/td/a</xPathActiveUsers>
 <xPathParticipantsPageSubTitle>/html/body/div/div[2]/div/h1</xPathParticipantsPageSubTitle>
 <xPathOperationalNonOperational>//span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span[3]</xPathOperationalNonOperational>
-<xPathCrossOnAttachmentCopiedMessage>//div[14]/span/a/img</xPathCrossOnAttachmentCopiedMessage>
+<xPathCrossOnAttachmentCopiedMessage>//div[15]/span/a/img</xPathCrossOnAttachmentCopiedMessage>
 <xPathTaskCausesEvent>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[10]/th/label/span/a/span</xPathTaskCausesEvent>
 <xPathTaskEventUnnamed>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[4]/span</xPathTaskEventUnnamed>
 <xPathTaskPhaseResponding>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[2]/span</xPathTaskPhaseResponding>
