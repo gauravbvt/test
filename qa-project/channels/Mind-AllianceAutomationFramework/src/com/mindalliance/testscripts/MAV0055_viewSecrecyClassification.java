@@ -48,7 +48,7 @@ public class MAV0055_viewSecrecyClassification
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
+			    Thread.sleep(2000);
 			    
 			    //Clicks on 'Secrecy classifications' link under show pop up menu option of "All segments" 	
 				GlobalVariables.iStepNo++ ;
@@ -60,7 +60,7 @@ public class MAV0055_viewSecrecyClassification
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
+			    Thread.sleep(2000);
 			    
 				// Assertion: Verify that page loaded with heading "All secrecy classifications" 
 			    GlobalVariables.iStepNo++;
@@ -83,6 +83,18 @@ public class MAV0055_viewSecrecyClassification
 				Thread.currentThread();
 				Thread.sleep(1000); 
 			    
+				// Click on Done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Done";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);
+				
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

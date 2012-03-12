@@ -61,7 +61,7 @@ public class MAV0223_AddInfoSentCopyCapability
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Copy Capability
 				GlobalVariables.iStepNo++ ;
@@ -69,7 +69,7 @@ public class MAV0223_AddInfoSentCopyCapability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"), GlobalVariables.viewElements.get("copyCapability"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);	
+				Thread.sleep(3000);	
 				// Assertion: Verify that Elements of Information is Present
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionCopyCapability")));
 				if(GlobalVariables.oElement.getText().equals("Capability copied")){

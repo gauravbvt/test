@@ -74,7 +74,7 @@ public class MAV0200_AddInfoReceiveSendTagLink
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click 'Tags' Link 
 				GlobalVariables.iStepNo++ ;
@@ -134,7 +134,6 @@ public class MAV0200_AddInfoReceiveSendTagLink
 				// Click 'Tags' Link 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Tags Link Clicked";				
-				GlobalVariables.oDriver.findElement(By.linkText("Tags:")).click();
 				GlobalVariables.oDriver.findElement(By.linkText("Tags:")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
