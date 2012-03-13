@@ -20,7 +20,7 @@ public class UpdatePlannerInPerformance
 {
 	
     public UpdatePlannerInPerformance() {
-    		String sChannelURL = "http://192.168.4.126:8081/channels";
+    		String sChannelURL = "http://192.168.4.127:8081/channels";
     		String sUserName = "admin";
     		String sPassword = "admin";
 		try {
