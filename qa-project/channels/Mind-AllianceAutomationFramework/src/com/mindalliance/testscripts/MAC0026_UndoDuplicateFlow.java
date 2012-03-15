@@ -82,7 +82,7 @@ public class MAC0026_UndoDuplicateFlow
 				
 				//  Click on 'add info received' option under 'Receives'  section
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Duplicate Flow";
+				GlobalVariables.sDescription="Add Info Receives";
 				// Click on legend for maximize the graph
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
@@ -93,9 +93,17 @@ public class MAC0026_UndoDuplicateFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				
+				// Enter Details
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Duplicate Flow";
 				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Duplicate this flow Info"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Undo Duplicate Flow"));
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -103,7 +111,7 @@ public class MAC0026_UndoDuplicateFlow
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:firstChoice")));
 				List<WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
-			    	if(GlobalVariables.viewElements.get("Other").equals(option.getText())){
+			    	if(GlobalVariables.viewElements.get("other").equals(option.getText())){
 			    			option.setSelected();
 			    			break;
 			    	}
@@ -123,7 +131,7 @@ public class MAC0026_UndoDuplicateFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click on Break up flow under more pop up menu
+				// Click on Duplicate flow under more pop up menu
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("duplicateFlow"));
 				// WebElement Synchronization
 				Thread.currentThread();

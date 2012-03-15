@@ -70,39 +70,11 @@ public class MAC0053_redoAddInfoNeed {
 					Thread.currentThread();
 					Thread.sleep(3000);
 
-					// Update the Information of the default task
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Task updated";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDefaultTask"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-					for (int i = 0; i <= 15; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task 1"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
-					// Click on hide details from action pop-menu bar
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-			
 					// Add info need flow in add info receive
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Add info need added";
-					GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+//					GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -183,9 +155,12 @@ public class MAC0053_redoAddInfoNeed {
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				}
-				else
+				else{
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					System.out.println("Unable to redo add info need"+ReportFunctions.getScreenShot("Redo add info need failed"));
+				}
+				
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -201,7 +176,6 @@ public class MAC0053_redoAddInfoNeed {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-			System.out.println("Unable to redo add info need"+ReportFunctions.getScreenShot("Redo add info need failed"));
 		}
 	}
 	public static void main(String args[]) {

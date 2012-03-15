@@ -66,15 +66,15 @@ public class MAC0063_UndoRemoveRequirement
 				Thread.currentThread();
 				Thread.sleep(1000);
 				// Assertion: Verify that New Requirement can be added
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathNewRequirementDefinitionAssertion")));
-				if(GlobalVariables.oElement.getText().equals("Requirement definition")){
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionRequirementName")));
+				if(GlobalVariables.oElement.getText().equals("UNNAMED")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.viewElements.get("informationSharingRequirements") + " Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.viewElements.get("UNNAMED") + " Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

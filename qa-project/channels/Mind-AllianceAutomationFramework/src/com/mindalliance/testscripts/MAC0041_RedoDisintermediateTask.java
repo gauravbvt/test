@@ -75,7 +75,7 @@ public class MAC0041_RedoDisintermediateTask {
 					// Update the Information of the default task
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDefaultTask"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

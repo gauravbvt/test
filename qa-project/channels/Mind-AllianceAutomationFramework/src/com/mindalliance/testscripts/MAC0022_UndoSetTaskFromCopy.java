@@ -75,10 +75,14 @@ public class MAC0022_UndoSetTaskFromCopy {
 				Thread.currentThread();
 				Thread.sleep(5000);
 				// Add details for New Task
-				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).clear();
+				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
+				for (int i = 0; i <= 15; i++)
+					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

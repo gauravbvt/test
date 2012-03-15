@@ -54,17 +54,7 @@ public class MAC0018_CopyAttachment
 						for (int i = 0; i <= 8; i++)
 							GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Copy Attachment"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
 					// Click on 'done' button
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Segment updated";
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -73,11 +63,15 @@ public class MAC0018_CopyAttachment
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					
+
 					// Update the Information of the default task
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDefaultTask"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -85,7 +79,10 @@ public class MAC0018_CopyAttachment
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 					for (int i = 0; i <= 15; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task for attachment"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -144,7 +141,7 @@ public class MAC0018_CopyAttachment
 					Thread.currentThread();
 					Thread.sleep(5000);
 					// Click on Cross of 'Attachment copied' option
-					GlobalVariables.oDriver.findElement(By.xpath("//div[@class='change-message']/span/a/img[@class='close']")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCrossOnAttachmentCopiedMessage"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
@@ -172,6 +169,7 @@ public class MAC0018_CopyAttachment
 				else
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				System.out.println("Unable to copy attachment"+ReportFunctions.getScreenShot("Copy attachment failed"));
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -187,7 +185,6 @@ public class MAC0018_CopyAttachment
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-			System.out.println("Unable to copy attachment"+ReportFunctions.getScreenShot("Copy attachment failed"));
 		}
 	}
 	public static void main(String args[]) {

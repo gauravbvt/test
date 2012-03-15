@@ -63,35 +63,8 @@ public class MAC0024_UndoAddInfoCapability {
 					GlobalVariables.oElement.sendKeys("Segment For Undo Add Info Capability");
 					// Click on 'done' button
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-
-					// Update the Information of the default task
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Task updated";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDefaultTask"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-					for (int i = 0; i <= 15; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task 1"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
-					// Click on hide details from action pop-menu bar
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
+					// Click on 'done' button
+					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -103,7 +76,6 @@ public class MAC0024_UndoAddInfoCapability {
 					// Add info sends flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Add info capability added";
-//					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
@@ -183,7 +155,7 @@ public class MAC0024_UndoAddInfoCapability {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-			System.out.println("Unable to undo add info capability"+ReportFunctions.getScreenShot("Undo add info capability failed"));
+//			System.out.println("Unable to undo add info capability"+ReportFunctions.getScreenShot("Undo add info capability failed"));
 		}
 	}
 	public static void main(String args[]) {

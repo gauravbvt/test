@@ -40,7 +40,7 @@ public class MAC0013_UndoConnectFlow {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(3000);
 					
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
@@ -52,7 +52,7 @@ public class MAC0013_UndoConnectFlow {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 			
 					// Enter the details
 					GlobalVariables.iStepNo++ ;
@@ -75,7 +75,7 @@ public class MAC0013_UndoConnectFlow {
 					// Update the Information of the default task
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDefaultTask"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -104,7 +104,8 @@ public class MAC0013_UndoConnectFlow {
 					// Add info sends flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Send Flow added";
-					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+//					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -245,7 +246,7 @@ public class MAC0013_UndoConnectFlow {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-			System.out.println("Unable undo connect flow"+ReportFunctions.getScreenShot("Undo connect flow failed"));
+//			System.out.println("Unable undo connect flow"+ReportFunctions.getScreenShot("Undo connect flow failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -259,7 +260,7 @@ public class MAC0013_UndoConnectFlow {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
-			System.out.println("Unable undo connect flow"+ReportFunctions.getScreenShot("Undo connect flow failed"));
+//			System.out.println("Unable undo connect flow"+ReportFunctions.getScreenShot("Undo connect flow failed"));
 		}
 	}
 }

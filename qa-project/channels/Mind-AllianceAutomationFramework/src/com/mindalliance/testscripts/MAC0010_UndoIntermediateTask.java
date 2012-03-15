@@ -40,7 +40,7 @@ public class MAC0010_UndoIntermediateTask {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(3000);
 					
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
@@ -52,7 +52,7 @@ public class MAC0010_UndoIntermediateTask {
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 			
 					// Enter the details
 					GlobalVariables.iStepNo++ ;
@@ -75,10 +75,10 @@ public class MAC0010_UndoIntermediateTask {
 					// Update the Information of the default task
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDefaultTask"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
 					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 					for (int i = 0; i <= 15; i++)
@@ -215,7 +215,7 @@ public class MAC0010_UndoIntermediateTask {
 					tds = GlobalVariables.oElement.findElements(By.tagName("td"));
 					for (WebElement td: tds){
 						GlobalVariables.sStrCheck=td.getText();
-						if (td.getText().equals("doing something")){
+						if (td.getText().equals("")){
 							GlobalVariables.bIsSuccess = Boolean.TRUE;
 							break;
 						}

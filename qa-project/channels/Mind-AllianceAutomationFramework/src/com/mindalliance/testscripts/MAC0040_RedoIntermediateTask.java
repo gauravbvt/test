@@ -75,7 +75,11 @@ public class MAC0040_RedoIntermediateTask {
 					// Update the Information of the default task
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDefaultTask"))).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -277,9 +281,11 @@ public class MAC0040_RedoIntermediateTask {
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				}
-				else
+				else{
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					System.out.println("Unable to redo intermediate task"+ReportFunctions.getScreenShot("Redo intermediate task failed"));
+				}
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -295,7 +301,6 @@ public class MAC0040_RedoIntermediateTask {
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-			System.out.println("Unable to redo intermediate task"+ReportFunctions.getScreenShot("Redo intermediate task failed"));
 		}
 	}
 	public static void main(String args[]) {

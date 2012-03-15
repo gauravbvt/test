@@ -89,7 +89,7 @@ public class MAC0056_RedoDuplicateFlow
 				
 				//  Click on 'add info received' option under 'Receives'  section
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Duplicate Flow";
+				GlobalVariables.sDescription="Add info received";
 				// Click on legend for maximize the graph
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
@@ -97,12 +97,20 @@ public class MAC0056_RedoDuplicateFlow
 				Thread.sleep(2000);
 //				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(8000);
+				
+				// Enter details -Duplicate Flow
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Duplicate Flow";
 				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Duplicate this flow Info"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Redo Duplicate Flow"));
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
@@ -110,7 +118,7 @@ public class MAC0056_RedoDuplicateFlow
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:firstChoice")));
 				List<WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
-			    	if(GlobalVariables.viewElements.get("Other").equals(option.getText())){
+			    	if(GlobalVariables.viewElements.get("other").equals(option.getText())){
 			    			option.setSelected();
 			    			break;
 			    	}
