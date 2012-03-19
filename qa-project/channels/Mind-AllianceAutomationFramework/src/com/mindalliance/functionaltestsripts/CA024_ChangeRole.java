@@ -92,7 +92,7 @@ public class CA024_ChangeRole
 				Thread.currentThread();
 				Thread.sleep(2000);
 				//Assign Access Privilege 'Admin' to User
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/div/div[2]/div/form/table[6]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
 				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				List<WebElement> tds;
 				int i=-1;
@@ -126,7 +126,7 @@ public class CA024_ChangeRole
 				//Assign Access Privilege 'planner' to User Newly Created User
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Assign Access Privilege 'Admin' to User";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[6]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				i=-1;
 				for(WebElement tr: trs) {
@@ -280,7 +280,7 @@ public class CA024_ChangeRole
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Delete Created User
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[6]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				i=0;
 				for(WebElement tr: trs) {

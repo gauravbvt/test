@@ -63,7 +63,7 @@ public class CA026_CreateUserWithLessCharacters
 				// Enter the 'Full Name', 'Email', 'Password' and select the role of the user (Admin/Planner/User/Disable)
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Details of New user entered";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[6]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
 				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				List<WebElement> tds;
 				int i=-1;
@@ -130,7 +130,7 @@ public class CA026_CreateUserWithLessCharacters
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 		    	// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(2000);			
+			    Thread.sleep(2000);
 			    
 			    // Click on Sign In button
 			    GlobalVariables.iStepNo++ ;
@@ -195,7 +195,7 @@ public class CA026_CreateUserWithLessCharacters
 			    Thread.currentThread();
 			    Thread.sleep(2000);
 				// Delete Created User
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[6]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				i=0;
 				for(WebElement tr: trs) {
@@ -215,7 +215,7 @@ public class CA026_CreateUserWithLessCharacters
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Logout of Channels
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
+				GlobalVariables.oDriver.findElement(By.className("logout")).click();
 				GlobalVariables.oDriver.quit();
 				// WebElement Synchronization
 				Thread.currentThread();

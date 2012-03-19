@@ -36,7 +36,7 @@ public class CP002_ShowPlanners
 				  //Clicks on About Plan link under show pop up menu option
 				  GlobalVariables.iStepNo++ ;
 				  GlobalVariables.sDescription = "Hide Planners";
-				  ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),"hide planners");
+				  ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("hidePlanners"));
 				  // Write Results
 				  LogFunctions.writeLogs(GlobalVariables.sDescription);
 				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -83,20 +83,26 @@ public class TE053_UpdateLocaleStreetAddress
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:localePanel:name"));
 				String sLocale = LogFunctions.getDateTime();
 				GlobalVariables.oElement.sendKeys(sLocale);
-				GlobalVariables.oElement.sendKeys(Keys.ENTER);
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
+				Thread.sleep(2000);		
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);		
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
+				// WebElement Synchronization
+				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click on 'Details' Link under 'Show' pop up menu
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("Details"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Click on 'Locale'
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathLocale"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();

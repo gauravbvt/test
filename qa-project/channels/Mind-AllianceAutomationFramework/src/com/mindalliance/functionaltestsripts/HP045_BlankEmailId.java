@@ -37,12 +37,18 @@ public class HP045_BlankEmailId
 				// Click on Email id text filed and Edit it
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Enter blank email id";
-				GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email")).clear();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000); 
+				GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email")).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email"));
+				for (int i = 0; i <= 20; i++)
+					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email"));
+//				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion: 1. Verify that error message should be displayed as 'An email address is required'
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathEmailNameInvalidErrorMessageAssertion")));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("An email address is required")) {

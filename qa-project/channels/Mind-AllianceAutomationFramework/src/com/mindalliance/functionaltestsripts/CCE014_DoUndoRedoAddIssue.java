@@ -17,7 +17,7 @@ public class CCE014_DoUndoRedoAddIssue
 {
 	  public CCE014_DoUndoRedoAddIssue() {
 			try {
-				GlobalVariables.sTestCaseId = "CCE014_DoUndoAddIssue";
+				GlobalVariables.sTestCaseId = "CCE014_DoUndoRedoAddIssue";
 				GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				System.out.println(GlobalVariables.sDescription);

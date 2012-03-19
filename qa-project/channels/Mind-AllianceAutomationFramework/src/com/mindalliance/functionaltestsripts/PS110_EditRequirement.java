@@ -14,7 +14,7 @@ public class PS110_EditRequirement
 	public PS110_EditRequirement(){
 		
 		try {
-			GlobalVariables.sTestCaseId = "PS0110_EditRequirement";
+			GlobalVariables.sTestCaseId = "PS110_EditRequirement";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);

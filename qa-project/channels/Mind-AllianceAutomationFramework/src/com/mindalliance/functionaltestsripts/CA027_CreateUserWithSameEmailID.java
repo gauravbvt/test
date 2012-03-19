@@ -139,7 +139,7 @@ public class CA027_CreateUserWithSameEmailID
 
 				// Delete Users
 				// Select First User
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[6]/tbody"));
+				GlobalVariables.oElement =GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				i=-1;
 				for(WebElement tr: trs) {
@@ -159,7 +159,7 @@ public class CA027_CreateUserWithSameEmailID
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Select Second User
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//body/div/div[2]/div/form/table[6]/tbody"));
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathUserID")));
 				trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
 				i=-1;
 				for(WebElement tr: trs) {

@@ -176,7 +176,7 @@ public class CCE027_DoCopyFlow
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Flow copied";
 					// Assertion: Verify that flow has been copied 
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//div[@class='change-message']/span/span"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathCopyAttachmentAssertion")));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

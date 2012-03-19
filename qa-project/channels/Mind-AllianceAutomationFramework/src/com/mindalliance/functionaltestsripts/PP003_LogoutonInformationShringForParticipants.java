@@ -23,13 +23,14 @@ public class PP003_LogoutonInformationShringForParticipants
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigate to Information sharing guidelines for all participants";
 				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingGuidelinesForAllParticipants"))).click();
-				if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.viewElements.get("participantPagesTitle"))) {
+				if (GlobalVariables.oDriver.getTitle().equals("Channels - IS Guidelines - All Participants")) {
 					  // Write Results
 					  LogFunctions.writeLogs(GlobalVariables.sDescription);
 					  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  }
 				else{
+					GlobalVariables.sVerifyError="Verification Failed Expected is "+GlobalVariables.viewElements.get("participantPagesTitle")+"Actual is " +GlobalVariables.oDriver.getTitle();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

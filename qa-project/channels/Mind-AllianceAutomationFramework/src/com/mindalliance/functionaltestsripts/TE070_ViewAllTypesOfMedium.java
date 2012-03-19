@@ -44,7 +44,7 @@ public class TE070_ViewAllTypesOfMedium
 				Thread.sleep(2000);
 				
 				// Click on 'add info send' Link
-				GlobalVariables.iStepNo++ ;
+				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription = "Add info send Link clicked";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 				// Write Results
