@@ -1,11 +1,13 @@
 package com.mindalliance.channels.social.model.rfi;
 
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.pages.Channels;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,33 +22,53 @@ import java.util.List;
 public class Questionnaire extends AbstractPersistentPlanObject {
 
     public enum Status {
-        DRAFT,
+        /**
+         * RFI surveys can be launched with the questionnaire.
+         */
         ACTIVE,
-        RETIRED
+        /**
+         * RFI surveys can no longer be launched with the questionnaire.
+         */
+        RETIRED,
+        /**
+         * RFI surveys can not yet be launched with the questionnaire.
+         */
+        DRAFT
     }
+
+    public static final Questionnaire UNKNOWN = new Questionnaire( Channels.UNKNOWN_QUESTIONNAIRE_ID );
+
     
-    private String modelObjectClassName = Plan.class.getSimpleName();
+    private String about = ModelObject.typeNames().get( 0 );
 
     private String name ="unnamed";
 
-    @OneToMany( mappedBy = "questionnaire", cascade = CascadeType.ALL )
-    private List<RFI> rfis = new ArrayList<RFI>();
-
     @OneToMany( mappedBy="questionnaire", cascade = CascadeType.ALL)
+    @OrderBy( "index")
     private List<Question> questions = new ArrayList<Question>(  );
 
     private Status status = Status.DRAFT;
+    
+    public Questionnaire() {}
 
-    public String getModelObjectClassName() {
-        return modelObjectClassName;
+    public Questionnaire( long id ) {
+        this.id = id;
+    }
+    
+    public boolean isUnknown() {
+        return this.equals( UNKNOWN );
     }
 
-    public void setModelObjectClassName( String modelObjectClassName ) {
-        this.modelObjectClassName = modelObjectClassName;
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout( String typeName ) {
+        about = typeName;
     }
 
     public String getName() {
-        return name;
+        return ( name == null || name.isEmpty() )? "unnamed" : name;
     }
 
     public void setName( String name ) {
@@ -69,11 +91,5 @@ public class Questionnaire extends AbstractPersistentPlanObject {
         this.status = status;
     }
 
-    public List<RFI> getRfis() {
-        return rfis;
-    }
 
-    public void setRfis( List<RFI> rfis ) {
-        this.rfis = rfis;
-    }
 }

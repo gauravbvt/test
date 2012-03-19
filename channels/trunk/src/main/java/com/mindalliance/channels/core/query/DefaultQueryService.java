@@ -12,6 +12,8 @@ import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
@@ -39,7 +41,6 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
@@ -108,6 +109,10 @@ public abstract class DefaultQueryService implements QueryService {
      * File user details service.
      */
     private ChannelsUserDao userDao;
+    /**
+     * Plan participation service.
+     */
+    private PlanParticipationService planParticipationService;
 
     //-------------------------------
 
@@ -117,12 +122,17 @@ public abstract class DefaultQueryService implements QueryService {
     DefaultQueryService() {
     }
 
-    protected DefaultQueryService( PlanManager planManager, AttachmentManager attachmentManager,
-                                   SemanticMatcher semanticMatcher, ChannelsUserDao userDao ) {
+    protected DefaultQueryService(
+            PlanManager planManager,
+            AttachmentManager attachmentManager,
+            SemanticMatcher semanticMatcher,
+            ChannelsUserDao userDao,
+            PlanParticipationService planParticipationService ) {
         this.planManager = planManager;
         this.attachmentManager = attachmentManager;
         this.semanticMatcher = semanticMatcher;
         this.userDao = userDao;
+        this.planParticipationService = planParticipationService;
     }
 
     //-------------------------------
@@ -343,18 +353,13 @@ public abstract class DefaultQueryService implements QueryService {
     @SuppressWarnings( "unchecked" )
     public Integer countReferences( final ModelObject mo ) {
         Set<ModelObject> referencers = new HashSet<ModelObject>();
-        if ( mo instanceof Participation ) {
-            // Participations are not referenced per se but are not obsolete if they name a registered user.
-            if ( hasUser( (Participation) mo ) ) referencers.add( mo );
-        } else {
-            boolean hasReference = false;
-            Iterator classes = ModelObject.referencingClasses().iterator();
-            if ( getPlan().references( mo ) ) referencers.add( getPlan() );
-            while ( classes.hasNext() ) {
-                List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
-                for ( ModelObject ref : mos ) {
-                    if ( ref.references( mo ) ) referencers.add( ref );
-                }
+        boolean hasReference = false;
+        Iterator classes = ModelObject.referencingClasses().iterator();
+        if ( getPlan().references( mo ) ) referencers.add( getPlan() );
+        while ( classes.hasNext() ) {
+            List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
+            for ( ModelObject ref : mos ) {
+                if ( ref.references( mo ) ) referencers.add( ref );
             }
         }
         return referencers.size();
@@ -465,8 +470,6 @@ public abstract class DefaultQueryService implements QueryService {
             return (T) Role.UNKNOWN;
         else if ( clazz.isAssignableFrom( TransmissionMedium.class ) && TransmissionMedium.UNKNOWN.getId() == id )
             return (T) TransmissionMedium.UNKNOWN;
-        else if ( clazz.isAssignableFrom( Participation.class ) && Participation.UNKNOWN.getId() == id )
-            return (T) Participation.UNKNOWN;
         else
             throw new NotFoundException();
     }
@@ -491,9 +494,6 @@ public abstract class DefaultQueryService implements QueryService {
         else if ( clazz.isAssignableFrom( TransmissionMedium.class )
                 && ModelEntity.getUniversalTypeFor( TransmissionMedium.class ).getId() == id )
             return (T) ModelEntity.getUniversalTypeFor( TransmissionMedium.class );
-        else if ( clazz.isAssignableFrom( Participation.class )
-                && ModelEntity.getUniversalTypeFor( Participation.class ).getId() == id )
-            return (T) ModelEntity.getUniversalTypeFor( Participation.class );
         else
             throw new NotFoundException();
     }
@@ -1712,17 +1712,9 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Participation> findAllParticipationsFor( final Actor actor ) {
-        return (List<Participation>) CollectionUtils.select(
-                list( Participation.class ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        Actor assigned = ( (Participation) object ).getActor();
-                        return assigned != null && assigned.equals( actor );
-                    }
-                }
-        );
+    public List<PlanParticipation> findAllParticipationsFor( Actor actor ) {
+        return planParticipationService.getParticipations( getPlan(), actor, this );
+
     }
 
     @Override
@@ -2445,17 +2437,30 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public Participation findParticipation( final String username ) {
-        return (Participation) CollectionUtils.find(
-                getDao().list( Participation.class ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Participation) object ).getUsername().equals( username );
-                    }
-                }
-        );
+    public List<PlanParticipation> findParticipations( final String username ) {
+        ChannelsUser user = userDao.getUserNamed( username );
+        if ( user != null )
+            return planParticipationService.getParticipations(
+                    getPlan(),
+                    user.getUserInfo(),
+                    this );
+        else
+            return new ArrayList<PlanParticipation>();
     }
+
+    @Override
+    public List<PlanParticipation> findParticipations( final Actor actor ) {
+        return planParticipationService.getParticipations(
+                getPlan(),
+                actor,
+                this );
+    }
+
+    @Override
+    public PlanParticipation findParticipation( ChannelsUser user, Actor actor ) {
+        return planParticipationService.getParticipation( getPlan(), user.getUserInfo(), actor, this );
+    }
+
 
     @Override
     public List<Part> findPartsInitiatingEvent( Event event ) {
@@ -2781,7 +2786,7 @@ public abstract class DefaultQueryService implements QueryService {
     public String findUserNormalizedFullName( String userName ) {
         ChannelsUser user = userDao.getUserNamed( userName );
         if ( user != null ) {
-            return user.getNormalizedFullName();
+            return user.getNormalizedFullName( false );
         } else {
             return "?";
         }
@@ -2799,13 +2804,15 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<ChannelsUser> findUsersParticipatingAs( Actor actor ) {
-        List<ChannelsUser> users = new ArrayList<ChannelsUser>();
-        for ( String userName : userDao.getUsernames( getPlan().getUri() ) ) {
-            Participation participation = findParticipation( userName );
-            if ( participation != null && participation.getActor() != null && participation.getActor().equals( actor ) )
-                users.add( userDao.getUserNamed( userName ) );
+        Set<ChannelsUser> users = new HashSet<ChannelsUser>();
+        List<PlanParticipation> participations = planParticipationService.getParticipations( getPlan(), actor, this );
+        for ( PlanParticipation participation : participations ) {
+            ChannelsUser user = userDao.getUserNamed( participation.getParticipant().getUsername() );
+            if ( user != null ) {
+                users.add( user );
+            }
         }
-        return users;
+        return new ArrayList<ChannelsUser>( users );
     }
 
     /**
@@ -2974,11 +2981,12 @@ public abstract class DefaultQueryService implements QueryService {
     /**
      * Get user's full name.
      *
-     * @param participation@return a string
+     * @param participation a plan participation
+     * @return a string
      */
     @Override
-    public String getUserFullName( Participation participation ) {
-        return findUserFullName( participation.getUsername() );
+    public String getUserFullName( PlanParticipation participation ) {
+        return participation.getParticipant().getFullName();
     }
 
     /**
@@ -3180,37 +3188,24 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     @SuppressWarnings( "unchecked" )
     public Boolean isReferenced( final ModelObject mo ) {
-        if ( mo instanceof Participation ) {
-            // Participations are not referenced per se but are not obsolete if they name a registered user.
-            return hasUser( (Participation) mo );
-        } else {
-            boolean hasReference = false;
-            Iterator classes = ModelObject.referencingClasses().iterator();
-            if ( getPlan().references( mo ) ) return true;
-            while ( !hasReference && classes.hasNext() ) {
-                List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
-                hasReference = CollectionUtils.exists(
-                        mos,
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return ( (ModelObject) object ).references( mo );
-                            }
+        boolean hasReference = false;
+        Iterator classes = ModelObject.referencingClasses().iterator();
+        if ( getPlan().references( mo ) ) return true;
+        while ( !hasReference && classes.hasNext() ) {
+            List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
+            hasReference = CollectionUtils.exists(
+                    mos,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (ModelObject) object ).references( mo );
                         }
-                );
-            }
-            return hasReference;
+                    }
+            );
         }
+        return hasReference;
     }
 
-    /**
-     * Whether this participation's username corresponds to a registered user.
-     *
-     * @param participation@return a boolean
-     */
-    private boolean hasUser( Participation participation ) {
-        return findUserRole( participation.getUsername() ) != null;
-    }
 
     @Override
     public Boolean isReferenced( final Classification classification ) {

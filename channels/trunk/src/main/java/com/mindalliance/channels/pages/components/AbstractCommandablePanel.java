@@ -13,7 +13,6 @@ import com.mindalliance.channels.core.command.commands.CreateEntityIfNew;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.Releaseable;
 import org.apache.wicket.model.IModel;
@@ -73,7 +72,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     }
 
     private boolean noLockRequired( Identifiable identifiable ) {
-        return identifiable instanceof Participation;
+        return false;
     }
 
     /**

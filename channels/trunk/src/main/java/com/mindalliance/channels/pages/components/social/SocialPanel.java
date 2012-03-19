@@ -56,16 +56,18 @@ public class SocialPanel extends AbstractUpdatablePanel {
      */
     private Date whenLastRefreshed = new Date();
     private boolean collapsible;
+    private boolean showProfile;
     private final List<String> showTabs;
 
 
     public SocialPanel( String id, String[] showTabs ) {
-        this( id, true, showTabs );
+        this( id, true, showTabs, true );
     }
 
-    public SocialPanel( String id, boolean collapsible, String[] showTabs ) {
+    public SocialPanel( String id, boolean collapsible, String[] showTabs, boolean showProfile ) {
         super( id );
         this.collapsible = collapsible;
+        this.showProfile = showProfile;
         this.showTabs = Arrays.asList( showTabs );
         init();
     }
@@ -100,21 +102,21 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( showTabs.contains( PRESENCE ) )
             tabs.add( new AbstractTab( new Model<String>( "Presence" ) ) {
                 public Panel getPanel( String id ) {
-                    plannerPresenceListPanel = new UserPresenceListPanel( id, SocialPanel.this, collapsible );
+                    plannerPresenceListPanel = new UserPresenceListPanel( id, SocialPanel.this, collapsible, showProfile );
                     return plannerPresenceListPanel;
                 }
             } );
         if ( showTabs.contains( ACTIVITIES ) )
             tabs.add( new AbstractTab( new Model<String>( "Activities" ) ) {
                 public Panel getPanel( String id ) {
-                    commandEventListPanel = new ExecutedCommandsListPanel( id, SocialPanel.this, collapsible );
+                    commandEventListPanel = new ExecutedCommandsListPanel( id, SocialPanel.this, collapsible, showProfile );
                     return commandEventListPanel;
                 }
             } );
         if ( showTabs.contains( MESSAGES ) )
             tabs.add( new AbstractTab( new Model<String>( getMessagesTabTitle() ) ) {
                 public Panel getPanel( String id ) {
-                    plannerMessageListPanel = new UserMessageListPanel( id, SocialPanel.this, collapsible );
+                    plannerMessageListPanel = new UserMessageListPanel( id, SocialPanel.this, collapsible, showProfile );
                     return plannerMessageListPanel;
                 }
             } );

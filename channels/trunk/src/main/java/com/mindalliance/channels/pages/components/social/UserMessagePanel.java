@@ -20,8 +20,9 @@ public class UserMessagePanel extends UserStatementPanel {
             IModel<UserMessage> userMessageModel,
             boolean showReceived,
             int index,
+            boolean showProfile,
             Updatable updatable ) {
-        super( id, userMessageModel, index, updatable );
+        super( id, userMessageModel, index, showProfile, updatable );
         this.showReceived = showReceived;
     }
 

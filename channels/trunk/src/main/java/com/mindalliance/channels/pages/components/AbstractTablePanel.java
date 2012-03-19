@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -41,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -667,11 +669,42 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         isActual,
                         updatable
                 );
-                cellContent.add( new AttributeModifier( "title", true, new Model<String>( title ) ) );
+                cellContent.add( new AttributeModifier( "title", new Model<String>( title ) ) );
                 cellItem.add( cellContent );
             }
         };
     }
+
+    protected AbstractColumn<T> makeEntityReferenceColumn(
+            String name,
+            final String entityProperty,
+            final String choicesProperty,
+            final Class<? extends ModelEntity> entityClass,
+            final boolean isActual,
+            final String title,
+            final Updatable updatable
+    ) {
+        return new AbstractColumn<T>( new Model<String>( name ), entityProperty ) {
+            @SuppressWarnings( "unchecked" )
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      IModel<T> model ) {
+                T bean = model.getObject();
+                EntityNamePanel cellContent = new EntityNamePanel(
+                        id,
+                        bean,
+                        entityProperty,
+                        (List<ModelEntity>) ChannelsUtils.getProperty( bean, choicesProperty, null ),
+                        entityClass,
+                        isActual,
+                        updatable
+                );
+                cellContent.add( new AttributeModifier( "title", new Model<String>( title ) ) );
+                cellItem.add( cellContent );
+            }
+        };
+    }
+
 
     /**
      * Make geomap link column.
@@ -773,7 +806,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 }
             };
             if ( cssClasses != null ) {
-                link.add( new AttributeModifier( "class", true, new Model<String>( cssClasses ) ) );
+                link.add( new AttributeModifier( "class", new Model<String>( cssClasses ) ) );
             }
             add( link );
             link.add( new Label( "label", new Model<String>( label ) ) );
@@ -896,6 +929,15 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         }
     }
 
+    private static List<? extends ModelEntity> getModelEntities(
+            Class<? extends ModelEntity> entityClass,
+            boolean actual,
+            QueryService queryService ) {
+        return actual
+                ? queryService.listActualEntities( entityClass )
+                : queryService.listTypeEntities( entityClass );
+    }
+
     private class EntityNamePanel extends Panel {
 
         private T bean;
@@ -910,32 +952,40 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 final Class<? extends ModelEntity> entityClass,
                 final boolean actual,
                 final Updatable updatable ) {
+            this( id,
+                    bean,
+                    entityProperty,
+                    getModelEntities( entityClass, actual, getQueryService() ),
+                    entityClass,
+                    actual,
+                    updatable );
+        }
+
+        public EntityNamePanel(
+                String id,
+                final T bean,
+                String entityProperty,
+                final List<? extends ModelEntity> choices,
+                final Class<? extends ModelEntity> entityClass,
+                final boolean actual,
+                final Updatable updatable ) {
             super( id );
             this.bean = bean;
             this.entityProperty = entityProperty;
-            kind = actual ? ModelEntity.Kind.Actual : ModelEntity.Kind.Type;
             this.entityClass = entityClass;
-            final List<String> choices = getQueryService().findAllEntityNames(
-                    entityClass,
-                    kind );
+            kind = actual ? ModelEntity.Kind.Actual : ModelEntity.Kind.Type;
             AutoCompleteTextField<String> nameField = new AutoCompleteTextField<String>(
                     "entityName",
                     new PropertyModel<String>( this, "entityName" ) ) {
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
-                    for ( String choice : choices ) {
-                        ModelEntity entity = getQueryService().getDao().find( entityClass, choice );
-                        if ( entity != null
-                                && entity.isType() == !actual
-                                && matches( s, choice, actual ) ) candidates.add( choice );
-
-/*
-                        if ( kind == ModelEntity.Kind.Type ) {
-                            if ( getQueryService().likelyRelated( s, choice ) ) candidates.add( choice );
-                        } else {
-                            if ( Matcher.same( s, choice ) ) candidates.add( choice );
+                    if ( choices != null ) {
+                        for ( ModelEntity entity : choices ) {
+                            String choice = entity.getName();
+                            if ( getQueryService().likelyRelated( s, choice ) )
+                                candidates.add( choice );
                         }
-*/
+                        Collections.sort( candidates );
                     }
                     return candidates.iterator();
                 }
@@ -949,7 +999,9 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         }
 
         private boolean matches( String text, String otherText, boolean actual ) {
-            if ( entityClass.isAssignableFrom( Role.class ) || !actual ) {
+            if ( entityClass.isAssignableFrom( Role.class )
+                    || entityClass.isAssignableFrom( Event.class )
+                    || !actual ) {
                 return getQueryService().likelyRelated( text, otherText );
             } else {
                 return Matcher.matches( text, otherText );

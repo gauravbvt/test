@@ -4,15 +4,17 @@ import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Web service data element for a plan summary.
@@ -22,7 +24,7 @@ import java.util.List;
  * Date: 12/12/11
  * Time: 1:36 PM
  */
-@XmlType( propOrder = {"planIdentifier", "description", "planners", "participation", "supervised", "documentation"} )
+@XmlType( propOrder = {"planIdentifier", "description", "planners", "participations", "supervised", "documentation"} )
 
 public class PlanSummaryData {
 
@@ -33,7 +35,7 @@ public class PlanSummaryData {
         // required
     }
 
-    public PlanSummaryData( PlanService planService, ChannelsUserDao userDao  ) {
+    public PlanSummaryData( PlanService planService, ChannelsUserDao userDao ) {
         this.planService = planService;
         this.userDao = userDao;
     }
@@ -48,29 +50,31 @@ public class PlanSummaryData {
         return getPlan().getDescription();
     }
 
-    @XmlElement
+    @XmlElement( name = "planner" )
     public List<UserData> getPlanners() {
-        List<UserData> planners = new ArrayList<UserData>(  );
+        List<UserData> planners = new ArrayList<UserData>();
         for ( ChannelsUser planner : planService.getUserDao().getPlanners( getPlan().getUri() ) ) {
-              planners.add( new UserData( planner ) );
+            planners.add( new UserData( planner ) );
         }
         return planners;
     }
 
     @XmlElement( name = "participatingAs" )
-    public ParticipationData getParticipation() {
+    public List<ParticipationData> getParticipations() {
+        List<ParticipationData> participationDataList = new ArrayList<ParticipationData>();
         ChannelsUser user = ChannelsUser.current( userDao );
-        Participation participation = planService.findParticipation( user.getUsername() );
-        return participation == null || participation.getActor() == null
-                ? null
-                : new ParticipationData( participation, user, getPlan() );
+        List<PlanParticipation> participations = planService.findParticipations( user.getUsername() );
+        for ( PlanParticipation participation : participations ) {
+            participationDataList.add( new ParticipationData( participation, user, planService ) );
+        }
+        return participationDataList;
     }
 
     @XmlElement( name = "supervised" )
     public List<AgentData> getSupervised() {
-        List<AgentData> underlings = new ArrayList<AgentData>(  );
+        List<AgentData> underlings = new ArrayList<AgentData>();
         for ( Actor underling : findSupervised() ) {
-            underlings.add(  new AgentData( underling, getPlan() ) );
+            underlings.add( new AgentData( underling, getPlan() ) );
         }
         return underlings;
     }
@@ -80,22 +84,22 @@ public class PlanSummaryData {
         return new DocumentationData( getPlan() );
     }
 
-    private Actor getParticipant() {
-        Participation participation = planService.findParticipation( ChannelsUser.current( userDao ).getUsername() );
-        if ( participation != null ) {
-            return participation.getActor();
-        } else {
-            return null;
+    private List<Actor> getParticipantActors() {
+        List<Actor> actors = new ArrayList<Actor>();
+        List<PlanParticipation> participations = planService.findParticipations( ChannelsUser.current( userDao ).getUsername() );
+        for ( PlanParticipation participation : participations ) {
+            Actor actor = participation.getActor( planService );
+            if ( actor != null ) actors.add( actor );
         }
+        return actors;
     }
 
     private List<Actor> findSupervised() {
-        Actor actor = getParticipant();
-        if ( actor == null ) {
-            return new ArrayList<Actor>(  );
-        } else {
-            return planService.findSupervised( actor );
+        Set<Actor> supervisedSet = new HashSet<Actor>();
+        for ( Actor actor : getParticipantActors() ) {
+            supervisedSet.addAll( planService.findSupervised( actor ) );
         }
+        return new ArrayList<Actor>( supervisedSet );
     }
 
     private Plan getPlan() {

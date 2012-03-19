@@ -17,8 +17,9 @@ public class FeedbackStatementPanel extends UserStatementPanel {
             String id,
             IModel<Feedback> feedbackModel,
             int index,
+            boolean showProfile,
             Updatable updatable ) {
-        super( id, feedbackModel, index, updatable );
+        super( id, feedbackModel, index, showProfile, updatable );
     }
 
     protected String getCssClasses() {

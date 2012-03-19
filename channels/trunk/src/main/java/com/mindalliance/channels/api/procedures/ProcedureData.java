@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
@@ -22,9 +23,10 @@ import java.util.Set;
  * Date: 12/5/11
  * Time: 3:05 PM
  */
-@XmlType( propOrder = {"triggers", "assignment"} )
+@XmlType( propOrder = {"actorId", "triggers", "assignment"} )
 public class ProcedureData {
 
+    private Actor actor;
     /**
      * An assignment of the actor for which this procedure is being marshalled.
      */
@@ -45,15 +47,23 @@ public class ProcedureData {
     }
 
     public ProcedureData(
+            Actor actor,
             Assignment assignment,
             Commitments benefitingCommitments,
             Commitments committingCommitments,
             PlanService planService ) {
+        this.actor = actor;
         this.assignment = assignment;
         this.benefitingCommitments = benefitingCommitments;
         this.committingCommitments = committingCommitments;
         this.planService = planService;
     }
+
+    @XmlElement( name = "agentId" )
+    public Long getActorId() {
+        return actor.getId();
+    }
+
 
     @XmlElement( name = "trigger" )
     public List<TriggerData> getTriggers() {
@@ -62,73 +72,83 @@ public class ProcedureData {
             // anytime
             if ( assignment.isOngoing() ) {
                 triggers.add( new TriggerData( assignment, planService ) );
-            }
-            // event phase is trigger
-            if ( assignment.isInitiatedByEventPhase() ) {
-                TriggerData trigger = new TriggerData( assignment, planService );
-                trigger.setEventPhase( assignment.getEventPhase() );
-                triggers.add( trigger );
-            }
-            // information discovery (notifications to self)
-            for ( Commitment triggerSelfNotification : benefitingCommitments.toSelf() ) {
-                TriggerData trigger = new TriggerData( assignment, planService );
-                trigger.setNotificationToSelf( triggerSelfNotification );
-                triggers.add( trigger );
-            }
-            // triggering notifications (from others)
-            for ( Commitment triggerNotification : triggeringNotifications() ) {
-                TriggerData trigger = new TriggerData( assignment, planService );
-                trigger.setNotification( triggerNotification );
-                triggers.add( trigger );
-            }
-            // triggering requests
-            for ( Commitment triggerRequest : triggeringRequests() ) {
-                TriggerData trigger = new TriggerData( assignment, planService );
-                trigger.setRequest( triggerRequest );
-                triggers.add( trigger );
-            }
-            // triggering requests to self
-            for ( Commitment triggerRequest : triggeringRequestsToSelf() ) {
-                TriggerData trigger = new TriggerData( assignment, planService );
-                trigger.setRequestToSelf( triggerRequest );
-                triggers.add( trigger );
+            } else {
+                // event phase is trigger
+                if ( assignment.isInitiatedByEventPhase() ) {
+                    TriggerData trigger = new TriggerData( assignment, planService );
+                    trigger.setEventPhase( assignment.getEventPhase() );
+                    triggers.add( trigger );
+                }
+                // information discovery (notifications to self)
+                for ( Flow triggerSelfNotification : triggeringNotificationsToSelf() ) {
+                    TriggerData trigger = new TriggerData( assignment, planService );
+                    trigger.setNotificationToSelf( triggerSelfNotification );
+                    triggers.add( trigger );
+                }
+                // triggering notifications (from others)
+                for ( Flow triggerNotification : triggeringNotificationsFromOthers() ) {    
+                    TriggerData trigger = new TriggerData( assignment, planService );
+                    trigger.setNotificationFromOther( triggerNotification );
+                    triggers.add( trigger );
+                }
+                // triggering requests
+                for ( Flow triggerRequest : triggeringRequestsFromOthers() ) {   
+                    TriggerData trigger = new TriggerData( assignment, planService );
+                    trigger.setRequestFromOther( triggerRequest );
+                    triggers.add( trigger );
+                }
+                // triggering requests to self
+                for ( Flow triggerRequest : triggeringRequestsToSelf() ) {   
+                    TriggerData trigger = new TriggerData( assignment, planService );
+                    trigger.setRequestToSelf( triggerRequest );
+                    triggers.add( trigger );
+                }
             }
         }
         return triggers;
     }
 
-    private List<Commitment> triggeringNotifications() {
-        List<Commitment> triggerNotifications = new ArrayList<Commitment>();
+    private List<Flow> triggeringNotificationsFromOthers() {
+        Set<Flow> triggerNotifications = new HashSet<Flow>();
         for ( Commitment commitment : benefitingCommitments ) {
             Flow flow = commitment.getSharing();
             if ( flow.isNotification() && flow.isTriggeringToTarget() && !commitment.isToSelf() ) {
-                triggerNotifications.add( commitment );
+                triggerNotifications.add( commitment.getSharing() );
             }
         }
-        return triggerNotifications;
+        return new ArrayList<Flow>( triggerNotifications );
     }
 
-    private List<Commitment> triggeringRequests() {
-        List<Commitment> triggerRequests = new ArrayList<Commitment>();
+    private List<Flow> triggeringRequestsFromOthers() {
+        Set<Flow> triggerRequests = new HashSet<Flow>();
         for ( Commitment commitment : committingCommitments ) {
             Flow flow = commitment.getSharing();
-            if ( flow.isAskedFor() && flow.isTriggeringToSource() && !commitment.isToSelf( ) ) {
-                triggerRequests.add( commitment );
+            if ( flow.isAskedFor() && flow.isTriggeringToSource() && !commitment.isToSelf() ) {
+                triggerRequests.add( commitment.getSharing() );
             }
         }
-        return triggerRequests;
+        return new ArrayList<Flow>( triggerRequests );
     }
 
-    private List<Commitment> triggeringRequestsToSelf() {
-         List<Commitment> triggerRequestsToSelf = new ArrayList<Commitment>(  );
-         for ( Commitment commitment : committingCommitments ) {
-             Flow flow = commitment.getSharing();
-             if ( flow.isAskedFor() && flow.isTriggeringToSource() && commitment.isToSelf() ) {
-                 triggerRequestsToSelf.add( commitment );
-             }
-         }
-         return triggerRequestsToSelf;
-     }
+
+    private List<Flow> triggeringNotificationsToSelf() {
+        Set<Flow> triggerNotificationsToSelf = new HashSet<Flow>();
+        for ( Commitment commitment : benefitingCommitments.toSelf() ) {
+            triggerNotificationsToSelf.add( commitment.getSharing() );
+        }
+        return new ArrayList<Flow>( triggerNotificationsToSelf );
+    }
+
+    private List<Flow> triggeringRequestsToSelf() {
+        Set<Flow> triggerRequestsToSelf = new HashSet<Flow>();
+        for ( Commitment commitment : committingCommitments ) {
+            Flow flow = commitment.getSharing();
+            if ( flow.isAskedFor() && flow.isTriggeringToSource() && commitment.isToSelf() ) {
+                triggerRequestsToSelf.add( commitment.getSharing() );
+            }
+        }
+        return new ArrayList<Flow>( triggerRequestsToSelf );
+    }
 
 
     @XmlElement( name = "assignment" )
@@ -213,8 +233,6 @@ public class ProcedureData {
         ids.addAll( getAssignment().allMediumIds() );
         return ids;
     }
-
-
 
 
 }

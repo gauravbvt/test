@@ -60,7 +60,7 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     }
 
     @Override
-    @Transactional
+    @Transactional( readOnly = true)
     public Iterator<UserMessage> getReceivedMessages( String username, String planUri, int planVersion ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -72,7 +72,7 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     }
 
     @Override
-    @Transactional
+    @Transactional( readOnly = true)
     public Iterator<UserMessage> getSentMessages( String username, String planUri, int planVersion ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -84,7 +84,8 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     }
 
     @Override
-    public Iterator<UserMessage> listMessagesToEmail() {
+    @Transactional( readOnly = true)
+   public Iterator<UserMessage> listMessagesToEmail() {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "emailIt", true ) );
@@ -101,7 +102,7 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     }
 
     @Override
-    @Transactional
+    @Transactional( readOnly = true)
     public Date getWhenLastReceived( String username, String planUri , int planVersion) {
         Iterator<UserMessage> received = getReceivedMessages( username, planUri, planVersion );
         if ( received.hasNext() ) {

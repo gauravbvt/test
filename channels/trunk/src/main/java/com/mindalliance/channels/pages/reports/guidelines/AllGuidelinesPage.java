@@ -3,15 +3,9 @@
 
 package com.mindalliance.channels.pages.reports.guidelines;
 
-import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.command.LockManager;
-import com.mindalliance.channels.core.command.LockingException;
-import com.mindalliance.channels.core.command.commands.UpdateObject.Action;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
@@ -19,24 +13,19 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-/** A planner's table of contents to responders pages. */
+/**
+ * A planner's table of contents to responders pages.
+ */
 
 public class AllGuidelinesPage extends AbstractAllParticipantsPage {
 
     public AllGuidelinesPage() {
-        super( new PageParameters(  ) );
+        super( new PageParameters() );
     }
 
     public AllGuidelinesPage( PageParameters parameters ) {
@@ -44,188 +33,73 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
     }
 
     protected void initComponents( QueryService service, final Plan plan ) {
-        List<Plan> otherPlans = findOtherPlans( plan );
-        List<ChannelsUser> otherPlanners = findOtherPlanners( getUserDao(), plan );
+        boolean isPlanner = getUser().isPlanner( plan.getUri() );
         add(
-            new Label( "userName", user.getUsername() ),
-            new Label( "planName", plan.toString() ),
+                new Label( "userName", getUser().getUsername() ),
+                new Label( "planName", plan.toString() ),
+                new WebMarkupContainer( "note" ).setVisible( isPlanner ),
+                new WebMarkupContainer( "activeDiv" ).add(
+                        new Label( 
+                                "participationNote",
+                                isPlanner
+                                        ? "(Users who participate as agents in this plan and thus have guidelines)"
+                                        : "(Your participation in this plan)"
+                                ),
+                        new ListView<PlanParticipation>( "participatingUsers", getParticipations() ) {
+                            @Override
+                            protected void populateItem( ListItem<PlanParticipation> item ) {
+                                PageParameters parameters = new PageParameters();
+                                PlanParticipation p = item.getModelObject();
+                                parameters.set( PLAN, getUri() );
+                                parameters.set( VERSION, getVersion() );
+                                Actor actor = p.getActor( getQueryService() );
+                                parameters.set( "agent", actor.getId() );
+                                String participatingUsername = p.getParticipant().getUsername();
+                                parameters.set( "user", participatingUsername );
+                                ChannelsUser participatingUser = getUserDao().getUserNamed( participatingUsername );
+                                item.add(
+                                        new Label( "participantName", participatingUser.getFullName() )
+                                                .setRenderBodyOnly( true ),
+                                        new BookmarkablePageLink<GuidelinesPage>(
+                                                "participation", GuidelinesPage.class, parameters )
+                                                .add( new Label( "participationName", actor.toString() )
+                                                        .setRenderBodyOnly( true ) )
+                                );
 
-            new WebMarkupContainer( "activeDiv" ).add(
-                new ListView<Participation>( "activeResponders", getUsers() ) {
-                    @Override
-                    protected void populateItem( ListItem<Participation> item ) {
-                        PageParameters parameters = new PageParameters();
-                        Participation p = item.getModelObject();
-                        parameters.set( PLAN, getUri() );
-                        parameters.set( VERSION, getVersion() );
-                        Actor actor = p.getActor();
-                        parameters.set( "agent", actor.getId() );
-                        String userName = p.getUsername();
-                        parameters.set( "user", userName );
-                        ChannelsUser otherUser = getUserDao().getUserNamed( userName );
-                        item.add(
-                            new BookmarkablePageLink<GuidelinesPage>(
-                                "responder", GuidelinesPage.class, parameters )
-                                  .add( new Label( "responderName", otherUser.getFullName() )
-                                            .setRenderBodyOnly( true ) ),
-                            new ExternalLink( "userName", "mailTo:" + otherUser.getEmail(), userName ),
-                            new WebMarkupContainer( "detachItem" )
-                                .add( new Link<Participation>( "removeLink", item.getModel() ) {
+                                if ( item.getIndex() == getViewSize() - 1 )
+                                    item.add( new AttributeAppender( "class",
+                                            new Model<String>( "last" ), " " ) );
+                            }
+                        }
+                ).setVisible( !getParticipations().isEmpty() ),
+
+                new WebMarkupContainer( "agentsDiv" ).add(
+                        isPlanner() ?
+                                new ListView<Actor>( "agents", getActors() ) {
                                     @Override
-                                    public void onClick() {
-                                        Participation participation = getModelObject();
-                                        try {
-                                            Commander commander = getCommander( plan );
-                                            LockManager lockManager = commander.getLockManager();
-                                            lockManager.lock( user.getUsername(), plan.getId() );
-                                            assign( commander, participation, null, getUser() );
-                                            lockManager.release( user.getUsername(), plan.getId() );
-                                        } catch ( LockingException e ) {
-                                            LoggerFactory.getLogger( getClass() ).warn(
-                                                "Unable to get plan lock",
-                                                e );
-                                        }
-                                        getPage().detachModels();
-                                        setResponsePage( AllGuidelinesPage.class, getPage().getPageParameters() );
+                                    protected void populateItem( ListItem<Actor> item ) {
+                                        final Actor actor = item.getModelObject();
+                                        PageParameters parameters =
+                                                GuidelinesPage.createParameters( actor, getUri(), getVersion() );
+
+                                        item.add(
+                                                new BookmarkablePageLink<GuidelinesPage>(
+                                                        "agent", GuidelinesPage.class, parameters )
+                                                        .add( new Label( "agentName", actor.getNormalizedName() )
+                                                                .setRenderBodyOnly( true ) ),
+
+                                                new Label( "participationPlurality", actor.getParticipationPlurality() )
+                                        ).setOutputMarkupId( true );
+
+                                        if ( item.getIndex() == getViewSize() - 1 )
+                                            item.add( new AttributeAppender( "class",
+                                                    new Model<String>( "last" ), " " ) );
+
                                     }
-                                } )
-                                .setOutputMarkupId( true ),
-                            new Label( "profile", actor.toString() )
-                                            .setRenderBodyOnly( true )
-                        );
-
-                        if ( item.getIndex() == getViewSize() - 1 )
-                            item.add( new AttributeAppender( "class",
-                                                             new Model<String>( "last" ), " " ) );
-                    }
-                }
-            ).setVisible( !getUsers().isEmpty() ),
-
-            new WebMarkupContainer( "agentsDiv" ).add(
-                new ListView<Actor>( "agents", getActors() ) {
-                    @Override
-                    protected void populateItem( ListItem<Actor> item ) {
-                        final Actor actor = item.getModelObject();
-                        PageParameters parameters =
-                            GuidelinesPage.createParameters( actor, getUri(), getVersion() );
-
-                        item.add(
-                            new WebMarkupContainer( "assign" )
-                                .add( new ListView<ChannelsUser>( "addUser", getUnassigned() ) {
-                                    @Override
-                                    protected void populateItem( ListItem<ChannelsUser> tListItem ) {
-                                        ChannelsUser u = tListItem.getModelObject();
-                                        tListItem.add( new Link<ChannelsUser>( "addLink", tListItem.getModel() ) {
-                                            @Override
-                                            public void onClick() {
-                                                try {
-                                                    Commander cmdr = getCommander( plan );
-                                                    String username = getModelObject().getUsername();
-                                                    LockManager lockManager = cmdr.getLockManager();
-                                                    lockManager.lock( user.getUsername(), plan.getId() );
-                                                    assign( cmdr, findParticipation( cmdr, username, getUser() ), actor, getUser() );
-                                                    lockManager.release( user.getUsername(), plan.getId() );
-                                                } catch ( LockingException e ) {
-                                                    LoggerFactory.getLogger( getClass() ).warn( "Unable to get plan lock", e );
-                                                }
-                                                getPage().detachModels();
-                                                setResponsePage( AllGuidelinesPage.class,
-                                                                 getPage().getPageParameters() );
-                                            }
-                                        }.add( new Label( "userLink", u.getFullName() ) ) );
-                                    }
-                                } )
-                                .setVisible( !getUnassigned().isEmpty() ),
-
-                            new BookmarkablePageLink<GuidelinesPage>(
-                                "responder", GuidelinesPage.class, parameters )
-                                    .add( new Label( "responderName", actor.getNormalizedName() )
-                                              .setRenderBodyOnly( true ) ),
-
-                            new WebMarkupContainer( "many" )
-                                            .setVisible( !actor.isSingular() )
-                        ).setOutputMarkupId( true );
-
-                        if ( item.getIndex() == getViewSize() - 1 )
-                            item.add( new AttributeAppender( "class",
-                                                             new Model<String>( "last" ), " " ) );
-
-                    }
-                }
-            ).setVisible( !getActors().isEmpty() ),
-
-            new WebMarkupContainer( "plansDiv" ).add(
-                new ListView<Plan>( "otherPlans", otherPlans ) {
-                    @Override
-                    protected void populateItem( ListItem<Plan> item ) {
-                        PageParameters parameters = new PageParameters();
-                        Plan p = item.getModelObject();
-                        parameters.set( PLAN, p.getUri() );
-                        parameters.set( VERSION, p.getVersion() );
-
-                        item.add( new BookmarkablePageLink<GuidelinesPage>(
-                            "responderList", GuidelinesPage.class, parameters )
-                                      .add( new Label( "otherPlanName", p.toString() )
-                                                .setRenderBodyOnly( true ) ) );
-
-                        if ( item.getIndex() == getViewSize() - 1 )
-                            item.add( new AttributeAppender( "class",
-                                                             new Model<String>( "last" ), " " ) );
-                    }
-                }
-            ).setVisible( !otherPlans.isEmpty() ),
-
-            new WebMarkupContainer( "plannersDiv" ).add(
-                new ListView<ChannelsUser>( "otherPlanners", otherPlanners ) {
-                    @Override
-                    protected void populateItem( ListItem<ChannelsUser> item ) {
-                        ChannelsUser user = item.getModelObject();
-                        item.add(
-                            new ExternalLink( "planner", "mailTo:" + user.getEmail(),
-                                              user.getFullName() ) );
-                        if ( item.getIndex() == getViewSize() - 1 )
-                            item.add( new AttributeAppender( "class",
-                                                             new Model<String>( "last" ), " " ) );
-                    }
-                }
-            ).setVisible( !otherPlanners.isEmpty() )
-
+                                }
+                                : new Label( "agents", "" )
+        ).setVisible( !getActors().isEmpty() && isPlanner )
         );
     }
-
-    private static void assign( Commander commander, Participation participation, Actor actor, ChannelsUser currentUser ) {
-        participation.setActor( actor );
-        commander.doUnsafeCommand( new UpdatePlanObject( currentUser.getUsername(), participation,
-                                                   "actor",
-                                                   actor,
-                                                   Action.Set ) );
-
-    }
-
-
-
-    private List<Plan> findOtherPlans( Plan current ) {
-        Collection<Plan> allPlans = getPlanManager().getPlannablePlans( getUser() );
-        List<Plan> answer = new ArrayList<Plan>( allPlans.size());
-        for ( Plan other : allPlans )
-            if ( !current.equals( other ) )
-                answer.add( other );
-
-        return answer;
-    }
-
-    private List<ChannelsUser> findOtherPlanners(
-            ChannelsUserDao userDao, Plan plan ) {
-        String me = user.getUsername();
-
-        Collection<ChannelsUser> planners = userDao.getPlanners( plan.getUri() );
-        List<ChannelsUser> answer = new ArrayList<ChannelsUser>( planners.size());
-        for ( ChannelsUser u : planners )
-            if ( !me.equals( u.getUsername() ) )
-                answer.add( u );
-
-        return answer;
-    }
-
 
 }

@@ -82,10 +82,40 @@ public interface Channelable extends Identifiable {
     boolean isEntity();
 
     /**
+     * Whether the channelable is a model object (vs db-persistent object).
+     *
+     * @return a boolean
+     */
+    boolean isModelObject();
+
+    /**
      * Whether it has a channel for the given medium.
-     * @param medium a transmission medium
+     *
+     * @param medium     a transmission medium
      * @param planLocale a place
      * @return a boolean
      */
     boolean hasChannelFor( TransmissionMedium medium, Place planLocale );
+
+    /**
+     * Can this be locked by a user?
+     *
+     * @return a boolean
+     */
+    boolean canBeLocked();
+
+    /**
+     * Whether channels have addresses.
+     *
+     * @return a boolean
+     */
+    boolean hasAddresses();
+
+    /**
+     * Set the address of a channel.
+     *
+     * @param channel a channel
+     * @param address an address
+     */
+    void setAddress( Channel channel, String address );
 }

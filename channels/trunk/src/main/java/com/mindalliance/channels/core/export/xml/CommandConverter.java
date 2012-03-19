@@ -117,12 +117,12 @@ public class CommandConverter extends AbstractChannelsConverter {
                         Command subCommand = (Command) context.convertAnother( command, AbstractCommand.class );
                         multi.addCommand( subCommand );
                     } else {
-                        LOG.warn( "Unknown element " + multiNodeName );
+                        LOG.debug( "Unknown element " + multiNodeName );
                     }
                     reader.moveUp();
                 }
             } else {
-                LOG.warn( "Unknown element " + nodeName );
+                LOG.debug( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }

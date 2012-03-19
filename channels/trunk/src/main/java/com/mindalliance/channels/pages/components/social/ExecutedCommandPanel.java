@@ -43,8 +43,9 @@ public class ExecutedCommandPanel extends AbstractSocialEventPanel {
             String id,
             IModel<ExecutedCommand> executedCommandModel,
             int index,
+            boolean showProfile,
             Updatable updatable ) {
-        super( id, index, executedCommandModel, updatable );
+        super( id, index, executedCommandModel, showProfile, updatable );
         this.executedCommandModel = executedCommandModel;
         init();
     }

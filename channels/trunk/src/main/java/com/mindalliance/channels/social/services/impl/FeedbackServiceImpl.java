@@ -62,7 +62,7 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
 
     @Override
     @SuppressWarnings( "unchecked" )
-    @Transactional
+    @Transactional( readOnly = true)
     public List<Feedback> listNotYetNotifiedNormalFeedbacks( Plan plan ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -75,7 +75,7 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     }
 
     @Override
-    @Transactional
+    @Transactional( readOnly = true)
     @SuppressWarnings( "unchecked" )
     public List<Feedback> listNotYetNotifiedUrgentFeedbacks() {
         Session session = getSession();
@@ -97,7 +97,7 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     }
 
     @Override
-    @Transactional
+    @Transactional( readOnly = true)
     @SuppressWarnings( "unchecked" )
     public List<Feedback> selectInitialFeedbacks(
             Boolean urgentOnly,

@@ -92,7 +92,7 @@ public class AgreementConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "attachments" ) ) {
                 importAttachments( agreement, reader );
             } else {
-                LOG.warn( "Unknown element " + nodeName );
+                LOG.debug( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }

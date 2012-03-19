@@ -1,10 +1,12 @@
 package com.mindalliance.channels.pages.components.social;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.model.PresenceRecord;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
@@ -20,15 +22,13 @@ import java.util.Date;
  */
 public class UserPresencePanel extends AbstractSocialEventPanel {
 
-    private String presenceUserName;
-
     public UserPresencePanel(
             String id,
-            String presenceUserName,
+            IModel<ChannelsUserInfo> presenceUserInfo,
             int index,
+            boolean showProfile,
             Updatable updatable ) {
-        super( id, index, updatable );
-        this.presenceUserName = presenceUserName;
+        super( id, index, presenceUserInfo, showProfile, updatable );
         init();
     }
 
@@ -38,7 +38,7 @@ public class UserPresencePanel extends AbstractSocialEventPanel {
 
     @Override
     protected String getPersistentPlanObjectUsername() {
-        return presenceUserName;
+        return ( (ChannelsUserInfo) getPersistentPlanObject() ).getUsername();
     }
 
     @Override

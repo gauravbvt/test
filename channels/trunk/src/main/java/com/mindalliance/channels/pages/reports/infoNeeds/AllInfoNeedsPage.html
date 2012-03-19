@@ -4,7 +4,7 @@
       xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
       lang="en">
 <head>
-    <title>Channels - Info Needs - All Participants</title>
+    <title>Channels - Information Needs</title>
     <link rel="stylesheet" href="css/reports/responder/all-responders.css" type="text/css" title="Playbook">
 </head>
 <body>
@@ -13,43 +13,41 @@
 		<a href="home">
 			<img class="logo" src="images/logo_home.png" width="48" height="48" alt="Channels Logo" />
 		</a>
-      	<h1>Channels &ndash; <span wicket:id="planName">plan</span> &ndash; Info Needs &ndash; All Participants</h1>
+      	<h1>Channels &ndash; <span wicket:id="planName">plan</span> &ndash; Information Needs</h1>
 		<a class="logout" href="logout">Sign out <span wicket:id="userName">user</span></a>
     </div>
     <div id="contents">
-        <div id="note">
+        <div id="note" wicket:id="note">
             <span>As a planner, you can access the information need reports of all participants.</span>
         </div>
 
         <div wicket:id="activeDiv">
-			<h3>Active Users <span class="desc">(Users that can log in to view their information needs report)</span></h3>
+			<h3>Participation <span wicket:id="participationNote" class="desc">(Users who participate as agents in this plan and thus have information needs)</span></h3>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr wicket:id="activeResponders" class="tablecont">
-					<td class="users">
-	                    <a wicket:id="responder" class="responder">
-							<span wicket:id="responderName">a participant</span>
-						</a>
-						(<a wicket:id="userName">user name</a>) as
+				<tr wicket:id="participatingUsers" class="tablecont">
+                    <td class="users">
 						<span class="profile">
-							<span wicket:id="profile">agent</span>
+							<span wicket:id="participantName">John Does</span>
 						</span>
-					</td>
+                        participates as
+                        <a wicket:id="participation" class="responder">
+                            <span wicket:id="participationName">an agent name</span>
+                        </a>
+                    </td>
 				</tr>
 			</table>
 
         </div>
 
         <div wicket:id="agentsDiv">
-			<h3>Agents <span class="desc">(Persons defined in the plan that can yet be assigned to users)</span></h3>
+			<h3>Agents <span class="desc">(All agents users can participate as in this plan)</span></h3>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr wicket:id="agents" class="tablecont">
 					<td class="agents">
-	                	<a wicket:id="responder" class="responder">
-							<span wicket:id="responderName">a participant</span>
+	                	<a wicket:id="agent" class="responder">
+							<span wicket:id="agentName">a participant</span>
 						</a>
-                    	<span wicket:id="many">
-							(<span class="many">many</span>)
-						</span>
+                    	(<span wicket:id="participationPlurality" class="many">many</span>)
 					</td>
 				</tr>
 			</table>

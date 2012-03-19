@@ -26,11 +26,12 @@ abstract public class UserStatementPanel extends AbstractSocialEventPanel {
             String id,
             IModel<? extends UserStatement> userStatementModel,
             int index,
+            boolean showProfile,
             Updatable updatable ) {
-        super(
-                id,
+        super( id,
                 index,
                 userStatementModel,
+                showProfile,
                 updatable );
         this.userStatementModel = userStatementModel;
         init();

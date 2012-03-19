@@ -1,8 +1,8 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -20,13 +20,13 @@ import javax.xml.bind.annotation.XmlType;
         "failureImpact", "documentation"} )
 public class ResearchData extends AbstractProcedureElementData {
 
-    private Commitment requestToSelf;
+    private Flow requestToSelf;
 
     public ResearchData() {
         super();
     }
 
-    public ResearchData( Commitment requestToSelf, Assignment assignment, PlanService planService ) {
+    public ResearchData( Flow requestToSelf, Assignment assignment, PlanService planService ) {
         super( assignment, planService );
         this.requestToSelf = requestToSelf;
     }
@@ -43,12 +43,12 @@ public class ResearchData extends AbstractProcedureElementData {
 
     @XmlElement
     public TaskData getResearchTask() {
-        return new TaskData( requestToSelf.getCommitter(), getPlanService() );
+        return new TaskData( (Part)requestToSelf.getSource(), getPlanService() );
     }
 
     @XmlElement
     public TaskData getConsumingTask() {
-        return new TaskData( requestToSelf.getBeneficiary(), getPlanService() );
+        return new TaskData( (Part)requestToSelf.getTarget(), getPlanService() );
     }
 
 
@@ -67,11 +67,11 @@ public class ResearchData extends AbstractProcedureElementData {
 
     @XmlElement
     public DocumentationData getDocumentation() {
-        return new DocumentationData( requestToSelf.getSharing() );
+        return new DocumentationData( requestToSelf );
     }
 
     private Flow getSharing() {
-        return requestToSelf.getSharing();
+        return requestToSelf;
     }
 
 

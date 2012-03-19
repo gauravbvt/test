@@ -5,6 +5,8 @@
  */
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Channel;
@@ -12,7 +14,6 @@ import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.query.Assignments;
@@ -126,7 +127,6 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
                                                                 new Label( "channel", address ) ).add(
                                                         new AttributeModifier(
                                                                 "href",
-                                                                true,
                                                                 new Model<String>( "mailTo:" + address ) ) ) )
                                                 .setRenderBodyOnly( true )
                                                 .setVisible( isEmail ),
@@ -142,7 +142,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
     }
 
     //===============================
-    public static final class AggregatedContact implements Comparable<AggregatedContact>, Serializable {
+    public class AggregatedContact implements Comparable<AggregatedContact>, Serializable {
 
         public static final String N_A = "N/A";
         private final Actor actor;
@@ -150,7 +150,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
         private final List<Channel> channels = new ArrayList<Channel>();
         private final Set<Employment> employments = new HashSet<Employment>();
         private Organization organization;
-        private final Participation participation;
+        private PlanParticipation participation;
         private AggregatedContact supervisor;
 
         //-------------------------------
@@ -162,15 +162,23 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
             supervisor = this;
         }
 
-        public AggregatedContact( QueryService service, Assignment assignment, Assignments assignments ) {
-            this( service, assignment.getEmployment(), assignments );
+        public AggregatedContact( 
+                QueryService service, 
+                Assignment assignment, 
+                Assignments assignments,
+                PlanParticipation participation ) {
+            this( service, assignment.getEmployment(), assignments, participation );
         }
 
-        public AggregatedContact( QueryService service, Employment employment, Assignments assignments ) {
+        public AggregatedContact( 
+                QueryService service, 
+                Employment employment, 
+                Assignments assignments,
+                PlanParticipation participation ) {
+            this.participation = participation;
             actor = employment.getActor();
             organization = employment.getOrganization();
-            participation = findParticipation( service, actor, null );
-            actorName = participation != null ? service.getUserFullName( participation )
+            actorName = participation != null ? participation.getParticipant().getFullName()
                     : actor == null ? ""
                     : actor.getName();
 
@@ -179,26 +187,39 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
                 supervisor = new AggregatedContact();
             else {
                 List<Employment> supEmps = service.findAllEmploymentsForActor( sup );
-                supervisor = supEmps.isEmpty() ? new AggregatedContact()
-                        : new AggregatedContact( service, supEmps.get( 0 ), assignments );
+                if ( supEmps.isEmpty() ) {
+                    supervisor = new AggregatedContact(  );
+                } else {
+                    // TODO - WRONG: only one employment (could be an irrelevant one) of a supervisor used
+                    // and only one user participation as supervisor is used if many.
+                    Employment supervisorEmp = supEmps.get( 0 );
+                    List<PlanParticipation> supervisorParticipations =
+                            getPlanParticipationService().getParticipations(
+                                    getPlan(),
+                                    supervisorEmp.getActor(),
+                                    getQueryService() );
+                    supervisor = new AggregatedContact(
+                            service,
+                            supervisorEmp,
+                            assignments,
+                            supervisorParticipations.isEmpty()
+                                    ? null
+                                    : supervisorParticipations.get( 0 ) );
+                }
             }
 
             employments.add( employment );
         }
 
         public AggregatedContact( QueryService service, Actor actor, String username ) {
-            this( service, actor, findParticipation( service, actor, username ) );
-        }
-
-        public AggregatedContact( QueryService service, Actor actor, Participation participation ) {
-            this.participation = participation;
+            participation =  findParticipation( service, actor, username );
             this.actor = actor;
             for ( Employment employment : service.findAllEmploymentsForActor( actor ) ) {
                 employments.add( employment );
                 organization = employment.getOrganization();
             }
 
-            actorName = participation != null ? service.getUserFullName( participation )
+            actorName = participation != null ? participation.getParticipant().getFullName()
                     : actor == null ? ""
                     : actor.getName();
         }
@@ -228,19 +249,15 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
                     : actor.equals( other.getActor() );
         }
 
-        public static Participation findParticipation( QueryService service, Actor actor, String username ) {
-            List<Participation> list = service.list( Participation.class );
-            if ( username != null ) {
-                for ( Participation participation : list )
-                    if ( username.equals( participation.getUsername() ) )
-                        return participation;
-            }
-
-            for ( Participation participation : list )
-                if ( actor != null && actor.equals( participation.getActor() ) )
-                    return participation;
-
-            return null;
+        public PlanParticipation findParticipation( QueryService queryService, Actor actor, String username ) {
+            ChannelsUser user = getUserDao().getUserNamed( username );
+            if ( user == null )
+                return null;
+            else
+                return getPlanParticipationService().getParticipation(
+                        getPlan(),
+                        user.getUserInfo(),
+                        actor, queryService );
         }
 
         public String getAvailability() {
@@ -287,9 +304,8 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
             if ( channels.isEmpty() ) {
                 Set<Channel> set = new HashSet<Channel>();
                 for ( Employment employment : employments )
-                    set.addAll(
-                            participation == null ? service.findAllChannelsFor( new ResourceSpec( employment ) )
-                                    : participation.getEffectiveChannels() );
+                    set.addAll(  // TODO - merge user-specific channels
+                            service.findAllChannelsFor( new ResourceSpec( employment ) ) );
 
                 channels.addAll( set );
                 Collections.sort( channels );
@@ -312,7 +328,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
             return organization;
         }
 
-        public Participation getParticipation() {
+        public PlanParticipation getParticipation() {
             return participation;
         }
 

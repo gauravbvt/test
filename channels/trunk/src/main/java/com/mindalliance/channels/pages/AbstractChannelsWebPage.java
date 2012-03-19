@@ -13,10 +13,11 @@ import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
@@ -101,6 +102,10 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     @SpringBean
     private ChannelsUserDao userDao;
 
+    @SpringBean
+    private PlanParticipationService planParticipationService;
+
+
     //-------------------------------
     public AbstractChannelsWebPage() {
     }
@@ -153,50 +158,80 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         return commanderFactory.getCommander( getPlan() );
     }
 
-    public static BookmarkablePageLink<? extends WebPage> getGuidelinesLink(
-            String id, QueryService queryService, Plan plan, ChannelsUser user, boolean samePage ) {
+    public PlanParticipationService getPlanParticipationService() {
+        return planParticipationService;
+    }
 
-        Actor actor = findActor( queryService, user.getUsername() );
+    protected List<PlanParticipation> getPlanParticipations( Plan plan, ChannelsUser user ) {
+        return planParticipationService.getParticipations(
+                plan,
+                user.getUserInfo(),
+                getQueryService() );
+    }
+
+    protected BookmarkablePageLink<? extends WebPage> getGuidelinesLink(
+            String id, QueryService queryService, Plan plan, ChannelsUser user, boolean samePage ) {
+        List<PlanParticipation> planParticipations = getPlanParticipations( plan, user );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
-        BookmarkablePageLink<? extends WebPage> guidelinesLink = newTargetedLink( id,
-                "",
-                planner ? AllGuidelinesPage.class : GuidelinesPage.class,
-                /**
-                 * getUser().isPlanner( plan.getUri() ) ? new ResourceSpec()
-                 : getProfile( service, getUser() ),
-                 */
-                AbstractParticipantPage.createParameters(
-                        planner ? new ResourceSpec() : actor,
-                        uri,
-                        plan.getVersion() ),
-                null,
-                plan );
+        BookmarkablePageLink<? extends WebPage> guidelinesLink;
+        if ( planner || planParticipations.size() != 1 ) {
+            guidelinesLink = newTargetedLink(
+                    id,
+                    "",
+                    AllGuidelinesPage.class,
+                    AbstractParticipantPage.createParameters(
+                            new ResourceSpec(),
+                            uri,
+                            plan.getVersion() ) ,
+                            null,
+                            plan );
+        } else {
+            Actor actor = planParticipations.get( 0 ).getActor( queryService );
+            guidelinesLink = newTargetedLink( id,
+                    "",
+                    GuidelinesPage.class,
+                    AbstractParticipantPage.createParameters(
+                            actor,
+                            uri,
+                            plan.getVersion() ),
+                    null,
+                    plan );
+        }
         if ( !samePage )
             guidelinesLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return guidelinesLink;
     }
 
-    private static Actor findActor( QueryService queryService, String userName ) {
-        Participation participation = queryService.findParticipation( userName );
-        return participation != null && participation.getActor() != null ? participation.getActor() : null;
-    }
-    //---------------- getGuidelinesLink
-
-    public static BookmarkablePageLink<? extends WebPage> getInfoNeedsLink(
+    public BookmarkablePageLink<? extends WebPage> getInfoNeedsLink(
             String id, QueryService queryService, Plan plan, ChannelsUser user, boolean samePage ) {
-        Actor actor = findActor( queryService, user.getUsername() );
+        List<PlanParticipation> planParticipations = getPlanParticipations( plan, user );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
-        BookmarkablePageLink<? extends WebPage> infoNeedsLink = newTargetedLink( id,
-                "",
-                planner ? AllInfoNeedsPage.class : InfoNeedsPage.class,
-                AbstractParticipantPage.createParameters(
-                        planner ? new ResourceSpec() : actor,
-                        uri,
-                        plan.getVersion() ),
-                null,
-                plan );
+        BookmarkablePageLink<? extends WebPage> infoNeedsLink;
+        if ( planner || planParticipations.size() != 1 ) {
+            infoNeedsLink = newTargetedLink(
+                    id,
+                    "",
+                    AllInfoNeedsPage.class,
+                    AbstractParticipantPage.createParameters(
+                            new ResourceSpec(),
+                            uri,
+                            plan.getVersion() ) ,
+                    null,
+                    plan );
+        } else {
+            Actor actor = planParticipations.get( 0 ).getActor( queryService );
+            infoNeedsLink = newTargetedLink( id,
+                    "",
+                    InfoNeedsPage.class,
+                    AbstractParticipantPage.createParameters(
+                            actor,
+                            uri,
+                            plan.getVersion() ),
+                    null,
+                    plan );
+        }
         if ( !samePage )
             infoNeedsLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return infoNeedsLink;
@@ -259,16 +294,6 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
         } catch ( StringValueConversionException ignored ) {
             throw new NotFoundException();
         }
-    }
-
-    //-----------------------------------
-    public static ResourceSpec getProfile( QueryService service, ChannelsUser user ) throws NotFoundException {
-
-        Participation participation = service.findParticipation( user.getUsername() );
-        if ( participation == null || participation.getActor() == null )
-            throw new NotFoundException();
-
-        return new ResourceSpec( participation.getActor(), null, null, null );
     }
 
     protected String getSupportCommunity() {

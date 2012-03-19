@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.social;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.services.PresenceRecordService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -11,6 +12,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.Collator;
@@ -36,14 +38,16 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
     private PresenceRecordService presenceRecordService;
 
     private Updatable updatable;
+    private boolean showProfile;
     private WebMarkupContainer presencesContainer;
     private boolean showHereOnly = true;
     private AjaxFallbackLink showHideLink;
     private Label showHideLabel;
 
-    public UserPresenceListPanel( String id, Updatable updatable, boolean collapsible ) {
+    public UserPresenceListPanel( String id, Updatable updatable, boolean collapsible, boolean showProfile ) {
         super( id, collapsible );
         this.updatable = updatable;
+        this.showProfile = showProfile;
         init();
     }
 
@@ -86,8 +90,9 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
                 ChannelsUser planner = item.getModelObject();
                 UserPresencePanel presencePanel = new UserPresencePanel(
                         "presence",
-                        planner.getUsername(),
+                        new Model<ChannelsUserInfo>( planner.getUserInfo() ),
                         item.getIndex(),
+                        showProfile,
                         updatable );
                 item.add( presencePanel );
             }

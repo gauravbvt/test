@@ -1,8 +1,8 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.EventPhase;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.jws.WebMethod;
@@ -22,13 +22,13 @@ import java.util.Set;
 @XmlType( propOrder={"situation", "anytime", "onDiscovery", "onResearch", "onNotification", "onRequest"} )
 public class TriggerData extends AbstractProcedureElementData {
 
-    private Commitment notification;
-    private Commitment request;
+    private Flow notificationFromOther;
+    private Flow requestFromOther;
     private EventPhase eventPhase;
-    private Commitment notificationToSelf;
+    private Flow notificationToSelf;
     private NotificationData onNotification;
     private RequestData onRequest;
-    private Commitment requestToSelf;
+    private Flow requestToSelf;
 
     public TriggerData() {
         // required
@@ -38,29 +38,29 @@ public class TriggerData extends AbstractProcedureElementData {
         super( assignment, planService );
     }
 
-    public void setNotification( Commitment notification ) {
-        this.notification = notification;
+    public void setNotificationFromOther( Flow notificationFromOther ) {
+        this.notificationFromOther = notificationFromOther;
     }
 
-    public void setRequest( Commitment request ) {
-        this.request = request;
+    public void setRequestFromOther( Flow requestFromOther ) {
+        this.requestFromOther = requestFromOther;
     }
 
     public void setEventPhase( EventPhase eventPhase ) {
         this.eventPhase = eventPhase;
     }
 
-    public void setNotificationToSelf( Commitment notificationToSelf ) {
+    public void setNotificationToSelf( Flow notificationToSelf ) {
         this.notificationToSelf = notificationToSelf;
     }
 
-    public void setRequestToSelf( Commitment requestToSelf ) {
+    public void setRequestToSelf( Flow requestToSelf ) {
         this.requestToSelf = requestToSelf;
     }
 
     @XmlElement
     public String getAnytime() {
-        return notification == null && request == null && eventPhase == null
+        return notificationFromOther == null && requestFromOther == null && eventPhase == null
                 ? "true"
                 : null;
     }
@@ -86,8 +86,8 @@ public class TriggerData extends AbstractProcedureElementData {
     @XmlElement
     public NotificationData getOnNotification() {
         if ( onNotification == null ) {
-            if ( notification != null && !notification.isToSelf() )
-                onNotification = new NotificationData( notification, true, getAssignment(), getPlanService() );
+            if ( notificationFromOther != null && !notificationFromOther.isToSelf() )
+                onNotification = new NotificationData( notificationFromOther, true, getAssignment(), getPlanService() );
             else
                 onNotification = null;
         }
@@ -97,8 +97,8 @@ public class TriggerData extends AbstractProcedureElementData {
     @XmlElement
     public RequestData getOnRequest() {
         if ( onRequest == null ) {
-            if ( request != null )
-                onRequest = new RequestData( request, true, getAssignment(), getPlanService() );
+            if ( requestFromOther != null )
+                onRequest = new RequestData( requestFromOther, true, getAssignment(), getPlanService() );
             else
                 onRequest = null;
         }
@@ -116,8 +116,8 @@ public class TriggerData extends AbstractProcedureElementData {
 
      private boolean isSituationKnown() {
          return eventPhase != null
-                 || notification != null && notification.getSharing().isReferencesEventPhase()
-                 || request != null && request.getSharing().isReferencesEventPhase();
+                 || notificationFromOther != null && notificationFromOther.isReferencesEventPhase()
+                 || requestFromOther != null && requestFromOther.isReferencesEventPhase();
      }
 
     @WebMethod( exclude = true )

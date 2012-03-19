@@ -21,7 +21,7 @@ import java.util.List;
 @Entity
 public class AnswerSet extends AbstractPersistentPlanObject {
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.ALL )
     private Question question;
 
     @ManyToOne( cascade = CascadeType.ALL )

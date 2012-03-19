@@ -54,12 +54,14 @@ public class SurveyListPanel extends AbstractSocialListPanel {
     private Date whenLastRefreshed;
     private boolean showCompleted = true;
     private final Updatable updatable;
+    private boolean showProfile;
     private String noReminderMessage;
     private List<SurveyResponse> surveyResponses;
 
-    public SurveyListPanel( String id, Updatable updatable, boolean collapsible ) {
+    public SurveyListPanel( String id, Updatable updatable, boolean collapsible, boolean showProfile ) {
         super( id, collapsible );
         this.updatable = updatable;
+        this.showProfile = showProfile;
         init();
     }
 
@@ -140,6 +142,7 @@ public class SurveyListPanel extends AbstractSocialListPanel {
                         "surveyReminder",
                         new Model<SurveyResponse>( surveyReminder ),
                         item.getIndex(),
+                        showProfile,
                         updatable );
                 item.add( plannerMessagePanel );
             }

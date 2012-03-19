@@ -4,6 +4,7 @@ package com.mindalliance.channels.pages.reports.guidelines;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Connector;
@@ -64,14 +65,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage.GuidelinesReportTask.Type.IMMEDIATE;
-import static com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage.GuidelinesReportTask.Type.PROMPTED;
-import static com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage.GuidelinesReportTask.Type.SUBTASK;
 
 /**
  * The participant report.  This page is different for every user.
  */
 public class GuidelinesPage extends AbstractParticipantPage {
+
+    public enum TaskType {IMMEDIATE, PROMPTED, SUBTASK}
 
     private static final Logger LOG = LoggerFactory.getLogger( GuidelinesPage.class );
 
@@ -223,7 +223,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
         };
     }
 
-    private static Component newDetailsDiv( GuidelinesReportTask task ) {
+    private Component newDetailsDiv( GuidelinesReportTask task ) {
 
         // TODO hide details when empty
         List<Goal> risks = task.getRisks();
@@ -319,7 +319,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
     }
 
     //-----------------------------------
-    private static Component newSimpleEoiList( List<ElementOfInformation> eois ) {
+    private Component newSimpleEoiList( List<ElementOfInformation> eois ) {
         return new WebMarkupContainer( "eois" )
                 .add( newEoiList( eois ) )
                 .setVisible( !eois.isEmpty() );
@@ -340,10 +340,10 @@ public class GuidelinesPage extends AbstractParticipantPage {
 
                 if ( item.getIndex() == 0 )
                     item.add(
-                            new AttributeAppender( "class", true, new Model<String>( "first" ), " " ) );
+                            new AttributeAppender( "class", new Model<String>( "first" ), " " ) );
                 if ( item.getIndex() == getViewSize() - 1 )
                     item.add(
-                            new AttributeAppender( "class", true, new Model<String>( "last" ), " " ) );
+                            new AttributeAppender( "class", new Model<String>( "last" ), " " ) );
             }
         };
     }
@@ -431,7 +431,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
     }
 
 
-    private static List<GuidelinesReportSegment> getSegments( QueryService planService, Specable myProfile ) {
+    private List<GuidelinesReportSegment> getSegments( QueryService planService, Specable myProfile ) {
 
         List<GuidelinesReportSegment> result = new ArrayList<GuidelinesReportSegment>();
 
@@ -489,15 +489,15 @@ public class GuidelinesPage extends AbstractParticipantPage {
     }
 
     //-----------------------------------
-    private static Component newTaskLink( GuidelinesReportTask task ) {
+    private Component newTaskLink( GuidelinesReportTask task ) {
 
         return new WebMarkupContainer( "link" )
                 .add( new Label( "linkValue", task.getLabel() ) )
-                .add( new AttributeModifier( "href", true, task.getLink() ) );
+                .add( new AttributeModifier( "href", task.getLink() ) );
     }
 
     //-----------------------------------
-    private static Component newDocSection( final List<Attachment> attachments ) {
+    private Component newDocSection( final List<Attachment> attachments ) {
 
         return new WebMarkupContainer( "documents" )
                 .add( new ListView<Attachment>( "document", attachments ) {
@@ -513,7 +513,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
     }
 
     //-----------------------------------
-    private static ListView<GuidelinesReportTask> newTaskLinks( final List<GuidelinesReportTask> routines ) {
+    private ListView<GuidelinesReportTask> newTaskLinks( final List<GuidelinesReportTask> routines ) {
 
         return new ListView<GuidelinesReportTask>( "links", routines ) {
             @Override
@@ -527,7 +527,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
 
 
     //================================================
-    public static class ContactSpec implements Serializable, Comparable<ContactSpec> {
+    public class ContactSpec implements Serializable, Comparable<ContactSpec> {
 
         private static final int TOO_MANY = 2;
         private final ResourceSpec spec;
@@ -672,12 +672,24 @@ public class GuidelinesPage extends AbstractParticipantPage {
         }
 
         private void addContact(
-                QueryService service, Assignment beneficiary, Assignments assignments ) {
-            Employment employment = beneficiary.getEmployment();
+                QueryService service, Assignment assignment, Assignments assignments ) {
+            Employment employment = assignment.getEmployment();
             if ( !contactIndex.containsKey( employment ) ) {
-                AggregatedContact e = new AggregatedContact( service, beneficiary, assignments );
-                contacts.add( e );
-                contactIndex.put( employment, e );
+                List<PlanParticipation> participations =
+                        getPlanParticipationService().getParticipations(
+                                getPlan(),
+                                employment.getActor(),
+                                service );
+                for ( PlanParticipation participation : participations ) {
+                    AggregatedContact e = new AggregatedContact( service, assignment, assignments, participation );
+                    contacts.add( e );
+                    contactIndex.put( employment, e );  
+                }
+                if ( participations.isEmpty() ) {
+                    AggregatedContact e = new AggregatedContact( service, assignment, assignments, null );
+                    contacts.add( e );
+                    contactIndex.put( employment, e );
+                }
             }
         }
 
@@ -691,7 +703,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
     }
 
     //================================================
-    private static class GuidelinesReportSegment extends ReportSegment {
+    private class GuidelinesReportSegment extends ReportSegment {
 
         private final List<GuidelinesReportTask> tasks = new ArrayList<GuidelinesReportTask>();
         private final List<GuidelinesReportTask> immediates = new ArrayList<GuidelinesReportTask>();
@@ -711,16 +723,16 @@ public class GuidelinesPage extends AbstractParticipantPage {
                 tasks.add( reportTask );
                 if ( Assignments.isImmediate( assignment.getPart(), planService ) ) {
                     immediates.add( reportTask );
-                    reportTask.setType( IMMEDIATE );
+                    reportTask.setType( TaskType.IMMEDIATE );
                 } else {
                     prompted.add( reportTask );
-                    reportTask.setType( PROMPTED );
+                    reportTask.setType( TaskType.PROMPTED );
                 }
 
                 for ( GuidelinesReportTask task : reportTask.getAllSubtasks() ) {
                     subtasks.add( task );
                     tasks.add( task );
-                    task.setType( SUBTASK );
+                    task.setType( TaskType.SUBTASK );
                 }
             }
 
@@ -801,9 +813,9 @@ public class GuidelinesPage extends AbstractParticipantPage {
     /**
      * Some report-specific extra information for an assignment.
      */
-    public static class GuidelinesReportTask extends ReportTask {
+    public class GuidelinesReportTask extends ReportTask {
 
-        private Type type;
+        private TaskType type;
         private final Assignment assignment;
         private final List<GuidelinesReportTask> subtasks = new ArrayList<GuidelinesReportTask>();
         private Commitments commitmentsOf;
@@ -950,16 +962,16 @@ public class GuidelinesPage extends AbstractParticipantPage {
             return aggregate( result, true );
         }
 
-        public void setType( Type type ) {
+        public void setType( TaskType type ) {
             this.type = type;
         }
 
         private boolean isSubtask() {
-            return type == SUBTASK;
+            return type == TaskType.SUBTASK;
         }
 
         private boolean isImmediate() {
-            return type == IMMEDIATE;
+            return type == TaskType.IMMEDIATE;
         }
 
         private List<Goal> getGains() {
@@ -1082,11 +1094,10 @@ public class GuidelinesPage extends AbstractParticipantPage {
              return specs;
          }
 
-        public enum Type {IMMEDIATE, PROMPTED, SUBTASK}
     }
 
     //================================================
-    public static class AggregatedFlow implements Serializable {
+    public class AggregatedFlow implements Serializable {
 
         private final String label;
         private final Set<ContactSpec> specs = new HashSet<ContactSpec>();

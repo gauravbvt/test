@@ -221,7 +221,7 @@ public class RequirementConverter extends AbstractChannelsConverter {
             } else if ( "issue".equals( nodeName ) ) {
                 context.convertAnother( requirement, UserIssue.class );
             } else {
-                LOG.warn( "Unexpected element: " + nodeName );
+                LOG.debug( "Unknown element: " + nodeName );
             }
             reader.moveUp();
         }

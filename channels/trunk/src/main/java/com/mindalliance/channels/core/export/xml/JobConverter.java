@@ -128,7 +128,7 @@ public class JobConverter extends AbstractChannelsConverter {
                         idMap );
                 job.setSupervisor( supervisor );
             } else {
-                LOG.warn( "Unknown element " + nodeName );
+                LOG.debug( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }

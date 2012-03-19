@@ -78,6 +78,11 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
     }
 
     @Override
+    public boolean isModelObject() {
+        return true;
+    }
+
+    @Override
     public boolean hasChannelFor( final TransmissionMedium medium, final Place planLocale ) {
         return CollectionUtils.exists(
                 getEffectiveChannels(),
@@ -88,6 +93,21 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
                     }
                 }
                 );
+    }
+
+    @Override
+    public boolean canBeLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean hasAddresses() {
+        return true;
+    }
+
+    @Override
+    public void setAddress( Channel channel, String address ) {
+        channel.setAddress( address );
     }
 
     @Override

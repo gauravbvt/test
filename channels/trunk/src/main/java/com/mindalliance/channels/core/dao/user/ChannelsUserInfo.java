@@ -3,14 +3,16 @@ package com.mindalliance.channels.core.dao.user;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import org.hibernate.search.annotations.Indexed;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,7 +27,6 @@ import java.util.StringTokenizer;
  * Time: 2:19 PM
  */
 @Entity
-@Indexed
 @Table( uniqueConstraints = @UniqueConstraint( columnNames = {"EMAIL", "USERNAME"} ) )
 public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
@@ -44,29 +45,48 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
      */
     public static final String ROLE_USER = "ROLE_USER";
 
-    /** The email. */
+    /**
+     * The email.
+     */
     private String email = "";
 
-    /** The password. */
+    /**
+     * The password.
+     */
     private String password;
 
-    /** The fullName. */
+    /**
+     * The fullName.
+     */
     private String fullName = "";
 
-    /** The user's access (ROLE_USER|ROLE_PLANNER|ROLE_ADMIN), indexed by plan uri. */
+    /**
+     * The user's access (ROLE_USER|ROLE_PLANNER|ROLE_ADMIN), indexed by plan uri.
+     */
     @Transient
-    private Map<String,String> planAccess = new HashMap<String, String>();
+    private Map<String, String> planAccess = new HashMap<String, String>();
     /**
      * Plan accesses as string.
      */
     private String planAccesses;
 
-    /** The user's global access role (ROLE_USER|ROLE_PLANNER|ROLE_ADMIN|null). */
+    /**
+     * The user's global access role (ROLE_USER|ROLE_PLANNER|ROLE_ADMIN|null).
+     */
     private String globalAccess;
+
+    @OneToMany( mappedBy = "participant", cascade = CascadeType.ALL )
+    @Transient
+    private List<PlanParticipation> planParticipations;
+
+    @OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
+    @Transient
+    private List<UserContactInfo> contactInfoList = new ArrayList<UserContactInfo>();
 
     //---------------------------------
 
-    public ChannelsUserInfo() {}
+    public ChannelsUserInfo() {
+    }
 
     public ChannelsUserInfo( String username, String values ) {
         super( username );
@@ -161,17 +181,35 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     /**
      * Set the password.
+     *
      * @param password unencrypted.
      */
     public void setPassword( String password ) {
         if ( password != null
-                && !password.trim().isEmpty() )  {
+                && !password.trim().isEmpty() ) {
             this.password = digestPassword( password.trim() );
         }
     }
 
+    public List<PlanParticipation> getPlanParticipations() {
+        return planParticipations;
+    }
+
+    public void setPlanParticipations( List<PlanParticipation> planParticipations ) {
+        this.planParticipations = planParticipations;
+    }
+
+    public List<UserContactInfo> getContactInfoList() {
+        return contactInfoList;
+    }
+
+    public void setContactInfoList( List<UserContactInfo> contactInfoList ) {
+        this.contactInfoList = contactInfoList;
+    }
+
     /**
      * Test if this user is a user of all plans.
+     *
      * @return true if so
      */
     public boolean isUser() {
@@ -180,6 +218,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     /**
      * Test if this user is a planner for all plans.
+     *
      * @return true if so
      */
     public boolean isPlanner() {
@@ -192,6 +231,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     /**
      * Test if this user can access the given plan uri.
+     *
      * @param uri the plan uri
      * @return true if user is authorized for that plan
      */
@@ -202,6 +242,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     /**
      * Test if this user can plan the given plan uri.
+     *
      * @param uri the plan uri
      * @return true if user is a planner for that plan
      */
@@ -213,6 +254,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     /**
      * Test if a user has any access.
+     *
      * @return true if the user is authorized for at least a plan
      */
     public boolean isEnabled() {
@@ -221,6 +263,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     /**
      * Returns a string representation of the object.
+     *
      * @return a string representation of the object.
      */
     @Override
@@ -253,12 +296,13 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
             buffer.append( ']' );
         }
         return buffer.toString();
-   }
+    }
 
     /**
      * Give a role to this user for all plans.
+     *
      * @param role either ROLE_ADMIN, ROLE_PLANNER, ROLE_USER or null.
-     * Setting to null removes all authorities.
+     *             Setting to null removes all authorities.
      */
     private void grantGlobalAccess( String role ) {
         globalAccess = null;
@@ -278,11 +322,11 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     /**
      * Grant proper authorities to a plan.
-     * @see com.mindalliance.channels.core.dao.PlanManagerImpl#setAuthorities
      *
-     * @param role either ROLE_ADMIN, ROLE_PLANNER, ROLE_USER or null for none
-     * @param uri the plan's uri or null for all
+     * @param role     either ROLE_ADMIN, ROLE_PLANNER, ROLE_USER or null for none
+     * @param uri      the plan's uri or null for all
      * @param planList available plans
+     * @see com.mindalliance.channels.core.dao.PlanManagerImpl#setAuthorities
      */
     public void setAuthorities( String role, String uri, List<Plan> planList ) {
         if ( uri == null || ROLE_ADMIN.equals( role ) )
@@ -313,6 +357,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     /**
      * Remove any specific access to a plan.
+     *
      * @param uri the plan uri
      */
     public void clearAuthority( String uri ) {
@@ -339,5 +384,11 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
                 null );
     }
 
+    public void addContactInfo( UserContactInfo contactInfo ) {
+        contactInfoList.add( contactInfo );
+    }
 
+    public void removeContactInfo( UserContactInfo contactInfo ) {
+        contactInfoList.remove( contactInfo );
+    }
 }

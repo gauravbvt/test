@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.EventPhase;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -18,7 +18,7 @@ public class DiscoveryData {
 
     private EventPhase eventPhase;
     private PlanService planService;
-    private Commitment notificationToSelf;
+    private Flow notificationToSelf;
 
     public DiscoveryData() {
         // required
@@ -29,7 +29,7 @@ public class DiscoveryData {
         this.planService = planService;
     }
 
-    public DiscoveryData( Commitment notificationToSelf, PlanService planService ) {
+    public DiscoveryData( Flow notificationToSelf, PlanService planService ) {
         this.notificationToSelf = notificationToSelf;
         this.planService = planService;
     }

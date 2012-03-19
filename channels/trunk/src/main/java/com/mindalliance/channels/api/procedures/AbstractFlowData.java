@@ -1,9 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
-import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.TransmissionMedium;
@@ -23,7 +21,7 @@ import java.util.Set;
  */
 public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
-    private Commitment commitment;
+    private Flow sharing;
     private List<EmploymentData> employments;
 
     public AbstractFlowData() {
@@ -31,15 +29,15 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     public AbstractFlowData(
-            Commitment commitment,
+            Flow sharing,
             Assignment assignment,
             PlanService planService ) {
         super( assignment, planService );
-        this.commitment = commitment;
+        this.sharing = sharing;
     }
 
     protected Flow getSharing() {
-        return commitment.getSharing();
+        return sharing;
     }
 
     public boolean getReceiptConfirmationRequested() {
@@ -130,13 +128,15 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return ids;
     }
 
-    public List<AgreementData> getAgreements() {
+
+/*    public List<AgreementData> getAgreements() {
         List<AgreementData> agreements = new ArrayList<AgreementData>(  );
-        for ( Agreement agreement : getPlanService().findAllConfirmedAgreementsCovering( commitment ) ) {
+        for ( Agreement agreement : getPlanService().findAllConfirmedAgreementsCovering( sharing ) ) {
             agreements.add( new AgreementData( agreement ) );
         }
         return agreements;
-    }
+    }*/
+
 
     public DocumentationData getDocumentation() {
         return new DocumentationData( getSharing() );

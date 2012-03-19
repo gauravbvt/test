@@ -2,10 +2,13 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -24,6 +27,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -40,9 +44,12 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     @SpringBean
     private ImagingService imagingService;
-    
+
     @SpringBean
     private ChannelsUserDao userDao;
+    
+    @SpringBean
+    private PlanParticipationService planParticipationService;
 
     private PresenceRecord latestPresenceRecord = null;
 
@@ -51,19 +58,22 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     private Updatable updatable;
 
     private Label nameLabel;
+    private boolean showProfile;
 
-    public AbstractSocialEventPanel( String id, int index, Updatable updatable ) {
-        this( id, index, null, updatable );
+    public AbstractSocialEventPanel( String id, int index, boolean showProfile, Updatable updatable ) {
+        this( id, index, null, showProfile, updatable );
     }
 
     public AbstractSocialEventPanel(
             String id,
             int index,
             IModel<? extends PersistentPlanObject> poModel,
+            boolean showProfile,
             Updatable updatable ) {
         super( id );
         this.index = index;
         this.poModel = poModel;
+        this.showProfile = showProfile;
         this.updatable = updatable;
     }
 
@@ -111,9 +121,10 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     private void addMoreMenu( WebMarkupContainer socialItemContainer ) {
         SocialItemMenuPanel menu = new SocialItemMenuPanel(
                 "menu",
-                new PropertyModel<Participation>( this, "participation" ),
+                new PropertyModel<ChannelsUserInfo>( this, "userInfo" ),
                 getUsername(),
                 poModel,
+                showProfile,
                 updatable );
         menu.setVisible( !menu.isEmpty() && isPlanner() );
         socialItemContainer.add( menu );
@@ -185,62 +196,57 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
     public String getJobTitles() {
-        String jobTitles = "";
-        Participation participation = getParticipation();
-        if ( participation != null ) {
-            Actor actor = participation.getActor();
+        StringBuilder sb = new StringBuilder(  );
+        QueryService queryService = getQueryService();
+        List<PlanParticipation> participations = planParticipationService.getParticipations(
+                getPlan(),
+                getUserInfo(),
+                queryService
+        );
+        for ( PlanParticipation participation : participations ) {
+            Actor actor = participation.getActor( queryService );
             if ( actor != null ) {
-                Iterator<Employment> employments = getQueryService().findAllEmploymentsForActor( actor ).iterator();
-                StringBuilder sb = new StringBuilder();
-                Set<String> titleSet = new HashSet<String>();
-                while ( employments.hasNext() ) {
-                    Employment employment = employments.next();
-                    String title = employment.getJob().getTitle();
-                    if ( !titleSet.contains( title ) ) {
-                        titleSet.add( title );
-                        if ( sb.length() > 0 ) sb.append( ", " );
-                        sb.append( ( title == null || title.isEmpty() ) ? "working" : title );
-                        sb.append( " at " );
-                        sb.append( employment.getOrganization().getName() );
-                    }
-                }
-                jobTitles = sb.toString();
+                String s = getActorJobTitles( actor );
+                sb.append( s );
+                if ( !s.isEmpty() ) sb.append( ". " );
             }
         }
-        return jobTitles.isEmpty()
-                ? ""
-                : jobTitles;
+        return sb.toString();
+    }
+    
+    public String getActorJobTitles( Actor actor ) {
+        Iterator<Employment> employments = getQueryService().findAllEmploymentsForActor( actor ).iterator();
+        StringBuilder sb = new StringBuilder();
+        Set<String> titleSet = new HashSet<String>();
+        while ( employments.hasNext() ) {
+            Employment employment = employments.next();
+            String title = employment.getJob().getTitle();
+            if ( !titleSet.contains( title ) ) {
+                titleSet.add( title );
+                if ( sb.length() > 0 ) sb.append( ", " );
+                sb.append( ( title == null || title.isEmpty() ) ? "working" : title );
+                sb.append( " at " );
+                sb.append( employment.getOrganization().getName() );
+            }
+        }
+        return sb.toString();
     }
 
-/*
-    public String getPhotoUrl() {
-        String url = null;
-        Participation participation = getParticipation();
-        if ( participation != null ) {
-            Actor actor = participation.getActor();
-            if ( actor != null )
-                url = actor.getImageUrl();
-        }
-        if ( url == null ) {
-            url = "images/actor.user.png";
-        }
-        return url;
-    }
-*/
 
     public String getPhotoUrl() {
         String url = null;
-        Participation participation = getParticipation();
-        if ( participation != null ) {
-            Actor actor = participation.getActor();
+        ChannelsUserInfo userInfo = getUserInfo();
+        if ( userInfo != null ) {
+            Actor actor = findActor( userInfo );
             if ( actor != null )
                 url = imagingService.getSquareIconUrl( getPlan(), actor );
         }
         return url == null ? "images/actor.user.png" : url;
     }
 
-    public Participation getParticipation() {
-        return getQueryService().findParticipation( getUsername() );
+    public ChannelsUserInfo getUserInfo() {
+        ChannelsUser user = userDao.getUserNamed( getPersistentPlanObject().getUsername() );
+        return user == null ? null : user.getUserInfo();
     }
 
     public PresenceRecordService getPresenceRecordService() {
@@ -251,7 +257,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         return nameLabel;
     }
 
-    public boolean isPresent( String username  ) {
+    public boolean isPresent( String username ) {
         PresenceRecord presenceRecord = getLatestPresenceRecord( username );
         return presenceRecord != null && presenceRecord.isEntering();
     }
@@ -348,7 +354,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         return sb.toString();
     }
 
-    private PersistentPlanObject getPersistentPlanObject() {
+    protected PersistentPlanObject getPersistentPlanObject() {
         return poModel.getObject();
     }
 

@@ -33,7 +33,6 @@ import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
@@ -200,7 +199,6 @@ public class XmlStreamer implements ImportExportFactory {
             stream.registerConverter( new FlowConverter( this ) );
             stream.registerConverter( new ElementOfInformationConverter( this ) );
             stream.registerConverter( new ActorConverter( this ) );
-            stream.registerConverter( new ParticipationConverter( this ) );
             stream.registerConverter( new RoleConverter( this ) );
             stream.registerConverter( new OrganizationConverter( this ) );
             stream.registerConverter( new PlaceConverter( this ) );
@@ -231,7 +229,6 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "medium", TransmissionMedium.class );
             stream.alias( "planevent", Event.class );
             stream.alias( "actor", Actor.class );
-            stream.alias( "participant", Participation.class );
             stream.aliasType( "flow", Flow.class );
             stream.aliasType( "eoi", ElementOfInformation.class );
             stream.alias( "jurisdiction", Place.class );

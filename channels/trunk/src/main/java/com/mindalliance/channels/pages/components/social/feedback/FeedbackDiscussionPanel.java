@@ -48,9 +48,11 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
     private AjaxLink<String> replyAndEmailButton;
     private AjaxLink<String> resetButton;
     private WebMarkupContainer repliesContainer;
+    private boolean showProfile;
 
-    public FeedbackDiscussionPanel( String id, Model<Feedback> feedbackModel ) {
+    public FeedbackDiscussionPanel( String id, Model<Feedback> feedbackModel, boolean showProfile ) {
         super( id, feedbackModel );
+        this.showProfile = showProfile;
         feedback = feedbackModel.getObject();
         feedbackService.refresh( feedback );
         init();
@@ -70,6 +72,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
                 "feedback",
                 new Model<Feedback>( feedback ),
                 0,
+                showProfile,
                 this
         ) );
     }
@@ -147,6 +150,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
                         item.getModel(),
                         true,
                         item.getIndex(),
+                        showProfile,
                         FeedbackDiscussionPanel.this
                 ) );
             }

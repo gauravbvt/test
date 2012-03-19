@@ -44,10 +44,10 @@ import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentPanel;
 import com.mindalliance.channels.pages.components.segment.SharingCommitmentsPanel;
 import com.mindalliance.channels.pages.components.social.feedback.AllFeedbackPanel;
+import com.mindalliance.channels.pages.components.social.rfi.DataCollectionPanel;
 import com.mindalliance.channels.pages.components.support.FlowLegendPanel;
-import com.mindalliance.channels.pages.components.surveys.SurveysPanel;
 import com.mindalliance.channels.social.model.Feedback;
-import com.mindalliance.channels.surveys.Survey;
+import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -263,7 +263,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * The surveys panel.
      */
-    private Component surveysPanel;
+ //   private Component surveysPanel;
 
     /**
      * Failure impacts panel.
@@ -335,7 +335,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * Feedbacks panel.
      */
-    private Component feedbacksPanel;
+    private Component allFeedbackPanel;
+
+    /**
+     * All RFIs panel
+     */
+    private Component dataCollectionPanel;
     /**
      * Cumulated change to an expanded identifiable.
      */
@@ -470,7 +475,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addPlanEditPanel( null );
 //        addSurveysPanel( Survey.UNKNOWN );
         addFlowLegendPanel();
-        addFeedbacksPanel();
+        addAllFeedbackPanel();
+        addDataCollectionPanel();
 
         updateSelectorsVisibility();
         updateNavigation();
@@ -559,26 +565,43 @@ public final class PlanPage extends AbstractChannelsWebPage {
         form.addOrReplace( flowLegendPanel );
     }
 
-    private void addFeedbacksPanel() {
-        addFeedbacksPanel( null );
+    private void addAllFeedbackPanel() {
+        addAllFeedbackPanel( null );
+    }
+    
+    private void addDataCollectionPanel() {
+        addDataCollectionPanel( null );
     }
 
-    private void addFeedbacksPanel( Feedback feedback ) {
+    private void addAllFeedbackPanel( Feedback feedback ) {
         if ( !expansions.contains( Feedback.UNKNOWN.getId() ) ) {
-            feedbacksPanel = new Label( "feedbacks", "" );
-            feedbacksPanel.setOutputMarkupId( true );
-            makeVisible( flowLegendPanel, false );
+            allFeedbackPanel = new Label( "feedbacks", "" );
+            allFeedbackPanel.setOutputMarkupId( true );
+            makeVisible( allFeedbackPanel, false );
         } else {
-            feedbacksPanel = new AllFeedbackPanel(
+            allFeedbackPanel = new AllFeedbackPanel(
                     "feedbacks",
-                    new Model<Plan>( getPlan() ) );
+                    new Model<Plan>( getPlan() ),
+                    true );
             if ( !feedback.isUnknown() ) {
-                ((AllFeedbackPanel)feedbacksPanel).select( feedback );
+                ((AllFeedbackPanel) allFeedbackPanel ).select( feedback );
             }
         }
-        form.addOrReplace( feedbacksPanel );
+        form.addOrReplace( allFeedbackPanel );
     }
 
+    private void addDataCollectionPanel( RFISurvey rfiSurvey ) {
+        if ( !expansions.contains( RFISurvey.UNKNOWN.getId() ) ) {
+            dataCollectionPanel = new Label( "dataCollection", "" );
+            dataCollectionPanel.setOutputMarkupId( true );
+            makeVisible( dataCollectionPanel, false );
+        } else {
+            dataCollectionPanel = new DataCollectionPanel(
+                    "dataCollection",
+                    new Model<RFISurvey>( rfiSurvey ) );
+        }
+        form.addOrReplace( dataCollectionPanel );
+    }
 
 
     /**
@@ -626,7 +649,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
         segmentDescriptionLabel.add(
                 new AttributeModifier(
                         "title",
-                        true,
                         new AbstractReadOnlyModel<String>() {
                             @Override
                             public String getObject() {
@@ -1869,10 +1891,13 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         } else if ( change.getId() == -1 || change.isForInstanceOf( SegmentObject.class ) ) {
             refreshSegmentPanel( target, change, updated );
-        } else if ( change.isForInstanceOf( Survey.class ) ) {
+        /*} else if ( change.isForInstanceOf( Survey.class ) ) {
             refreshSurveysPanel( target, change, updated );
+        */
         }  else if ( change.isForInstanceOf( Feedback.class ) ) {
-            refreshFeedbacksPanel( target, change, updated );
+            refreshAllFeedbackPanel( target, change, updated );
+        }  else if ( change.isForInstanceOf( RFISurvey.class ) ) {
+            refreshDataCollectionPanel( target, change, updated );
         }
         refreshHeadersMenusAndNavigation( target, change, updated );
     }
@@ -1959,9 +1984,14 @@ public final class PlanPage extends AbstractChannelsWebPage {
         target.add( flowLegendPanel );
     }
     
-    private void updateFeedbacksPanel( AjaxRequestTarget target ) {
-        addFeedbacksPanel();
-        target.add( feedbacksPanel );
+    private void updateAllFeedbackPanel( AjaxRequestTarget target ) {
+        addAllFeedbackPanel();
+        target.add( allFeedbackPanel );
+    }
+
+    private void updateDataCollectionPanel( AjaxRequestTarget target ) {
+        addDataCollectionPanel();
+        target.add( dataCollectionPanel );
     }
 
     private void updateRefresh( AjaxRequestTarget target ) {
@@ -2011,7 +2041,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         refreshAssignmentsPanel( target, change, updated );
         refreshCommitmentsPanel( target, change, updated );
         refreshEOIsPanel( target, change, updated );
-        refreshSurveysPanel( target, change, updated );
+        // refreshSurveysPanel( target, change, updated );
         refreshSegmentPanel( target, change, updated );
         refreshFailureImpactsPanel( target, change, updated );
         refreshDisseminationPanel( target, change, updated );
@@ -2181,10 +2211,13 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
     }
 
+/*
     private void refreshSurveysPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( /*change.isUnknown() ||*/
+        if ( */
+/*change.isUnknown() ||*//*
+
                 identifiable != null
                         && change.isDisplay()
                         && identifiable instanceof Survey ) {
@@ -2201,8 +2234,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     getAspectShown( Survey.UNKNOWN ) );
         }
     }
+*/
 
-    private void refreshFeedbacksPanel(
+    private void refreshAllFeedbackPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
         if ( /*change.isUnknown() ||*/
@@ -2213,13 +2247,34 @@ public final class PlanPage extends AbstractChannelsWebPage {
             Feedback viewedFeedback = ( expandedFeedback == null || expandedFeedback.isUnknown() )
                     ? Feedback.UNKNOWN
                     : expandedFeedback;
-            addFeedbacksPanel( viewedFeedback );
-            target.add( feedbacksPanel );
-        } else if ( feedbacksPanel instanceof AllFeedbackPanel ) {
-            ( (AllFeedbackPanel) feedbacksPanel ).refresh( target,
+            addAllFeedbackPanel( viewedFeedback );
+            target.add( allFeedbackPanel );
+        } else if ( allFeedbackPanel instanceof AllFeedbackPanel ) {
+            ( (AllFeedbackPanel) allFeedbackPanel ).refresh( target,
                     change,
                     updated,
                     getAspectShown( Feedback.UNKNOWN ) );
+        }
+    }
+
+    private void refreshDataCollectionPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        Identifiable identifiable = change.getSubject( getQueryService() );
+        if ( /*change.isUnknown() ||*/
+                identifiable != null
+                        && change.isDisplay()
+                        && identifiable instanceof RFISurvey ) {
+            RFISurvey rfiSurvey = (RFISurvey) identifiable;
+            RFISurvey viewedRFISurvey = ( rfiSurvey == null || rfiSurvey.isUnknown() )
+                    ? RFISurvey.UNKNOWN
+                    : rfiSurvey;
+            addDataCollectionPanel( viewedRFISurvey );
+            target.add( dataCollectionPanel );
+        } else if ( dataCollectionPanel instanceof DataCollectionPanel ) {
+            ( (DataCollectionPanel) dataCollectionPanel ).refresh( target,
+                    change,
+                    updated,
+                    getAspectShown( RFISurvey.UNKNOWN ) );
         }
     }
 

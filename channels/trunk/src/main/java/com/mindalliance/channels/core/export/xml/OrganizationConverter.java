@@ -160,7 +160,7 @@ public class OrganizationConverter extends EntityConverter {
             String id = reader.getAttribute( "id");
             org.addMediumNotDeployed( findOrCreate( TransmissionMedium.class, reader.getValue(), id ) );
         } else {
-            LOG.warn( "Unknown element " + nodeName );
+            LOG.debug( "Unknown element " + nodeName );
         }
     }
 }

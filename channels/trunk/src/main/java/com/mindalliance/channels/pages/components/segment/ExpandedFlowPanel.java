@@ -846,7 +846,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addHeader() {
         titlePanel = new FlowTitlePanel( "title", getFlow(), isSend() );
         // Add style classes
-        titlePanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses() ) ) );
+        titlePanel.add( new AttributeModifier( "class", new Model<String>( getCssClasses() ) ) );
         titlePanel.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {

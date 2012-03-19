@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
@@ -28,7 +29,6 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
@@ -1213,9 +1213,25 @@ public interface QueryService {
      * Find the participation by a user.
      *
      * @param username a user name
-     * @return a participation or null
+     * @return a list of plan participations
      */
-    Participation findParticipation( String username );
+    List<PlanParticipation> findParticipations( String username );
+
+    /**
+     * Find the participation by a user.
+     *
+     * @param actor aan actor
+     * @return a list of plan participations
+     */
+    List<PlanParticipation> findParticipations( Actor actor );
+
+    /**
+     * Find a user's participation as an actor.
+     * @param user a user
+     * @param actor an actor
+     * @return a plan participation or null
+     */
+    PlanParticipation findParticipation( ChannelsUser user, Actor actor );
 
     /**
      * Whether a commitment is covered by an agreement.
@@ -1496,7 +1512,7 @@ public interface QueryService {
      * @param actor an actor
      * @return a list of participations
      */
-    List<Participation> findAllParticipationsFor( Actor actor );
+    List<PlanParticipation> findAllParticipationsFor( Actor actor );
 
     /**
      * Whether this is a sharing flow where source actor is target actor.
@@ -1510,7 +1526,7 @@ public interface QueryService {
      *
      * @param participation@return a string
      */
-    String getUserFullName( Participation participation );
+    String getUserFullName( PlanParticipation participation );
 
     Actor getKnownActualActor( Part part );
 

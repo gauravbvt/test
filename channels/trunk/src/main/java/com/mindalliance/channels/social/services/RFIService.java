@@ -1,6 +1,7 @@
 package com.mindalliance.channels.social.services;
 
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
+import com.mindalliance.channels.social.model.rfi.RFI;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -9,5 +10,10 @@ import com.mindalliance.channels.core.orm.service.GenericSqlService;
  * Date: 2/16/12
  * Time: 2:19 PM
  */
-public interface RFIService extends GenericSqlService {
+public interface RFIService extends GenericSqlService<RFI, Long> {
+    
+    boolean isCompleted( RFI rfi );
+
+    boolean isIncomplete( RFI rfi );
+
 }

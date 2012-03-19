@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.reports.infoNeeds;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
@@ -10,7 +10,6 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
@@ -36,32 +35,38 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
 
 
     protected void initComponents( QueryService service, final Plan plan ) {
+        boolean isPlanner = getUser().isPlanner( plan.getUri() );
         addChannelsLogo();
         add(
             new Label( "userName", getUser().getUsername() ),
             new Label( "planName", plan.toString() ),
-
+            new WebMarkupContainer( "note" ).setVisible( isPlanner ),
             new WebMarkupContainer( "activeDiv" ).add(
-                new ListView<Participation>( "activeResponders", getUsers() ) {
+                    new Label(
+                            "participationNote",
+                            isPlanner
+                                    ? "(Users who participate as agents in this plan and thus have info needs)"
+                                    : "(Your participation in this plan)"
+                    ),
+               new ListView<PlanParticipation>( "participatingUsers", getParticipations() ) {
                     @Override
-                    protected void populateItem( ListItem<Participation> item ) {
+                    protected void populateItem( ListItem<PlanParticipation> item ) {
                         PageParameters parameters = new PageParameters();
-                        Participation p = item.getModelObject();
+                        PlanParticipation p = item.getModelObject();
                         parameters.set( PLAN, getUri() );
                         parameters.set( VERSION, getVersion() );
-                        Actor actor = p.getActor();
+                        Actor actor = p.getActor( getQueryService() );
                         parameters.set( "agent", actor.getId() );
-                        String userName = p.getUsername();
-                        parameters.set( "user", userName );
-                        ChannelsUser otherUser = getUserDao().getUserNamed( userName );
+                        String participantUsername = p.getParticipant().getUsername();
+                        parameters.set( "user", participantUsername );
+                        ChannelsUser participatingUser = getUserDao().getUserNamed( participantUsername );
                         item.add(
-                            new BookmarkablePageLink<InfoNeedsPage>(
-                                "responder", InfoNeedsPage.class, parameters )
-                                  .add( new Label( "responderName", otherUser.getFullName() )
-                                            .setRenderBodyOnly( true ) ),
-                            new ExternalLink( "userName", "mailTo:" + otherUser.getEmail(), userName ),
-                            new Label( "profile", actor.toString() )
-                                            .setRenderBodyOnly( true )
+                                new Label( "participantName", participatingUser.getFullName() )
+                                        .setRenderBodyOnly( true ),
+                                new BookmarkablePageLink<InfoNeedsPage>(
+                                        "participation", InfoNeedsPage.class, parameters )
+                                        .add( new Label( "participationName", actor.toString() )
+                                                .setRenderBodyOnly( true ) )
                         );
 
                         if ( item.getIndex() == getViewSize() - 1 )
@@ -69,10 +74,11 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                                                              new Model<String>( "last" ), " " ) );
                     }
                 }
-            ).setVisible( !getUsers().isEmpty() ),
+            ).setVisible( !getParticipations().isEmpty() ),
 
             new WebMarkupContainer( "agentsDiv" ).add(
-                new ListView<Actor>( "agents", getActors() ) {
+                    isPlanner() ?
+               new ListView<Actor>( "agents", getActors() ) {
                     @Override
                     protected void populateItem( ListItem<Actor> item ) {
                         final Actor actor = item.getModelObject();
@@ -82,12 +88,11 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                         item.add(
 
                             new BookmarkablePageLink<InfoNeedsPage>(
-                                "responder", InfoNeedsPage.class, parameters )
-                                    .add( new Label( "responderName", actor.getNormalizedName() )
+                                "agent", InfoNeedsPage.class, parameters )
+                                    .add( new Label( "agentName", actor.getNormalizedName() )
                                               .setRenderBodyOnly( true ) ),
 
-                            new WebMarkupContainer( "many" )
-                                            .setVisible( !actor.isSingular() )
+                                new Label( "participationPlurality", actor.getParticipationPlurality() )
                         ).setOutputMarkupId( true );
 
                         if ( item.getIndex() == getViewSize() - 1 )
@@ -96,7 +101,8 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
 
                     }
                 }
-            ).setVisible( !getActors().isEmpty() )
+                            : new Label( "agents", "" )
+          ).setVisible( !getActors().isEmpty() && isPlanner )
 
         );
     }

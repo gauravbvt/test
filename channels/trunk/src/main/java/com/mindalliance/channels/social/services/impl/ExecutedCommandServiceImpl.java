@@ -40,7 +40,7 @@ public class ExecutedCommandServiceImpl
     }
 
     @Override
-    @Transactional
+    @Transactional( readOnly = true)
     public Iterator<ExecutedCommand> getExecutedCommands( String planUri, int planVersion ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -69,7 +69,6 @@ public class ExecutedCommandServiceImpl
     }
 
     @Override
-    @Transactional
     public Date getWhenLastChanged( String planUri ) {
         return whenLastChanged.get( planUri );
     }

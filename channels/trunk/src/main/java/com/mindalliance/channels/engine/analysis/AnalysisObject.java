@@ -29,6 +29,8 @@ public abstract class AnalysisObject implements Serializable {
      */
     private String property;
 
+    public AnalysisObject() {}
+
     /**
      * Constructor
      *

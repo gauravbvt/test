@@ -1,11 +1,15 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
+import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
@@ -13,13 +17,11 @@ import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -31,11 +33,14 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -47,6 +52,15 @@ import java.util.List;
  * Time: 12:57:54 PM
  */
 public class ParticipationsPanel extends AbstractCommandablePanel implements NameRangeable {
+
+    @SpringBean
+    private PlanParticipationService planParticipationService;
+
+    @SpringBean
+    private UserContactInfoService userContactInfoService;
+
+    @SpringBean
+    private ChannelsUserDao userDao;
 
     private static final int MAX_ROWS = 10;
     private static String USERNAMES = "Users";
@@ -69,6 +83,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     private CheckBox withActorCheckBox;
     private ParticipationWrapper selectedParticipation;
     private WebMarkupContainer participationDiv;
+    private ParticipationWrapper addedParticipationWrapper;
 
     public ParticipationsPanel( String id ) {
         super( id );
@@ -77,12 +92,17 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
 
     private void init() {
         indexedOn = indexingChoices[0];
+        resetParticipations();
         addIndexedOnChoices();
         addRangesPanel();
         addParticipationsTable();
         addWithActorCheckBox();
         addWithoutActorCheckBox();
         addParticipation();
+    }
+
+    private void resetParticipations() {
+        addedParticipationWrapper = null;
     }
 
     private void addIndexedOnChoices() {
@@ -223,23 +243,28 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     }
 
     private List<ParticipationWrapper> getAllParticipationWrappers() {
+        List<ParticipationWrapper> participationWrappers = new ArrayList<ParticipationWrapper>();
+        participationWrappers = new ArrayList<ParticipationWrapper>();
         QueryService queryService = getQueryService();
-        List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
-        if ( isLockedByUser( getPlan() ) ) {
-            for ( String username : queryService.getUserDao().getUsernames( getPlan().getUri() ) ) {
-                Participation participation = doSafeFindOrCreate( Participation.class, username );
-                ParticipationWrapper wrapper = new ParticipationWrapper( username );
-                wrapper.setParticipation( participation );
-                wrappers.add( wrapper );
+        for ( ChannelsUser channelsUser : userDao.getUsers( getPlan().getUri() ) ) {
+            List<PlanParticipation> participations = planParticipationService.getParticipations(
+                    getPlan(), channelsUser.getUserInfo(), queryService );
+            for ( PlanParticipation participation : participations ) {
+                planParticipationService.refresh( participation );
+                ParticipationWrapper wrapper = new ParticipationWrapper(
+                        channelsUser.getUsername(),
+                        participation );
+                participationWrappers.add( wrapper );
             }
-        } else {
-            for ( Participation participation : queryService.list( Participation.class )) {
-                ParticipationWrapper wrapper = new ParticipationWrapper( participation.getUsername() );
-                wrapper.setParticipation( participation );
-                wrappers.add( wrapper );
+            if ( isLockedByUser( getPlan() ) && participations.isEmpty() ) {
+                participationWrappers.add( new ParticipationWrapper( channelsUser.getUsername() ) );
+                if ( addedParticipationWrapper != null ) {
+                    participationWrappers.add( addedParticipationWrapper );
+                }
             }
         }
-        return wrappers;
+        addedParticipationWrapper = null;
+        return participationWrappers;
     }
 
     private boolean isInNameRange( ParticipationWrapper participationWrapper ) {
@@ -285,36 +310,6 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         target.add( participationsTable );
     }
 
-    public void update( AjaxRequestTarget target, Object object, String action ) {
-        if ( object instanceof ParticipationWrapper ) {
-            if ( action.equals( "select" ) ) {
-                setSelectedParticipation( (ParticipationWrapper) object );
-                addParticipation();
-                target.add( participationDiv );
-            } else {
-                if ( action.equals( "entity named" ) ) {
-                    addParticipationsTable();
-                    target.add( participationsTable );
-                    selectedParticipation = null;
-                    addParticipation();
-                    target.add( participationDiv );
-                    update(
-                            target,
-                            new Change(
-                                    Change.Type.Updated,
-                                    ( (ParticipationWrapper) object ).getParticipation() ) );
-                }
-            }
-        }
-    }
-
-    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( !(change.isUpdated() && change.isForInstanceOf( Channelable.class ) ) ) {
-            super.updateWith( target, change, updated );
-        }
-    }
-
-
     private void setSelectedParticipation( ParticipationWrapper pw ) {
         if ( selectedParticipation != null && selectedParticipation.getParticipation() != null ) {
             releaseAnyLockOn( selectedParticipation.getParticipation() );
@@ -333,22 +328,12 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         addParticipationLabel();
         addParticipationLink();
         addParticipationActorChannels();
-        addParticipationChannels();
+        addUserChannels();
     }
 
     private boolean isAssignedParticipationSelected() {
-       return selectedParticipation != null
+        return selectedParticipation != null
                 && selectedParticipation.getActor() != null;
-    }
-
-    private void addParticipationActorChannels() {
-        ParticipationWrapper pw = getParticipation();
-        String channelsString = pw != null && pw.getActor() != null
-                ? pw.getActor().getChannelsString()
-                : "None";
-        Label label = new Label( "actorChannels", channelsString );
-        label.setOutputMarkupId( true );
-        participationDiv.addOrReplace( label );
     }
 
     private void addParticipationLabel() {
@@ -379,18 +364,26 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         }
     }
 
-    private void addParticipationChannels() {
-        Component participationChannels;
-        if ( selectedParticipation == null ) {
-            participationChannels = new Label( "participationChannels", "" );
-        } else {
-            participationChannels = new ChannelListPanel(
-                    "participationChannels",
-                    new Model<Channelable>( getParticipation().getParticipation() ),
-                    getPlan().isDevelopment() );
-        }
-        participationChannels.setOutputMarkupId( true );
-        participationDiv.addOrReplace( participationChannels );
+    private void addParticipationActorChannels() {
+        ParticipationWrapper pw = getParticipation();
+        String channelsString = pw != null && pw.getActor() != null
+                ? pw.getActor().getChannelsString()
+                : "None";
+        Label label = new Label( "actorChannels", channelsString );
+        label.setOutputMarkupId( true );
+        participationDiv.addOrReplace( label );
+    }
+
+    private void addUserChannels() {
+        ParticipationWrapper pw = getParticipation();
+        String channelsString = pw != null
+                ? Channel.toString( userContactInfoService.findChannels(
+                pw.getParticipatingUserInfo(),
+                getQueryService() ) )
+                : "None";
+        Label label = new Label( "userChannels", channelsString );
+        label.setOutputMarkupId( true );
+        participationDiv.addOrReplace( label );
     }
 
     /**
@@ -403,32 +396,81 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     }
 
 
+    public void update( AjaxRequestTarget target, Object object, String action ) {
+        if ( object instanceof ParticipationWrapper ) {
+            ParticipationWrapper wrapper = (ParticipationWrapper) object;
+
+            if ( action.equals( "select" ) ) {
+                setSelectedParticipation( wrapper );
+                addParticipation();
+                target.add( participationDiv );
+            } else {
+                if ( action.equals( "entity named" ) ) {
+                    resetParticipations();
+                    addParticipationsTable();
+                    target.add( participationsTable );
+                    selectedParticipation = null;
+                    addParticipation();
+                    target.add( participationDiv );
+                    update(
+                            target,
+                            new Change(
+                                    Change.Type.Updated,
+                                    getPlan() ) );
+                } else if ( action.equals( "participation" ) ) {
+                    ChannelsUser participatingUser = userDao.getUserNamed( wrapper.getUsername() );
+                    if ( participatingUser != null ) {
+                        selectedParticipation = null;
+                        addedParticipationWrapper = new ParticipationWrapper(
+                                participatingUser.getUsername(),
+                                new PlanParticipation( getUsername(), getPlan(), participatingUser ) );
+                        addParticipation();
+                        target.add( participationDiv );
+                        addParticipationsTable();
+                        target.add( participationsTable );
+                    }
+                }
+            }
+        }
+    }
+
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        if ( !( change.isUpdated() && change.isForInstanceOf( Channelable.class ) ) ) {
+            super.updateWith( target, change, updated );
+        }
+    }
+
     /**
      * Participation wrapper.
      */
     public class ParticipationWrapper implements Serializable {
 
         private String username;
-        private Participation participation;
+        private PlanParticipation participation;
 
         public ParticipationWrapper( String username ) {
             this.username = username;
+        }
+
+        public ParticipationWrapper( String username, PlanParticipation participation ) {
+            this.username = username;
+            this.participation = participation;
         }
 
         public String getUsername() {
             return username;
         }
 
-        public Participation getParticipation() {
+        public PlanParticipation getParticipation() {
             return participation;
         }
 
-        public void setParticipation( Participation participation ) {
+        public void setParticipation( PlanParticipation participation ) {
             this.participation = participation;
         }
 
         public boolean hasActor() {
-            return participation.getActor() != null;
+            return participation.getActor( getQueryService() ) != null;
         }
 
         public String getUserFullName() {
@@ -448,12 +490,44 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         }
 
         public Actor getActor() {
-            return participation == null ? null : participation.getActor();
+            return participation == null ? null : participation.getActor( getQueryService() );
         }
 
-        public void setActor( Actor val ) {
-            doCommand( new UpdatePlanObject( getUser().getUsername(),
-                                             participation, "actor", val, UpdateObject.Action.Set ) );
+        public void setActor( Actor actor ) {
+            if ( participation != null ) {
+                planParticipationService.removeParticipation( getUser().getUsername(), getPlan(), participation );
+            }
+            if ( actor != null ) {
+                participation = planParticipationService.addParticipation(
+                        getUser().getUsername(),
+                        getPlan(),
+                        userDao.getUserNamed( getUsername() ),
+                        actor );
+            } else {
+                participation = null;
+            }
+        }
+
+        public List<Actor> getDomain() {
+            List<Actor> domain = new ArrayList<Actor>();
+            List<Actor> actors = getQueryService().listActualEntities( Actor.class );
+            for ( Actor actor : actors ) {
+                if ( planParticipationService.canBeDesignated( getPlan(), actor ) )
+                    domain.add( actor );
+            }
+            Collections.sort(
+                    domain,
+                    new Comparator<Actor>() {
+                        @Override
+                        public int compare( Actor a1, Actor a2 ) {
+                            return a1.getName().compareTo( a2.getName() );
+                        }
+                    } );
+            return domain;
+        }
+
+        public ChannelsUserInfo getParticipatingUserInfo() {
+            return participation.getParticipant();
         }
     }
 
@@ -485,7 +559,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             ) );
             columns.add( makeColumn(
                     "Name",
-                    "userFullName",
+                    "userNormalizedFullName",
                     null,
                     EMPTY,
                     null,
@@ -495,9 +569,10 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                 columns.add( makeEntityReferenceColumn(
                         "Is agent",
                         "actor",
+                        "domain",
                         Actor.class,
                         true,
-                        "Name the agent representing the user",
+                        "Name an agent representing the user",
                         ParticipationsPanel.this
                 ) );
             } else {
@@ -511,6 +586,15 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                     "more",
                     ParticipationsPanel.this
             ) );
+            if ( isLockedByUser( getPlan() ) ) {
+                columns.add( makeActionLinkColumn(
+                        "",
+                        "add",
+                        "participation",
+                        "actor",
+                        "more",
+                        ParticipationsPanel.this ) );
+            }
             // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "participations",
@@ -522,3 +606,4 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         }
     }
 }
+

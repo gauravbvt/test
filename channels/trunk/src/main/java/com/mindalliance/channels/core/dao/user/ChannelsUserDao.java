@@ -99,4 +99,7 @@ public interface ChannelsUserDao extends GenericSqlService<ChannelsUserInfo,Long
      * @param update another user info with undigested password
      */
     void updateIdentity( ChannelsUserInfo userInfo, ChannelsUserInfo update );
+
+
+
 }

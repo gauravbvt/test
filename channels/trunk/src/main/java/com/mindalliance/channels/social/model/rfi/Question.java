@@ -28,6 +28,8 @@ public class Question extends AbstractPersistentPlanObject {
 
     @ManyToOne( cascade = CascadeType.ALL)
     private Questionnaire questionnaire;
+    
+    private int index;
 
     private Type type = Type.STATEMENT;
 
@@ -66,5 +68,13 @@ public class Question extends AbstractPersistentPlanObject {
 
     public void setType( Type type ) {
         this.type = type;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex( int index ) {
+        this.index = index;
     }
 }

@@ -111,6 +111,10 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         return placeHolderSingular;
     }
 
+    public boolean isPlaceHolderPlural() {
+        return isPlaceHolder() && !isPlaceHolderSingular();
+    }
+
     public void setPlaceHolderSingular( boolean placeHolderSingular ) {
         this.placeHolderSingular = placeHolderSingular;
     }
@@ -293,7 +297,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * Whether the actor is cleared for the information in a flow.
      *
      * @param flow a flow
-     * @param plan
+     * @param plan a plan
      * @return a boolean
      */
     public boolean isClearedFor( Flow flow, final Plan plan ) {
@@ -339,5 +343,9 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      */
     public boolean isSingular() {
         return !archetype && ( !placeHolder || placeHolderSingular );
+    }
+
+    public String getParticipationPlurality() {
+        return isSingular() ? "one user" : "many users";
     }
 }

@@ -72,6 +72,6 @@ public class EventConverter extends EntityConverter {
         } else if ( "self-terminating".equals( nodeName ) )
             event.setSelfTerminating( "true".equals( reader.getValue() ) );
         else
-            LOG.warn( "Unknown element " + nodeName );
+            LOG.debug( "Unknown element " + nodeName );
     }
 }

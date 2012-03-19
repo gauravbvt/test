@@ -143,7 +143,7 @@ public class TransmissionMediumConverter extends EntityConverter {
         } else if ( nodeName.equals(  "synchronous" )) {
             medium.setSynchronous( reader.getValue().equals( "true" ) );
         } else {
-            LOG.warn( "Unknown element " + nodeName );
+            LOG.debug( "Unknown element " + nodeName );
         }
     }
 

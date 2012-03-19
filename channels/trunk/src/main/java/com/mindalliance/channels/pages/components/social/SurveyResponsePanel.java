@@ -29,9 +29,11 @@ public class SurveyResponsePanel extends AbstractSocialEventPanel {
             String id,
             IModel<SurveyResponse> surveyResponseModel,
             int index,
+            boolean showProfile,
             Updatable updatable ) {
         super( id,
                 index,
+                showProfile,
                 updatable );
         this.surveyResponseModel = surveyResponseModel;
         init();

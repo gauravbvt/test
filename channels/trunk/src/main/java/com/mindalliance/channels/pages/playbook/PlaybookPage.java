@@ -9,7 +9,6 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
@@ -80,10 +79,10 @@ public abstract class PlaybookPage extends AbstractChannelsWebPage {
      */
     private Actor getActualActor() {
         Actor actualActor = getParm( ACTOR_PARM, Actor.class );
-        if ( actualActor == null ) {
+       /* if ( actualActor == null ) {
             Participation participation = getQueryService().findOrCreate( Participation.class, user.getUsername() );
             actualActor = participation.getActor();
-        }
+        }*/
         return actualActor;
     }
 

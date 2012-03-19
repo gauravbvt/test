@@ -7,10 +7,10 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -32,8 +32,8 @@ public class NonParticipatingNormalUser extends AbstractIssueDetector {
         Plan plan = queryService.getPlan();
         for ( String username : queryService.getUserDao().getUsernames( plan.getUri() ) ) {
             if ( queryService.findUserRole( username ).equals( ChannelsUserInfo.ROLE_USER ) ) {
-                Participation participation = queryService.findOrCreate( Participation.class, username );
-                if ( participation.getActor() == null ) {
+                List<PlanParticipation> participations = queryService.findParticipations( username );
+                if ( participations.isEmpty() ) {
                     Issue issue = makeIssue( queryService, Issue.COMPLETENESS, plan );
                     issue.setDescription( "Normal user " + username + " does not participate in the plan." );
                     issue.setRemediation( "Assign an agent to user " + username + "\nor unregister user " + username );

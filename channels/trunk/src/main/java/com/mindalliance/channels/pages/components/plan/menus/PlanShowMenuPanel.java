@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.plan.menus;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
@@ -13,6 +12,7 @@ import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.social.model.Feedback;
+import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -56,7 +56,7 @@ public class PlanShowMenuPanel extends MenuPanel {
     @Override
     public List<Component> getMenuItems() {
         synchronized ( getCommander() ) {
-            Plan plan = ChannelsUser.plan();
+            Plan plan = getPlan();
             List<Component> menuItems = new ArrayList<Component>();
 
             menuItems.addAll(
@@ -71,6 +71,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                 menuItems.add( collapsible( Survey.UNKNOWN, "Hide surveys", "Surveys" ) );
 */
             menuItems.add( collapsible( Feedback.UNKNOWN, "Hide all feedback", "All feedback" ) );
+            menuItems.add( collapsible( RFISurvey.UNKNOWN, "Hide surveys", "Surveys" ) );
             menuItems.addAll(
                     Arrays.asList(
                             newLink( "All segments", plan, PlanEditPanel.MAP ),
@@ -79,6 +80,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                             newLink( "Index", plan, PlanEditPanel.INDEX ),
                             newLink( "Assignments & Commitments", plan, PlanEditPanel.PROCEDURES ),
                             newLink( "Requirements", plan, PlanEditPanel.REQUIREMENTS ),
+                            newLink( "Participations", plan, PlanEditPanel.PARTICIPATIONS ),
                             newLink(
                                     "Help", newTargetedLink(
                                     "help", HelpPage.class, new PopupSettings(

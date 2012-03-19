@@ -7,13 +7,13 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,25 +31,20 @@ public class ActorWithNonMatchingParticipation extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Actor actor = (Actor) modelObject;
         if ( actor.isActual() && !actor.isPlaceHolder() && !actor.isArchetype() ) {
-            Participation participation = null;
-            for ( String userName : queryService.getUserDao().getUsernames() ) {
-                Participation p = queryService.findParticipation( userName );
-                if ( p != null && p.hasActor( actor ) ) {
-                    participation = p;
-                    break;
-                }
-            }
-            if ( participation != null ) {
-                String userFullName = queryService.getUserFullName( participation );
-                if ( !Matcher.same( actor.getName(), userFullName ) ) {
-                    Issue issue = makeIssue( queryService, Issue.VALIDITY, actor );
-                    issue.setDescription( "Agent \"" + actor.getName() + "\" is not a placeholder nor an archetype "
-                                          + "and is assigned to a user with a different name (" + userFullName + ")." );
-                    issue.setRemediation(
-                            "Assign a user of the same name to the agent" + "\nor assign no user to the agent"
-                            + "\nor make the agent a place holder" + "\nor make the agent an archetype." );
-                    issue.setSeverity( Level.Medium );
-                    issues.add( issue );
+            List<PlanParticipation> participations = queryService.findParticipations( actor );
+            if ( !participations.isEmpty() ) {
+                for ( PlanParticipation participation : participations ) {
+                    String userFullName = participation.getParticipant().getFullName();
+                    if ( !Matcher.same( actor.getName(), userFullName ) ) {
+                        Issue issue = makeIssue( queryService, Issue.VALIDITY, actor );
+                        issue.setDescription( "Agent \"" + actor.getName() + "\" is not a placeholder nor an archetype "
+                                              + "and is assigned to a user with a different name (" + userFullName + ")." );
+                        issue.setRemediation(
+                                "Assign a user of the same name to the agent" + "\nor assign no user to the agent"
+                                + "\nor make the agent a place holder" + "\nor make the agent an archetype." );
+                        issue.setSeverity( Level.Medium );
+                        issues.add( issue );
+                    }
                 }
             }
         }

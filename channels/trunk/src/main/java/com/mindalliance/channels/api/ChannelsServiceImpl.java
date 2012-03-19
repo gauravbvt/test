@@ -9,8 +9,9 @@ import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.query.PlanService;
@@ -50,6 +51,7 @@ public class ChannelsServiceImpl implements ChannelsService {
     private ChannelsUserDao userDao;
     private AttachmentManager attachmentManager;
     private Analyst analyst;
+    private PlanParticipationService planParticipationService;
 
     @Override
     /**
@@ -136,13 +138,13 @@ public class ChannelsServiceImpl implements ChannelsService {
                 throw new Exception( user.getUsername() + " is not authorized to access production plan " + uri );
             }
             PlanService planService = getPlanService( plan );
-            Participation participation = planService.findParticipation( user.getUsername() );
-            if ( participation == null || participation.getActor() == null ) {
+            List<PlanParticipation> participations = planService.findParticipations( user.getUsername() );
+            if ( participations.isEmpty() ) {
                 throw new Exception( user.getUsername() + " does not participate in production plan " + uri );
             }
             return new ProceduresData(
                     plan,
-                    participation.getActor(),
+                    participations,
                     planService );
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
@@ -161,6 +163,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         Plan plan = null;
         try {
             plan = planManager.getPlan( uri, Integer.parseInt( version ) );
+            user.setPlan( plan );
         } catch ( Exception e ) {
             LOG.error( "Plan not found " + uri + " version " + version );
         }
@@ -183,10 +186,13 @@ public class ChannelsServiceImpl implements ChannelsService {
         if ( plan.isTemplate() || user.isPlanner( plan.getUri() ) )
             return true;
         // Participating user can see own procedures. Supervisor can procedures of supervised.
-        Participation participation = planService.findParticipation( user.getUsername() );
-        if ( participation != null ) {
-            Actor participant = participation.getActor();
-            return participant.equals( actor ) || planService.findSupervised( participant ).contains( actor );
+        List<PlanParticipation> participations = planService.findParticipations( user.getUsername() );
+        for ( PlanParticipation participation : participations ) {
+            Actor participant = participation.getActor( planService );
+            if ( participant != null
+                    && ( participant.equals( actor )
+                    || planService.findSupervised( participant ).contains( actor ) ) )
+                return true;
         }
         return false;
     }
@@ -216,6 +222,10 @@ public class ChannelsServiceImpl implements ChannelsService {
         this.analyst = analyst;
     }
 
+    @WebMethod( exclude = true )
+    public void setPlanParticipationService( PlanParticipationService planParticipationService ) {
+        this.planParticipationService = planParticipationService;
+    }
 
     private PlanService getPlanService( Plan plan ) {
         return new PlanService(
@@ -223,6 +233,7 @@ public class ChannelsServiceImpl implements ChannelsService {
                 semanticMatcher,
                 userDao,
                 attachmentManager,
+                planParticipationService,
                 plan );
     }
 }

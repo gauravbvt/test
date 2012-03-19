@@ -14,13 +14,19 @@
              <tr><td>Name:</td><td><input type="text" wicket:id="fullName"/></td></tr>
              <tr><td>Email:</td><td><input type="text" wicket:id="email"/></td></tr>
          </table>
-         <h3>In this plan...</h3>
+         <div class="buttons">
+             <input wicket:id="apply1" type="button" value="Apply" />
+             <input wicket:id="reset1" type="button" value="Reset"/>
+         </div>
+         <h3>My participation</h3>
          <ul>
              <li>I am<span wicket:id="userRole">a planner</span></li>
-             <li wicket:id="assignation">I participate as the NJ Transit Chief of police</li>
+             <li wicket:id="participations">
+                 <span wicket:id="participation">I participate as the NJ Transit Chief of police</span>
+             </li>
           </ul>
-         <div wicket:id="updatedContact">
-             <h4> Updated or additional contact info:</h4>
+         <div wicket:id="userContact">
+             <h3> My personal contact info</h3>
              <span wicket:id="contactInfo">[channels list panel]</span>
          </div>
          <h3>My password</h3>
@@ -35,8 +41,8 @@
              </ul>
          </div>
          <div class="buttons">
-             <input wicket:id="apply" type="button" value="Apply" />
-             <input wicket:id="reset" type="button" value="Reset"/>
+             <input wicket:id="apply2" type="button" value="Apply" />
+             <input wicket:id="reset2" type="button" value="Reset"/>
          </div>
      </div>
 </wicket:panel>

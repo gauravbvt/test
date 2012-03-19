@@ -42,7 +42,7 @@ public class PresenceRecordServiceImpl
 
 
     @Override
-    @Transactional
+    @Transactional( readOnly = true)
     public PresenceRecord findLatestPresence( String username, String uri ) {
         PresenceRecord latestPresence;
         if ( isLatestPresenceCached( uri, username ) ) {

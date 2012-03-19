@@ -288,7 +288,7 @@ public class FlowConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "receiptConfirmationRequested" ) ) {
                 flow.setReceiptConfirmationRequested( Boolean.valueOf( reader.getValue() ) );
             } else {
-                LOG.warn( "Unknown element " + nodeName );
+                LOG.debug( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }

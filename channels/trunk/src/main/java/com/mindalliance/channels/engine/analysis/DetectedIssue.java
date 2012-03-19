@@ -52,6 +52,8 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      */
     private Level severity = Level.Low;
 
+    public DetectedIssue() { };
+
     /**
      * Constructor.
      *

@@ -140,6 +140,9 @@ CONFIGURATION NOTES:
         </property>
     </bean>
 
+    <bean id="planParticipationService" class="com.mindalliance.channels.core.dao.user.PlanParticipationServiceImpl"/>
+
+
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
         <property name="algo" value="dot"/>
@@ -192,7 +195,8 @@ CONFIGURATION NOTES:
         <constructor-arg ref="semanticMatcher"/>
         <constructor-arg ref="userDao"/>
         <constructor-arg ref="attachmentManager"/>
-    </bean>
+        <constructor-arg ref="planParticipationService"/>
+   </bean>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
         <property name="resourceLoaderPath" value="/WEB-INF/templates"/>
@@ -485,6 +489,7 @@ CONFIGURATION NOTES:
         <property name="userDao" ref="userDao"/>
         <property name="attachmentManager" ref="attachmentManager"/>
         <property name="analyst" ref="analyst"/>
+        <property name="planParticipationService" ref="planParticipationService"/>
     </bean>
 
 

@@ -2,10 +2,9 @@ package com.mindalliance.channels.pages.components.social.menus;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.CommandException;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
-import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
@@ -34,19 +33,22 @@ public class SocialItemMenuPanel extends MenuPanel {
 
     private String username;
     private IModel<? extends PersistentPlanObject> poModel;
+    private boolean showProfile;
     private Updatable updatable;
-    private IModel<Participation> participationModel;
+    private IModel<ChannelsUserInfo> userInfoIModelModel;
 
     public SocialItemMenuPanel(
             String id,
-            IModel<Participation> participationModel,
+            IModel<ChannelsUserInfo> userInfoIModelModel,
             String username,
             IModel<? extends PersistentPlanObject> poModel,
+            boolean showProfile,
             Updatable updatable ) {
-        super( id, "more", participationModel );
-        this.participationModel = participationModel;
+        super( id, "more", userInfoIModelModel );
+        this.userInfoIModelModel = userInfoIModelModel;
         this.username = username;
         this.poModel = poModel;
+        this.showProfile = showProfile;
         this.updatable = updatable;
         doInit();
     }
@@ -61,11 +63,11 @@ public class SocialItemMenuPanel extends MenuPanel {
 
     public List<Component> getMenuItems() throws CommandException {
         List<Component> menuItems = new ArrayList<Component>();
-        Participation participation = getParticipation();
+        ChannelsUserInfo userInfo = getUserInfo();
         final String currentUsername = getUser().getUsername();
-        if ( participation != null ) {
-            final Actor actor = participation.getActor();
-            if ( actor != null && canShowAgentProfile() ) {
+        if ( userInfo != null ) {
+            final Actor actor = findActor( userInfo );
+            if ( actor != null && showProfile ) {
                 Link link = new AjaxFallbackLink( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         update( target, new Change( Change.Type.Expanded, actor ) );
@@ -76,7 +78,7 @@ public class SocialItemMenuPanel extends MenuPanel {
                         new Model<String>( "Show profile" ),
                         link ) );
             }
-            final String participant = participation.getUsername();
+            final String participant = userInfo.getUsername();
             if ( participant != null && !participant.equals( currentUsername ) ) {
                 Link link = new AjaxFallbackLink( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {
@@ -119,16 +121,13 @@ public class SocialItemMenuPanel extends MenuPanel {
         return menuItems;
     }
 
-    private boolean canShowAgentProfile() {
-        return ( (Component) updatable ).getPage().getClass().isAssignableFrom( PlanPage.class );
-    }
 
     private PersistentPlanObject getPersistentObject() {
         return poModel == null ? null : poModel.getObject();
     }
 
-    private Participation getParticipation() {
-        return participationModel.getObject();
+    private ChannelsUserInfo getUserInfo() {
+        return userInfoIModelModel.getObject();
     }
 
 }

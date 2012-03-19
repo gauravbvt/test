@@ -266,6 +266,16 @@ public class ChannelsUser implements UserDetails {
      * @return a string
      */
     public String getNormalizedFullName() {
+        return getNormalizedFullName( true );
+    }
+
+    /**
+     * Return a normalized version of the full name with or without username.
+     *
+     * @param withUsername whether to add username
+     * @return a string
+     */
+    public String getNormalizedFullName( boolean withUsername ) {
         String normalized;
         String name = getFullName().trim();
         int index = name.lastIndexOf( ' ' );
@@ -275,8 +285,12 @@ public class ChannelsUser implements UserDetails {
         } else {
             normalized = name;
         }
-        return normalized + " (" + getUsername() + ')';
+        if ( withUsername )
+            return normalized + " (" + getUsername() + ')';
+        else
+            return normalized;
     }
+
 
     /**
      * Test for a given role string in an authentication object.

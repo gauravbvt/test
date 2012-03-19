@@ -124,7 +124,7 @@ public class ActorConverter extends EntityConverter {
             Availability availability = (Availability) context.convertAnother( plan, Availability.class );
             actor.setAvailability(  availability );
         } else {
-            LOG.warn( "Unknown element " + nodeName );
+            LOG.debug( "Unknown element " + nodeName );
         }
     }
 

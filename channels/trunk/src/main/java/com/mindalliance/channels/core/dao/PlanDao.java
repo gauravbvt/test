@@ -3,7 +3,6 @@ package com.mindalliance.channels.core.dao;
 import com.mindalliance.channels.core.Attachable;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.dao.PlanDefinition.Version;
-import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
@@ -19,7 +18,6 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
@@ -250,16 +248,6 @@ public class PlanDao {
             add( medium );
             medium.makeImmutable();
         }
-        Participation.UNKNOWN = findOrCreateType( Participation.class, Participation.UnknownName, null );
-        Participation.UNKNOWN.makeImmutable();
-
-        // Make sure that there is one participation per user
-        if ( userDao != null )
-            for ( String username : userDao.getUsernames( plan.getUri() ) ) {
-                Participation p = findOrCreate( Participation.class, username, null );
-                p.setActual();
-            }
-
         idGenerator.setLastAssignedId( id, plan );
     }
 
@@ -460,7 +448,7 @@ public class PlanDao {
         Set<? extends ModelObject> referencers = getReferencingObjects();
         Class<?>[] classes = {
                 TransmissionMedium.class, Actor.class, Role.class, Place.class, Organization.class, Event.class,
-                Phase.class, Participation.class
+                Phase.class
         };
 
         Iterator<? extends ModelEntity>[] iterators = new Iterator[classes.length];
@@ -498,13 +486,7 @@ public class PlanDao {
 
     @SuppressWarnings( {"unchecked", "RawUseOfParameterizedType"} )
     private boolean isReferenced( ModelObject mo, Set<? extends ModelObject> referencingObjects ) {
-        if ( mo instanceof Participation ) {
-            // Participations are not referenced per se but are not obsolete if they name a
-            // registered user.
-            Participation participation = (Participation) mo;
-            ChannelsUser user = userDao.getUserNamed( participation.getUsername() );
-            return user != null;
-        } else if ( plan.references( mo ) )
+        if ( plan.references( mo ) )
             return true;
 
         for ( ModelObject object : referencingObjects )

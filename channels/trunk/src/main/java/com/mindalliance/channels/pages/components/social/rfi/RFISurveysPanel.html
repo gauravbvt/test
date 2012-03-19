@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div>
+        Show
+        <input wicket:id="active" type="checkbox"/>
+        only active
+        surveys about
+        <select wicket:id="aboutChoice">
+            <option>All</option>
+            <option>The plan</option>
+            <option>Events</option>
+            <option>Organizations</option>
+            <option>Roles</option>
+        </select>
+    </div>
+    <div wicket:id="rfiSurveys">[RFI survey table]</div>
+    <div wicket:id="rfiSurveyContainer">
+        <h3 wicket:id="rfiSurveyLabel">Survey about event "IED explosion: What risks and opportunities are created by
+            the event?"</h3>
+        <span wicket:id="rfiSurvey">[RFI survey panel]</span>
+    </div>
+</wicket:panel>
+</body>
+</html>

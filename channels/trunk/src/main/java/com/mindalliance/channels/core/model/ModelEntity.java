@@ -53,10 +53,6 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
      */
     private static final TransmissionMedium ANY_MEDIUM_TYPE;
     /**
-     * Universal participation type.
-     */
-    private static final Participation ANY_PARTICIPATION_TYPE;
-    /**
      * All universal types.
      */
     private static final List<ModelEntity> UNIVERSAL_TYPES;
@@ -104,10 +100,6 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         ANY_MEDIUM_TYPE.setId( 10000000L - 16 );
         ANY_MEDIUM_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_MEDIUM_TYPE );
-        ANY_PARTICIPATION_TYPE = new Participation( "any participation" );
-        ANY_PARTICIPATION_TYPE.setId( 10000000L - 17 );
-        ANY_PARTICIPATION_TYPE.setType();
-        UNIVERSAL_TYPES.add( ANY_PARTICIPATION_TYPE );
     }
 
     protected ModelEntity() {
@@ -115,6 +107,18 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
 
     protected ModelEntity( String name ) {
         super( name );
+    }
+    
+    public static List<String> typeNames() {
+        List<String> typeNames = new ArrayList<String>(  );
+        typeNames.add( new Actor( ).getTypeName() );
+        typeNames.add( new Event( ).getTypeName() );
+        typeNames.add( new Organization( ).getTypeName() );
+        typeNames.add( new Place( ).getTypeName() );
+        typeNames.add( new Role( ).getTypeName() );
+        typeNames.add( new Phase( ).getTypeName() );
+        typeNames.add( new TransmissionMedium( ).getTypeName() );
+        return typeNames;
     }
 
     /**
@@ -260,8 +264,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 || equals( ANY_PLACE_TYPE )
                 || equals( ANY_ROLE_TYPE )
                 || equals( ANY_PHASE_TYPE )
-                || equals( ANY_MEDIUM_TYPE )
-                || equals( ANY_PARTICIPATION_TYPE );
+                || equals( ANY_MEDIUM_TYPE );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -280,8 +283,6 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
             return (T) ANY_PHASE_TYPE;
         } else if ( entityClass == TransmissionMedium.class ) {
             return (T) ANY_MEDIUM_TYPE;
-        } else if ( entityClass == Participation.class ) {
-            return (T) ANY_PARTICIPATION_TYPE;
         } else {
             throw new RuntimeException( "No known universal type for " + entityClass.getSimpleName() );
         }

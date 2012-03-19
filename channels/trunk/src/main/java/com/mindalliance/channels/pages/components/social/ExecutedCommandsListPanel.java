@@ -44,11 +44,13 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
     private AjaxFallbackLink showAFew;
     private AjaxFallbackLink showMore;
     private Updatable updatable;
+    private boolean showProfile;
     private Date whenLastRefreshed;
 
-    public ExecutedCommandsListPanel( String id, Updatable updatable, boolean collapsible ) {
+    public ExecutedCommandsListPanel( String id, Updatable updatable, boolean collapsible, boolean showProfile ) {
         super( id, collapsible );
         this.updatable = updatable;
+        this.showProfile = showProfile;
         init();
     }
 
@@ -114,6 +116,7 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
                         "executedCommand",
                         new Model<ExecutedCommand>( executedCommand ),
                         item.getIndex(),
+                        showProfile,
                         updatable );
                 item.add( executedCommandPanel );
             }

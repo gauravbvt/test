@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
@@ -188,7 +187,7 @@ public class SurveyContactsPanel extends AbstractUpdatablePanel implements Filte
         Place planLocale = getPlan().getLocale();
         for ( Contact contact : getAllContacts() ) {
             String username = contact.getUsername();
-            Actor actor = queryService.findOrCreate( Participation.class, username ).getActor();
+            Actor actor = /*queryService.findOrCreate( Participation.class, username ).getActor();*/ null;
             if ( actor == null ) {
                 contactDescriptors.add( new ContactDescriptor( contact, null ) );
             } else {

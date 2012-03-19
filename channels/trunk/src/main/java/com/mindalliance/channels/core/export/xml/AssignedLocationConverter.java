@@ -89,14 +89,14 @@ public class AssignedLocationConverter  extends AbstractChannelsConverter {
                     } else if ( subNodeName.equals( "eoi" ) ) {
                         eoi = reader.getValue();
                     } else {
-                        LOG.warn( "Unknown element " + subNodeName );
+                        LOG.debug( "Unknown element " + subNodeName );
                     }
                     reader.moveUp();
                 }
                 Subject subject = new Subject( info, eoi );
                 assignedLocation.setSubject( subject );
             } else {
-                LOG.warn( "Unknown element " + nodeName );
+                LOG.debug( "Unknown element " + nodeName );
             }
             reader.moveUp();
          }

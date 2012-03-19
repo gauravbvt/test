@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div>
+        Show
+        <select wicket:id="statusChoice">
+            <option>All</option>
+            <option>Active</option>
+            <option>Draft</option>
+            <option>Obsolete</option>
+            <option>Draft</option>
+        </select>
+        RFIs about
+        <select wicket:id="aboutChoice">
+            <option>Anything</option>
+            <option>The plan</option>
+            <option>Events</option>
+            <option>Organizations</option>
+            <option>Roles</option>
+        </select>
+    </div>
+    <div wicket:id="questionnaires">[RFIs table]</div>
+    <input wicket:id="newQuestionnaire" type="button" value="Add new questionnaire"/>
+
+    <div wicket:id="questionnaire">
+        <h3 wicket:id="questionnaireLabel">RFIs about event "IED explosion: What risks and opportunities are created by
+            the event?"</h3>
+        <span wicket:id="questionnaireManager">[RFI manager panel]</span>
+    </div>
+</wicket:panel>
+</body>
+</html>

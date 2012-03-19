@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -16,36 +17,36 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType( propOrder = {"information", "doingTask", "followUpTask", "documentation"} )
 public class InfoDiscoveredData {
 
-    private Commitment notificationToSelf;
+    private Flow notificationToSelf;
     private PlanService planService;
 
     public InfoDiscoveredData() {
         // required
     }
 
-    public InfoDiscoveredData( Commitment notificationToSelf, PlanService planService ) {
+    public InfoDiscoveredData( Flow notificationToSelf, PlanService planService ) {
         this.notificationToSelf = notificationToSelf;
         this.planService = planService;
     }
 
     @XmlElement
     public InformationData getInformation() {
-        return new InformationData( notificationToSelf.getSharing() );
+        return new InformationData( notificationToSelf );
     }
 
     @XmlElement
     public TaskData getDoingTask() {
-        return new TaskData( notificationToSelf.getCommitter(), planService );
+        return new TaskData( (Part)notificationToSelf.getSource(), planService );
     }
 
     @XmlElement
     public TaskData getFollowUpTask() {
-        return new TaskData( notificationToSelf.getBeneficiary(), planService );
+        return new TaskData( (Part)notificationToSelf.getTarget(), planService );
     }
 
     @XmlElement
     public DocumentationData getDocumentation() {
-        return new DocumentationData( notificationToSelf.getSharing() );
+        return new DocumentationData( notificationToSelf );
     }
 
 }

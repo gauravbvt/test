@@ -58,7 +58,7 @@ public class JournalConverter extends AbstractChannelsConverter {
                 Command command = (Command) context.convertAnother( journal, AbstractCommand.class );
                 journal.addCommand( command );
             } else {
-                LOG.warn( "Unknown element " + nodeName );
+                LOG.debug( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }

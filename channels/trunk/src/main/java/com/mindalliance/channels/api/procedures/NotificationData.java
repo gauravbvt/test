@@ -1,11 +1,11 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -24,7 +24,7 @@ import java.util.Set;
  * Time: 12:49 PM
  */
 @XmlType( propOrder = {"information", "intent", "receiptConfirmationRequested", "instructions", "contactAll",
-        "maxDelay", "employments", "mediumIds", "failureImpact", "consumingTask", "documentation", "agreements"} )
+        "maxDelay", "employments", "mediumIds", "failureImpact", "consumingTask", "documentation"/*, "agreements"*/} )
 public class NotificationData extends AbstractFlowData {
 
     private boolean consuming;
@@ -34,11 +34,11 @@ public class NotificationData extends AbstractFlowData {
     }
 
     public NotificationData(
-            Commitment notificationCommitment,
+            Flow notification,
             boolean consuming,
             Assignment assignment,
             PlanService planService ) {
-        super( notificationCommitment, assignment, planService );
+        super( notification, assignment, planService );
         this.consuming = consuming;
     }
 
@@ -70,7 +70,7 @@ public class NotificationData extends AbstractFlowData {
     @Override
     @XmlElement( name = "contact" )
     public List<EmploymentData> getEmployments() {
-       return super.getEmployments();
+        return super.getEmployments();
     }
 
     @Override
@@ -111,21 +111,29 @@ public class NotificationData extends AbstractFlowData {
         return super.getDocumentation();
     }
 
-    @Override
-    @XmlElement( name = "agreement" )
-    public List<AgreementData> getAgreements() {
-        return super.getAgreements();
-    }
+    /*   @Override
+        @XmlElement( name = "agreement" )
+        public List<AgreementData> getAgreements() {
+            return super.getAgreements();
+        }
+    */
 
+    @Override
     protected List<Employment> contacts() {
-        Set<Employment> contacts = new HashSet<Employment>(  );
-        Part part = consuming
-                ? (Part)getNotification().getSource() :
-                (Part)getNotification().getTarget();
-        for (Assignment otherAssignment : getPlanService().findAllAssignments( part, false ) ) {
-            Employment employment = otherAssignment.getEmployment();
-            if ( !employment.getActor().equals( getAssignment().getActor() ) ) {
-                contacts.add( employment );
+        Set<Employment> contacts = new HashSet<Employment>();
+        Actor assignedActor = getAssignment().getActor();
+        List<Commitment> commitments = getPlanService().findAllCommitments( getNotification() );
+        for ( Commitment commitment : commitments ) {
+            if ( consuming ) {
+               if ( commitment.getBeneficiary().getActor().equals(  assignedActor )
+                  && !commitment.getCommitter().getActor().equals( assignedActor ) ) {
+                   contacts.add( commitment.getCommitter().getEmployment() );
+               }
+            } else { // producing
+                if ( commitment.getCommitter().getActor().equals(  assignedActor )
+                        && !commitment.getBeneficiary().getActor().equals( assignedActor ) ) {
+                    contacts.add( commitment.getBeneficiary().getEmployment() );
+                }
             }
         }
         return new ArrayList<Employment>( contacts );

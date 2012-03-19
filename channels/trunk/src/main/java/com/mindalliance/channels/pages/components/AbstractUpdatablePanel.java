@@ -12,6 +12,10 @@ import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -22,6 +26,8 @@ import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -36,6 +42,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -60,6 +68,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     @SpringBean
     private ChannelsUser user;
+
+    @SpringBean
+    private PlanParticipationService planParticipationService;
+
 
     /**
      * String comparator for equality tests.
@@ -333,14 +345,12 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
         if ( summary.isEmpty() )
             component.add( new AttributeModifier( "class",
-                    true,
                     new Model<String>( hasIssues ? "waived" : "no-error" ) ),
                     new AttributeModifier( "title",
-                            true,
                             new Model<String>( hasIssues ? "All issues waived" : "" ) ) );
         else
-            component.add( new AttributeModifier( "class", true, new Model<String>( "error" ) ),
-                    new AttributeModifier( "title", true, new Model<String>( summary ) ) );
+            component.add( new AttributeModifier( "class", new Model<String>( "error" ) ),
+                    new AttributeModifier( "title",  new Model<String>( summary ) ) );
     }
 
     public ChannelsUser getUser() {
@@ -401,8 +411,8 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     protected Label editedByLabel( String id, final Identifiable identifiable, final String username ) {
         Label label = new Label( id, "(Edited by " + getQueryService().findUserFullName( username ) + ")" );
-        label.add( new AttributeModifier( "class", true, new Model<String>( "disabled pointer" ) ) );
-        label.add( new AttributeModifier( "title", true, new Model<String>( "Click to send a message" ) ) );
+        label.add( new AttributeModifier( "class", new Model<String>( "disabled pointer" ) ) );
+        label.add( new AttributeModifier( "title", new Model<String>( "Click to send a message" ) ) );
         label.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
@@ -420,7 +430,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     protected Label timeOutLabel( String id ) {
         Label label = new Label( id, new Model<String>( getPlan().isDevelopment() ? "Timed out" : "" ) );
-        label.add( new AttributeModifier( "class", true, new Model<String>( "disabled timed-out" ) ) );
+        label.add( new AttributeModifier( "class", new Model<String>( "disabled timed-out" ) ) );
         return label;
     }
 
@@ -473,4 +483,41 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
             }
         }
     }
+
+    @SuppressWarnings( "unchecked" )
+    protected Actor findActor( ChannelsUserInfo userInfo ) {
+        final QueryService queryService = getQueryService();
+        List<PlanParticipation> participations = planParticipationService.getParticipations(
+                getPlan(),
+                userInfo,
+                getQueryService() );
+        List<Actor> actors = (List<Actor>) CollectionUtils.collect(
+                participations,
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ( (PlanParticipation) input ).getActor( queryService );
+                    }
+                }
+        );
+        Collections.sort(
+                actors,
+                new Comparator<Actor>() {
+                    @Override
+                    public int compare( Actor a1, Actor a2 ) {
+                        if ( a1.isArchetype() ) return 1;
+                        if ( a2.isArchetype() ) return -1;
+                        if ( a1.isSingular() ) return -1;
+                        if ( a2.isSingular() ) return 1;
+                        return 0;
+                    }
+                }
+        );
+        if ( actors.size() > 0 ) {
+            return actors.get( 0 );
+        } else {
+            return null;
+        }
+    }
+
 }

@@ -6,15 +6,13 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.query.QueryService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +30,8 @@ public class ActorPlaceHolderWithoutParticipation extends AbstractIssueDetector 
         List<Issue> issues = new ArrayList<Issue>();
         final Actor actor = (Actor) modelObject;
         if ( actor.isActual() && actor.isPlaceHolder() ) {
-            boolean hasParticipation =
-                    CollectionUtils.exists( queryService.getUserDao().getUsernames(), new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            Participation participation = queryService.findParticipation( (String) object );
-                            return participation != null && participation.hasActor( actor );
-                        }
-                    } );
+            List<PlanParticipation> participations = queryService.findParticipations( actor );
+            boolean hasParticipation = !participations.isEmpty();
             if ( !hasParticipation ) {
                 Issue issue = makeIssue( queryService, Issue.COMPLETENESS, actor );
                 issue.setDescription( "Agent \"" + actor.getName() + "\" is a placeholder but with no user assigned." );

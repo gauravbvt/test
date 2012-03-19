@@ -12,7 +12,6 @@ import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
@@ -241,7 +240,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "actor" ) ) {
                 context.convertAnother( plan, Actor.class );
             } else if ( nodeName.equals( "participation" ) ) {
-                context.convertAnother( plan, Participation.class );
+                LOG.debug( "Obsolete element: participation" );
             } else if ( nodeName.equals( "organization" ) ) {
                 context.convertAnother( plan, Organization.class );
             } else if ( nodeName.equals( "role" ) ) {
@@ -300,7 +299,7 @@ public class PlanConverter extends AbstractChannelsConverter {
                         plan,
                         Requirement.class );
             } else {
-                LOG.warn( "Unknown element " + nodeName );
+                LOG.debug( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }

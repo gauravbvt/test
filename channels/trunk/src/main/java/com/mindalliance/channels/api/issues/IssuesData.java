@@ -36,6 +36,7 @@ public class IssuesData {
     public IssuesData( PlanService planService, Analyst analyst, ChannelsUserDao userDao ) {
         this.planService = planService;
         this.analyst = analyst;
+        this.userDao = userDao;
     }
 
     @XmlElement( name = "plan" )

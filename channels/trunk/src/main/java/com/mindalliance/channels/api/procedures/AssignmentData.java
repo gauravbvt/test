@@ -2,7 +2,7 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
-import com.mindalliance.channels.core.query.Commitments;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.jws.WebMethod;
@@ -47,11 +47,11 @@ public class AssignmentData extends AbstractProcedureElementData {
         return new TaskData( getAssignment(), getPlanService() );
     }
 
-    @XmlElement( name = "inNotication" )
+    @XmlElement( name = "inNotification" )
     public List<NotificationData> getInNotifications() {
         if ( inNotifications == null ) {
             inNotifications = new ArrayList<NotificationData>();
-            for ( Commitment inNotification : inNotifications() ) {
+            for ( Flow inNotification : inNotifications() ) {
                 boolean benefiting = true;
                 inNotifications.add( new NotificationData(
                         inNotification,
@@ -67,11 +67,11 @@ public class AssignmentData extends AbstractProcedureElementData {
     public List<RequestData> getInReplies() {
         if ( inReplies == null ) {
             inReplies = new ArrayList<RequestData>();
-            for ( Commitment inReply : inReplies() ) {
-                boolean benefiting = true;
+            for ( Flow inReply : inReplies() ) {
+                boolean replying = false;
                 inReplies.add( new RequestData(
                         inReply,
-                        benefiting,
+                        replying,
                         getAssignment(),
                         getPlanService() ) );
             }
@@ -79,11 +79,11 @@ public class AssignmentData extends AbstractProcedureElementData {
         return inReplies;
     }
 
-    @XmlElement( name = "outNotication" )
+    @XmlElement( name = "outNotification" )
     public List<NotificationData> getOutNotifications() {
         if ( outNotifications == null ) {
             outNotifications = new ArrayList<NotificationData>();
-            for ( Commitment outNotification : outNotifications() ) {
+            for ( Flow outNotification : outNotifications() ) {
                 boolean benefiting = false;
                 outNotifications.add( new NotificationData(
                         outNotification,
@@ -99,11 +99,11 @@ public class AssignmentData extends AbstractProcedureElementData {
     public List<RequestData> getOutReplies() {
         if ( outReplies == null ) {
             outReplies = new ArrayList<RequestData>();
-            for ( Commitment outReply : outReplies() ) {
-                boolean benefiting = false;
+            for ( Flow outReply : outReplies() ) {
+                boolean replying = true;
                 outReplies.add( new RequestData(
                         outReply,
-                        benefiting,
+                        replying,
                         getAssignment(),
                         getPlanService() ) );
             }
@@ -115,7 +115,7 @@ public class AssignmentData extends AbstractProcedureElementData {
     @XmlElement( name = "discovery" )
     public List<DiscoveryData> getDiscoveries() {
         List<DiscoveryData> discoveries = new ArrayList<DiscoveryData>();
-        for ( Commitment discovery : discoveries() ) {
+        for ( Flow discovery : discoveries() ) {
             discoveries.add( new DiscoveryData( discovery, getPlanService() ) );
         }
         return discoveries;
@@ -124,7 +124,7 @@ public class AssignmentData extends AbstractProcedureElementData {
     @XmlElement( name = "research" )
     public List<ResearchData> getResearch() {
         List<ResearchData> allResearch = new ArrayList<ResearchData>();
-        for ( Commitment research : research() ) {
+        for ( Flow research : research() ) {
             allResearch.add( new ResearchData( research, getAssignment(), getPlanService() ) );
         }
         return allResearch;
@@ -212,30 +212,74 @@ public class AssignmentData extends AbstractProcedureElementData {
     }
 
 
-    private Commitments inNotifications() {
-        return procedureData.getBenefitingCommitments().notifications().notTo( getAssignment().getActor() );
+    private List<Flow> inNotifications() {
+        Set<Flow> flows = new HashSet<Flow>(  );
+        for (Commitment commitment : procedureData
+                .getBenefitingCommitments()
+                .notifications()
+                .notTo( getAssignment()
+                        .getActor() ) ) {
+            flows.add( commitment.getSharing() );
+        }
+        return new ArrayList<Flow>( flows  );
     }
 
-    private Commitments inReplies() {
-        return procedureData.getBenefitingCommitments().requests().notTo( getAssignment().getActor() );
+    private  List<Flow> inReplies() {
+        Set<Flow> flows = new HashSet<Flow>(  );
+        for (Commitment commitment : procedureData
+                .getBenefitingCommitments()
+                .requests()
+                .notTo( getAssignment()
+                        .getActor() ) ) {
+            flows.add( commitment.getSharing() );
+        }
+        return new ArrayList<Flow>( flows  );
     }
 
-    private Commitments outNotifications() {
-        return procedureData.getCommittingCommitments().notifications().notTo( getAssignment().getActor() );
+    private  List<Flow> outNotifications() {
+        Set<Flow> flows = new HashSet<Flow>(  );
+        for (Commitment commitment : procedureData
+                .getCommittingCommitments()
+                .notifications()
+                .notTo( getAssignment()
+                        .getActor() ) ) {
+            flows.add( commitment.getSharing() );
+        }
+        return new ArrayList<Flow>( flows  );
     }
 
-    private Commitments outReplies() {
-        return procedureData.getCommittingCommitments().requests().notTo( getAssignment().getActor() );
+    private  List<Flow> outReplies() {
+        Set<Flow> flows = new HashSet<Flow>(  );
+        for (Commitment commitment : procedureData
+                .getCommittingCommitments()
+                .requests()
+                .notTo( getAssignment()
+                        .getActor() ) ) {
+            flows.add( commitment.getSharing() );
+        }
+        return new ArrayList<Flow>( flows  );
     }
 
-    private Commitments discoveries() {
-        return procedureData.getCommittingCommitments().notifications().to( getAssignment().getActor() );
+    private  List<Flow> discoveries() {
+        Set<Flow> flows = new HashSet<Flow>(  );
+        for (Commitment commitment : procedureData
+                .getCommittingCommitments()
+                .notifications()
+                .to( getAssignment()
+                        .getActor() ) ) {
+            flows.add( commitment.getSharing() );
+        }
+        return new ArrayList<Flow>( flows  );
     }
 
-    private Commitments research() {
-        return procedureData.getBenefitingCommitments().requests()
+    private  List<Flow> research() {
+        Set<Flow> flows = new HashSet<Flow>(  );
+        for (Commitment commitment : procedureData.getBenefitingCommitments().requests()
                 .to( getAssignment().getActor() )
-                .from( getAssignment().getActor() );
+                .from( getAssignment().getActor() ) ) {
+            flows.add( commitment.getSharing() );
+        }
+        return new ArrayList<Flow>( flows  );
     }
 
     

@@ -72,7 +72,6 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
         save( userInfo );
     }
 
-
     @Override
     @Transactional
     public void deleteUser( ChannelsUser user ) {
@@ -228,4 +227,5 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
         if ( user == null ) throw new UsernameNotFoundException( "User " + identifier + " not found" );
         else return user;
     }
+
 }

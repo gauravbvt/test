@@ -20,7 +20,9 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.Predicate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -261,6 +263,20 @@ public class Assignments implements Iterable<Assignment>, Serializable {
         } );
         return result;
     }
+
+    @SuppressWarnings( "unchecked" )
+    public List<Actor> getActualKnownActors() {
+        return (List<Actor>)CollectionUtils.select(
+                getActualActors(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !((Actor)object).isUnknown();
+                    }
+                }
+        );
+    }
+
 
     public List<Role> getRoles() {
         Set<Role> roles = new HashSet<Role>();

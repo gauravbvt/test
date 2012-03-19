@@ -67,6 +67,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private AjaxFallbackLink showAFew;
     private AjaxFallbackLink showMore;
     private Updatable updatable;
+    private boolean showProfile;
     private WebMarkupContainer newMessageContainer;
     private AjaxFallbackLink showHideBroadcastsLink;
     private Label showHideBroadcastsLabel;
@@ -79,9 +80,10 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         ALL_USERS = new ChannelsUser( new ChannelsUserInfo( UserMessageService.USERS, "bla,Anonymous,bla" ) );
     }
 
-    public UserMessageListPanel( String id, Updatable updatable, boolean collapsible ) {
+    public UserMessageListPanel( String id, Updatable updatable, boolean collapsible, boolean showProfile ) {
         super( id, collapsible );
         this.updatable = updatable;
+        this.showProfile = showProfile;
         newMessageRecipient = ALL_PLANNERS;
         init();
     }
@@ -164,6 +166,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                         new Model<UserMessage>( userMessage ),
                         isShowReceived(),
                         item.getIndex(),
+                        showProfile,
                         updatable );
                 item.add( userMessagePanel );
             }

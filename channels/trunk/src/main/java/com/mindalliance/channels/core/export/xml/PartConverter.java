@@ -207,7 +207,7 @@ public class PartConverter extends AbstractChannelsConverter {
                         kind, context ) );
             } else if ( nodeName.equals( "location" ) ) {
                 // deprecated
-                LOG.warn( "The part \"location\" element is deprecated. Use \"assignedLocation\" instead." );
+                LOG.debug( "The part \"location\" element is deprecated. Use \"assignedLocation\" instead." );
                 String idString = reader.getAttribute( "id" );
                 ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
                 AssignedLocation assignedLocation = new AssignedLocation();
@@ -266,7 +266,7 @@ public class PartConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "prohibited" ) ) {
                 part.setProhibited( reader.getValue().equals( "true" ) );
             } else {
-                LOG.warn( "Unknown element " + nodeName );
+                LOG.debug( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }

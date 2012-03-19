@@ -1,10 +1,6 @@
 package com.mindalliance.channels.social.model;
 
-import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
-import com.mindalliance.channels.core.query.QueryService;
 
 import javax.persistence.Entity;
 
@@ -17,17 +13,9 @@ import javax.persistence.Entity;
  * Time: 10:40 AM
  */
 @Entity
-public class UserStatement extends AbstractPersistentPlanObject {
+public class UserStatement extends AbstractModelObjectReferencingPPO {
     
     private String text;
-    /**
-     * Model object reference as string.
-     */
-    private String moRef;
-    /**
-     * Model object label.
-     */
-    private String moLabel;
 
     public UserStatement() {
     }
@@ -43,8 +31,8 @@ public class UserStatement extends AbstractPersistentPlanObject {
     }
 
     public UserStatement( String planUri, int planVersion, String username, String text, ModelObject modelObject ) {
-        this( planUri, planVersion, username, text );
-        moRef = new ModelObjectRef( modelObject ).asString();
+        super( planUri, planVersion, username, modelObject );
+        this.text = text;
     }
 
     public String getText() {
@@ -55,45 +43,5 @@ public class UserStatement extends AbstractPersistentPlanObject {
         this.text = text;
     }
 
-    public String getMoRef() {
-        return moRef;
-    }
-
-    public void setMoRef( ModelObject modelObject ) {
-        moRef = new ModelObjectRef( modelObject ).asString();
-        moLabel = aboutLabel( modelObject );
-    }
-
-    public void setMoRef( String moRef ) {
-        this.moRef = moRef;
-    }
-
-    public String getMoLabel() {
-        return moLabel == null ? "" : moLabel;
-    }
-
-    public void setMoLabel( String moLabel ) {
-        this.moLabel = moLabel;
-    }
-
-    private String aboutLabel( ModelObject mo ) {
-        String description = "";
-        if ( mo != null ) {
-            description = mo.getKindLabel() + " \"" + mo.getLabel() + "\"";
-            if ( mo instanceof SegmentObject ) {
-                description += " in segment \"" + ( (SegmentObject) mo ).getSegment().getLabel() + "\"";
-            }
-        }
-        return description;
-    }
-
-    public ModelObject getAbout( QueryService queryService ) {
-        ModelObjectRef aboutRef = getAboutRef();
-        return aboutRef == null ? null : (ModelObject) aboutRef.resolve( queryService );
-    }
-
-    public ModelObjectRef getAboutRef() {
-        return moRef == null ? null : ModelObjectRef.fromString( moRef );
-    }
 
 }

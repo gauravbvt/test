@@ -12,7 +12,6 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Participation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
@@ -212,10 +211,10 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
         Actor paramActor = null;
         Actor participationActor = null;
         ChannelsUser user = this.user;
-        Participation participation = getQueryService().findParticipation( user.getUsername() );
+       /* Participation participation = getQueryService().findParticipation( user.getUsername() );
         if ( participation != null ) {
             participationActor = participation.getActor();
-        }
+        }*/
         PageParameters pageParameters = page.getPageParameters();
         long actorId = pageParameters.getNamedKeys().contains( SelectorPanel.ACTOR_PARM ) ? pageParameters
                 .get( SelectorPanel.ACTOR_PARM ).toLong() : -1;
@@ -386,9 +385,9 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
                 } catch ( NotFoundException ignored ) {
                 }
         } else {
-            Participation participation = queryService.findParticipation( user.getUsername() );
+           /* Participation participation = queryService.findParticipation( user.getUsername() );
             if ( participation != null )
-                a = participation.getActor();
+                a = participation.getActor();*/
         }
 
         if ( a == null || getAllAssignments().with( a ).isEmpty() ) {

@@ -102,7 +102,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                     } else if ( nodeName.equals( "attachments" ) ) {
                         importAttachments( issue, reader );
                     } else {
-                        LOG.warn( "Unknown element " + nodeName );
+                        LOG.debug( "Unknown element " + nodeName );
                     }
                     reader.moveUp();
                 }
@@ -113,10 +113,10 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                 }
                 idMap.put( issueId, issue.getId() );
             } else {
-                LOG.warn( "Model object issue " + issueId + " is about is not found" );
+                LOG.debug( "Model object issue " + issueId + " is about is not found" );
             }
         } catch ( NotFoundException e ) {
-            XmlStreamer.LOG.warn( "Obsolete issue", e );
+            LOG.debug( "Obsolete issue", e );
             issue = null;
         }
         return issue;

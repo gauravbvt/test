@@ -1,12 +1,15 @@
 package com.mindalliance.channels.social.model.rfi;
 
+import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.pages.Channels;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,25 +22,94 @@ import java.util.List;
 @Entity
 public class RFI extends AbstractPersistentPlanObject {
 
-    @ManyToOne( cascade = CascadeType.ALL )
-    private Questionnaire questionnaire;
+    public static final RFI UNKNOWN = new RFI( Channels.UNKNOWN_RFI_ID );
 
+
+    @ManyToOne( cascade = CascadeType.ALL )
+    private RFISurvey rfiSurvey;
+
+    /**
+     * username of user being questioned.
+     */
+    private String surveyedUsername;
+
+   // Employment = organization and role ids, and title
+    private String title;
+    private Long organizationId;
+    private Long roleId;
+
+    private Date deadline;
+    private Date nagged;
     private boolean declined = false;
 
     private String reasonDeclined = "";
 
     @OneToMany( mappedBy="rfi", cascade = CascadeType.ALL )
-    private List<Forwarding> forwardedTo = new ArrayList<Forwarding>(  );
+    private List<RFIForward> forwards = new ArrayList<RFIForward>(  );
 
     @OneToMany (mappedBy="rfi", cascade = CascadeType.ALL)
     private List<AnswerSet> answerSets = new ArrayList<AnswerSet>(  );
 
-    public Questionnaire getQuestionnaire() {
-        return questionnaire;
+    public RFI() {}
+
+    public RFI( long id ) {
+        this.id = id;
     }
 
-    public void setQuestionnaire( Questionnaire questionnaire ) {
-        this.questionnaire = questionnaire;
+    public RFI( String username, String planUri, int planVersion ) {
+        super( planUri, planVersion, username );
+    }
+
+    public RFI( String username, String planUri, int planVersion, String surveyedUsername, Employment employment ) {
+        this( username, planUri, planVersion );
+        this.surveyedUsername = surveyedUsername;
+        title = employment.getTitle();
+        organizationId = employment.getOrganization().getId();
+        roleId = employment.getRole().getId();
+    }
+
+    public boolean isUnknown() {
+        return this.equals( UNKNOWN );
+    }
+
+    public String getSurveyedUsername() {
+        return surveyedUsername;
+    }
+
+    public void setSurveyedUsername( String surveyedUsername ) {
+        this.surveyedUsername = surveyedUsername;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle( String title ) {
+        this.title = title;
+    }
+
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId( Long organizationId ) {
+        this.organizationId = organizationId;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId( Long roleId ) {
+        this.roleId = roleId;
+    }
+
+    public RFISurvey getRfiSurvey() {
+        return rfiSurvey;
+    }
+
+    public void setRfiSurvey( RFISurvey rfiSurvey ) {
+        this.rfiSurvey = rfiSurvey;
     }
 
     public boolean isDeclined() {
@@ -56,16 +128,32 @@ public class RFI extends AbstractPersistentPlanObject {
         this.reasonDeclined = reasonDeclined;
     }
 
-    public List<Forwarding> getForwardedTo() {
-        return forwardedTo;
+    public Date getDeadline() {
+        return deadline;
     }
 
-    public void setForwardedTo( List<Forwarding> forwardedTo ) {
-        this.forwardedTo = forwardedTo == null ? new ArrayList<Forwarding>(  ) : forwardedTo;
+    public void setDeadline( Date deadline ) {
+        this.deadline = deadline;
+    }
+
+    public Date getNagged() {
+        return nagged;
+    }
+
+    public void setNagged( Date nagged ) {
+        this.nagged = nagged;
+    }
+
+    public List<RFIForward> getForwards() {
+        return forwards;
+    }
+
+    public void setForwards( List<RFIForward> forwards ) {
+        this.forwards = forwards == null ? new ArrayList<RFIForward>(  ) : forwards;
     }
     
-    public void addForwarding( Forwarding forwarding ) {
-        getForwardedTo().add( forwarding );
+    public void addForwarding( RFIForward forwarding ) {
+        getForwards().add( forwarding );
     }
 
     public List<AnswerSet> getAnswerSets() {
@@ -75,4 +163,5 @@ public class RFI extends AbstractPersistentPlanObject {
     public void setAnswerSets( List<AnswerSet> answerSets ) {
         this.answerSets = answerSets;
     }
+
 }

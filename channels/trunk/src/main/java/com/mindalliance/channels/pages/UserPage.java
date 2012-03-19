@@ -9,10 +9,8 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
@@ -66,6 +64,7 @@ public class UserPage extends AbstractChannelsWebPage {
      */
     @SpringBean
     private MailSender mailSender;
+
     /**
      * The big form -- used for attachments and segment imports only.
      */
@@ -161,7 +160,7 @@ public class UserPage extends AbstractChannelsWebPage {
     private void addSpinner() {
         spinner = new WebMarkupContainer( "spinner" );
         spinner.setOutputMarkupId( true );
-        spinner.add( new AttributeModifier( "id", true, new Model<String>( "spinner" ) ) );
+        spinner.add( new AttributeModifier( "id", new Model<String>( "spinner" ) ) );
         form.addOrReplace( spinner );
     }
 
@@ -174,7 +173,7 @@ public class UserPage extends AbstractChannelsWebPage {
 
         } else {
             BookmarkablePageLink<HelpPage> helpLink = new BookmarkablePageLink<HelpPage>( "help-link", HelpPage.class );
-            helpLink.add( new AttributeModifier( "target", true, new Model<String>( "help" ) ) );
+            helpLink.add( new AttributeModifier( "target", new Model<String>( "help" ) ) );
             helpLink.setPopupSettings( new PopupSettings(
                     PopupSettings.RESIZABLE |
                             PopupSettings.SCROLLBARS |
@@ -292,11 +291,10 @@ public class UserPage extends AbstractChannelsWebPage {
                 Attachment a = item.getModelObject();
                 ExternalLink documentLink = new ExternalLink( "attachment",
                         a.getUrl(), getAttachmentManager().getLabel( getPlan(), a ) );
-                documentLink.add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) );
+                documentLink.add( new AttributeModifier( "target", new Model<String>( "_" ) ) );
                 item.add( documentLink );
                 item.add( new AttributeModifier(
                         "title",
-                        true,
                         new Model<String>(
                                 a.getType().getLabel() + " - " + a.getUrl()
                         ) ) );
@@ -333,7 +331,7 @@ public class UserPage extends AbstractChannelsWebPage {
 
     private void addGotoLinks( Plan plan, ChannelsUser user ) {
 
-        Actor actor = findActor( getQueryService(), user.getUsername() );
+        List<PlanParticipation> participations = getPlanParticipations( plan, user );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
         // guidelines link
@@ -377,12 +375,12 @@ public class UserPage extends AbstractChannelsWebPage {
                 // Goto guidelines
                 new WebMarkupContainer( "guidelines" )
                         .add( gotoGuidelinesLink )
-                        .setVisible( planner || actor != null ),
+                        .setVisible( planner || !participations.isEmpty() ),
 
                 // Goto info needs
                 new WebMarkupContainer( "infoNeeds" )
                         .add( gotoInfoNeedsLink )
-                        .setVisible( planner || actor != null ),
+                        .setVisible( planner || !participations.isEmpty() ),
 
                 // Goto issues report
                 new WebMarkupContainer( "issues" )
@@ -429,16 +427,9 @@ public class UserPage extends AbstractChannelsWebPage {
                 "  (Requires a standards-compliant browser such as Internet Explorer 8+ and Firefox 3+.)";
     }
 
-    private static Actor findActor( QueryService queryService, String userName ) {
-        Participation participation = queryService.findParticipation( userName );
-        return participation != null && participation.getActor() != null
-                ? participation.getActor()
-                : null;
-    }
-
     private void addSocial() {
         String[] tabsShown = {SocialPanel.CALENDAR, /*SocialPanel.SURVEYS, */SocialPanel.MESSAGES, SocialPanel.USER};
-        socialPanel = new SocialPanel( "social", false, tabsShown );
+        socialPanel = new SocialPanel( "social", false, tabsShown, false );
         form.add( socialPanel );
     }
 

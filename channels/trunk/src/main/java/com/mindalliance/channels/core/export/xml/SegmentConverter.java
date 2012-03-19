@@ -210,7 +210,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
                                 EventTiming.class );
                         segment.addToContext( eventTiming );
                     } else {
-                        LOG.warn( "Unknown element " + nodeName );
+                        LOG.debug( "Unknown element " + nodeName );
                     }
                     reader.moveUp();
                 }
@@ -228,7 +228,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "issue" ) ) {
                 context.convertAnother( segment, UserIssue.class );
             } else {
-                LOG.warn( "Unknown element " + nodeName );
+                LOG.debug( "Unknown element " + nodeName );
             }
             reader.moveUp();
         }

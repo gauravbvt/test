@@ -4,11 +4,18 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
+import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
-import com.mindalliance.channels.core.model.Participation;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -54,16 +61,20 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     @SpringBean
     private ChannelsUserDao userDao;
 
+    @SpringBean
+    private UserContactInfoService userContactInfoService;
+
+    @SpringBean
+    private PlanParticipationService planParticipationService;
+
     private Pattern emailPattern;
     private boolean passwordOk = false;
     private String newPassword = "";
     private String repeatNewPassword = "";
-    private AjaxFallbackLink<String> applyButton;
     private TextField<String> newPasswordText;
     private TextField<String> repeatNewPasswordText;
     private List<String> errors;
     private WebMarkupContainer errorsContainer;
-    private Participation participation;
 
     public UserInfoPanel( String id, SocialPanel socialPanel, boolean collapsible ) {
         super( id, collapsible );
@@ -72,7 +83,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
     protected void init() {
         super.init();
-        participation = getParticipation();
         resetAll();
     }
 
@@ -82,18 +92,20 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         emailPattern = Pattern.compile( EMAIL_REGEX );
         addUserInfoContainer();
         addIdentity();
+        addUserRole();
         addParticipation();
+        addUserContactInfo();
         addPassword();
         addErrors();
         addButtons();
     }
 
     private void resetTemp() {
-        temp = new ChannelsUserInfo( 
+        temp = new ChannelsUserInfo(
                 user.getUsername(),
                 user.getFullName(),
                 user.getEmail()
-                );
+        );
         newPassword = "";
         repeatNewPassword = "";
     }
@@ -130,32 +142,35 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         return matcher.matches();
     }
 
-    private void addParticipation() {
-        Actor actor = findActor();
-        String assignation = getAssignation();
+    private void addUserRole() {
         userInfoContainer.add( new Label( "userRole", getUserRole() ) );
-        Label assignationLabel = new Label( "assignation", assignation );
-        assignationLabel.setVisible( actor != null );
-        userInfoContainer.add( assignationLabel );
-        // Updated agent contact info if assigned to non-archetype actor
-        WebMarkupContainer updatedContactContainer = new WebMarkupContainer( "updatedContact" );
-        updatedContactContainer.setVisible( actor != null && !actor.isArchetype() );
+    }
+
+    private void addParticipation() {
+        ListView<PlanParticipation> participationList = new ListView<PlanParticipation>(
+                "participations",
+                planParticipationService.getParticipations( getPlan(), getUser().getUserInfo(), getQueryService() )
+        ) {
+            @Override
+            protected void populateItem( ListItem<PlanParticipation> item ) {
+                PlanParticipation participation = item.getModelObject();
+                String assignation = getAssignation( participation.getActor( getQueryService() ) );
+                item.add( new Label( "participation", assignation ) );
+            }
+        };
+        userInfoContainer.add( participationList );
+    }
+
+    private void addUserContactInfo() {
+        WebMarkupContainer updatedContactContainer = new WebMarkupContainer( "userContact" );
         updatedContactContainer.add(
-                participation != null
-                        ? new ChannelListPanel( "contactInfo", new Model<Channelable>( participation ), false )
-                        : new Label( "contactInfo", "" )
-        );
+                new ChannelListPanel(
+                        "contactInfo",
+                        new Model<Channelable>( new UserChannels(
+                                getUser().getUserInfo()
+                        ) ),
+                        false ) );
         userInfoContainer.add( updatedContactContainer );
-
-    }
-
-    private String getAgentContactInfo() {
-        Actor actor = findActor();
-        return actor == null ? "" : actor.getChannelsString();
-    }
-
-    private Participation getParticipation() {
-        return getQueryService().findParticipation( user.getUsername() );
     }
 
     private String getUserRole() {
@@ -167,8 +182,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         return ( ChannelsUtils.startsWithVowel( userRole ) ? " an " : " a " ) + userRole + ".";
     }
 
-    private String getAssignation() {
-        Actor actor = findActor();
+    private String getAssignation( Actor actor ) {
         StringBuilder sb = new StringBuilder();
         if ( actor != null ) {
             sb.append( "I participate as " );
@@ -181,12 +195,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             sb.append( '.' );
         }
         return sb.toString();
-    }
-
-    private Actor findActor() {
-        return participation != null && participation.getActor() != null
-                ? participation.getActor()
-                : null;
     }
 
 
@@ -236,7 +244,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     private void addButtons() {
-        AjaxFallbackLink<String> reset = new AjaxFallbackLink<String>( "reset" ) {
+        AjaxFallbackLink<String> reset = new AjaxFallbackLink<String>( "reset1" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 resetAll();
@@ -244,36 +252,53 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             }
         };
         userInfoContainer.add( reset );
-        applyButton = new AjaxFallbackLink<String>( "apply" ) {
+        AjaxFallbackLink<String> otherReset = new AjaxFallbackLink<String>( "reset2" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                try {
-                    if ( save() ) {
-                        Change change = new Change( Change.Type.Updated, getPlan() );
-                        change.setProperty( "user" );
-                        if ( !newPassword.isEmpty() ) {
-                            change.setMessage( isValidNewPassword()
-                                    ? "Your password is changed."
-                                    : "Your password was NOT changed (new password not confirmed)." );
-                        }
-                        resetAll();
-                        target.add( UserInfoPanel.this );
-                        update( target, change );
-                    } else {
-                        Change change = new Change( Change.Type.None );
-                        change.setMessage( "No changes were made" );
-                        update( target, change );
-                    }
-                } catch ( IOException e ) {
-                    LOG.error( "Failed to save user info", e );
-                    target.appendJavaScript( "alert('Failed to save');" );
-                    target.add( UserInfoPanel.this );
-                }
+                resetAll();
+                target.add( UserInfoPanel.this );
             }
         };
-        // applyButton.setEnabled( false );
+        userInfoContainer.add( otherReset );
+        AjaxFallbackLink<String> applyButton = new AjaxFallbackLink<String>( "apply1" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                applyChanges( target );
+            }
+        };
         userInfoContainer.add( applyButton );
+        AjaxFallbackLink<String> otherApplyButton = new AjaxFallbackLink<String>( "apply2" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                applyChanges( target );
+            }
+        };
+        userInfoContainer.add( otherApplyButton );
     }
+
+    private void applyChanges( AjaxRequestTarget target ) {
+        try {
+            if ( save() ) {
+                Change change = new Change( Change.Type.Updated, getPlan() );
+                change.setProperty( "user" );
+                if ( !newPassword.isEmpty() ) {
+                    change.setMessage( isValidNewPassword()
+                            ? "Your password is changed."
+                            : "Your password was NOT changed (new password not confirmed)." );
+                }
+                resetAll();
+                target.add( UserInfoPanel.this );
+                update( target, change );
+            } else {
+                Change change = new Change( Change.Type.None );
+                change.setMessage( "No changes were made" );
+                update( target, change );
+            }
+        } catch ( IOException e ) {
+            LOG.error( "Failed to save user info", e );
+            target.appendJavaScript( "alert('Failed to save');" );
+            target.add( UserInfoPanel.this );
+        }    }
 
     private void adjustFields( AjaxRequestTarget target ) {
         resetErrors();
@@ -375,5 +400,130 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
     public void setRepeatNewPassword( String val ) {
         repeatNewPassword = val == null ? "" : val;
+    }
+
+
+    //////////////////////////////////////
+
+    public class UserChannels implements Channelable {
+
+
+        private ChannelsUserInfo userInfo;
+
+        public UserChannels( ChannelsUserInfo userInfo ) {
+            this.userInfo = userInfo;
+        }
+
+        @Override
+        public List<Channel> getEffectiveChannels() {
+            return userContactInfoService.findChannels( getUserInfo(), getQueryService() );
+        }
+
+        @Override
+        public List<Channel> getModifiableChannels() {
+            return getEffectiveChannels();
+        }
+
+        @Override
+        public void addChannel( Channel channel ) {
+            userContactInfoService.addChannel( getUserInfo().getUsername(), getUserInfo(), channel );
+        }
+
+        @Override
+        public void removeChannel( Channel channel ) {
+            userContactInfoService.removeChannel( getUserInfo(), channel );
+        }
+
+        @Override
+        public void setAddress( Channel channel, String address ) {
+            userContactInfoService.setAddress( getUserInfo(), channel, address );
+        }
+
+       @Override
+        public String getChannelsString() {
+            return Channel.toString( getEffectiveChannels() );
+        }
+
+        @Override
+        public List<Channel> allChannels() {
+            return getEffectiveChannels();
+        }
+
+        @Override
+        public boolean canBeUnicast() {
+            return true;
+        }
+
+        @Override
+        public boolean canSetChannels() {
+            return true;
+        }
+
+        @Override
+        public String validate( Channel channel ) {
+            return channel.isValid() ? null : "Invalid address";
+        }
+
+        @Override
+        public boolean isEntity() {
+            return false;
+        }
+
+        @Override
+        public boolean isModelObject() {
+            return false;
+        }
+
+        @Override
+        public boolean hasChannelFor( final TransmissionMedium medium, final Place planLocale ) {
+            return CollectionUtils.exists(
+                    getEffectiveChannels(),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (Channel) object ).getMedium().narrowsOrEquals( medium, planLocale );
+                        }
+                    }
+            );
+        }
+
+        @Override
+        public boolean canBeLocked() {
+            return false;
+        }
+
+        @Override
+        public boolean hasAddresses() {
+            return true;
+        }
+
+        @Override
+        public long getId() {
+            return getUserInfo().getId();
+        }
+
+        @Override
+        public String getDescription() {
+            return "";
+        }
+
+        @Override
+        public String getTypeName() {
+            return "user contact info";
+        }
+
+        @Override
+        public boolean isModifiableInProduction() {
+            return true;
+        }
+
+        @Override
+        public String getName() {
+            return getUserInfo().getFullName();
+        }
+
+        private ChannelsUserInfo getUserInfo() {
+            return userInfo;
+        }
     }
 }

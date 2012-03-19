@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
@@ -24,7 +25,7 @@ import java.util.Set;
  * Time: 12:49 PM
  */
 @XmlType( propOrder = {"information", "intent", "receiptConfirmationRequested", "instructions", "contactAll",
-        "maxDelay", "employments", "mediumIds", "failureImpact","consumingTask", "agreements", "documentation"} )
+        "maxDelay", "employments", "mediumIds", "failureImpact","consumingTask", /*"agreements",*/ "documentation"} )
 public class RequestData extends AbstractFlowData {
 
     /**
@@ -37,11 +38,11 @@ public class RequestData extends AbstractFlowData {
     }
 
     public RequestData(
-            Commitment requestCommitment,
+            Flow request,
             boolean replying,
             Assignment assignment,
             PlanService planService ) {
-        super( requestCommitment, assignment, planService );
+        super( request, assignment, planService );
         this.replying = replying;
     }
 
@@ -102,16 +103,18 @@ public class RequestData extends AbstractFlowData {
     @XmlElement
     public TaskData getConsumingTask() {
         if ( replying )
-            return null;
-        else
             return new TaskData( (Part)getRequest().getTarget(), getPlanService() );
+        else
+            return null;
     }
 
+/*
     @Override
     @XmlElement( name = "agreement" )
     public List<AgreementData> getAgreements() {
         return super.getAgreements();
     }
+*/
 
     @XmlElement
     @Override
@@ -119,15 +122,22 @@ public class RequestData extends AbstractFlowData {
         return super.getDocumentation();
     }
 
+    @Override
     protected List<Employment> contacts() {
         Set<Employment> contacts = new HashSet<Employment>(  );
-        Part part = replying
-                ? (Part)getSharing().getTarget() :
-                (Part)getSharing().getSource();
-        for (Assignment otherAssignment : getPlanService().findAllAssignments( part, false ) ) {
-            Employment employment = otherAssignment.getEmployment();
-            if ( !employment.getActor().equals( getAssignment().getActor() ) ) {
-                contacts.add(  employment );
+        Actor assignedActor = getAssignment().getActor();
+        List<Commitment> commitments = getPlanService().findAllCommitments( getRequest() );
+        for ( Commitment commitment : commitments ) {
+            if ( replying ) {
+                if ( commitment.getCommitter().getActor().equals( assignedActor )
+                        && !commitment.getBeneficiary().getActor().equals( assignedActor ) ) {
+                    contacts.add( commitment.getBeneficiary().getEmployment() );
+                }
+            } else { // asking
+                if ( commitment.getBeneficiary().getActor().equals( assignedActor )
+                        && !commitment.getCommitter().getActor().equals( assignedActor ) ) {
+                    contacts.add( commitment.getCommitter().getEmployment() );
+                }
             }
         }
         return new ArrayList<Employment>( contacts );
