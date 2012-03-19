@@ -105,7 +105,11 @@ public class Change implements Serializable {
         /**
          * Change failed because refresh needed.
          */
-        NeedsRefresh;
+        NeedsRefresh,
+        /**
+         * Change is a refresh.
+         */
+        Refresh;
 
     }
 
@@ -368,6 +372,10 @@ public class Change implements Serializable {
      */
     public boolean isUnknown() {
         return type == Type.Unknown;
+    }
+    
+    public boolean isRefresh() {
+        return type == Type.Refresh;
     }
 
     /**

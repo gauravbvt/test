@@ -275,8 +275,8 @@ public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel 
             titleString = "No known issue";
         }
 
-        headerTitle.add( new AttributeModifier( "class", true, new Model<String>( classString ) ) );   // NON-NLS
-        headerTitle.add( new AttributeModifier( "title", true, new Model<String>( titleString ) ) );   // NON-NLS
+        headerTitle.add( new AttributeModifier( "class", new Model<String>( classString ) ) );   // NON-NLS
+        headerTitle.add( new AttributeModifier( "title", new Model<String>( titleString ) ) );   // NON-NLS
     }
 
     public void showAspect( String aspect, Change change, AjaxRequestTarget target ) {
