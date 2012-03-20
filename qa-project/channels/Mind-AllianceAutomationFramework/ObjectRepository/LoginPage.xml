@@ -2,7 +2,7 @@
 <elements>
 <channelURL>http://192.168.4.126:8081/channels/login.html</channelURL>
 <username>admin</username>
-<usernamefullname>Jean-Francois Cloutier</usernamefullname>
+<usernamefullname>Administrator</usernamefullname>
 <password>admin</password>
 <login>/html/body/div/div[2]/form/div[6]/input</login>
 <xPathBody>/html/body</xPathBody>
