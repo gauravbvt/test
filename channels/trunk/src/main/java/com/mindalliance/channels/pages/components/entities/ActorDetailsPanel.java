@@ -93,18 +93,6 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     @SpringBean
     private PlanManager planManager;
     /**
-     * Checkbox indicating if actor is an archetype.
-     */
-    private CheckBox isArchetypeCheckBox;
-    /**
-     * Checkbox indicating if actor is a place holder.
-     */
-    private CheckBox isPlaceHolderCheckBox;
-    /**
-     * Container for placeholder singularity setting.
-     */
-    private WebMarkupContainer singularityContainer;
-    /**
      * Is system checkbox.
      */
     private CheckBox systemCheckBox;
@@ -148,7 +136,6 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     private WebMarkupContainer commitmentsContainer;
     private WebMarkupContainer participantsContainer;
     private WebMarkupContainer moreContainer;
-    private CheckBox isPlaceHolderSingularCheckBox;
     private WebMarkupContainer languagesContainer;
 
 
@@ -161,8 +148,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
      */
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
-        addArchetypicalCheckBox();
-        addPlaceHolderCheckBoxes();
+        addParticipationFields();
         addIsSystem();
         addContactInfo();
         addAvailabilityPanel();
@@ -177,7 +163,6 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         addAssignmentsPanel();
         addCommitmentsPanel();
         addParticipantsTable();
-        adjustFields();
     }
 
     private void addMoreLink() {
@@ -197,7 +182,6 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 addAssignmentsPanel();
                 addCommitmentsPanel();
                 addParticipantsTable();
-                adjustFields();
                 target.add( moreContainer );
                 target.add( rolesContainer );
                 target.add( assignmentsContainer );
@@ -207,7 +191,6 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         };
         moreLink.add( new AttributeModifier(
                 "class",
-                true,
                 new Model<String>( showingMore ? "less" : "more" ) ) );
         moreContainer.add( moreLink );
         moreLink.add( new Label( "moreOrLess", showingMore ? "less" : "more" ) );
@@ -352,61 +335,68 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         clearancesContainer.setVisible( getActor().isActual() );
     }
 
-    private void addArchetypicalCheckBox() {
-        WebMarkupContainer archetypeContainer = new WebMarkupContainer( "archetype" );
-        isArchetypeCheckBox = new CheckBox(
-                "isArchetype",
-                new PropertyModel<Boolean>( this, "archetype" ) );
-        isArchetypeCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                adjustFields();
-                target.add( isPlaceHolderCheckBox );
-                target.add( singularityContainer );
-                update( target, new Change( Change.Type.Updated, getActor(), "archetype" ) );
-            }
-        } );
-        isArchetypeCheckBox.setOutputMarkupId( true );
-        isArchetypeCheckBox.setEnabled( !isPlaceHolder() );
-        archetypeContainer.add( isArchetypeCheckBox );
-        archetypeContainer.setVisible( getActor().isActual() );
-        moDetailsDiv.add( archetypeContainer );
+    private void addParticipationFields() {
+        WebMarkupContainer participationContainer = new WebMarkupContainer( "participationConstraints" );
+        participationContainer.setVisible( getActor().isActual() );
+        moDetailsDiv.add( participationContainer );
+        addOpenParticipationCheckBox( participationContainer );
+        addSingularParticipationCheckBox( participationContainer );
+        addSameEmployerParticipation( participationContainer );
+        addAnonymousParticipation( participationContainer );
     }
 
-    private void addPlaceHolderCheckBoxes() {
-        WebMarkupContainer placeHolderContainer = new WebMarkupContainer( "placeHolder" );
-        isPlaceHolderCheckBox = new CheckBox(
-                "isPlaceHolder",
-                new PropertyModel<Boolean>( this, "placeHolder" ) );
-        isPlaceHolderCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+    private void addOpenParticipationCheckBox( WebMarkupContainer participationContainer ) {
+        CheckBox openParticipationCheckBox = new CheckBox(
+                "isParticipationOpen",
+                new PropertyModel<Boolean>( this, "openParticipation" ) );
+        openParticipationCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                adjustFields();
-                target.add( isArchetypeCheckBox );
-                target.add( singularityContainer );
-                update( target, new Change( Change.Type.Updated, getActor(), "placeHolder" ) );
+                update( target, new Change( Change.Type.Updated, getActor(), "openParticipation" ) );
             }
         } );
-        isPlaceHolderCheckBox.setOutputMarkupId( true );
-        isPlaceHolderCheckBox.setEnabled( !isArchetype() );
-        placeHolderContainer.add( isPlaceHolderCheckBox );
-        // singularity
-        singularityContainer = new WebMarkupContainer( "singularity" );
-        singularityContainer.setOutputMarkupId( true );
-        isPlaceHolderSingularCheckBox = new CheckBox(
-                "isSingular",
-                new PropertyModel<Boolean>( this, "placeHolderSingular" ) );
-        isPlaceHolderSingularCheckBox.setEnabled( isLockedByUser( getActor() ) );
-        isPlaceHolderSingularCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
-            protected void onUpdate( AjaxRequestTarget target ) {
-                adjustFields();
-                update( target, new Change( Change.Type.Updated, getActor(), "placeHolderSingular" ) );
-            }
-        } );
-        singularityContainer.add( isPlaceHolderSingularCheckBox );
-        placeHolderContainer.add( singularityContainer );
-
-        placeHolderContainer.setVisible( getActor().isActual() );
-        moDetailsDiv.add( placeHolderContainer );
+        participationContainer.add( openParticipationCheckBox );
+        openParticipationCheckBox.setEnabled( isLockedByUser( getActor() ) );
     }
+
+    private void addSingularParticipationCheckBox( WebMarkupContainer participationContainer ) {
+        CheckBox openParticipationCheckBox = new CheckBox(
+                "isOneParticipant",
+                new PropertyModel<Boolean>( this, "singularParticipation" ) );
+        openParticipationCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getActor(), "singularParticipation" ) );
+            }
+        } );
+        participationContainer.add( openParticipationCheckBox );
+        openParticipationCheckBox.setEnabled( isLockedByUser( getActor() ) );
+    }
+
+    private void addSameEmployerParticipation( WebMarkupContainer participationContainer ) {
+        CheckBox sameEmployerCheckBox = new CheckBox(
+                "hasSameEmployer",
+                new PropertyModel<Boolean>( this, "participationRestrictedToEmployed" ) );
+        sameEmployerCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getActor(), "participationRestrictedToEmployed" ) );
+            }
+        } );
+        participationContainer.add( sameEmployerCheckBox );
+        sameEmployerCheckBox.setEnabled( isLockedByUser( getActor() ) );
+    }
+
+    private void addAnonymousParticipation( WebMarkupContainer participationContainer ) {
+        CheckBox anonymousCheckBox = new CheckBox(
+                "isAnonymous",
+                new PropertyModel<Boolean>( this, "anonymousParticipation" ) );
+        anonymousCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getActor(), "anonymousParticipation" ) );
+            }
+        } );
+        participationContainer.add( anonymousCheckBox );
+        anonymousCheckBox.setEnabled( isLockedByUser( getActor() ) );
+    }
+
 
     private void addIsSystem() {
         WebMarkupContainer systemContainer = new WebMarkupContainer( "system" );
@@ -418,18 +408,11 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 update( target, new Change( Change.Type.Updated, getActor(), "system" ) );
             }
         } );
+        systemCheckBox.setEnabled( isLockedByUser( getActor() ) );
         systemContainer.setVisible( getActor().isActual() );
         systemContainer.add( systemCheckBox );
     }
 
-    private void adjustFields() {
-        makeVisible( singularityContainer, isPlaceHolder() );
-        isPlaceHolderCheckBox.setEnabled( isLockedByUser( getActor() ) && !isArchetype() );
-        isPlaceHolderSingularCheckBox.setEnabled( isLockedByUser( getActor() ) );
-        isArchetypeCheckBox.setEnabled( isLockedByUser( getActor() ) && !isPlaceHolder() );
-        systemCheckBox.setEnabled( isLockedByUser( getActor() ) );
-        rolesContainer.setVisible( getActor().isActual() );
-    }
 
     private void addRolesMap() {
         List<? extends GeoLocatable> geoLocatables = getEmployments();
@@ -439,6 +422,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                 geoLocatables,
                 new Model<String>( "Map where agent is employed" ) );
         rolesMapLink.setOutputMarkupId( true );
+        rolesContainer.setVisible( getActor().isActual() );
         rolesContainer.addOrReplace( rolesMapLink );
     }
 
@@ -727,42 +711,55 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
     /**
-     * Whether the actor is an archetype.
+     * Whether participation as the actor is open.
      *
      * @return a boolean
      */
-    public boolean isArchetype() {
-        return getActor().isArchetype();
+    public boolean isOpenParticipation() {
+        return getActor().isOpenParticipation();
     }
 
-    public void setArchetype( boolean val ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "archetype", val ) );
+    public void setOpenParticipation( boolean val ) {
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "openParticipation", val ) );
     }
 
     /**
-     * Whether the actor is a place holder.
+     * Whether the actor can only have one participant.
      *
      * @return a boolean
      */
-    public boolean isPlaceHolder() {
-        return getActor().isPlaceHolder();
+    public boolean isSingularParticipation() {
+        return getActor().isSingularParticipation();
     }
 
-    public void setPlaceHolder( boolean val ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "placeHolder", val ) );
+    public void setSingularParticipation( boolean val ) {
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "singularParticipation", val ) );
     }
 
     /**
-     * Whether the actor is a place holder.
+     * Whether participation as the actor is open.
      *
      * @return a boolean
      */
-    public boolean isPlaceHolderSingular() {
-        return getActor().isPlaceHolderSingular();
+    public boolean isParticipationRestrictedToEmployed() {
+        return getActor().isParticipationRestrictedToEmployed();
     }
 
-    public void setPlaceHolderSingular( boolean val ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "placeHolderSingular", val ) );
+    public void setParticipationRestrictedToEmployed( boolean val ) {
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "participationRestrictedToEmployed", val ) );
+    }
+
+    /**
+     * Whether participation as the actor is open.
+     *
+     * @return a boolean
+     */
+    public boolean isAnonymousParticipation() {
+        return getActor().isAnonymousParticipation();
+    }
+
+    public void setAnonymousParticipation( boolean val ) {
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "anonymousParticipation", val ) );
     }
 
 
@@ -867,12 +864,10 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     "part.category.label",
                     EMPTY
             ) );
-            columns.add( makeFilterableLinkColumn(
+            columns.add( makeColumn(
                     "Location",
-                    "part.location",
-                    "part.location.name",
-                    EMPTY,
-                    AssignmentsTablePanel.this ) );
+                    "part.location.displayName",
+                    EMPTY ) );
             columns.add( this.makeFilterableLinkColumn(
                     "Role",
                     "employment.role",
@@ -949,12 +944,10 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     "sharing.source.task",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
-            columns.add( this.makeFilterableLinkColumn(
+            columns.add( this.makeColumn(
                     "at location",
-                    "sharing.source.location",
-                    "sharing.source.location.name",
-                    EMPTY,
-                    CommitmentsTablePanel.this ) );
+                    "sharing.source.location.displayName",
+                    EMPTY ) );
             columns.add( makeLinkColumn(
                     "commits to share",
                     "sharing",
@@ -977,12 +970,10 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
                     "sharing.target.task",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
-            columns.add( this.makeFilterableLinkColumn(
+            columns.add( this.makeColumn(
                     "at location",
-                    "sharing.target.location",
-                    "sharing.target.location.name",
-                    EMPTY,
-                    CommitmentsTablePanel.this ) );
+                    "sharing.target.location.displayName",
+                    EMPTY ) );
             // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "commitments",

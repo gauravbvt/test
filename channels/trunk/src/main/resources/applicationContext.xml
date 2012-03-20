@@ -289,7 +289,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentContextNeverCaused"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowEOIsNotStandardCompliant"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AmbiguousSharingFlow"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorPlaceHolderWithoutParticipation"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorWithoutParticipation"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorWithNonMatchingParticipation"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorWithTooManyParticipations"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.PartTerminatedByManySends"/>

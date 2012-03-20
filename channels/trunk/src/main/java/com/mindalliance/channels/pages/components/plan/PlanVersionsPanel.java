@@ -107,10 +107,6 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
                 "devVersion", "" + devPlan.getVersion() );
         versionLabel.setOutputMarkupId( true );
         addOrReplace( versionLabel );
-        Label dateLabel = new Label(
-                "devDate", dateFormat.format( devPlan.getWhenVersioned() ) );
-        dateLabel.setOutputMarkupId( true );
-        addOrReplace( dateLabel );
     }
 
     private void addVotes() {

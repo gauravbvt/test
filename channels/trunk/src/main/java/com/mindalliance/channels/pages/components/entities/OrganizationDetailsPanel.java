@@ -774,12 +774,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                     "part.category.label",
                     EMPTY
             ) );
-            columns.add( makeFilterableLinkColumn(
+            columns.add( makeColumn(
                     "Location",
-                    "part.location",
-                    "part.location.name",
-                    EMPTY,
-                    AssignmentsTablePanel.this ) );
+                    "part.location.displayName",
+                    EMPTY ) );
             columns.add( this.makeFilterableLinkColumn(
                     "Role",
                     "employment.role",
@@ -862,12 +860,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                     "sharing.source.task",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
-            columns.add( this.makeFilterableLinkColumn(
+            columns.add( this.makeColumn(
                     "at location",
-                    "sharing.source.location",
-                    "sharing.source.location.name",
-                    EMPTY,
-                    CommitmentsTablePanel.this ) );
+                    "sharing.source.location.displayName",
+                    EMPTY ) );
             columns.add( makeLinkColumn(
                     "commits to share",
                     "sharing",
@@ -890,12 +886,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                     "sharing.target.task",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
-            columns.add( this.makeFilterableLinkColumn(
+            columns.add( this.makeColumn(
                     "at location",
-                    "sharing.target.location",
-                    "sharing.target.location.name",
-                    EMPTY,
-                    CommitmentsTablePanel.this ) );
+                    "sharing.target.location.displayName",
+                    EMPTY ) );
             // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "commitments",

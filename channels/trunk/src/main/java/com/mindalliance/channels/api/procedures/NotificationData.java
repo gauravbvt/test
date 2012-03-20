@@ -74,7 +74,7 @@ public class NotificationData extends AbstractFlowData {
     }
 
     @Override
-    @XmlElement( name = "transmissionMediumId" )
+    @XmlElement( name = "preferredTransmissionMedium" )
     public List<Long> getMediumIds() {
         return super.getMediumIds();
     }

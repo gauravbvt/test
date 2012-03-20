@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <book version="5.0" xmlns="http://docbook.org/ns/docbook"
       xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns:xi="http://www.w3.org/2001/XInclude"
-      xmlns:svg="http://www.w3.org/2000/svg"
-      xmlns:m="http://www.w3.org/1998/Math/MathML"
-      xmlns:html="http://www.w3.org/1999/xhtml"
       xmlns:db="http://docbook.org/ns/docbook">
   <info>
     <title>Channels User Guide</title>
@@ -10765,10 +10761,10 @@
                       <para>assign no user to the agent, </para>
                     </listitem>
                     <listitem>
-                      <para>make the agent a placeholder, </para>
+                      <para>make the agent anonymous, </para>
                     </listitem>
                     <listitem>
-                      <para>or make the agent an archetype.</para>
+                      <para>or allow more than one user to participate as this agent.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -11613,17 +11609,14 @@
               </row>
 
               <row>
-                <entry><para>No user participates as placeholder
+                <entry><para>No user participates as this agent
                 agent</para></entry>
 
                 <entry><para>Medium</para></entry>
 
                 <entry><itemizedlist>
                     <listitem>
-                      <para>Assign a user to the agent </para>
-                    </listitem>
-                    <listitem>
-                      <para>or make the agent not a placeholder.</para>
+                      <para>Assign a user to the agent. </para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -12010,7 +12003,10 @@
                       <para>or add participating agents to the scope who will be assigned to the
                         task</para>
                     </listitem>
-                  </itemizedlist></entry>
+                  <listitem>
+                    <para>or allow more than one participant to represent this agent.</para>
+                  </listitem>
+                </itemizedlist></entry>
 
                 <entry><para>Yes</para></entry>
               </row>
@@ -12052,8 +12048,7 @@
               </row>
 
               <row>
-                <entry><para>Important task has only one
-                assignment</para></entry>
+                <entry><para>Important task has only one assignment</para></entry>
 
                 <entry><para>Depends on impacted tasks</para></entry>
 
@@ -12064,9 +12059,12 @@
                     </listitem>
                     <listitem>
                       <para>or modify the task specifications so that it matches more than one
-                        agent.</para>
+                        agent</para>
                     </listitem>
-                  </itemizedlist></entry>
+                  <listitem>
+                    <para>or allow multiple users to participate as this agent.</para>
+                  </listitem>
+                </itemizedlist></entry>
 
                 <entry><para>Yes</para></entry>
               </row>

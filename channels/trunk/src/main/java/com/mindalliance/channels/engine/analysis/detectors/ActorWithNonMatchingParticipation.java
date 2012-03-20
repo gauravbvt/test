@@ -30,18 +30,18 @@ public class ActorWithNonMatchingParticipation extends AbstractIssueDetector {
     public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Actor actor = (Actor) modelObject;
-        if ( actor.isActual() && !actor.isPlaceHolder() && !actor.isArchetype() ) {
+        if ( actor.isActual() && actor.isSingularParticipation() && !actor.isAnonymousParticipation() ) {
             List<PlanParticipation> participations = queryService.findParticipations( actor );
             if ( !participations.isEmpty() ) {
                 for ( PlanParticipation participation : participations ) {
                     String userFullName = participation.getParticipant().getFullName();
                     if ( !Matcher.same( actor.getName(), userFullName ) ) {
                         Issue issue = makeIssue( queryService, Issue.VALIDITY, actor );
-                        issue.setDescription( "Agent \"" + actor.getName() + "\" is not a placeholder nor an archetype "
+                        issue.setDescription( "Agent \"" + actor.getName() + "\" can only be associated with one visible user "
                                               + "and is assigned to a user with a different name (" + userFullName + ")." );
                         issue.setRemediation(
                                 "Assign a user of the same name to the agent" + "\nor assign no user to the agent"
-                                + "\nor make the agent a place holder" + "\nor make the agent an archetype." );
+                                + "\nor make the agent anonymous" + "\nor allow more than one user to participate as this agent." );
                         issue.setSeverity( Level.Medium );
                         issues.add( issue );
                     }

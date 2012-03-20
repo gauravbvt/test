@@ -15,9 +15,9 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -45,13 +45,12 @@ public class TaskWithTooManyInputs extends AbstractIssueDetector {
         int n;
         List<Assignment> assignments = queryService.findAllAssignments( part, false );
         if ( !assignments.isEmpty() && !areAllSystemsOrArchetypes( assignments )
-             && ( n = countDifferentCommitters( part, assignments, queryService ) ) > TOO_MANY )
-        {
+                && ( n = countDifferentCommitters( part, assignments, queryService ) ) > TOO_MANY ) {
             Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
             issue.setDescription( "Agents executing task \"" + part.getTitle()
-                                  + "\" could receive information from too many different agents (" + n + ")." );
+                    + "\" could receive information from too many different agents (" + n + ")." );
             issue.setRemediation( "Remove \"receive\" sharing flows"
-                                  + "\nor add intermediates to spread the incoming communication load." );
+                    + "\nor add intermediates to spread the incoming communication load." );
             issue.setSeverity( this.computeTaskFailureSeverity( queryService, part ) );
             issues.add( issue );
         }
@@ -65,8 +64,10 @@ public class TaskWithTooManyInputs extends AbstractIssueDetector {
             public boolean evaluate( Object object ) {
                 Assignment assignment = (Assignment) object;
                 ModelEntity entity = assignment.getKnownAssignee();
-                return entity instanceof Organization || entity instanceof Actor && !( (Actor) entity ).isSystem()
-                                                         && !( (Actor) entity ).isArchetype();
+                return entity instanceof Organization
+                        || ( entity instanceof Actor
+                            && ( !( (Actor) entity ).isSystem()
+                                    || ( (Actor) entity ).isSingularParticipation() ) );
             }
         } );
     }

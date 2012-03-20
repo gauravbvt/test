@@ -6,13 +6,13 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.util.NameRange;
+import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
-import com.mindalliance.channels.core.util.NameRange;
-import com.mindalliance.channels.core.util.SortableBeanProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -173,7 +173,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
 
     private boolean isInNameRange( Employment employment ) {
         if ( indexedOn.equals( ACTORS ) ) {
-            return nameRange.contains( employment.getActor().getLastName() );
+            return nameRange.contains( employment.getActor().getName() );
         } else if ( indexedOn.equals( ROLES ) ) {
             return employment.getRole() != null
                     && nameRange.contains( employment.getRole().getName() );
@@ -201,7 +201,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
                     employments,
                     new Transformer() {
                         public Object transform( Object obj ) {
-                            return ( (Employment) obj ).getActor().getLastName();
+                            return ( (Employment) obj ).getActor().getName();
                         }
                     } );
         } else if ( indexedOn.equals( ROLES ) ) {

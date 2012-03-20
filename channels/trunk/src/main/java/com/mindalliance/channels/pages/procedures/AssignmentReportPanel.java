@@ -14,8 +14,8 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
-import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.core.query.Assignments;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -461,7 +461,7 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
         }
 
         public String getHead() {
-            if ( all || !isActor() || getActor().isArchetype() || getActor().isUnknown() )
+            if ( all || !isActor() || !getActor().isSingularParticipation() || getActor().isUnknown() )
                 return receiving
                         ? "Any"
                         : all
@@ -493,7 +493,7 @@ public class AssignmentReportPanel extends AbstractUpdatablePanel {
         public String toString() {
 
             return getReportSource( all ? "all "
-                                        : !isActor() || getActor().isArchetype() ? "a "
+                                        : !isActor() || !getActor().isSingularParticipation() ? "a "
                                         : "" );
         }
     }

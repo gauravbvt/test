@@ -20,22 +20,22 @@ import java.util.List;
 /**
  * No participation for placeholder actor.
  */
-public class ActorPlaceHolderWithoutParticipation extends AbstractIssueDetector {
+public class ActorWithoutParticipation extends AbstractIssueDetector {
 
-    public ActorPlaceHolderWithoutParticipation() {
+    public ActorWithoutParticipation() {
     }
 
     @Override
     public List<Issue> detectIssues( final QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         final Actor actor = (Actor) modelObject;
-        if ( actor.isActual() && actor.isPlaceHolder() ) {
+        if ( actor.isActual() ) {
             List<PlanParticipation> participations = queryService.findParticipations( actor );
             boolean hasParticipation = !participations.isEmpty();
             if ( !hasParticipation ) {
                 Issue issue = makeIssue( queryService, Issue.COMPLETENESS, actor );
-                issue.setDescription( "Agent \"" + actor.getName() + "\" is a placeholder but with no user assigned." );
-                issue.setRemediation( "Assign a user to the agent\nor make the agent not a place holder." );
+                issue.setDescription( "Agent \"" + actor.getName() + "\" has no user assigned." );
+                issue.setRemediation( "Assign a user to the agent." );
                 issue.setSeverity( Level.Medium );
                 issues.add( issue );
             }
@@ -55,7 +55,7 @@ public class ActorPlaceHolderWithoutParticipation extends AbstractIssueDetector 
 
     @Override
     protected String getKindLabel() {
-        return "No user participates as placeholder agent";
+        return "No user participates as agent";
     }
 
     @Override

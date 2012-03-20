@@ -34,14 +34,16 @@ public class ActorIsTaskBottleneck extends AbstractIssueDetector {
             List<Assignment> assignments = queryService.findAllAssignments( part, false );
             if ( assignments.size() == 1 ) {
                 Actor actor = assignments.get( 0 ).getActor();
-                if ( !( actor.isArchetype() || actor.isPlaceHolder() ) ) {
+                if ( actor.isSingularParticipation() ) {
                     Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
                     issue.setDescription( actor.getName()
-                            + " is the only known agent assigned to critical task \""
+                            + " can only be represented by one participant " +
+                            "and is the only known agent assigned to critical task \""
                             + part.getTitle()
                             + "\"." );
                     issue.setRemediation( "Change the specification of the task to allow more agents to be assigned to it"
-                            + "\nor add participating agents to the scope who will be assigned to the task." );
+                            + "\nor add participating agents to the scope who will be assigned to the task"
+                            +"\nor allow more than one participant to represent this agent." );
                     issue.setSeverity( computeTaskFailureSeverity( queryService, part ) );
                     issues.add( issue );
                 }

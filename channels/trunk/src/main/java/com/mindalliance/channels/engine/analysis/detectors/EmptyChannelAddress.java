@@ -1,7 +1,5 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Flow;
@@ -11,6 +9,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +38,7 @@ public class EmptyChannelAddress extends AbstractIssueDetector {
             if ( channel.getAddress().isEmpty() ) {
                 if ( channel.getMedium().requiresAddress()
                         && !( modelObject instanceof Flow )
-                        && !( modelObject.isEntity() && ( (ModelEntity) modelObject ).isType() )
-                        && !( modelObject instanceof Actor && ( (Actor) modelObject ).isPlaceHolder() ) ) {
+                        && !( modelObject.isEntity() && ( (ModelEntity) modelObject ).isType() ) ) {
                     problem = "The " + channel.getMedium().getName() + " channel's address is required but empty.";
                     remediation = "Enter a valid address.";
                     Issue issue = makeIssue( queryService, Issue.COMPLETENESS, modelObject );

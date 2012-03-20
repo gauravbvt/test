@@ -220,7 +220,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @param visible   a boolean
      */
     protected static void makeVisible( Component component, boolean visible ) {
-        component.add( new AttributeModifier( "style", true, new Model<String>( visible ? "" : "display:none" ) ) );
+        component.add( new AttributeModifier( "style", new Model<String>( visible ? "" : "display:none" ) ) );
     }
 
     @Override
@@ -473,13 +473,13 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                 analyst.getIssuesSummary( getQueryService(), object, property );
         boolean hasIssues = analyst.hasIssues( getQueryService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !summary.isEmpty() ) {
-            component.add( new AttributeModifier( "class", true, new Model<String>( errorClass ) ) );
-            component.add( new AttributeModifier( "title", true, new Model<String>( summary ) ) );
+            component.add( new AttributeModifier( "class", new Model<String>( errorClass ) ) );
+            component.add( new AttributeModifier( "title", new Model<String>( summary ) ) );
         } else {
             if ( property == null && hasIssues ) {
                 // All waived issues
-                component.add( new AttributeModifier( "class", true, new Model<String>( "waived" ) ) );
-                component.add( new AttributeModifier( "title", true, new Model<String>( "All issues waived" ) ) );
+                component.add( new AttributeModifier( "class", new Model<String>( "waived" ) ) );
+                component.add( new AttributeModifier( "title", new Model<String>( "All issues waived" ) ) );
             }
         }
     }
@@ -505,10 +505,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                 new Comparator<Actor>() {
                     @Override
                     public int compare( Actor a1, Actor a2 ) {
-                        if ( a1.isArchetype() ) return 1;
-                        if ( a2.isArchetype() ) return -1;
-                        if ( a1.isSingular() ) return -1;
-                        if ( a2.isSingular() ) return 1;
+                        if ( a1.isSingularParticipation() ) return -1;
+                        if ( a2.isSingularParticipation() ) return 1;
+                        if ( a1.isAnonymousParticipation() ) return 1;
+                        if ( a2.isAnonymousParticipation() ) return -1;
                         return 0;
                     }
                 }

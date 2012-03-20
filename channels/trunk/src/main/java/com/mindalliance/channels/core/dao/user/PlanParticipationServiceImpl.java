@@ -117,8 +117,7 @@ public class PlanParticipationServiceImpl
     @Override
     @Transactional( readOnly = true )
     public boolean canBeDesignated( Plan plan, Actor actor ) {
-        return actor.isArchetype()
-                || actor.isPlaceHolderPlural()
+        return !actor.isSingularParticipation()
                 || !isDesignated( plan, actor );
     }
 

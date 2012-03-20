@@ -33,16 +33,18 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
         List<Assignment> assignments = queryService.findAllAssignments( part, false );
         if ( assignments.size() == 1 ) {
             Actor actor = assignments.get( 0 ).getActor();
-            if ( !( actor.isArchetype() || actor.isPlaceHolder() ) ) {
+            if ( actor.isSingularParticipation() ) {
                 Level importance = computeTaskFailureSeverity( queryService, part );
                 if ( importance.compareTo( Level.Low ) >= 1 ) {
                     Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, part );
                     issue.setDescription( "Task \""
                             + part.getTitle()
-                            + "\" is important and yet is assigned to only one agent." );
+                            + "\" is important and yet is assigned to only one agent" +
+                            " and this agent can be represented by only one participant." );
                     issue.setSeverity( importance );
                     issue.setRemediation( "Profile agents so that more than one match the task specifications"
-                            + "\nor modify the task specifications so that it matches more than one agent."
+                            + "\nor modify the task specifications so that it matches more than one agent"
+                            + "\nor allow multiple users to participate as this agent."
                     );
                     issues.add( issue );
                 }

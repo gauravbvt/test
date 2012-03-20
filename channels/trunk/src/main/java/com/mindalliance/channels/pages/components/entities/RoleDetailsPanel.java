@@ -251,7 +251,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
                         employments,
                         new Transformer() {
                             public Object transform( Object obj ) {
-                                return ( (Employment) obj ).getActor().getLastName();
+                                return ( (Employment) obj ).getActor().getName();
                             }
                         } );
             } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
@@ -340,7 +340,7 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
 
     private boolean isInNameRange( Employment employment ) {
         if ( indexedOn.equals( ACTORS ) ) {
-            return nameRange.contains( employment.getActor().getLastName() );
+            return nameRange.contains( employment.getActor().getName() );
         } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
             return employment.getOrganization() != null
                     && nameRange.contains( employment.getOrganization().getName() );

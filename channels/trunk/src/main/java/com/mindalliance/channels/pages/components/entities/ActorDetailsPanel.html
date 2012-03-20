@@ -13,21 +13,25 @@
         </th>
         <td><input id="system" wicket:id="system" type="checkbox"/></td>
     </tr>
-    <tr wicket:id="archetype">
+    <tr wicket:id="participationConstraints">
         <th align="right">
-            <label for="archetype">Is an archetype:</label>
-        </th>
-        <td><input id="archetype" wicket:id="isArchetype" type="checkbox"/></td>
-    </tr>
-    <tr wicket:id="placeHolder">
-        <th align="right">
-            <label for="placeHolder">Is a placeholder:</label>
+            <label for="system">Participation:</label>
         </th>
         <td>
-            <input id="placeHolder" wicket:id="isPlaceHolder" type="checkbox"/>
-            <span wicket:id="singularity">
-                and there can only be one <input wicket:id="isSingular" type="checkbox"/>
-            </span>
+            <table>
+                <tr>
+                    <td><input id="open" wicket:id="isParticipationOpen" type="checkbox"/> Participation is open to all users</td>
+                </tr>
+                <tr>
+                    <td><input id="singular" wicket:id="isOneParticipant" type="checkbox"/> At most one participant</td>
+                </tr>
+                <tr>
+                    <td><input id="sameEmployer" wicket:id="hasSameEmployer" type="checkbox"/> Participants must have an employer in common with this agent</td>
+                </tr>
+                <tr>
+                    <td><input id="anonymous" wicket:id="isAnonymous" type="checkbox"/> Participants are anonymous</td>
+                </tr>
+            </table>
         </td>
     </tr>
     <tr wicket:id="contact">

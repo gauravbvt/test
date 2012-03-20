@@ -29,15 +29,38 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      */
     private boolean system;
 
-    /**
-     * Whether this (actual) agent is an archetype.
-     */
-    private boolean archetype = false;
+     /////////////// OBSOLETE /////////////////
+
     /**
      * Whether this (actual) agent is a place holder (to be named by assigned participant).
      */
     private boolean placeHolder = false;
     /**
+     * Whether placeholder is singular.
+     */
+    private boolean placeHolderSingular = false;
+
+    //////////////END OBSOLETE ///////////////////
+
+    /**
+     * Is participation as this actor open to all users?
+     */
+    private boolean openParticipation = false;
+    /**
+     * Can only one user participate as this actor?
+     */
+    private boolean singularParticipation = true;
+    /**
+     * Is participating as this actor restricted to users also participating
+     * as another actor with a same employer as this?
+     */
+    private boolean participationRestrictedToEmployed = false;
+    /**
+     * Is the user's identity and contact info visible in protocols from this actor?
+     */
+    private boolean anonymousParticipation = false;
+
+   /**
      * The actor's time-based availability.
      * Null means 24/7.
      */
@@ -54,10 +77,6 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
     private List<String> languages = new ArrayList<String>();
 
 
-    /**
-     * Whether placeholder is singular.
-     */
-    private boolean placeHolderSingular = false;
 
     public Actor() {
     }
@@ -89,34 +108,36 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         this.system = system;
     }
 
-    public boolean isArchetype() {
-        return archetype;
+    public boolean isOpenParticipation() {
+        return openParticipation;
     }
 
-    public void setArchetype( boolean archetype ) {
-        this.archetype = archetype;
-        if ( archetype ) placeHolder = false;
+    public void setOpenParticipation( boolean openParticipation ) {
+        this.openParticipation = openParticipation;
     }
 
-    public boolean isPlaceHolder() {
-        return placeHolder;
+    public boolean isSingularParticipation() {
+        return singularParticipation;
     }
 
-    public void setPlaceHolder( boolean placeHolder ) {
-        this.placeHolder = placeHolder;
-        if ( placeHolder ) archetype = false;
+    public void setSingularParticipation( boolean singularParticipation ) {
+        this.singularParticipation = singularParticipation;
     }
 
-    public boolean isPlaceHolderSingular() {
-        return placeHolderSingular;
+    public boolean isParticipationRestrictedToEmployed() {
+        return participationRestrictedToEmployed;
     }
 
-    public boolean isPlaceHolderPlural() {
-        return isPlaceHolder() && !isPlaceHolderSingular();
+    public void setParticipationRestrictedToEmployed( boolean participationRestrictedToEmployed ) {
+        this.participationRestrictedToEmployed = participationRestrictedToEmployed;
     }
 
-    public void setPlaceHolderSingular( boolean placeHolderSingular ) {
-        this.placeHolderSingular = placeHolderSingular;
+    public boolean isAnonymousParticipation() {
+        return anonymousParticipation;
+    }
+
+    public void setAnonymousParticipation( boolean anonymousParticipation ) {
+        this.anonymousParticipation = anonymousParticipation;
     }
 
     @Override
@@ -240,9 +261,10 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * @return a string
      */
     public String getNormalizedName() {
-        String name = getName().trim();
+        return getName();
+ /*       String name = getName().trim();
         if ( this == UNKNOWN || name.indexOf( ',' ) >= 0 ) return name;
-        else if ( isType() || archetype || system || placeHolder ) return name;
+        else if ( isType() || system || placeHolder ) return name;
         else {
             int index = name.lastIndexOf( ' ' );
             if ( index >= 0 ) {
@@ -250,7 +272,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
                 return name.substring( index + 1 ) + ", " + s;
             } else
                 return name;
-        }
+        }*/
     }
 
     public String getLastName() {
@@ -342,7 +364,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      * @return a boolean
      */
     public boolean isSingular() {
-        return !archetype && ( !placeHolder || placeHolderSingular );
+        return isSingularParticipation();
     }
 
     public String getParticipationPlurality() {

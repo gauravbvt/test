@@ -56,17 +56,23 @@ public class ActorConverter extends EntityConverter {
             writer.setValue( "true" );
             writer.endNode();
         }
-        if ( actor.isArchetype() ) {
-            writer.startNode( "archetype" );
-            writer.setValue( "true" );
-            writer.endNode();
-        }
-        if ( actor.isPlaceHolder() ) {
-            writer.startNode( "placeHolder" );
-            writer.addAttribute( "singular", Boolean.toString( actor.isPlaceHolderSingular() ) );
-            writer.setValue( "true" );
-            writer.endNode();
-        }
+        // open participation
+        writer.startNode( "openParticipation" );
+        writer.setValue( Boolean.toString( actor.isOpenParticipation() ) );
+        writer.endNode();
+        // singular participation
+        writer.startNode( "singularParticipation" );
+        writer.setValue( "true" );
+        writer.endNode();
+        // participation restricted to already employed
+        writer.startNode( "participationRestrictedToEmployed" );
+        writer.setValue( Boolean.toString( actor.isParticipationRestrictedToEmployed() ) );
+        writer.endNode();
+        // participant identity visibility
+        writer.startNode( "anonymousParticipation" );
+        writer.setValue( Boolean.toString( actor.isAnonymousParticipation() ) );
+        writer.endNode();
+        // availability
         if ( actor.getAvailability() != null ) {
             writer.startNode( "availability" );
             context.convertAnother( actor.getAvailability() );
@@ -106,15 +112,31 @@ public class ActorConverter extends EntityConverter {
         } else if ( nodeName.equals( "system" ) ) {
             boolean isSystem = reader.getValue().equals( "true" );
             actor.setSystem( isSystem );
-        } else if ( nodeName.equals( "archetype" ) ) {
+        } else if ( nodeName.equals( "archetype" ) ) {   // obsolete
             boolean isArchetype = reader.getValue().equals( "true" );
-            actor.setArchetype( isArchetype );
-        } else if ( nodeName.equals( "placeHolder" ) ) {
-            if ( reader.getAttributeCount() > 0 ) {
-                actor.setPlaceHolderSingular( Boolean.parseBoolean( reader.getAttribute( "singular" ) ) );
+            // actor.setArchetype( isArchetype );
+            LOG.debug( "Obsolete element: isArchetype" );
+            if ( isArchetype ) {
+                actor.setSingularParticipation( false );
+                actor.setAnonymousParticipation( false );
             }
-            boolean val = reader.getValue().equals( "true" );
-            actor.setPlaceHolder( val );
+        } else if ( nodeName.equals( "placeHolder" ) ) { // obsolete
+            LOG.debug( "Obsolete element: placeHolder" );
+            if ( reader.getAttributeCount() > 0 ) {
+                boolean singular = Boolean.parseBoolean( reader.getAttribute( "singular" ) );
+                actor.setSingularParticipation( singular );
+                // actor.setPlaceHolderSingular( singular );
+            }
+            // boolean val = reader.getValue().equals( "true" );
+            // actor.setPlaceHolder( val );
+        } else if ( nodeName.equals( "openParticipation" ) ) {
+            actor.setOpenParticipation( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals( "singularParticipation" ) ) {
+            actor.setSingularParticipation( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals( "participationRestrictedToEmployed" ) ) {
+            actor.setParticipationRestrictedToEmployed( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals( "anonymousParticipation" ) ) {
+            actor.setAnonymousParticipation( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "clearance" ) ) {
             Classification clearance = (Classification) context.convertAnother( plan, Classification.class );
             actor.addClearance( clearance );
@@ -122,7 +144,7 @@ public class ActorConverter extends EntityConverter {
             actor.addLanguage( reader.getValue() );
         } else if ( nodeName.equals( "availability" ) ) {
             Availability availability = (Availability) context.convertAnother( plan, Availability.class );
-            actor.setAvailability(  availability );
+            actor.setAvailability( availability );
         } else {
             LOG.debug( "Unknown element " + nodeName );
         }

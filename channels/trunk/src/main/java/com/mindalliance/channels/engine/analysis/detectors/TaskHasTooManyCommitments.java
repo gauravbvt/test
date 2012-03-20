@@ -15,9 +15,9 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -62,15 +62,17 @@ public class TaskHasTooManyCommitments extends AbstractIssueDetector {
         return issues;
     }
 
-    // No assignee is neither a system nor an archetype.
+    // No assignee is neither a system nor an "archetype".
     private static boolean areAllSystemsOrArchetypes( List<Assignment> assignments ) {
         return !CollectionUtils.exists( assignments, new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
                 Assignment assignment = (Assignment) object;
                 ModelEntity entity = assignment.getKnownAssignee();
-                return entity instanceof Organization || entity instanceof Actor && !( (Actor) entity ).isSystem()
-                                                         && !( (Actor) entity ).isArchetype();
+                return entity instanceof Organization ||
+                        entity instanceof Actor
+                                && (!( (Actor) entity ).isSystem()
+                                                         || ( (Actor) entity ).isSingularParticipation() );
             }
         } );
     }

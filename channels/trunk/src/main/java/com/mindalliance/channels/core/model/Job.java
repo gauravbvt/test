@@ -67,11 +67,6 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         else return actor.getName();
     }
 
-    public String getActorLastName() {
-        if ( actor == null ) return "";
-        else return actor.getLastName();
-    }
-
     public void setActor( Actor actor ) {
         this.actor = actor;
     }

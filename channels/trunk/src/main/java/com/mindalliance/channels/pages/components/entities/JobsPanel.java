@@ -150,7 +150,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         addOrReplace( jobsDiv );
         rangePanel = new NameRangePanel(
                 "ranges",
-                new PropertyModel<List<String>>( this, "jobActorLastNames" ),
+                new PropertyModel<List<String>>( this, "jobActorNames" ),
                 MAX_JOB_ROWS,
                 this,
                 "All last names" );
@@ -176,7 +176,6 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 addShowFlowsCell( item );
                 item.add( new AttributeModifier(
                         "class",
-                        true,
                         new Model<String>( cssClasses( item, count ) ) ) );
             }
         };
@@ -457,13 +456,13 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
      *
      * @return a list of strings
      */
-    public List<String> getJobActorLastNames() {
+    public List<String> getJobActorNames() {
         List<String> names = new ArrayList<String>();
         for ( Job job : getOrganization().getJobs() ) {
-            names.add( job.getActorLastName() );
+            names.add( job.getActorName() );
         }
         for ( Job job : getQueryService().findUnconfirmedJobs( getOrganization() ) ) {
-            names.add( job.getActorLastName() );
+            names.add( job.getActorName() );
         }
         return names;
     }
@@ -476,14 +475,14 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         // Confirmed jobs
         for ( Job job : confirmedJobs ) {
             if ( jobActorRange == null
-                    || jobActorRange.contains( job.getActorLastName().trim().toLowerCase() ) )
+                    || jobActorRange.contains( job.getActorName().trim().toLowerCase() ) )
                 jobWrappers.add( new JobWrapper( job, true ) );
         }
         // Unconfirmed jobs
         List<Job> unconfirmedJobs = getQueryService().findUnconfirmedJobs( getOrganization() );
         for ( Job job : unconfirmedJobs ) {
             if ( jobActorRange == null
-                    || jobActorRange.contains( job.getActorLastName().trim().toLowerCase() ) )
+                    || jobActorRange.contains( job.getActorName().trim().toLowerCase() ) )
                 jobWrappers.add( new JobWrapper( job, false ) );
         }
         Collections.sort( jobWrappers, new Comparator<JobWrapper>() {
@@ -535,7 +534,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUpdated() ) {
             if ( selectedJob != null )
-                setNameRange( target, rangePanel.getRangeFor( selectedJob.getActorLastName() ) );
+                setNameRange( target, rangePanel.getRangeFor( selectedJob.getActorName() ) );
         }
         super.updateWith( target, change, updated );
     }

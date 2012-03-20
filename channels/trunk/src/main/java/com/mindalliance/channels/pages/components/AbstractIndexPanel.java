@@ -544,7 +544,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 new Transformer() {
                     public Object transform( Object input ) {
                         if ( input instanceof Actor && ( (Actor) input ).isActual() ) {
-                            return ( (Actor) input ).getLastName();
+                            return ( (Actor) input ).getName();
                         } else if ( input instanceof Part ) {
                             return ( (Part) input ).getTask().toLowerCase();
                         } else if ( input instanceof Flow ) {
@@ -686,7 +686,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
 
     private String rangeName( Nameable nameable ) {
         if ( nameable instanceof Actor && ( (Actor) nameable ).isActual() ) {
-            return ( (Actor) nameable ).getLastName();
+            return ( (Actor) nameable ).getName();
         } else if ( nameable instanceof Part ) {
             return ( (Part) nameable ).getTask().toLowerCase();
         } else if ( nameable instanceof Flow ) {

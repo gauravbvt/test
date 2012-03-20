@@ -66,6 +66,14 @@ public class AssignedLocation implements Serializable {
     public void setKind( Kind kind ) {
         this.kind = kind;
     }
+    
+    public String getDisplayName() {
+        return kind == Kind.NamedPlace
+                ? namedPlace != null
+                    ? namedPlace.getName()
+                    : ""
+                : kind.getLabel().toLowerCase();
+    }
 
     public Place getNamedPlace() {
         return kind == Kind.NamedPlace ? namedPlace : null;

@@ -542,7 +542,7 @@ public abstract class DefaultQueryService implements QueryService {
                 ResourceSpec actorResourceSpec = actorSpecs.next();
                 if ( actorResourceSpec.narrowsOrEquals( resourceSpec, locale ) ) {
                     Actor actor = actorResourceSpec.getActor();
-                    if ( !actor.isUnknown() && !actor.isArchetype() ) actors.add( actor );
+                    if ( !actor.isUnknown() /*&& !actor.isArchetype()*/ ) actors.add( actor );
                 }
             }
         }
@@ -2892,7 +2892,7 @@ public abstract class DefaultQueryService implements QueryService {
             label += part.getActor().getName();
             if ( part.getActor().isType() ) {
                 Actor impliedActor = getKnownActualActor( part );
-                if ( impliedActor != null && !impliedActor.isArchetype() ) {
+                if ( impliedActor != null /*&& !impliedActor.isArchetype()*/ ) {
                     label += " (" + impliedActor.getName() + ")";
                 }
             }
@@ -2902,7 +2902,7 @@ public abstract class DefaultQueryService implements QueryService {
                 label += sep;
             if ( part.getActor() == null ) {
                 Actor impliedActor = getKnownActualActor( part );
-                if ( impliedActor != null && !impliedActor.isArchetype() ) {
+                if ( impliedActor != null /*&& !impliedActor.isArchetype()*/ ) {
                     label += impliedActor.getName();
                     label += " ";
                 }
