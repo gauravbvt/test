@@ -1,5 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.query.PlanService;
@@ -24,8 +26,12 @@ public class SituationData  extends AbstractProcedureElementData {
         // required
     }
 
-    public SituationData( Assignment assignment, PlanService planService ) {
-        super( assignment,planService );
+    public SituationData(
+            Assignment assignment,
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
+        super( assignment,planService, planParticipationService, user );
     }
 
     @XmlElement

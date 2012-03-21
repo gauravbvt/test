@@ -1,5 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.Flow;
@@ -19,7 +21,7 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:16 AM
  */
-@XmlType( propOrder={"situation", "anytime", "onDiscovery", "onResearch", "onNotification", "onRequest"} )
+@XmlType( propOrder = {"situation", "anytime", "onDiscovery", "onResearch", "onNotification", "onRequest"} )
 public class TriggerData extends AbstractProcedureElementData {
 
     private Flow notificationFromOther;
@@ -34,8 +36,12 @@ public class TriggerData extends AbstractProcedureElementData {
         // required
     }
 
-    public TriggerData( Assignment assignment, PlanService planService ) {
-        super( assignment, planService );
+    public TriggerData(
+            Assignment assignment,
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
+        super( assignment, planService, planParticipationService, user );
     }
 
     public void setNotificationFromOther( Flow notificationFromOther ) {
@@ -68,9 +74,9 @@ public class TriggerData extends AbstractProcedureElementData {
     @XmlElement
     public DiscoveryData getOnDiscovery() {
         if ( eventPhase != null )
-            return new DiscoveryData( eventPhase, getPlanService() );
+            return new DiscoveryData( eventPhase, getPlanService(), getPlanParticipationService(), getUser() );
         else if ( notificationToSelf != null )
-            return new DiscoveryData( notificationToSelf, getPlanService() );
+            return new DiscoveryData( notificationToSelf, getPlanService(), getPlanParticipationService(), getUser() );
         else
             return null;
     }
@@ -78,7 +84,12 @@ public class TriggerData extends AbstractProcedureElementData {
     @XmlElement
     public ResearchData getOnResearch() {
         if ( requestToSelf != null )
-            return new ResearchData( requestToSelf, getAssignment(), getPlanService() );
+            return new ResearchData(
+                    requestToSelf,
+                    getAssignment(),
+                    getPlanService(),
+                    getPlanParticipationService(),
+                    getUser() );
         else
             return null;
     }
@@ -87,7 +98,13 @@ public class TriggerData extends AbstractProcedureElementData {
     public NotificationData getOnNotification() {
         if ( onNotification == null ) {
             if ( notificationFromOther != null && !notificationFromOther.isToSelf() )
-                onNotification = new NotificationData( notificationFromOther, true, getAssignment(), getPlanService() );
+                onNotification = new NotificationData(
+                        notificationFromOther,
+                        true,
+                        getAssignment(),
+                        getPlanService(),
+                        getPlanParticipationService(),
+                        getUser());
             else
                 onNotification = null;
         }
@@ -98,7 +115,13 @@ public class TriggerData extends AbstractProcedureElementData {
     public RequestData getOnRequest() {
         if ( onRequest == null ) {
             if ( requestFromOther != null )
-                onRequest = new RequestData( requestFromOther, true, getAssignment(), getPlanService() );
+                onRequest = new RequestData(
+                        requestFromOther,
+                        true,
+                        getAssignment(),
+                        getPlanService(),
+                        getPlanParticipationService(),
+                        getUser());
             else
                 onRequest = null;
         }
@@ -106,23 +129,23 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
     @XmlElement
-     public SituationData getSituation() {
-         if ( isSituationKnown() ) {
-             return new SituationData( getAssignment(), getPlanService() );
-         } else {
-             return null;
-         }
-     }
+    public SituationData getSituation() {
+        if ( isSituationKnown() ) {
+            return new SituationData( getAssignment(), getPlanService(), getPlanParticipationService(), getUser() );
+        } else {
+            return null;
+        }
+    }
 
-     private boolean isSituationKnown() {
-         return eventPhase != null
-                 || notificationFromOther != null && notificationFromOther.isReferencesEventPhase()
-                 || requestFromOther != null && requestFromOther.isReferencesEventPhase();
-     }
+    private boolean isSituationKnown() {
+        return eventPhase != null
+                || notificationFromOther != null && notificationFromOther.isReferencesEventPhase()
+                || requestFromOther != null && requestFromOther.isReferencesEventPhase();
+    }
 
     @WebMethod( exclude = true )
     public Long getEventId() {
-         SituationData situation = getSituation();
+        SituationData situation = getSituation();
         if ( situation != null )
             return situation.getEventId();
         else
@@ -138,7 +161,7 @@ public class TriggerData extends AbstractProcedureElementData {
             return null;
     }
 
-     public Set<Long> allOrganizationIds() {
+    public Set<Long> allOrganizationIds() {
         Set<Long> ids = new HashSet<Long>();
         if ( getOnNotification() != null ) {
             ids.addAll( getOnNotification().allOrganizationIds() );

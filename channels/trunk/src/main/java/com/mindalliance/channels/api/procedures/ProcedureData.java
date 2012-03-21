@@ -1,5 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -40,6 +42,8 @@ public class ProcedureData {
      */
     private Commitments committingCommitments;
     private PlanService planService;
+    private PlanParticipationService planParticipationService;
+    private ChannelsUser user;
     private List<TriggerData> triggers;
 
     public ProcedureData() {
@@ -51,12 +55,16 @@ public class ProcedureData {
             Assignment assignment,
             Commitments benefitingCommitments,
             Commitments committingCommitments,
-            PlanService planService ) {
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
         this.actor = actor;
         this.assignment = assignment;
         this.benefitingCommitments = benefitingCommitments;
         this.committingCommitments = committingCommitments;
         this.planService = planService;
+        this.planParticipationService = planParticipationService;
+        this.user = user;
     }
 
     @XmlElement( name = "agentId" )
@@ -71,35 +79,35 @@ public class ProcedureData {
             triggers = new ArrayList<TriggerData>();
             // anytime
             if ( assignment.isOngoing() ) {
-                triggers.add( new TriggerData( assignment, planService ) );
+                triggers.add( new TriggerData( assignment, planService, planParticipationService, user ) );
             } else {
                 // event phase is trigger
                 if ( assignment.isInitiatedByEventPhase() ) {
-                    TriggerData trigger = new TriggerData( assignment, planService );
+                    TriggerData trigger = new TriggerData( assignment, planService, planParticipationService, user );
                     trigger.setEventPhase( assignment.getEventPhase() );
                     triggers.add( trigger );
                 }
                 // information discovery (notifications to self)
                 for ( Flow triggerSelfNotification : triggeringNotificationsToSelf() ) {
-                    TriggerData trigger = new TriggerData( assignment, planService );
+                    TriggerData trigger = new TriggerData( assignment, planService, planParticipationService, user );
                     trigger.setNotificationToSelf( triggerSelfNotification );
                     triggers.add( trigger );
                 }
                 // triggering notifications (from others)
                 for ( Flow triggerNotification : triggeringNotificationsFromOthers() ) {    
-                    TriggerData trigger = new TriggerData( assignment, planService );
+                    TriggerData trigger = new TriggerData( assignment, planService, planParticipationService, user );
                     trigger.setNotificationFromOther( triggerNotification );
                     triggers.add( trigger );
                 }
                 // triggering requests
                 for ( Flow triggerRequest : triggeringRequestsFromOthers() ) {   
-                    TriggerData trigger = new TriggerData( assignment, planService );
+                    TriggerData trigger = new TriggerData( assignment, planService, planParticipationService, user );
                     trigger.setRequestFromOther( triggerRequest );
                     triggers.add( trigger );
                 }
                 // triggering requests to self
                 for ( Flow triggerRequest : triggeringRequestsToSelf() ) {   
-                    TriggerData trigger = new TriggerData( assignment, planService );
+                    TriggerData trigger = new TriggerData( assignment, planService, planParticipationService, user );
                     trigger.setRequestToSelf( triggerRequest );
                     triggers.add( trigger );
                 }
@@ -153,7 +161,7 @@ public class ProcedureData {
 
     @XmlElement( name = "assignment" )
     public AssignmentData getAssignment() {
-        return new AssignmentData( assignment, planService, this );
+        return new AssignmentData( assignment, planService, planParticipationService, user, this );
     }
 
     @WebMethod( exclude = true )

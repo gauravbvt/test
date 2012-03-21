@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Employment;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -14,10 +15,11 @@ import java.util.Set;
  * Date: 12/1/11
  * Time: 10:27 AM
  */
-@XmlType( propOrder = {"organizationId", "actorId", "title", "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
+@XmlType( propOrder = {"name", "organizationId", "title", "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
 public class EmploymentData {
 
     private Employment employment;
+    private ChannelsUserInfo userInfo;
 
     public EmploymentData() {
         // required
@@ -27,9 +29,16 @@ public class EmploymentData {
         this.employment = employment;
     }
 
-    @XmlElement( name = "agentId" )
-    public Long getActorId() {
-        return employment.getActor().getId();
+    public EmploymentData( Employment employment, ChannelsUserInfo userInfo ) {
+        this.employment = employment;
+        this.userInfo = userInfo;
+    }
+    
+    @XmlElement
+    public String getName() {
+        return userInfo != null
+                ? userInfo.getFullName()
+                : employment.getActor().getName();
     }
 
     @XmlElement
@@ -70,7 +79,7 @@ public class EmploymentData {
 
     public Set<Long> allActorIds() {
         Set<Long> ids = new HashSet<Long>(  );
-        ids.add( getActorId() );
+        ids.add( employment.getActor().getId() );
         if ( getSupervisorId() != null )
             ids.add( getSupervisorId() );
         return ids;

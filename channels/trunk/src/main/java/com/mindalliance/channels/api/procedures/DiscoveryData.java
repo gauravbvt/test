@@ -1,5 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.PlanService;
@@ -18,20 +20,32 @@ public class DiscoveryData {
 
     private EventPhase eventPhase;
     private PlanService planService;
+    private PlanParticipationService planParticipationService;
+    private ChannelsUser user;
     private Flow notificationToSelf;
 
     public DiscoveryData() {
         // required
     }
 
-    public DiscoveryData( EventPhase eventPhase, PlanService planService ) {
+    public DiscoveryData( EventPhase eventPhase,
+                          PlanService planService,
+                          PlanParticipationService planParticipationService,
+                          ChannelsUser user ) {
         this.eventPhase = eventPhase;
         this.planService = planService;
+        this.planParticipationService = planParticipationService;
+        this.user = user;
     }
 
-    public DiscoveryData( Flow notificationToSelf, PlanService planService ) {
+    public DiscoveryData( Flow notificationToSelf,
+                          PlanService planService,
+                          PlanParticipationService planParticipationService,
+                          ChannelsUser user ) {
         this.notificationToSelf = notificationToSelf;
         this.planService = planService;
+        this.planParticipationService = planParticipationService;
+        this.user = user;
     }
 
     @XmlElement
@@ -53,7 +67,7 @@ public class DiscoveryData {
     @XmlElement
     public InfoDiscoveredData getInformationDiscovered() {
         if ( notificationToSelf != null )
-            return new InfoDiscoveredData( notificationToSelf, planService );
+            return new InfoDiscoveredData( notificationToSelf, planService, planParticipationService, user );
         else
             return null;
     }

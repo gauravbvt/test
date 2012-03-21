@@ -1,5 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
@@ -19,14 +21,21 @@ public class InfoDiscoveredData {
 
     private Flow notificationToSelf;
     private PlanService planService;
+    private PlanParticipationService planParticipationService;
+    private ChannelsUser user;
 
     public InfoDiscoveredData() {
         // required
     }
 
-    public InfoDiscoveredData( Flow notificationToSelf, PlanService planService ) {
+    public InfoDiscoveredData( Flow notificationToSelf,
+                               PlanService planService,
+                               PlanParticipationService planParticipationService,
+                               ChannelsUser user ) {
         this.notificationToSelf = notificationToSelf;
         this.planService = planService;
+        this.planParticipationService = planParticipationService;
+        this.user = user;
     }
 
     @XmlElement
@@ -36,12 +45,12 @@ public class InfoDiscoveredData {
 
     @XmlElement
     public TaskData getDoingTask() {
-        return new TaskData( (Part)notificationToSelf.getSource(), planService );
+        return new TaskData( (Part)notificationToSelf.getSource(), planService, planParticipationService, user );
     }
 
     @XmlElement
     public TaskData getFollowUpTask() {
-        return new TaskData( (Part)notificationToSelf.getTarget(), planService );
+        return new TaskData( (Part)notificationToSelf.getTarget(), planService, planParticipationService, user );
     }
 
     @XmlElement

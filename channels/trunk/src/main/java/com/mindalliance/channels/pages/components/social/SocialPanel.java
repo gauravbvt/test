@@ -38,7 +38,8 @@ public class SocialPanel extends AbstractUpdatablePanel {
     public static final String ACTIVITIES = "Activities";
     public static final String MESSAGES = "Messages";
     public static final String CALENDAR = "Calendar";
-    // public static final String SURVEYS = "Surveys";
+    public static final String PARTICIPATION = "Participation";
+   // public static final String SURVEYS = "Surveys";
     public static final String USER = "User";
     public static final String SEND_MESSAGE = "sendMessage";
     public static final String DELETE_MESSAGE = "deleteMessage";
@@ -48,10 +49,12 @@ public class SocialPanel extends AbstractUpdatablePanel {
     private UserMessageListPanel plannerMessageListPanel;
     private ExecutedCommandsListPanel commandEventListPanel;
     private UserPresenceListPanel plannerPresenceListPanel;
-    private SurveyListPanel surveyListPanel;
+    // private SurveyListPanel surveyListPanel;
     private CalendarPanel calendarPanel;
     private UserInfoPanel userProfilePanel;
-    /**
+    private UserParticipationPanel userParticipationPanel;
+
+   /**
      * When last refreshed.
      */
     private Date whenLastRefreshed = new Date();
@@ -145,7 +148,16 @@ public class SocialPanel extends AbstractUpdatablePanel {
             };
             tabs.add( tab );
         }
-        return tabs;
+        if ( showTabs.contains( PARTICIPATION ) ) {
+            AbstractTab tab = new AbstractTab( new Model<String>( "What I do" ) ) {
+                public Panel getPanel( String id ) {
+                    userParticipationPanel = new UserParticipationPanel( id, SocialPanel.this, collapsible );
+                    return userParticipationPanel;
+                }
+            };
+            tabs.add( tab );
+        }
+      return tabs;
     }
 
     private String getMessagesTabTitle() {

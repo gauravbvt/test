@@ -16,6 +16,7 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +53,9 @@ public class ChannelsServiceImpl implements ChannelsService {
     private AttachmentManager attachmentManager;
     private Analyst analyst;
     private PlanParticipationService planParticipationService;
+
+    @SpringBean
+    private ChannelsUser user;
 
     @Override
     /**
@@ -117,7 +121,8 @@ public class ChannelsServiceImpl implements ChannelsService {
             return new ProceduresData(
                     plan,
                     actor,
-                    planService );
+                    planService,
+                    planParticipationService );
         } catch ( Exception e ) {
             LOG.warn( "No procedures available for agent " + actorId, e );
             throw new WebApplicationException(
@@ -145,7 +150,9 @@ public class ChannelsServiceImpl implements ChannelsService {
             return new ProceduresData(
                     plan,
                     participations,
-                    planService );
+                    planService,
+                    planParticipationService,
+                    user);
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
             throw new WebApplicationException(
@@ -226,6 +233,7 @@ public class ChannelsServiceImpl implements ChannelsService {
     public void setPlanParticipationService( PlanParticipationService planParticipationService ) {
         this.planParticipationService = planParticipationService;
     }
+
 
     private PlanService getPlanService( Plan plan ) {
         return new PlanService(

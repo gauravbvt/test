@@ -1,5 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
@@ -16,19 +18,30 @@ abstract public class AbstractProcedureElementData {
 
     private Assignment assignment;
     private PlanService planService;
+    private PlanParticipationService planParticipationService;
+    private ChannelsUser user;
 
     protected AbstractProcedureElementData() {
     }
 
-    protected AbstractProcedureElementData( PlanService planService ) {
+    protected AbstractProcedureElementData(
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
         this.planService = planService;
+        this.planParticipationService = planParticipationService;
+        this.user = user;
     }
 
     protected AbstractProcedureElementData(
             Assignment assignment,
-            PlanService planService ) {
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user) {
         this.assignment = assignment;
         this.planService = planService;
+        this.planParticipationService = planParticipationService;
+        this.user = user;
     }
 
     public Assignment getAssignment() {
@@ -39,7 +52,19 @@ abstract public class AbstractProcedureElementData {
         return planService;
     }
 
+    public PlanParticipationService getPlanParticipationService() {
+        return planParticipationService;
+    }
+
     protected Plan getPlan() {
         return planService.getPlan();
+    }
+
+    protected ChannelsUser getUser() {
+        return user;
+    }
+
+    protected String getUsername() {
+        return user.getUsername();
     }
 }

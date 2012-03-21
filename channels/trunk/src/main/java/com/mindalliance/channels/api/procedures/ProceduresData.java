@@ -3,7 +3,9 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Employment;
@@ -36,6 +38,8 @@ public class ProceduresData {
     private Plan plan;
     private List<Actor> actors;
     private PlanService planService;
+    private PlanParticipationService planParticipationService;
+    private ChannelsUser user;
     private Assignments assignments;
     private List<ProcedureData> procedures;
     private List<EmploymentData> employments;
@@ -45,15 +49,27 @@ public class ProceduresData {
         // required
     }
 
-    public ProceduresData( Plan plan, List<PlanParticipation> participations, PlanService planService ) {
+    public ProceduresData(
+            Plan plan,
+            List<PlanParticipation> participations,
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
         this.plan = plan;
         this.planService = planService;
+        this.planParticipationService = planParticipationService;
+        this.user = user;
         this.actors = getActors( participations );
     }
 
-    public ProceduresData( Plan plan, Actor actor, PlanService planService ) {
+    public ProceduresData(
+            Plan plan,
+            Actor actor,
+            PlanService planService,
+            PlanParticipationService planParticipationService ) {
         this.plan = plan;
         this.planService = planService;
+        this.planParticipationService = planParticipationService;
         this.actors = new ArrayList<Actor>(  );
         actors.add( actor );
     }
@@ -111,7 +127,9 @@ public class ProceduresData {
                             assignment,
                             allCommitments.benefiting( assignment ),
                             allCommitments.committing( assignment ),
-                            planService ) );
+                            planService,
+                            planParticipationService,
+                            user ) );
                 }
         }
         return procedures;

@@ -1,5 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
@@ -26,8 +28,13 @@ public class ResearchData extends AbstractProcedureElementData {
         super();
     }
 
-    public ResearchData( Flow requestToSelf, Assignment assignment, PlanService planService ) {
-        super( assignment, planService );
+    public ResearchData(
+            Flow requestToSelf,
+            Assignment assignment,
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
+        super( assignment, planService, planParticipationService, user );
         this.requestToSelf = requestToSelf;
     }
 
@@ -43,12 +50,20 @@ public class ResearchData extends AbstractProcedureElementData {
 
     @XmlElement
     public TaskData getResearchTask() {
-        return new TaskData( (Part)requestToSelf.getSource(), getPlanService() );
+        return new TaskData(
+                (Part)requestToSelf.getSource(),
+                getPlanService(),
+                getPlanParticipationService(),
+                getUser() );
     }
 
     @XmlElement
     public TaskData getConsumingTask() {
-        return new TaskData( (Part)requestToSelf.getTarget(), getPlanService() );
+        return new TaskData(
+                (Part)requestToSelf.getTarget(),
+                getPlanService(),
+                getPlanParticipationService(),
+                getUser() );
     }
 
 

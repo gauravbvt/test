@@ -1,5 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
@@ -37,14 +39,16 @@ public class AssignmentData extends AbstractProcedureElementData {
     public AssignmentData(
             Assignment assignment,
             PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user,
             ProcedureData procedureData ) {
-        super( assignment, planService );
+        super( assignment, planService, planParticipationService, user );
         this.procedureData = procedureData;
     }
 
     @XmlElement
     public TaskData getTask() {
-        return new TaskData( getAssignment(), getPlanService() );
+        return new TaskData( getAssignment(), getPlanService(), getPlanParticipationService(), getUser() );
     }
 
     @XmlElement( name = "inNotification" )
@@ -57,7 +61,9 @@ public class AssignmentData extends AbstractProcedureElementData {
                         inNotification,
                         benefiting,
                         getAssignment(),
-                        getPlanService() ) );
+                        getPlanService(),
+                        getPlanParticipationService(),
+                        getUser() ) );
             }
         }
         return inNotifications;
@@ -73,7 +79,9 @@ public class AssignmentData extends AbstractProcedureElementData {
                         inReply,
                         replying,
                         getAssignment(),
-                        getPlanService() ) );
+                        getPlanService(),
+                        getPlanParticipationService(),
+                        getUser() ) );
             }
         }
         return inReplies;
@@ -89,7 +97,9 @@ public class AssignmentData extends AbstractProcedureElementData {
                         outNotification,
                         benefiting,
                         getAssignment(),
-                        getPlanService() ) );
+                        getPlanService(),
+                        getPlanParticipationService(),
+                        getUser() ) );
             }
         }
         return outNotifications;
@@ -105,7 +115,9 @@ public class AssignmentData extends AbstractProcedureElementData {
                         outReply,
                         replying,
                         getAssignment(),
-                        getPlanService() ) );
+                        getPlanService(),
+                        getPlanParticipationService(),
+                        getUser() ) );
             }
         }
         return outReplies;
@@ -116,7 +128,11 @@ public class AssignmentData extends AbstractProcedureElementData {
     public List<DiscoveryData> getDiscoveries() {
         List<DiscoveryData> discoveries = new ArrayList<DiscoveryData>();
         for ( Flow discovery : discoveries() ) {
-            discoveries.add( new DiscoveryData( discovery, getPlanService() ) );
+            discoveries.add( new DiscoveryData(
+                    discovery,
+                    getPlanService(),
+                    getPlanParticipationService(),
+                    getUser() ) );
         }
         return discoveries;
     }
@@ -125,7 +141,12 @@ public class AssignmentData extends AbstractProcedureElementData {
     public List<ResearchData> getResearch() {
         List<ResearchData> allResearch = new ArrayList<ResearchData>();
         for ( Flow research : research() ) {
-            allResearch.add( new ResearchData( research, getAssignment(), getPlanService() ) );
+            allResearch.add( new ResearchData(
+                    research,
+                    getAssignment(),
+                    getPlanService(),
+                    getPlanParticipationService(),
+                    getUser() ) );
         }
         return allResearch;
     }

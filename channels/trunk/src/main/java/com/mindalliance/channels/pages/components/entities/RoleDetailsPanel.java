@@ -127,7 +127,6 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements NameRangeabl
         };
         moreLink.add( new AttributeModifier(
                 "class",
-                true,
                 new Model<String>( showingMore ? "less" : "more" ) ) );
         moreLink.add( new Label( "moreOrLess", showingMore ? "less" : "more" ) );
         moreLink.setOutputMarkupId( true );

@@ -4,15 +4,11 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.dao.user.PlanParticipation;
-import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.dao.user.UserContactInfoService;
-import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -64,8 +60,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     @SpringBean
     private UserContactInfoService userContactInfoService;
 
-    @SpringBean
-    private PlanParticipationService planParticipationService;
 
     private Pattern emailPattern;
     private boolean passwordOk = false;
@@ -92,8 +86,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         emailPattern = Pattern.compile( EMAIL_REGEX );
         addUserInfoContainer();
         addIdentity();
-        addUserRole();
-        addParticipation();
         addUserContactInfo();
         addPassword();
         addErrors();
@@ -142,25 +134,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         return matcher.matches();
     }
 
-    private void addUserRole() {
-        userInfoContainer.add( new Label( "userRole", getUserRole() ) );
-    }
-
-    private void addParticipation() {
-        ListView<PlanParticipation> participationList = new ListView<PlanParticipation>(
-                "participations",
-                planParticipationService.getParticipations( getPlan(), getUser().getUserInfo(), getQueryService() )
-        ) {
-            @Override
-            protected void populateItem( ListItem<PlanParticipation> item ) {
-                PlanParticipation participation = item.getModelObject();
-                String assignation = getAssignation( participation.getActor( getQueryService() ) );
-                item.add( new Label( "participation", assignation ) );
-            }
-        };
-        userInfoContainer.add( participationList );
-    }
-
     private void addUserContactInfo() {
         WebMarkupContainer updatedContactContainer = new WebMarkupContainer( "userContact" );
         updatedContactContainer.add(
@@ -172,31 +145,6 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                         false ) );
         userInfoContainer.add( updatedContactContainer );
     }
-
-    private String getUserRole() {
-        String userRole = user.isAdmin()
-                ? "administrator (and in all other plans)"
-                : user.isPlanner()
-                ? "planner"
-                : "participant";
-        return ( ChannelsUtils.startsWithVowel( userRole ) ? " an " : " a " ) + userRole + ".";
-    }
-
-    private String getAssignation( Actor actor ) {
-        StringBuilder sb = new StringBuilder();
-        if ( actor != null ) {
-            sb.append( "I participate as " );
-            sb.append( actor.getName() );
-            String channelsString = actor.getChannelsString();
-            if ( !channelsString.isEmpty() ) {
-                sb.append( ", reachable via " );
-                sb.append( channelsString );
-            }
-            sb.append( '.' );
-        }
-        return sb.toString();
-    }
-
 
     private void addPassword() {
         PasswordTextField passwordField = new PasswordTextField( "password", new PropertyModel<String>( this, "password" ) );

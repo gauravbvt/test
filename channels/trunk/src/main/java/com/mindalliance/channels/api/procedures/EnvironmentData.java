@@ -211,7 +211,7 @@ public class EnvironmentData {
     private Set<Long> allActorIds() {
         Set<Long> allIds = new HashSet<Long>(  );
         for ( EmploymentData employment : procedures.getEmployments() ) {
-            allIds.add(  employment.getActorId() );
+            allIds.addAll(  employment.allActorIds());
             if ( employment.getSupervisorId() != null )
                 allIds.add( employment.getSupervisorId() );
         }

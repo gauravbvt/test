@@ -39,7 +39,7 @@ public class AgreementData {
         return agreement.getInformation();
     }
 
-    @XmlElement
+    @XmlElement( name= "eoi" )
     public List<ElementOfInformationData> getElementsOfInformation() {
         List<ElementOfInformationData> eois = new ArrayList<ElementOfInformationData>(  );
         for ( ElementOfInformation eoi : agreement.getEois() ) {

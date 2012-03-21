@@ -1,6 +1,9 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.api.entities.EmploymentData;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
@@ -22,7 +25,8 @@ import java.util.Set;
 public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     private Flow sharing;
-    private List<EmploymentData> employments;
+    private List<ContactData> contacts;
+    private List<Employment> employments;
 
     public AbstractFlowData() {
         // required
@@ -31,8 +35,10 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     public AbstractFlowData(
             Flow sharing,
             Assignment assignment,
-            PlanService planService ) {
-        super( assignment, planService );
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
+        super( assignment, planService, planParticipationService, user );
         this.sharing = sharing;
     }
 
@@ -54,14 +60,55 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
                 : getSharing().getIntent().getLabel();
     }
 
-    public List<EmploymentData> getEmployments() {
-        if ( employments == null ) {
-            employments = new ArrayList<EmploymentData>();
-            for ( Employment employment : contacts() ) {
-                employments.add( new EmploymentData( employment ) );
+    public List<ContactData> getContacts() {
+        if ( contacts == null ) {
+            contacts = new ArrayList<ContactData>();
+            for ( Employment employment : contactEmployments() ) {
+                Actor actor = employment.getActor();
+                if ( actor.isAnonymousParticipation() ) {
+                    contacts.add( new ContactData(
+                            employment,
+                            null,
+                            true,
+                            getPlanService(),
+                            getPlanParticipationService() ) );
+                } else {
+                    List<PlanParticipation> otherParticipations = getOtherParticipations( actor );
+                    if ( otherParticipations.isEmpty() ) {
+                        contacts.add( new ContactData(
+                                employment,
+                                null,
+                                true,
+                                getPlanService(),
+                                getPlanParticipationService() ) );
+                    } else {
+                        for ( PlanParticipation otherParticipation : otherParticipations ) {
+                            contacts.add( new ContactData(
+                                    employment,
+                                    otherParticipation.getParticipant(),
+                                    true,
+                                    getPlanService(),
+                                    getPlanParticipationService() ) );
+                        }
+                    }
+                }
             }
         }
-        return employments;
+        return contacts;
+    }
+
+    private List<PlanParticipation> getOtherParticipations( Actor actor ) {
+        List<PlanParticipation> otherParticipations = new ArrayList<PlanParticipation>(  );
+        List<PlanParticipation> participations = getPlanParticipationService().getParticipations(
+                getPlan(),
+                actor,
+                getPlanService() );
+        for ( PlanParticipation participation : participations ) {
+            if ( !getUsername().equals( participation.getParticipant().getUsername() ) ) {
+                otherParticipations.add( participation );
+            }
+        }
+        return otherParticipations;
     }
 
     public List<Long> getMediumIds() {
@@ -70,6 +117,10 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
             media.add( medium.getId() );
         }
         return media;
+    }
+
+    public boolean getTaskFailed() {
+        return sharing.isIfTaskFails();
     }
 
     public boolean getContactAll() {
@@ -93,16 +144,18 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allOrganizationIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( EmploymentData employment : getEmployments() ) {
-            ids.add( employment.getOrganizationId() );
+        for ( Employment employment : contactEmployments() ) {
+            ids.add( employment.getOrganization().getId() );
         }
         return ids;
     }
 
     public Set<Long> allActorIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( EmploymentData employment : getEmployments() ) {
-            ids.addAll( employment.allActorIds() );
+        for ( Employment employment : contactEmployments() ) {
+            ids.add( employment.getActor().getId() );
+            if ( employment.getSupervisor() != null )
+                ids.add( employment.getSupervisor().getId() );
         }
         for ( TransmissionMedium medium : getSharing().transmissionMedia() ) {
             if ( medium.getQualification() != null )
@@ -113,17 +166,17 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allRoleIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( EmploymentData employment : getEmployments() ) {
-            ids.add( employment.getRoleId() );
+        for ( Employment employment : contactEmployments() ) {
+            ids.add( employment.getRole().getId() );
         }
         return ids;
     }
 
     public Set<Long> allPlaceIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( EmploymentData employment : getEmployments() ) {
-            if ( employment.getJurisdictionId() != null )
-                ids.add( employment.getJurisdictionId() );
+        for ( Employment employment : contactEmployments() ) {
+            if ( employment.getJurisdiction() != null )
+                ids.add( employment.getJurisdiction().getId() );
         }
         return ids;
     }
@@ -142,6 +195,13 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return new DocumentationData( getSharing() );
     }
 
-    protected abstract List<Employment> contacts();
+    protected List<Employment> contactEmployments() {
+        if ( employments == null ) {
+            employments = findContactEmployments();
+        }
+        return employments;
+    }
+
+    protected abstract List<Employment> findContactEmployments();
 
 }

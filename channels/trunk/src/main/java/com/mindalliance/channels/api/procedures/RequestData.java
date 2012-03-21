@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.api.entities.EmploymentData;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -24,8 +25,8 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 12:49 PM
  */
-@XmlType( propOrder = {"information", "intent", "receiptConfirmationRequested", "instructions", "contactAll",
-        "maxDelay", "employments", "mediumIds", "failureImpact","consumingTask", /*"agreements",*/ "documentation"} )
+@XmlType( propOrder = {"information", "intent", "taskFailed", "receiptConfirmationRequested", "instructions", "contactAll",
+        "maxDelay", "contacts", "mediumIds", "failureImpact","consumingTask", /*"agreements",*/ "documentation"} )
 public class RequestData extends AbstractFlowData {
 
     /**
@@ -41,8 +42,10 @@ public class RequestData extends AbstractFlowData {
             Flow request,
             boolean replying,
             Assignment assignment,
-            PlanService planService ) {
-        super( request, assignment, planService );
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
+        super( request, assignment, planService, planParticipationService, user );
         this.replying = replying;
     }
 
@@ -60,6 +63,13 @@ public class RequestData extends AbstractFlowData {
 
     @Override
     @XmlElement
+    public boolean getTaskFailed() {
+        return super.getTaskFailed();
+    }
+
+
+    @Override
+    @XmlElement
     public boolean getReceiptConfirmationRequested() {
         return super.getReceiptConfirmationRequested();
     }
@@ -72,9 +82,11 @@ public class RequestData extends AbstractFlowData {
 
     @Override
     @XmlElement( name = "contact" )
-    public List<EmploymentData> getEmployments() {
-       return super.getEmployments();
+    public List<ContactData> getContacts() {
+       return super.getContacts();
     }
+
+    // TODO: Add disintermediated contacts to request or requesting
 
     @Override
     @XmlElement( name = "preferredTransmissionMedium" )
@@ -103,7 +115,11 @@ public class RequestData extends AbstractFlowData {
     @XmlElement
     public TaskData getConsumingTask() {
         if ( replying )
-            return new TaskData( (Part)getRequest().getTarget(), getPlanService() );
+            return new TaskData( 
+                    (Part)getRequest().getTarget(), 
+                    getPlanService(), 
+                    getPlanParticipationService(),
+                    getUser() );
         else
             return null;
     }
@@ -123,7 +139,7 @@ public class RequestData extends AbstractFlowData {
     }
 
     @Override
-    protected List<Employment> contacts() {
+    protected List<Employment> findContactEmployments() {
         Set<Employment> contacts = new HashSet<Employment>(  );
         Actor assignedActor = getAssignment().getActor();
         List<Commitment> commitments = getPlanService().findAllCommitments( getRequest() );

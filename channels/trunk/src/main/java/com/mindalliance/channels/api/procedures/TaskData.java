@@ -2,6 +2,8 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.entities.PlaceData;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Part;
@@ -32,13 +34,21 @@ public class TaskData extends AbstractProcedureElementData {
         // required
     }
 
-    public TaskData( Assignment assignment, PlanService planService ) {
-        super( assignment, planService );
+    public TaskData( 
+            Assignment assignment, 
+            PlanService planService, 
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
+        super( assignment, planService, planParticipationService, user );
     }
 
     // For consuming tasks
-    public TaskData( Part part, PlanService planService ) {
-        super( planService );
+    public TaskData( 
+            Part part,
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
+        super( planService, planParticipationService, user );
         this.part = part;
     }
 
