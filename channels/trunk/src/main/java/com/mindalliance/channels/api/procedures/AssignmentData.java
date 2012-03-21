@@ -23,7 +23,7 @@ import java.util.Set;
  * Date: 12/8/11
  * Time: 3:57 PM
  */
-@XmlType( propOrder = {"task", "inNotifications", "inReplies", "outNotifications", "outReplies", "discoveries", "research"} )
+@XmlType( propOrder = {"task", "inNotifications", "inRequests", "outNotifications", "outReplies", "discoveries", "research"} )
 public class AssignmentData extends AbstractProcedureElementData {
 
     private ProcedureData procedureData;
@@ -69,8 +69,8 @@ public class AssignmentData extends AbstractProcedureElementData {
         return inNotifications;
     }
 
-    @XmlElement( name = "inReply" )
-    public List<RequestData> getInReplies() {
+    @XmlElement( name = "inRequest" )
+    public List<RequestData> getInRequests() {
         if ( inReplies == null ) {
             inReplies = new ArrayList<RequestData>();
             for ( Flow inReply : inReplies() ) {
@@ -226,7 +226,7 @@ public class AssignmentData extends AbstractProcedureElementData {
     private List<AbstractFlowData> getCommunications() {
         List<AbstractFlowData> communications = new ArrayList<AbstractFlowData>(  );
         communications.addAll(  getInNotifications() );
-        communications.addAll( getInReplies() );
+        communications.addAll( getInRequests() );
         communications.addAll(  getOutNotifications() );
         communications.addAll( getOutReplies() );
         return communications;

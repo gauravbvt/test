@@ -74,22 +74,21 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
                             getPlanParticipationService() ) );
                 } else {
                     List<PlanParticipation> otherParticipations = getOtherParticipations( actor );
-                    if ( otherParticipations.isEmpty() ) {
+                    if ( otherParticipations.isEmpty() || !actor.isSingularParticipation() ) {
                         contacts.add( new ContactData(
                                 employment,
                                 null,
                                 true,
                                 getPlanService(),
                                 getPlanParticipationService() ) );
-                    } else {
-                        for ( PlanParticipation otherParticipation : otherParticipations ) {
-                            contacts.add( new ContactData(
-                                    employment,
-                                    otherParticipation.getParticipant(),
-                                    true,
-                                    getPlanService(),
-                                    getPlanParticipationService() ) );
-                        }
+                    }
+                    for ( PlanParticipation otherParticipation : otherParticipations ) {
+                        contacts.add( new ContactData(
+                                employment,
+                                otherParticipation.getParticipant(),
+                                true,
+                                getPlanService(),
+                                getPlanParticipationService() ) );
                     }
                 }
             }
@@ -98,7 +97,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     private List<PlanParticipation> getOtherParticipations( Actor actor ) {
-        List<PlanParticipation> otherParticipations = new ArrayList<PlanParticipation>(  );
+        List<PlanParticipation> otherParticipations = new ArrayList<PlanParticipation>();
         List<PlanParticipation> participations = getPlanParticipationService().getParticipations(
                 getPlan(),
                 actor,

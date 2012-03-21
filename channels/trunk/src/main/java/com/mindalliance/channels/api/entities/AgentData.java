@@ -18,7 +18,8 @@ import java.util.List;
  * Date: 12/1/11
  * Time: 10:02 AM
  */
-@XmlType( propOrder = {"id", "name", "categories", "kind", "availability", "languages", "documentation"} )
+@XmlType( propOrder = {"id", "name", "hasUniqueIdentity", "isAnonymous", "categories", "kind",
+        "availability", "languages", "documentation"} )
 public class AgentData extends ModelEntityData {
 
     public AgentData() {
@@ -40,6 +41,16 @@ public class AgentData extends ModelEntityData {
         return super.getName();
     }
 
+    @XmlElement
+    public boolean getHasUniqueIdentity() {
+        return getActor().isSingularParticipation();
+    }
+
+    @XmlElement
+    public boolean getIsAnonymous() {
+        return getActor().isAnonymousParticipation();
+    }
+
     @Override
     @XmlElement( name = "categoryId" )
     public List<Long> getCategories() {
@@ -54,7 +65,7 @@ public class AgentData extends ModelEntityData {
 
     @XmlElement( name = "language" )
     public List<String> getLanguages() {
-        List<String> languages = new ArrayList<String>(  );
+        List<String> languages = new ArrayList<String>();
         for ( String language : getActor().getEffectiveLanguages( getPlan() ) ) {
             languages.add( language );
         }
