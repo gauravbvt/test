@@ -116,6 +116,10 @@ public class CCE003_DoUndoRedoAddGoal
 					// Name for Goal
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AddGoal"));
+					GlobalVariables.oElement.sendKeys(Keys.ENTER);
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
 					// Achieved at end check box
 					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
 					// WebElement Synchronization
