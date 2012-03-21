@@ -34,7 +34,7 @@ public class PlanParticipationServiceImpl
     @Override
     @Transactional
     public PlanParticipation addParticipation( String username, Plan plan, ChannelsUser participatingUser, Actor actor ) {
-        if ( canBeDesignated( participatingUser.getPlan(), actor ) ) {
+        if ( canBeDesignated( plan, actor ) ) {
             PlanParticipation planParticipation = new PlanParticipation( username, plan, participatingUser, actor );
             save( planParticipation );
             return planParticipation;
