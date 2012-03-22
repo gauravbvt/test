@@ -10,7 +10,7 @@
 <xPathAddInfoReceiveAttachment>//span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[12]/td/ul/span/li/a</xPathAddInfoReceiveAttachment>
 <xPathAddInfoSendCreateSurvey>//span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoSendCreateSurvey>
 <xPathAddInfoReceiveCreateSurvey>//span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoReceiveCreateSurvey>
-<xPathShowPopUpMenu>//div[@class='header']/span[@class='menubar']/span[@class='menuitem']/span[@class='dropmenu']/span</xPathShowPopUpMenu>
+<xPathShowPopUpMenu>/html/body/form/div[15]/span/span[2]/span/span</xPathShowPopUpMenu>
 <xPathSendInfoAddNewIssue>//div[@class='sends']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/div[@class='section-title']/ul[@class='menu']/li</xPathSendInfoAddNewIssue>
 <xPathReceiveInfoAddNewIssue>//div[@class='receives']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/div[@class='section-title']/ul[@class='menu']/li</xPathReceiveInfoAddNewIssue>
 <xPathReceiveInfoIssueMenu>//div[@class='receives']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/span/ol/li/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathReceiveInfoIssueMenu>
@@ -196,8 +196,8 @@
 <xPathAssertionRequirementUndo>//div[4]/div/span/div/div[2]/div/div[2]/div/span/table/tfoot/tr/td/span</xPathAssertionRequirementUndo>
 <xPathAssertionRequirementName>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/span/table[@class='data-table']/tbody/tr[@class='even']/td/span</xPathAssertionRequirementName>
 <xPathNewRequirementDefinitionAssertion>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/div[@class='req']/h3</xPathNewRequirementDefinitionAssertion>
-<xPathAssertionCopyCapability>//div[@class='change-message']/span/span</xPathAssertionCopyCapability>
-<xPathAssertionCopyNeed>//div[@class='change-message']/span/span</xPathAssertionCopyNeed>
+<xPathAssertionCopyCapability>//div[16]/span/span</xPathAssertionCopyCapability>
+<xPathAssertionCopyNeed>//div[16]/span/span</xPathAssertionCopyNeed>
 <xPathTaskURLAssertion>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/a</xPathTaskURLAssertion>
 <xPathEmailNameInvalidErrorMessageAssertion>//div[2]/div[2]/div[3]/span/div/div/div[2]/div/div/ul/li/span</xPathEmailNameInvalidErrorMessageAssertion>
 <xPathErrorMessageSocialPanelAssertion>//div[2]/div/div/div[2]/div/span/span</xPathErrorMessageSocialPanelAssertion>
