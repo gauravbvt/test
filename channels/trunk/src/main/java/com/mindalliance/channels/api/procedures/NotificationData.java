@@ -25,7 +25,7 @@ import java.util.Set;
  * Time: 12:49 PM
  */
 @XmlType( propOrder = {"information", "intent", "taskFailed", "receiptConfirmationRequested", "instructions", "contactAll",
-        "maxDelay", "contacts", "mediumIds", "failureImpact", "consumingTask", "documentation"/*, "agreements"*/} )
+        "maxDelay", "contacts", "disintermediatedContacts", "mediumIds", "failureImpact", "consumingTask", "documentation"/*, "agreements"*/} )
 public class NotificationData extends AbstractFlowData {
 
     private boolean consuming;
@@ -81,6 +81,12 @@ public class NotificationData extends AbstractFlowData {
     @XmlElement( name = "contact" )
     public List<ContactData> getContacts() {
         return super.getContacts();
+    }
+
+    @Override
+    @XmlElement( name = "disintermediatedContact" )
+    public List<ContactData> getDisintermediatedContacts() {
+        return super.getDisintermediatedContacts();
     }
 
     // TODO - add disintermediated contacts notifying or to notify
@@ -152,6 +158,11 @@ public class NotificationData extends AbstractFlowData {
             }
         }
         return new ArrayList<Employment>( contacts );
+    }
+
+    @Override
+    protected List<Employment> findDisintermediatedContactEmployments() {
+        return new ArrayList<Employment>(  ); // TODO
     }
 
     private Flow getNotification() {

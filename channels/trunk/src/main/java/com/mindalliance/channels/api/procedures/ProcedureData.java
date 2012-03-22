@@ -2,7 +2,6 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
-import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
@@ -28,7 +27,6 @@ import java.util.Set;
 @XmlType( propOrder = {"actorId", "triggers", "assignment"} )
 public class ProcedureData {
 
-    private Actor actor;
     /**
      * An assignment of the actor for which this procedure is being marshalled.
      */
@@ -51,14 +49,12 @@ public class ProcedureData {
     }
 
     public ProcedureData(
-            Actor actor,
             Assignment assignment,
             Commitments benefitingCommitments,
             Commitments committingCommitments,
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        this.actor = actor;
         this.assignment = assignment;
         this.benefitingCommitments = benefitingCommitments;
         this.committingCommitments = committingCommitments;
@@ -69,7 +65,7 @@ public class ProcedureData {
 
     @XmlElement( name = "agentId" )
     public Long getActorId() {
-        return actor.getId();
+        return assignment.getActor().getId();
     }
 
 

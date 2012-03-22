@@ -26,7 +26,9 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     private Flow sharing;
     private List<ContactData> contacts;
+    private List<ContactData> disintermediatedContacts;
     private List<Employment> employments;
+    private List<Employment> disintermediatedEmployments;
 
     public AbstractFlowData() {
         // required
@@ -64,36 +66,53 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         if ( contacts == null ) {
             contacts = new ArrayList<ContactData>();
             for ( Employment employment : contactEmployments() ) {
-                Actor actor = employment.getActor();
-                if ( actor.isAnonymousParticipation() ) {
-                    contacts.add( new ContactData(
-                            employment,
-                            null,
-                            true,
-                            getPlanService(),
-                            getPlanParticipationService() ) );
-                } else {
-                    List<PlanParticipation> otherParticipations = getOtherParticipations( actor );
-                    if ( otherParticipations.isEmpty() || !actor.isSingularParticipation() ) {
-                        contacts.add( new ContactData(
-                                employment,
-                                null,
-                                true,
-                                getPlanService(),
-                                getPlanParticipationService() ) );
-                    }
-                    for ( PlanParticipation otherParticipation : otherParticipations ) {
-                        contacts.add( new ContactData(
-                                employment,
-                                otherParticipation.getParticipant(),
-                                true,
-                                getPlanService(),
-                                getPlanParticipationService() ) );
-                    }
-                }
+                contacts.addAll( findContactsFromEmployment( employment)  );
             }
         }
         return contacts;
+    }
+
+    public List<ContactData> getDisintermediatedContacts() {
+        if ( disintermediatedContacts == null ) {
+            disintermediatedContacts = new ArrayList<ContactData>();
+            for ( Employment employment : disintermediatedContactEmployments() ) {
+                disintermediatedContacts.addAll( findContactsFromEmployment( employment)  );
+            }
+        }
+        return disintermediatedContacts;
+
+    }
+    
+    private List<ContactData> findContactsFromEmployment( Employment employment ) {
+        List<ContactData> contactList = new ArrayList<ContactData>(  );
+        Actor actor = employment.getActor();
+        if ( actor.isAnonymousParticipation() ) {
+            contactList.add( new ContactData(
+                    employment,
+                    null,
+                    true,
+                    getPlanService(),
+                    getPlanParticipationService() ) );
+        } else {
+            List<PlanParticipation> otherParticipations = getOtherParticipations( actor );
+            if ( otherParticipations.isEmpty() || !actor.isSingularParticipation() ) {
+                contactList.add( new ContactData(
+                        employment,
+                        null,
+                        true,
+                        getPlanService(),
+                        getPlanParticipationService() ) );
+            }
+            for ( PlanParticipation otherParticipation : otherParticipations ) {
+                contactList.add( new ContactData(
+                        employment,
+                        otherParticipation.getParticipant(),
+                        true,
+                        getPlanService(),
+                        getPlanParticipationService() ) );
+            }
+        }
+        return contactList;
     }
 
     private List<PlanParticipation> getOtherParticipations( Actor actor ) {
@@ -143,7 +162,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allOrganizationIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( Employment employment : contactEmployments() ) {
+        for ( Employment employment : allEmployments() ) {
             ids.add( employment.getOrganization().getId() );
         }
         return ids;
@@ -151,7 +170,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allActorIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( Employment employment : contactEmployments() ) {
+        for ( Employment employment : allEmployments() ) {
             ids.add( employment.getActor().getId() );
             if ( employment.getSupervisor() != null )
                 ids.add( employment.getSupervisor().getId() );
@@ -165,7 +184,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allRoleIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( Employment employment : contactEmployments() ) {
+        for ( Employment employment : allEmployments() ) {
             ids.add( employment.getRole().getId() );
         }
         return ids;
@@ -173,7 +192,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allPlaceIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( Employment employment : contactEmployments() ) {
+        for ( Employment employment : allEmployments() ) {
             if ( employment.getJurisdiction() != null )
                 ids.add( employment.getJurisdiction().getId() );
         }
@@ -201,6 +220,23 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return employments;
     }
 
+    protected List<Employment> disintermediatedContactEmployments() {
+        if ( disintermediatedEmployments == null ) {
+            disintermediatedEmployments = findDisintermediatedContactEmployments();
+        }
+        return disintermediatedEmployments;
+    }
+
+    private List<Employment> allEmployments() {
+        List<Employment> allEmployments = new ArrayList<Employment>(  );
+        allEmployments.addAll( contactEmployments() );
+        allEmployments.addAll( disintermediatedContactEmployments() );
+        return allEmployments;
+    }
+
     protected abstract List<Employment> findContactEmployments();
+
+    protected abstract List<Employment> findDisintermediatedContactEmployments();
+
 
 }

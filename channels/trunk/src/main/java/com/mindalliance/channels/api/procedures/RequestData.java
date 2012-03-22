@@ -26,7 +26,7 @@ import java.util.Set;
  * Time: 12:49 PM
  */
 @XmlType( propOrder = {"information", "intent", "taskFailed", "receiptConfirmationRequested", "instructions", "contactAll",
-        "maxDelay", "contacts", "mediumIds", "failureImpact","consumingTask", /*"agreements",*/ "documentation"} )
+        "maxDelay", "contacts", "disintermediatedContacts", "mediumIds", "failureImpact","consumingTask", /*"agreements",*/ "documentation"} )
 public class RequestData extends AbstractFlowData {
 
     /**
@@ -86,7 +86,11 @@ public class RequestData extends AbstractFlowData {
        return super.getContacts();
     }
 
-    // TODO: Add disintermediated contacts to request or requesting
+    @Override
+    @XmlElement( name = "disintermediatedContact" )
+    public List<ContactData> getDisintermediatedContacts() {
+        return super.getDisintermediatedContacts();
+    }
 
     @Override
     @XmlElement( name = "preferredTransmissionMedium" )
@@ -157,6 +161,11 @@ public class RequestData extends AbstractFlowData {
             }
         }
         return new ArrayList<Employment>( contacts );
+    }
+
+    @Override
+    protected List<Employment> findDisintermediatedContactEmployments() {
+        return new ArrayList<Employment>(  ); // TODO
     }
 
     private Flow getRequest() {

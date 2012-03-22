@@ -21,7 +21,9 @@ import javax.xml.bind.annotation.XmlType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Web Service data element for the procedures of an actor according to a plan.
@@ -120,10 +122,14 @@ public class ProceduresData {
         if ( procedures == null ) {
             procedures = new ArrayList<ProcedureData>();
             Commitments allCommitments = planService.getAllCommitments( true, false );
-            for ( Actor actor : actors )
+            Set<Assignment> assignments = new HashSet<Assignment>(  );
+            for ( Actor actor : actors ) {
                 for ( Assignment assignment : getActorAssignments( actor ) ) {
+                    assignments.add( assignment );
+                }
+        }
+            for ( Assignment assignment : assignments ) {
                     procedures.add( new ProcedureData(
-                            actor,
                             assignment,
                             allCommitments.benefiting( assignment ),
                             allCommitments.committing( assignment ),
