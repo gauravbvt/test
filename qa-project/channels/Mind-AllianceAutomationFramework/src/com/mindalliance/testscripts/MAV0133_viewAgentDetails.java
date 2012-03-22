@@ -5,7 +5,6 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -38,9 +37,9 @@ public class MAV0133_viewAgentDetails
 				Thread.currentThread();
 				Thread.sleep(1000);  
 				
-				// Clicks on 'About plan' link under show pop up menu option
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "About plan section opened";
+				//Click on 'About Plan' under show pop-up menu
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="About plan";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -48,71 +47,118 @@ public class MAV0133_viewAgentDetails
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 
-				//clicks on 'Participations' link under show pop up menu option on About plan window 
+				//Click on 'All organization' under show pop-up menu
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Participation section opened";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("participation"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				GlobalVariables.sDescription="Create Agent";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("allOrganizations"));
+				// WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(3000);
+			    // enter into the text box the name of organization
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+				String sOrgName = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sOrgName);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
+				// Click on any organization from list
+				GlobalVariables.bIsSuccess = Boolean.FALSE;
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("indices-table"));
+				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
+				for (WebElement li: tds){
+					if (li.getText().equals(sOrgName)){
+						GlobalVariables.bIsSuccess = Boolean.TRUE;
+						li.click();
+						// WebElement Synchronization
+						Thread.currentThread();
+						Thread.sleep(3000);
+						break;
+					}
+				}
+				if (GlobalVariables.sBrowser.equals("Internet Explorer")) {
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("index"));
+				GlobalVariables.oElement.click();
+					GlobalVariables.oElement.sendKeys(Keys.END);
 				
-				// Create Agent in All Participants
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Agent created";
-				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).click();
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-				for (int i = 0; i <= 50; i++)
-					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent 1"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				// Enter  Egent details
+				String Agent="Agent 1";
+				if (GlobalVariables.sBrowser.equals("Internet Explorer")) {
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName))	;
+				GlobalVariables.oElement.click();
+				for (int i=1;i<=30;i++)
+					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
+				}
+				// agent name
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field"));
+				GlobalVariables.oElement.sendKeys(Agent);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				// Title
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Title"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Role
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Role"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Jury
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Jurisdiction"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Supervisor
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Supervisor"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Check box
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed")).click();
+				 // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);
+				// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
+			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(Agent));
+			    if(GlobalVariables.oElement.getText().equals(Agent))
+				{
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Agent 1' "+" Actual "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				// Click on done
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Done";
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-
-				// Click on Index under show pop up menu
+			    // Click on Agent
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Index section opened";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("index"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
-				// Select the plan from 'Switch to Agent' drop down, located on the top right corner
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Agent Selected";
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:indexed")));
-				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
-			    for(WebElement option : options) {
-			    	if(option.getText().equals(GlobalVariables.viewElements.get("agents"))){
-			    			option.setSelected();
-			    			break;
-			    	}
-			    }
+				GlobalVariables.sDescription = "Agent Page opened";
+			    GlobalVariables.oDriver.findElement(By.linkText(Agent)).click();
 			    // Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -120,26 +166,10 @@ public class MAV0133_viewAgentDetails
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathIndexAgent"))).click();
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
 				
-				// Click on details under show pop up menu
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Agent details opened";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathPhaseShowMenu"),GlobalVariables.viewElements.get("Details"));
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				
-				// Assertion: Verify that "Agent details" page loaded 
+				// Assertion: Verify that "Agent" page loaded 
 			    GlobalVariables.iStepNo++;
-			    GlobalVariables.sDescription="'Agent details' gets loaded";
+			    GlobalVariables.sDescription="'Agent' gets loaded";
 			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseAssertionDetails")));
 			    if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("details"))) {
 			    	// Write Results
