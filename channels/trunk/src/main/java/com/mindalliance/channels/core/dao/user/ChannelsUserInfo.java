@@ -191,6 +191,10 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
         }
     }
 
+    public void setDigestedPassword( String passwordDigest ) {
+        this.password = passwordDigest;
+    }
+
     public List<PlanParticipation> getPlanParticipations() {
         return planParticipations;
     }

@@ -566,6 +566,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                         getPlanManager().setAuthorities( rowUser, null, null );
                         break;
                 }
+                userDao.save( rowUser.getUserInfo() );
             }
         }
     }

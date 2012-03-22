@@ -66,7 +66,7 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
     @Override
     @Transactional
     public void updateIdentity( ChannelsUserInfo userInfo, ChannelsUserInfo update ) {
-        userInfo.setPassword( update.getPassword() );
+        userInfo.setDigestedPassword( update.getPassword() );
         userInfo.setEmail( update.getEmail() );
         userInfo.setFullName( update.getFullName() );
         save( userInfo );
