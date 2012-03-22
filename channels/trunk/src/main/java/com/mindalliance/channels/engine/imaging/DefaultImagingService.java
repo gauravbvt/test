@@ -243,7 +243,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
                 String absolutePath = squareIconFile.getAbsolutePath();
                 String relPath = absolutePath.substring( prefix.length() );
-                String encodedPath = relPath.replaceAll( File.separator, "||" );
+                String encodedPath = relPath.replaceAll( File.separator, SEPARATOR );
 
                 return "icons" + File.separator + encodedPath;
             }
@@ -266,7 +266,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
     @Override
     public File findIcon( Plan plan, String encodedPath ) throws IOException {
-        String decodedPath = encodedPath.replaceAll( "\\|\\|", File.separator );
+        String decodedPath = URLEncoder.encode( encodedPath, "UTF-8" );
+        decodedPath =  decodedPath.replaceAll( SEPARATOR, File.separator );
         return new File( getIconFilePrefix( plan ) + decodedPath );
     }
 

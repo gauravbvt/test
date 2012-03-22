@@ -23,6 +23,7 @@ import org.jgrapht.Graph;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -106,7 +107,9 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         if ( !( initiators.isEmpty() && autoStarters.isEmpty() ) )
             exportStart( out, metaProvider );
         Map<Segment, Set<Node>> segmentNodes = new HashMap<Segment, Set<Node>>();
-        for ( Node node : g.vertexSet() ) {
+        Set<Node> allNodes = new HashSet<Node>( g.vertexSet() );
+        allNodes.addAll( bypassParts() );
+        for ( Node node : allNodes ) {
             Segment segment = node.getSegment();
             Set<Node> nodesInSegment = segmentNodes.get( segment );
             if ( nodesInSegment == null ) {
@@ -146,6 +149,16 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             exportStartedEvents( out, metaProvider );
         if ( !contextInitiators.isEmpty() )
             exportContextInitiators( out, metaProvider );
+    }
+
+    private List<Part> bypassParts() {
+        Set<Part> bypassParts = new HashSet<Part>();
+        Segment segment = getSegment();
+        for ( Flow sharing : segment.getAllSharingFlows() ) {
+            bypassParts.addAll( sharing.intermediatedTargets() );
+            bypassParts.addAll( sharing.intermediatedSources() );
+        }
+        return new ArrayList<Part>( bypassParts );
     }
 
     private void exportStart( PrintWriter out, AbstractMetaProvider<Node, Flow> metaProvider ) {
@@ -220,9 +233,9 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
                 throw new RuntimeException( "Unable to get image directory location", e );
             }
             attributes.add( new DOTAttribute( "image",
-                                              dirName + "/" + ( eventTiming.isConcurrent() ?
-                                                                "start.png" :
-                                                                "stop.png" ) ) );
+                    dirName + "/" + ( eventTiming.isConcurrent() ?
+                            "start.png" :
+                            "stop.png" ) ) );
             out.print( getIndent() );
             out.print( getEventTimingID( eventTiming ) );
             out.print( "[" );
@@ -316,7 +329,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             List<DOTAttribute> attributes = getTimingEdgeAttributes( autoStarter );
             attributes.add( new DOTAttribute(
                     "headlabel",
-                    autoStarter.isOngoing()? "(ongoing)" : "(starts)" ) );
+                    autoStarter.isOngoing() ? "(ongoing)" : "(starts)" ) );
             String autoStarterId = getVertexID( autoStarter );
             out.print( getIndent() + START + getArrow( g ) + autoStarterId );
             out.print( "[" );
@@ -364,28 +377,51 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     private void exportBypasses( PrintWriter out, Graph<Node, Flow> g ) {
         Segment segment = getSegment();
+        List<String> drawn = new ArrayList<String>();
         for ( Flow sharing : segment.getAllSharingFlows() ) {
-            if ( sharing.isCanBypassIntermediate() ) {
-                Part source = (Part) sharing.getSource();
+            List<DOTAttribute> attributes = getBypassEdgeAttributes( sharing );
+            Part source = (Part) sharing.getSource();
+            if ( isVisible( source ) ) {
                 String starterId = getVertexID( source );
-                if ( isVisible( source ) ) {
-                    List<DOTAttribute> attributes = getBypassEdgeAttributes( sharing );
-                    for ( Part byPassedTo : sharing.intermediatedTargets() ) {
-                        if ( isVisible( byPassedTo ) ) {
-                            String enderId = getVertexID( byPassedTo );
-                            out.print( getIndent() + starterId + getArrow( g ) + enderId );
-                            out.print( "[" );
-                            if ( !attributes.isEmpty() ) {
-                                out.print( asElementAttributes( attributes ) );
-                            }
-                            out.println( "];" );
+                for ( Part byPassedTo : sharing.intermediatedTargets() ) {
+                    if ( isVisible( byPassedTo ) ) {
+                        String enderId = getVertexID( byPassedTo );
+                        String s = getIndent()
+                                + starterId
+                                + getArrow( g )
+                                + enderId
+                                + "["
+                                + asElementAttributes( attributes )
+                                + "]";
+                        if ( !drawn.contains( s ) ) {
+                            out.print( s );
+                            drawn.add( s );
+                        }
+                    }
+                }
+            }
+            Part target = (Part) sharing.getTarget();
+            if ( isVisible( target ) ) {
+                String enderId = getVertexID( target );
+                for ( Part byPassedFrom : sharing.intermediatedSources() ) {
+                    if ( isVisible( byPassedFrom ) ) {
+                        String starterId = getVertexID( byPassedFrom );
+                        String s = getIndent()
+                                + starterId
+                                + getArrow( g )
+                                + enderId
+                                + "["
+                                + asElementAttributes( attributes )
+                                + "]";
+                        if ( !drawn.contains( s ) ) {
+                            out.print( s );
+                            drawn.add( s );
                         }
                     }
                 }
             }
         }
     }
-
 
     private List<DOTAttribute> getTimingEdgeAttributes( Part part ) {
         List<DOTAttribute> list = DOTAttribute.emptyList();
@@ -400,9 +436,9 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     private List<DOTAttribute> getBypassEdgeAttributes( Flow flow ) {
-        FlowMapMetaProvider flowMapMetaProvider = (FlowMapMetaProvider)getMetaProvider();
+        FlowMapMetaProvider flowMapMetaProvider = (FlowMapMetaProvider) getMetaProvider();
         List<DOTAttribute> list = DOTAttribute.emptyList();
-        list.add( new DOTAttribute( "color",  "gray" ) );
+        list.add( new DOTAttribute( "color", "gray" ) );
         list.add( new DOTAttribute( "arrowsize", "0.75" ) );
         list.add( new DOTAttribute( "arrowhead", "normal" ) );
         list.add( new DOTAttribute( "fontname", AbstractMetaProvider.EDGE_FONT ) );
@@ -410,7 +446,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         list.add( new DOTAttribute( "fontcolor", "dimgray" ) );
         list.add( new DOTAttribute( "len", "1.5" ) );
         list.add( new DOTAttribute( "weight", "2.0" ) );
-        String label = flowMapMetaProvider.getEdgeLabelProvider().getEdgeName( flow );
+        String label = flow.getName();
         list.add( new DOTAttribute( "label", label ) );
         list.add( new DOTAttribute( "tooltip", "Intermediate is bypassed if unreachable" ) );
         flowMapMetaProvider.addTailArrowHead( flow, list );
@@ -421,8 +457,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     private boolean isVisible( Part part ) {
         FlowMapMetaProvider metaProvider = (FlowMapMetaProvider) getMetaProvider();
         return !metaProvider.isHidingNoop()
-               || !metaProvider.getAnalyst().isEffectivelyConceptual( metaProvider.getQueryService(),
-                                                                      part );
+                || !metaProvider.getAnalyst().isEffectivelyConceptual( metaProvider.getQueryService(),
+                part );
     }
 
     private String ifVisibleColor( Part part, String color ) {
@@ -460,7 +496,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
         attributes.add( new DOTAttribute( "fontsize", AbstractFlowMetaProvider.NODE_FONT_SIZE ) );
         attributes.add( new DOTAttribute( "fontname", AbstractFlowMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
-        String label = sanitize( goal.getSuccessLabel( ) );
+        String label = sanitize( goal.getSuccessLabel() );
         attributes.add( new DOTAttribute( "label", label ) );
         attributes.add( new DOTAttribute( "shape", "none" ) );
         attributes.add( new DOTAttribute( "tooltip", goal.getFullTitle() ) );
@@ -483,29 +519,29 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             return "goal_blank.png";
         if ( goal.isRiskMitigation() ) {
             switch ( goal.getLevel() ) {
-            case Low:
-                return "risk_minor.png";
-            case Medium:
-                return "risk_major.png";
-            case High:
-                return "risk_severe.png";
-            case Highest:
-                return "risk_extreme.png";
-            default:
-                throw new RuntimeException( "Unknown risk level" );
+                case Low:
+                    return "risk_minor.png";
+                case Medium:
+                    return "risk_major.png";
+                case High:
+                    return "risk_severe.png";
+                case Highest:
+                    return "risk_extreme.png";
+                default:
+                    throw new RuntimeException( "Unknown risk level" );
             }
         } else {
             switch ( goal.getLevel() ) {
-            case Low:
-                return "gain_low.png";
-            case Medium:
-                return "gain_medium.png";
-            case High:
-                return "gain_high.png";
-            case Highest:
-                return "gain_highest.png";
-            default:
-                throw new RuntimeException( "Unknown gain level" );
+                case Low:
+                    return "gain_low.png";
+                case Medium:
+                    return "gain_medium.png";
+                case High:
+                    return "gain_high.png";
+                case Highest:
+                    return "gain_highest.png";
+                default:
+                    throw new RuntimeException( "Unknown gain level" );
             }
         }
     }

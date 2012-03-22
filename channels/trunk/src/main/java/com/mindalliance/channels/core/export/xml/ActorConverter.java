@@ -62,7 +62,7 @@ public class ActorConverter extends EntityConverter {
         writer.endNode();
         // singular participation
         writer.startNode( "singularParticipation" );
-        writer.setValue( "true" );
+        writer.setValue( Boolean.toString( actor.isSingularParticipation() )  );
         writer.endNode();
         // participation restricted to already employed
         writer.startNode( "participationRestrictedToEmployed" );

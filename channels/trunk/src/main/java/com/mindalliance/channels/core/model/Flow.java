@@ -82,6 +82,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     private boolean referencesEventPhase = true;
 
+    /**
+     * If notification, whether the target can be bypassed (set by notifier).
+     * If request-reply, whether the source can be bypassed (set by requester).
+     */
     private boolean canBypassIntermediate = false;
 
     private boolean receiptConfirmationRequested = false;
@@ -1249,17 +1253,23 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
-     * Get the list of all parts this flow's target intermediates.
+     * Get the list of all parts this flow's intermediated targets.
      *
      * @return a list of parts
      */
     public List<Part> intermediatedTargets() {
         Set<Part> intermediatedTargets = new HashSet<Part>();
         if ( isSharing() ) {
-            Part target = (Part) getTarget();
-            for ( Flow f : target.getAllSharingSends() ) {
-                if ( f.hasSameContentAs( this ) ) {
-                    intermediatedTargets.add( (Part) f.getTarget() );
+            if ( isAskedFor() || isCanBypassIntermediate() ) {  // requesters can bypass, notifiers can bypass
+                Part target = (Part) getTarget();
+                for ( Flow f : target.getAllSharingSends() ) {
+                    if ( isNotification() && f.isNotification() || isAskedFor() && f.isAskedFor() ) {
+                        if ( f.isNotification() || f.isCanBypassIntermediate() ) {  // requesters can bypass, notifiers can bypass
+                            if ( this.containsAsMuchAs( f ) ) {
+                                intermediatedTargets.add( (Part) f.getTarget() );
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -1275,25 +1285,44 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     public List<Part> intermediatedSources() {
         Set<Part> intermediatedSources = new HashSet<Part>();
         if ( isSharing() ) {
-            Part source = (Part) getSource();
-            for ( Flow f : source.getAllSharingReceives() ) {
-                if ( f.hasSameContentAs( this ) ) {
-                    intermediatedSources.add( (Part) f.getSource() );
+            if ( isNotification() || isCanBypassIntermediate() ) {  // requesters can bypass, notifiers can bypass
+                Part source = (Part) getSource();
+                for ( Flow f : source.getAllSharingReceives() ) {
+                    if ( isNotification() && f.isNotification() || isAskedFor() && f.isAskedFor() ) {
+                        if ( f.isAskedFor() || f.isCanBypassIntermediate() ) {  // requesters can bypass, notifiers can bypass
+                            if ( this.containsAsMuchAs( f ) ) {
+                                intermediatedSources.add( (Part) f.getSource() );
+                            }
+                        }
+                    }
                 }
             }
         }
+
         return new ArrayList<Part>( intermediatedSources );
     }
 
-    private boolean hasSameContentAs( final Flow flow ) {
+    public boolean containsAsMuchAs( final Flow flow ) {
+        final List<String> eoiContents = getEoiContents();
         return Matcher.same( getName(), flow.getName() )
-                && getEois().size() == flow.getEois().size()
-                && ( !CollectionUtils.exists( getEois(), new Predicate() {
-            @Override
-            public boolean evaluate( Object object ) {
-                return !flow.getEois().contains( (ElementOfInformation) object );
-            }
-        } ) );
+                // no EOI from flow is missing in this
+                && ( flow.getEois().isEmpty()
+                || ( !CollectionUtils.exists(
+                flow.getEoiContents(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !eoiContents.contains( (String) object );
+                    }
+                } ) ) );
+    }
+
+    private List<String> getEoiContents() {
+        List<String> contents = new ArrayList<String>();
+        for ( ElementOfInformation eoi : getEois() ) {
+            contents.add( eoi.getContent().toLowerCase() );
+        }
+        return contents;
     }
 
     @Override
@@ -1337,7 +1366,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         if ( state.containsKey( "intent" ) )
             setIntent( (Intent) state.get( "intent" ) );
         if ( state.containsKey( "prohibited" ) )
-            setProhibited( (Boolean)state.get( "prohibited" ) );
+            setProhibited( (Boolean) state.get( "prohibited" ) );
         if ( state.containsKey( "restriction" ) )
             setRestriction( (Restriction) state.get( "restriction" ) );
         if ( state.containsKey( "ifTaskFails" ) )

@@ -9,6 +9,8 @@ import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -26,7 +28,7 @@ import java.util.Set;
  * Time: 12:49 PM
  */
 @XmlType( propOrder = {"information", "intent", "taskFailed", "receiptConfirmationRequested", "instructions", "contactAll",
-        "maxDelay", "contacts", "disintermediatedContacts", "mediumIds", "failureImpact","consumingTask", /*"agreements",*/ "documentation"} )
+        "maxDelay", "contacts", "bypassContacts", "mediumIds", "failureImpact","consumingTask", /*"agreements",*/ "documentation"} )
 public class RequestData extends AbstractFlowData {
 
     /**
@@ -88,8 +90,8 @@ public class RequestData extends AbstractFlowData {
 
     @Override
     @XmlElement( name = "disintermediatedContact" )
-    public List<ContactData> getDisintermediatedContacts() {
-        return super.getDisintermediatedContacts();
+    public List<ContactData> getBypassContacts() {
+        return super.getBypassContacts();
     }
 
     @Override
@@ -164,8 +166,39 @@ public class RequestData extends AbstractFlowData {
     }
 
     @Override
-    protected List<Employment> findDisintermediatedContactEmployments() {
-        return new ArrayList<Employment>(  ); // TODO
+    @SuppressWarnings( "unchecked" )
+    // Don't repeat any (direct) contact employment
+    protected List<Employment> findBypassContactEmployments() {
+        Set<Employment> contacts = new HashSet<Employment>(  );
+        if ( !replying ) {
+            List<Commitment> bypassCommitments = getPlanService()
+                    .findAllBypassCommitments( getRequest() );
+            if ( !bypassCommitments.isEmpty() ) {
+                Actor assignedActor = getAssignment().getActor();
+                List<Actor> directContacts = findDirectContacts();
+                for ( Commitment commitment : bypassCommitments ) {
+                    if ( directContacts.contains( commitment.getBeneficiary().getActor() )
+                            && !commitment.getCommitter().getActor().equals( assignedActor )
+                            && !directContacts.contains( commitment.getCommitter().getActor() ) ) {
+                        contacts.add( commitment.getCommitter().getEmployment() );
+                    }
+                }
+            }
+        }
+        return new ArrayList<Employment>( contacts );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Actor> findDirectContacts() {
+        return (List<Actor>) CollectionUtils.collect(
+                findContactEmployments(),
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ( (Employment) input ).getActor();
+                    }
+                }
+        );
     }
 
     private Flow getRequest() {

@@ -152,10 +152,10 @@ public class FlowConverter extends AbstractChannelsConverter {
                                  HierarchicalStreamWriter writer,
                                  Segment currentSegment ) {
         writer.startNode( "source" );
-        writeNode( flow.getSource(), writer, currentSegment );
+        writeNode( flow.getSource(), writer, currentSegment, flow );
         writer.endNode();
         writer.startNode( "target" );
-        writeNode( flow.getTarget(), writer, currentSegment );
+        writeNode( flow.getTarget(), writer, currentSegment, flow );
         writer.endNode();
     }
 
@@ -163,20 +163,27 @@ public class FlowConverter extends AbstractChannelsConverter {
                                  HierarchicalStreamWriter writer,
                                  Segment currentSegment ) {
         writer.startNode( "source" );
-        writeNode( ( flow.isPartTargeted() ? flow.getConnector() : flow.getPart() ), writer, currentSegment );
+        writeNode( ( flow.isPartTargeted() ? flow.getConnector() : flow.getPart() ),
+                writer,
+                currentSegment,
+                flow );
         writer.endNode();
         writer.startNode( "target" );
-        writeNode( flow.isPartTargeted() ? flow.getPart() : flow.getConnector(), writer, currentSegment );
+        writeNode( flow.isPartTargeted() ? flow.getPart() : flow.getConnector(),
+                writer,
+                currentSegment,
+                flow );
         writer.endNode();
     }
 
     private void writeNode( Node node,
                             HierarchicalStreamWriter writer,
-                            Segment currentSegment ) {
+                            Segment currentSegment,
+                            Flow flow ) {
         if ( node.isPart() ) {
             writePart( (Part) node, writer );
         } else {
-            writeConnector( (Connector) node, writer, currentSegment );
+            writeConnector( (Connector) node, writer, currentSegment, flow );
         }
     }
 
@@ -188,7 +195,8 @@ public class FlowConverter extends AbstractChannelsConverter {
 
     private void writeConnector( Connector connector,
                                  HierarchicalStreamWriter writer,
-                                 Segment currentSegment ) {
+                                 Segment currentSegment,
+                                 Flow flow ) {
         writer.startNode( "connector" );
         writer.addAttribute( "id", "" + connector.getId() );
         // Connector is in other segment -- an external flow
@@ -202,6 +210,10 @@ public class FlowConverter extends AbstractChannelsConverter {
             writer.addAttribute( "name", innerFlow.getName() );
             if ( innerFlow.getRestriction() != null )
                 writer.addAttribute( "restriction", innerFlow.getRestriction().name() );
+            if ( flow.isCanBypassIntermediate() )
+                writer.addAttribute( "canBypassIntermediate", Boolean.toString( flow.isCanBypassIntermediate() ) );
+            if ( flow.isReceiptConfirmationRequested() )
+                writer.addAttribute( "receiptConfirmationRequested", Boolean.toString( flow.isReceiptConfirmationRequested() ) );
             writer.endNode();
             Part part = (Part) ( connector.isSource()
                     ? innerFlow.getTarget()
@@ -368,6 +380,8 @@ public class FlowConverter extends AbstractChannelsConverter {
         String taskDescription = "";
         String partId = null;
         String restriction = null;
+        boolean receiptConfirmationRequested = false;
+        boolean canBypassIntermediate = false;
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
@@ -380,6 +394,8 @@ public class FlowConverter extends AbstractChannelsConverter {
                 if ( nodeName.equals( "flow" ) ) {
                     flowName = name;
                     restriction = reader.getAttribute( "restriction" );
+                    canBypassIntermediate = Boolean.valueOf( reader.getAttribute( "canBypassIntermediate" ) );
+                    receiptConfirmationRequested = Boolean.valueOf( reader.getAttribute( "receiptConfirmationRequested" ) );
                 } else if ( nodeName.equals( "part-role" ) ) {
                     roleName = name;
                 } else if ( nodeName.equals( "part-task" ) ) {
@@ -407,6 +423,8 @@ public class FlowConverter extends AbstractChannelsConverter {
         conSpec.setExternalFlowId( flowId );
         if ( restriction != null )
             conSpec.setRestriction( restriction );
+        conSpec.setReceiptConfirmationRequested( receiptConfirmationRequested );
+        conSpec.setCanBypassIntermediate( canBypassIntermediate );
         addConnectionSpec( connector, conSpec );
     }
 

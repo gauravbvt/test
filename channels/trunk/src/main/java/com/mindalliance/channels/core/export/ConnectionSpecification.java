@@ -38,6 +38,14 @@ public class ConnectionSpecification implements Serializable {
      * The name of the restriction.
      */
     private String restriction;
+    /**
+     * Whether confirmation of receipt is requested.
+     */
+    private boolean receiptConfirmationRequested;
+    /**
+     * Whether an intermediate can be bypassed.
+     */
+    private boolean canBypassIntermediate;
 
     public ConnectionSpecification() {
     }
@@ -88,5 +96,21 @@ public class ConnectionSpecification implements Serializable {
 
     public void setRestriction( String restriction ) {
         this.restriction = restriction;
+    }
+
+    public boolean isReceiptConfirmationRequested() {
+        return receiptConfirmationRequested;
+    }
+
+    public void setReceiptConfirmationRequested( boolean receiptConfirmationRequested ) {
+        this.receiptConfirmationRequested = receiptConfirmationRequested;
+    }
+
+    public boolean isCanBypassIntermediate() {
+        return canBypassIntermediate;
+    }
+
+    public void setCanBypassIntermediate( boolean canBypassIntermediate ) {
+        this.canBypassIntermediate = canBypassIntermediate;
     }
 }

@@ -8,6 +8,8 @@ import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.PlanService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -25,10 +27,11 @@ import java.util.Set;
  * Time: 12:49 PM
  */
 @XmlType( propOrder = {"information", "intent", "taskFailed", "receiptConfirmationRequested", "instructions", "contactAll",
-        "maxDelay", "contacts", "disintermediatedContacts", "mediumIds", "failureImpact", "consumingTask", "documentation"/*, "agreements"*/} )
+        "maxDelay", "contacts", "bypassContacts", "mediumIds", "failureImpact", "consumingTask", "documentation"/*, "agreements"*/} )
 public class NotificationData extends AbstractFlowData {
 
     private boolean consuming;
+    private List<Employment> contactEmployments;
 
     public NotificationData() {
         // required
@@ -84,12 +87,10 @@ public class NotificationData extends AbstractFlowData {
     }
 
     @Override
-    @XmlElement( name = "disintermediatedContact" )
-    public List<ContactData> getDisintermediatedContacts() {
-        return super.getDisintermediatedContacts();
+    @XmlElement( name = "bypassContact" )
+    public List<ContactData> getBypassContacts() {
+        return super.getBypassContacts();
     }
-
-    // TODO - add disintermediated contacts notifying or to notify
 
     @Override
     @XmlElement( name = "preferredTransmissionMedium" )
@@ -141,28 +142,62 @@ public class NotificationData extends AbstractFlowData {
 
     @Override
     protected List<Employment> findContactEmployments() {
-        Set<Employment> contacts = new HashSet<Employment>();
-        Actor assignedActor = getAssignment().getActor();
-        List<Commitment> commitments = getPlanService().findAllCommitments( getNotification() );
-        for ( Commitment commitment : commitments ) {
-            if ( consuming ) {
-                if ( commitment.getBeneficiary().getActor().equals( assignedActor )
-                        && !commitment.getCommitter().getActor().equals( assignedActor ) ) {
-                    contacts.add( commitment.getCommitter().getEmployment() );
+        if ( contactEmployments == null ) {
+            Set<Employment> contacts = new HashSet<Employment>();
+            Actor assignedActor = getAssignment().getActor();
+            List<Commitment> commitments = getPlanService().findAllCommitments( getNotification() );
+            for ( Commitment commitment : commitments ) {
+                if ( consuming ) {
+                    if ( commitment.getBeneficiary().getActor().equals( assignedActor )
+                            && !commitment.getCommitter().getActor().equals( assignedActor ) ) {
+                        contacts.add( commitment.getCommitter().getEmployment() );
+                    }
+                } else { // producing
+                    if ( commitment.getCommitter().getActor().equals( assignedActor )
+                            && !commitment.getBeneficiary().getActor().equals( assignedActor ) ) {
+                        contacts.add( commitment.getBeneficiary().getEmployment() );
+                    }
                 }
-            } else { // producing
-                if ( commitment.getCommitter().getActor().equals( assignedActor )
-                        && !commitment.getBeneficiary().getActor().equals( assignedActor ) ) {
-                    contacts.add( commitment.getBeneficiary().getEmployment() );
+            }
+            contactEmployments = new ArrayList<Employment>( contacts );
+        }
+        return contactEmployments;
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    // Don't repeat any (direct) contact employment
+    protected List<Employment> findBypassContactEmployments() {
+        Set<Employment> contacts = new HashSet<Employment>();
+        if ( !consuming ) {
+            List<Commitment> bypassCommitments = getPlanService()
+                    .findAllBypassCommitments( getNotification() );
+            if ( !bypassCommitments.isEmpty() ) {
+                Actor assignedActor = getAssignment().getActor();
+                List<Actor> directContacts = findDirectContacts();
+                for ( Commitment commitment : bypassCommitments ) {
+                    if ( directContacts.contains( commitment.getCommitter().getActor() )
+                            && !commitment.getBeneficiary().getActor().equals( assignedActor )
+                            && !directContacts.contains( commitment.getBeneficiary().getActor() ) ) {
+                        contacts.add( commitment.getBeneficiary().getEmployment() );
+                    }
                 }
             }
         }
         return new ArrayList<Employment>( contacts );
     }
 
-    @Override
-    protected List<Employment> findDisintermediatedContactEmployments() {
-        return new ArrayList<Employment>(  ); // TODO
+    @SuppressWarnings( "unchecked" )
+   private List<Actor> findDirectContacts() {
+        return (List<Actor>) CollectionUtils.collect(
+                findContactEmployments(),
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ( (Employment) input ).getActor();
+                    }
+                }
+        );
     }
 
     private Flow getNotification() {

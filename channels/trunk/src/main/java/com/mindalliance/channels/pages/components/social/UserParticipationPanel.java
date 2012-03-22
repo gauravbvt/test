@@ -4,14 +4,25 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -63,18 +74,82 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
 
     private void addParticipation() {
-        ListView<PlanParticipation> participationList = new ListView<PlanParticipation>(
+        ListView<ParticipationWrapper> participationList = new ListView<ParticipationWrapper>(
                 "participations",
-                planParticipationService.getParticipations( getPlan(), getUser().getUserInfo(), getQueryService() )
-        ) {
+                participations() ) {
             @Override
-            protected void populateItem( ListItem<PlanParticipation> item ) {
-                PlanParticipation participation = item.getModelObject();
-                String assignation = getAssignation( participation.getActor( getQueryService() ) );
+            protected void populateItem( ListItem<ParticipationWrapper> item ) {
+                ParticipationWrapper participationWrapper = item.getModelObject();
+                String assignation = getAssignation( participationWrapper.getActor( getQueryService() ) );
+                AjaxCheckBox confirmedCheckBox = new AjaxCheckBox(
+                        "confirmed",
+                        new PropertyModel<Boolean>( participationWrapper, "confirmed" )
+                ) {
+                    @Override
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        resetAll();
+                        target.add( userParticipationContainer );
+                    }
+                };
+                boolean open =  participationWrapper.isOpen( getQueryService() );
+                confirmedCheckBox.setEnabled( open );
+                confirmedCheckBox.add( new AttributeModifier(
+                        "title",
+                        open ? "Open participation" : "Planned participation"
+                        ) );
+                item.add( confirmedCheckBox );
                 item.add( new Label( "participation", assignation ) );
             }
         };
         userParticipationContainer.add( participationList );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<ParticipationWrapper> participations() {
+        List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
+        final List<PlanParticipation> currentParticipations = planParticipationService.getParticipations(
+                getPlan(),
+                getUser().getUserInfo(),
+                getQueryService() );
+        for ( PlanParticipation participation : currentParticipations ) {
+            wrappers.add( new ParticipationWrapper( participation, true ) );
+        }
+        List<Actor> openActors = (List<Actor>)CollectionUtils.select(
+               getQueryService().listActualEntities( Actor.class ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final Actor actor = (Actor)object;
+                        return !actor.isUnknown()
+                                && actor.isOpenParticipation()
+                                // Not already participating as the actor
+                                && !CollectionUtils.exists(
+                                    currentParticipations,
+                                    new Predicate() {
+                                        @Override
+                                        public boolean evaluate( Object object ) {
+                                            return ((PlanParticipation)object).getActorId() == actor.getId();
+                                        }
+                                }
+                                )
+                                // not singular participation already taken
+                                && !( actor.isSingularParticipation()
+                                        && !planParticipationService.getParticipations( 
+                                                getPlan(),
+                                                actor,
+                                                getQueryService() ).isEmpty() );
+                    }
+                }
+        );
+        for ( Actor actor : openActors ) {
+            PlanParticipation openParticipation = new PlanParticipation(
+                    getUsername(),
+                    getPlan(), 
+                    getUser(),
+                    actor );
+            wrappers.add( new ParticipationWrapper( openParticipation, false ) );
+        }
+        return wrappers;
     }
 
     private String getUserRole() {
@@ -100,6 +175,46 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             sb.append( '.' );
         }
         return sb.toString();
+    }
+    
+    public class ParticipationWrapper implements Serializable {
+
+        private PlanParticipation participation;
+        private boolean confirmed;
+
+        public ParticipationWrapper( PlanParticipation participation, boolean confirmed ) {
+            this.participation = participation;
+            this.confirmed = confirmed;
+        }
+
+        public PlanParticipation getParticipation() {
+            return participation;
+        }
+
+        public void setParticipation( PlanParticipation participation ) {
+            this.participation = participation;
+        }
+
+        public boolean isConfirmed() {
+            return confirmed;
+        }
+
+        public void setConfirmed( boolean confirmed ) {
+            this.confirmed = confirmed;
+            if ( confirmed ) {
+                planParticipationService.save( participation );
+            } else {
+                planParticipationService.delete( participation );
+            }
+        }
+
+        public Actor getActor( QueryService queryService ) {
+            return participation.getActor( queryService );
+        }
+
+        public boolean isOpen( QueryService queryService ) {
+            return getActor( queryService ).isOpenParticipation();
+        }
     }
 
 

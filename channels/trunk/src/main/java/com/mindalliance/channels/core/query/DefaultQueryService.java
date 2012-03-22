@@ -819,6 +819,43 @@ public abstract class DefaultQueryService implements QueryService {
         return new ArrayList<Commitment>( commitments );
     }
 
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Commitment> findAllBypassCommitments( final Flow flow ) {
+        assert flow.isSharing();
+        Set<Commitment> commitments = new HashSet<Commitment>();
+        if ( flow.isCanBypassIntermediate() ) {
+            List<Flow> bypassFlows;
+            if ( flow.isNotification() ) {
+                Part intermediate = (Part)flow.getTarget();
+                bypassFlows = (List<Flow>)CollectionUtils.select(
+                        intermediate.getAllSharingSends(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return flow.containsAsMuchAs( ((Flow)object) );
+                            }
+                        }
+                );
+            } else { // request-reply
+                Part intermediate = (Part)flow.getSource();
+                bypassFlows = (List<Flow>)CollectionUtils.select(
+                        intermediate.getAllSharingReceives(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return ((Flow)object).containsAsMuchAs( flow );
+                            }
+                        }
+                );
+            }
+            for ( Flow byPassFlow : bypassFlows ) {
+                commitments.addAll( findAllCommitments( byPassFlow,false, false ) );
+            }
+        }
+        return new ArrayList<Commitment>( commitments );
+    }
+
 
     private void addCommitment(
             Commitment commitment, Set<Commitment> commitments, Place locale, List<Flow> allFlows ) {

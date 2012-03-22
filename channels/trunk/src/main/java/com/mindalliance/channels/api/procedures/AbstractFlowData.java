@@ -26,9 +26,9 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     private Flow sharing;
     private List<ContactData> contacts;
-    private List<ContactData> disintermediatedContacts;
+    private List<ContactData> bypassContacts;
     private List<Employment> employments;
-    private List<Employment> disintermediatedEmployments;
+    private List<Employment> bypassEmployments;
 
     public AbstractFlowData() {
         // required
@@ -72,14 +72,14 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return contacts;
     }
 
-    public List<ContactData> getDisintermediatedContacts() {
-        if ( disintermediatedContacts == null ) {
-            disintermediatedContacts = new ArrayList<ContactData>();
-            for ( Employment employment : disintermediatedContactEmployments() ) {
-                disintermediatedContacts.addAll( findContactsFromEmployment( employment)  );
+    public List<ContactData> getBypassContacts() {
+        if ( bypassContacts == null ) {
+            bypassContacts = new ArrayList<ContactData>();
+            for ( Employment employment : bypassContactEmployments() ) {
+                bypassContacts.addAll( findContactsFromEmployment( employment)  );
             }
         }
-        return disintermediatedContacts;
+        return bypassContacts;
 
     }
     
@@ -220,23 +220,23 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return employments;
     }
 
-    protected List<Employment> disintermediatedContactEmployments() {
-        if ( disintermediatedEmployments == null ) {
-            disintermediatedEmployments = findDisintermediatedContactEmployments();
+    protected List<Employment> bypassContactEmployments() {
+        if ( bypassEmployments == null ) {
+            bypassEmployments = findBypassContactEmployments();
         }
-        return disintermediatedEmployments;
+        return bypassEmployments;
     }
 
     private List<Employment> allEmployments() {
         List<Employment> allEmployments = new ArrayList<Employment>(  );
         allEmployments.addAll( contactEmployments() );
-        allEmployments.addAll( disintermediatedContactEmployments() );
+        allEmployments.addAll( bypassContactEmployments() );
         return allEmployments;
     }
 
     protected abstract List<Employment> findContactEmployments();
 
-    protected abstract List<Employment> findDisintermediatedContactEmployments();
+    protected abstract List<Employment> findBypassContactEmployments();
 
 
 }

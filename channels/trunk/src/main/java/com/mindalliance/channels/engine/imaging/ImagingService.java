@@ -28,6 +28,9 @@ public interface ImagingService {
      */
     String NEGATED_ICON_URL = "/conceptual.png";
 
+    public static final String SEPARATOR = "---";
+
+
     /**
      * Find the size of an image given its url.
      *

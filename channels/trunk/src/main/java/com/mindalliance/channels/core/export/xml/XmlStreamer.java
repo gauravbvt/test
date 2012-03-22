@@ -406,6 +406,8 @@ public class XmlStreamer implements ImportExportFactory {
             if ( restriction != null ) {
                 externalFlow.setRestriction( Flow.Restriction.valueOf( restriction ) );
             }
+            externalFlow.setReceiptConfirmationRequested( conSpec.isReceiptConfirmationRequested() );
+            externalFlow.setCanBypassIntermediate( conSpec.isCanBypassIntermediate() );
             planDao.disconnect( localInnerFlow );
         }
 
@@ -423,6 +425,8 @@ public class XmlStreamer implements ImportExportFactory {
             external.setReferencesEventPhase( inner.isReferencesEventPhase() );
             external.setIfTaskFails( inner.isIfTaskFails() );
             external.setRestriction( inner.getRestriction() );
+            external.setCanBypassIntermediate( inner.isCanBypassIntermediate() );
+            external.setReceiptConfirmationRequested( inner.isReceiptConfirmationRequested() );
         }
 
         @SuppressWarnings( "unchecked" )

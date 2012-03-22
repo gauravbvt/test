@@ -1057,13 +1057,13 @@ public interface QueryService {
     List<Commitment> findAllCommitments( Boolean includeToSelf );
 
     /**
-      * Find all commitments.
-      *
-      * @param allowCommitmentsToSelf a boolean
-      * @param includeUnknowns a boolean
-      * @return a list of commitments
-      */
-     List<Commitment> findAllCommitments( Boolean allowCommitmentsToSelf, Boolean includeUnknowns );
+     * Find all commitments.
+     *
+     * @param allowCommitmentsToSelf a boolean
+     * @param includeUnknowns        a boolean
+     * @return a list of commitments
+     */
+    List<Commitment> findAllCommitments( Boolean allowCommitmentsToSelf, Boolean includeUnknowns );
 
     /**
      * Find all commitments to others implied by a sharing flow.
@@ -1087,7 +1087,7 @@ public interface QueryService {
      *
      * @param flow                   a flow
      * @param allowCommitmentsToSelf a boolean
-     * @param includeUnknowns a boolean
+     * @param includeUnknowns        a boolean
      * @return a list of commitments
      */
     List<Commitment> findAllCommitments( Flow flow, Boolean allowCommitmentsToSelf, Boolean includeUnknowns );
@@ -1101,6 +1101,15 @@ public interface QueryService {
      * @return a list of commitments
      */
     List<Commitment> findAllCommitments( Flow flow, Boolean selfCommits, Assignments assignments );
+
+    /**
+     * Find all commitments intermediated by a flow.
+     *
+     * @param flow a flow
+     * @return a list of commitments
+     */
+    List<Commitment> findAllBypassCommitments( Flow flow );
+
 
     List<Commitment> findAllCommitmentsOf(
             Specable specable,
@@ -1227,7 +1236,8 @@ public interface QueryService {
 
     /**
      * Find a user's participation as an actor.
-     * @param user a user
+     *
+     * @param user  a user
      * @param actor an actor
      * @return a plan participation or null
      */
@@ -1557,7 +1567,7 @@ public interface QueryService {
     /**
      * Get all commitments in the plan.
      *
-     * @param includeToSelf a boolean
+     * @param includeToSelf   a boolean
      * @param includeUnknowns a boolean
      * @return commitments
      */
