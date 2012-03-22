@@ -2,7 +2,6 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
-import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.PlanService;
 
@@ -18,7 +17,6 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class DiscoveryData {
 
-    private EventPhase eventPhase;
     private PlanService planService;
     private PlanParticipationService planParticipationService;
     private ChannelsUser user;
@@ -28,15 +26,6 @@ public class DiscoveryData {
         // required
     }
 
-    public DiscoveryData( EventPhase eventPhase,
-                          PlanService planService,
-                          PlanParticipationService planParticipationService,
-                          ChannelsUser user ) {
-        this.eventPhase = eventPhase;
-        this.planService = planService;
-        this.planParticipationService = planParticipationService;
-        this.user = user;
-    }
 
     public DiscoveryData( Flow notificationToSelf,
                           PlanService planService,
@@ -48,21 +37,6 @@ public class DiscoveryData {
         this.user = user;
     }
 
-    @XmlElement
-    public Long getEventId() {
-        if ( eventPhase != null )
-            return eventPhase.getEvent().getId();
-        else
-            return null;
-    }
-
-    @XmlElement
-    public Long getPhaseId() {
-        if ( eventPhase != null )
-            return eventPhase.getPhase().getId();
-        else
-            return null;
-    }
 
     @XmlElement
     public InfoDiscoveredData getInformationDiscovered() {

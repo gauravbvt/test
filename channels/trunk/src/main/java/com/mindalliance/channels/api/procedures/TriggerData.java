@@ -21,7 +21,7 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:16 AM
  */
-@XmlType( propOrder = {"situation", "anytime", "onDiscovery", "onResearch", "onNotification", "onRequest"} )
+@XmlType( propOrder = {"situation", "anytime", "onObservation", "onDiscovery", "onResearch", "onNotification", "onRequest"} )
 public class TriggerData extends AbstractProcedureElementData {
 
     private Flow notificationFromOther;
@@ -73,10 +73,16 @@ public class TriggerData extends AbstractProcedureElementData {
 
     @XmlElement
     public DiscoveryData getOnDiscovery() {
-        if ( eventPhase != null )
-            return new DiscoveryData( eventPhase, getPlanService(), getPlanParticipationService(), getUser() );
-        else if ( notificationToSelf != null )
+        if ( notificationToSelf != null )
             return new DiscoveryData( notificationToSelf, getPlanService(), getPlanParticipationService(), getUser() );
+        else
+            return null;
+    }
+
+    @XmlElement
+    public ObservationData getOnObservation() {
+        if ( eventPhase != null )
+            return new ObservationData( eventPhase );
         else
             return null;
     }
