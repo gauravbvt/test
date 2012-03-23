@@ -26,7 +26,10 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -109,6 +112,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     }
 
     private List<ParticipationWrapper> participations() {
+        final QueryService queryService = getQueryService();
         List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
         final List<PlanParticipation> currentParticipations = currentParticipations();
         for ( PlanParticipation participation : currentParticipations ) {
@@ -122,6 +126,19 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                     actor );
             wrappers.add( new ParticipationWrapper( openParticipation, false ) );
         }
+        Collections.sort(
+                wrappers,
+                new Comparator<ParticipationWrapper>() {
+                    @Override
+                    public int compare( ParticipationWrapper p1, ParticipationWrapper p2 ) {
+                        boolean p1Open = p1.isOpen( queryService );
+                        boolean p2Open = p2.isOpen( queryService );
+                        if ( !p1Open && p2Open ) return -1;
+                        if ( p1Open && !p2Open ) return 1;
+                        return p1.getActor( queryService ).getName()
+                                    .compareTo( p2.getActor( queryService ).getName() );
+                    }
+                });
         return wrappers;
     }
 
@@ -154,23 +171,26 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 && meetsPreEmploymentConstraint( actor, currentParticipations );
     }
 
-    private boolean meetsPreEmploymentConstraint( Actor actor, List<PlanParticipation> currentParticipations ) {
+    private boolean meetsPreEmploymentConstraint( Actor actor,
+                                                  List<PlanParticipation> currentParticipations ) {
         if ( !actor.isParticipationRestrictedToEmployed() ) return true;
         QueryService queryService = getQueryService();
-        List<Organization> actorEmployers = findEmployers(
+        List<Organization> actorEmployers = findDirectAndIndirectEmployers(
                 getQueryService().findAllEmploymentsForActor( actor ) );
         List<Organization> myPlannedEmployers = new ArrayList<Organization>();
         for ( PlanParticipation participation : currentParticipations ) {
             Actor partipationActor = participation.getActor( queryService );
             if ( partipationActor != null && !partipationActor.isOpenParticipation() )
-                myPlannedEmployers.addAll( findEmployers( queryService.findAllEmploymentsForActor( partipationActor ) ) );
+                myPlannedEmployers.addAll( findDirectAndIndirectEmployers(
+                        queryService.findAllEmploymentsForActor( partipationActor ) ) );
         }
         return !Collections.disjoint( myPlannedEmployers, actorEmployers );
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<Organization> findEmployers( List<Employment> employments ) {
-        return (List<Organization>) CollectionUtils.collect(
+    private List<Organization> findDirectAndIndirectEmployers( List<Employment> employments ) {
+        Set<Organization> allEmployers = new HashSet<Organization>();
+        List<Organization> directEmployers = (List<Organization>) CollectionUtils.collect(
                 employments,
                 new Transformer() {
                     @Override
@@ -179,6 +199,10 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                     }
                 }
         );
+        for ( Organization org : directEmployers ) {
+            allEmployers.addAll( org.selfAndAncestors() );
+        }
+        return new ArrayList<Organization>( allEmployers );
     }
 
     private boolean alreadyParticipatingAs( final Actor actor, List<PlanParticipation> currentParticipations ) {
