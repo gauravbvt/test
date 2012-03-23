@@ -67,11 +67,13 @@
     </context-param>
 
 <!-- Removed to avoid duplication because Enunciate inserts it -->
-<!--    
+
+<!--
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 -->
+
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>

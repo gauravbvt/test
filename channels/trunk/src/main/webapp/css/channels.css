@@ -2529,3 +2529,186 @@ div.req-section-headers ul {
  margin:0;
  padding:0;
 }
+
+
+/* ----- Feedback - Messages ----- */
+
+div.feedback-messages {
+	width:100%;
+}
+
+div.feedback-messages > span > div {
+	width:100%;
+	float:left;
+}
+
+div.feedback-messages div.even {
+	background:#e8e8e8;
+	padding:5px 10px 10px;
+	border-top: 1px solid #999999;
+}
+
+div.feedback-messages div.odd {
+	padding:5px 10px 10px;
+	border-top: 1px solid #999999;
+}
+
+div.feedback-messages > span > div > div {
+	border-bottom:1px solid #bcbec0;
+	padding:0 5px 0 0;
+}
+
+div.feedback-messages table {
+	width:100%;
+	display:table;
+	line-height:100%;
+	border:none;
+}
+
+div.feedback-messages table td.photo-cont {
+	width:50px;
+}
+
+div.feedback-messages table td table {
+	width:100%;
+}
+
+div.feedback-messages table td,
+div.feedback-messages table td table td {
+	vertical-align:top;
+}
+
+div.feedback-messages img.photo {
+	background:#E8E8E8;
+	border:1px solid #999999;
+	padding:2px;
+	margin:5px 0 0;
+	width:32px;
+	height:32px;
+	float:left;
+}
+
+div.feedback-messages div.even img.photo {
+	background:#dadada;
+}
+
+div.feedback-messages div.odd img.photo {
+	background:#dadada;
+}
+
+div.feedback-messages div.joining span.name,
+div.feedback-messages div.leaving span.name {
+	font-size:12px;
+	font-weight:bold;
+	color:#333333;
+	padding:0;
+	text-transform:capitalize;
+	float:left;
+	display:block;
+	padding:5px 0 4px 0;
+}
+
+div.feedback-messages div.even img.present,
+div.feedback-messages div.odd img.present {
+	display:block;
+	float:left;
+	background:none;
+	padding:7px 0 0 7px;
+}
+
+div.feedback-messages span.menubar {
+    float: right;
+	 padding:0 0 0 0;
+    position: relative;
+}
+
+div.feedback-messages td.jobtitle span.titles {
+	display:block;
+	font-size:10px;
+	font-weight:bold;
+	color:#666666;
+	float:left;
+	padding:0 0 4px 0;
+}
+
+div.feedback-messages td.info-container {
+	font-size:11px;
+	line-height:140%;
+	color:#333333;
+	padding:3px 0 8px 0;
+	border-top:1px solid #bcbec0;
+}
+
+div.feedback-messages td.info-container a {
+	font-size:11px;
+	line-height:140%;
+	color:#333333;
+}
+
+div.feedback-messages td.info-container a:hover {
+	font-size:11px;
+	line-height:140%;
+	color:#666666;
+}
+
+div.feedback-messages div.time {
+	font-size:10px;
+	font-weight:bold;
+	color:#959595;
+}
+
+div.feedback-messages span.time {
+	color:#666666;
+}
+
+
+/* ----- Feedback - New Message ----- */
+
+div.feedback-new-message {
+	background: #E8E8E8;
+	border-top: 1px solid #999999;
+   border-bottom: 1px solid #999999;
+	font-size: 11px;
+	padding: 10px;
+	margin-top: 10px;
+}
+
+div.feedback-new-message > div {
+	padding:5px 0;
+}
+
+div.feedback-new-message > div > span {
+	font-weight:bold;
+}
+
+div.feedback-new-message > div > select {
+	background:#F6F6F6;
+	border:1px solid #666666;
+	margin-left:5px;
+	font-size:11px;
+}
+
+div.feedback-new-message textarea {
+	background:#F6F6F6;
+	border:1px solid #999999;
+	margin:2px 0 5px 0;
+	overflow-x:hidden;
+	font-size:11px;
+}
+
+div.feedback-new-message input {
+	background:#d9d9d9;
+	border:1px solid #666666;
+	color:#000000;
+	font-size:11px;
+    padding-left: 2px;
+    padding-right: 2px;
+    text-transform: capitalize;
+}
+
+div.feedback-new-message input:hover {
+	background:#f6f6f6;
+	border:1px solid #999999;
+	color:#333333;
+	font-size:11px;
+}
