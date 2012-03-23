@@ -2542,13 +2542,13 @@ div.feedback-messages > span > div {
 	float:left;
 }
 
-div.feedback-messages div.even {
+div.feedback-messages div.odd {
 	background:#e8e8e8;
 	padding:5px 10px 10px;
 	border-top: 1px solid #999999;
 }
 
-div.feedback-messages div.odd {
+div.feedback-messages div.even {
 	padding:5px 10px 10px;
 	border-top: 1px solid #999999;
 }
@@ -2588,10 +2588,7 @@ div.feedback-messages img.photo {
 	float:left;
 }
 
-div.feedback-messages div.even img.photo {
-	background:#dadada;
-}
-
+div.feedback-messages div.even img.photo,
 div.feedback-messages div.odd img.photo {
 	background:#dadada;
 }

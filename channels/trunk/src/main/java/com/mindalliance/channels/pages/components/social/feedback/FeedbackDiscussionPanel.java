@@ -71,7 +71,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
         add( new FeedbackStatementPanel(
                 "feedback",
                 new Model<Feedback>( feedback ),
-                0,
+                1,
                 showProfile,
                 this
         ) );
