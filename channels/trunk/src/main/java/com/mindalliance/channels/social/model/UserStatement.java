@@ -2,6 +2,7 @@ package com.mindalliance.channels.social.model;
 
 import com.mindalliance.channels.core.model.ModelObject;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 /**
@@ -14,7 +15,8 @@ import javax.persistence.Entity;
  */
 @Entity
 public class UserStatement extends AbstractModelObjectReferencingPPO {
-    
+
+    @Column(length=1000)
     private String text;
 
     public UserStatement() {

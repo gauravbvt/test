@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 /**
@@ -21,6 +22,7 @@ public class ExecutedCommand extends AbstractPersistentPlanObject {
     private String commandName;
     private String commandUndoes;
     private String changeProperty;
+    @Column(columnDefinition="LONGTEXT")
     private String commandTargetDescription;
     private boolean update;
     private Long changeId;
