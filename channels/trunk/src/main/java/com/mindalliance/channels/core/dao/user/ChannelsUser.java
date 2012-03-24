@@ -122,11 +122,10 @@ public class ChannelsUser implements UserDetails {
         List<GrantedAuthority> result = new ArrayList<GrantedAuthority>();
         if ( userInfo.isAdmin() )
             result.add( new GrantedAuthorityImpl( ChannelsUserInfo.ROLE_ADMIN ) );
-
         String uri = plan == null ? null : plan.getUri();
-        if ( userInfo.isPlanner( uri ) )
+        if ( userInfo.isAPlanner( uri ) )
             result.add( new GrantedAuthorityImpl( ChannelsUserInfo.ROLE_PLANNER ) );
-        if ( userInfo.isUser( uri ) )
+        if ( userInfo.isAUser( uri ) )
             result.add( new GrantedAuthorityImpl( ChannelsUserInfo.ROLE_USER ) );
 
         return Collections.unmodifiableList( result );

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -15,6 +16,7 @@ import javax.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -64,10 +66,11 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
      * The user's access (ROLE_USER|ROLE_PLANNER|ROLE_ADMIN), indexed by plan uri.
      */
     @Transient
-    private Map<String, String> planAccess = new HashMap<String, String>();
+    private Map<String, String> planAccess;
     /**
      * Plan accesses as string.
      */
+    @Column(length=1000)
     private String planAccesses;
 
     /**
@@ -96,7 +99,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
         if ( tokens.hasMoreTokens() ) fullName = tokens.nextToken();
         if ( tokens.hasMoreTokens() ) email = tokens.nextToken();
         globalAccess = null;
-
+        planAccess = new HashMap<String, String>(  );
         while ( tokens.hasMoreTokens() ) {
             String token = tokens.nextToken();
             if ( token.startsWith( "[" ) && token.endsWith( "]" ) ) {
@@ -127,19 +130,58 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
         this.email = email == null ? "" : email;
         processPlanAccesses();
     }
+    
+    private Map<String, String> getPlanAccess() {
+        if ( planAccess == null ) {
+            planAccess = unmarshallPlanAccesses( planAccesses );
+        }
+        return planAccess;
+    }
+
+    private Map<String, String> unmarshallPlanAccesses( String s ) {
+        Map<String,String> result = new HashMap<String, String>(  );
+        StringTokenizer tokens = new StringTokenizer( s == null ? "" : s, "," );
+        while ( tokens.hasMoreTokens() ) {
+            String token = tokens.nextToken();
+            if ( token.startsWith( "[" ) && token.endsWith( "]" ) ) {
+                // e.g. [mindalliance.com/channels/plans/sci|ROLE_PLANNER]
+                // e.g. [mindalliance.com/channels/plans/sci]
+                StringTokenizer access =
+                        new StringTokenizer( token.substring( 1, token.length() - 1 ), "|" );
+
+                String uri = access.nextToken();
+                result.put( uri,
+                        access.hasMoreTokens() && ROLE_PLANNER.equals( access.nextToken() ) ?
+                                ROLE_PLANNER : ROLE_USER );
+
+            } else if ( token.equals( ROLE_ADMIN ) || token.equals( ROLE_PLANNER )
+                    || token.equals( ROLE_USER ) )
+                globalAccess = token;
+
+            else
+                LoggerFactory.getLogger( getClass() ).warn(
+                        "Discarding invalid user definition part: {}", token );
+        }
+        return result;
+    }
+
+     private void processPlanAccesses() {
+        cleanUpPlanAccess();
+        planAccesses = planAccessesToString();
+    }
 
     /**
      * Remove redundant declarations.
      */
-    private void processPlanAccesses() {
+    private void cleanUpPlanAccess() {
+        Map<String, String> pa = getPlanAccess();
         if ( ROLE_ADMIN.equals( globalAccess ) || ROLE_PLANNER.equals( globalAccess ) ) {
-            planAccess.clear();
+            pa.clear();
         } else if ( ROLE_USER.equals( globalAccess ) ) {
-            for ( String uri : new HashSet<String>( planAccess.keySet() ) )
-                if ( ROLE_USER.equals( planAccess.get( uri ) ) )
-                    planAccess.remove( uri );
+            for ( String uri : new HashSet<String>( pa.keySet() ) )
+                if ( ROLE_USER.equals( pa.get( uri ) ) )
+                    pa.remove( uri );
         }
-        planAccesses = planAccessesToString();
     }
 
     public String getEmail() {
@@ -233,6 +275,26 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
         return ROLE_ADMIN.equals( globalAccess );
     }
 
+    public boolean isAPlanner( String uri ) {
+        if ( uri != null ) {
+            return isPlanner( uri );
+        } else {
+            return isAdmin()
+                    || isPlanner()
+                    || getPlanAccess().values().contains( ROLE_PLANNER );
+        }
+    }
+
+    
+    public boolean isAUser( String uri ) {
+        if ( uri != null ) {
+            return isUser( uri );
+        } else {
+            return globalAccess != null
+                    || !getPlanAccess().values().isEmpty();
+        }
+    }
+
     /**
      * Test if this user can access the given plan uri.
      *
@@ -241,7 +303,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
      */
     public boolean isUser( String uri ) {
         return globalAccess != null
-                || uri != null && planAccess.containsKey( uri );
+                || uri != null && getPlanAccess().containsKey( uri );
     }
 
     /**
@@ -253,7 +315,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
     public boolean isPlanner( String uri ) {
         return isAdmin()
                 || isPlanner()
-                || uri != null && ROLE_PLANNER.equals( planAccess.get( uri ) );
+                || uri != null && ROLE_PLANNER.equals( getPlanAccess().get( uri ) );
     }
 
     /**
@@ -262,7 +324,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
      * @return true if the user is authorized for at least a plan
      */
     public boolean isEnabled() {
-        return globalAccess != null || !planAccess.isEmpty();
+        return globalAccess != null || !getPlanAccess().isEmpty();
     }
 
     /**
@@ -279,6 +341,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
         buffer.append( getFullName() );
         buffer.append( ',' );
         buffer.append( getEmail() );
+        buffer.append( "," );
         buffer.append( planAccessesToString() );
         if ( getGlobalAccess() != null ) {
             buffer.append( ',' );
@@ -290,14 +353,17 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     private String planAccessesToString() {
         StringBuilder buffer = new StringBuilder();
-        for ( Map.Entry<String, String> access : planAccess.entrySet() ) {
-            buffer.append( ",[" );
+        Iterator<Map.Entry<String, String>> iter = getPlanAccess().entrySet().iterator();
+        while( iter.hasNext() ) {
+            Map.Entry<String, String> access = iter.next();
+            buffer.append( "[" );
             buffer.append( access.getKey() );
             if ( access.getValue().equals( ROLE_PLANNER ) ) {
                 buffer.append( '|' );
                 buffer.append( ROLE_PLANNER );
             }
             buffer.append( ']' );
+            if ( iter.hasNext() ) buffer.append( "," );
         }
         return buffer.toString();
     }
@@ -309,15 +375,16 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
      *             Setting to null removes all authorities.
      */
     private void grantGlobalAccess( String role ) {
+        Map<String,String> pa = getPlanAccess();
         globalAccess = null;
         if ( ROLE_USER.equals( role ) ) {
             globalAccess = role;
-            for ( String uri : new HashSet<String>( planAccess.keySet() ) )
-                if ( ROLE_USER.equals( planAccess.get( uri ) ) )
-                    planAccess.remove( uri );
+            for ( String uri : new HashSet<String>( pa.keySet() ) )
+                if ( ROLE_USER.equals( pa.get( uri ) ) )
+                    pa.remove( uri );
 
         } else {
-            planAccess.clear();
+            pa.clear();
             if ( ROLE_ADMIN.equals( role ) || ROLE_PLANNER.equals( role ) )
                 globalAccess = role;
         }
@@ -340,13 +407,13 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
             if ( isPlanner() )
                 grantOthers( planList, ROLE_PLANNER );
             else
-                planAccess.put( uri, ROLE_PLANNER );
+                getPlanAccess().put( uri, ROLE_PLANNER );
 
         } else if ( ROLE_USER.equals( role ) ) {
             if ( isUser() )
                 grantOthers( planList, ROLE_USER );
             else
-                planAccess.put( uri, ROLE_USER );
+                getPlanAccess().put( uri, ROLE_USER );
 
         } else {
             // role == null or other string
@@ -354,7 +421,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
                 grantOthers( planList, ROLE_PLANNER );
             else if ( isUser() )
                 grantOthers( planList, ROLE_USER );
-            planAccess.remove( uri );
+            getPlanAccess().remove( uri );
         }
         planAccesses = planAccessesToString();
     }
@@ -365,15 +432,16 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
      * @param uri the plan uri
      */
     public void clearAuthority( String uri ) {
-        planAccess.remove( uri );
+        getPlanAccess().remove( uri );
         planAccesses = planAccessesToString();
     }
 
     private void grantOthers( List<Plan> planList, String role ) {
+        Map<String,String> pa = getPlanAccess();
         for ( Plan plan : planList ) {
             String uri = plan.getUri();
-            if ( !planAccess.containsKey( uri ) )
-                planAccess.put( uri, role );
+            if ( !pa.containsKey( uri ) )
+                pa.put( uri, role );
         }
         globalAccess = null;
         planAccesses = planAccessesToString();
