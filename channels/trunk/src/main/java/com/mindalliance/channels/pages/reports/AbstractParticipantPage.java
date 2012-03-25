@@ -250,6 +250,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
         }
 
         public PlanParticipation findParticipation( QueryService queryService, Actor actor, String username ) {
+            if( username == null ) return null;
             ChannelsUser user = getUserDao().getUserNamed( username );
             if ( user == null )
                 return null;
