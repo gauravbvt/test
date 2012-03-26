@@ -108,16 +108,16 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
     protected ModelEntity( String name ) {
         super( name );
     }
-    
+
     public static List<String> typeNames() {
-        List<String> typeNames = new ArrayList<String>(  );
-        typeNames.add( new Actor( ).getTypeName() );
-        typeNames.add( new Event( ).getTypeName() );
-        typeNames.add( new Organization( ).getTypeName() );
-        typeNames.add( new Place( ).getTypeName() );
-        typeNames.add( new Role( ).getTypeName() );
-        typeNames.add( new Phase( ).getTypeName() );
-        typeNames.add( new TransmissionMedium( ).getTypeName() );
+        List<String> typeNames = new ArrayList<String>();
+        typeNames.add( new Actor().getTypeName() );
+        typeNames.add( new Event().getTypeName() );
+        typeNames.add( new Organization().getTypeName() );
+        typeNames.add( new Place().getTypeName() );
+        typeNames.add( new Role().getTypeName() );
+        typeNames.add( new Phase().getTypeName() );
+        typeNames.add( new TransmissionMedium().getTypeName() );
         return typeNames;
     }
 
@@ -133,7 +133,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 Event.class.isAssignableFrom( entityClass )
                         || Role.class.isAssignableFrom( entityClass )
                         || TransmissionMedium.class.isAssignableFrom( entityClass )
-                       // || Phase.class.isAssignableFrom( entityClass )
+                // || Phase.class.isAssignableFrom( entityClass )
         );
     }
 
@@ -159,7 +159,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
      * @return a kind
      */
     public static Kind defaultKindFor( Class<? extends ModelEntity> entityClass ) {
-       /* if ( Event.class.isAssignableFrom( entityClass )
+        /* if ( Event.class.isAssignableFrom( entityClass )
                 || Role.class.isAssignableFrom( entityClass ) ) {
             return Kind.Type;
         } else {
@@ -548,4 +548,12 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         }
         return superiors;
     }
+
+    public static boolean canBeActual( ModelObject mo ) {
+        return !( mo instanceof Role
+                || mo instanceof Event
+                || mo instanceof TransmissionMedium
+                || mo instanceof Phase );
+    }
+
 }

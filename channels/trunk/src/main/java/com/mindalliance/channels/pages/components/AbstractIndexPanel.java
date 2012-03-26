@@ -187,9 +187,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * There is no tag from s such that there is no tag in tag that matches it
      * (all tags from s match at least of this mo's tags).
      *
-     *
      * @param taggable the object
-     * @param s a string
+     * @param s        a string
      * @return true if the object is tagged with given string
      */
     private static boolean isTaggedWith( Taggable taggable, String s ) {
@@ -213,8 +212,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
     /**
      * Whether two tags match.
      *
-     *
-     * @param tag a tag
+     * @param tag   a tag
      * @param other another tag
      * @return a boolean
      */
@@ -259,7 +257,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             protected void onUpdate( AjaxRequestTarget target ) {
                 indices = null;
                 byTagsCheckBox.setEnabled( !indexedOn.equals( EOIS ) );
-                if ( indexedOn.equals( EOIS ) )  {
+                if ( indexedOn.equals( EOIS ) ) {
                     setFilteredByName( true );
                 }
                 target.add( byNameCheckBox );
@@ -752,7 +750,6 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             component.add(
                     new AttributeModifier(
                             "style",
-                            true,
                             new Model<String>( "font-style: oblique" ) ) );
         }
     }
@@ -761,28 +758,28 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         String added = "";
         if ( modelObject instanceof Part ) {
             QueryService queryService = getQueryService();
-            boolean overridden = queryService.isOverridden( (Part)modelObject );
-            boolean overriding = queryService.isOverriding( (Part)modelObject );
+            boolean overridden = queryService.isOverridden( (Part) modelObject );
+            boolean overriding = queryService.isOverriding( (Part) modelObject );
             added = overriding && overridden
-                            ? "overridden-overriding"
-                            : overriding
-                            ? "overriding"
-                            : overridden
-                            ? "overridden"
-                            : "";
+                    ? "overridden-overriding"
+                    : overriding
+                    ? "overriding"
+                    : overridden
+                    ? "overridden"
+                    : "";
         } else if ( modelObject instanceof Flow ) {
             QueryService queryService = getQueryService();
-            boolean overridden = queryService.isOverridden( (Flow)modelObject );
-            boolean overriding = queryService.isOverriding( (Flow)modelObject );
+            boolean overridden = queryService.isOverridden( (Flow) modelObject );
+            boolean overriding = queryService.isOverriding( (Flow) modelObject );
             added = overriding && overridden
-                            ? "overridden-overriding"
-                            : overriding
-                            ? "overriding"
-                            : overridden
-                            ? "overridden"
-                            : "";
+                    ? "overridden-overriding"
+                    : overriding
+                    ? "overriding"
+                    : overridden
+                    ? "overridden"
+                    : "";
         }
-        return css + (added.isEmpty() ? "" : (" " + added));
+        return css + ( added.isEmpty() ? "" : ( " " + added ) );
     }
 
 
@@ -912,19 +909,29 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     ? ( ( (Actor) mo ).isPerson() ? "Person" : "System" )
                     : ( (ModelEntity) mo ).isActual()
                     ? "Actual " + mo.getClass().getSimpleName().toLowerCase()
-                    : "Type of " + mo.getClass().getSimpleName().toLowerCase()
-            );
-            return kind + ( isNameAbbreviated() ? ": " + getFullName() : "" ) + " [" + mo.getId() + "]";
+                    : ( ModelEntity.canBeActual( ( (ModelEntity) mo ) )
+                    ? ( "Type of " + mo.getClass().getSimpleName().toLowerCase() )
+                    :  mo.getClass().getSimpleName() ) );
+            return kind
+                    + ( isNameAbbreviated() ? ": " + getFullName() : "" )
+                    + " [" + mo.getId() + "]"
+                    + ( mo.getDescription().isEmpty()
+                    ? ""
+                    : ( " - " + StringUtils.abbreviate( mo.getDescription(), MAX_NAME_LENGTH * 3 )  ) );
         }
 
         /**
-         * Get the kind of model oebjct.
+         * Get the kind of model object.
          *
          * @param mo model object
          * @return a string
          */
         protected String getToolTip( ModelObject mo ) {
-            return mo.getTypeName() + " [" + mo.getId() + "]";
+            return StringUtils.capitalize( mo.getTypeName() )
+                    + " [" + mo.getId() + "]"
+                    + ( mo.getDescription().isEmpty()
+                    ? ""
+                    : ( " - " + StringUtils.abbreviate( mo.getDescription(), MAX_NAME_LENGTH * 3 ) ) );
         }
     }
 
@@ -952,7 +959,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     new Model<ModelObject>( getIndexedModelObject() ),
                     new Model<String>( getAbbreviatedName() ),
                     getToolTip(),
-                    addToCss( getIndexedModelObject(), css  ) );
+                    addToCss( getIndexedModelObject(), css ) );
             italicizeIfEntityType( moLink, getIndexedModelObject() );
             add( moLink );
         }
@@ -983,8 +990,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             if ( isNameAbbreviated() ) {
                 moLabel.add( new AttributeModifier(
                         "title",
-                        true,
-                        new Model<String>( getFullName()  ) ) );
+                        new Model<String>( getFullName() ) ) );
             }
             add( moLabel );
             ListView refList = new ListView<ModelObject>(
