@@ -118,18 +118,12 @@ public class MAP0022_addGoal {
 					// Organization
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:actualOrType"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("actual"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
 					// Name for Goal
 					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AddGoal"));
 					// Achieved at end check box
 					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);	
 					// ASSERTION: When clicked on 'Achieved at end' checkbox, Goal 'Goal1' should be added 
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					if (GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("AddGoal"))){

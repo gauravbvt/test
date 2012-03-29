@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
@@ -102,6 +103,10 @@ public class MAV0190_GoalsOption
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);	
+//				GlobalVariables.oElement.sendKeys(Keys.TAB);
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(3000);	
 				// Achieved at end check box
 				GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
 				// WebElement Synchronization
@@ -125,6 +130,9 @@ public class MAV0190_GoalsOption
 				GlobalVariables.sDescription="Goals <Options>";
 				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:part:goals:goals:0:goal:goalChoice")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				options.get(1).setSelected();
 				// Assertion : Verify that the Goal gets selected
 				if(options.get(1).isSelected())	 {
@@ -202,6 +210,7 @@ public class MAV0190_GoalsOption
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to view goals option"+ReportFunctions.getScreenShot("View goals option failedr"));
 		}
 	}
 }

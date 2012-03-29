@@ -68,6 +68,9 @@ public class MAV0192_TaskInstructions
 				GlobalVariables.sDescription="Task Instruction Details Entered";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:description"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an Instruction"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();

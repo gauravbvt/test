@@ -136,9 +136,16 @@ public class MAC0001_UndoAddSegment {
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				
 			}
-			else
+			else{
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				System.out.println("Unable to undo add new segment" + ReportFunctions.getScreenShot("Undo add new segment failedr"));
+				GlobalVariables.oDriver.quit();
+				}
+			
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -151,8 +158,9 @@ public class MAC0001_UndoAddSegment {
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
-				ApplicationFunctionLibrary.logout();	
-				System.out.println("Unable to undo add new segment"+ReportFunctions.getScreenShot("Undo add new segment failedr"));
+//				ApplicationFunctionLibrary.logout();
+				GlobalVariables.oDriver.quit();
+//				System.out.println("Unable to undo add new segment"+ReportFunctions.getScreenShot("Undo add new segment failedr"));
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 		}
