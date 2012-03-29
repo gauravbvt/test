@@ -1,6 +1,7 @@
 api,http://192.168.4.127:8081/channels/rest/isp/plans
 username,admin
 password,admin
-url,http://192.168.4.127:8081/channels/login.html
 uri,mindalliance_com_channels_plans_acme
-responseType,xml
+version,1
+name,ACME Emergency Communication Plan
+release,development

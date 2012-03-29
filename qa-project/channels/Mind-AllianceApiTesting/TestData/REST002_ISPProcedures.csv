@@ -1,0 +1,5 @@
+api,http://192.168.4.127:8081/channels/rest/isp/plan/mindalliance_com_channels_plans_railsec/procedures
+username,admin
+password,admin
+uri,mindalliance_com_channels_plans_acme
+responseType,xml
