@@ -11,6 +11,7 @@ import java.util.Hashtable;
 public class GlobalVariables {
 	public static HttpURLConnection connection=null;
 	public static String responseType="responsetype";
+	public static String userCredentials="";
 	public static String logDirectoryName;
 	public static String logDirectoryPath;
 	public static String testDataDirectoryPath;

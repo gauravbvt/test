@@ -22,7 +22,13 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.ws.http.HTTPException;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.*;
 
 /** The Configurations class is a collection of methods which sends HttpURLConnection request to the Web service and gets response and retrieves test data.
  * @author AFourTech
@@ -109,8 +115,8 @@ public class Configurations {
 			GlobalVariables.connection = (HttpURLConnection) url.openConnection();
 			GlobalVariables.connection.setRequestMethod("GET");
 			
-			String userCredentials=GlobalVariables.testData.get("username")+":"+GlobalVariables.testData.get("password");
-			String encodedAuthorization = org.apache.commons.codec.binary.Base64.encodeBase64String(userCredentials.getBytes());
+			GlobalVariables.userCredentials=GlobalVariables.testData.get("username")+":"+GlobalVariables.testData.get("password");
+			String encodedAuthorization = org.apache.commons.codec.binary.Base64.encodeBase64String(GlobalVariables.userCredentials.getBytes());
 			GlobalVariables.connection.setRequestProperty("Authorization", "Basic "+encodedAuthorization);
 		      
 		} catch (MalformedURLException e) {
@@ -152,4 +158,40 @@ public class Configurations {
 		}
 		return GlobalVariables.responseString;
 	}
+	
+	public static void expectedResult(){
+		try {		
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			SAXParser saxParser = factory.newSAXParser();
+		 
+			DefaultHandler handler = new DefaultHandler() {
+				boolean flag = false;
+		 
+				public void startElement(String uri, String localName,String tagName, Attributes attributes) throws SAXException {
+					System.out.println("<" + tagName +">");
+					if(tagName!=null){
+						flag=true;
+					}
+				}
+		 
+				public void endElement(String uri, String localName,String tagName) throws SAXException {
+					System.out.println("<" + tagName +">");
+				}
+				
+				public void characters(char ch[], int start, int length) throws SAXException {
+					if (flag) {
+						System.out.println("" + new String(ch, start, length));
+						flag = false;
+					}
+				}
+			};
+		     
+			GlobalVariables.testDataDirectoryPath = GlobalVariables.currentDirectory.getCanonicalPath().toString() + "\\TestData\\";
+			saxParser.parse(GlobalVariables.testDataDirectoryPath+ "response.xml", handler);
+		 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
