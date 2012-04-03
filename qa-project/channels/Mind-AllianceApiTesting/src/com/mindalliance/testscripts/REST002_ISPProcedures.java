@@ -46,10 +46,10 @@ public class REST002_ISPProcedures extends TestCase{
 			
 			// Expected Result
 			GlobalVariables.steps++;
-			System.out.println("5) Expecet Result is");
+			System.out.println("5) Expected Result");
 			Configurations.expectedResult();
-			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result is");
-			
+			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result");
+						
 			// Assertion: Verify that Plan name is present
 			GlobalVariables.steps++;
 			Assert.assertEquals("mindalliance_com_channels_plans_railsec","mindalliance_com_channels_plans_railsec");
@@ -58,11 +58,11 @@ public class REST002_ISPProcedures extends TestCase{
 
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST002_ISPProcedures Execution Completed");
+			System.out.println("7) Test Case : REST002_ISPProcedures Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : ISP001 Execution Completed");
 			
 		}catch (AssertionError ar) {
-			System.out.println("5)Assertion Failed : ");
+			System.out.println("6)Assertion Failed : ");
 			ar.printStackTrace();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
 		} catch (Exception e) {

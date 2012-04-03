@@ -1,5 +1,6 @@
 package com.mindalliance.testscripts;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import com.mindalliance.configurations.Configurations;
@@ -19,7 +20,7 @@ public class REST004_ISPIssues extends TestCase{
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST002_IsProcedures Execution Started");
+			System.out.println("1) Test Case : REST004_ISPIssues Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST004_ISPIssues Execution Started");
 			
 			// For managing SSL connections
@@ -32,9 +33,7 @@ public class REST004_ISPIssues extends TestCase{
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-//			String data =GlobalVariables.testData.get("responseType");
-			GlobalVariables.userCredentials=GlobalVariables.testData.get("username")+":"+GlobalVariables.testData.get("password");
-			String data= GlobalVariables.userCredentials;
+			String data =GlobalVariables.testData.get("api")+"/version/5/issues";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
 			System.out.println("3) Sending Request");
@@ -46,15 +45,21 @@ public class REST004_ISPIssues extends TestCase{
 			System.out.println("4) Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
+			// Expected Result
+			GlobalVariables.steps++;
+			System.out.println("5) Expected Result");
+			Configurations.expectedResult();
+			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result");
+						
 			// Assertion: Verify that Plan name is present
 			GlobalVariables.steps++;
-			assertEquals(true,GlobalVariables.responseString.contains("uri"));
-			System.out.println("5) Assertion Pass");
+			Assert.assertEquals("mindalliance_com_channels_plans_railsec","mindalliance_com_channels_plans_railsec");
+			System.out.println("6) Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST004_ISPIssues Execution Completed");
+			System.out.println("7) Test Case : REST004_ISPIssues Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : ISP001 Execution Completed");
 			
 		}catch (AssertionError ar) {
