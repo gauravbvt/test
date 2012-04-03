@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -163,17 +165,18 @@ public class Configurations {
 		try {		
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
-		 
+			Configurations.writeResult();		
 			DefaultHandler handler = new DefaultHandler() {
 				boolean flag = false;
-		 
+				
+				
 				public void startElement(String uri, String localName,String tagName, Attributes attributes) throws SAXException {
 					System.out.println("<" + tagName +">");
 					if(tagName!=null){
 						flag=true;
 					}
 				}
-		 
+				
 				public void endElement(String uri, String localName,String tagName) throws SAXException {
 					System.out.println("<" + tagName +">");
 				}
@@ -185,13 +188,26 @@ public class Configurations {
 					}
 				}
 			};
-		     
+		    		
 			GlobalVariables.testDataDirectoryPath = GlobalVariables.currentDirectory.getCanonicalPath().toString() + "\\TestData\\";
 			saxParser.parse(GlobalVariables.testDataDirectoryPath+ "response.xml", handler);
+			
 		 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	public static void writeResult() throws FileNotFoundException{
+		PrintStream orgStream 	= null;
+		PrintStream fileStream 	= null;
+		
+		orgStream = System.out;
+		fileStream = new PrintStream(new FileOutputStream("out.txt",true));
+		// Redirecting console output to file
+		System.setOut(fileStream);
+		
+		// Redirecting runtime exceptions to file
+		System.setErr(fileStream);		
+	}
 }
