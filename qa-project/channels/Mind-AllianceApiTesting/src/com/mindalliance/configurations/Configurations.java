@@ -163,6 +163,7 @@ public class Configurations {
 	
 	public static void expectedResult(){
 		try {		
+			
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
 			Configurations.writeResult();		
@@ -171,7 +172,7 @@ public class Configurations {
 				
 				
 				public void startElement(String uri, String localName,String tagName, Attributes attributes) throws SAXException {
-					System.out.println("<" + tagName +">");
+					System.out.print("<" + tagName +">");
 					if(tagName!=null){
 						flag=true;
 					}
@@ -183,7 +184,7 @@ public class Configurations {
 				
 				public void characters(char ch[], int start, int length) throws SAXException {
 					if (flag) {
-						System.out.println("" + new String(ch, start, length));
+						System.out.print("" + new String(ch, start, length));
 						flag = false;
 					}
 				}
@@ -203,7 +204,7 @@ public class Configurations {
 		PrintStream fileStream 	= null;
 		
 		orgStream = System.out;
-		fileStream = new PrintStream(new FileOutputStream("out.txt",true));
+		fileStream = new PrintStream(new FileOutputStream("out.xml",true));
 		// Redirecting console output to file
 		System.setOut(fileStream);
 		
