@@ -48,18 +48,19 @@ public class REST001_ISPPlans extends TestCase{
 			Configurations.getResponse();
 			System.out.println("4) Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
-			
-			GlobalVariables.steps++;
-			Configurations.expectedResult();
-			System.out.println("5) Expected Result");
-			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result");
-			
+				
 			// Assertion
 			GlobalVariables.steps++;
 			assertEquals(true,GlobalVariables.responseString.contains("uri"));
-			System.out.println("6) Assertion Pass");
+			System.out.println("5) Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
+			// Expected Result
+			GlobalVariables.steps++;
+			System.out.println("6) Expected Result");
+			Configurations.expectedResult();
+			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result");
+			
 			// Execution Completed
 			GlobalVariables.steps++;
 			System.out.println("7) Test Case : REST001_ISPPlans Execution Completed");
