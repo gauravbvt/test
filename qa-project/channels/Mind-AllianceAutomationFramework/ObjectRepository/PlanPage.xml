@@ -145,7 +145,7 @@
 <xPathActiveUsers>/html/body/div/div[2]/div[2]/table/tbody/tr/td/a</xPathActiveUsers>
 <xPathParticipantsPageSubTitle>/html/body/div/div[2]/div/h1</xPathParticipantsPageSubTitle>
 <xPathOperationalNonOperational>//span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span[3]</xPathOperationalNonOperational>
-<xPathCrossOnAttachmentCopiedMessage>//div[15]/span/a/img</xPathCrossOnAttachmentCopiedMessage>
+<xPathCrossOnAttachmentCopiedMessage>//div[16]/span/a/img</xPathCrossOnAttachmentCopiedMessage>
 <xPathTaskCausesEvent>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[10]/th/label/span/a/span</xPathTaskCausesEvent>
 <xPathTaskEventUnnamed>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[4]/span</xPathTaskEventUnnamed>
 <xPathTaskPhaseResponding>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[2]/span</xPathTaskPhaseResponding>
