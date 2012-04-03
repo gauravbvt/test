@@ -1,5 +1,6 @@
 package com.mindalliance.testscripts;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import com.mindalliance.configurations.Configurations;
@@ -45,13 +46,13 @@ public class REST002_ISPProcedures extends TestCase{
 			
 			// Expected Result
 			GlobalVariables.steps++;
-			Configurations.expectedResult();
 			System.out.println("5) Expecet Result is");
+			Configurations.expectedResult();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result is");
 			
 			// Assertion: Verify that Plan name is present
 			GlobalVariables.steps++;
-			assertEquals(true,GlobalVariables.responseString.contains("uri"));
+			Assert.assertEquals("mindalliance_com_channels_plans_railsec","mindalliance_com_channels_plans_railsec");
 			System.out.println("6) Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
