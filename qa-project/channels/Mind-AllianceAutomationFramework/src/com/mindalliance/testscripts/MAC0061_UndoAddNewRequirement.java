@@ -61,10 +61,11 @@ public class MAC0061_UndoAddNewRequirement
 				// Click on New Button to Add Requirement
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Requirement";
-				GlobalVariables.oDriver.findElement(By.className("button")).click();
+//				GlobalVariables.oDriver.findElement(By.className("button")).click();
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewRequirement"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(5000);
 				// Assertion: Verify that New Requirement can be added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionRequirementName")));
 				if(GlobalVariables.oElement.getText().equals("UNNAMED")){
@@ -82,7 +83,7 @@ public class MAC0061_UndoAddNewRequirement
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);			
+				Thread.sleep(3000);			
 				
 				// Click on Undo add new Requirement under Action pop up menu
 				GlobalVariables.iStepNo++;

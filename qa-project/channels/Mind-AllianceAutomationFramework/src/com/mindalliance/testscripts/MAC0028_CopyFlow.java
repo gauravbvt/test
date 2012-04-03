@@ -170,7 +170,7 @@ public class MAC0028_CopyFlow
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathCopyAttachmentAssertion")));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(3000);
 				    if(GlobalVariables.oElement.getText().equals("Flow copied")){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -186,7 +186,7 @@ public class MAC0028_CopyFlow
 					}
 				    // WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(5000);
 					// Click on legend for maximize the graph
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// WebElement Synchronization

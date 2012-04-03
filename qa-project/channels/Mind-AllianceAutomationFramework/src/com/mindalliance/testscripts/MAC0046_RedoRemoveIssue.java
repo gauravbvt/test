@@ -103,7 +103,7 @@ public class MAC0046_RedoRemoveIssue {
 				// Click on Redo remove issue under Action pop up menu
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Redo remove issue";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("Redo remove issue"));
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("redoRemoveIssue"));
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

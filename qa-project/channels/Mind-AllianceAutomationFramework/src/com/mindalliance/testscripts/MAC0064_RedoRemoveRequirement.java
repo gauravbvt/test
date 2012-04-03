@@ -63,7 +63,7 @@ public class MAC0064_RedoRemoveRequirement
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewRequirement"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(5000);
 				// Assertion: Verify that New Requirement can be added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionRequirementName")));
 				if(GlobalVariables.oElement.getText().equals("UNAMED")){
@@ -81,7 +81,7 @@ public class MAC0064_RedoRemoveRequirement
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);			
+				Thread.sleep(3000);			
 				
 				// Click on Remove requirement button
 				GlobalVariables.iStepNo++;
@@ -90,7 +90,7 @@ public class MAC0064_RedoRemoveRequirement
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathRemoveRequirement"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				// Get a handle to the open alert, prompt or confirmation
 //				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 //				// WebElement Synchronization

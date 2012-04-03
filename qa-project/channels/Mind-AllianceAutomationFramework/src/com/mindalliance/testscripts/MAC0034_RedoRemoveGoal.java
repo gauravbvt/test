@@ -121,11 +121,11 @@ public class MAC0034_RedoRemoveGoal {
 					// Name for Goal
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AddGoal"));
-					// Achieved at end check box
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
+//					// Achieved at end check box
+//					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);	
+					Thread.sleep(5000);	
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -139,6 +139,9 @@ public class MAC0034_RedoRemoveGoal {
 					GlobalVariables.sDescription = "Goal deleted";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("aspect"));
 					GlobalVariables.oElement.click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(5000);	
 					for(int i=0;i<=4;i++)
 						GlobalVariables.oElement.sendKeys(Keys.ARROW_RIGHT);
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteGoals"))).click();
