@@ -97,7 +97,7 @@
 <xPathParticipationNewMedium>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[10]/td/ol/li/span/a/span</xPathParticipationNewMedium>
 <xPathHelpIcon>//div[@class='header']/span[@class='menubar']/a/img[@class='help-icon']</xPathHelpIcon>
 <xPathTagsLinkOnTask>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[2]/th/label/a</xPathTagsLinkOnTask>
-<xPathAboutPlanSegmentLink>//div[14]/h1/span</xPathAboutPlanSegmentLink>
+<xPathAboutPlanSegmentLink>//div[@class='header']/h1/span</xPathAboutPlanSegmentLink>
 <xPathAboutPlanShowDetails>//div[4]/div/div[2]/div/div/span/span/span/ul/li/span/a/span</xPathAboutPlanShowDetails>
 <xPathAboutPlanShowAllEvents>//div[4]/div/div[2]/div/div/span/span/span/ul/li[2]/span/a/span</xPathAboutPlanShowAllEvents>
 <xPathAboutPlanShowSecrecyClassification>//div[4]/div/div[2]/div/div/span/span/span/ul/li[3]/span/a/span</xPathAboutPlanShowSecrecyClassification>
@@ -170,7 +170,7 @@
 <xPathSendMessageSocialPanel>//div[2]/div[2]/div[3]/span/div/div/div[2]/div[4]/input</xPathSendMessageSocialPanel>
 <xPathSendMessageAndEmailSocialPanel>//div[2]/div[2]/div[3]/span/div/div/div[2]/div[4]/input[2]</xPathSendMessageAndEmailSocialPanel>
 <xPathResetMessageSocialPanel>//div[2]/div[2]/div[3]/span/div/div/div[2]/div[4]/input[3]</xPathResetMessageSocialPanel>
-<xPathApplySocialPanel>//div[2]/div[2]/div[3]/span/div/div/div[2]/div/div[2]/input</xPathApplySocialPanel>
+<xPathApplySocialPanel>//div[2]/div[2]/div[3]/span/div/div/div[2]/div/div/input</xPathApplySocialPanel>
 <xPathTaskIssueURL>//span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathTaskIssueURL>
 <xPathCreateViewSurvey>//span/div/div[3]/div/div[2]/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathCreateViewSurvey>
 <xPathRequirementDefinition>//div[4]/div/span/div/div[2]/div/div/ul/li/a/span</xPathRequirementDefinition>
