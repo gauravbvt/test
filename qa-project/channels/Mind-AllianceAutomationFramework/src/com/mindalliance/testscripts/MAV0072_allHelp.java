@@ -46,12 +46,15 @@ public class MAV0072_allHelp
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
+			    Thread.sleep(3000);
 			    
 			    //Switch to 'Help' Window
 			    for (String handle : GlobalVariables.oDriver.getWindowHandles()) {
 			    	GlobalVariables.oDriver.switchTo().window(handle);
 			    }
+			    // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(1000);
 			    // Assertion: Verify that "Help" page loaded 
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="'Help' gets loaded";		
