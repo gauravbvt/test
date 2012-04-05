@@ -44,16 +44,16 @@ public class REST002_ISPProcedures extends TestCase{
 			System.out.println("4) Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
-			// Expected Result
-			GlobalVariables.steps++;
-			System.out.println("5) Expected Result");
-			Configurations.expectedResult();
-			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result");
-						
+//			// Expected Result
+//			GlobalVariables.steps++;
+//			System.out.println("5) Expected Result");
+//			Configurations.expectedResult();
+//			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result");
+//						
 			// Assertion: Verify that Plan name is present
 			GlobalVariables.steps++;
 			Assert.assertEquals("mindalliance_com_channels_plans_railsec","mindalliance_com_channels_plans_railsec");
-			System.out.println("6) Assertion Pass");
+			System.out.println("5) Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
 			// Execution Completed

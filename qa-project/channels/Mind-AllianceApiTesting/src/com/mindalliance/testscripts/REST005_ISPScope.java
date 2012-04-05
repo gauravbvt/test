@@ -45,11 +45,11 @@ public class REST005_ISPScope extends TestCase{
 			System.out.println("4) Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
-			// Expected Result
-			GlobalVariables.steps++;
-			System.out.println("5) Expected Result");
-			Configurations.expectedResult();
-			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result");
+//			// Expected Result
+//			GlobalVariables.steps++;
+//			System.out.println("5) Expected Result");
+//			Configurations.expectedResult();
+//			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result");
 						
 			// Assertion: Verify that Plan name is present
 			GlobalVariables.steps++;
