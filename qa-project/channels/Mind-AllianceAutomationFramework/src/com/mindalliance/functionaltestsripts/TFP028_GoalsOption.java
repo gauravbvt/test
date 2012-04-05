@@ -96,7 +96,7 @@ public class TFP028_GoalsOption
 				// Enter Goal Details
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("First Goal"));
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
+//				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

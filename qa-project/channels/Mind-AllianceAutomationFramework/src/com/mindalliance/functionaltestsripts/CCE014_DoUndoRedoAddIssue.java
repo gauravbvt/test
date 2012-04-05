@@ -99,24 +99,19 @@ public class CCE014_DoUndoRedoAddIssue
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion 1.2: Verify that When clicked on 'Undo add new Issue' option, an issue should be removed from the segment
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("issues"));
-					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("ol"));
-					for (WebElement ol: tds){
-						if(ol.getText().equals("")){
-							// Write Results
-							LogFunctions.writeLogs(GlobalVariables.sDescription);
-							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-									GlobalVariables.sBlank, GlobalVariables.sBlank);
-							break;
-						}
-						else{
-							GlobalVariables.sVerifyError ="Verification Failed "+"Expected '' "+" Actual " + ol.getText();
-							// Write Results
-							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-							break;
-						}
+					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[2]/span/span[@class='menubar']/span/span[@class='dropmenu']/span"));
+					if(GlobalVariables.oElement.getText().equalsIgnoreCase("")){
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+								GlobalVariables.sBlank, GlobalVariables.sBlank);
+					}
+					else{
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Menu' "+" Actual " + GlobalVariables.oElement.getText();
+						// Write Results
+						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 					}
 					// WebElement Synchronization
 					Thread.currentThread();

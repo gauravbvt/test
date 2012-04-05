@@ -53,9 +53,11 @@ public class CCE010_DoUndoRedoDisintermediateTask
 					// Enter the details
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "New segment updated";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).clear();
+					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Do Undo Redo Disintermediate Task"));
+					for (int i = 0; i <= 8; i++)
+						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+					GlobalVariables.oElement.sendKeys("Segment For Do Undo Redo Disintermediate Task");
 					// Click on 'done' button
 					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// Write Results
@@ -64,20 +66,25 @@ public class CCE010_DoUndoRedoDisintermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(5000);
 
 					// Update the Information of the default task
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
+					// Click on legend for maximize the graph
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
 					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 					for (int i = 0; i <= 15; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
+					GlobalVariables.oElement.sendKeys("Task Sender");
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);
@@ -96,10 +103,10 @@ public class CCE010_DoUndoRedoDisintermediateTask
 					Thread.sleep(3000);
 					
 					// Click on legend for maximize the graph
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
+//					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+//					// WebElement Synchronization
+//					Thread.currentThread();
+//					Thread.sleep(1000);
 					// Add info sent flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Sent Flow added";
@@ -230,46 +237,43 @@ public class CCE010_DoUndoRedoDisintermediateTask
 					
 					// Click on 'Undo disintermediate' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Undo disintermediate done";
+					GlobalVariables.sDescription = "Redo disintermediate done";
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoDisintermediate"));
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION:When clicked on 'Undo disintermediate' option, the disintermediated task should be intermediate again
-					GlobalVariables.bIsSuccess = Boolean.FALSE;
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("flow-map"));
-					List<WebElement> areas = GlobalVariables.oElement.findElements(By.tagName("area"));
-					for(WebElement area:areas){
-					if(area.getAttribute("id").equals("node1"))
-						 GlobalVariables.bIsSuccess = Boolean.TRUE;
-						 break;
-				    }
-					if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					// Get the option name
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//span[@class='menubar']/span[3]/span/ul"));
+					List <WebElement> list = GlobalVariables.oElement.findElements(By.tagName("li"));
+					for (WebElement li: list){
+						if (li.getValue().equals("Undo disintermediate")){
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
+							break;
+						}
+						else{
+							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Redo disintermediate' "+" Actual " + li.getValue();
+					    	// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+							break;
+					    }
 					}
-					else{
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 
 					// Click on 'Redo disintermediate' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Redo disintermediate done";
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("redoDisintermediate"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
 					// Assertion: When clicked on 'Redo disintermediate' option, the task should be disntermediate again
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//span[@class='menubar']/span[3]/span/ul"));
-					List<WebElement> list = GlobalVariables.oElement.findElements(By.tagName("li"));
+					list = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: list){
 						if (li.getValue().equals("Redo disintermediate")){
 							// Write Results
@@ -290,7 +294,6 @@ public class CCE010_DoUndoRedoDisintermediateTask
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-					GlobalVariables.oDriver.navigate().refresh();
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
 //					Alert alert = GlobalVariables.oDriver.switchTo().alert();
