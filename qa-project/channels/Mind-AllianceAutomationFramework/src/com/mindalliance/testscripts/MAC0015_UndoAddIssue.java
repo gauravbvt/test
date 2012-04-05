@@ -16,7 +16,7 @@ import com.mindalliance.globallibrary.ReportFunctions;
  * 
  */
 public class MAC0015_UndoAddIssue {
-    public MAC0015_UndoAddIssue() {
+	public MAC0015_UndoAddIssue() {
 		try {
 			GlobalVariables.sTestCaseId = "MAC0015_UndoAddIssue";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
@@ -55,8 +55,8 @@ public class MAC0015_UndoAddIssue {
 				GlobalVariables.sDescription = "Segment's details entered";
 				GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
-					for (int i = 0; i <= 8; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+				for (int i = 0; i <= 8; i++)
+					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Undo Add New Issue"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -166,25 +166,25 @@ public class MAC0015_UndoAddIssue {
 			else
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-	} 
-	catch (Exception e) {
-		if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
-			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-					e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
-			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
-			LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
-			ApplicationFunctionLibrary.logout();
+		} 
+		catch (Exception e) {
+			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
+				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				ApplicationFunctionLibrary.logout();
+			}
+			else {
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						e.getMessage(),GlobalVariables.sBlank);
+				ApplicationFunctionLibrary.logout();	
+			}
+			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+			System.out.println("Unable to undo add issue"+ReportFunctions.getScreenShot("Undo add new issue failed"));
 		}
-		else {
-			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-					e.getMessage(),GlobalVariables.sBlank);
-			ApplicationFunctionLibrary.logout();	
-		}
-		System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-		System.out.println("Unable to undo add issue"+ReportFunctions.getScreenShot("Undo add new issue failed"));
 	}
-  }
-	public static void main(String args[]) {
+    public static void main(String args[]) {
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
