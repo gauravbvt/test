@@ -9,7 +9,7 @@ import com.mindalliance.configurations.LogFunctions;
 
 public class REST002_ISPProcedures extends TestCase{
 	
-	public static void testISPPlan(){
+	public static void testISPProcedures(){
 		try {
 			LogFunctions.generateLogsDirectory();	
 			

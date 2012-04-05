@@ -11,7 +11,7 @@ public class REST004_ISPIssues extends TestCase{
 	/**
 	 * Invoke testISPPlan() and get plans, versions and planners identities.
 	 */
-	public static void testISPPlan(){
+	public static void testISPIssues(){
 		try {
 			LogFunctions.generateLogsDirectory();	
 			GlobalVariables.steps = 0;

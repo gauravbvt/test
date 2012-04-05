@@ -11,7 +11,7 @@ public class REST005_ISPScope extends TestCase{
 	/**
 	 * Invoke testISPPlan() and get plans, versions and planners identities.
 	 */
-	public static void testISPPlan(){
+	public static void testISPScopes(){
 		try {
 			LogFunctions.generateLogsDirectory();	
 			GlobalVariables.steps = 0;
