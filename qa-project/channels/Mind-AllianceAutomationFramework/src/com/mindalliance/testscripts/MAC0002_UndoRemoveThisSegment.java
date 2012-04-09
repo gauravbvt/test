@@ -15,7 +15,7 @@ import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
 /**
- * Testcase ID: MAC0002_UndoRemoveThisSegment
+ * Test case ID: MAC0002_UndoRemoveThisSegment
  * 	   Summary: Verify that user is able to undo the removed segment
  * @author AFour
  * 
@@ -159,8 +159,7 @@ public class MAC0002_UndoRemoveThisSegment {
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				
+						GlobalVariables.sBlank, GlobalVariables.sBlank);	
 				}
 				else{
 					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Segment For Redo Remove This Segment' "+" Actual " + GlobalVariables.sStrCheck;
@@ -190,13 +189,19 @@ public class MAC0002_UndoRemoveThisSegment {
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-
+				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			}
-			else
+			else{
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				System.out.println("Unable to undo remove new segment" + ReportFunctions.getScreenShot("Undo remove new segment failed"));
+				GlobalVariables.oDriver.quit();
+			}
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -204,29 +209,29 @@ public class MAC0002_UndoRemoveThisSegment {
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to undo remove new segment" + ReportFunctions.getScreenShot("Undo remove new segment failed"));
 				ApplicationFunctionLibrary.logout();
 			}
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to undo remove new segment" + ReportFunctions.getScreenShot("Undo remove new segment failed"));
 				ApplicationFunctionLibrary.logout();	
-				System.out.println("Unable to Undo remove this segment failed"+ReportFunctions.getScreenShot("Undo remove this segment failed"));
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 		}
 	}
-	 public static void main(String args[]) {
-			try {
-				GenericFunctionLibrary.initializeTestData();
-				GenericFunctionLibrary.loadObjectRepository();
-				new MAC0002_UndoRemoveThisSegment();
-				GenericFunctionLibrary.tearDownTestData();
-				ReportFunctions.generateAutomationReport();
-			} 
-			catch (Exception oException) {
-				// TODO Auto-generated catch block
-				oException.printStackTrace();
-				System.out.println("Unable to Undo remove this segment failed"+ReportFunctions.getScreenShot("Undo remove this segment failed"));
-			}
+	public static void main(String args[]) {
+		try {
+			GenericFunctionLibrary.initializeTestData();
+			GenericFunctionLibrary.loadObjectRepository();
+			new MAC0002_UndoRemoveThisSegment();
+			GenericFunctionLibrary.tearDownTestData();
+			ReportFunctions.generateAutomationReport();
+		} 
+		catch (Exception oException) {
+			// TODO Auto-generated catch block
+			oException.printStackTrace();
 		}
+	}
 }
