@@ -56,7 +56,7 @@ public class MAV0138_viewIssueOfEvent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				
 				// Create an event
 				GlobalVariables.iStepNo++;

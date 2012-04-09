@@ -34,7 +34,7 @@ public class MAV0123_closeElementsOfInformation
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  	
+				Thread.sleep(2000);  	
 			
 				// Click on add receive info
 				GlobalVariables.iStepNo++;
@@ -46,11 +46,11 @@ public class MAV0123_closeElementsOfInformation
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(2000);  
 				
 				// Click on send element from more pop up menu located on the "Receives" Pane
 			    GlobalVariables.iStepNo++;
-			    GlobalVariables.sDescription="Send Element";
+			    GlobalVariables.sDescription="Show Element";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveShowMenu"),GlobalVariables.viewElements.get("elements"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -58,7 +58,7 @@ public class MAV0123_closeElementsOfInformation
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    // WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
+			    Thread.sleep(2000);
 			    
 			    // Click on done
 				GlobalVariables.iStepNo++;
@@ -70,7 +70,7 @@ public class MAV0123_closeElementsOfInformation
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(2000);  
 			
 				// Assertion: Verify that Send Elements of Informations gets closed when clicked on "done" tab 
 			    GlobalVariables.iStepNo++;
