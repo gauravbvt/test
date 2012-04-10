@@ -1,9 +1,14 @@
 package com.mindalliance.testscripts;
 
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.mindalliance.configurations.Configurations;
 import com.mindalliance.configurations.GlobalVariables;
 import com.mindalliance.configurations.LogFunctions;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 /**
  * The ISP001 class contains the test case for rest/isp/plans api
@@ -20,6 +25,9 @@ public class REST001_ISPPlans extends TestCase{
 			GlobalVariables.steps = 0;
 			GlobalVariables.testCaseId = "REST001_ISPPlans";
 			
+			Date currentDate = new java.util.Date();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			String formattedDate = formatter.format(currentDate)+" "+"IST";
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
@@ -51,7 +59,14 @@ public class REST001_ISPPlans extends TestCase{
 				
 			// Assertion: verify that Plan is present
 			GlobalVariables.steps++;
-			assertEquals(true,GlobalVariables.responseString.contains("uri"));
+			//assertEquals(true,GlobalVariables.responseString.contains("uri"));
+			Assert.assertEquals(true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")));
+			Assert.assertEquals(true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("name")));
+			Assert.assertEquals(true,GlobalVariables.responseString.contains(formattedDate));
+			Assert.assertEquals(true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("dateVersioned")));
+			Assert.assertEquals(true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("version")));
+			Assert.assertEquals(true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("release")));
+			
 			System.out.println("5) Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
