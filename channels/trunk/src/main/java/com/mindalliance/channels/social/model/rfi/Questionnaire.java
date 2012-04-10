@@ -1,8 +1,10 @@
 package com.mindalliance.channels.social.model.rfi;
 
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 import com.mindalliance.channels.pages.Channels;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -39,7 +41,7 @@ public class Questionnaire extends AbstractPersistentPlanObject {
     public static final Questionnaire UNKNOWN = new Questionnaire( Channels.UNKNOWN_QUESTIONNAIRE_ID );
 
     
-    private String about = ModelObject.typeNames().get( 0 );
+    private String about;
 
     private String name ="unnamed";
 
@@ -49,18 +51,23 @@ public class Questionnaire extends AbstractPersistentPlanObject {
 
     private Status status = Status.DRAFT;
     
-    public Questionnaire() {}
+    public Questionnaire() {
+    }
+
+    public Questionnaire( Plan plan, String username ) {
+        super( plan.getUri(), plan.getVersion(), username );
+    }
 
     public Questionnaire( long id ) {
         this.id = id;
     }
-    
+
     public boolean isUnknown() {
         return this.equals( UNKNOWN );
     }
 
     public String getAbout() {
-        return about;
+        return about == null ? ModelObject.TYPE_LABELS.get( 0 ) : about;
     }
 
     public void setAbout( String typeName ) {
@@ -91,5 +98,9 @@ public class Questionnaire extends AbstractPersistentPlanObject {
         this.status = status;
     }
 
-
+    public String toString() {
+        return StringUtils.capitalize( getName() )
+                + ": a questionnaire about " + getAbout()
+                + " (" + getStatus().name() + ")";
+    }
 }

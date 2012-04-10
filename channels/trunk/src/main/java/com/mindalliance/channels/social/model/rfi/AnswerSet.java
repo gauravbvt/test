@@ -21,10 +21,10 @@ import java.util.List;
 @Entity
 public class AnswerSet extends AbstractPersistentPlanObject {
 
-    @ManyToOne( cascade = CascadeType.ALL )
+    @ManyToOne
     private Question question;
 
-    @ManyToOne( cascade = CascadeType.ALL )
+    @ManyToOne
     private RFI rfi;
 
     private boolean shared;

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.orm.service.impl;
 
+import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
@@ -109,7 +110,12 @@ public abstract class GenericSqlServiceImpl<T, ID extends Serializable> implemen
     @Override
     @Transactional
     public T save( T entity ) {
-        getSession().saveOrUpdate( deproxy( entity ) );
+        PersistentPlanObject ppo = (PersistentPlanObject)deproxy( entity );
+        if ( ppo.getId() != 0 ) {
+            getSession().merge( ppo ) ;
+        } else {
+            getSession().saveOrUpdate( ppo );
+        }
         return entity;
     }
 

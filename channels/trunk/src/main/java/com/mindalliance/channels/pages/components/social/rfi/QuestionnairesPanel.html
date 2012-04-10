@@ -16,7 +16,7 @@
             <option>Obsolete</option>
             <option>Draft</option>
         </select>
-        RFIs about
+        questionnaires about
         <select wicket:id="aboutChoice">
             <option>Anything</option>
             <option>The plan</option>
@@ -25,13 +25,13 @@
             <option>Roles</option>
         </select>
     </div>
-    <div wicket:id="questionnaires">[RFIs table]</div>
+    <div wicket:id="questionnaires">[Questionnaires table]</div>
     <input wicket:id="newQuestionnaire" type="button" value="Add new questionnaire"/>
 
     <div wicket:id="questionnaire">
-        <h3 wicket:id="questionnaireLabel">RFIs about event "IED explosion: What risks and opportunities are created by
-            the event?"</h3>
-        <span wicket:id="questionnaireManager">[RFI manager panel]</span>
+        <h3 wicket:id="questionnaireLabel">Questionnaire about event"</h3>
+        <span wicket:id="questionnaireManager">[Questionnaire manager panel]</span>
+        <input wicket:id="deleteQuestionnaire" type="button" value="Delete this questionnaire"/>
     </div>
 </wicket:panel>
 </body>

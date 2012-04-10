@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -19,6 +19,12 @@ import java.util.Date;
 @Inheritance( strategy = InheritanceType.TABLE_PER_CLASS )
 @Entity
 public abstract class AbstractPersistentPlanObject implements PersistentPlanObject {
+
+    /**
+     * Simple date format.
+     */
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat( "M/d/yyyy HH:mm" );
+
 
     @Id @GeneratedValue(strategy = GenerationType.TABLE)
     protected long id;
@@ -63,7 +69,7 @@ public abstract class AbstractPersistentPlanObject implements PersistentPlanObje
     }
 
     public String toString() {
-        return "at " + DateFormat.getInstance().format( getCreated() );
+        return "at " + dateFormat.format( getCreated() );
     }
 
     public String getUsername() {
@@ -117,5 +123,17 @@ public abstract class AbstractPersistentPlanObject implements PersistentPlanObje
     @Override
     public String getName() {
         return getTypeName() + "[" + getId() + "]";
+    }
+
+    @Override
+    public boolean equals( Object obj ) {
+        return obj.getClass().isAssignableFrom( getClass() )
+                && getClass().isAssignableFrom( obj.getClass() )
+                && getId() == ((AbstractPersistentPlanObject)obj).getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return new Long( getId() ).hashCode();
     }
 }

@@ -13,12 +13,14 @@ import java.util.List;
  * Date: 2/16/12
  * Time: 2:19 PM
  */
-public interface QuestionnaireService extends GenericSqlService<Questionnaire,Long> {
+public interface QuestionnaireService extends GenericSqlService<Questionnaire, Long> {
     /**
      * Find all questionnaires of given (or not) status about a type of model objects or about any type.
+     *
      * @param typeName model object type name, or null for any
-     * @param status the status (Draft, Active, or Retired)
-     * @return  a list of questionnaires
+     * @param status   the status (Draft, Active, or Retired)
+     * @return a list of questionnaires
      */
     List<Questionnaire> select( String typeName, Questionnaire.Status status );
+
 }

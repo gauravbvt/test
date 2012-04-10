@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
@@ -71,6 +72,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     @SpringBean
     private PlanParticipationService planParticipationService;
+
+    @SpringBean
+    private ChannelsUserDao userDao;
+
 
 
     /**
@@ -518,6 +523,11 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         } else {
             return null;
         }
+    }
+    
+    protected String getUserFullName( String userName ) {
+        ChannelsUser aUser = userDao.getUserNamed( userName );
+        return aUser == null ? userName : aUser.getFullName();
     }
 
 }

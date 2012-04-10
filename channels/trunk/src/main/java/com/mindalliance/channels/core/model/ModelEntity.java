@@ -109,15 +109,15 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         super( name );
     }
 
-    public static List<String> typeNames() {
+    public static List<String> typeLabels() {
         List<String> typeNames = new ArrayList<String>();
-        typeNames.add( new Actor().getTypeName() );
-        typeNames.add( new Event().getTypeName() );
-        typeNames.add( new Organization().getTypeName() );
-        typeNames.add( new Place().getTypeName() );
-        typeNames.add( new Role().getTypeName() );
-        typeNames.add( new Phase().getTypeName() );
-        typeNames.add( new TransmissionMedium().getTypeName() );
+        typeNames.add( "agents" );
+        typeNames.add( "events" );
+        typeNames.add( "organizations" );
+        typeNames.add( "places" );
+        typeNames.add( "roles" );
+        typeNames.add( "phases of events" );
+        typeNames.add( "transmission media" );
         return typeNames;
     }
 

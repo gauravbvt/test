@@ -541,6 +541,7 @@ public final class ChannelsUtils {
 
     /**
      * Clean up a name by removing extra spaces.
+     *
      * @param name a string
      * @return a string
      */
@@ -552,5 +553,25 @@ public final class ChannelsUtils {
         return address != null
                 && !address.isEmpty()
                 && EmailValidator.getInstance().isValid( address );
+    }
+
+    public static <T> List<T> moveUp( T item, List<T> list ) {
+        int index = list.indexOf( item );
+        List<T> results = new ArrayList<T>( list );
+        if ( index > 0 ) {
+            results.set( index, list.get( index - 1 ) );
+            results.set( index - 1, item );
+        }
+        return results;
+    }
+
+    public static <T> List<T> moveDown( T item, List<T> list ) {
+        int index = list.indexOf( item );
+        List<T> results = new ArrayList<T>( list );
+        if ( index >= 0 && index < ( list.size() - 1 ) ) {
+            results.set( index, list.get( index + 1 ) );
+            results.set( index + 1, item );
+        }
+        return results;
     }
 }

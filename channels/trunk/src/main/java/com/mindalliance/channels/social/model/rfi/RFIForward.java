@@ -25,7 +25,7 @@ public class RFIForward extends AbstractPersistentPlanObject {
     /**
      * Name of actor user participates as in survey.
      */
-    private String actorName;
+    private long actorId;
 
     private String message = "";
 
@@ -37,7 +37,7 @@ public class RFIForward extends AbstractPersistentPlanObject {
     public RFIForward( String planUri, int planVersion, String fromUsername, PlanParticipation participation, QueryService queryService ) {
         super( planUri, planVersion, fromUsername  );
         surveyedUsername = participation.getUsername();
-        actorName = participation.getActor( queryService ).getName();
+        actorId = participation.getActor( queryService ).getId();
     }
 
     public String getSurveyedUsername() {
@@ -48,12 +48,12 @@ public class RFIForward extends AbstractPersistentPlanObject {
         this.surveyedUsername = surveyedUsername;
     }
 
-    public String getActorName() {
-        return actorName;
+    public long getActorId() {
+        return actorId;
     }
 
-    public void setActorName( String actorName ) {
-        this.actorName = actorName;
+    public void setActorId( long actorId ) {
+        this.actorId = actorId;
     }
 
     public RFI getRfi() {

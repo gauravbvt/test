@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table>
+        <tr>
+            <td align="right"> Question:</td>
+            <td colspan="2"><input wicket:id="questionText" type="text"/></td>
+        </tr>
+        <tr>
+            <td align="right">Answer:</td>
+            <td>
+                <select wicket:id="questionType">
+                    <li>None</li>
+                </select>
+            </td>
+            <td>
+                <span wicket:id="answerOptions">[answer options panel]</span>
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="2" wicket:id="constraints"> The answer
+                <input wicket:id="answerRequired" type="checkbox"/> is required
+                <input wicket:id="openEnded" type="checkbox"/> is open ended
+                <input wicket:id="multiple" type="checkbox"/> has alternates
+            </td>
+        </tr>
+    </table>
+</wicket:panel>
+</body>
+</html>

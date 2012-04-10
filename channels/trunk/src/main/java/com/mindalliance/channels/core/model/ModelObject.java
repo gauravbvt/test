@@ -3,7 +3,6 @@ package com.mindalliance.channels.core.model;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.ChannelsLockable;
 import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -24,10 +23,10 @@ public abstract class ModelObject
         extends AbstractAttachable
         implements Comparable<ModelObject>, Nameable, Modelable, Taggable, ChannelsLockable {
     
-    public static final List<String> TYPE_NAMES;
+    public static final List<String> TYPE_LABELS;
 
     static {
-        TYPE_NAMES = typeNames();
+        TYPE_LABELS = typeLabels();
     }
 
     /**
@@ -467,18 +466,19 @@ public abstract class ModelObject
         setWaivedIssueDetections( (ArrayList<String>)state.get( "waivedIssueDetections" ) );
     }
 
-    public static List<String> typeNames() {
-        List<String> typeNames = new ArrayList<String>(  );
-        typeNames.add( new Plan().getTypeName() );
-        typeNames.add( new Segment().getTypeName() );
-        typeNames.add( new Requirement().getTypeName() );
-        typeNames.add( new DetectedIssue( ).getTypeName() );
-        typeNames.add( new UserIssue( ).getTypeName() );
-        typeNames.add( new Part().getTypeName() );
-        typeNames.add( new InternalFlow().getTypeName() );
-        typeNames.addAll( ModelEntity.typeNames() );
-        Collections.sort( typeNames );
-        return typeNames;
+    public static List<String> typeLabels() {
+        List<String> typeLabels = new ArrayList<String>(  );
+        typeLabels.add( "plan segments" );
+        typeLabels.add( "sharing requirements" );
+        typeLabels.add( "issues" );
+        typeLabels.add( "tasks" );
+        typeLabels.add( "information flows" );
+        typeLabels.addAll( ModelEntity.typeLabels() );
+        Collections.sort( typeLabels );
+        List<String> results = new ArrayList<String>(  );
+        results.add( "this plan" );
+        results.addAll( typeLabels );
+        return results;
     }
     
 }

@@ -100,7 +100,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
     private List<String> getAboutChoices() {
         List<String> choices = new ArrayList<String>();
         choices.add( ANYTHING );
-        choices.addAll( ModelObject.TYPE_NAMES );
+        choices.addAll( ModelObject.TYPE_LABELS );
         return choices;
     }
 

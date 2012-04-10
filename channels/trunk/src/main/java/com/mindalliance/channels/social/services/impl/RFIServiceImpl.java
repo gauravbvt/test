@@ -1,6 +1,7 @@
 package com.mindalliance.channels.social.services.impl;
 
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.services.RFIService;
 import org.springframework.stereotype.Repository;
@@ -29,5 +30,10 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @Transactional( readOnly = true)
     public boolean isIncomplete( RFI rfi ) {
         return false;  //Todo
+    }
+
+    @Override
+    public int getRFICount( Questionnaire questionnaire ) {
+        return 0;  //Todo
     }
 }
