@@ -2,7 +2,7 @@ api,http://192.168.4.127:8081/channels/rest/isp/plans
 username,admin
 password,admin
 uri,mindalliance_com_channels_plans_acme
-version,1
+version,4
 name,Rail Security
 release,development
 dateVersioned,2011/07/07 23:35:12 IST
