@@ -59,13 +59,12 @@ public class REST001_ISPPlans extends TestCase{
 				
 			// Assertion: verify that Plan is present
 			GlobalVariables.steps++;
-			//assertEquals(true,GlobalVariables.responseString.contains("uri"));
-			Assert.assertEquals(true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")));
-			Assert.assertEquals(true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("name")));
-			Assert.assertEquals(true,GlobalVariables.responseString.contains(formattedDate));
-			Assert.assertEquals(true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("dateVersioned")));
-			Assert.assertEquals(true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("version")));
-			Assert.assertEquals(true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("release")));
+			Assert.assertEquals("Plan URI is",GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")),true);			
+			Assert.assertEquals("Plan Name is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("name")));
+			Assert.assertEquals("Date is",true,GlobalVariables.responseString.contains(formattedDate));
+			Assert.assertEquals("Date Versioned is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("dateVersioned")));
+			Assert.assertEquals("Version is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("version")));
+			Assert.assertEquals("Plan release is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("release")));
 			
 			System.out.println("5) Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
