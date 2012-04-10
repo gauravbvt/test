@@ -38,7 +38,7 @@ public class MAV0175_ExpandTaskSummary
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Assertion: · Verify that summaries can be expanded in form
+				// Assertion: Verify that summaries can be expanded in form
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathTaskActionsMenu")));
 				if(GlobalVariables.oElement.getText().equals("Actions")){
 					// Write Results

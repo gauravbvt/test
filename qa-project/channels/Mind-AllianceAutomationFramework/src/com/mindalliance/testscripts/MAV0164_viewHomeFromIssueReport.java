@@ -30,7 +30,7 @@ public class MAV0164_viewHomeFromIssueReport
 				  // WebElement Synchronization
 				  Thread.currentThread();
 				  Thread.sleep(2000);
-				  // Assertion: Verify that the Issue Report page renders with title 'Channels – <plan name> – Issues Summary Report' 
+				  // Assertion: Verify that the Issue Report page renders with title 'Channels <plan name> Issues Summary Report'
 				  GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathIssueReport")));
 				  if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.viewElements.get("channelsIssueSummaryReport"))) {
 					  // Write Results
