@@ -59,7 +59,7 @@ public class REST001_ISPPlans extends TestCase{
 				
 			// Assertion: verify that Plan is present
 			GlobalVariables.steps++;
-			Assert.assertEquals("Plan URI is",GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")),true);			
+			Assert.assertEquals("Plan URI is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")));			
 			Assert.assertEquals("Plan Name is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("name")));
 			Assert.assertEquals("Date is",true,GlobalVariables.responseString.contains(formattedDate));
 			Assert.assertEquals("Date Versioned is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("dateVersioned")));
