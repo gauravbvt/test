@@ -31,7 +31,7 @@ public class HP010_SendFeedBack
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
-				// Assertion: Verify that “Send Feedback” option is accessible to admin , planner & user
+				// Assertion: Verify that Send Feedback option is accessible to admin , planner & user
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Send feedback is accessible";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSendFeedbackWindow")));

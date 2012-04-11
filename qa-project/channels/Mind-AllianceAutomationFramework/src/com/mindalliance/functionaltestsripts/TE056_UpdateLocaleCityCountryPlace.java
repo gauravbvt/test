@@ -120,7 +120,7 @@ public class TE056_UpdateLocaleCityCountryPlace
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Assertion: Verify that Locale's “City, county, state and/or country” details gets updated
+				// Assertion: Verify that Locale's City, county, state and/or country details gets updated
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:geonameContainer:geoname"));
 				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("India"))) {
 					// Write Results
