@@ -88,8 +88,9 @@ public class TE027_ShowAgentMoreDetails
 				//Click on 'More' Link
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="More Link Clicked";
-//				GlobalVariables.oDriver.findElement(By.className("more")).click();
-				GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[14]/td/a/span")).click();
+				GlobalVariables.oDriver.findElement(By.className("more")).click();
+//				//GlobalVariables.oDriver.findElement(By.className("more")).click();
+				//GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[14]/td/a/span")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -123,6 +123,7 @@ public class TE090_EventTags
 				Thread.sleep(2000);
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization
+				
 				Thread.currentThread();
 				Thread.sleep(2000);
 				GlobalVariables.oDriver.navigate().refresh();

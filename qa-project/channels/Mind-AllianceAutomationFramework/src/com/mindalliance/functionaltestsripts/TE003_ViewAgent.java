@@ -70,7 +70,7 @@ public class TE003_ViewAgent
 				Thread.currentThread();
 				Thread.sleep(3000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-				String sAgentName = LogFunctions.getDateTime();
+				String sAgentName = "Agent1";//LogFunctions.getDateTime();
 				GlobalVariables.oElement.sendKeys(sAgentName);
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				

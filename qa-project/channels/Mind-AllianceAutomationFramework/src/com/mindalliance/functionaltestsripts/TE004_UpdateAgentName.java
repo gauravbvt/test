@@ -104,7 +104,7 @@ public class TE004_UpdateAgentName
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion : Verify that Agent name gets updated
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:name"));
 				if(GlobalVariables.oElement.getValue().equals(GlobalVariables.viewElements.get("agent2"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
