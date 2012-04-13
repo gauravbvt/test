@@ -19,7 +19,7 @@
     <span wicket:id="simpleAdvanced" class="simple-advanced">Show simple form</span>
 
     <div class="flow-details">
-        <table summary="Flow definition">
+        <table class="flow-definition" summary="Flow definition">
             <tr>
                 <th align="right"><label wicket:id="name-label">Information:</label></th>
                 <td><input wicket:id="name" type="text" value="information" size="40"></td>
@@ -34,8 +34,8 @@
                 <th align="right">Intent:</th>
                 <td>
                     <select wicket:id="intent"><option>Report</option></select>
-                    <span wicket:id="ifTaskFailsContainer"><input wicket:id="ifTaskFails" type="checkbox"> only if the task fails</span>
-                    <span wicket:id="prohibitedContainer"><input wicket:id="prohibited" type="checkbox"/> prohibited</span>
+                    <span class="if-task-fails" wicket:id="ifTaskFailsContainer"><input wicket:id="ifTaskFails" type="checkbox"> only if the task fails</span>
+                    <span class="prohibited" wicket:id="prohibitedContainer"><input wicket:id="prohibited" type="checkbox"/> prohibited</span>
                 </td>
             </tr>
               <tr>
@@ -43,7 +43,7 @@
                     <a wicket:id="editEOIs" href="#" title="Click to edit the elements">Elements:</a>
                 </th>
                 <td>
-                    <ul>
+                    <ul class="element-list">
                         <li wicket:id="eois"><span wicket:id="summary">eoi</span></li>
                     </ul>
                     <span wicket:id="referencesEventPhaseContainer">
@@ -59,14 +59,19 @@
                 <span wicket:id="askedFor">
                     <label><input wicket:id="askedForFalse" type="radio"> Notification</label>
                     <label><input wicket:id="askedForTrue" type="radio"> Reply</label>
-                </span>&nbsp;
+                </span>
+                <span class="as-target">
                     <label wicket:id="target-significance-label">that <select wicket:id="significance-to-target"><option>is critical to</option></select> <span wicket:id="target-label">this task</span></label>
+                </span>
                 </td>
             </tr>
             <tr>
                 <th align="right"><a wicket:id="other-link" href="#">To task</a>:</th>
-                <td><label wicket:id="all-label"><input wicket:id="all" type="checkbox"> Every </label><span
-                        wicket:id="other">[other node selector]</span>
+                <td>
+							<span class="every-node">
+								<label wicket:id="all-label"><input wicket:id="all" type="checkbox"> Every </label>
+							</span>
+							<span wicket:id="other">[other node selector]</span>
                 </td>
             </tr>
 
@@ -97,22 +102,27 @@
             <tr wicket:id="significance-to-source">
                 <th align="right"><span wicket:id="source-task">Sender task</span>:</th>
                 <td>
-                    <label wicket:id="triggers-source-container"><input wicket:id="triggers-source" type="checkbox"/> is triggered by the request</label>
-                    &nbsp;
-                    <label wicket:id="terminates-source-container"><input wicket:id="terminates-source" type="checkbox"/> terminates after <span wicket:id="notifying-or-replying">notifying</span></label>
+                		<span class="triggers-source">
+								<label wicket:id="triggers-source-container"><input wicket:id="triggers-source" type="checkbox"/> is triggered by the request</label>
+							</span>
+							<span class="terminates-source">
+								<label wicket:id="terminates-source-container"><input wicket:id="terminates-source" type="checkbox"/> terminates after <span wicket:id="notifying-or-replying">notifying</span></label>
+							</span>
                 </td>
             </tr>
 
             <tr>
                 <th class="area" align="right" valign="top">Instructions:</th>
-                <td><span wicket:id="canBypassIntermediateContainer">
-                        <input wicket:id="canBypassIntermediate" type="checkbox"/> can bypass intermediate<br/>
-                    </span>
-                    <span wicket:id="receiptConfirmationRequestedContainer">
-                        <input wicket:id="receiptConfirmationRequested" type="checkbox"/> receipt confirmation requested<br/>
-                    </span>
-                    <textarea id="description" name="description" wicket:id="description"
-                      cols="40" rows="1">Instructions</textarea></td>
+                <td>
+							<span class="can-bypass-intermediate" wicket:id="canBypassIntermediateContainer">
+								<input wicket:id="canBypassIntermediate" type="checkbox"/> can bypass intermediate<br/>
+							</span>
+							<span class="receipt-confirmation-requested" wicket:id="receiptConfirmationRequestedContainer">
+								<input wicket:id="receiptConfirmationRequested" type="checkbox"/> receipt confirmation requested<br/>
+							</span>
+							<textarea id="description" name="description" wicket:id="description"
+                      cols="40" rows="1">Instructions</textarea>
+					</td>
             </tr>
 
             <tr wicket:id="attachments">

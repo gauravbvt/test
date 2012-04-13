@@ -77,6 +77,7 @@ div.part-header div.section-content {
     padding: 10px;
     position: absolute;
     top: 39px;
+    background: #e8e8e8;
 }
 
 #graph, #part {
@@ -100,13 +101,11 @@ div.part-header div.section-content {
 }
 
 #part .summary {
-    background: #E8E8E8;
-    border-bottom: 1px solid #999999;
-    border-top: 1px solid #999999;
     display: block;
     font-size: 15px;
     line-height: 150%;
-    padding: 5px 10px;
+    margin: -10px -10px 0 -10px;
+    padding: 10px 15px;
 }
 
 #part .summary:hover {
@@ -114,10 +113,20 @@ div.part-header div.section-content {
 }
 
 .simple-advanced {
+    background: #999999;
+    color: #ffffff;
     cursor: pointer;
-    color: #4F2D87;
-    font-size: x-small;
-    padding-left: 0.5em;
+    display: block;
+    font-size: 10px;
+    padding: 3px 0 0 0;
+    margin: 10px 0 0;
+    text-align: center;
+    text-transform: uppercase;
+    width: 150px;
+}
+
+.simple-advanced:hover {
+	color: #e8e8e8;
 }
 
 .small-text-area {
@@ -233,18 +242,26 @@ div.section input[type='submit'] {
     list-style: none;
 }
 
-input, textarea, select, div.flow-details {
-    padding: 1px;
+/* ----- Forms ----- */
+
+input,
+textarea,
+select,
+div.flow-details {
+    padding: 0;
     margin: 0;
 }
 
-input[type='checkbox'], input[type='radio'] {
+input[type='checkbox'],
+input[type='radio'] {
     padding: 0;
     margin: 0;
     vertical-align: middle;
 }
 
-input[type='submit'], input[type='button'], input[type='file'] {
+input[type='submit'],
+input[type='button'],
+input[type='file'] {
     font-size: 8pt;
 }
 
@@ -252,29 +269,38 @@ input[type='file'] {
     margin-top: 2px;
 }
 
-input[type='text'], textarea {
-    width: 96%;
+input[type='text'] {
+    width: 97%;
 }
 
+textarea {
+    width: 97%;
+}
+
+/*
 span.entityReference {
     display: block;
     position: relative;
     width: 98%;
 }
+*/
 
 span.entityReference select {
-    position: absolute;
+    background: #e8e8e8;
+    border: 1px solid #999999;
+    position: relative;
     width: 65px;
-    padding: 1px;
+    margin-bottom: 5px;
 }
 
 span.entityReference input[type='text'] {
-    width: 70%;
-    margin-left: 70px;
+	width: 97%;
 	position: relative;
-	min-width: 150px;
+	background: #e8e8e8;
+	border: 1px solid #999999;
 }
 
+/*
 #location {
     display: block;
     position: relative;
@@ -282,25 +308,33 @@ span.entityReference input[type='text'] {
 }
 
 #location select {
-    position: absolute;
+    position: relative;
     width: 65px;
-    padding: 1px;
+    background: #ffffff;
+    border: 1px solid #999999;
+    margin-bottom: 5px;
 }
+*/
 
 #location span {
-    width: 70%;
-    margin-left: 70px;
 	position: relative;
-	min-width: 150px;
+}
+
+span.location-infoelement,
+span.location-infoelement span {
+	display: block;
+	padding: 5px 0 0;
 }
 
 input[type="text"].no-expand {
     width: 5em;
 }
 
+/*
 input[type="text"].phrase {
     width: 10em;
 }
+*/
 
 input[type="text"].entity-name {
     width: 25em;
@@ -344,23 +378,40 @@ div.issues h4 {
     margin: 0;
     padding: 3px 0 4px 30px;
     text-transform: uppercase;
+    border: none;
 }
 
 div.issues ol {
 	margin:0;
-	padding:5px 10px 5px 30px;
+	padding:10px 30px 0 40px;
+	font-weight: bold;
 }
 
 div.issues li {
 	font-size:11px;
 	padding:5px 0 10px 0;
 	margin:0 0 10px 0;
-	border-bottom:2px solid #C9252C;
-	font-family: monospace;
+	border-bottom:1px dotted #C9252C;
+	font-family: Lucida Console, monospace;
+}
+
+div.issues li:last-child {
+	border: none;
+}
+
+div.issues span.menubar {
+	margin:0;
+	right: 0;
+} 
+
+div.issues table.issuepanel-options {
+	font-weight: normal;
+	margin: 5px 0 0 0;
 }
 
 div.issues div.section-title ul.menu {
 	padding:4px 3px 0 0;
+	margin: 0;
 }
 
 div.issues div.section-title ul.menu li {
@@ -382,21 +433,20 @@ div.issues ol li table span a.menubar {
     text-transform: capitalize;
 }
 
+
+/*
+
 div.issues ul.attach li {
     padding-left: 20px;
 	margin-left: 10px;
 }
 
+*/
+
 div.issues ul.attach li ul.menu li {
 	margin: 0;
-	padding: 0 0 0 5px;
-}
-
-div.issue-details {
-    margin-top: 5px;
-}
-
-div.issue-details table {
+	padding: 0;
+	border: none;
 }
 
 textarea.error, input.error, div.issues {
@@ -466,61 +516,140 @@ table {
     border-collapse: collapse;
 }
 
+table.part-summary {
+	width: 100%;
+}
+
+table.part-description {
+	background: #FFFFFF;
+	border: 3px solid #999999;
+	width: 100%;
+}
+
+table.part-description table {
+	border: none;
+}
+
+table.part-description table.goal-panel {
+	margin-right: 5px;
+}
+
 #part td {
     width: 100%;
 }
 
-/*
-#part table {
-    width: 98%;
+table.issue-details {
+    border-top: 1px dotted #999999;
+    margin: 10px 0 0 0;
 }
-*/
 
-tbody {
+table.part-description td,
+table.issue-details td,
+table.plan-edit-details td {
+    border-bottom: 1px dotted #999999;
+    padding: 10px 5px;
+}
+
+table.issue-details td.grouped {
+	border: none;
+	padding: 10px 0 0 0;
+}
+
+table.part-description td td,
+table.issue-details td td {
+    border: none;
+    padding: 0;
+}
+
+table.flow-definition {
+    background: #FFFFFF;
+    border: 3px solid #999999;
+}
+
+table.flow-definition td {
+    border-bottom: 1px dotted #999999;
+    padding: 10px 5px;
+}
+
+table.flow-definition td td {
+    border: none;
+    padding: 0;
 }
 
 div.flow-details {
-    margin: 5px 0;
+    margin: 0;
     position: relative;
-    padding: 5px;
+    padding: 0;
 }
 
+/*
+
 div.flow-details ul {
-	margin:0 0 0 15px;
+	margin:5px 0 5px 20px;
 	padding:0;
 }
 
 div.flow-details ul li {
 	margin:0;
-	padding:0;
+	padding:0 0 5px 0;
+	text-transform: capitalize;
 }
 
-/* ----- Flow Attachment Styling - Start ----- */
+*/
 
-div.flow-details ul.attach {
-	margin:0;
-	padding:0;
-	list-style:none;
+span.if-task-fails,
+span.prohibited {
+	padding: 0 0 0 5px;
 }
 
-div.flow-details ul.attach li {
-	margin:0 0 2px;
-	padding:0 0 0 20px;
+span.can-bypass-intermediate,
+span.triggers-source,
+span.terminates-source,
+span.every-node {
+	display: block;
+	padding: 0 0 5px 0;
 }
 
-div.flow-details ul.attach li.controls {
-	margin:0;
-	padding:5px 0 0 0;
+span.receipt-confirmation-requested {
+	display: block;
+	padding: 0 0 10px 0;
 }
 
-div.flow-details ul.attach li ul li {
-	padding:0 0 0 5px;
+textarea,
+select,
+input[type='text'] {
+    font-size: 11px;
+    margin: 0;
+    padding: 3px;
+    background: #e8e8e8;
+    border: 1px solid #999999;
 }
 
-/* ----- Flow Attachment Styling - End ----- */
+ul.attach li.controls input[type='text'] {
+	margin: 5px 0;
+}
 
-textarea, select, input[type='text'], td, th {
-    font: inherit;
+select.goal-choice,
+select.node-firstchoice {
+	width: 99%;
+}
+
+select#category {
+	margin: 0 10px 0 0;
+}
+
+input.node-secondchoice {
+	margin: 5px 0 0 0;
+}
+
+/*
+select {
+	width: 100%;
+}
+*/
+
+td, th {
+    font-size: 11px;
     margin: 0;
 }
 
@@ -529,26 +658,57 @@ th {
 }
 
 td, th {
-    padding: 1px;
-    vertical-align: baseline;
-}
-tbody th {
-    padding-right: 5px;
+    padding: 0;
+    vertical-align: middle;
 }
 
+tbody th {
+    padding:0 5px 0 10px;
+}
+
+tbody th a {
+	border-bottom: 1px dotted #4F2D87;
+}
+
+a.entity-link,
+div.phases ul li a {
+	border-bottom: 1px dotted #4F2D87;
+	font-weight: bold;
+}
+
+div.phases ul li a.phase-delete {
+	font-size: 9px;
+	text-transform: uppercase;
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+	border: none;
+	float: right;
+	padding: 0 10px 0 0;
+}
+
+div.phases ul li a.phase-delete:hover {
+    border-bottom: none;
+    color: #000;
+}
+
+/*
 th.area {
     vertical-align: baseline;
     padding-top: 1px;
     white-space: normal;
 }
+*/
 
+/*
 td span.timing:first-child {
     margin-bottom: 2px;
 }
+*/
 
 span.timing {
     display: block;
     white-space: nowrap;
+    padding-bottom: 5px;
 }
 
 span.timing input:first-child {
@@ -627,10 +787,32 @@ ul.menu, div.caption, span.menubar, ul.ranges {
 }
 */
 
-ol.channels li {
-    margin: 0 0 2px !important;
-    white-space: nowrap;
+ul.element-list,
+div.phases ul {
+    margin: 0;
+    padding: 0 0 5px 20px;
 }
+
+ul.element-list li {
+	margin: 0;
+	padding: 0;
+}
+
+div.phases ul li {
+	margin: 0;
+	padding: 0 0 5px 0;
+}
+
+ol.channels {
+    margin: 5px 0 5px 20px;
+    padding: 0;
+}
+
+ol.channels li {
+    margin: 0;
+    padding: 0 0 5px 0;
+}
+
 /*
 .section-title span.menubar {
     top: 4px;
@@ -657,6 +839,8 @@ ul.menu li {
     display: inline;
 }
 
+/*
+
 ul.attach ul.menu li:before {
     content: " ";
 }
@@ -664,8 +848,6 @@ ul.attach ul.menu li:before {
 ul.attach li.controls {
     list-style: none;
 }
-
-/*
 
 ul.menu li:before {
     content: " \2015  ";
@@ -675,11 +857,9 @@ ul.menu li:before {
     content: " ";
 }
 
-
 div.section-title ul.menu {
     padding-left: 5px;
     z-index: 1;
-
     top: auto;
     bottom: 2px;
     margin: 0;
@@ -715,29 +895,97 @@ ul > li > ul.menu {
     float: right;
 }
 
-ul.attach, ul.call-list {
+ul.call-list {
     margin: 0;
     padding: 0 0 0 1em;
     list-style: outside;
     line-height: 1.5em;
 }
 
+/* ----- Attachment Styling ----- */
+
+ul.attach {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+ul.attach {
+    border-bottom: 1px dotted #999999;
+    margin: 0 0 10px 0;
+    padding: 0 10px 5px;	
+}
+
+td.grouped > ul.attach {
+	padding: 0 0 5px 0;
+}
+
+ul.attach li {
+    margin: 0 0 5px;
+    padding: 0 0 0 25px;
+}
+
+ul.attach li.controls {
+	padding: 0;	
+}
+
+ul.attach li a {
+	font-weight: bold;
+}
+
+ul.attach li a:hover {
+	border-bottom: 1px dotted #4F2D87;	
+}
+
+ul.attach li ul.menu,
+ul.attach li ul.menu li {
+	margin: 0;
+	padding: 0;
+}
+
+ul.attach li ul.menu li a {
+	font-size: 9px;
+	text-transform: uppercase;
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+	border: none;
+}
+
+ul.attach li ul.menu li:first-child a {
+	border-right: 1px solid #999999;
+	margin-right: 3px;
+	padding-right: 6px;
+}
+
+ul.attach li ul.menu li a:hover {
+    border-bottom: none;
+    color: #000;
+}
+
+
+
 ul.call-list {
     padding-bottom: 5px;
 }
+
+/*
 
 ul.attach li {
     position: relative;
 }
 
 ul.attach input[type='text'] {
-    height: 1.2em;
-    margin-top: 2px;
-    width: 20em;
+	margin: 5px 0;
 }
 
+span.issue {
+
+}
+
+*/
+
 span.suggest {
-    font-style: italic;
+    font-weight: normal;
 }
 
 span.note {
@@ -950,48 +1198,48 @@ div.import-dialog {
 /* ----- Dropdown Menu - Default ----- */
 
 .menubar .dropmenu {
-    width: auto;
-    cursor: pointer;
-    position: relative;
+	width: auto;
+	cursor: pointer;
+	position: relative;
 	border:1px solid transparent;
 	color:#333333;
-
-    background: url('../images/bullet-arrow-bottom.png') no-repeat scroll 90% 56% #D1D3D4;
-    border:1px solid #BCBEC0;
-    padding-right: 13px;
-    padding-left: 2px;
-    margin-right: 4px;
-    text-transform: lowercase;
+	background: url('../images/bullet-arrow-bottom.png') no-repeat scroll 90% 56% #D1D3D4;
+	border:1px solid #BCBEC0;
+	padding-right: 13px;
+	padding-left: 2px;
+	margin-right: 4px;
+	text-transform: lowercase;
 }
 
 .menubar .dropmenu:hover {
 	border:1px solid #C7C8CA;
 	color:#000000;
-
-    background: url( '../images/bullet-arrow-bottom-high.png' ) no-repeat scroll 90% 56% #e6e6e6;
-    border:1px solid #C7C8CA;
-
+	background: url( '../images/bullet-arrow-bottom-high.png' ) no-repeat scroll 90% 56% #e6e6e6;
+	border:1px solid #C7C8CA;
 }
 
 .menubar .dropmenu ul {
-    display: none;
-    position: absolute;
-    right: 0;
-    background-color: #e6e6e6;
-    color: #000000;
-    list-style: none;
-    margin: -1px 2px 0 0;
-    padding: 0;
-    z-index: 100000;
+	display: none;
+	position: absolute;
+	right: 0;
+	background-color: #e6e6e6;
+	color: #000000;
+	list-style: none;
+	margin: -1px 2px 0 0;
+	padding: 0;
+	z-index: 100000;
 	border:1px solid #C7C8CA;
 	top:1.5em;
 }
 
 .menubar .dropmenu ul li {
-    display: block;
-    padding: 2px 4px;
-    z-index: 100000;
+	display: block;
+	padding: 2px 4px;
+	z-index: 100000;
 	border-bottom:1px solid #D1D3D4;
+	margin: 0;
+	font-size: 10px;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 .menubar .dropmenu li span.disabled {
@@ -1257,7 +1505,6 @@ a.button:hover {
 }
 
 .grouped {
-    background: #DDDDDD;
     padding: 4px;
     margin: 0 0 2px 0;
 }
@@ -1603,7 +1850,7 @@ ul.index-counter li:first-child:before {
 }
 
 input.filter {
-    width: 30em;
+    width: 200px;
 }
 
 input.filter-small {
@@ -1699,8 +1946,10 @@ input[disabled] {
 }
 
 
-.flow .info , .summary .task {
+.flow .info ,
+.summary .task {
     font-weight: bold;
+    text-transform: capitalize;
 }
 
 #sg-sel {
@@ -1747,15 +1996,13 @@ div.part-header > div.section-title > span.menubar {
     right: 6em;
 }
 
-div.receives span.menubar, div.sends span.menubar {
+div.receives span.menubar.top,
+div.sends span.menubar.top {
 	margin-top:10px;
 }
 
-div.receives span.menubar {
-	right:6em;
-}
-
-div.sends span.menubar {
+div.receives span.menubar.top,
+div.sends span.menubar.top {
 	right:6em;
 }
 
@@ -1787,44 +2034,27 @@ h3.task-title-noop {
 
 /* ----- Task, Receive and Send Severity Icon ----- */
 
-
-span.extreme {
-	border-left: 10px solid #ff8c73;
-}
-
-span.major {
-	border-left: 10px solid #ffe27b;
-}
-
-span.minor {
-	border-left: 10px solid #7ac4f1;
-}
-
-span.severe {
-	border-left: 10px solid #ffb658;
-}
-
-span.none {
-	border-left: 10px solid #929498;
-}
-
-
+span.extreme,
 .flow div.extreme {
 	background: url( '../images/corner-red.png' ) no-repeat top left;
 }
 
+span.major,
 .flow div.major {
 	background: url( '../images/corner-yellow.png' ) no-repeat top left;
 }
 
+span.minor,
 .flow div.minor {
 	background: url( '../images/corner-blue.png' ) no-repeat top left;
 }
 
+span.severe,
 .flow div.severe {
 	background: url( '../images/corner-orange.png' ) no-repeat top left;
 }
 
+span.none,
 .flow div.none {
 	background: url( '../images/corner-black.png' ) no-repeat top left;
 }
@@ -1865,7 +2095,6 @@ span.channels-summary {
 div.section-content > div.flow > div > span.pointer {
     font-family: sans-serif;
     font-size: 13px;
-    text-transform: capitalize;
     line-height: 22px;
 }
 
