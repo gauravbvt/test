@@ -7,17 +7,17 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div wicket:id=typesDiv>
+    <div class="types" wicket:id=typesDiv>
         <ul>
              <li wicket:id="types">
                 <span wicket:id="typeContainer">
                     <span wicket:id="universal">Any agent</span>
                     <span wicket:id="typeLink">[type link]</span>
-                    <input wicket:id="newType" type="text" title = "Enter new type"/>
+                    <input class="new-type" wicket:id="newType" type="text" title = "Enter new type"/>
                 </span>
                  <span>
-                     <a wicket:id="delete" href="#">
-                         <img style="border:0;vertical-align:middle" src="images/delete.png" title="Remove type" alt="Remove type"/>
+                     <a class="type-delete" wicket:id="delete" href="#">
+                         Delete
                      </a>
                  </span>
             </li>

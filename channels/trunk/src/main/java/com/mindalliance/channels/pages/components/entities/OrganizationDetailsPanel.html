@@ -38,12 +38,11 @@
             <label>Media not deployed:</label>
         </th>
         <td>
-            <ul>
+            <ul class="media-not-deployed">
                 <li wicket:id="mediaNotDeployed">
                     <span wicket:id="notDeployedMediumLink" title="Medium's details">Phone</span>
-                    <a wicket:id="deleteNotDeployedMedium" href="#">
-                        <img style="border:0;vertical-align:middle" src="images/delete.png"
-                             title="Remove medium from list" alt="Remove medium from list"/>
+                    <a class="medium-delete" wicket:id="deleteNotDeployedMedium" href="#">
+								Delete
                     </a>
                     <select wicket:id="mediumChoice">
                         <option>Secure Radio</option>

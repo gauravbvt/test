@@ -14,6 +14,12 @@ body {
 body.profile {
 }
 
+a, a:link, a:visited, td.link span {
+    color: #4f2d87;
+    text-decoration: none;
+    cursor: pointer;
+	outline:none;
+}
 
 a > img {
     border: 0;
@@ -341,7 +347,7 @@ input[type="text"].entity-name {
 }
 
 input[type="text"].address {
-    width: 12em;
+	margin: 5px 0;
 }
 
 input[type="text"].invalid-address {
@@ -545,7 +551,8 @@ table.issue-details {
 
 table.part-description td,
 table.issue-details td,
-table.plan-edit-details td {
+table.plan-edit-details td,
+table.entity-details td {
     border-bottom: 1px dotted #999999;
     padding: 10px 5px;
 }
@@ -642,6 +649,12 @@ input.node-secondchoice {
 	margin: 5px 0 0 0;
 }
 
+input.new-phase,
+input.new-type {
+    margin: 10px 0 0 -20px;
+    width: 100%;
+}
+
 /*
 select {
 	width: 100%;
@@ -671,24 +684,40 @@ tbody th a {
 }
 
 a.entity-link,
-div.phases ul li a {
+div.phases ul li a,
+div.types ul li a {
 	border-bottom: 1px dotted #4F2D87;
 	font-weight: bold;
 }
 
-div.phases ul li a.phase-delete {
+div.phases ul li a.phase-delete,
+div.types ul li a.type-delete,
+a.medium-delete,
+a.move-to-top {
 	font-size: 9px;
 	text-transform: uppercase;
 	font-weight: normal;
 	font-family: Arial, Helvetica, sans-serif;
 	border: none;
-	float: right;
-	padding: 0 10px 0 0;
+	padding: 1px 3px;
+	margin: 0 0 0 10px;
+	background: #999999;
+	color: #ffffff;
 }
 
-div.phases ul li a.phase-delete:hover {
-    border-bottom: none;
-    color: #000;
+a.move-to-top {
+	float: right;
+	line-height: 100%;
+	color: #FFFFFF;
+	margin-right: 9px;
+	padding: 2px 3px;
+}
+
+div.phases ul li a.phase-delete:hover,
+div.types ul li a.type-delete:hover,
+a.medium-delete:hover,
+a.move-to-top:hover {
+    color: #e8e8e8;
 }
 
 /*
@@ -788,7 +817,9 @@ ul.menu, div.caption, span.menubar, ul.ranges {
 */
 
 ul.element-list,
-div.phases ul {
+ul.media-not-deployed,
+div.phases ul,
+div.types ul {
     margin: 0;
     padding: 0 0 5px 20px;
 }
@@ -798,9 +829,17 @@ ul.element-list li {
 	padding: 0;
 }
 
-div.phases ul li {
+div.phases ul li,
+div.types ul li,
+ul.media-not-deployed li {
 	margin: 0;
 	padding: 0 0 5px 0;
+}
+
+div.phases ul li:last-child,
+div.types ul li:last-child,
+ul.media-not-deployed li:last-child {
+	list-style: none;
 }
 
 ol.channels {
@@ -813,6 +852,11 @@ ol.channels li {
     padding: 0 0 5px 0;
 }
 
+table.entity-details ol.channels li {
+    margin: 0;
+    padding: 0 0 10px 0;
+}
+
 /*
 .section-title span.menubar {
     top: 4px;
@@ -823,7 +867,8 @@ ol.channels li {
     margin: 0 4px 0 4px;
 }
 
-ul.menu, span.menubar {
+ul.menu,
+span.menubar {
     font-weight: normal;
     list-style: none;
     margin: 0 0 0 5px;
@@ -949,20 +994,18 @@ ul.attach li ul.menu li a {
 	font-weight: normal;
 	font-family: Arial, Helvetica, sans-serif;
 	border: none;
+	color: #ffffff;
+	background: #999999;
+	padding: 1px 3px;
 }
 
 ul.attach li ul.menu li:first-child a {
-	border-right: 1px solid #999999;
 	margin-right: 3px;
-	padding-right: 6px;
 }
 
 ul.attach li ul.menu li a:hover {
-    border-bottom: none;
-    color: #000;
+	color: #e8e8e8;
 }
-
-
 
 ul.call-list {
     padding-bottom: 5px;
@@ -1009,13 +1052,6 @@ p.caption {
 
 hr {
     display: none;
-}
-
-a, a:link, a:visited, td.link span {
-    color: #4f2d87;
-    text-decoration: none;
-    cursor: pointer;
-	outline:none;
 }
 
 h1 a, div.caption a {
