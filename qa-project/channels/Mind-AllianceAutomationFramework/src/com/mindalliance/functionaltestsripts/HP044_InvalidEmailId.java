@@ -44,6 +44,8 @@ public class HP044_InvalidEmailId
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email"));
 				for (int i = 0; i <= 20; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+				for (int i = 0; i <= 5; i++)
+					GlobalVariables.oElement.sendKeys(Keys.DELETE);
 				GlobalVariables.oElement.sendKeys("^%@GFD.COM");
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Write Results

@@ -14,6 +14,12 @@ import com.mindalliance.globallibrary.ReportFunctions;
 
 public class PS114_ViewRequirementAfter 
 {
+	/**
+	 * 
+	 */
+	/**
+	 * 
+	 */
 	public PS114_ViewRequirementAfter(){		
 		try {
 			GlobalVariables.sTestCaseId = "PS114_ViewRequirementAfter";
@@ -35,7 +41,7 @@ public class PS114_ViewRequirementAfter
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(3000);  
 				  
 				// Clicks on About Plan link under show pop up menu option
 				GlobalVariables.iStepNo++ ;
@@ -47,7 +53,7 @@ public class PS114_ViewRequirementAfter
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(3000);  
 				
 				// Clicks on Definition tab
 				GlobalVariables.iStepNo++ ;
@@ -59,7 +65,7 @@ public class PS114_ViewRequirementAfter
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Click on drop down of Situation and select After
 				GlobalVariables.iStepNo++ ;
@@ -67,13 +73,13 @@ public class PS114_ViewRequirementAfter
 				GlobalVariables.bIsSuccess=Boolean.FALSE;
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:timing")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
-			    for(WebElement option : options) {
-			    	if(GlobalVariables.testData.get("After").equals(option.getValue())){
-			    		GlobalVariables.bIsSuccess=Boolean.TRUE;
-			    		option.setSelected();
-			    		break;
-			    	}
-			    }
+				 for(WebElement option : options) {
+				    	if(GlobalVariables.testData.get("After").equals(option.getText())){
+				    		GlobalVariables.bIsSuccess=Boolean.TRUE;
+				    		option.setSelected();
+				    		break;
+				    	}
+				    }
 			    if(GlobalVariables.bIsSuccess==Boolean.TRUE){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -81,6 +87,7 @@ public class PS114_ViewRequirementAfter
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 			    else{
+			    	GlobalVariables.sVerifyError="Verifiction failed ";
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -88,7 +95,7 @@ public class PS114_ViewRequirementAfter
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -100,7 +107,7 @@ public class PS114_ViewRequirementAfter
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);	
+				Thread.sleep(3000);	
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

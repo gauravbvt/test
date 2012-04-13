@@ -32,7 +32,7 @@ public class TFP037_TaskAttachmentAsURL
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
@@ -44,13 +44,13 @@ public class TFP037_TaskAttachmentAsURL
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Stretch Up Task Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Click on default task
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Task Added";
@@ -61,7 +61,7 @@ public class TFP037_TaskAttachmentAsURL
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
 				// Attachment as a URL
 				GlobalVariables.iStepNo++;
@@ -73,25 +73,32 @@ public class TFP037_TaskAttachmentAsURL
 				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("segment:part:attachments:container:controls:url"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("URL"));
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
+					
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				// Refresh Page
+				GlobalVariables.oDriver.navigate().refresh();
+				
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Refresh Page
-				GlobalVariables.oDriver.navigate().refresh();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Stretch Up Task Details
+//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(3000);
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
 				GlobalVariables.oDriver.navigate().refresh();
-				// Click on Task 
+				
+//				// Click on Task 
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
+						
 				// Assertion : Verify that Attachment attached as a URL
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'http://www.google.com')]"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))) {
@@ -109,19 +116,19 @@ public class TFP037_TaskAttachmentAsURL
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Get a handle to the open alert, prompt or confirmation
 //				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 //				// And acknowledge the alert (equivalent to clicking "OK")
 //				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// 	Call Logout
 				GlobalVariables.iStepNo++;
@@ -133,7 +140,7 @@ public class TFP037_TaskAttachmentAsURL
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

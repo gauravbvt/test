@@ -31,7 +31,7 @@ public class CP001_HidePlanners
 						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(1000);  
+				  Thread.sleep(3000);  
 				  
 				  //Clicks on Hide Planners link under show pop up menu option
 				  GlobalVariables.iStepNo++ ;
@@ -43,11 +43,11 @@ public class CP001_HidePlanners
 						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(1000);  					
-				  GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu"))).click();
-				  // WebElement Synchronization
-			 	  Thread.currentThread();
-			 	  Thread.sleep(500);
+				  Thread.sleep(5000);  					
+//				  GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu"))).click();
+//				  // WebElement Synchronization
+//			 	  Thread.currentThread();
+//			 	  Thread.sleep(5000);
 					
 			      // Call logout()
 			      GlobalVariables.iStepNo++ ;

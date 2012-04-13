@@ -31,7 +31,7 @@ public class CP002_ShowPlanners
 						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(3000);  
+				  Thread.sleep(10000);  
 				  
 				  //Clicks on About Plan link under show pop up menu option
 				  GlobalVariables.iStepNo++ ;
@@ -43,8 +43,11 @@ public class CP002_ShowPlanners
 						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(5000);  	 					
-				 
+				  Thread.sleep(10000);  					
+//				  GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu"))).click();
+//				  // WebElement Synchronization
+//			 	  Thread.currentThread();
+//			 	  Thread.sleep(3000);
 				  // Clicks on Planners link under show pop up menu option 
 			 	  GlobalVariables.iStepNo++ ;
 				  GlobalVariables.sDescription = "Show Planners";
@@ -55,11 +58,11 @@ public class CP002_ShowPlanners
 						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(1000);  				
+				  Thread.sleep(3000);  				
 				  GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu"))).click();
 				  // WebElement Synchronization
 			 	  Thread.currentThread();
-			 	  Thread.sleep(500);
+			 	  Thread.sleep(5000);
 			 	  
 			      // Call logout()
 			      GlobalVariables.iStepNo++ ;
@@ -71,7 +74,7 @@ public class CP002_ShowPlanners
 			    		  GlobalVariables.sBlank, GlobalVariables.sBlank);
 			      // WebElement Synchronization
 			      Thread.currentThread();
-			      Thread.sleep(1000);	
+			      Thread.sleep(3000);	
 			
 			      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			      System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

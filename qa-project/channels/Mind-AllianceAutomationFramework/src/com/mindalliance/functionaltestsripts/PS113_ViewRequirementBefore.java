@@ -35,7 +35,7 @@ public class PS113_ViewRequirementBefore
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(3000);  
 				  
 				// Clicks on About Plan link under show pop up menu option
 				GlobalVariables.iStepNo++ ;
@@ -47,7 +47,7 @@ public class PS113_ViewRequirementBefore
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(3000);  
 				
 				// Clicks on Definition tab
 				GlobalVariables.iStepNo++ ;
@@ -59,7 +59,7 @@ public class PS113_ViewRequirementBefore
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Click on drop down of Situation and select Before
 				GlobalVariables.iStepNo++ ;
@@ -88,7 +88,7 @@ public class PS113_ViewRequirementBefore
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -100,7 +100,7 @@ public class PS113_ViewRequirementBefore
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);	
+				Thread.sleep(3000);	
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

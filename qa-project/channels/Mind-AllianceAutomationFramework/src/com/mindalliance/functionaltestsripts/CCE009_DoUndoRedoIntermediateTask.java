@@ -37,7 +37,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
 					
 					// Click on 'Add new segment' option under 'Actions' pop up menu
 					GlobalVariables.iStepNo++ ;
@@ -49,7 +49,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 			
 					// Enter the details
 					GlobalVariables.iStepNo++ ;
@@ -57,7 +57,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).clear();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(3000);
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Do Undo Redo Intermediate Task"));
 					// Click on 'done' button
@@ -68,7 +68,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 
 					// Update the Information of the default task
 					GlobalVariables.iStepNo++ ;
@@ -76,11 +76,11 @@ public class CCE009_DoUndoRedoIntermediateTask
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDefaultTask"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).clear();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(3000);
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
 					// WebElement Synchronization
@@ -104,7 +104,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(3000);
 					// Add info sends flow
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Send Flow added";
@@ -115,7 +115,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					
 					// Create Flow between respective nodes
 					GlobalVariables.iStepNo++ ;
@@ -125,7 +125,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					// To
 					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:firstChoice")));
 					List<WebElement> options = GlobalVariables.oDropDown.getOptions();
@@ -137,7 +137,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 				    }
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
 					for (int i = 0; i <= 50; i++)
@@ -156,7 +156,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					
 					// Create Intermediate Flow
 					GlobalVariables.iStepNo++ ;
@@ -166,7 +166,7 @@ public class CCE009_DoUndoRedoIntermediateTask
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),GlobalVariables.viewElements.get("addIntermediate"));
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 					// Click on Legend to minimize the information flow details
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 					// WebElement Synchronization

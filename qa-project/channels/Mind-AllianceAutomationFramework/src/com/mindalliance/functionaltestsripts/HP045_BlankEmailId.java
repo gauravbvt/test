@@ -44,12 +44,17 @@ public class HP045_BlankEmailId
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email"));
 				for (int i = 0; i <= 20; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+				for (int i = 0; i <= 5; i++)
+					GlobalVariables.oElement.sendKeys(Keys.DELETE);
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 //				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("social:tabs:panel:userInfo:email"));
 //				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// Assertion: 1. Verify that error message should be displayed as 'An email address is required'
+				
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathEmailNameInvalidErrorMessageAssertion")));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("An email address is required")) {
 					// Write Results

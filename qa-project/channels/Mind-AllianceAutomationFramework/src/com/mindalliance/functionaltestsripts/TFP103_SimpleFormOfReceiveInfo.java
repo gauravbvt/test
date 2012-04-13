@@ -63,7 +63,7 @@ public class TFP103_SimpleFormOfReceiveInfo
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormReceiveInfo"))).click();
+				//GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormReceiveInfo"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -76,7 +76,7 @@ public class TFP103_SimpleFormOfReceiveInfo
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Simple form";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormReceiveInfo")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showSimpleForm"))){
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showAdvanceForm"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -93,6 +93,7 @@ public class TFP103_SimpleFormOfReceiveInfo
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
+
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization

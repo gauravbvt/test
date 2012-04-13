@@ -31,7 +31,7 @@ public class TFP026_EndEventUnnamed
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
@@ -43,13 +43,13 @@ public class TFP026_EndEventUnnamed
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Stretch Up Task Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Click on default task
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Task";
@@ -80,7 +80,7 @@ public class TFP026_EndEventUnnamed
 				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:terminatesEventPhase")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Assertion : Verify that 'Can end event unnamed' is added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathOperationalNonOperational")));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("taskEnd"))) {
@@ -103,7 +103,7 @@ public class TFP026_EndEventUnnamed
 				GlobalVariables.oDriver.findElement(By.name("segment:part:timingContainer:terminatesEventPhase")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Assertion : Verify that 'Can end event unnamed' is removed
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathOperationalNonOperational")));
 				if(GlobalVariables.oElement.getText().equals(".")) {
@@ -121,19 +121,19 @@ public class TFP026_EndEventUnnamed
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Get a handle to the open alert, prompt or confirmation
 //				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 //				// And acknowledge the alert (equivalent to clicking "OK")
 //				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 
 				// 	Call Logout
 				GlobalVariables.iStepNo++;
@@ -145,7 +145,7 @@ public class TFP026_EndEventUnnamed
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

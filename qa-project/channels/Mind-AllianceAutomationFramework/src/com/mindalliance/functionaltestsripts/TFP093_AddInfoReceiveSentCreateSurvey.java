@@ -32,7 +32,7 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
@@ -44,13 +44,13 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Stretch Up Task Details
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
@@ -62,7 +62,7 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click on create survey link of Send panel
 				GlobalVariables.iStepNo++;
@@ -70,7 +70,7 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSendCreateSurvey"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(35000);
+				Thread.sleep(5000);
 				// Assertion : Verify that Survey gets Created
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div/div/h1"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("surveys"))) {
@@ -87,12 +87,12 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Close Survey Window
 				GlobalVariables.oDriver.findElement(By.xpath("//span[2]/div[@class='floating']/div[@class='float-bar']/div[@class='float-bar-close']/a/img")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click 'Add info received' Link. 
 				GlobalVariables.iStepNo++ ;
@@ -105,7 +105,7 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click on create survey link of Receive panel
 				GlobalVariables.iStepNo++;
@@ -130,24 +130,24 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Close Survey Window
 				GlobalVariables.oDriver.findElement(By.xpath("//span[2]/div[@class='floating']/div[@class='float-bar']/div[@class='float-bar-close']/a/img")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 //				// Get a handle to the open alert, prompt or confirmation
 //				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 //				// And acknowledge the alert (equivalent to clicking "OK")
 //				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Call Logout
 				GlobalVariables.iStepNo++;
@@ -159,7 +159,7 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
