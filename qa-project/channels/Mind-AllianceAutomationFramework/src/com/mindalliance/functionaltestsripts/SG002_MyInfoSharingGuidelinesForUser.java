@@ -39,7 +39,7 @@ public class SG002_MyInfoSharingGuidelinesForUser
 			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("j_password"));
 			GlobalVariables.oElement.sendKeys("@test123");
 			// Click on Sign In button
-			GlobalVariables.iStepNo++ ;
+			GlobalVariables.iStepNo=0 ;
 			GlobalVariables.sDescription = "Login is successful";
 			GlobalVariables.oDriver.findElement(By.name("_spring_security_remember_me")).click();
 			GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.login.get("sLogin"))).click();

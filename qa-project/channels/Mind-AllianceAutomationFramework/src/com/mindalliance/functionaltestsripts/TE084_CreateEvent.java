@@ -63,25 +63,8 @@ public class TE084_CreateEvent
 				
 				// Create an event
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Add Event";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
-				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tbody"));
-				List<WebElement> tds;
-				int i=0;
-				for(WebElement tr: trs) {
-					i++;	
-					tds = tr.findElements(By.tagName("input"));
-					for(WebElement td: tds) {
-						if(td.getText().contains(GlobalVariables.testData.get("user"))){
-							// Write Results
-							LogFunctions.writeLogs(GlobalVariables.sDescription);
-							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-									GlobalVariables.sBlank, GlobalVariables.sBlank);						
-							GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:"+(i+1)+":name-container:name-input")).click();
-						}
-					}
-				}			
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
+				GlobalVariables.sDescription="Add Event";	
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
 				String sEventName = LogFunctions.getDateTime();
 				GlobalVariables.oElement.sendKeys(sEventName);
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
