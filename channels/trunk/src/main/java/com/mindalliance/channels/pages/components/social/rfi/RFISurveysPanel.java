@@ -74,7 +74,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
             selectedRFISurvey = rfiSurvey;
         addFilters();
         addRFISurveyTable();
-        addRFISurveyContainer();
+        addRFISurvey();
     }
 
     private void addFilters() {
@@ -134,7 +134,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         return wrappers;
     }
 
-    private void addRFISurveyContainer() {
+    private void addRFISurvey() {
         rfiSurveyContainer = new WebMarkupContainer( "rfiSurveyContainer" );
         rfiSurveyContainer.setOutputMarkupId( true );
         makeVisible( rfiSurveyContainer, selectedRFISurvey != null );
@@ -170,7 +170,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         } else {
             filters.put( property, (ModelObject) identifiable );
         }
-        addRFISurveyContainer();
+        addRFISurvey();
         target.add( rfiSurveyContainer );
     }
 
@@ -216,7 +216,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( RFISurveyWrapper.class ) && change.isExpanded() ) {
-            addRFISurveyContainer();
+            addRFISurvey();
             target.add( rfiSurveyContainer );
         } else
             super.updateWith( target, change, updated );
@@ -272,10 +272,6 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
             return StringUtils.capitalize( getQuestionnaire().getAbout() );
         }
 
-        public String getMoLabel() {
-            return rfiSurvey.getMoLabel();
-        }
-
         public ModelObject getModelObject() {
             return rfiSurvey.getModelObject( getQueryService() );
         }
@@ -286,6 +282,18 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
 
         public Segment getSegment() {
             return rfiSurvey.getSegment( getQueryService() );
+        }
+
+        public String getMoLabel() {
+            ModelObject mo = getModelObject();
+            if ( mo == null ) {
+                return null;
+            } else {
+                return StringUtils.capitalize( mo.getTypeName() )
+                        + " \""
+                        + mo.getLabel()
+                        + "\"";
+            }
         }
 
         public String getStatusLabel() {
@@ -316,7 +324,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // Columns
-            columns.add( makeColumn( "Questionnaire", "about", EMPTY ) );
+            columns.add( makeColumn( "Questionnaire", "questionnaire.name", EMPTY ) );
             columns.add( makeColumn( "About", "about", EMPTY ) );
             columns.add( makeFilterableLinkColumn( "Applied to", "modelObject", "moLabel", EMPTY, RFISurveysPanel.this ) );
             columns.add( makeFilterableLinkColumn( "In segment", "segment", "segment.name", EMPTY, RFISurveysPanel.this ) );

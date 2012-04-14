@@ -2,6 +2,7 @@ package com.mindalliance.channels.social.model.rfi;
 
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.Channels;
 
 import javax.persistence.CascadeType;
@@ -175,4 +176,10 @@ public class RFI extends AbstractPersistentPlanObject {
         this.answerSets = answerSets;
     }
 
+    public boolean isLate( QueryService queryService ) {
+        return !isDeclined()
+                && getDeadline() != null
+                && new Date().after( getDeadline() )
+                && getRfiSurvey().isOngoing( queryService );
+    }
 }

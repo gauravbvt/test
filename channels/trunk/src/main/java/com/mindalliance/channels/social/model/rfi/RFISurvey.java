@@ -86,7 +86,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
         // todo - deal with surveys on obsolete issues about non-obsolete MOs.
     }
     
-    public boolean isActive( QueryService queryService ) {
+    public boolean isOngoing( QueryService queryService ) {
         return !isClosed() && !isObsolete( queryService );
     }
 
@@ -103,7 +103,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
                 ? "Closed"
                 : isObsolete( queryService )
                 ? "Obsolete"
-                : "Open";
+                : "Ongoing";
                 
     }
 

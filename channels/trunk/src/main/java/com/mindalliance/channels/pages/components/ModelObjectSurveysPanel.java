@@ -236,7 +236,7 @@ public class ModelObjectSurveysPanel extends FloatingCommandablePanel {
             if ( rfiSurvey != null ) {
                 return rfiSurvey.isClosed()
                         ? "Closed"
-                        : rfiSurvey.isActive( getQueryService() )
+                        : rfiSurvey.isOngoing( getQueryService() )
                         ? "Launched"
                         : "Closed";
             } else {
