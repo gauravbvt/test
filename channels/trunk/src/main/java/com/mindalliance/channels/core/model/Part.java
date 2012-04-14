@@ -110,6 +110,16 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         adjustName();
     }
 
+    public static String classLabel() {
+        return "tasks";
+    }
+
+    @Override
+    public String getClassLabel() {
+        return classLabel();
+    }
+
+
     @Override
     public String getLabel() {
         return getTitle();
@@ -1120,6 +1130,8 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
             return null;
         }
     }
+
+
 
     /**
      * Category of tasks.

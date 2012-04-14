@@ -22,7 +22,7 @@ public class ExecutedCommand extends AbstractPersistentPlanObject {
     private String commandName;
     private String commandUndoes;
     private String changeProperty;
-    @Column(columnDefinition="LONGTEXT")
+    @Column(length=2000)
     private String commandTargetDescription;
     private boolean update;
     private Long changeId;

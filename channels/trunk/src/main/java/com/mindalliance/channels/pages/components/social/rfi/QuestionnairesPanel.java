@@ -24,7 +24,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,11 +39,6 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
 
     private static final String ANYTHING = "anything";
     private static final String ALL = "all";
-
-    /**
-     * Simple date format.
-     */
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat( "M/d/yyyy HH:mm" );
 
 
     @SpringBean
@@ -114,7 +108,7 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
     private List<String> getAboutChoices() {
         List<String> choices = new ArrayList<String>();
         choices.add( ANYTHING );
-        choices.addAll( ModelObject.TYPE_LABELS );
+        choices.addAll( ModelObject.CLASS_LABELS );
         return choices;
     }
 
@@ -129,7 +123,9 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
     private void addQuestionnaireContainer() {
         questionnaireContainer = new WebMarkupContainer( "questionnaire" );
         questionnaireContainer.setOutputMarkupId( true );
-        makeVisible( questionnaireContainer, selectedQuestionnaire != null );
+        makeVisible(
+                questionnaireContainer,
+                selectedQuestionnaire != null );
         // Label
         addQuestionnaireLabel();
         // Questions
@@ -153,10 +149,39 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
             }
         };
         questionnaireContainer.add( deleteButton );
-
+        // activate
+        ConfirmedAjaxFallbackLink<String> activateButton = new ConfirmedAjaxFallbackLink<String>(
+                "activateQuestionnaire",
+                "Activate this questionnaire?" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                activateQuestionnaire();
+                addQuestionnaireTable();
+                target.add( questionnaireTable );
+                addQuestionnaireContainer();
+                target.add( questionnaireContainer );
+            }
+        };
+        activateButton.setVisible( selectedQuestionnaire != null && !selectedQuestionnaire.isActive() );
+        questionnaireContainer.add( activateButton );
+        // retire
+        ConfirmedAjaxFallbackLink<String> retireButton = new ConfirmedAjaxFallbackLink<String>(
+                "retireQuestionnaire",
+                "Deactivate this questionnaire?" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                retireQuestionnaire();
+                addQuestionnaireTable();
+                target.add( questionnaireTable );
+                addQuestionnaireContainer();
+                target.add( questionnaireContainer );
+            }
+        };
+        retireButton.setVisible( selectedQuestionnaire != null && selectedQuestionnaire.isActive() );
+        questionnaireContainer.add( retireButton );
         addOrReplace( questionnaireContainer );
     }
-    
+
     private void addQuestionnaireLabel() {
         Label label = new Label( "questionnaireLabel",
                 selectedQuestionnaire == null
@@ -172,10 +197,24 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
         selectedQuestionnaire = null;
     }
 
+    private void activateQuestionnaire() {
+        if ( selectedQuestionnaire != null ) {
+            selectedQuestionnaire.setStatus( Questionnaire.Status.ACTIVE );
+            questionnaireService.save(  selectedQuestionnaire );
+        }
+    }
+
+    private void retireQuestionnaire() {
+        if ( selectedQuestionnaire != null ) {
+            selectedQuestionnaire.setStatus( Questionnaire.Status.INACTIVE );
+            questionnaireService.save(  selectedQuestionnaire );
+        }
+    }
 
     public List<QuestionnaireWrapper> getFilteredQuestionnaires() {
         List<QuestionnaireWrapper> wrappers = new ArrayList<QuestionnaireWrapper>();
         List<Questionnaire> questionnaires = questionnaireService.select(
+                getPlan(),
                 getAbout().equals( ANYTHING ) ? null : getAbout(),
                 getStatus().equals( ALL ) ? null : Questionnaire.Status.valueOf( getStatus().toUpperCase() )
         );
@@ -199,7 +238,7 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
     }
 
     public String getDefaultAbout() {
-        return about == null ? ModelObject.TYPE_LABELS.get( 0 ) : about;
+        return about == null ? ModelObject.CLASS_LABELS.get( 0 ) : about;
     }
 
     public void setAbout( String about ) {
@@ -267,6 +306,7 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
                 super.updateWith( target, change, updated );
             }
         }
+        target.add( this );
     }
 
 
@@ -303,6 +343,11 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
         }
 
         @Override
+        public String getClassLabel() {
+            return getClass().getSimpleName();
+        }
+
+        @Override
         public String getName() {
             return questionnaire.getName();
         }
@@ -320,12 +365,12 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
         }
 
         public String getCreatedOn() {
-            return dateFormat.format( questionnaire.getCreated() );
+            return getDateFormat().format( questionnaire.getCreated() );
         }
 
         public String getLastModifiedOn() {
             Date lastModified = questionnaire.getLastModified();
-            return lastModified == null ? null : dateFormat.format( questionnaire.getLastModified() );
+            return lastModified == null ? null : getDateFormat().format( questionnaire.getLastModified() );
         }
 
         public int getRfiCount() {

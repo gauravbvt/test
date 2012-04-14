@@ -576,6 +576,55 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
     /**
+     * Make a column with a link that expands the bean for the row.
+     *
+     * @param name                 a string
+     * @param identifiableProperty a string
+     * @param labelProperty        a string
+     * @return an abstract column
+     */
+    protected AbstractColumn<T> makeFlexibleExpandLinkColumn(
+            String name,
+            final String identifiableProperty,
+            final String labelProperty,
+            final String defaultText,
+            final String... properties
+    ) {
+        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      final IModel<T> model ) {
+                T bean = model.getObject();
+                Identifiable identifiable = (Identifiable) ChannelsUtils.getProperty(
+                        bean,
+                        identifiableProperty,
+                        null );
+                Map<String, Serializable> payload = new HashMap<String, Serializable>();
+                for ( String property : properties ) {
+                    payload.put(
+                            property,
+                            (Serializable) ChannelsUtils.getProperty(
+                                    bean,
+                                    property,
+                                    null ) );
+                }
+                String labelText = (String) ChannelsUtils.getProperty( bean, labelProperty, defaultText );
+                labelText = ( labelText == null || labelText.isEmpty() )
+                        ? ( defaultText == null ? "" : defaultText )
+                        : labelText;
+                ExpandLinkPanel<Identifiable> cellContent = new ExpandLinkPanel<Identifiable>(
+                        id,
+                        identifiable,
+                        labelText,
+                        payload );
+                cellItem.add( cellContent );
+            }
+
+        };
+    }
+
+
+    /**
      * Make actionlink column.
      *
      * @param name      column name
@@ -767,7 +816,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             super( id );
             AjaxLink link = new AjaxLink<String>( "link", new Model<String>( label ) ) {
                 public void onClick( AjaxRequestTarget target ) {
-                    Change change = new Change( Change.Type.Expanded, (Identifiable) bean );
+                    Change change = new Change( Change.Type.Expanded, (Identifiable) bean, label );
                     if ( payload != null ) {
                         for ( String prop : payload.keySet() ) {
                             change.addQualifier( prop, payload.get( prop ) );

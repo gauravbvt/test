@@ -90,6 +90,17 @@ public class TransmissionMedium extends ModelEntity {
         setType();
     }
 
+    public static String classLabel() {
+        return "transmission media";
+    }
+
+    @Override
+    public String getClassLabel() {
+        return classLabel();
+    }
+
+
+
     private void compilePattern( String addressPattern ) {
         compiledPattern = null;
         try {

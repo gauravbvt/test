@@ -77,6 +77,14 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         this.type = type;
     }
 
+    public static String classLabel() {
+        return "issues";
+    }
+
+    public String getClassLabel() {
+        return classLabel();
+    }
+
     /**
      * {@inheritDoc}
      */

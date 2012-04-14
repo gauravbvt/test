@@ -42,6 +42,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.text.Collator;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -76,6 +77,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     @SpringBean
     private ChannelsUserDao userDao;
 
+    /**
+     * Simple date format.
+     */
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat( "M/d/yyyy HH:mm" );
 
 
     /**
@@ -121,6 +126,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     protected IModel<? extends Identifiable> getModel() {
         return model;
+    }
+
+    protected SimpleDateFormat getDateFormat() {
+        return dateFormat;
     }
 
     /**

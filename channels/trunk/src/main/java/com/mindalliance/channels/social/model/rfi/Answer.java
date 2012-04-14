@@ -3,6 +3,7 @@ package com.mindalliance.channels.social.model.rfi;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 import org.apache.commons.validator.UrlValidator;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.net.MalformedURLException;
@@ -21,6 +22,7 @@ public class Answer extends AbstractPersistentPlanObject {
     @ManyToOne
     private AnswerSet answerSet;
 
+    @Column(length=3000)
     private String text = "";
 
     private int sequence = 0;

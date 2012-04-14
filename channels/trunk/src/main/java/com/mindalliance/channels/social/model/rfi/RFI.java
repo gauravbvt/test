@@ -25,7 +25,7 @@ public class RFI extends AbstractPersistentPlanObject {
     public static final RFI UNKNOWN = new RFI( Channels.UNKNOWN_RFI_ID );
 
 
-    @ManyToOne( cascade = CascadeType.ALL )
+    @ManyToOne
     private RFISurvey rfiSurvey;
 
     /**
@@ -33,7 +33,7 @@ public class RFI extends AbstractPersistentPlanObject {
      */
     private String surveyedUsername;
 
-   // Employment = organization and role ids, and title
+    // Employment = organization and role ids, and title
     private String title;
     private Long organizationId;
     private Long roleId;
@@ -44,13 +44,16 @@ public class RFI extends AbstractPersistentPlanObject {
 
     private String reasonDeclined = "";
 
-    @OneToMany( mappedBy="rfi", cascade = CascadeType.ALL )
-    private List<RFIForward> forwards = new ArrayList<RFIForward>(  );
+    private boolean naggingRequested = false;
 
-    @OneToMany (mappedBy="rfi", cascade = CascadeType.ALL)
-    private List<AnswerSet> answerSets = new ArrayList<AnswerSet>(  );
+    @OneToMany( mappedBy = "rfi", cascade = CascadeType.ALL )
+    private List<RFIForward> forwards = new ArrayList<RFIForward>();
 
-    public RFI() {}
+    @OneToMany( mappedBy = "rfi", cascade = CascadeType.ALL )
+    private List<AnswerSet> answerSets = new ArrayList<AnswerSet>();
+
+    public RFI() {
+    }
 
     public RFI( long id ) {
         this.id = id;
@@ -136,6 +139,14 @@ public class RFI extends AbstractPersistentPlanObject {
         this.deadline = deadline;
     }
 
+    public boolean isNaggingRequested() {
+        return naggingRequested;
+    }
+
+    public void setNaggingRequested( boolean naggingRequested ) {
+        this.naggingRequested = naggingRequested;
+    }
+
     public Date getNagged() {
         return nagged;
     }
@@ -149,9 +160,9 @@ public class RFI extends AbstractPersistentPlanObject {
     }
 
     public void setForwards( List<RFIForward> forwards ) {
-        this.forwards = forwards == null ? new ArrayList<RFIForward>(  ) : forwards;
+        this.forwards = forwards == null ? new ArrayList<RFIForward>() : forwards;
     }
-    
+
     public void addForwarding( RFIForward forwarding ) {
         getForwards().add( forwarding );
     }

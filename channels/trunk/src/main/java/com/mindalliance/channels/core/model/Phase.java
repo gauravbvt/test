@@ -34,6 +34,17 @@ public class Phase extends ModelEntity {
         super( name );
     }
 
+    public static String classLabel() {
+        return "phases of events";
+    }
+
+    @Override
+    public String getClassLabel() {
+        return classLabel();
+    }
+
+
+
     public Timing getTiming() {
         return timing;
     }

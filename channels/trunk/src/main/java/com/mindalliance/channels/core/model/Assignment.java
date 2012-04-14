@@ -251,6 +251,11 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
     }
 
     @Override
+    public String getClassLabel() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
     public String getName() {
         return part.getTask();
     }

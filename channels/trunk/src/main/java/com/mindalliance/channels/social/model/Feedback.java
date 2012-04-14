@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.pages.Channels;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.Date;
@@ -36,6 +37,7 @@ public class Feedback extends UserStatement implements Notifiable {
 
     private String fromEmail;
     private Type type;
+    @Column(length=1000)
     private String topic;
     private boolean urgent;
     private Date whenNotified;

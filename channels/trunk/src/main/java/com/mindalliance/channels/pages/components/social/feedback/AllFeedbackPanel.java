@@ -441,6 +441,11 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
         }
 
         @Override
+        public String getClassLabel() {
+            return getClass().getSimpleName();
+        }
+
+        @Override
         public String getName() {
             return feedback.getName();
         }

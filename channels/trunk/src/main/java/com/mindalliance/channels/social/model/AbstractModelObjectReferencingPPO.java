@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 import com.mindalliance.channels.core.query.QueryService;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 /**
@@ -22,10 +23,12 @@ public abstract class AbstractModelObjectReferencingPPO extends AbstractPersiste
     /**
      * Model object reference as string.
      */
+    @Column(length=2000)
     private String moRef;
     /**
      * Model object label.
      */
+    @Column(length=1000)
     private String moLabel;
     
     private String moTypeName;

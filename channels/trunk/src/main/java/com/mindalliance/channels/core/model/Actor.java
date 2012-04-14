@@ -90,6 +90,17 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         super( name );
     }
 
+    public static String classLabel() {
+        return "agents";
+    }
+
+    @Override
+    public String getClassLabel() {
+        return classLabel();
+    }
+
+
+
     @Override
     public String getKindLabel() {
         return "agent";

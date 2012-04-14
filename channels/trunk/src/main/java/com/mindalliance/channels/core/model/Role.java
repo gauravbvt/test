@@ -30,6 +30,17 @@ public class Role extends ModelEntity implements Specable {
         super( name );
     }
 
+    public static String classLabel() {
+        return "roles";
+    }
+
+    @Override
+    public String getClassLabel() {
+        return classLabel();
+    }
+
+
+
     /**
      * {@inheritDoc}
      */

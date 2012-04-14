@@ -38,13 +38,14 @@ import java.util.List;
  */
 public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
 
-    private static final int MAX_LENGTH = 30;
+    private static final int MAX_LENGTH = 50;
 
     @SpringBean
     private QuestionnaireService questionnaireService;
 
     @SpringBean
     private QuestionService questionService;
+
 
     private Question selectedQuestion;
     private WebMarkupContainer questionsContainer;
@@ -78,6 +79,7 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
             }
         } );
         nameField.setOutputMarkupId( true );
+        nameField.setEnabled( !getQuestionnaire().isActive() );
         addOrReplace( nameField );
     }
 
@@ -92,12 +94,13 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
                 update( target, new Change( Change.Type.Updated, getQuestionnaire() ) );
             }
         } );
+        aboutChoice.setEnabled( !getQuestionnaire().isActive() );
         add( aboutChoice );
     }
 
     private List<String> getAboutChoices() {
         List<String> choices = new ArrayList<String>();
-        choices.addAll( ModelObject.TYPE_LABELS );
+        choices.addAll( ModelObject.CLASS_LABELS );
         return choices;
     }
 
@@ -113,7 +116,7 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
             protected void populateItem( final ListItem<Question> item ) {
                 final Question question = item.getModelObject();
                 // index
-                item.add( new Label("index", Integer.toString( question.getIndex() + 1 ) ) );
+                item.add( new Label( "index", Integer.toString( question.getIndex() + 1 ) ) );
                 // question label, abbreviated
                 AjaxLink<String> questionLink = new AjaxLink<String>( "select" ) {
                     @Override
@@ -123,13 +126,13 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
                         target.add( questionPanel );
                     }
                 };
-                item.add(  questionLink );
+                item.add( questionLink );
                 String questionText = getQuestionText( question );
                 Label questionLabel = new Label(
                         "questionLabel",
                         StringUtils.abbreviate( questionText, MAX_LENGTH ) );
                 if ( questionText.length() > MAX_LENGTH ) {
-                    questionLabel.add( new AttributeModifier( "title", new Model<String>( questionText ) ) );
+                    questionLabel.add( new AttributeModifier( "title", new Model<String>( question.getText() ) ) );
                 }
                 questionLink.add( questionLabel );
                 // move up
@@ -156,19 +159,6 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
                 };
                 moveDownLink.setVisible( !isLastQuestion( question ) );
                 item.add( moveDownLink );
-                 // delete
-                AjaxLink<String> deleteLink = new AjaxLink<String>( "delete" ) {
-                    @Override
-                    public void onClick( AjaxRequestTarget target ) {
-                        questions = null;
-                        delete( question );
-                        addQuestionList();
-                        target.add( questionsContainer );
-                        addQuestionPanel();
-                        target.add(  questionPanel );
-                    }
-                };
-                item.add( deleteLink );
             }
 
         } );
@@ -177,7 +167,7 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
 
     private String getQuestionText( Question question ) {
         String text = question.getText();
-        return text.isEmpty() ? "(empty)" : text;
+        return ( !question.isActivated() ? "(Inactive) " : "" ) + ( text.isEmpty() ? "--TBD--" : text );
     }
 
 
@@ -197,12 +187,6 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
     private boolean isFirstQuestion( Question question ) {
         List<Question> qs = getQuestions();
         return !qs.isEmpty() && question.equals( qs.get( 0 ) );
-    }
-
-    private void delete( Question question ) {
-        if ( selectedQuestion != null && selectedQuestion.equals( question ) )
-            selectedQuestion = null;
-        questionService.delete( question );
     }
 
     private List<Question> getQuestions() {
@@ -229,7 +213,7 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 questions = null;
-                selectedQuestion = addQuestion(  );
+                selectedQuestion = addQuestion();
                 addQuestionList();
                 target.add( questionsContainer );
                 addQuestionPanel();
@@ -267,10 +251,10 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
 
     private Questionnaire getQuestionnaire() {
         Questionnaire questionnaire = (Questionnaire) getModel().getObject();
-   //     questionnaireService.refresh( questionnaire );
+        //     questionnaireService.refresh( questionnaire );
         return questionnaire;
     }
-    
+
     private Question getQuestion() {
 /*
         if ( selectedQuestion != null )
@@ -288,14 +272,22 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
         }
         if ( change.isUpdated() && change.isForInstanceOf( Question.class ) ) {
             addQuestionList();
-            target.add( questionsContainer);
+            target.add( questionsContainer );
+            if ( change.isForProperty( "deleted" ) ) {
+                selectedQuestion = null;
+                questions = null;
+                addQuestionList();
+                target.add( questionsContainer );
+                addQuestionPanel();
+                target.add( questionPanel );
+            }
             modified( getQuestionnaire() );
         }
         super.updateWith( target, new Change( Change.Type.Updated, getQuestionnaire() ), updated );
     }
 
     private void modified( Questionnaire questionnaire ) {
-        questionnaire.setLastModified( new Date( )  );
+        questionnaire.setLastModified( new Date() );
         questionnaireService.save( questionnaire );
     }
 

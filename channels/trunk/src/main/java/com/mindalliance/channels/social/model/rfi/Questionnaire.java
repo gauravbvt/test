@@ -7,6 +7,7 @@ import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -23,6 +24,7 @@ import java.util.List;
 @Entity
 public class Questionnaire extends AbstractPersistentPlanObject {
 
+
     public enum Status {
         /**
          * RFI surveys can be launched with the questionnaire.
@@ -31,25 +33,27 @@ public class Questionnaire extends AbstractPersistentPlanObject {
         /**
          * RFI surveys can no longer be launched with the questionnaire.
          */
-        RETIRED,
-        /**
-         * RFI surveys can not yet be launched with the questionnaire.
-         */
-        DRAFT
+        INACTIVE
     }
 
     public static final Questionnaire UNKNOWN = new Questionnaire( Channels.UNKNOWN_QUESTIONNAIRE_ID );
 
-    
+    /**
+     * Label of the class the questionnaire is about.
+     */
     private String about;
 
+    @Column(length=1000)
     private String name ="unnamed";
 
     @OneToMany( mappedBy="questionnaire", cascade = CascadeType.ALL)
     @OrderBy( "index")
     private List<Question> questions = new ArrayList<Question>(  );
 
-    private Status status = Status.DRAFT;
+    @OneToMany( mappedBy="questionnaire", cascade = CascadeType.ALL)
+    private List<RFISurvey> surveys = new ArrayList<RFISurvey>();
+
+    private Status status = Status.INACTIVE;
     
     public Questionnaire() {
     }
@@ -67,7 +71,7 @@ public class Questionnaire extends AbstractPersistentPlanObject {
     }
 
     public String getAbout() {
-        return about == null ? ModelObject.TYPE_LABELS.get( 0 ) : about;
+        return about == null ? ModelObject.CLASS_LABELS.get( 0 ) : about;
     }
 
     public void setAbout( String typeName ) {
@@ -90,6 +94,14 @@ public class Questionnaire extends AbstractPersistentPlanObject {
         this.questions = questions;
     }
 
+    public List<RFISurvey> getSurveys() {
+        return surveys;
+    }
+
+    public void setSurveys( List<RFISurvey> surveys ) {
+        this.surveys = surveys;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -103,4 +115,9 @@ public class Questionnaire extends AbstractPersistentPlanObject {
                 + ": a questionnaire about " + getAbout()
                 + " (" + getStatus().name() + ")";
     }
+
+    public boolean isActive() {
+        return getStatus().equals( Status.ACTIVE );
+    }
+
 }

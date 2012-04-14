@@ -674,6 +674,11 @@ public class GoalListPanel extends AbstractCommandablePanel {
             return false;
         }
 
+        @Override
+        public String getClassLabel() {
+            return getClass().getSimpleName();
+        }
+
         public void setDescription( String value ) {
             String oldValue = goal.getDescription();
             if ( !oldValue.equals( value ) ) {

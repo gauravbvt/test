@@ -23,7 +23,7 @@ import java.util.List;
  * Time: 9:42 AM
  */
 @Repository
-public class QuestionServiceImpl  extends GenericSqlServiceImpl<Question, Long> implements QuestionService {
+public class QuestionServiceImpl extends GenericSqlServiceImpl<Question, Long> implements QuestionService {
 
     @Override
     @SuppressWarnings( "unchecked" )

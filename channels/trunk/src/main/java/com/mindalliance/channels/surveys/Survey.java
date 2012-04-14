@@ -274,6 +274,11 @@ abstract public class Survey implements Identifiable, Serializable {
         return false;
     }
 
+    @Override
+    public String getClassLabel() {
+        return getClass().getSimpleName();
+    }
+
     /**
      * Add a user to the survey.
      *

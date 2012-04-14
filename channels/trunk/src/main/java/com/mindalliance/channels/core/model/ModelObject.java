@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.model;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.ChannelsLockable;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -21,12 +22,12 @@ import java.util.Map;
  */
 public abstract class ModelObject
         extends AbstractAttachable
-        implements Comparable<ModelObject>, Nameable, Modelable, Taggable, ChannelsLockable {
+        implements Comparable<ModelObject>, Modelable, Taggable, ChannelsLockable {
     
-    public static final List<String> TYPE_LABELS;
+    public static final List<String> CLASS_LABELS;
 
     static {
-        TYPE_LABELS = typeLabels();
+        CLASS_LABELS = classLabels();
     }
 
     /**
@@ -466,19 +467,23 @@ public abstract class ModelObject
         setWaivedIssueDetections( (ArrayList<String>)state.get( "waivedIssueDetections" ) );
     }
 
-    public static List<String> typeLabels() {
+    public static List<String> classLabels() {
         List<String> typeLabels = new ArrayList<String>(  );
-        typeLabels.add( "plan segments" );
-        typeLabels.add( "sharing requirements" );
-        typeLabels.add( "issues" );
-        typeLabels.add( "tasks" );
-        typeLabels.add( "information flows" );
-        typeLabels.addAll( ModelEntity.typeLabels() );
+        typeLabels.add( Segment.classLabel() );
+        typeLabels.add( Requirement.classLabel() );
+        typeLabels.add( DetectedIssue.classLabel() );
+        typeLabels.add( Part.classLabel() );
+        typeLabels.add( Flow.classLabel() );
+        typeLabels.addAll( ModelEntity.classLabels() );
         Collections.sort( typeLabels );
         List<String> results = new ArrayList<String>(  );
         results.add( "this plan" );
         results.addAll( typeLabels );
         return results;
+    }
+
+    public String getClassLabel() {
+        return getTypeName(); // default
     }
     
 }

@@ -54,6 +54,11 @@ public class Relationship<T extends Identifiable> implements Identifiable {
         return false;
     }
 
+    @Override
+    public String getClassLabel() {
+        return getClass().getSimpleName();
+    }
+
     /**
      * Long value of(<fromIdentifiable id as string>
      * concatenated to  <toIdentifiable id as string of length 9, left padded with 0>.

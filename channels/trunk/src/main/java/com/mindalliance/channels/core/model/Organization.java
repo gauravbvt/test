@@ -73,6 +73,17 @@ public class Organization extends AbstractUnicastChannelable
         super( name );
     }
 
+    public static String classLabel() {
+        return "organizations";
+    }
+
+    @Override
+    public String getClassLabel() {
+        return classLabel();
+    }
+
+
+
     @Override
     public boolean validates( ModelEntity entity, Place locale ) {
         Organization org = (Organization) entity;

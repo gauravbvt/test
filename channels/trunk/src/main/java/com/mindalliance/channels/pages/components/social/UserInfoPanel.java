@@ -466,6 +466,11 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         }
 
         @Override
+        public String getClassLabel() {
+            return getClass().getSimpleName();
+        }
+
+        @Override
         public String getName() {
             return getUserInfo().getFullName();
         }

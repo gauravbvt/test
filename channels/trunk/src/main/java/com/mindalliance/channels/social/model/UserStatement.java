@@ -16,7 +16,7 @@ import javax.persistence.Entity;
 @Entity
 public class UserStatement extends AbstractModelObjectReferencingPPO {
 
-    @Column(length=1000)
+    @Column(length=3000)
     private String text;
 
     public UserStatement() {

@@ -39,7 +39,7 @@ public class PresenceRecord extends AbstractPersistentPlanObject {
     public String toString() {
         return getUsername()
                 + ( type == Type.Active ? " logged in" : " logged out" )
-                + " " + super.toString();
+                + " at " + getFormattedCreated();
     }
 
     public boolean isEntering() {

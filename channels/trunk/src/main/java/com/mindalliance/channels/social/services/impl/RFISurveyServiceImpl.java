@@ -1,7 +1,10 @@
 package com.mindalliance.channels.social.services.impl;
 
+import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import com.mindalliance.channels.social.services.RFIService;
@@ -34,8 +37,8 @@ public class RFISurveyServiceImpl extends GenericSqlServiceImpl<RFISurvey, Long>
 
     @Override
     @SuppressWarnings( "unchecked" )
-    @Transactional( readOnly = true)
-   public List<RFISurvey> select( Plan plan, boolean onlyOpen, String aboutTypeName ) {
+    @Transactional( readOnly = true )
+    public List<RFISurvey> select( Plan plan, boolean onlyOpen, String about ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
@@ -43,20 +46,33 @@ public class RFISurveyServiceImpl extends GenericSqlServiceImpl<RFISurvey, Long>
         if ( onlyOpen ) {
             criteria.add( Restrictions.eq( "closed", false ) );
         }
-        if ( aboutTypeName != null && !aboutTypeName.isEmpty() ) {
-            criteria.add( Restrictions.eq( "moTypeName", aboutTypeName ) );
+        if ( about != null && !about.isEmpty() ) {
+            criteria.add( Restrictions.eq( "about", about ) );
         }
         criteria.addOrder( Order.desc( "created" ) );
         return (List<RFISurvey>) criteria.list();
-   }
+    }
 
     @Override
-    @Transactional( readOnly = true)
-   public String findResponseMetrics( RFISurvey rfiSurvey, final RFIService rfiService ) {
-        List<RFI> surveyedRFIs = rfiSurvey.getRfis();
-        int[]counts = new int[3];
+    @SuppressWarnings( "unchecked" )
+    @Transactional( readOnly = true )
+    public List<RFISurvey> select( Plan plan, ModelObject modelObject ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
+        criteria.add( Restrictions.eq( "moRef", new ModelObjectRef( modelObject ).asString() ) );
+        criteria.addOrder( Order.desc( "created" ) );
+        return (List<RFISurvey>) criteria.list();
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public String findResponseMetrics( RFISurvey rfiSurvey, final RFIService rfiService ) {
+        List<RFI> surveyedRFIs = rfiService.select( rfiSurvey );
+        Integer[] counts = new Integer[3];
         counts[0] = CollectionUtils.countMatches(
-                rfiSurvey.getRfis(),
+                surveyedRFIs,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -65,7 +81,7 @@ public class RFISurveyServiceImpl extends GenericSqlServiceImpl<RFISurvey, Long>
                 }
         );
         counts[1] = CollectionUtils.countMatches(
-                rfiSurvey.getRfis(),
+                surveyedRFIs,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -73,17 +89,37 @@ public class RFISurveyServiceImpl extends GenericSqlServiceImpl<RFISurvey, Long>
                     }
                 }
         );
-        counts[2] = surveyedRFIs.size() - (counts[0] + counts[1] );
-        return new MessageFormat( "{0}c {1}d {2}i").format( counts );
+        counts[2] = surveyedRFIs.size() - ( counts[0] + counts[1] );
+        return new MessageFormat( "{0}c {1}d {2}i" ).format( counts );
     }
 
     @Override
+    @Transactional
     public List<String> findParticipants( RFISurvey rfiSurvey ) {
-        return new ArrayList<String>(  ); //TODO
+        return new ArrayList<String>(); //TODO
     }
 
     @Override
+    @Transactional
     public RFI findRFI( String username, RFISurvey rfiSurvey ) {
-        return null;  //TODO
+        return null;  //TODO -- should be in RFIService
+    }
+
+    @Override
+    @Transactional
+    public RFISurvey launch( Plan plan, String username, Questionnaire questionnaire, ModelObject modelObject ) {
+        RFISurvey rfiSurvey = new RFISurvey(
+                plan.getUri(),
+                plan.getVersion(),
+                username
+        );
+        if ( questionnaire.isActive() ) {
+            rfiSurvey.setQuestionnaire( questionnaire );
+            rfiSurvey.setMoRef( modelObject );
+            save( rfiSurvey );
+            return rfiSurvey;
+        } else {
+            return null;
+        }
     }
 }

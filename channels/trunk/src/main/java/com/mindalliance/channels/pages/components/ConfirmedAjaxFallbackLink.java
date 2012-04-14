@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.calldecorator.AjaxCallDecorator;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -37,7 +38,7 @@ abstract public class ConfirmedAjaxFallbackLink<T> extends AjaxFallbackLink<T> {
             return super.getAjaxCallDecorator();
         } else {
             return new AjaxCallDecorator() {
-                public CharSequence decorateScript( CharSequence script ) {
+                public CharSequence decorateScript( Component component, CharSequence script ) {
                     String prompt = message.replaceAll( "'", "\\\\'" );
                     return "if (confirm('" + prompt + "')) {" + script + "} else {return false;};";
                 }

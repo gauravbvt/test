@@ -83,7 +83,7 @@ public class AnswerChoicesPanel extends AbstractUpdatablePanel {
                         update( target, new Change( Change.Type.Updated, getQuestion() ) );
                     }
                 };
-                moveUpLink.setVisible( !isFirstChoice( choice ) );
+                moveUpLink.setVisible( !getQuestion().isActivated() && !isFirstChoice( choice ) );
                 item.add( moveUpLink );
                 // move down
                 AjaxLink<String> moveDownLink = new AjaxLink<String>( "moveDown" ) {
@@ -96,7 +96,7 @@ public class AnswerChoicesPanel extends AbstractUpdatablePanel {
                         update( target, new Change( Change.Type.Updated, getQuestion() ) );
                     }
                 };
-                moveDownLink.setVisible( !isLastChoice( choice ) );
+                moveDownLink.setVisible( !getQuestion().isActivated() && !isLastChoice( choice ) );
                 item.add( moveDownLink );
                 // delete
                 AjaxLink<String> deleteLink = new AjaxLink<String>( "delete" ) {
@@ -109,6 +109,7 @@ public class AnswerChoicesPanel extends AbstractUpdatablePanel {
                         update( target, new Change( Change.Type.Updated, getQuestion() ) );
                     }
                 };
+                deleteLink.setVisible( !getQuestion().isActivated() );
                 item.add( deleteLink );
             }
 

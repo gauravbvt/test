@@ -3,6 +3,7 @@ package com.mindalliance.channels.social.model.rfi;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 import org.apache.commons.lang.StringUtils;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.util.ArrayList;
@@ -21,13 +22,13 @@ public class Question extends AbstractPersistentPlanObject {
 
 
     public enum Type {
-        STATEMENT,
+        SHORT_FORM,
         YES_NO,
         CHOICE,
-        SHORT_FORM,
         LONG_FORM,
-        DOCUMENT;
-        
+        DOCUMENT,
+        STATEMENT;
+
         public String getLabel() {
             switch( this ) {
                 case STATEMENT: return "statement";
@@ -53,6 +54,7 @@ public class Question extends AbstractPersistentPlanObject {
     // Multiple choice question follows pattern: "Question:::choice 1:::choice 2:::..."
     private String options = "";
 
+    @Column(length=2000)
     private String text = "";
 
     private boolean answerRequired = true;
@@ -61,7 +63,7 @@ public class Question extends AbstractPersistentPlanObject {
 
     private boolean multipleAnswers = false;
 
-    private boolean retired = false;
+    private boolean activated = false;
 
     public Question() {
     }
@@ -119,12 +121,12 @@ public class Question extends AbstractPersistentPlanObject {
         this.multipleAnswers = multipleAnswers;
     }
 
-    public boolean isRetired() {
-        return retired;
+    public boolean isActivated() {
+        return activated;
     }
 
-    public void setRetired( boolean retired ) {
-        this.retired = retired;
+    public void setActivated( boolean activated ) {
+        this.activated = activated;
     }
 
     public Type getType() {
@@ -162,7 +164,7 @@ public class Question extends AbstractPersistentPlanObject {
     }
 
     public boolean isOpenable() {
-        return getType() != Type.STATEMENT && getType() != Type.YES_NO;
+        return getType() == Type.CHOICE || getType() == Type.YES_NO;
     }
 
     public boolean isMultipleable() {

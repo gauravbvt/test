@@ -70,7 +70,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
     /**
      * Plan accesses as string.
      */
-    @Column(length=1000)
+    @Column(length=2000)
     private String planAccesses;
 
     /**

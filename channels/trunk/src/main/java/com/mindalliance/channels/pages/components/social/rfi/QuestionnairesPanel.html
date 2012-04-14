@@ -12,9 +12,7 @@
         <select wicket:id="statusChoice">
             <option>All</option>
             <option>Active</option>
-            <option>Draft</option>
-            <option>Obsolete</option>
-            <option>Draft</option>
+            <option>Inactive</option>
         </select>
         questionnaires about
         <select wicket:id="aboutChoice">
@@ -31,7 +29,9 @@
     <div wicket:id="questionnaire">
         <h3 wicket:id="questionnaireLabel">Questionnaire about event"</h3>
         <span wicket:id="questionnaireManager">[Questionnaire manager panel]</span>
-        <input wicket:id="deleteQuestionnaire" type="button" value="Delete this questionnaire"/>
+        <a wicket:id="deleteQuestionnaire" class="button">Delete questionnaire</a>
+        <a wicket:id="activateQuestionnaire" class="button">Activate questionnaire</a>
+        <a wicket:id="retireQuestionnaire" class="button">Deactivate questionnaire</a>
     </div>
 </wicket:panel>
 </body>

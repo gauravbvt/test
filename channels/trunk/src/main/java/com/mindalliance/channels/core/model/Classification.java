@@ -75,6 +75,11 @@ public class Classification implements Identifiable, Comparable<Classification> 
         return false;
     }
 
+    @Override
+    public String getClassLabel() {
+        return getClass().getSimpleName();
+    }
+
     public void setName( String name ) {
         assert this.name.isEmpty();
         this.name = name;

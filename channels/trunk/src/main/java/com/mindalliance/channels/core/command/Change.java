@@ -1,7 +1,6 @@
 package com.mindalliance.channels.core.command;
 
 import com.mindalliance.channels.core.model.Identifiable;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -209,7 +208,7 @@ public class Change implements Serializable {
         return identifiableRef == null ? null : identifiableRef.resolve( queryService );
     }
 
-    public void setSubject( ModelObject subject ) {
+    public void setSubject( Identifiable subject ) {
         identifiableRef = new ModelObjectRef( subject );
     }
 

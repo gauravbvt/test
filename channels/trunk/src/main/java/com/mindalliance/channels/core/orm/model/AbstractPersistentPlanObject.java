@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.orm.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,6 +32,7 @@ public abstract class AbstractPersistentPlanObject implements PersistentPlanObje
     private Date created;
     private String username;
     private Date lastModified;
+    @Column(length=1000)
     private String planUri;
     private int planVersion;
 
@@ -69,7 +71,11 @@ public abstract class AbstractPersistentPlanObject implements PersistentPlanObje
     }
 
     public String toString() {
-        return "at " + dateFormat.format( getCreated() );
+        return getTypeName() + "created at " + getFormattedCreated();
+    }
+
+    protected String getFormattedCreated() {
+        return dateFormat.format( getCreated() );
     }
 
     public String getUsername() {
@@ -118,6 +124,11 @@ public abstract class AbstractPersistentPlanObject implements PersistentPlanObje
     @Override
     public boolean isModifiableInProduction() {
         return true;
+    }
+
+    @Override
+    public String getClassLabel() {
+        return getClass().getSimpleName();
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 import com.mindalliance.channels.core.query.QueryService;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -27,6 +28,7 @@ public class RFIForward extends AbstractPersistentPlanObject {
      */
     private long actorId;
 
+    @Column(length=3000)
     private String message = "";
 
     @ManyToOne

@@ -29,6 +29,8 @@ public class Requirement extends ModelObject implements Countable {
 
     private static String UNNAMED = "UNNAMED";
 
+    
+
     /**
      * Degree of satisfaction.
      */
@@ -86,6 +88,15 @@ public class Requirement extends ModelObject implements Countable {
         super();
         String s = name == null || name.trim().isEmpty() ? UNNAMED : name.trim();
         setName( s );
+    }
+
+    public static String classLabel() {
+        return "sharing requirements";
+    }
+
+    @Override
+    public String getClassLabel() {
+        return classLabel();
     }
 
     public String getInformation() {

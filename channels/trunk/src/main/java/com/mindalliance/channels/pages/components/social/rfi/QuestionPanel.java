@@ -3,10 +3,12 @@ package com.mindalliance.channels.pages.components.social.rfi;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.model.rfi.Question;
+import com.mindalliance.channels.social.services.AnswerSetService;
 import com.mindalliance.channels.social.services.QuestionService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -34,8 +36,23 @@ public class QuestionPanel extends AbstractUpdatablePanel {
     @SpringBean
     private QuestionService questionService;
 
+    @SpringBean
+    private AnswerSetService answerService;
+
     private Component answerOptionsPanel;
     private WebMarkupContainer constraintsContainer;
+    private WebMarkupContainer retirementContainer;
+    private TextField<String> questionTextField;
+    private DropDownChoice<Question.Type> typeChoice;
+    private WebMarkupContainer requiredContainer;
+    private AjaxCheckBox requiredCheckBox;
+    private WebMarkupContainer openEndedContainer;
+    private AjaxCheckBox openEndedCheckBox;
+    private WebMarkupContainer multipleContainer;
+    private AjaxCheckBox multipleCheckBox;
+    private AjaxLink<String> deactivateIt;
+    private AjaxLink<String> deleteIt;
+    private AjaxLink<String> activateIt;
 
     public QuestionPanel( String id, IModel<Question> questionModel ) {
         super( id, questionModel );
@@ -47,24 +64,53 @@ public class QuestionPanel extends AbstractUpdatablePanel {
         addAnswerTypeChoice();
         addAnswerOptionsPanel();
         addConstraints();
+        addRetirement();
+        updateFields();
     }
 
+    private void updateFields() {
+        Question question = getQuestion();
+        questionTextField.setEnabled( canBeChanged( question ) );
+        typeChoice.setEnabled( canBeChanged( question ) );
+        requiredCheckBox.setEnabled( canBeChanged( question ) );
+        makeVisible( requiredContainer, question.isRequirable() );
+        openEndedCheckBox.setEnabled( canBeChanged( question ) );
+        makeVisible( openEndedContainer, question.isOpenable() );
+        multipleCheckBox.setEnabled( canBeChanged( question ) );
+        multipleContainer.setVisible( question.isMultipleable() );
+        makeVisible( deactivateIt, getQuestion().isActivated() );
+        makeVisible( deleteIt, canBeDeleted() );
+        makeVisible( activateIt, !getQuestion().isActivated() );
+    }
+
+    private void updateFields( AjaxRequestTarget target ) {
+        updateFields();
+        target.add( this );
+    }
+
+
     private void addQuestionTextField() {
-        TextField<String> questionText = new TextField<String>(
+        questionTextField = new TextField<String>(
                 "questionText",
                 new PropertyModel<String>( this, "questionText" )
         );
-        questionText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        questionTextField.setOutputMarkupId( true );
+        questionTextField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, getQuestion() ) );
             }
         } );
-        add( questionText );
+        add( questionTextField );
+    }
+
+    private boolean canBeChanged( Question question ) {
+        return !question.isActivated();
+
     }
 
     private void addAnswerTypeChoice() {
-        DropDownChoice<Question.Type> typeChoice = new DropDownChoice<Question.Type>(
+        typeChoice = new DropDownChoice<Question.Type>(
                 "questionType",
                 new PropertyModel<Question.Type>( this, "questionType" ),
                 getQuestionTypes(),
@@ -80,12 +126,14 @@ public class QuestionPanel extends AbstractUpdatablePanel {
                     }
                 }
         );
+        typeChoice.setOutputMarkupId( true );
         typeChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addAnswerOptionsPanel();
                 target.add( answerOptionsPanel );
                 addConstraints();
+                updateFields();
                 target.add( constraintsContainer );
                 update( target, new Change( Change.Type.Updated, getQuestion() ) );
             }
@@ -121,9 +169,15 @@ public class QuestionPanel extends AbstractUpdatablePanel {
                         || question.isOpenable()
                         || question.isMultipleable() );
         addOrReplace( constraintsContainer );
-        // required
-        AjaxCheckBox requiredCheckBox = new AjaxCheckBox(
-                "answerRequired",
+        addRequired();
+        addOpenEnded();
+        addMultiple();
+    }
+
+    private void addRequired() {
+        requiredContainer = new WebMarkupContainer( "requiredContainer" );
+        requiredCheckBox = new AjaxCheckBox(
+                "required",
                 new PropertyModel<Boolean>( this, "answerRequired" )
 
         ) {
@@ -132,10 +186,13 @@ public class QuestionPanel extends AbstractUpdatablePanel {
                 update( target, new Change( Change.Type.Updated, getQuestion() ) );
             }
         };
-        requiredCheckBox.setVisible( question.isRequirable() );
-        constraintsContainer.add( requiredCheckBox );
-        // open ended
-        AjaxCheckBox openEndedCheckBox = new AjaxCheckBox(
+        requiredContainer.add( requiredCheckBox );
+        constraintsContainer.add( requiredContainer );
+    }
+
+    private void addOpenEnded() {
+        openEndedContainer = new WebMarkupContainer( "openEndedContainer" );
+        openEndedCheckBox = new AjaxCheckBox(
                 "openEnded",
                 new PropertyModel<Boolean>( this, "openEnded" )
 
@@ -145,10 +202,14 @@ public class QuestionPanel extends AbstractUpdatablePanel {
                 update( target, new Change( Change.Type.Updated, getQuestion() ) );
             }
         };
-        openEndedCheckBox.setVisible( question.isOpenable() );
-        constraintsContainer.add( openEndedCheckBox );
-        // multiple
-        AjaxCheckBox multipleCheckBox = new AjaxCheckBox(
+        openEndedContainer.add( openEndedCheckBox );
+        constraintsContainer.add( openEndedContainer );
+    }
+
+    private void addMultiple() {
+        multipleContainer = new WebMarkupContainer( "multipleContainer" );
+
+        multipleCheckBox = new AjaxCheckBox(
                 "multiple",
                 new PropertyModel<Boolean>( this, "multipleAnswers" )
 
@@ -158,8 +219,67 @@ public class QuestionPanel extends AbstractUpdatablePanel {
                 update( target, new Change( Change.Type.Updated, getQuestion() ) );
             }
         };
-        multipleCheckBox.setVisible( question.isMultipleable() );
-        constraintsContainer.add( multipleCheckBox );
+        multipleContainer.add( multipleCheckBox );
+        constraintsContainer.add( multipleContainer );
+    }
+
+    private void addRetirement() {
+        retirementContainer = new WebMarkupContainer( "retirementContainer" );
+        retirementContainer.setOutputMarkupId( true );
+        retirementContainer.add( new Label( "answered", getAnsweredLabel() ) );
+        // activate it
+        activateIt = new AjaxLink<String>( "activateIt" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                setActivated( true );
+                addAnswerOptionsPanel();
+                target.add( answerOptionsPanel );
+                updateFields( target );
+                update( target, new Change( Change.Type.Updated, getQuestion(), "activated" ) );
+            }
+        };
+        retirementContainer.add( activateIt );
+        // deactivate it
+        deactivateIt = new AjaxLink<String>( "deactivateIt" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                setActivated( false );
+                updateFields( target );
+                addAnswerOptionsPanel();
+                target.add( answerOptionsPanel );
+                update( target, new Change( Change.Type.Updated, getQuestion(), "activated" ) );
+            }
+        };
+        retirementContainer.add( deactivateIt );
+        addOrReplace( retirementContainer );
+        // delete it
+        deleteIt = new AjaxLink<String>( "deleteIt" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                deleteQuestion();
+                update( target, new Change( Change.Type.Updated, getQuestion(), "deleted" ) );
+            }
+        };
+        retirementContainer.add( deleteIt );
+        addOrReplace( retirementContainer );
+    }
+
+    private void deleteQuestion() {
+        if ( canBeDeleted() ) {
+            Question question = getQuestion();
+            questionService.delete( question );
+        }
+    }
+
+    private boolean canBeDeleted() {
+        return !getQuestion().isActivated() && answerService.getAnswerCount( getQuestion() ) == 0;
+    }
+
+    private String getAnsweredLabel() {
+        int count = answerService.getAnswerCount( getQuestion() );
+        return count > 0
+                ? "has been answered " + count + " times"
+                : "has not yet been answered";
     }
 
     public String getQuestionText() {
@@ -214,6 +334,15 @@ public class QuestionPanel extends AbstractUpdatablePanel {
         questionService.save( question );
     }
 
+    public boolean isActivated() {
+        return getQuestion().isActivated();
+    }
+
+    public void setActivated( boolean val ) {
+        Question question = getQuestion();
+        question.setActivated( val );
+        questionService.save( question );
+    }
 
     private Question getQuestion() {
         return (Question) getModel().getObject();

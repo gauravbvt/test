@@ -43,6 +43,17 @@ public class Event extends ModelEntity implements GeoLocatable {
         super( name );
     }
 
+    public static String classLabel() {
+        return "events";
+    }
+
+    @Override
+    public String getClassLabel() {
+        return classLabel();
+    }
+
+
+
     //-------------------------------
     @Override
     public List<Type> getAttachmentTypes() {

@@ -7,6 +7,7 @@ import com.mindalliance.channels.social.model.AbstractModelObjectReferencingPPO;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.Date;
 import java.util.List;
@@ -24,10 +25,11 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
 
     public static final RFISurvey UNKNOWN = new RFISurvey( Channels.UNKNOWN_RFI_SURVEY_ID );
     private static final String DELETED = "(DELETED)";
-
+    @ManyToOne
     private Questionnaire questionnaire;
     private boolean closed = false;
     private Date deadline;
+    private String about;
     @OneToMany( mappedBy="rfiSurvey", cascade = CascadeType.ALL )
     private List<RFI> rfis;
 
@@ -52,6 +54,15 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
 
     public void setQuestionnaire( Questionnaire questionnaire ) {
         this.questionnaire = questionnaire;
+        setAbout( questionnaire.getAbout() );
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout( String about ) {
+        this.about = about;
     }
 
     public boolean isClosed() {
@@ -72,6 +83,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
 
     public boolean isObsolete( QueryService queryService) {
         return getModelObject( queryService ) == null;
+        // todo - deal with surveys on obsolete issues about non-obsolete MOs.
     }
     
     public boolean isActive( QueryService queryService ) {
@@ -98,12 +110,11 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
     public String getLabel( QueryService queryService ) {
         StringBuilder sb = new StringBuilder(  );
         sb
-                .append( isClosed() ? "Closed survey about "  : "Survey about ")
-                .append( getTypeName()  )
-                .append( " \"" )
-                .append( getModelObjectName( queryService ) )
-                .append( "\": " )
-                .append(  getQuestionnaire().getName() );
+                .append( isClosed() ? "Closed survey \""  : "Survey \"")
+                .append(  getQuestionnaire().getName() )
+                .append( "\"" )
+                .append( " about " )
+                .append( getMoLabel() );
         return sb.toString();
     }
 

@@ -1,5 +1,7 @@
 package com.mindalliance.channels.social.services;
 
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 
@@ -17,10 +19,20 @@ public interface QuestionnaireService extends GenericSqlService<Questionnaire, L
     /**
      * Find all questionnaires of given (or not) status about a type of model objects or about any type.
      *
+     *
+     * @param plan
      * @param typeName model object type name, or null for any
-     * @param status   the status (Draft, Active, or Retired)
+     * @param status   the status (null, Active, or Inactive)
      * @return a list of questionnaires
      */
-    List<Questionnaire> select( String typeName, Questionnaire.Status status );
+    List<Questionnaire> select( Plan plan, String typeName, Questionnaire.Status status );
 
+    /**
+     * Find all questionnaires that can be used in surveys about a model object.
+     *
+     * @param plan        a plan
+     * @param modelObject a model object
+     * @return a list of questionnaires
+     */
+    List<Questionnaire> findApplicableQuestionnaires( Plan plan, ModelObject modelObject );
 }

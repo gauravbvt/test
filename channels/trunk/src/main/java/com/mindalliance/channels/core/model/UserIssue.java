@@ -58,6 +58,16 @@ public class UserIssue extends ModelObject implements Issue {
         setDescription( "(No description)" );
     }
 
+    public static String classLabel() {
+        return "issues";
+    }
+
+    @Override
+    public String getClassLabel() {
+        return classLabel();
+    }
+
+
     /**
      * {@inheritDoc}
      */

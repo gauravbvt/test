@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.dao.user;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -19,6 +20,8 @@ public class UserContactInfo extends AbstractPersistentPlanObject {
     @ManyToOne
     private ChannelsUserInfo user;
     private long transmissionMediumId;
+
+    @Column(length=1000)
     private String address;
 
     public UserContactInfo() {}

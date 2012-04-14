@@ -93,6 +93,16 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     protected Flow() {
     }
 
+    public static String classLabel() {
+        return "information flows";
+    }
+
+    @Override
+    public String getClassLabel() {
+        return classLabel();
+    }
+
+
     public String getKindLabel() {
         return "Flow";
     }
@@ -1378,6 +1388,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         if ( state.containsKey( "receiptConfirmationRequested" ) )
             setReceiptConfirmationRequested( (Boolean) state.get( "receiptConfirmationRequested" ) );
     }
+
 
     /**
      * The significance of a flow.

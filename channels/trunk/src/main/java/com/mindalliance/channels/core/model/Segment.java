@@ -726,8 +726,16 @@ public class Segment extends ModelObject {
                 CollectionUtils.isEqualCollection( context, other.getContext() );
     }
 
+    public static String classLabel() {
+        return "plan segments";
+    }
 
-    //=================================================
+    @Override
+    public String getClassLabel() {
+        return classLabel();
+    }
+
+//=================================================
 
     /**
      * An iterator that walks through all flow in the segment.

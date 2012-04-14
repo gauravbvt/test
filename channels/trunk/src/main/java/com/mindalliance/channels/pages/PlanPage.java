@@ -29,6 +29,7 @@ import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareWebContainer;
 import com.mindalliance.channels.pages.components.MessagePanel;
+import com.mindalliance.channels.pages.components.ModelObjectSurveysPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
@@ -277,6 +278,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private Component disseminationPanel;
 
     /**
+     * Surveys panel.
+     */
+    private Component modelObjectSurveysPanel;
+
+    /**
      * Overrides panel.
      */
     private Component overridesPanel;
@@ -470,6 +476,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addEOIsPanel();
         addFailureImpactsPanel();
         addDisseminationPanel( null, false );
+        addModelObjectSurveysPanel( );
         addOverridesPanel();
         addSegmentEditPanel();
         addPlanEditPanel( null );
@@ -1033,6 +1040,21 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     getReadOnlyExpansions() );
         }
         form.addOrReplace( disseminationPanel );
+    }
+
+    private void addModelObjectSurveysPanel( ) {
+        ModelObject modelObject = getModelObjectViewed( ModelObject.class, "surveys" );
+        if ( modelObject == null ) {
+            modelObjectSurveysPanel = new Label( "moSurveys", "" );
+            modelObjectSurveysPanel.setOutputMarkupId( true );
+            makeVisible( modelObjectSurveysPanel, false );
+        } else {
+            modelObjectSurveysPanel = new ModelObjectSurveysPanel(
+                    "moSurveys",
+                    new Model<ModelObject>( modelObject ) );
+        }
+        form.addOrReplace( modelObjectSurveysPanel );
+
     }
 
     private void addOverridesPanel() {
@@ -1882,6 +1904,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
             refreshFailureImpactsPanel( target, change, updated );
         } else if ( change.isForInstanceOf( SegmentObject.class ) && change.isForProperty( "dissemination" ) ) {
             refreshDisseminationPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( ModelObject.class ) && change.isForProperty( "surveys" ) ) {
+            refreshModelObjectSurveysPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Flow.class ) && change.isForProperty( "commitments" ) ) {
             refreshCommitmentsPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Flow.class ) && change.isForProperty( "eois" ) ) {
@@ -2045,6 +2069,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         refreshSegmentPanel( target, change, updated );
         refreshFailureImpactsPanel( target, change, updated );
         refreshDisseminationPanel( target, change, updated );
+        refreshModelObjectSurveysPanel( target, change, updated );
         refreshOverridesPanel( target, change, updated );
     }
 
@@ -2194,6 +2219,19 @@ public final class PlanPage extends AbstractChannelsWebPage {
             target.add( disseminationPanel );
         } else if ( disseminationPanel instanceof DisseminationPanel ) {
             ( (DisseminationPanel) disseminationPanel ).refresh( target, change, updated );
+        }
+    }
+
+    private void refreshModelObjectSurveysPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        Identifiable identifiable = change.getSubject( getQueryService() );
+        if ( change.isRefresh() ||
+                identifiable != null && identifiable instanceof ModelObject
+                        && change.isAspect( "surveys" ) ) {
+            addModelObjectSurveysPanel();
+            target.add( modelObjectSurveysPanel );
+        } else if ( modelObjectSurveysPanel instanceof ModelObjectSurveysPanel ) {
+            ( (ModelObjectSurveysPanel) modelObjectSurveysPanel ).refresh( target, change, updated );
         }
     }
 

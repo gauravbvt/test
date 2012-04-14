@@ -35,4 +35,10 @@ public interface Identifiable extends Nameable {
      * @return a boolean
      */
     boolean isModifiableInProduction();
+
+    /**
+     * Get a presentable name for the identifiable's class.
+     * @return a string
+     */
+    String getClassLabel();
 }

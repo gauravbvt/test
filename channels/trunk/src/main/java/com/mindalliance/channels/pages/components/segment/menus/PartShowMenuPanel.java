@@ -114,6 +114,19 @@ public class PartShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Dissemination" ),
                 disseminationLink ) );
+        // Surveys
+        AjaxFallbackLink surveysLink = new AjaxFallbackLink( "link" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                Change change = new Change( Change.Type.AspectViewed, getPart(), "surveys" );
+                change.addQualifier( "show", "targets" );
+                update( target, change );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Surveys" ),
+                surveysLink ) );
         // View part entities
         menuItems.addAll( getModelObjectMenuItems( "menuItem", getModelObjectWrappers() ) );
         return menuItems;

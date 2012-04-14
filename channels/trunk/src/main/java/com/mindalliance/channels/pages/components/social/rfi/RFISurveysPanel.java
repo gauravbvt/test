@@ -13,6 +13,7 @@ import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.RFISurveyService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -22,6 +23,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -48,8 +50,8 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
     @SpringBean
     private RFIService rfiService;
 
-    private String aboutTypeName = ANYTHING;
-    private boolean onlyActive = true;
+    private String about = null;
+    private boolean onlyLaunched = false;
     private RFISurvey selectedRFISurvey;
     /**
      * Filters mapped by property.
@@ -67,6 +69,9 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
     }
 
     private void init() {
+        RFISurvey rfiSurvey = getRFISurvey();
+        if ( !rfiSurvey.isUnknown() )
+            selectedRFISurvey = rfiSurvey;
         addFilters();
         addRFISurveyTable();
         addRFISurveyContainer();
@@ -74,8 +79,8 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
 
     private void addFilters() {
         activeCheckBox = new AjaxCheckBox(
-                "active",
-                new PropertyModel<Boolean>( this, "onlyActive" ) ) {
+                "launched",
+                new PropertyModel<Boolean>( this, "onlyLaunched" ) ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addRFISurveyTable();
@@ -85,7 +90,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         add( activeCheckBox );
         DropDownChoice<String> aboutChoice = new DropDownChoice<String>(
                 "aboutChoice",
-                new PropertyModel<String>( this, "aboutTypeName" ),
+                new PropertyModel<String>( this, "about" ),
                 getAboutChoices() );
         aboutChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
@@ -100,7 +105,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
     private List<String> getAboutChoices() {
         List<String> choices = new ArrayList<String>();
         choices.add( ANYTHING );
-        choices.addAll( ModelObject.TYPE_LABELS );
+        choices.addAll( ModelObject.CLASS_LABELS );
         return choices;
     }
 
@@ -118,11 +123,10 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         List<RFISurveyWrapper> wrappers = new ArrayList<RFISurveyWrapper>();
         List<RFISurvey> rfiSurveys = rfiSurveyService.select(
                 getPlan(),
-                onlyActive, // restrict to open surveys
-                aboutTypeName );
+                onlyLaunched, // restrict to open surveys or not
+                about );
         for ( RFISurvey rfiSurvey : rfiSurveys ) {
-            if ( !isFilteredOut( rfiSurvey ) )
-                if ( onlyActive && rfiSurvey.isActive( getQueryService())) {
+            if ( !isFilteredOut( rfiSurvey ) ) {
                     rfiSurveyService.refresh( rfiSurvey );
                     wrappers.add( new RFISurveyWrapper( rfiSurvey ) );
                 }
@@ -141,7 +145,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
                 ? new Label( "rfiSurvey", "" )
                 : new RFISurveyPanel(
                 "rfiSurvey",
-                new PropertyModel<RFISurvey>( this, "selectedSurveyRFI" ) ) );
+                new Model<RFISurvey>( selectedRFISurvey ) ) );
         addOrReplace( rfiSurveyContainer );
     }
 
@@ -181,20 +185,20 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         return segment != null && !segment.equals( rfiSurvey.getSegment( getQueryService() ) );
     }
 
-    public boolean isOnlyActive() {
-        return onlyActive;
+    public boolean isOnlyLaunched() {
+        return onlyLaunched;
     }
 
-    public void setOnlyActive( boolean onlyActive ) {
-        this.onlyActive = onlyActive;
+    public void setOnlyLaunched( boolean onlyLaunched ) {
+        this.onlyLaunched = onlyLaunched;
     }
 
-    public String getAboutTypeName() {
-        return ( aboutTypeName == null || aboutTypeName.isEmpty() ) ? ANYTHING : aboutTypeName;
+    public String getAbout() {
+        return ( about == null || about.isEmpty() ) ? ANYTHING : about;
     }
 
-    public void setAboutTypeName( String val ) {
-        this.aboutTypeName = val.equals( ANYTHING )
+    public void setAbout( String val ) {
+        this.about = val.equals( ANYTHING )
                 ? null
                 : val;
     }
@@ -218,7 +222,9 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
             super.updateWith( target, change, updated );
     }
 
-
+    private RFISurvey getRFISurvey() {
+        return (RFISurvey)getModel().getObject();
+    }
 
     public class RFISurveyWrapper implements Identifiable {
 
@@ -253,8 +259,25 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         }
 
         @Override
+        public String getClassLabel() {
+            return getClass().getSimpleName();
+        }
+
+        @Override
         public String getName() {
             return rfiSurvey.getName();
+        }
+
+        public String getAbout() {
+            return StringUtils.capitalize( getQuestionnaire().getAbout() );
+        }
+
+        public String getMoLabel() {
+            return rfiSurvey.getMoLabel();
+        }
+
+        public ModelObject getModelObject() {
+            return rfiSurvey.getModelObject( getQueryService() );
         }
 
         public Questionnaire getQuestionnaire() {
@@ -293,9 +316,10 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // Columns
-            columns.add( makeColumn( "Questionnaire", "questionnaire.name", EMPTY ) );
-            columns.add( makeColumn( "About", "questionnaire.about", EMPTY ) );
-            columns.add( makeFilterableLinkColumn( "Segment", "segment", "segment.name", EMPTY, RFISurveysPanel.this ) );
+            columns.add( makeColumn( "Questionnaire", "about", EMPTY ) );
+            columns.add( makeColumn( "About", "about", EMPTY ) );
+            columns.add( makeFilterableLinkColumn( "Applied to", "modelObject", "moLabel", EMPTY, RFISurveysPanel.this ) );
+            columns.add( makeFilterableLinkColumn( "In segment", "segment", "segment.name", EMPTY, RFISurveysPanel.this ) );
             columns.add( makeColumn( "Status", "statusLabel", EMPTY ) );
             columns.add( makeColumn( "Sent to", "sentToCount", EMPTY ) );
             columns.add( makeColumn( "Responses", "responseMetrics", EMPTY ) );

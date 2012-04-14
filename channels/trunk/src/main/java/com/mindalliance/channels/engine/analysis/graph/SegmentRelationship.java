@@ -6,13 +6,13 @@
 
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +72,11 @@ public class SegmentRelationship implements Identifiable {
     @Override
     public boolean isModifiableInProduction() {
         return false;
+    }
+
+    @Override
+    public String getClassLabel() {
+        return getClass().getSimpleName();
     }
 
     /**

@@ -176,4 +176,5 @@ public interface Issue extends Identifiable, Serializable {
      * @return a boolean
      */
     boolean isRobustness();
+
 }

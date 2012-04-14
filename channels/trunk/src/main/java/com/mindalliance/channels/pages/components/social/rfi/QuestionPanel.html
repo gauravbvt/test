@@ -26,9 +26,26 @@
         <tr>
             <td>&nbsp;</td>
             <td colspan="2" wicket:id="constraints"> The answer
-                <input wicket:id="answerRequired" type="checkbox"/> is required
-                <input wicket:id="openEnded" type="checkbox"/> is open ended
-                <input wicket:id="multiple" type="checkbox"/> has alternates
+                <span wicket:id="requiredContainer">
+                    <input wicket:id="required" type="checkbox"/> is required
+                </span>
+                <span wicket:id="openEndedContainer">
+                    <input wicket:id="openEnded" type="checkbox"/> is open ended
+                </span>
+                <span wicket:id="multipleContainer">
+                    <input wicket:id="multiple" type="checkbox"/> has alternates
+                </span>
+            </td>
+        </tr>
+        <tr wicket:id="retirementContainer">
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                This question <span wicket:id="answered">has been answered</span>.
+                <input wicket:id="activateIt" type="button" value="Activate it"/>
+                <input wicket:id="deactivateIt" type="button" value="Deactivate it"/>
+                <input wicket:id="deleteIt" type="button" value="Delete it"/>
             </td>
         </tr>
     </table>

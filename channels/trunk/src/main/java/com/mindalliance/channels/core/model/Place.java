@@ -101,6 +101,17 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         super( name );
     }
 
+    public static String classLabel() {
+        return "places";
+    }
+
+    @Override
+    public String getClassLabel() {
+        return classLabel();
+    }
+
+
+
     @Override
     protected List<ModelEntity> safeImplicitTypes( Set<ModelEntity> visited ) {
         Set<ModelEntity> implicitTypes = new HashSet<ModelEntity>();
