@@ -551,8 +551,9 @@ table.issue-details {
 
 table.part-description td,
 table.issue-details td,
+table.entity-details td,
 table.plan-edit-details td,
-table.entity-details td {
+table.segment-edit-details td {
     border-bottom: 1px dotted #999999;
     padding: 10px 5px;
 }
@@ -560,6 +561,12 @@ table.entity-details td {
 table.issue-details td.grouped {
 	border: none;
 	padding: 10px 0 0 0;
+}
+
+table.entity-details td.grouped,
+table.plan-edit-details td.grouped,
+table.segment-edit-details td.grouped {
+	border: none;
 }
 
 table.part-description td td,
@@ -699,19 +706,19 @@ a.move-to-top {
 	font-weight: normal;
 	font-family: Arial, Helvetica, sans-serif;
 	border: none;
-	padding: 1px 3px;
-	margin: 0 0 0 10px;
+	padding: 2px 3px;
+	margin: 0 10px 0 10px;
 	background: #999999;
 	color: #ffffff;
+	float: right;;
+	line-height: 100%;
 }
 
+/*
 a.move-to-top {
-	float: right;
-	line-height: 100%;
-	color: #FFFFFF;
 	margin-right: 9px;
-	padding: 2px 3px;
 }
+*/
 
 div.phases ul li a.phase-delete:hover,
 div.types ul li a.type-delete:hover,
@@ -849,13 +856,9 @@ ol.channels {
 
 ol.channels li {
     margin: 0;
-    padding: 0 0 5px 0;
-}
-
-table.entity-details ol.channels li {
-    margin: 0;
     padding: 0 0 10px 0;
 }
+
 
 /*
 .section-title span.menubar {
