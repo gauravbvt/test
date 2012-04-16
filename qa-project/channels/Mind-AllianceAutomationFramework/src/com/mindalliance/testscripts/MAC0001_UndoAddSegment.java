@@ -114,6 +114,7 @@ public class MAC0001_UndoAddSegment {
 				Thread.currentThread();
 				Thread.sleep(3000);
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+				// Get a handle to the open alert, prompt or confirmation
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				alert.accept();
 				// WebElement Synchronization
