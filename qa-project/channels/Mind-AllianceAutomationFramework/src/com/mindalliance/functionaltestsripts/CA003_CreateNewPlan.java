@@ -81,9 +81,9 @@ public class CA003_CreateNewPlan
 				
 				// Click on 'Delete Plan' button
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				// Click on 'OK" button of message box in order to confirm it
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

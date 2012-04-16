@@ -119,8 +119,8 @@ public class TE091_EventCategories
 				// Delete Event Category
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteCategoriesOfEvent"))).click();
 				// Get a handle to the open alert, prompt or confirmation
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

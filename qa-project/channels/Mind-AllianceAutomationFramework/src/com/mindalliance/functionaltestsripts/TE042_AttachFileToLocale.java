@@ -133,9 +133,9 @@ public class TE042_AttachFileToLocale
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(000);
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				// And acknowledge the alert (equivalent to clicking "OK")
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

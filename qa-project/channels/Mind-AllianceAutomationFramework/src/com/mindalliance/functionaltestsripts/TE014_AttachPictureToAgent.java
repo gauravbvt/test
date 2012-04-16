@@ -140,9 +140,9 @@ public class TE014_AttachPictureToAgent
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// And acknowledge the alert (equivalent to clicking "OK")
-//					alert.accept();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// And acknowledge the alert (equivalent to clicking "OK")
+					alert.accept();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

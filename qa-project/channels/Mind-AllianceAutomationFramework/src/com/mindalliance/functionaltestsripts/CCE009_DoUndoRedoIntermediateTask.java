@@ -288,11 +288,11 @@ public class CCE009_DoUndoRedoIntermediateTask
 					Thread.currentThread();
 					Thread.sleep(3000);
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(2000);
-//					alert.accept();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(2000);
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

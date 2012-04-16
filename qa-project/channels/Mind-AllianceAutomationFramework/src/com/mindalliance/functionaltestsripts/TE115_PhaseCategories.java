@@ -110,9 +110,9 @@ public class TE115_PhaseCategories
 					Thread.sleep(2000);
 					// Delete Categories
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhaseCategories"))).click();
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// And acknowledge the alert (equivalent to clicking "OK")
-//					alert.accept();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// And acknowledge the alert (equivalent to clicking "OK")
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -122,9 +122,9 @@ public class TE115_PhaseCategories
 					Thread.sleep(2000);
 					// Delete an Phase
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
-//					alert = GlobalVariables.oDriver.switchTo().alert();
-//					// And acknowledge the alert (equivalent to clicking "OK")
-//					alert.accept();
+					alert = GlobalVariables.oDriver.switchTo().alert();
+					// And acknowledge the alert (equivalent to clicking "OK")
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

@@ -126,9 +126,9 @@ public class TFP005_CreateFlow
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),"Break up flow");
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				// Click on 'OK" button of message box in order to confirm it
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -138,9 +138,9 @@ public class TFP005_CreateFlow
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Get a handle to the open alert, prompt or confirmation
-//				alert = GlobalVariables.oDriver.switchTo().alert();
-//				// And acknowledge the alert (equivalent to clicking "OK")
-//				alert.accept();
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

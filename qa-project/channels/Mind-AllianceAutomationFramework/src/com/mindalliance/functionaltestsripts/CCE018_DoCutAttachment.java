@@ -126,16 +126,16 @@ public class CCE018_DoCutAttachment
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//					alert.accept();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
+					alert.accept();
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
-//					alert = GlobalVariables.oDriver.switchTo().alert();
-//					alert.accept();
+					alert = GlobalVariables.oDriver.switchTo().alert();
+					alert.accept();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -137,9 +137,9 @@ public class CCE023_DoUndoRedoAddInfoCapability
 					Thread.sleep(3000);
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// And acknowledge the alert (equivalent to clicking "OK")
-//					alert.accept();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// And acknowledge the alert (equivalent to clicking "OK")
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);					

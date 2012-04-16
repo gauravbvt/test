@@ -124,9 +124,9 @@ public class TE103_DelteEventAttachment
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				// And acknowledge the alert (equivalent to clicking "OK")
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
 				// Assertion: Verify that file is deleted
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("grouped"));
 				if (GlobalVariables.oElement.getText().equals("")){

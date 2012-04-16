@@ -124,9 +124,9 @@ public class TE139_OrganizationCategories
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// And acknowledge the alert (equivalent to clicking "OK")
-//					alert.accept();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// And acknowledge the alert (equivalent to clicking "OK")
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

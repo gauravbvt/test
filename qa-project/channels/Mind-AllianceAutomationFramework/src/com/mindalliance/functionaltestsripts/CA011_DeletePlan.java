@@ -81,9 +81,9 @@ public class CA011_DeletePlan
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Plan Deleted";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				// Click on 'OK" button of message box in order to confirm it
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
 				//Thread sleep
 				Thread.currentThread();
 				Thread.sleep(2000);

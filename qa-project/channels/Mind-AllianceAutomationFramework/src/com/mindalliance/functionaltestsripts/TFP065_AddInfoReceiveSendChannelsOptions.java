@@ -108,9 +108,9 @@ public class TFP065_AddInfoReceiveSendChannelsOptions
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				// Click on 'OK" button of message box in order to confirm it
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -180,9 +180,9 @@ public class TFP065_AddInfoReceiveSendChannelsOptions
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),"Remove info need");
-//				alert = GlobalVariables.oDriver.switchTo().alert();
-//				// Click on 'OK" button of message box in order to confirm it
-//				alert.accept();
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -197,9 +197,9 @@ public class TFP065_AddInfoReceiveSendChannelsOptions
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Get a handle to the open alert, prompt or confirmation
-//				alert = GlobalVariables.oDriver.switchTo().alert();
-//				// And acknowledge the alert (equivalent to clicking "OK")
-//				alert.accept();
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

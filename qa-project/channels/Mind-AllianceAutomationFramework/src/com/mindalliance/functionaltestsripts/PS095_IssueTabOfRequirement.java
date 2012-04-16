@@ -90,8 +90,8 @@ public class PS095_IssueTabOfRequirement
 				Thread.currentThread();
 				Thread.sleep(1000);
 //				// Get a handle to the open alert, prompt or confirmation
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

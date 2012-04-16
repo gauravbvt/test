@@ -114,9 +114,9 @@ public class TE040_RemoveLocaleCategory
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Locale's Category Removed";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteAgentCategory"))).click();
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				// Click on 'OK" button of message box in order to confirm it
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
 				//Thread sleep
 				Thread.currentThread();
 				Thread.sleep(2000);

@@ -89,12 +89,12 @@ public class TE060_AddNewMedium
 				Thread.sleep(2000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(2000);
-//				// Click on 'OK" button of message box in order to confirm it
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
 			    // WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

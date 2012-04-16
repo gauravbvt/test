@@ -130,11 +130,11 @@ public class TE020_AgentAttachmentAsInvalidURL
 				//Delete Agent Attached URL
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteAgentURL"))).click();
 				// Get a handle to the open alert, prompt or confirmation
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				Thread.currentThread();
-//				Thread.sleep(1000);
-//				// And acknowledge the alert (equivalent to clicking "OK")
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				Thread.currentThread();
+				Thread.sleep(1000);
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

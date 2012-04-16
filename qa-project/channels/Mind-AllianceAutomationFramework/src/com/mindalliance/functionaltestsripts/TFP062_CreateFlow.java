@@ -162,8 +162,8 @@ public class TFP062_CreateFlow
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 					// Get a handle to the open alert, prompt or confirmation
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					alert.accept();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(5000);

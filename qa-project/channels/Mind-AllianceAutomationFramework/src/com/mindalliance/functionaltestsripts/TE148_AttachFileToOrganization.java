@@ -131,9 +131,9 @@ public class TE148_AttachFileToOrganization
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// And acknowledge the alert (equivalent to clicking "OK")
-//					alert.accept();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// And acknowledge the alert (equivalent to clicking "OK")
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

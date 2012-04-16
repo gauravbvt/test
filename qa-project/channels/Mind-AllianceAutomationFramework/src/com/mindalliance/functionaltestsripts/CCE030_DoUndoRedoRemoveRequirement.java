@@ -96,8 +96,8 @@ public class CCE030_DoUndoRedoRemoveRequirement
 				Thread.currentThread();
 				Thread.sleep(1000);
 //				// Get a handle to the open alert, prompt or confirmation
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);	
@@ -190,9 +190,9 @@ public class CCE030_DoUndoRedoRemoveRequirement
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Get a handle to the open alert, prompt or confirmation
-//				alert = GlobalVariables.oDriver.switchTo().alert();
-//				// And acknowledge the alert (equivalent to clicking "OK")
-//				alert.accept();
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);

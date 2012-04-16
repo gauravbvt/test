@@ -111,9 +111,9 @@ public class TE124_AttachFileToPhase
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// And acknowledge the alert (equivalent to clicking "OK")
-//					alert.accept();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// And acknowledge the alert (equivalent to clicking "OK")
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -134,9 +134,9 @@ public class TE124_AttachFileToPhase
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-//					alert = GlobalVariables.oDriver.switchTo().alert();
-//					// And acknowledge the alert (equivalent to clicking "OK")
-//					alert.accept();
+					alert = GlobalVariables.oDriver.switchTo().alert();
+					// And acknowledge the alert (equivalent to clicking "OK")
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
