@@ -119,9 +119,9 @@ public class MAP0012_addPhase
 					Thread.sleep(1000);
 					//delete an phase
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePhase"))).click();
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// And acknowledge the alert (equivalent to clicking "OK")
-//					alert.accept();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// And acknowledge the alert (equivalent to clicking "OK")
+					alert.accept();
 										
 					// Click on 'done' button
 					GlobalVariables.iStepNo++ ;
@@ -137,8 +137,8 @@ public class MAP0012_addPhase
 					// Click on 'Remove this segment' under 'Actions' pop up menu
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));					
 					// Get a handle to the open alert, prompt or confirmation
-//					alert = GlobalVariables.oDriver.switchTo().alert();
-//					alert.accept();
+					alert = GlobalVariables.oDriver.switchTo().alert();
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);

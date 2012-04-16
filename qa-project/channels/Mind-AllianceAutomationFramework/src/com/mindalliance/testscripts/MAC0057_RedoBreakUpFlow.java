@@ -135,8 +135,9 @@ public class MAC0057_RedoBreakUpFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				alert.accept();
+				// Get a handle to the open alert, prompt or confirmation
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -205,8 +206,9 @@ public class MAC0057_RedoBreakUpFlow
 				Thread.currentThread();
 				Thread.sleep(3000);
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-//				alert = GlobalVariables.oDriver.switchTo().alert();
-//				alert.accept();
+				// Get a handle to the open alert, prompt or confirmation
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

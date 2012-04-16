@@ -67,9 +67,10 @@ public class MAV0079_pasteAttachmentUnerAction
 				Thread.sleep(3000);
 				// delete attachment
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePlanSegAttachment"))).click();
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				// And acknowledge the alert (equivalent to clicking "OK")
-//				alert.accept();
+				// Get a handle to the open alert, prompt or confirmation
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
 				// Click on Done
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 				// WebElement Synchronization

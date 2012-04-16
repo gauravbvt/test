@@ -311,11 +311,11 @@ public class MAC0020_UndoPasteAttachment {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(1000);
-//					alert.accept();
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -331,11 +331,11 @@ public class MAC0020_UndoPasteAttachment {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-//					alert = GlobalVariables.oDriver.switchTo().alert();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(1000);
-//					alert.accept();
+					alert = GlobalVariables.oDriver.switchTo().alert();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

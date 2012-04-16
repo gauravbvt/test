@@ -206,11 +206,12 @@ public class MAC0035_RedoAddNewTask {
 					Thread.currentThread();
 					Thread.sleep(3000);
 					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(1000);
-//					alert.accept();
+					// Get a handle to the open alert, prompt or confirmation
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

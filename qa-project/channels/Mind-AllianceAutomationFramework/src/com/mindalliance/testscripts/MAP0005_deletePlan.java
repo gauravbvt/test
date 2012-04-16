@@ -94,9 +94,9 @@ public class MAP0005_deletePlan
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Plan deleted";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathDeletePlan"))).click();
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				// Click on 'OK" button of message box in order to confirm it
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// Click on 'OK" button of message box in order to confirm it
+				alert.accept();
 //				//Assertion:Verify that plan should get deleted.  Need to change
 //				GlobalVariables.bIsSuccess=Boolean.FALSE;
 //				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));

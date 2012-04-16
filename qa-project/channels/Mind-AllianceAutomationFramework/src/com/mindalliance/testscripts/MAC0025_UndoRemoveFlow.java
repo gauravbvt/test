@@ -140,9 +140,10 @@ public class MAC0025_UndoRemoveFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				// And acknowledge the alert (equivalent to clicking "OK")
-//				alert.accept();
+				// Get a handle to the open alert, prompt or confirmation
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -195,9 +196,9 @@ public class MAC0025_UndoRemoveFlow
 				Thread.currentThread();
 				Thread.sleep(3000);
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-//				// Get a handle to the open alert, prompt or confirmation
-//				alert = GlobalVariables.oDriver.switchTo().alert();
-//				alert.accept();
+				// Get a handle to the open alert, prompt or confirmation
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

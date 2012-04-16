@@ -64,8 +64,9 @@ public class MAV0078_pasteTaskUnderAction
 			    GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Cut task";
 		    	ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskActionsMenu"),GlobalVariables.viewElements.get("cutTask"));
-//		    	Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				alert.accept();
+		    	// Get a handle to the open alert, prompt or confirmation
+		    	Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
 		    	// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

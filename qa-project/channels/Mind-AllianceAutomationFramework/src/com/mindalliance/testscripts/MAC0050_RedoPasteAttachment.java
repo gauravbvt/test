@@ -320,11 +320,12 @@ public class MAC0050_RedoPasteAttachment {
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(1000);
-//					alert.accept();
+					// Get a handle to the open alert, prompt or confirmation
+					Alert alert = GlobalVariables.oDriver.switchTo().alert();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -343,11 +344,12 @@ public class MAC0050_RedoPasteAttachment {
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-//					alert = GlobalVariables.oDriver.switchTo().alert();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(1000);
-//					alert.accept();
+					// Get a handle to the open alert, prompt or confirmation
+					alert = GlobalVariables.oDriver.switchTo().alert();
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(1000);
+					alert.accept();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

@@ -67,8 +67,8 @@ public class MAV0248_RemoveRequirement
 				Thread.currentThread();
 				Thread.sleep(1000);
 				// Get a handle to the open alert, prompt or confirmation
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				alert.accept();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
