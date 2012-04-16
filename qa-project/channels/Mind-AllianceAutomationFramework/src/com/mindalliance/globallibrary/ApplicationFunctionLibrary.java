@@ -98,9 +98,9 @@ public class ApplicationFunctionLibrary {
 		try {
 			MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),
 					"Sign out " + GlobalVariables.login.get("sUsername"));
-//			Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//			// And acknowledge the alert (equivalent to clicking "OK")
-//			alert.accept();
+			Alert alert = GlobalVariables.oDriver.switchTo().alert();
+			// And acknowledge the alert (equivalent to clicking "OK")
+			alert.accept();
 			// WebElement Synchronization
 			Thread.currentThread();
 			Thread.sleep(3000);
