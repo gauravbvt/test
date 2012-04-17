@@ -1,5 +1,9 @@
-api,http://192.168.4.127:8081/channels/rest/isp/plan/mindalliance_com_channels_plans_railsec
+api,http://192.168.4.127:8081/channels/rest/isp/plan/mindalliance_com_channels_plans_railsec/procedures
 username,admin
 password,admin
 uri,mindalliance_com_channels_plans_railsec
-responseType,xml
+agentId,2587
+agentName,A special ops
+hasUniqueIdentity,false
+isAnonymous,false
+kind,actual
