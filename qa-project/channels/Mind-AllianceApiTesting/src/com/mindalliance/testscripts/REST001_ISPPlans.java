@@ -22,9 +22,6 @@ public class REST001_ISPPlans extends TestCase{
 			GlobalVariables.steps = 0;
 			GlobalVariables.testCaseId = "REST001_ISPPlans";
 			
-//			Date currentDate = new java.util.Date();
-//			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-//			String formattedDate = formatter.format(currentDate)+" "+"IST";
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
@@ -32,8 +29,7 @@ public class REST001_ISPPlans extends TestCase{
 			LogFunctions.logDescription(GlobalVariables.steps + ") ISP001 Execution Started");
 			
 			// For managing SSL connections
-			Configurations.validateTrustManager();
-			
+			Configurations.validateTrustManager();			
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST001_ISPPlans.csv");
@@ -68,6 +64,8 @@ public class REST001_ISPPlans extends TestCase{
 			GlobalVariables.steps++;
 			System.out.println("6) Test Case : REST001_ISPPlans Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : ISP001 Execution Completed");
+			
+			Configurations.expResult("uri");
 			
 		}catch (AssertionError ar) {
 			System.out.println("5)Assertion Failed : ");
