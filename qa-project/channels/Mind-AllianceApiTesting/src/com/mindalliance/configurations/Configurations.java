@@ -22,7 +22,16 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.ws.http.HTTPException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /** The Configurations class is a collection of methods which sends HttpURLConnection request to the Web service and gets response and retrieves test data.
  * @author AFourTech
@@ -203,4 +212,48 @@ public class Configurations {
 //		// Redirecting runtime exceptions to file
 //		System.setErr(fileStream);		
 //	}
+	
+	public static String expResult(String nodename){
+		try{
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+	        Document doc = docBuilder.parse (new File("Testdata//response.xml"));
+
+	        // normalize text representation
+	        doc.getDocumentElement ().normalize ();
+	        System.out.println ("Root element of the doc is " + doc.getDocumentElement().getNodeName());
+        
+	        NodeList node = doc.getElementsByTagName("planIdentifier");
+            int totalPersons = node.getLength();
+            System.out.println("Total no of node : " + totalPersons);
+            
+            for(int s=0; s<node.getLength() ; s++){
+
+                Node firstPersonNode = node.item(s);
+                if(firstPersonNode.getNodeType() == Node.ELEMENT_NODE){
+
+                    Element firstPersonElement = (Element)firstPersonNode;
+                    NodeList firstNameList = firstPersonElement.getElementsByTagName(nodename);
+                    Element firstNameElement = (Element)firstNameList.item(0);
+
+                    NodeList textFNList = firstNameElement.getChildNodes();
+                    System.out.println("Attribute 1 : " + ((Node)textFNList.item(0)).getNodeValue().trim());
+
+                }
+
+            }
+		}catch(SAXParseException err) {
+	    	System.out.println ("** Parsing error" + ", line " + err.getLineNumber () + ", uri " + err.getSystemId ());
+	    	System.out.println(" " + err.getMessage ());
+
+	    }catch (SAXException e) {
+	    	Exception x = e.getException ();
+	    	((x == null) ? e : x).printStackTrace ();
+
+	    }catch (Throwable t) {
+	    	t.printStackTrace ();
+	    }
+		return nodename;
+
+	}
 }
