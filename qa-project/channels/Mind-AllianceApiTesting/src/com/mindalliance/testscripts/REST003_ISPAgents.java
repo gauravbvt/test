@@ -33,7 +33,7 @@ public class REST003_ISPAgents extends TestCase{
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			String data =GlobalVariables.testData.get("api")+"/procedures/agent/23108";
+			String data =GlobalVariables.testData.get("api")+"/procedures/agent/2587";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
 			System.out.println("3) Sending Request");
@@ -44,13 +44,7 @@ public class REST003_ISPAgents extends TestCase{
 			Configurations.getResponse();
 			System.out.println("4) Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
-			
-//			// Expected Result
-//			GlobalVariables.steps++;
-//			System.out.println("5) Expected Result");
-//			Configurations.expectedResult();
-//			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result");
-						
+								
 			// Assertion: Verify that Plan name is present
 			GlobalVariables.steps++;
 			Assert.assertEquals("mindalliance_com_channels_plans_railsec","mindalliance_com_channels_plans_railsec");

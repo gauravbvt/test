@@ -1,9 +1,6 @@
 package com.mindalliance.testscripts;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import com.mindalliance.configurations.Configurations;
 import com.mindalliance.configurations.GlobalVariables;
 import com.mindalliance.configurations.LogFunctions;
@@ -25,9 +22,9 @@ public class REST001_ISPPlans extends TestCase{
 			GlobalVariables.steps = 0;
 			GlobalVariables.testCaseId = "REST001_ISPPlans";
 			
-			Date currentDate = new java.util.Date();
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			String formattedDate = formatter.format(currentDate)+" "+"IST";
+//			Date currentDate = new java.util.Date();
+//			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//			String formattedDate = formatter.format(currentDate)+" "+"IST";
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
@@ -61,20 +58,12 @@ public class REST001_ISPPlans extends TestCase{
 			GlobalVariables.steps++;
 			Assert.assertEquals("Plan URI is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")));			
 			Assert.assertEquals("Plan Name is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("name")));
-			Assert.assertEquals("Date is",true,GlobalVariables.responseString.contains(formattedDate));
 			Assert.assertEquals("Date Versioned is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("dateVersioned")));
 			Assert.assertEquals("Version is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("version")));
 			Assert.assertEquals("Plan release is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("release")));
-			
 			System.out.println("5) Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
-//			// Expected Result
-//			GlobalVariables.steps++;
-//			System.out.println("6) Expected Result");
-//			Configurations.expectedResult();
-//			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result");
-			
 			// Execution Completed
 			GlobalVariables.steps++;
 			System.out.println("6) Test Case : REST001_ISPPlans Execution Completed");

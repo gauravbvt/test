@@ -44,15 +44,13 @@ public class REST002_ISPProcedures extends TestCase{
 			System.out.println("4) Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
-//			// Expected Result
-//			GlobalVariables.steps++;
-//			System.out.println("5) Expected Result");
-//			Configurations.expectedResult();
-//			LogFunctions.logDescription(GlobalVariables.steps + ") Expected Result");
-//						
 			// Assertion: Verify that Plan name is present
 			GlobalVariables.steps++;
-			Assert.assertEquals("mindalliance_com_channels_plans_railsec","mindalliance_com_channels_plans_railsec");
+			Assert.assertEquals("Plan URI is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")));
+			Assert.assertEquals("Agent Id is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("agentId")));
+			Assert.assertEquals("Agent Name is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("agentName")));
+			Assert.assertEquals("Agent has Unique Identity",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("hasUniqueIdentity")));
+			Assert.assertEquals("Agent is Anonymous",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("isAnonymous")));
 			System.out.println("5) Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
