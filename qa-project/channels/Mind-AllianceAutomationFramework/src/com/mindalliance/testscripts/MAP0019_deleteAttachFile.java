@@ -161,7 +161,7 @@ public class MAP0019_deleteAttachFile
 					GlobalVariables.oElement.click();
 					for(int i=0;i<= 4;i++)
 						GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-					GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePlanSegAttachment"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);

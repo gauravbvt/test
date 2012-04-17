@@ -61,8 +61,8 @@ public class MAV0007_logoutOnPlanPage
 					  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  }
-				  else
-				  {
+				  else{
+					  GlobalVariables.sVerifyError="Verification failed Expected "+GlobalVariables.viewElements.get("loginPageTitle")+" Actual "+GlobalVariables.oDriver.getTitle();
 					  // Write Results
 					  LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

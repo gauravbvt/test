@@ -126,7 +126,7 @@ public class MAP0018_attachFile
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Attach File";
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:name"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is File 1"));
+					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
 					GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:upload"));
 					GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 					// WebElement Synchronization
@@ -137,11 +137,10 @@ public class MAP0018_attachFile
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: verify that file is attached
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[5]/div/span/div/div[2]/table/tbody/tr[6]/td/ul/span/li/a")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
-						if (li.getText().equals(GlobalVariables.testData.get("This is File 1"))){
+						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
 							// Write Results
 							LogFunctions.writeLogs(GlobalVariables.sDescription);
 							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

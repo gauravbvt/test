@@ -32,39 +32,33 @@ public class MAV0174_AddInfoSend
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
-				// Stretch Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				// Click on add info receive link
+				// Click on add info send link
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Add info receive";
+				GlobalVariables.sDescription="Add info send Clicked";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 				// Assertion: Verify that When click on add info receive receiveiev info need panel opens
-//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("sXpathAddInfoSendAssertion"));
-//				if(GlobalVariables.oElement.getText().equals("can notify")){
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				}
-//				else{
-//					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Can notify of' "+" Actual " + GlobalVariables.oElement.getText();
-//			    	// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-//				}
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAddInfoSendAssertion")));
+				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("Can notify of"))) {
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else {
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Can notify of' "+" Actual " + GlobalVariables.oElement.getText();
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				// Remove Information Sharing Capability
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),"Remove sharing capability");
-				// Get a handle to the open alert, prompt or confirmation
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();

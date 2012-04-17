@@ -89,11 +89,10 @@ public class MAV0079_pasteAttachmentUnerAction
 			    // WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(3000);
-			    GlobalVariables.oDriver.findElement(By.linkText(file)).click();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
+			    GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
 				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 				for (WebElement li: tds){
-					if (li.getText().equals(GlobalVariables.viewElements.get("file1"))){
+					if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -101,16 +100,28 @@ public class MAV0079_pasteAttachmentUnerAction
 						break;
 					}
 					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("file1")+" Actual "+li.getText();
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+						break;
 				    }
 				}
 				// WebElement Synchronization
-			    Thread.currentThread();
-			    Thread.sleep(3000);
+				Thread.currentThread();
+				Thread.sleep(3000);
+				// delete attachment
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeletePlanSegAttachment"))).click();
+				// Get a handle to the open alert, prompt or confirmation
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
+				// Click on Done
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 			    
 				// Call logout()
 				GlobalVariables.iStepNo++ ;

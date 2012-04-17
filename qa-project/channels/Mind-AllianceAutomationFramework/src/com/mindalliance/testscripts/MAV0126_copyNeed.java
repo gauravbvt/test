@@ -1,5 +1,6 @@
 package com.mindalliance.testscripts;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
@@ -40,7 +41,6 @@ public class MAV0126_copyNeed
 			    // Clicks on "add info receive" located on the "Receives" Pane
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="Add info receive";
-//			    GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 			    // Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -73,7 +73,7 @@ public class MAV0126_copyNeed
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Need Copied' "+" Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Need copied' "+" Actual "+GlobalVariables.oElement.getText();
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -84,7 +84,10 @@ public class MAV0126_copyNeed
 			    Thread.sleep(1000);
 			    // Remove Info need
 			    ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("removeInfoNeed"));
-			    // WebElement Synchronization
+			    Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
+				// WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);
 			    

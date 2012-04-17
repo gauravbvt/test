@@ -53,7 +53,6 @@ public class MAV0224_AddInfoReceiveCopyNeed
 				// Click 'Add Info Receive' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Receive' Link Clicked";
-//				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);

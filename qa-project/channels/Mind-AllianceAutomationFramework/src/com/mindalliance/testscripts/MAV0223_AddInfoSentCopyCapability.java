@@ -53,7 +53,6 @@ public class MAV0223_AddInfoSentCopyCapability
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";
-//				GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);

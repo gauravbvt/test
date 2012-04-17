@@ -178,7 +178,7 @@ public class MAP0021_deleteFileOfEvent
 					// Delete an File of an event
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Delete an Attachment of event";
-					GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteEventAttachment"))).click();
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// And acknowledge the alert (equivalent to clicking "OK")
 					alert.accept();
