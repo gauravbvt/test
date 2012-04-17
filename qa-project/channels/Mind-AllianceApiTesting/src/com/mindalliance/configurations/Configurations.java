@@ -4,13 +4,11 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -24,13 +22,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.ws.http.HTTPException;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.*;
 
 /** The Configurations class is a collection of methods which sends HttpURLConnection request to the Web service and gets response and retrieves test data.
  * @author AFourTech
@@ -161,54 +153,54 @@ public class Configurations {
 		return GlobalVariables.responseString;
 	}
 	
-	public static void expectedResult(){
-		try {		
-			
-			SAXParserFactory factory = SAXParserFactory.newInstance();
-			SAXParser saxParser = factory.newSAXParser();
-			Configurations.writeResult();		
-			DefaultHandler handler = new DefaultHandler() {
-				boolean flag = false;
-				
-				
-				public void startElement(String uri, String localName,String tagName, Attributes attributes) throws SAXException {
-					System.out.print("<" + tagName +">");
-					if(tagName!=null){
-						flag=true;
-					}
-				}
-				
-				public void endElement(String uri, String localName,String tagName) throws SAXException {
-					System.out.println("<" + tagName +">");
-				}
-				
-				public void characters(char ch[], int start, int length) throws SAXException {
-					if (flag) {
-						System.out.print("" + new String(ch, start, length));
-						flag = false;
-					}
-				}
-			};
-		    		
-			GlobalVariables.testDataDirectoryPath = GlobalVariables.currentDirectory.getCanonicalPath().toString() + "\\TestData\\";
-			saxParser.parse(GlobalVariables.testDataDirectoryPath+ "response.xml", handler);
-			
-		 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void expectedResult(){
+//		try {		
+//			
+//			SAXParserFactory factory = SAXParserFactory.newInstance();
+//			SAXParser saxParser = factory.newSAXParser();
+////			Configurations.writeResult();		
+//			DefaultHandler handler = new DefaultHandler() {
+//				boolean flag = false;
+//				
+//				
+//				public void startElement(String uri, String localName,String tagName, Attributes attributes) throws SAXException {
+//					System.out.print("<" + tagName +">");
+//					if(tagName!=null){
+//						flag=true;
+//					}
+//				}
+//				
+//				public void endElement(String uri, String localName,String tagName) throws SAXException {
+//					System.out.println("<" + tagName +">");
+//				}
+//				
+//				public void characters(char ch[], int start, int length) throws SAXException {
+//					if (flag) {
+//						System.out.print("" + new String(ch, start, length));
+//						flag = false;
+//					}
+//				}
+//			};
+//		    		
+//			GlobalVariables.testDataDirectoryPath = GlobalVariables.currentDirectory.getCanonicalPath().toString() + "\\TestData\\";
+//			saxParser.parse(GlobalVariables.testDataDirectoryPath+ "response.xml", handler);
+//			
+//		 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
-	public static void writeResult() throws FileNotFoundException{
-		PrintStream orgStream 	= null;
-		PrintStream fileStream 	= null;
-		
-		orgStream = System.out;
-		fileStream = new PrintStream(new FileOutputStream("out.xml",true));
-		// Redirecting console output to file
-		System.setOut(fileStream);
-		
-		// Redirecting runtime exceptions to file
-		System.setErr(fileStream);		
-	}
+//	public static void writeResult() throws FileNotFoundException{
+//		PrintStream orgStream 	= null;
+//		PrintStream fileStream 	= null;
+//		
+//		orgStream = System.out;
+//		fileStream = new PrintStream(new FileOutputStream("out.xml",true));
+//		// Redirecting console output to file
+//		System.setOut(fileStream);
+//		
+//		// Redirecting runtime exceptions to file
+//		System.setErr(fileStream);		
+//	}
 }
