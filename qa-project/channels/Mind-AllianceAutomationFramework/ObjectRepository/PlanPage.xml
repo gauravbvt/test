@@ -249,7 +249,7 @@
 <xPathElementsOfInformation>//span/div/div[3]/div[3]/div[2]/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/table/tbody/tr[4]/th[@class='area']/a[@class='model-object-link']</xPathElementsOfInformation>
 <xPathIssueReport>/html/body/div/div/h1</xPathIssueReport>
 <xPathIssueReportHome>/html/body/div/div/a/img</xPathIssueReportHome>
-<xPathLegendLabel>//div[12]/div/span/div/h1</xPathLegendLabel>
+<xPathLegendLabel>//div[13]/div/span/div/h1</xPathLegendLabel>
 <xPathReceivePanel>//span/div/div[3]/div[2]/div/h3/span</xPathReceivePanel>
 <xPathSendPanel>//span/div/div[3]/div[3]/div/h3/span</xPathSendPanel>
 <xPathAddInfoReceiveAssertion>//span/div/div[3]/div[2]/div[2]/div/div/span/span</xPathAddInfoReceiveAssertion>
