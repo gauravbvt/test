@@ -431,6 +431,11 @@ div.issues div.section-title ul.menu li a {
     text-transform: uppercase;
 }
 
+div.issues div.section-title ul.menu li a:hover {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #8b0000;
+}
+
 div.issues ol li table span a.menubar {
     background: none repeat scroll 0 0 #8b0000;
     border-radius: 5px 5px 5px 5px;
@@ -619,7 +624,8 @@ span.prohibited {
 span.can-bypass-intermediate,
 span.triggers-source,
 span.terminates-source,
-span.every-node {
+span.every-node,
+span.constraints {
 	display: block;
 	padding: 0 0 5px 0;
 }
@@ -744,7 +750,7 @@ td span.timing:first-child {
 span.timing {
     display: block;
     white-space: nowrap;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
 }
 
 span.timing input:first-child {
@@ -844,9 +850,13 @@ ul.media-not-deployed li {
 }
 
 div.phases ul li:last-child,
-div.types ul li:last-child,
-ul.media-not-deployed li:last-child {
+div.types ul li:last-child {
 	list-style: none;
+}
+
+ul.media-not-deployed li:last-child {
+	margin: 10px 0 0 -20px;
+	list-style: none;	
 }
 
 ol.channels {
