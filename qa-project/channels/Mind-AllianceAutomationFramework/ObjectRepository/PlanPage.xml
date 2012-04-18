@@ -152,7 +152,7 @@
 <xPathDeletePhaseCategories>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeletePhaseCategories>
 <xPathDeletePhaseAttachment>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img</xPathDeletePhaseAttachment>
 <xPathCopyPhaseAttachment>//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyPhaseAttachment>
-<xPathCopyTaskAttachment>//span/div/div[@id='part']/div/div[@class='section-content']/table[2]/tbody/tr[14]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li/a/img</xPathCopyTaskAttachment>
+<xPathCopyTaskAttachment>//span/div/div[3]/div[@class='part-header']/div[@class='section-content']/table[@class='part-description']/tbody/tr[14]/td[@class='grouped']/span/ul[@class='attach list']/li[@class='doc_Reference']/ul[@class='menu']/li/a</xPathCopyTaskAttachment>
 <xPathDeleteOrganizationCategories>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteOrganizationCategories>
 <xPathSendFeedBackOfIssueSummaryReport>/html/body/div/div/span/div/a/span</xPathSendFeedBackOfIssueSummaryReport>
 <xPathTaskAttachmentURL>//span/div/div[3]/div[@class='part-header']/div[@class='section-content']/table/tbody/tr[14]/td[@class='grouped']/ul[@class='attach']/li[@class='controls']/span/span/input[2]</xPathTaskAttachmentURL>
