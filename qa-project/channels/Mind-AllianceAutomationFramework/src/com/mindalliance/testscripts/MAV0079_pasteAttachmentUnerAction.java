@@ -33,7 +33,7 @@ public class MAV0079_pasteAttachmentUnerAction
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);   	
+				Thread.sleep(3000);   	
 				
 				// Click on About Plan segment under show pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -45,7 +45,7 @@ public class MAV0079_pasteAttachmentUnerAction
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  	
+				Thread.sleep(3000);  	
 				
 				// Attach a File to the segment
 				String file="This is File 1";
@@ -133,7 +133,7 @@ public class MAV0079_pasteAttachmentUnerAction
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
+			    Thread.sleep(3000);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
