@@ -155,7 +155,7 @@ public class CCE019_DoUndoRedoPasteAttachment
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: verify that file is attached
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
 					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
 						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
@@ -181,7 +181,7 @@ public class CCE019_DoUndoRedoPasteAttachment
 					// Click copy option of respective attachment
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Attachment copied";
-					GlobalVariables.oDriver.findElement(By.xpath("//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li/a/img")).click();
+					GlobalVariables.oDriver.findElement(By.xpath("//div[@class='segment']/div[@class='aspect']/table[@class='segment-edit-details']/tbody/tr[6]/td[@class='grouped']/span/ul[@class='attach list']/li[@class='doc_Reference']/ul[@class='menu']/li/a")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -240,7 +240,7 @@ public class CCE019_DoUndoRedoPasteAttachment
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on 'Paste attachment' option, the attachment should be pasted in the respective segment 
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
 					tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
 						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
@@ -272,7 +272,7 @@ public class CCE019_DoUndoRedoPasteAttachment
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on 'Undo paste attachment' option, the attachment which is pasted should be removed from the respective segment
 					GlobalVariables.bIsSuccess = Boolean.FALSE;
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
 					tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
 						GlobalVariables.sStrCheck=li.getText();
@@ -306,7 +306,7 @@ public class CCE019_DoUndoRedoPasteAttachment
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on 'Undo attach document' option, the attachment which was removed should be restored in respective segment
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("attach"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
 					tds = GlobalVariables.oElement.findElements(By.tagName("li"));
 					for (WebElement li: tds){
 						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
