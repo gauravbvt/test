@@ -56,7 +56,7 @@ public class MAC0061_UndoAddNewRequirement
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(3000);  
 				  
 				// Click on New Button to Add Requirement
 				GlobalVariables.iStepNo++ ;
@@ -109,7 +109,11 @@ public class MAC0061_UndoAddNewRequirement
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);	
+				Thread.sleep(2000);	
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);	
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization
