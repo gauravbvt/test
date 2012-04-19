@@ -374,7 +374,7 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
         }
 
         public int getRfiCount() {
-            return rfiService.getRFICount( questionnaire );
+            return rfiService.getRFICount( getPlan(), questionnaire );
         }
 
     }

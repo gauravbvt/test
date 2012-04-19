@@ -302,6 +302,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.NoIntermediateToBypass"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.RequirementNotSatisfiedByOrganization"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AssignedTaskLocationNotCommunicated"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.JobWithoutTitle"/>
             </list>
         </property>
     </bean>

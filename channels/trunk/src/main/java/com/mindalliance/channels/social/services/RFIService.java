@@ -22,46 +22,33 @@ import java.util.List;
 public interface RFIService extends GenericSqlService<RFI, Long> {
 
     /**
-     * Are all required questions answered?
-     *
-     * @param rfi an RFI
-     * @return a boolean
-     */
-    boolean isCompleted( RFI rfi );
-
-    /**
-     * Are some required questions unanswered?
-     *
-     * @param rfi an RFI
-     * @return a boolean
-     */
-    boolean isIncomplete( RFI rfi );
-
-    /**
      * List all RFIs in a given survey.
      *
+     * @param plan      a plan
      * @param rfiSurvey a survey
      * @return a list of rfis
      */
-    List<RFI> select( RFISurvey rfiSurvey );
+    List<RFI> select( Plan plan, RFISurvey rfiSurvey );
 
     /**
      * Get the number of RFIs based on a given questionnaire.
      *
+     * @param plan          a plan
      * @param questionnaire a questionnaire
      * @return an int
      */
-    int getRFICount( Questionnaire questionnaire );
+    int getRFICount( Plan plan, Questionnaire questionnaire );
 
     /**
      * Add or update an RFI.
-     * @param plan a plan
-     * @param username who adds or updates
-     * @param rfiSurvey a survey
-     * @param userInfo user info
+     *
+     * @param plan         a plan
+     * @param username     who adds or updates
+     * @param rfiSurvey    a survey
+     * @param userInfo     user info
      * @param organization an organization
-     * @param title a string
-     * @param role a role
+     * @param title        a string
+     * @param role         a role
      * @param deadlineDate a date or null if no deadline
      */
     void makeOrUpdateRFI(
@@ -76,20 +63,37 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
 
     /**
      * Nag a user to complete an RFI.
-     * @param plan a plan
-     * @param username who nags
-     * @param rfiSurvey a survey
-     * @param userInfo user info
-     * @param organization an organization
-     * @param title a string
-     * @param role a role
+     *
+     * @param plan         a plan
+     * @param username     who nags
+     * @param rfiSurvey    a survey
+     * @param userInfo     user info
      */
     void nag(
             Plan plan,
             String username,
             RFISurvey rfiSurvey,
-            ChannelsUserInfo userInfo,
-            Organization organization,
-            String title,
-            Role role );
+            ChannelsUserInfo userInfo );
+
+    /**
+     * Find matching RFI RFI.
+     *
+     * @param plan             a plan
+     * @param surveyedUsername who is being surveyed
+     * @param rfiSurvey        a survey
+     */
+    RFI find(
+            Plan plan,
+            RFISurvey rfiSurvey,
+            String surveyedUsername );
+
+    /**
+     * Find the usernames of all participants in a survey.
+     *
+     * @param plan         a plan
+     * @param rfiSurvey a survey
+     * @return a list of strings
+     */
+    List<String> findParticipants( Plan plan, RFISurvey rfiSurvey );
+
 }

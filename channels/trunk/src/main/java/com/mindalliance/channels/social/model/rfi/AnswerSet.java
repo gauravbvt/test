@@ -90,4 +90,8 @@ public class AnswerSet extends AbstractPersistentPlanObject {
             answers.set( 0, answer );
         }
     }
+
+    public boolean isEmpty() {
+        return getAnswers().isEmpty();
+    }
 }

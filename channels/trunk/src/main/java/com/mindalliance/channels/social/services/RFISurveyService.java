@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
-import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 
 import java.util.List;
@@ -22,9 +21,9 @@ public interface RFISurveyService extends GenericSqlService<RFISurvey, Long> {
     /**
      * Get all surveys for a plan, possibly restricting to open ones about a given what the questionnaire is about.
      *
-     * @param plan          a plan
-     * @param onlyOpen      a boolean
-     * @param about a string
+     * @param plan     a plan
+     * @param onlyOpen a boolean
+     * @param about    a string
      * @return a list of surveys
      */
     List<RFISurvey> select( Plan plan, boolean onlyOpen, String about );
@@ -41,28 +40,13 @@ public interface RFISurveyService extends GenericSqlService<RFISurvey, Long> {
     /**
      * Find response metrics for a survey.
      *
-     * @param rfiSurvey  a survey
-     * @param rfiService the rfi service
+     * @param plan a plan
+     * @param rfiSurvey        a survey
+     * @param answerSetService the answer set service
+     * @param rfiService       an rfi service
      * @return a string like "105c 95i 3d" (105 completed, 95 incomplete 3 declined)
      */
-    String findResponseMetrics( RFISurvey rfiSurvey, RFIService rfiService );
-
-    /**
-     * Find names of all users participating in a survey.
-     *
-     * @param rfiSurvey a survey
-     * @return a list of strings
-     */
-    List<String> findParticipants( RFISurvey rfiSurvey );
-
-    /**
-     * Find the RFI of a user in a survey, if participating.
-     *
-     * @param username  a string
-     * @param rfiSurvey a survey
-     * @return an RFI or null
-     */
-    RFI findRFI( String username, RFISurvey rfiSurvey );
+    String findResponseMetrics( Plan plan, RFISurvey rfiSurvey, RFIService rfiService, AnswerSetService answerSetService );
 
     /**
      * Creates (i.e. launches) an RFISurvey on a model object using a questionnaire.

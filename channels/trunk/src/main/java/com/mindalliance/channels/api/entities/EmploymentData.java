@@ -45,7 +45,7 @@ public class EmploymentData {
     public String getTitle() {
         return !employment.getTitle().isEmpty()
                 ? employment.getTitle()
-                : null;
+                : "(" + employment.getRole().getName() + ")";
     }
 
     @XmlElement

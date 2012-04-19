@@ -71,7 +71,7 @@ public abstract class AbstractPersistentPlanObject implements PersistentPlanObje
     }
 
     public String toString() {
-        return getTypeName() + "created at " + getFormattedCreated();
+        return getTypeName() + "[" + getId() + "] created " +  getFormattedCreated();
     }
 
     protected String getFormattedCreated() {

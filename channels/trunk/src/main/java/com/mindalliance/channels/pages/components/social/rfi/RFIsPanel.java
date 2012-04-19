@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
@@ -10,12 +11,14 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
+import com.mindalliance.channels.social.services.AnswerSetService;
 import com.mindalliance.channels.social.services.RFIForwardService;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.RFISurveyService;
@@ -66,6 +69,9 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
     private RFIService rfiService;
 
     @SpringBean
+    private AnswerSetService answerSetService;
+
+    @SpringBean
     private RFIForwardService rfiForwardService;
 
     @SpringBean
@@ -97,6 +103,12 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         addActions();
     }
 
+    private void reset() {
+        allUsernames = null;
+        allParticipantUsernames = null;
+        surveyParticipations = null;
+    }
+
     private void addSurveyParticipationTable() {
         surveyParticipations = null;
         surveyParticipationTable = new SurveyParticipationTable(
@@ -119,7 +131,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
             for ( String username : usernames ) {
                 RFI rfi = null;
                 if ( getAllParticipantUsernames().contains( username ) )
-                    rfi = rfiSurveyService.findRFI( username, rfiSurvey );
+                    rfi = rfiService.find( getPlan(), rfiSurvey, username );
                 SurveyParticipation surveyParticipation = new SurveyParticipation(
                         userDao.getUserNamed( username ).getUserInfo(),
                         rfi,
@@ -182,6 +194,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         recipientChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
+                reset();
                 addSurveyParticipationTable();
                 target.add( surveyParticipationTable );
                 addActions();
@@ -207,15 +220,6 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         recipientDomain = val.equals( ALL ) ? null : val;
     }
 
-    public void update( AjaxRequestTarget target, Object object, String action ) {
-        if ( object instanceof SurveyParticipation ) {
-            if ( action.equals( "selected" ) ) {
-                addActions();
-                target.add( actionsContainer );
-            }
-        }
-    }
-
     private List<String> getAllUsernames() {
         if ( allUsernames == null ) {
             allUsernames = userDao.getUsernames();
@@ -225,7 +229,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
     private List<String> getAllParticipantUsernames() {
         if ( allParticipantUsernames == null ) {
-            allParticipantUsernames = rfiSurveyService.findParticipants( getRFISurvey() );
+            allParticipantUsernames = rfiService.findParticipants( getPlan(), getRFISurvey() );
         }
         return allParticipantUsernames;
     }
@@ -234,15 +238,15 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         actionsContainer = new WebMarkupContainer( "actions" );
         actionsContainer.setOutputMarkupId( true );
         addOrReplace( actionsContainer );
-        List<SurveyParticipation> selectedParticipations = getSelectedSurveyParticipations();
-        addActionLabels( selectedParticipations );
-        addDeadline( selectedParticipations );
-        addActionButtons( selectedParticipations );
+        addActionLabels(  );
+        addDeadline(  );
+        addActionButtons( );
     }
 
-    private void addActionLabels( List<SurveyParticipation> selectedParticipations ) {
-        actionsContainer.add( new Label( "selectionCount", Integer.toString( selectedParticipations.size() ) ) );
-        actionsContainer.add( new Label( "userOrUsers", selectedParticipations.size() > 1 ? "users" : "user" ) );
+    private void addActionLabels( ) {
+        int selectedCount = getSelectedSurveyParticipations().size();
+        actionsContainer.add( new Label( "selectionCount", Integer.toString( selectedCount ) ) );
+        actionsContainer.add( new Label( "userOrUsers", selectedCount > 1 ? "users" : "user" ) );
         actionsContainer.add( new Label( "userCount", Integer.toString( getUserCount() ) ) );
     }
 
@@ -264,20 +268,20 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
     }
 
     @SuppressWarnings( "unchecked" )
-    private void addActionButtons( final List<SurveyParticipation> selectedParticipations ) {
+    private void addActionButtons(  ) {
         // send or update RFIs
         Date deadlineDate = getDeadlineDate();
         ConfirmedAjaxFallbackLink<String> createRFIsLink = new ConfirmedAjaxFallbackLink<String>(
                 "sendRFI",
                 "Send or update RFIS to "
-                        + selectedParticipations.size()
+                        + getSelectedSurveyParticipations().size()
                         + ( deadlineDate == null
                         ? " with no deadline "
                         : ( " with deadline on " + getDateFormat().format( deadlineDate ) ) )
                         + "?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                for ( SurveyParticipation participation : selectedParticipations ) {
+                for ( SurveyParticipation participation : getSelectedSurveyParticipations() ) {
                     rfiService.makeOrUpdateRFI(
                             getPlan(),
                             getUsername(),
@@ -289,13 +293,14 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
                             getDeadlineDate()
                     );
                 }
+                update( target, new Change( Change.Type.Updated, getRFISurvey(), "updated" ) );
             }
         };
-        createRFIsLink.setEnabled( selectedParticipations.size() > 0 );
+        createRFIsLink.setEnabled( getSelectedSurveyParticipations().size() > 0 );
         actionsContainer.add( createRFIsLink );
         // nag
-        final List<SurveyParticipation> naggableParticipations = (List<SurveyParticipation>)CollectionUtils.select(
-                selectedParticipations,
+        final List<SurveyParticipation> naggableParticipations = (List<SurveyParticipation>) CollectionUtils.select(
+                getSelectedSurveyParticipations(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -313,19 +318,17 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
                             getPlan(),
                             getUsername(),
                             participation.getRfiSurvey(),
-                            participation.getUserInfo(),
-                            participation.getOrganization(),
-                            participation.getTitle(),
-                            participation.getRole()
+                            participation.getUserInfo()
                     );
                 }
+                update( target, new Change( Change.Type.Updated, getRFISurvey(), "updated" ) );
             }
         };
         nagLink.setEnabled( naggableParticipations.size() > 0 );
         actionsContainer.add( nagLink );
     }
 
-    private void addDeadline( List<SurveyParticipation> selectedParticipations ) {
+    private void addDeadline(  ) {
         deadlineContainer = new WebMarkupContainer( "deadlineContainer" );
         deadlineContainer.setOutputMarkupId( true );
         makeVisible( deadlineContainer, isHasDeadline() );
@@ -343,7 +346,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
             }
         };
         deadlineCheckBox.setOutputMarkupId( true );
-        deadlineCheckBox.setEnabled( selectedParticipations.size() > 0 );
+        deadlineCheckBox.setEnabled( getSelectedSurveyParticipations().size() > 0 );
         actionsContainer.add( deadlineCheckBox );
         addDeadlineField();
     }
@@ -400,6 +403,25 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
     private RFISurvey getRFISurvey() {
         return (RFISurvey) getModel().getObject();
+    }
+
+    public void update( AjaxRequestTarget target, Object object, String action ) {
+        if ( object instanceof SurveyParticipation ) {
+            if ( action.equals( "selected" ) ) {
+                addActions();
+                target.add( actionsContainer );
+            }
+        }
+    }
+
+    public void changed( Change change ) {
+        reset();
+    }
+
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        addSurveyParticipationTable();
+        target.add( surveyParticipationTable );
+        super.updateWith( target, change, updated );
     }
 
     public class SurveyParticipation implements Identifiable {
@@ -483,7 +505,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
             if ( rfi == null ) return null;
             return rfi.isDeclined()
                     ? "Declined"
-                    : rfiService.isCompleted( rfi )
+                    : answerSetService.isCompleted( rfi )
                     ? "Completed"
                     : "Incomplete";
         }
@@ -505,8 +527,8 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
                     : StringUtils.join( fullNames, ", " );
         }
 
-        public Date getInvitedOn() {
-            return rfi == null ? null : rfi.getCreated();
+        public String getInvitedOn() {
+            return rfi == null ? null : getDateFormat().format( rfi.getCreated() );
         }
 
         public Date getCreated() {
@@ -514,11 +536,14 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         }
 
         private <T extends ModelObject> T find( Class<T> clazz, Long id ) {
-            try {
-                return getQueryService().find( clazz, id );
-            } catch ( NotFoundException e ) {
+            if ( id == null )
                 return null;
-            }
+            else
+                try {
+                    return getQueryService().find( clazz, id );
+                } catch ( NotFoundException e ) {
+                    return null;
+                }
         }
 
         // Identifiable
@@ -557,7 +582,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         public boolean isNaggable() {
             return rfi != null
                     && rfi.isLate( getQueryService() )
-                    && rfiService.isIncomplete( rfi );
+                    && answerSetService.isIncomplete( rfi );
 
         }
     }

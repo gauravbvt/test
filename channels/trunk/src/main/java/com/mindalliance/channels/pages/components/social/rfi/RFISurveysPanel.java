@@ -11,6 +11,7 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
+import com.mindalliance.channels.social.services.AnswerSetService;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.RFISurveyService;
 import org.apache.commons.lang.StringUtils;
@@ -49,6 +50,9 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
     
     @SpringBean
     private RFIService rfiService;
+
+    @SpringBean
+    private AnswerSetService answerSetService;
 
     private String about = null;
     private boolean onlyLaunched = false;
@@ -218,8 +222,12 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         if ( change.isForInstanceOf( RFISurveyWrapper.class ) && change.isExpanded() ) {
             addRFISurvey();
             target.add( rfiSurveyContainer );
-        } else
+        } else if ( change.isForInstanceOf( RFISurvey.class ) ) {
+            addRFISurveyTable();
+            target.add( rfiSurveyTable );
+        } else {
             super.updateWith( target, change, updated );
+        }
     }
 
     private RFISurvey getRFISurvey() {
@@ -305,7 +313,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         }
 
         public String getResponseMetrics() {
-            return rfiSurveyService.findResponseMetrics( rfiSurvey, rfiService );
+            return rfiSurveyService.findResponseMetrics( getPlan(), rfiSurvey, rfiService, answerSetService );
         }
 
     }

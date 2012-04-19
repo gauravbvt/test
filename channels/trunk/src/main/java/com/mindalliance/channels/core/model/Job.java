@@ -95,7 +95,7 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     }
 
     public String getTitle() {
-        return title;
+        return title == null ? "" : title;
     }
 
     public void setTitle( String title ) {

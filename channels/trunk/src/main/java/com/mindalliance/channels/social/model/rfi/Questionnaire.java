@@ -4,6 +4,8 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 import com.mindalliance.channels.pages.Channels;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -43,18 +45,18 @@ public class Questionnaire extends AbstractPersistentPlanObject {
      */
     private String about;
 
-    @Column(length=1000)
-    private String name ="unnamed";
+    @Column( length = 1000 )
+    private String name = "unnamed";
 
-    @OneToMany( mappedBy="questionnaire", cascade = CascadeType.ALL)
-    @OrderBy( "index")
-    private List<Question> questions = new ArrayList<Question>(  );
+    @OneToMany( mappedBy = "questionnaire", cascade = CascadeType.ALL )
+    @OrderBy( "index" )
+    private List<Question> questions = new ArrayList<Question>();
 
-    @OneToMany( mappedBy="questionnaire", cascade = CascadeType.ALL)
+    @OneToMany( mappedBy = "questionnaire", cascade = CascadeType.ALL )
     private List<RFISurvey> surveys = new ArrayList<RFISurvey>();
 
     private Status status = Status.INACTIVE;
-    
+
     public Questionnaire() {
     }
 
@@ -79,7 +81,7 @@ public class Questionnaire extends AbstractPersistentPlanObject {
     }
 
     public String getName() {
-        return ( name == null || name.isEmpty() )? "unnamed" : name;
+        return ( name == null || name.isEmpty() ) ? "unnamed" : name;
     }
 
     public void setName( String name ) {
@@ -118,6 +120,18 @@ public class Questionnaire extends AbstractPersistentPlanObject {
 
     public boolean isActive() {
         return getStatus().equals( Status.ACTIVE );
+    }
+
+    public boolean isOptional() {
+        return !CollectionUtils.exists(
+                getQuestions(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Question) object ).isAnswerRequired();
+                    }
+                }
+        );
     }
 
 }
