@@ -162,58 +162,7 @@ public class Configurations {
 		return GlobalVariables.responseString;
 	}
 	
-//	public static void expectedResult(){
-//		try {		
-//			
-//			SAXParserFactory factory = SAXParserFactory.newInstance();
-//			SAXParser saxParser = factory.newSAXParser();
-////			Configurations.writeResult();		
-//			DefaultHandler handler = new DefaultHandler() {
-//				boolean flag = false;
-//				
-//				
-//				public void startElement(String uri, String localName,String tagName, Attributes attributes) throws SAXException {
-//					System.out.print("<" + tagName +">");
-//					if(tagName!=null){
-//						flag=true;
-//					}
-//				}
-//				
-//				public void endElement(String uri, String localName,String tagName) throws SAXException {
-//					System.out.println("<" + tagName +">");
-//				}
-//				
-//				public void characters(char ch[], int start, int length) throws SAXException {
-//					if (flag) {
-//						System.out.print("" + new String(ch, start, length));
-//						flag = false;
-//					}
-//				}
-//			};
-//		    		
-//			GlobalVariables.testDataDirectoryPath = GlobalVariables.currentDirectory.getCanonicalPath().toString() + "\\TestData\\";
-//			saxParser.parse(GlobalVariables.testDataDirectoryPath+ "response.xml", handler);
-//			
-//		 
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-	
-//	public static void writeResult() throws FileNotFoundException{
-//		PrintStream orgStream 	= null;
-//		PrintStream fileStream 	= null;
-//		
-//		orgStream = System.out;
-//		fileStream = new PrintStream(new FileOutputStream("out.xml",true));
-//		// Redirecting console output to file
-//		System.setOut(fileStream);
-//		
-//		// Redirecting runtime exceptions to file
-//		System.setErr(fileStream);		
-//	}
-	
-	public static String parseResponse(String nodename,String value){
+	public static boolean parseResponse(String nodename,String value,String item){
 		try{
 			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
@@ -233,10 +182,14 @@ public class Configurations {
                     Element firstPersonElement = (Element)firstPersonNode;
                     NodeList firstNameList = firstPersonElement.getElementsByTagName(value);
                     Element firstNameElement = (Element)firstNameList.item(0);
-
                     NodeList textFNList = firstNameElement.getChildNodes();
+                    if(item.equals(((Node)textFNList.item(0)).getNodeValue().trim()))
+                    {                    
+                    	return true;
+                    }
                     System.out.println("Attribute: " + ((Node)textFNList.item(0)).getNodeValue().trim());
                 }
+                
             }
 		}catch(SAXParseException err) {
 	    	System.out.println ("** Parsing error" + ", line " + err.getLineNumber () + ", uri " + err.getSystemId ());
@@ -247,6 +200,6 @@ public class Configurations {
 	    }catch (Throwable t) {
 	    	t.printStackTrace ();
 	    }
-		return value;
+		return false;
 	}	
 }
