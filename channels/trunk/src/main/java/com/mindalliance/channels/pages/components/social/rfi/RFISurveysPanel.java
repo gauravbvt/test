@@ -29,6 +29,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -274,6 +275,10 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         @Override
         public String getName() {
             return rfiSurvey.getName();
+        }
+
+        public Date getCreated() {
+            return rfiSurvey.getCreated();
         }
 
         public String getAbout() {

@@ -1890,7 +1890,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void openOrCloseChild( Change change, AjaxRequestTarget target ) {
         List<Updatable> updated = new ArrayList<Updatable>();
-        if ( change.isForInstanceOf( Plan.class ) ) {
+        if ( change.isForInstanceOf( ModelObject.class ) && change.isForProperty( "surveys" ) ) {
+            refreshModelObjectSurveysPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( Plan.class ) ) {
             refreshPlanEditPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Segment.class ) ) {
             refreshSegmentEditPanel( target, change, updated );
@@ -1904,8 +1906,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
             refreshFailureImpactsPanel( target, change, updated );
         } else if ( change.isForInstanceOf( SegmentObject.class ) && change.isForProperty( "dissemination" ) ) {
             refreshDisseminationPanel( target, change, updated );
-        } else if ( change.isForInstanceOf( ModelObject.class ) && change.isForProperty( "surveys" ) ) {
-            refreshModelObjectSurveysPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Flow.class ) && change.isForProperty( "commitments" ) ) {
             refreshCommitmentsPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Flow.class ) && change.isForProperty( "eois" ) ) {

@@ -136,6 +136,18 @@ public class FlowShowMenuPanel extends MenuPanel {
                                     } ) );
             }
 
+            // Surveys
+            AjaxFallbackLink surveysLink = new AjaxFallbackLink( "link" ) {
+                @Override
+                public void onClick( AjaxRequestTarget target ) {
+                    Change change = new Change( Change.Type.AspectViewed, getFlow(), "surveys" );
+                    update( target, change );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Surveys" ),
+                    surveysLink ) );
 
             if ( getCommander().isTimedOut( getUser().getUsername() ) )
                 menuItems.add( timeOutLabel( "menuItem" ) );

@@ -1,13 +1,20 @@
 package com.mindalliance.channels.pages.components.entities.menus;
 
-import com.mindalliance.channels.engine.geo.GeoService;
-import com.mindalliance.channels.core.model.*;
+import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.GeoLocation;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -91,6 +98,20 @@ public class EntityShowMenuPanel extends MenuPanel {
                     new LinkMenuItem(
                         "menuItem", new Model<String>( "Map" ), geomapLink ) );
             }
+            // Surveys
+            AjaxFallbackLink surveysLink = new AjaxFallbackLink( "link" ) {
+                @Override
+                public void onClick( AjaxRequestTarget target ) {
+                    Change change = new Change( Change.Type.AspectViewed, getEntity(), "surveys" );
+                    update( target, change );
+                }
+            };
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Surveys" ),
+                    surveysLink ) );
+
+
 
             menuItems.add( link( "Issues", "issues" ) );
 

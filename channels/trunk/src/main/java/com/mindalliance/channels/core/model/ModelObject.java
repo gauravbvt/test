@@ -3,7 +3,6 @@ package com.mindalliance.channels.core.model;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.ChannelsLockable;
 import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -471,7 +470,6 @@ public abstract class ModelObject
         List<String> typeLabels = new ArrayList<String>(  );
         typeLabels.add( Segment.classLabel() );
         typeLabels.add( Requirement.classLabel() );
-        typeLabels.add( DetectedIssue.classLabel() );
         typeLabels.add( Part.classLabel() );
         typeLabels.add( Flow.classLabel() );
         typeLabels.addAll( ModelEntity.classLabels() );

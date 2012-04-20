@@ -6,17 +6,29 @@
 
 package com.mindalliance.channels.pages.components;
 
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.social.model.rfi.RFISurvey;
+import com.mindalliance.channels.social.services.IssueRemediationSurveysDAO;
+import com.mindalliance.channels.social.services.RFISurveyService;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,10 +71,13 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
     /**
      * Survey service.
      */
-/*
+
     @SpringBean
-    SurveyService surveyService;
-*/
+    IssueRemediationSurveysDAO surveysDAO;
+
+    @SpringBean
+    RFISurveyService rfiSurveyService;
+
 
     public AbstractIssueTablePanel( String id, IModel<? extends ModelObject> model, int maxRows ) {
         super( id, model );
@@ -189,11 +204,10 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             columns.add( makeColumn( "Remediation", "remediation", EMPTY ) );
             columns.add( makeColumn( "Reported by", "reportedBy", EMPTY ) );
             columns.add( makeColumn( "Waived", "waivedString", EMPTY ) );
-/*
+
             if ( getPlan().isDevelopment() ) {
                 columns.add( makeSurveyColumn( "Survey" ) );
             }
-*/
             // provider and table
             add( new AjaxFallbackDefaultDataTable( "issues",
                     columns,
@@ -201,40 +215,40 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                     getPageSize() ) );
         }
 
-/*
+
         private AbstractColumn<Issue> makeSurveyColumn( String name ) {
             return new AbstractColumn<Issue>( new Model<String>( name ) ) {
                 @Override
                 public void populateItem( Item<ICellPopulator<Issue>> cellItem, String id, IModel<Issue> issueModel ) {
                     Issue issue = issueModel.getObject();
-                    boolean surveyed = surveyService.isSurveyed( Survey.Type.Remediation, issue );
+                    boolean surveyed = rfiSurveyService.findRemediationSurvey(
+                            getPlan(),
+                            issue,
+                            getQueryService() ) != null;
                     SurveyLinkPanel surveyLinkPanel = new SurveyLinkPanel( id, surveyed, issue );
                     cellItem.add( surveyLinkPanel );
                 }
             };
         }
-*/
+
     }
 
-/*    private class SurveyLinkPanel extends AbstractUpdatablePanel {
+    private class SurveyLinkPanel extends AbstractUpdatablePanel {
 
         private SurveyLinkPanel( String id, boolean surveyed, final Issue issue ) {
             super( id );
             AjaxFallbackLink link = new AjaxFallbackLink( "link" ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
-                    try {
-                        Survey survey = surveyService.getOrCreateSurvey(
-                                getQueryService(), Survey.Type.Remediation,
-                                issue,
+                        RFISurvey survey = surveysDAO.getOrCreateRemediationSurvey(
+                                getUsername(),
                                 getPlan(),
-                                getUser() );
-                        update( target, new Change( Change.Type.Expanded, survey ) );
-                    } catch ( SurveyException e ) {
-                        LOG.error( "Fail to get or create survey on " + issue.getDetectorLabel() );
-                        target.prependJavaScript( "alert(\"Oops! Could not get or create survey.\")" );
-                        target.add( AbstractIssueTablePanel.this );
-                    }
+                                getQueryService(),
+                                issue );
+                        // Open all surveys panel on this survey
+                        Change change = new Change( Change.Type.Expanded, survey );
+                        change.setId( RFISurvey.UNKNOWN.getId() );
+                        update( target, change );
                 }
             };
             add( link );
@@ -249,5 +263,5 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                     new Model<String>( surveyed ? "View survey" : "Create new survey" ) ) );
             link.add( image );
         }
-    }*/
+    }
 }

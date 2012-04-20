@@ -1,8 +1,10 @@
 package com.mindalliance.channels.social.model.rfi;
 
+import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -133,5 +135,18 @@ public class Questionnaire extends AbstractPersistentPlanObject {
                 }
         );
     }
+
+    public boolean isAboutRemediation( Issue issue ) {
+        return getAbout().equals( aboutRemediation( issue ) );
+    }
+
+    public void makeAboutRemediation( Issue issue ) {
+        setAbout( aboutRemediation( issue ) );
+    }
+
+    public static String aboutRemediation( Issue issue ) {
+        return "Issue " + ChannelsUtils.decamelize( issue.getKind() ) + "[" + issue.getAbout().getId() + "]";
+    }
+
 
 }

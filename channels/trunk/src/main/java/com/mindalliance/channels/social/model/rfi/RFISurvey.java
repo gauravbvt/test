@@ -1,6 +1,7 @@
 package com.mindalliance.channels.social.model.rfi;
 
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.social.model.AbstractModelObjectReferencingPPO;
@@ -29,6 +30,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
     private Questionnaire questionnaire;
     private boolean closed = false;
     private Date deadline;
+    // Questionnaire's about.
     private String about;
     @OneToMany( mappedBy="rfiSurvey", cascade = CascadeType.ALL )
     private List<RFI> rfis;
@@ -36,8 +38,8 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
     public RFISurvey() {
     }
 
-    public RFISurvey( String uri, int version, String username ) {
-        super( uri, version, username );
+    public RFISurvey( Plan plan, String username ) {
+        super( plan.getUri(), plan.getVersion(), username );
     }
 
     public RFISurvey( Long id ) {

@@ -1,8 +1,10 @@
 package com.mindalliance.channels.social.services;
 
+import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 
@@ -59,4 +61,12 @@ public interface RFISurveyService extends GenericSqlService<RFISurvey, Long> {
      */
     RFISurvey launch( Plan plan, String username, Questionnaire questionnaire, ModelObject modelObject );
 
+    /**
+     * Whether remediation of an issue is already surveyed (closed or ongoing).
+     *
+     * @param issue        an issue
+     * @param queryService a query service
+     * @return a rfi survey
+     */
+    RFISurvey findRemediationSurvey( Plan plan, final Issue issue, final QueryService queryService );
 }

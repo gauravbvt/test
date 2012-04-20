@@ -1,9 +1,11 @@
 package com.mindalliance.channels.social.services.impl;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
@@ -98,8 +100,7 @@ public class RFISurveyServiceImpl extends GenericSqlServiceImpl<RFISurvey, Long>
     @Transactional
     public RFISurvey launch( Plan plan, String username, Questionnaire questionnaire, ModelObject modelObject ) {
         RFISurvey rfiSurvey = new RFISurvey(
-                plan.getUri(),
-                plan.getVersion(),
+                plan,
                 username
         );
         if ( questionnaire.isActive() ) {
@@ -111,4 +112,22 @@ public class RFISurveyServiceImpl extends GenericSqlServiceImpl<RFISurvey, Long>
             return null;
         }
     }
+
+    @Override
+    @Transactional( readOnly = true )
+    public RFISurvey findRemediationSurvey( Plan plan, final Issue issue, final QueryService queryService ) {
+        List<RFISurvey> surveys = select( plan, false, Questionnaire.aboutRemediation( issue ) );
+        return (RFISurvey)CollectionUtils.find(
+                surveys,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        RFISurvey survey = (RFISurvey)object;
+                        return survey.getQuestionnaire().isAboutRemediation( issue );
+                    }
+                }
+        );
+    }
+
+
 }

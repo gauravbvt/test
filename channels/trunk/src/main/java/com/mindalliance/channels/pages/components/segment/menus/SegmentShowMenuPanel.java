@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.segment.menus;
 
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Part;
@@ -103,6 +104,20 @@ public class SegmentShowMenuPanel extends MenuPanel {
                     new Model<String>( "Task mover" ),
                     moverLink ) );
         }
+        // Surveys
+        AjaxFallbackLink surveysLink = new AjaxFallbackLink( "link" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                Change change = new Change( Change.Type.AspectViewed, getSegment(), "surveys" );
+                update( target, change );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Surveys" ),
+                surveysLink ) );
+
+
         return menuItems;
     }
 

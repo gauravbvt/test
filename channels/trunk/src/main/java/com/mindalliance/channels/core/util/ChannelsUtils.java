@@ -23,6 +23,8 @@ import org.apache.commons.validator.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -573,5 +575,31 @@ public final class ChannelsUtils {
             results.set( index + 1, item );
         }
         return results;
+    }
+
+    public static String decamelize( String s ) {
+        StringReader reader = new StringReader( s );
+        StringBuilder sb = new StringBuilder();
+        int c;
+        int index = 0;
+        try {
+            while ( ( c = reader.read() ) != -1 ) {
+                char ch = (char)c;
+                if ( index == 0 ) {
+                    sb.append( ch );
+                } else {
+                    if ( Character.isUpperCase( ch ) ) {
+                        sb.append( " " );
+                        sb.append( Character.toLowerCase( ch ) );
+                    } else {
+                        sb.append( ch );
+                    }
+                }
+                index++;
+            }
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
+        return sb.toString();
     }
 }

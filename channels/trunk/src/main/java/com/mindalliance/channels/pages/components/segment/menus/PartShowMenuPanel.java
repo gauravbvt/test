@@ -119,7 +119,6 @@ public class PartShowMenuPanel extends MenuPanel {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.AspectViewed, getPart(), "surveys" );
-                change.addQualifier( "show", "targets" );
                 update( target, change );
             }
         };

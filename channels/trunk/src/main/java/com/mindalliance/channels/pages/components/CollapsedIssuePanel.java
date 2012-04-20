@@ -12,11 +12,15 @@ import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
+import com.mindalliance.channels.social.model.rfi.RFISurvey;
+import com.mindalliance.channels.social.services.IssueRemediationSurveysDAO;
+import com.mindalliance.channels.social.services.RFISurveyService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -24,16 +28,19 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 public class CollapsedIssuePanel extends AbstractCommandablePanel {
 
     /**
      * Survey service.
      */
-/*
     @SpringBean
-    private SurveyService surveyService;
-*/
+    private IssueRemediationSurveysDAO surveysDao;
+
+    @SpringBean
+    private RFISurveyService rfiSurveyService;
+
     /**
      * Issue in panel.
      */
@@ -51,43 +58,39 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         addMenubar( issue );
         addSummary();
         addWaiving( issue );
-//        addSurveying( issue );
+        addSurveying( issue );
     }
 
-/*
+
     private void addSurveying( final Issue issue ) {
         WebMarkupContainer surveyLinkContainer = new WebMarkupContainer( "surveyLinkContainer" );
         surveyLinkContainer.setVisible( issue.isDetected() && !issue.isWaived() );
         add( surveyLinkContainer );
         IndicatingAjaxFallbackLink surveyLink = new IndicatingAjaxFallbackLink( "surveyLink" ) {
             public void onClick( AjaxRequestTarget target ) {
-                try {
-                    Survey survey = surveyService.getOrCreateSurvey(
-                            getQueryService(),
-                            Survey.Type.Remediation,
-                            issue,
+                    RFISurvey survey = surveysDao.getOrCreateRemediationSurvey(
+                            getUsername(),
                             getPlan(),
-                            getUser() );
-                    update( target, new Change( Change.Type.Expanded, survey ) );
-                } catch ( SurveyException e ) {
-                    e.printStackTrace();
-                    target.prependJavaScript( "alert('Oops -- " + e.getMessage() + "');" );
-                    target.add( CollapsedIssuePanel.this );
-                }
+                            getQueryService(),
+                            issue );
+                // Open all surveys panel on this survey
+                Change change = new Change( Change.Type.Expanded, survey );
+                change.setId( RFISurvey.UNKNOWN.getId() );
+                update( target, change );
             }
         };
         surveyLinkContainer.add( surveyLink );
         Label surveyActionLabel = new Label(
                 "surveyAction",
                 new Model<String>(
-                        surveyService.isSurveyed( Survey.Type.Remediation, issue )
+                        rfiSurveyService.findRemediationSurvey( getPlan(), issue, getQueryService() ) != null
                                 ? "View survey"
                                 : "Create survey"
                 ) );
         surveyLink.add( surveyActionLabel );
         surveyLink.setVisible( getPlan().isDevelopment() );
     }
-*/
+
 
     private void addMenubar( Issue issue ) {
         WebMarkupContainer menubar = new WebMarkupContainer( "menubar" );
@@ -132,7 +135,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
             }
         } );
         if ( !issue.isDetected() ) {
-            summary.add( new AttributeModifier( "class", true, new Model<String>( "pointer" ) ) );
+            summary.add( new AttributeModifier( "class", new Model<String>( "pointer" ) ) );
         }
         addOrReplace( summary );
         Label label;
