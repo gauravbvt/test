@@ -50,22 +50,22 @@ public class REST001_ISPPlans extends TestCase{
 			System.out.println("4) Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 				
-			// Assertion: verify that Plan is present
+			// Assertion: verify that PlanSummary
 			GlobalVariables.steps++;
-			Assert.assertEquals("Plan URI is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")));			
-			Assert.assertEquals("Plan Name is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("name")));
-			Assert.assertEquals("Date Versioned is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("dateVersioned")));
-			Assert.assertEquals("Version is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("version")));
-			Assert.assertEquals("Plan release is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("release")));
-			System.out.println("5) Assertion Pass");
+			Configurations.parseResponse("planSummary","uri");	
+			
+			Assert.assertEquals("Plan URI is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")));
+//			Assert.assertEquals("Plan Name is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("name")));
+//			Assert.assertEquals("Date Versioned is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("dateVersioned")));
+//			Assert.assertEquals("Version is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("version")));
+//			Assert.assertEquals("Plan release is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("release")));
+			System.out.println("5) Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
 			// Execution Completed
 			GlobalVariables.steps++;
 			System.out.println("6) Test Case : REST001_ISPPlans Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : ISP001 Execution Completed");
-			
-			Configurations.expResult("uri");
 			
 		}catch (AssertionError ar) {
 			System.out.println("5)Assertion Failed : ");
