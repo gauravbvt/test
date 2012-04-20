@@ -213,47 +213,40 @@ public class Configurations {
 //		System.setErr(fileStream);		
 //	}
 	
-	public static String expResult(String nodename){
+	public static String parseResponse(String nodename,String value){
 		try{
 			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 	        Document doc = docBuilder.parse (new File("Testdata//response.xml"));
-
+	        
 	        // normalize text representation
 	        doc.getDocumentElement ().normalize ();
 	        System.out.println ("Root element of the doc is " + doc.getDocumentElement().getNodeName());
-        
-	        NodeList node = doc.getElementsByTagName("planIdentifier");
+	        
+	        NodeList node = doc.getElementsByTagName(nodename);
             int totalPersons = node.getLength();
             System.out.println("Total no of node : " + totalPersons);
             
             for(int s=0; s<node.getLength() ; s++){
-
                 Node firstPersonNode = node.item(s);
                 if(firstPersonNode.getNodeType() == Node.ELEMENT_NODE){
-
                     Element firstPersonElement = (Element)firstPersonNode;
-                    NodeList firstNameList = firstPersonElement.getElementsByTagName(nodename);
+                    NodeList firstNameList = firstPersonElement.getElementsByTagName(value);
                     Element firstNameElement = (Element)firstNameList.item(0);
 
                     NodeList textFNList = firstNameElement.getChildNodes();
-                    System.out.println("Attribute 1 : " + ((Node)textFNList.item(0)).getNodeValue().trim());
-
+                    System.out.println("Attribute: " + ((Node)textFNList.item(0)).getNodeValue().trim());
                 }
-
             }
 		}catch(SAXParseException err) {
 	    	System.out.println ("** Parsing error" + ", line " + err.getLineNumber () + ", uri " + err.getSystemId ());
 	    	System.out.println(" " + err.getMessage ());
-
 	    }catch (SAXException e) {
 	    	Exception x = e.getException ();
 	    	((x == null) ? e : x).printStackTrace ();
-
 	    }catch (Throwable t) {
 	    	t.printStackTrace ();
 	    }
-		return nodename;
-
-	}
+		return value;
+	}	
 }
