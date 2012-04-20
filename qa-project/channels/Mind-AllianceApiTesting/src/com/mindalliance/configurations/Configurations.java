@@ -170,11 +170,8 @@ public class Configurations {
 	        
 	        // normalize text representation
 	        doc.getDocumentElement ().normalize ();
-	        System.out.println ("Root element of the doc is " + doc.getDocumentElement().getNodeName());
 	        
 	        NodeList node = doc.getElementsByTagName(nodename);
-            int totalPersons = node.getLength();
-            System.out.println("Total no of node : " + totalPersons);
             
             for(int s=0; s<node.getLength() ; s++){
                 Node firstPersonNode = node.item(s);
@@ -183,11 +180,10 @@ public class Configurations {
                     NodeList firstNameList = firstPersonElement.getElementsByTagName(value);
                     Element firstNameElement = (Element)firstNameList.item(0);
                     NodeList textFNList = firstNameElement.getChildNodes();
-                    if(item.equals(((Node)textFNList.item(0)).getNodeValue().trim()))
-                    {                    
+                    if(item.equals(((Node)textFNList.item(0)).getNodeValue().trim())){
+//                    	System.out.println("Attribute: " + ((Node)textFNList.item(0)).getNodeValue().trim());
                     	return true;
                     }
-                    System.out.println("Attribute: " + ((Node)textFNList.item(0)).getNodeValue().trim());
                 }
                 
             }
