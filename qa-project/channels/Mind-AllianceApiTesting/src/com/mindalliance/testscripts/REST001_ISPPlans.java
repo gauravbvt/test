@@ -52,16 +52,31 @@ public class REST001_ISPPlans extends TestCase{
 				
 			// Assertion: verify that PlanSummary
 			GlobalVariables.steps++;
-			Configurations.parseResponse("planSummary","uri");	
 			
-			Assert.assertEquals("Plan URI is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")));
-//			Assert.assertEquals("Plan Name is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("name")));
-//			Assert.assertEquals("Date Versioned is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("dateVersioned")));
-//			Assert.assertEquals("Version is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("version")));
-//			Assert.assertEquals("Plan release is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("release")));
+			boolean result=Configurations.parseResponse("planSummary","uri",GlobalVariables.testData.get("uri"));	
+//			Configurations.parseResponse("planSummary","name");	
+//			Configurations.parseResponse("planSummary","dateVersioned");
+//			Configurations.parseResponse("planSummary","version");
+//			Configurations.parseResponse("planSummary","release");
+			
+			Assert.assertEquals("Plan URI is",result,GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")));
+			
+			Configurations.parseResponse("planSummary","name",GlobalVariables.testData.get("name"));	
+			Assert.assertEquals("Plan Name is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("name")));
+			
+			Configurations.parseResponse("planSummary","dateVersioned",GlobalVariables.testData.get("dateVersioned"));
+			Assert.assertEquals("Date Versioned is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("dateVersioned")));
+			
+			Configurations.parseResponse("planSummary","version",GlobalVariables.testData.get("version"));
+			Assert.assertEquals("Version is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("version")));
+			
+			Configurations.parseResponse("planSummary","release",GlobalVariables.testData.get("release"));
+			Assert.assertEquals("Plan release is",true,GlobalVariables.responseString.contains(GlobalVariables.testData.get("release")));
+			
 			System.out.println("5) Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
+				
 			// Execution Completed
 			GlobalVariables.steps++;
 			System.out.println("6) Test Case : REST001_ISPPlans Execution Completed");
