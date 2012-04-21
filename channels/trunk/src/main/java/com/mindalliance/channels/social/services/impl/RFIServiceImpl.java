@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
+import com.mindalliance.channels.social.services.AnswerSetService;
 import com.mindalliance.channels.social.services.RFIService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -38,9 +39,9 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     }
 
     @Override
-    @Transactional( readOnly = true)
+    @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<RFI> select( Plan plan,  RFISurvey rfiSurvey ) {
+    public List<RFI> select( Plan plan, RFISurvey rfiSurvey ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
@@ -51,7 +52,7 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     }
 
     @Override
-    @Transactional( readOnly = true)
+    @Transactional( readOnly = true )
     public int getRFICount( Plan plan, final Questionnaire questionnaire ) {
         List<RFI> rfis = list();
         return CollectionUtils.select(
@@ -59,7 +60,7 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        RFI rfi = (RFI)object;
+                        RFI rfi = (RFI) object;
                         return rfi.getRfiSurvey().getQuestionnaire().equals( questionnaire );
                     }
                 }
@@ -95,18 +96,17 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     }
 
 
-
     @Override
     @Transactional
     public void nag(
             Plan plan,
             String username,
             RFISurvey rfiSurvey,
-            ChannelsUserInfo userInfo) {
+            ChannelsUserInfo userInfo ) {
         RFI rfi = find( plan, rfiSurvey, userInfo.getUsername() );
         if ( rfi != null ) {
             rfi.setNaggingRequested( true );
-            save(  rfi );
+            save( rfi );
         }
     }
 
@@ -135,11 +135,27 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @Transactional( readOnly = true )
     public List<String> findParticipants( Plan plan, RFISurvey rfiSurvey ) {
         Set<String> usernames = new HashSet<String>();
-        List<RFI> rfis = select(  plan, rfiSurvey );
+        List<RFI> rfis = select( plan, rfiSurvey );
         for ( RFI rfi : rfis ) {
-            usernames.add(  rfi.getSurveyedUsername() );
+            usernames.add( rfi.getSurveyedUsername() );
         }
         return new ArrayList<String>( usernames );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    @Transactional( readOnly = true )
+    public List<RFI> findAnsweringRFIs( Plan plan, RFISurvey rfiSurvey, final AnswerSetService answerSetService ) {
+        List<RFI> rfis = select( plan, rfiSurvey );
+        return (List<RFI>) CollectionUtils.select(
+                rfis,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !answerSetService.select( (RFI) object ).isEmpty();
+                    }
+                }
+        );
     }
 
 }

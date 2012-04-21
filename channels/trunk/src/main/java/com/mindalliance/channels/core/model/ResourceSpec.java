@@ -494,6 +494,11 @@ public class ResourceSpec extends ModelObject implements Specable {
             setJurisdiction( null );
     }
 
+    @Override
+    public boolean isSegmentObject() {
+        return false;
+    }
+
     @SuppressWarnings( "unchecked" )
     public <T extends ModelEntity> T getEntity( Class<T> aClass ) {
        if ( aClass.isAssignableFrom( Actor.class )) {

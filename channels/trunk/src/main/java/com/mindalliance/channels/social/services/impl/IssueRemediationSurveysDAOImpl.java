@@ -82,9 +82,10 @@ public class IssueRemediationSurveysDAOImpl implements IssueRemediationSurveysDA
         Questionnaire questionnaire = questionnaireService.findRemediationQuestionnaire( plan, issue );
         if ( questionnaire == null ) {
             questionnaire = new Questionnaire( plan, username );
-            questionnaire.setName( "Resolving: " + issue.getDetectorLabel() );
-            questionnaire.makeAboutRemediation( issue );
+            questionnaire.setName( Questionnaire.makeRemediationName( issue ) );
+            questionnaire.setAbout( Questionnaire.makeRemediationAbout( issue ) );
             questionnaire.setStatus( Questionnaire.Status.ACTIVE );
+            questionnaire.setIssueRemediated( issue );
             questionnaireService.save( questionnaire );
             List<Question> questions = makeRemediationQuestions( questionnaire, username, issue );
             int index = 0;

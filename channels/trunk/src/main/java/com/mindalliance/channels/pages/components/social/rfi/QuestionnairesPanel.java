@@ -11,10 +11,12 @@ import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.services.QuestionnaireService;
 import com.mindalliance.channels.social.services.RFIService;
+import com.mindalliance.channels.social.services.RFISurveyService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -47,10 +49,15 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
     @SpringBean
     private RFIService rfiService;
 
+    @SpringBean
+    private RFISurveyService rfiSurveyService;
+
     private Questionnaire selectedQuestionnaire;
 
     private String about;
     private String status;
+    private boolean usedInSurveysOnly = false;
+    private boolean remediation = false;
     private WebMarkupContainer questionnaireContainer;
 
     private static final int MAX_ROWS = 10;
@@ -70,6 +77,7 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
     }
 
     private void addFilters() {
+        // status choice
         DropDownChoice<String> statusChoice = new DropDownChoice<String>(
                 "statusChoice",
                 new PropertyModel<String>( this, "status" ),
@@ -82,6 +90,7 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
             }
         } );
         add( statusChoice );
+        // about choice
         DropDownChoice<String> aboutChoice = new DropDownChoice<String>(
                 "aboutChoice",
                 new PropertyModel<String>( this, "about" ),
@@ -94,6 +103,28 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
             }
         } );
         add( aboutChoice );
+        // remediation or not
+        AjaxCheckBox remediationCheckBox = new AjaxCheckBox(
+                "remediation",
+                new PropertyModel<Boolean>( this, "remediation" ) ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addQuestionnaireTable();
+                target.add( questionnaireTable );
+            }
+        };
+        add( remediationCheckBox );
+        // used in surveys
+        AjaxCheckBox usedCheckBox = new AjaxCheckBox(
+                "usedOnly",
+                new PropertyModel<Boolean>( this, "usedInSurveysOnly" ) ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addQuestionnaireTable();
+                target.add( questionnaireTable );
+            }
+        };
+        add( usedCheckBox );
     }
 
     private List<String> getStatusChoices() {
@@ -200,14 +231,14 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
     private void activateQuestionnaire() {
         if ( selectedQuestionnaire != null ) {
             selectedQuestionnaire.setStatus( Questionnaire.Status.ACTIVE );
-            questionnaireService.save(  selectedQuestionnaire );
+            questionnaireService.save( selectedQuestionnaire );
         }
     }
 
     private void retireQuestionnaire() {
         if ( selectedQuestionnaire != null ) {
             selectedQuestionnaire.setStatus( Questionnaire.Status.INACTIVE );
-            questionnaireService.save(  selectedQuestionnaire );
+            questionnaireService.save( selectedQuestionnaire );
         }
     }
 
@@ -216,10 +247,16 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
         List<Questionnaire> questionnaires = questionnaireService.select(
                 getPlan(),
                 getAbout().equals( ANYTHING ) ? null : getAbout(),
-                getStatus().equals( ALL ) ? null : Questionnaire.Status.valueOf( getStatus().toUpperCase() )
+                getStatus().equals( ALL ) ? null : Questionnaire.Status.valueOf( getStatus().toUpperCase() ),
+                isRemediation()
         );
         for ( Questionnaire questionnaire : questionnaires ) {
-            wrappers.add( new QuestionnaireWrapper( questionnaire ) );
+            if ( !questionnaire.isObsolete( getQueryService(), getAnalyst() ) ) {
+                QuestionnaireWrapper wrapper = new QuestionnaireWrapper( questionnaire );
+                if ( isRemediation() == questionnaire.isIssueRemediation() )
+                    if ( !isUsedInSurveysOnly() || wrapper.getSurveyCount() > 0 )
+                        wrappers.add( wrapper );
+            }
         }
         return wrappers;
     }
@@ -251,6 +288,22 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
 
     public void setStatus( String status ) {
         this.status = status.equals( ALL ) ? null : status;
+    }
+
+    public boolean isUsedInSurveysOnly() {
+        return usedInSurveysOnly;
+    }
+
+    public void setUsedInSurveysOnly( boolean usedInSurveysOnly ) {
+        this.usedInSurveysOnly = usedInSurveysOnly;
+    }
+
+    public boolean isRemediation() {
+        return remediation;
+    }
+
+    public void setRemediation( boolean remediation ) {
+        this.remediation = remediation;
     }
 
     private void refreshSelected() {
@@ -377,6 +430,9 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
             return rfiService.getRFICount( getPlan(), questionnaire );
         }
 
+        public int getSurveyCount() {
+            return rfiSurveyService.findSurveys( getPlan(), questionnaire ).size();
+        }
     }
 
     public class QuestionnaireTable extends AbstractTablePanel<QuestionnaireWrapper> {
@@ -399,6 +455,7 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
             columns.add( makeColumn( "Created on", "createdOn", EMPTY ) );
             columns.add( makeColumn( "By", "author", EMPTY ) );
             columns.add( makeColumn( "Last modified on", "lastModifiedOn", EMPTY ) );
+            columns.add( makeColumn( "# of surveys", "surveyCount", EMPTY ) );
             columns.add( makeColumn( "# of RFIs", "rfiCount", EMPTY ) );
             columns.add( makeExpandLinkColumn( "", "", "edit..." ) );
             // Provider and table

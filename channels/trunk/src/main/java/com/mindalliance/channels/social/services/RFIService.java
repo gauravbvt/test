@@ -96,4 +96,17 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
      */
     List<String> findParticipants( Plan plan, RFISurvey rfiSurvey );
 
+    /**
+     * Find the RFIs in a given survey with answers.
+     *
+     * @param plan             a plan
+     * @param rfiSurvey        a survey
+     * @param answerSetService the answer set service
+     * @return a string like "105c 95i 3d" (105 completed, 95 incomplete 3 declined)
+     */
+    List<RFI> findAnsweringRFIs(
+            Plan plan,
+            RFISurvey rfiSurvey,
+            AnswerSetService answerSetService );
+
 }

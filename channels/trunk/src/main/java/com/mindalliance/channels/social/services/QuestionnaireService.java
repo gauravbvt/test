@@ -20,12 +20,14 @@ public interface QuestionnaireService extends GenericSqlService<Questionnaire, L
     /**
      * Find all questionnaires of given (or not) status about a type of model objects or about any type.
      *
-     * @param plan
+     *
+     * @param plan a plan
      * @param about a string, or null for any
      * @param status   the status (null, Active, or Inactive)
+     * @param includeGenerated include generated questionnaires
      * @return a list of questionnaires
      */
-    List<Questionnaire> select( Plan plan, String about, Questionnaire.Status status );
+    List<Questionnaire> select( Plan plan, String about, Questionnaire.Status status, boolean includeGenerated );
 
     /**
      * Find all questionnaires that can be used in surveys about a model object.

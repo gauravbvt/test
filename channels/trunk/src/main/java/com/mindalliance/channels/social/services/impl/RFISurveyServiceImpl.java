@@ -116,7 +116,7 @@ public class RFISurveyServiceImpl extends GenericSqlServiceImpl<RFISurvey, Long>
     @Override
     @Transactional( readOnly = true )
     public RFISurvey findRemediationSurvey( Plan plan, final Issue issue, final QueryService queryService ) {
-        List<RFISurvey> surveys = select( plan, false, Questionnaire.aboutRemediation( issue ) );
+        List<RFISurvey> surveys = select( plan, false, Questionnaire.makeRemediationAbout( issue ) );
         return (RFISurvey)CollectionUtils.find(
                 surveys,
                 new Predicate() {
@@ -127,6 +127,16 @@ public class RFISurveyServiceImpl extends GenericSqlServiceImpl<RFISurvey, Long>
                     }
                 }
         );
+    }
+
+    @Override
+    public List<RFISurvey> findSurveys( Plan plan, Questionnaire questionnaire ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
+        criteria.add( Restrictions.eq( "questionnaire", questionnaire ) );
+        return (List<RFISurvey>)criteria.list();
     }
 
 

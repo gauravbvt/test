@@ -9,8 +9,7 @@
 <wicket:panel>
     <div>
         Show
-        <input wicket:id="launched" type="checkbox"/>
-        only ongoing surveys about
+         surveys about
         <select wicket:id="aboutChoice">
             <option>All</option>
             <option>The plan</option>
@@ -18,6 +17,8 @@
             <option>Organizations</option>
             <option>Roles</option>
         </select>
+        <input wicket:id="launched" type="checkbox"/> only if ongoing
+        <input wicket:id="answered" type="checkbox"/> and with responses
     </div>
     <div wicket:id="rfiSurveys">[RFI survey table]</div>
     <div wicket:id="rfiSurveyContainer">

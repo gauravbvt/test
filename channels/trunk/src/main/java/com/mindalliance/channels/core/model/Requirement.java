@@ -99,6 +99,11 @@ public class Requirement extends ModelObject implements Countable {
         return classLabel();
     }
 
+    @Override
+    public boolean isSegmentObject() {
+        return false;
+    }
+
     public String getInformation() {
         return information;
     }

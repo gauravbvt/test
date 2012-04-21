@@ -67,6 +67,10 @@ public class Plan extends ModelObject {
         return getOrganizations().contains( organization );
     }
 
+    public static String classLabel() {
+        return "this plan";
+    }
+
     /**
      * The status of a (version of) plan.
      */
@@ -172,6 +176,11 @@ public class Plan extends ModelObject {
     //-----------------------------
     public Plan() {
         whenVersioned = new Date();
+    }
+
+    @Override
+    public String getClassLabel() {
+        return classLabel();
     }
 
     public int getVersion() {
@@ -617,6 +626,11 @@ public class Plan extends ModelObject {
                 return ModelObject.areIdentical( (ModelObject) object, mo );
             }
         } );
+    }
+
+    @Override
+    public boolean isSegmentObject() {
+        return false;
     }
 
     /**

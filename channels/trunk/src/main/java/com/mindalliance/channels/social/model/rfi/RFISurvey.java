@@ -3,6 +3,7 @@ package com.mindalliance.channels.social.model.rfi;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.social.model.AbstractModelObjectReferencingPPO;
 
@@ -125,6 +126,10 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
         return mo == null 
                 ? DELETED
                 : mo.getName();
+    }
+
+    public boolean isObsolete( QueryService queryService, Analyst analyst ) {
+        return getQuestionnaire().isObsolete( queryService, analyst );
     }
 
 }

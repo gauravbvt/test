@@ -121,6 +121,11 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         return classLabels;
     }
 
+    @Override
+    public boolean isSegmentObject() {
+        return false;
+    }
+
     /**
      * Whether instances of a given entity class can be either actuals or types.
      * Roles and events are always types.

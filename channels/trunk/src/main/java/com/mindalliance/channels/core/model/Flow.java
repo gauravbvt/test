@@ -102,6 +102,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return classLabel();
     }
 
+    @Override
+    public boolean isSegmentObject() {
+        return true;
+    }
+
 
     public String getKindLabel() {
         return "Flow";

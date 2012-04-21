@@ -48,7 +48,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
 
     @SpringBean
     private RFISurveyService rfiSurveyService;
-    
+
     @SpringBean
     private RFIService rfiService;
 
@@ -57,13 +57,13 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
 
     private String about = null;
     private boolean onlyLaunched = false;
+    private boolean onlyAnswered = false;
     private RFISurvey selectedRFISurvey;
     /**
      * Filters mapped by property.
      */
     private Map<String, ModelObject> filters = new HashMap<String, ModelObject>();
     private WebMarkupContainer rfiSurveyContainer;
-    private AjaxCheckBox activeCheckBox;
     private static final int MAX_ROWS = 10;
     private RFISurveyTable rfiSurveyTable;
 
@@ -83,7 +83,8 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
     }
 
     private void addFilters() {
-        activeCheckBox = new AjaxCheckBox(
+        // launched
+        AjaxCheckBox activeCheckBox = new AjaxCheckBox(
                 "launched",
                 new PropertyModel<Boolean>( this, "onlyLaunched" ) ) {
             @Override
@@ -93,6 +94,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
             }
         };
         add( activeCheckBox );
+        // about
         DropDownChoice<String> aboutChoice = new DropDownChoice<String>(
                 "aboutChoice",
                 new PropertyModel<String>( this, "about" ),
@@ -105,6 +107,17 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
             }
         } );
         add( aboutChoice );
+        // answered
+        AjaxCheckBox answeredCheckBox = new AjaxCheckBox(
+                "answered",
+                new PropertyModel<Boolean>( this, "onlyAnswered" ) ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addRFISurveyTable();
+                target.add( rfiSurveyTable );
+            }
+        };
+        add( answeredCheckBox );
     }
 
     private List<String> getAboutChoices() {
@@ -131,10 +144,13 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
                 onlyLaunched, // restrict to open surveys or not
                 about );
         for ( RFISurvey rfiSurvey : rfiSurveys ) {
-            if ( !isFilteredOut( rfiSurvey ) ) {
-                    rfiSurveyService.refresh( rfiSurvey );
-                    wrappers.add( new RFISurveyWrapper( rfiSurvey ) );
-                }
+            if ( !rfiSurvey.isObsolete( getQueryService(), getAnalyst() ) ) {
+                if ( !onlyAnswered || getAnsweredCount( rfiSurvey ) > 0 )
+                    if ( !isFilteredOut( rfiSurvey ) ) {
+                        rfiSurveyService.refresh( rfiSurvey );
+                        wrappers.add( new RFISurveyWrapper( rfiSurvey ) );
+                    }
+            }
         }
         return wrappers;
     }
@@ -198,6 +214,14 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         this.onlyLaunched = onlyLaunched;
     }
 
+    public boolean isOnlyAnswered() {
+        return onlyAnswered;
+    }
+
+    public void setOnlyAnswered( boolean onlyAnswered ) {
+        this.onlyAnswered = onlyAnswered;
+    }
+
     public String getAbout() {
         return ( about == null || about.isEmpty() ) ? ANYTHING : about;
     }
@@ -206,6 +230,10 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         this.about = val.equals( ANYTHING )
                 ? null
                 : val;
+    }
+
+    private int getAnsweredCount( RFISurvey rfiSurvey ) {
+        return rfiService.findAnsweringRFIs( getPlan(), rfiSurvey, answerSetService ).size();
     }
 
     @Override
@@ -232,7 +260,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
     }
 
     private RFISurvey getRFISurvey() {
-        return (RFISurvey)getModel().getObject();
+        return (RFISurvey) getModel().getObject();
     }
 
     public class RFISurveyWrapper implements Identifiable {

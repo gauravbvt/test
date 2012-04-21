@@ -42,7 +42,7 @@ public interface RFISurveyService extends GenericSqlService<RFISurvey, Long> {
     /**
      * Find response metrics for a survey.
      *
-     * @param plan a plan
+     * @param plan             a plan
      * @param rfiSurvey        a survey
      * @param answerSetService the answer set service
      * @param rfiService       an rfi service
@@ -69,4 +69,14 @@ public interface RFISurveyService extends GenericSqlService<RFISurvey, Long> {
      * @return a rfi survey
      */
     RFISurvey findRemediationSurvey( Plan plan, final Issue issue, final QueryService queryService );
+
+    /**
+     * Find surveys using a given questionnaire.
+     *
+     * @param plan          a plan
+     * @param questionnaire a questionnaire
+     * @return a list of surveys
+     */
+    List<RFISurvey> findSurveys( Plan plan, Questionnaire questionnaire );
+
 }

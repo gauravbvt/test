@@ -5,6 +5,8 @@ import com.mindalliance.channels.social.model.rfi.AnswerSet;
 import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.RFI;
 
+import java.util.List;
+
 /**
  * Answer service.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -13,9 +15,10 @@ import com.mindalliance.channels.social.model.rfi.RFI;
  * Date: 4/11/12
  * Time: 10:41 AM
  */
-public interface AnswerSetService extends GenericSqlService<AnswerSet,Long> {
+public interface AnswerSetService extends GenericSqlService<AnswerSet, Long> {
     /**
      * A count of how many have answered this question.
+     *
      * @param question a question
      * @return an int
      */
@@ -39,10 +42,18 @@ public interface AnswerSetService extends GenericSqlService<AnswerSet,Long> {
 
     /**
      * Find the answer set in an RFI to a question.
-     * @param rfi an RFI
+     *
+     * @param rfi      an RFI
      * @param question a question
      * @return an answer set
      */
     AnswerSet findAnswers( RFI rfi, Question question );
 
+    /**
+     * Find all answer sets for an RFI.
+     *
+     * @param rfi an RFI
+     * @return a list of answer sets
+     */
+    List<AnswerSet> select( RFI rfi );
 }

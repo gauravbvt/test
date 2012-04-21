@@ -475,7 +475,7 @@ public abstract class ModelObject
         typeLabels.addAll( ModelEntity.classLabels() );
         Collections.sort( typeLabels );
         List<String> results = new ArrayList<String>(  );
-        results.add( "this plan" );
+        results.add( Plan.classLabel() );
         results.addAll( typeLabels );
         return results;
     }
@@ -483,5 +483,6 @@ public abstract class ModelObject
     public String getClassLabel() {
         return getTypeName(); // default
     }
-    
+
+    public abstract boolean isSegmentObject();
 }

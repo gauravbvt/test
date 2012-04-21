@@ -1,14 +1,18 @@
 package com.mindalliance.channels.social.model.rfi;
 
+import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
-import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -58,6 +62,10 @@ public class Questionnaire extends AbstractPersistentPlanObject {
     private List<RFISurvey> surveys = new ArrayList<RFISurvey>();
 
     private Status status = Status.INACTIVE;
+
+    private String issueKind;
+
+    private String remediatedModelObjectRefString;
 
     public Questionnaire() {
     }
@@ -114,6 +122,48 @@ public class Questionnaire extends AbstractPersistentPlanObject {
         this.status = status;
     }
 
+    public String getIssueKind() {
+        return issueKind;
+    }
+
+    public void setIssueKind( String issueKind ) {
+        this.issueKind = issueKind;
+    }
+
+    public String getRemediatedModelObjectRefString() {
+        return remediatedModelObjectRefString;
+    }
+
+    public void setRemediatedModelObjectRefString( String remediatedModelObjectRefString ) {
+        this.remediatedModelObjectRefString = remediatedModelObjectRefString;
+    }
+
+    public boolean isIssueRemediation() {
+        return issueKind != null && remediatedModelObjectRefString != null;
+    }
+
+    public void setIssueRemediated( Issue issue ) {
+        issueKind = issue.getKind();
+        remediatedModelObjectRefString = new ModelObjectRef( issue.getAbout() ).asString();
+    }
+
+    public boolean isObsolete( QueryService queryService, Analyst analyst ) {
+        boolean obsolete = false;
+        if ( isIssueRemediation() ) {
+            ModelObject mo = ModelObjectRef.resolveFromString( remediatedModelObjectRefString, queryService );
+            obsolete = mo == null
+                    || !CollectionUtils.exists(
+                    analyst.listUnwaivedIssues( queryService, mo, false ),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (Issue) object ).getKind().equals( issueKind );
+                        }
+                    } );
+        }
+        return obsolete;
+    }
+
     public String toString() {
         return StringUtils.capitalize( getName() )
                 + ": a questionnaire about " + getAbout()
@@ -124,6 +174,7 @@ public class Questionnaire extends AbstractPersistentPlanObject {
         return getStatus().equals( Status.ACTIVE );
     }
 
+    @Transactional( readOnly = true )
     public boolean isOptional() {
         return !CollectionUtils.exists(
                 getQuestions(),
@@ -137,15 +188,28 @@ public class Questionnaire extends AbstractPersistentPlanObject {
     }
 
     public boolean isAboutRemediation( Issue issue ) {
-        return getAbout().equals( aboutRemediation( issue ) );
+        return isIssueRemediation()
+                && getIssueKind().equals( issue.getKind() )
+                && getRemediatedModelObjectRefString().equals( new ModelObjectRef( issue.getAbout() ).asString() );
     }
 
-    public void makeAboutRemediation( Issue issue ) {
-        setAbout( aboutRemediation( issue ) );
+    public static String makeRemediationAbout( Issue issue ) {
+        return issue.getAbout().getClassLabel();
     }
 
-    public static String aboutRemediation( Issue issue ) {
-        return "Issue " + ChannelsUtils.decamelize( issue.getKind() ) + "[" + issue.getAbout().getId() + "]";
+    public static String makeRemediationName( Issue issue ) {
+        ModelObject mo = issue.getAbout();
+        return "Remediating \""
+                + issue.getDetectorLabel()
+                + "\" for "
+                + issue.getAbout().getTypeName()
+                + " \""
+                + issue.getAbout().getLabel()
+                + "\" "
+                + "[" + mo.getId() + "]"
+                + ( mo.isSegmentObject()
+                ? ( " in \"" + ( (SegmentObject) mo ).getSegment().getName() + "\"" )
+                : "" );
     }
 
 

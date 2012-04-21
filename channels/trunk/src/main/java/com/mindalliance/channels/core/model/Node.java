@@ -310,6 +310,11 @@ public abstract class Node extends ModelObject implements SegmentObject {
         return super.isUndefined() && receives.isEmpty() && sends.isEmpty();
     }
 
+    @Override
+    public boolean isSegmentObject() {
+        return true;
+    }
+
     /**
      * Make display string.
      *

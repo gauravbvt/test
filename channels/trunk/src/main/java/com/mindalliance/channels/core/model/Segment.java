@@ -735,6 +735,11 @@ public class Segment extends ModelObject {
         return classLabel();
     }
 
+    @Override
+    public boolean isSegmentObject() {
+        return false;
+    }
+
 //=================================================
 
     /**

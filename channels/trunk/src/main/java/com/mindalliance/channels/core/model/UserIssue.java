@@ -67,6 +67,11 @@ public class UserIssue extends ModelObject implements Issue {
         return classLabel();
     }
 
+    @Override
+    public boolean isSegmentObject() {
+        return false;
+    }
+
 
     /**
      * {@inheritDoc}
