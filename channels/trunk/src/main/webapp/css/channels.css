@@ -336,11 +336,10 @@ input[type="text"].no-expand {
     width: 5em;
 }
 
-/*
+
 input[type="text"].phrase {
     width: 10em;
 }
-*/
 
 input[type="text"].entity-name {
     width: 25em;
