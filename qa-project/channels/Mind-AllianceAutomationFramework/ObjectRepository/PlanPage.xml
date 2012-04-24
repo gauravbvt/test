@@ -41,7 +41,7 @@
 <xPathDeleteGoals>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/div[@class='goals']/table/tbody/tr/td[7]/a/img</xPathDeleteGoals>
 <xPathDeletePhase>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/table[@class='plan-edit-details']/tbody/tr[5]/td/span/div[@class='phases']/ul/li/a[@class='phase-delete']</xPathDeletePhase>
 <xPathDeletePlanSegAttachment>//div[@class='segment']/div[@class='aspect']/table[@class='segment-edit-details']/tbody/tr[6]/td[@class='grouped']/span/ul[@class='attach list']/li/ul[@class='menu']/li[2]/a</xPathDeletePlanSegAttachment>
-<xPathDeleteTaskAttachment>//div[@id='part']/div/div[@class='section-content']/table[2]/tbody/tr[14]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img</xPathDeleteTaskAttachment>
+<xPathDeleteTaskAttachment>//span/div/div[3]/div[@class='part-header']/div[@class='section-content']/table[@class='part-description']/tbody/tr[14]/td[@class='grouped']/span/ul[@class='attach list']/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a</xPathDeleteTaskAttachment>
 <xPathCutAttachment>//span/div[@class='segment']/div[@class='aspect']/table[@class='segment-edit-details']/tbody/tr[6]/td[@class='grouped']/span/ul[@class='attach list']/li/ul[@class='menu']/li/a</xPathCutAttachment>
 <xPathDeleteEventAttachment>//div[@class='entity']/div[@class='aspect']/div/table[@class='entity-details']/tbody/tr[6]/td[@class='grouped']/span/ul[@class='attach list']/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a</xPathDeleteEventAttachment>
 <xPathDeletePlacesAttachment>//div[3]/div/span/div/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li/ul[@class='menu']/li[2]/a/img</xPathDeletePlacesAttachment>
@@ -123,11 +123,11 @@
 <xPathAbtPlanSegActionSendMessage>//div[5]/div/div[2]/div/div/span/span[2]/span/ul/li[3]/span/a/span</xPathAbtPlanSegActionSendMessage>
 <xPathAbtPlanSegActionAddNewIssue>//div[5]/div/div[2]/div/div/span/span[2]/span/ul/li[5]/span/a/span</xPathAbtPlanSegActionAddNewIssue>
 <xPathNewOrganization>//div[4]/div/div[2]/div[2]/div/div[2]/div[2]/div[2]/table/tbody/tr/td/ul/li/span/span/a/span</xPathNewOrganization>
-<xPathSurvey>//span[2]/div/span/div/div/h1</xPathSurvey>
+<xPathSurvey>/html/body/form/div[15]/div/span/div/div/h1</xPathSurvey>
 <xPathAgentContacts>//div[@class='aspect']/span/span/table/tbody/tr/td[5]/span/a/span</xPathAgentContacts>
 <xPathAgent>//div[4]/div/span/div/div[2]/span/span[2]/h3/span[2]/span/a/span</xPathAgent>
 <xPathAgentCategory>//div[3]/div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/span/a/span</xPathAgentCategory>
-<xPathDeleteAgentCategory>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteAgentCategory>
+<xPathDeleteAgentCategory>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a</xPathDeleteAgentCategory>
 <xPathAgentViewAllTypes>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/a</xPathAgentViewAllTypes>
 <xPathLocaleViewAllTypes>//div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/a</xPathLocaleViewAllTypes>
 <xPathURL>//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathURL>
@@ -140,7 +140,7 @@
 <xPathIssueSummaryReportToHome>/html/body/div/div/a/img</xPathIssueSummaryReportToHome>
 <xPathViewAllTypesOfAddInfoSendNewMedium>//div[3]/div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/a</xPathViewAllTypesOfAddInfoSendNewMedium>
 <xPathEventTagsLink>//div[3]/div/span/div/div[2]/div/table/tbody/tr[4]/th/label/a</xPathEventTagsLink>
-<xPathDeleteCategoriesOfEvent>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteCategoriesOfEvent>
+<xPathDeleteCategoriesOfEvent>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a</xPathDeleteCategoriesOfEvent>
 <xPathInformationSharingGuidelinesForParticipantsToHome>/html/body/div/div/a/img</xPathInformationSharingGuidelinesForParticipantsToHome>
 <xPathActiveUsers>/html/body/div/div[2]/div[2]/table/tbody/tr/td/a</xPathActiveUsers>
 <xPathParticipantsPageSubTitle>/html/body/div/div[2]/div/h1</xPathParticipantsPageSubTitle>
