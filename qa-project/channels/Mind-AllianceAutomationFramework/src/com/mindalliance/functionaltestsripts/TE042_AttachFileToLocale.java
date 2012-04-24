@@ -46,10 +46,11 @@ public class TE042_AttachFileToLocale
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				
 
 				// Create Locale 
 				GlobalVariables.iStepNo++ ;

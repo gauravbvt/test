@@ -117,19 +117,24 @@ public class CCE016_DoUndoRedoAttachDocument
 					Thread.sleep(3000);
 					// Assertion: Verify that file is attached
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
-					if (GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
+					for (WebElement li: tds){
+						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
+							break;
+						}
+						else{
+							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
+					    	// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+							break;
+					    }
 					}
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + GlobalVariables.oElement.getText();
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);						
-				    }
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
@@ -143,7 +148,7 @@ public class CCE016_DoUndoRedoAttachDocument
 					Thread.sleep(3000);
 					// Assertion: verify that file is detached
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("grouped"));
-					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
+					tds = GlobalVariables.oElement.findElements(By.tagName("td"));
 					for (WebElement li: tds){
 						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
 							// Write Results
@@ -175,19 +180,23 @@ public class CCE016_DoUndoRedoAttachDocument
 					// Assertion: verify that file is attached
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
 					tds = GlobalVariables.oElement.findElements(By.tagName("li"));
-					if (GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+					for (WebElement li: tds){
+						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
+							break;
+						}
+						else{
+							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
+					    	// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+							break;
+					    }
 					}
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + GlobalVariables.oElement.getText();
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);						
-				    }
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);

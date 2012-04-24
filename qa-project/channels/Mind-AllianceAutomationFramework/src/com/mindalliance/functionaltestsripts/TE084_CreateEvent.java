@@ -31,7 +31,7 @@ public class TE084_CreateEvent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Clicks on 'About plan' link under show pop up menu option
 				GlobalVariables.iStepNo++ ;
@@ -43,7 +43,7 @@ public class TE084_CreateEvent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click on 'All Event' under show pop up menu of About plan window
 				GlobalVariables.iStepNo++;
@@ -55,7 +55,7 @@ public class TE084_CreateEvent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Create an event
 				GlobalVariables.iStepNo++;
@@ -66,7 +66,7 @@ public class TE084_CreateEvent
 				GlobalVariables.oElement.sendKeys(Keys.ENTER);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Select check box
 				GlobalVariables.iStepNo++;
@@ -74,7 +74,7 @@ public class TE084_CreateEvent
 				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);					
+				Thread.sleep(3000);					
 				// Assertion : verify that Event is added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sEventName));
 				if(GlobalVariables.oElement.getText().equals(sEventName)) {
@@ -92,12 +92,12 @@ public class TE084_CreateEvent
 			    }
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				//Delete Event
 				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:0:confirmed")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				// Click on 'done' button
 				GlobalVariables.iStepNo++ ;
@@ -109,7 +109,7 @@ public class TE084_CreateEvent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);				
+				Thread.sleep(3000);				
 				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
@@ -121,7 +121,7 @@ public class TE084_CreateEvent
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

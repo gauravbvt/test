@@ -36,7 +36,7 @@ public class TE035_UpdateLocaleWithSpecialCharacters
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
+				Thread.sleep(4000);
 				
 				//About Plan Window Opened
 				GlobalVariables.iStepNo++ ;

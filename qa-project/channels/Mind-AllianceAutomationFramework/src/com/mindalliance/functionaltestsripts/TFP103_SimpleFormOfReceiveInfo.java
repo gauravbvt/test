@@ -76,7 +76,7 @@ public class TFP103_SimpleFormOfReceiveInfo
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Simple form";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowAdvanceSimpleFormReceiveInfo")));
-				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showAdvanceForm"))){
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("showSimpleForm"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

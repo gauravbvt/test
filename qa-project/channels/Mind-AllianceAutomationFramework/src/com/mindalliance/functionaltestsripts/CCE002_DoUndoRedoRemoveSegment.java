@@ -36,7 +36,7 @@ public class CCE002_DoUndoRedoRemoveSegment
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(6000);
 				
 				// Click on 'Add new segment' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -48,7 +48,7 @@ public class CCE002_DoUndoRedoRemoveSegment
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(7000);
+				Thread.sleep(3000);
 				
 				// Enter the details for new segment
 				GlobalVariables.iStepNo++ ;

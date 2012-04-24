@@ -111,7 +111,7 @@ public class TE072_DeleteMediumAttachment
 				// Delete Attachment
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Delete Attachment";
-				GlobalVariables.oDriver.findElement(By.xpath("//ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img")).click();
+				GlobalVariables.oDriver.findElement(By.xpath("//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/span/ul/li/ul/li[2]/a")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);

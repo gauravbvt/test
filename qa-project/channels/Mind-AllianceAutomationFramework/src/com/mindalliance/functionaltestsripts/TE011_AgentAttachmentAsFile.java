@@ -1,8 +1,12 @@
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -100,20 +104,28 @@ public class TE011_AgentAttachmentAsFile
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// Assertion: verify that file is attached
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("doc_Reference"));
-					if (GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("This is File 1"))){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
+					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
+					for (WebElement li: tds){
+						if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
+							break;
+						}
+						else{
+							GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
+					    	// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+									GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+							break;
+					    }
 					}
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'This is File 1' "+" Actual "+GlobalVariables.oElement.getText();
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				    }
+					// WebElement Synchronization
+					Thread.currentThread();
+					Thread.sleep(3000);
 					// Delete Attachment
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteAgentURL"))).click();
 					// WebElement Synchronization

@@ -95,7 +95,7 @@ public class TE029_ShowAgentNetworkDetails
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.className("floating"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[3]/div/span/div/div[2]/span[2]/h3/span"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("allFlowsInvolving"))) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

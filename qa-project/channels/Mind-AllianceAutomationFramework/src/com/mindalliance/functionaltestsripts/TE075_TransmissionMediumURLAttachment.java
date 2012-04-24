@@ -113,7 +113,7 @@ public class TE075_TransmissionMediumURLAttachment
 				Thread.currentThread();
 				Thread.sleep(3000);
 				//Assertion : Verify that URL gets Attached
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//ul[@class='attach']/span/li[@class='doc_Reference']/a"));
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/span/ul/li/a"));
 				if(GlobalVariables.oElement.getText().contains(GlobalVariables.testData.get("URL"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -128,7 +128,7 @@ public class TE075_TransmissionMediumURLAttachment
 						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
 			    }
 				// Delete Attachment
-				GlobalVariables.oDriver.findElement(By.xpath("//ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img")).click();
+				GlobalVariables.oDriver.findElement(By.xpath("//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/span/ul/li/ul/li[2]/a")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);
