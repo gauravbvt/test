@@ -31,6 +31,25 @@ public class MAP0015_removeSegment {
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
+				
+				// Select the plan from 'Switch to Plan' drop down, located on the top right corner
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Switch to plan";
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("switch-plan:plan-sel")));
+				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
+			    for(WebElement option : options) {
+			    	if(GlobalVariables.testData.get("Automation Test Plan v.1 (dev)").equals(option.getText())){
+			    			option.setSelected();
+			    			break;
+			    	}
+			    }
+			    // Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);	
 
 				// Click on 'Information Sharing Model' link
 				GlobalVariables.iStepNo++;
@@ -97,7 +116,7 @@ public class MAP0015_removeSegment {
 				// Assertion:Verify that segment should get removed.
 				GlobalVariables.bIsSuccess = Boolean.FALSE;
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
-				List<WebElement> options = GlobalVariables.oDropDown.getOptions();
+				options = GlobalVariables.oDropDown.getOptions();
 				for (WebElement option : options) {
 					if (GlobalVariables.testData.get(
 							"Segment For Remove Segment").equals(option.getText())) {
@@ -132,35 +151,47 @@ public class MAP0015_removeSegment {
 
 				LogFunctions.writeLogs("Testcase: "+ GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId+ " execution completed");
-			} else
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId,GlobalVariables.iStepNo, GlobalVariables.sDescription,GlobalVariables.sFailed, GlobalVariables.sBlank,
-						GlobalVariables.sBlank);
-		} catch (Exception e) {
+			} 
+			else{
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				System.out.println("Unable to Remove Segment" + ReportFunctions.getScreenShot("Remove Segment failed"));
+				GlobalVariables.oDriver.quit();
+			}
+		} 
+		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId,GlobalVariables.iStepNo, GlobalVariables.sDescription,
-						GlobalVariables.sFailed, e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\"+ GlobalVariables.sTestCaseId + ".logs");
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
-				ApplicationFunctionLibrary.logout();
-			} else {
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId,GlobalVariables.iStepNo, GlobalVariables.sDescription,
-						GlobalVariables.sFailed, e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Remove Segment"+ReportFunctions.getScreenShot("Remove Segment failed"));
 				ApplicationFunctionLibrary.logout();
 			}
-			System.out.println("Testcase: " + GlobalVariables.sTestCaseId+ " execution failed");
+			else {
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Remove Segment"+ReportFunctions.getScreenShot("Remove Segment failed"));
+				ApplicationFunctionLibrary.logout();	
+			}
+			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 		}
 	}
-
-	public static void main(String args[]) {
+    public static void main(String args[]) {
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
 			new MAP0015_removeSegment();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
-		} catch (Exception oException) {
+		} 
+		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to Remove Segment"+ReportFunctions.getScreenShot("Remove Segment failed"));
 		}
 	}
 }

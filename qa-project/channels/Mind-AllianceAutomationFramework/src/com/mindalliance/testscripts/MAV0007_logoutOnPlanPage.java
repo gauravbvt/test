@@ -44,6 +44,9 @@ public class MAV0007_logoutOnPlanPage
 				  GlobalVariables.sDescription="Logout";
 				  ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),"Sign out "+GlobalVariables.login.get("sUsername"));
 				  Alert alert=GlobalVariables.oDriver.switchTo().alert();
+				  // WebElement Synchronization
+				  Thread.currentThread();
+				  Thread.sleep(1000); 
 				  alert.accept();
 			      // Write Results
 				  LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -51,7 +54,7 @@ public class MAV0007_logoutOnPlanPage
 						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(1000);  
+				  Thread.sleep(2000);  
 				  // Assertion: Verify that 'Channel information Sharing system' loaded
 				  GlobalVariables.iStepNo++;
 				  GlobalVariables.sDescription = "'Channels Information Sharing Planning' renders";
@@ -70,15 +73,21 @@ public class MAV0007_logoutOnPlanPage
 				  }
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(1000);  
+				  Thread.sleep(2000);  
 				  GlobalVariables.oDriver.quit();
 				  
 			      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			      System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			  }
-			  else
-				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						  GlobalVariables.sBlank, GlobalVariables.sBlank);
+			  else{
+					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+					
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					System.out.println("Unable to logout on plan page" + ReportFunctions.getScreenShot("Undo logout on plan page failed"));
+					GlobalVariables.oDriver.quit();
+				}
 		  }	
 		  catch (Exception e) {
 			  

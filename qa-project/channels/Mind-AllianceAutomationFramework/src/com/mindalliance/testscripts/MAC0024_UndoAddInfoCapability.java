@@ -27,119 +27,125 @@ public class MAC0024_UndoAddInfoCapability {
 			System.out.println(GlobalVariables.sDescription);
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
-				if (GlobalVariables.bIsSuccess) {
+			if (GlobalVariables.bIsSuccess) {
 					
-					// Click on 'Information Sharing Model' link
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Navigated to Information Sharing Model";
-					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Click on 'Add new segment' option under 'Actions' pop up menu
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "New segment added";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-			
-					// Enter the details
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "New segment updated";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
-					for (int i = 0; i <= 8; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys("Segment For Undo Add Info Capability");
-					// Click on 'done' button
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// Click on 'done' button
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-			
-					// Add info sends flow
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Add info capability added";
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					// ASSERTION: When clicked on 'Add info sends' option, info sends flow should be added in the received section of respective task
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name"));
-					if (((RenderedWebElement) GlobalVariables.oElement).isDisplayed()) { 
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Info sends flow displayed' "+" Actual 'Info sends flow is not displayed'";
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				    }
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-
-					// Click on 'Undo add sharing capability' option under 'Actions' pop up menu
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Undo add sharing capability done";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoAddSharingCapability"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					//ASSERTION: When clicked on 'Undo add sharing capability' option, the added info sends flow should be removed from the sends section of respective task
-					try {
-						GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name"));
-					}
-					catch (WebDriverException e) {
-								// Write Results
-								LogFunctions.writeLogs(GlobalVariables.sDescription);
-								LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-										GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-					// Get a handle to the open alert, prompt or confirmation
-					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-					// And acknowledge the alert (equivalent to clicking "OK")
-					alert.accept();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Call logout()
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Logout is successful";
-					ApplicationFunctionLibrary.logout();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					
-					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				// Click on 'Information Sharing Model' link
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Navigated to Information Sharing Model";
+				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Click on 'Add new segment' option under 'Actions' pop up menu
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "New segment added";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+		
+				// Enter the details
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "New segment updated";
+				GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
+				for (int i = 0; i <= 8; i++)
+					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+				GlobalVariables.oElement.sendKeys("Segment For Undo Add Info Capability");
+				// Click on 'done' button
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Click on 'done' button
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+		
+				// Add info sends flow
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Add info capability added";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// ASSERTION: When clicked on 'Add info sends' option, info sends flow should be added in the received section of respective task
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name"));
+				if (((RenderedWebElement) GlobalVariables.oElement).isDisplayed()) { 
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
-				else
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Info sends flow displayed' "+" Actual 'Info sends flow is not displayed'";
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+	
+				// Click on 'Undo add sharing capability' option under 'Actions' pop up menu
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Undo add sharing capability done";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoAddSharingCapability"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				//ASSERTION: When clicked on 'Undo add sharing capability' option, the added info sends flow should be removed from the sends section of respective task
+				try {
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name"));
+				}
+				catch (WebDriverException e) {
+							// Write Results
+							LogFunctions.writeLogs(GlobalVariables.sDescription);
+							LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+									GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+				// Get a handle to the open alert, prompt or confirmation
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Call logout()
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Logout is successful";
+				ApplicationFunctionLibrary.logout();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+			}
+			else{
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				System.out.println("Unable to Undo Add Info Capability" + ReportFunctions.getScreenShot("Undo Add Info Capability failed"));
+				GlobalVariables.oDriver.quit();
+			}
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -147,11 +153,13 @@ public class MAC0024_UndoAddInfoCapability {
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to Undo Add Info Capability"+ReportFunctions.getScreenShot("Undo Add Info Capability failed"));
 				ApplicationFunctionLibrary.logout();
 			}
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Undo Add Info Capability"+ReportFunctions.getScreenShot("Undo Add Info Capability failed"));
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");

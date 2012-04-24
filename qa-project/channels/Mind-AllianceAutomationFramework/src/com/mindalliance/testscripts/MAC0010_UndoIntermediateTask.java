@@ -260,9 +260,15 @@ public class MAC0010_UndoIntermediateTask {
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				}
-				else
+				else{
+					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+					
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					System.out.println("Unable to undo intermediate task"+ReportFunctions.getScreenShot("Undo intermediate task failed"));
+					GlobalVariables.oDriver.quit();
+				}
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -270,15 +276,16 @@ public class MAC0010_UndoIntermediateTask {
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to undo intermediate task"+ReportFunctions.getScreenShot("Undo intermediate task failed"));
 				ApplicationFunctionLibrary.logout();
 			}
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to undo intermediate task"+ReportFunctions.getScreenShot("Undo intermediate task failed"));
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-			System.out.println("Unable to undo intermediate task"+ReportFunctions.getScreenShot("Undo intermediate task failed"));
 		}
 	}
 	public static void main(String args[]) {

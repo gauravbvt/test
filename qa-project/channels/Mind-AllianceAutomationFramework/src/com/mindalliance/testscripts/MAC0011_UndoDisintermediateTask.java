@@ -281,9 +281,15 @@ public class MAC0011_UndoDisintermediateTask {
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				}
-				else
+				else{
+					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+					
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					System.out.println("Unable to undo disintermediate task"+ReportFunctions.getScreenShot("Undo disintermediate task failed"));
+					GlobalVariables.oDriver.quit();
+				}
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -291,15 +297,16 @@ public class MAC0011_UndoDisintermediateTask {
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to undo disintermediate task"+ReportFunctions.getScreenShot("Undo disintermediate task failed"));
 				ApplicationFunctionLibrary.logout();
 			}
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to undo disintermediate task"+ReportFunctions.getScreenShot("Undo disintermediate task failed"));
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-			System.out.println("Unable to undo disintermediate task"+ReportFunctions.getScreenShot("Undo disintermediate task failed"));
 		}
 	}
 	public static void main(String args[]) {

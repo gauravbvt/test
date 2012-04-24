@@ -138,28 +138,34 @@ public class MAC0046_RedoRemoveIssue {
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			}
-			else
+			else{
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-	} 
-	catch (Exception e) {
-		System.out.println(e.getMessage());
-		if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
-			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-					e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
-			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
-			LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
-			ApplicationFunctionLibrary.logout();
+				System.out.println("Unable to Redo Remove Issue" + ReportFunctions.getScreenShot("Redo Remove Issue failed"));
+				GlobalVariables.oDriver.quit();
+			}
+		} 
+		catch (Exception e) {
+			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
+				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to Redo Remove Issue"+ReportFunctions.getScreenShot("Redo Remove Issue failed"));
+				ApplicationFunctionLibrary.logout();
+			}
+			else {
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Redo Remove Issue"+ReportFunctions.getScreenShot("Redo Remove Issue failed"));
+				ApplicationFunctionLibrary.logout();	
+			}
+			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 		}
-		else {
-			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-					e.getMessage(),GlobalVariables.sBlank);
-			ApplicationFunctionLibrary.logout();	
-		}
-		System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-		System.out.println("Unable to redo remove issue"+ReportFunctions.getScreenShot("Redo remove issue failed"));
 	}
-   }
     public static void main(String args[]) {
 		try {
 			GenericFunctionLibrary.initializeTestData();

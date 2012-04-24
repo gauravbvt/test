@@ -221,27 +221,34 @@ public class MAC0027_UndoBreakUpFlow
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			}
-			else
+			else{
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-	} 
-	catch (Exception e) {
-		if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
-			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-					e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
-			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
-			LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
-			ApplicationFunctionLibrary.logout();
+				System.out.println("Unable to Undo Breakup Flow" + ReportFunctions.getScreenShot("Undo Breakup Flow failed"));
+				GlobalVariables.oDriver.quit();
+			}
+		} 
+		catch (Exception e) {
+			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
+				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to Undo Breakup Flow"+ReportFunctions.getScreenShot("Undo Breakup Flow failed"));
+				ApplicationFunctionLibrary.logout();
+			}
+			else {
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Undo Breakup Flow"+ReportFunctions.getScreenShot("Undo Breakup Flow failed"));
+				ApplicationFunctionLibrary.logout();	
+			}
+			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 		}
-		else {
-			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-					e.getMessage(),GlobalVariables.sBlank);
-			ApplicationFunctionLibrary.logout();	
-		}
-		System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-		System.out.println("Unable to undo break up flow"+ReportFunctions.getScreenShot("Undo break up flow failed"));
 	}
-  }
     public static void main(String args[]) {
 		try {
 			GenericFunctionLibrary.initializeTestData();
@@ -253,7 +260,7 @@ public class MAC0027_UndoBreakUpFlow
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
-			System.out.println("Unable to undo break up flow"+ReportFunctions.getScreenShot("Undo break up flow failed"));
+			System.out.println("Unable to Undo break up flow"+ReportFunctions.getScreenShot("Undo break up flow failed"));
 		}
 	}
 }

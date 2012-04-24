@@ -185,9 +185,15 @@ public class MAC0006_UndoCutTask {
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				}
-				else
+				else{
+					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+					
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					System.out.println("Unable to Undo cut task" + ReportFunctions.getScreenShot("Undo cut task failed"));
+					GlobalVariables.oDriver.quit();
+				}
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -195,11 +201,13 @@ public class MAC0006_UndoCutTask {
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to Undo cut task" + ReportFunctions.getScreenShot("Undo cut task failed"));
 				ApplicationFunctionLibrary.logout();
 			}
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Undo cut task" + ReportFunctions.getScreenShot("Undo cut task failed"));
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
@@ -217,7 +225,7 @@ public class MAC0006_UndoCutTask {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
-			System.out.println("Unable to undo cut task"+ReportFunctions.getScreenShot("Undo undo cut task failed"));
+			System.out.println("Unable to undo cut task"+ReportFunctions.getScreenShot("Undo cut task failed"));
 		}
 	}
 }

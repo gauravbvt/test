@@ -231,27 +231,34 @@ public class MAC0022_UndoSetTaskFromCopy {
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			}
-			else
+			else{
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-	} 
-	catch (Exception e) {
-		if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
-			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-					e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
-			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
-			LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
-			ApplicationFunctionLibrary.logout();
+				System.out.println("Unable to Set Task From Copy" + ReportFunctions.getScreenShot("Set Task From Copy failed"));
+				GlobalVariables.oDriver.quit();
+			}
+		} 
+		catch (Exception e) {
+			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
+				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to Set Task From Copy"+ReportFunctions.getScreenShot("Set Task From Copy failed"));
+				ApplicationFunctionLibrary.logout();
+			}
+			else {
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Set Task From Copy"+ReportFunctions.getScreenShot("Set Task From Copy failed"));
+				ApplicationFunctionLibrary.logout();	
+			}
+			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 		}
-		else {
-			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-					e.getMessage(),GlobalVariables.sBlank);
-			ApplicationFunctionLibrary.logout();	
-		}
-		System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-		System.out.println("Unable to set task from copy"+ReportFunctions.getScreenShot("Undo st task from copy failed"));
-	}
-  }
+    }
     public static void main(String args[]) {
 		try {
 			GenericFunctionLibrary.initializeTestData();
@@ -263,7 +270,7 @@ public class MAC0022_UndoSetTaskFromCopy {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
-			System.out.println("Unable to set task from copy"+ReportFunctions.getScreenShot("Undo st task from copy failed"));
+			System.out.println("Unable to Set task from copy"+ReportFunctions.getScreenShot("Undo Set task from copy failed"));
 		}
 	}
 }

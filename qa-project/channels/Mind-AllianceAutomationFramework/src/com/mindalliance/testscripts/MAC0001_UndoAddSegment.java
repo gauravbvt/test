@@ -154,11 +154,13 @@ public class MAC0001_UndoAddSegment {
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to undo remove new segment" + ReportFunctions.getScreenShot("Undo remove new segment failed"));
 				ApplicationFunctionLibrary.logout();
 			}
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to undo remove new segment" + ReportFunctions.getScreenShot("Undo remove new segment failed"));
 				ApplicationFunctionLibrary.logout();
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");

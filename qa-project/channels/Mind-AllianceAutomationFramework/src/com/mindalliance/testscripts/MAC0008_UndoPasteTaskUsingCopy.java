@@ -253,9 +253,15 @@ public class MAC0008_UndoPasteTaskUsingCopy {
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				}
-				else
+				else{
+					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+					
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					System.out.println("Unable to Undo Paste Task using Cut" + ReportFunctions.getScreenShot("Undo Paste Task using Cut failed"));
+					GlobalVariables.oDriver.quit();
+				}
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -263,15 +269,16 @@ public class MAC0008_UndoPasteTaskUsingCopy {
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to Undo Paste Task using Cut" + ReportFunctions.getScreenShot("Undo Paste Task using Cut failed"));
 				ApplicationFunctionLibrary.logout();
 			}
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Undo Paste Task using Cut" + ReportFunctions.getScreenShot("Undo Paste Task using Cut failed"));
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-			System.out.println("Unable to undo paste task using coyp"+ReportFunctions.getScreenShot("Undo paste task using copy failed"));
 		}
 	}
 	public static void main(String args[]) {

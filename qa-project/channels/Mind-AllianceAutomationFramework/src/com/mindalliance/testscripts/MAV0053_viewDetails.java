@@ -13,10 +13,8 @@ import com.mindalliance.globallibrary.ReportFunctions;
  * @author: AFour
  *
  */
-public class MAV0053_viewDetails 
-{
-	public MAV0053_viewDetails()
-	{
+public class MAV0053_viewDetails{
+	public MAV0053_viewDetails(){
 		try{
 			GlobalVariables.sTestCaseId = "MAV0053_viewDetails";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
@@ -73,7 +71,7 @@ public class MAV0053_viewDetails
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    }
 			    else{
-			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("allSegments")+" Actual "+GlobalVariables.oElement.getText();
+			    	GlobalVariables.sVerifyError ="Verification Failed "+"Expected "+GlobalVariables.viewElements.get("details")+" Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 

@@ -463,9 +463,15 @@ public class MAC0012_UndoMoveTask {
 					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				}
-				else
+				else{
+					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+					
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+					System.out.println("Unable to Undo Move Task" + ReportFunctions.getScreenShot("Undo Undo Move Task failed"));
+					GlobalVariables.oDriver.quit();
+				}
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -473,15 +479,16 @@ public class MAC0012_UndoMoveTask {
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to Undo Move Task" + ReportFunctions.getScreenShot("Undo Undo Move Task failed"));
 				ApplicationFunctionLibrary.logout();
 			}
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Undo Move Task" + ReportFunctions.getScreenShot("Undo Undo Move Task failed"));
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-			System.out.println("Unable to undo move task"+ReportFunctions.getScreenShot("Undo move task failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -495,7 +502,7 @@ public class MAC0012_UndoMoveTask {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
-			System.out.println("Unable to undo move task"+ReportFunctions.getScreenShot("Undo move task failed"));
+			System.out.println("Unable to Undo Move Task" + ReportFunctions.getScreenShot("Undo Undo Move Task failed"));
 		}
 	}
 }

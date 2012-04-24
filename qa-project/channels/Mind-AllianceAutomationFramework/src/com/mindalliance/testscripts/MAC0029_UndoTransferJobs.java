@@ -23,285 +23,291 @@ public class MAC0029_UndoTransferJobs
 			System.out.println(GlobalVariables.sDescription);
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
-				if (GlobalVariables.bIsSuccess) {
-					// Click on 'Information Sharing Model' link
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Navigated to Information Sharing Model";
-					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
+			if (GlobalVariables.bIsSuccess) {
+				// Click on 'Information Sharing Model' link
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Navigated to Information Sharing Model";
+				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Click 'About Plan' option under 'Show' pop up menu
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "About Plan Window Opened";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),"About plan");
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Click on 'All organizations' option under 'Show' pop up menu
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "All Organizations Window Opened";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),"All organizations");
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Enter name of organization1 in 'Other organization that should be assigned tasks ' field
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Org 1 Name Entered";
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+				String sOrgName1 = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sOrgName1);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);			
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);	
+				// Assertion: Verify that organization1 should get added to plan
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName1));
+				if (GlobalVariables.oElement.getText().equals(sOrgName1)) {
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Click 'About Plan' option under 'Show' pop up menu
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "About Plan Window Opened";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),"About plan");
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Click on 'All organizations' option under 'Show' pop up menu
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "All Organizations Window Opened";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),"All organizations");
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Enter name of organization1 in 'Other organization that should be assigned tasks ' field
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Org 1 Name Entered";
-					GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
-					String sOrgName1 = LogFunctions.getDateTime();
-					GlobalVariables.oElement.sendKeys(sOrgName1);
-					GlobalVariables.oElement.sendKeys(Keys.ENTER);			
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);	
-					// Assertion: Verify that organization1 should get added to plan
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName1));
-					if (GlobalVariables.oElement.getText().equals(sOrgName1)) {
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName1+"'"+" Actual "+GlobalVariables.oElement.getText();
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				    }
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);		
-					
-					// Enter name of organization2 in 'Other organization that should be assigned tasks ' field
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Org 2 Name Entered";
-					GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
-					String sOrgName2 = LogFunctions.getDateTime();
-					GlobalVariables.oElement.sendKeys(sOrgName2);
-					GlobalVariables.oElement.sendKeys(Keys.ENTER);			
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);	
-					// Assertion: Verify that organization2 should get added to plan
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName2));
-					if (GlobalVariables.oElement.getText().equals(sOrgName2)) {
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName2+"'"+" Actual "+GlobalVariables.oElement.getText();
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				    }
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);		
-										
-					// Click on Organization 1
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Organization 1 Details";
-					GlobalVariables.oDriver.findElement(By.linkText(sOrgName1)).click();
-					GlobalVariables.oDriver.findElement(By.linkText(sOrgName1)).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-
-					// Enter  Role, Title, Jurisdiction and supervisor for an agent inside 'Job' section
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Details Entered";
-					if (GlobalVariables.sBrowser.equals("Internet Explorer")) {
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.linkText(sOrgName1));
-					GlobalVariables.oElement.click();
-					for (int i=1;i<=30;i++)
-						GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
-					}
-					// Agent
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					// Title
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Title"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					// Role
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Role"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					// Jury
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Jurisdiction"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					// Supervisor
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Supervisor"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					// Check box
-					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed")).click();
-					 // WebElement Synchronization
-				    Thread.currentThread();
-				    Thread.sleep(2000);
-					// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Agent")));
-					if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Agent"))){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.testData.get("Agent")+"' Actual "+GlobalVariables.oElement.getText();
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-					}
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
-					
-					// Check 'Transfer Jobs' Checkbox 
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Check Transfer Jobs Checkbox";
-					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:transferContainer:transfer")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Select Job from the List 
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Select Job from the List";
-					GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:transferDiv:fromOrganization")));
-					List <WebElement> options = GlobalVariables.oDropDown.getOptions();
-				    for(WebElement option : options) {
-				    	if(option.getText().equals(sOrgName2)){
-				    			option.setSelected();
-				    			break;
-				    	}
-				    }
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-
-					// Check 'Take Copies' Checkbox 
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Take Copies";
-					GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:transferDiv:copying")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Click on Done
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Jobs Transferred";
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);					
-					// Assertion: Verify that job has been transferred
-					GlobalVariables.oDriver.findElement(By.linkText(sOrgName2)).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName1));
-					if(GlobalVariables.oElement.getText().equalsIgnoreCase(sOrgName1)){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Agent 1' "+" Actual "+GlobalVariables.oElement.getText();
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-					}
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
-					
-					// Click on 'undo update organization' option under 'actions' pop up menu 
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Undo Update Organization";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoUpdateOrganization"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-		
-					// Call logout()
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Logout is successful";
-					ApplicationFunctionLibrary.logout();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-									
-					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				}
-				else
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName1+"'"+" Actual "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);		
+				
+				// Enter name of organization2 in 'Other organization that should be assigned tasks ' field
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Org 2 Name Entered";
+				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:tabs:panel:newInvolvedContainer:newInvolved"));
+				String sOrgName2 = LogFunctions.getDateTime();
+				GlobalVariables.oElement.sendKeys(sOrgName2);
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);			
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);	
+				// Assertion: Verify that organization2 should get added to plan
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName2));
+				if (GlobalVariables.oElement.getText().equals(sOrgName2)) {
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+sOrgName2+"'"+" Actual "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);		
+									
+				// Click on Organization 1
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Organization 1 Details";
+				GlobalVariables.oDriver.findElement(By.linkText(sOrgName1)).click();
+				GlobalVariables.oDriver.findElement(By.linkText(sOrgName1)).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
+				// Enter  Role, Title, Jurisdiction and supervisor for an agent inside 'Job' section
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Details Entered";
+				if (GlobalVariables.sBrowser.equals("Internet Explorer")) {
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.linkText(sOrgName1));
+				GlobalVariables.oElement.click();
+				for (int i=1;i<=30;i++)
+					GlobalVariables.oElement.sendKeys(Keys.ARROW_DOWN);
+				}
+				// Agent
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Agent"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Title
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:title"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Title"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Role
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Role"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Jury
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Jurisdiction"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Supervisor
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Supervisor"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				// Check box
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed")).click();
+				 // WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(2000);
+				// Assertion: Verify that Role, Title, Jurisdiction and supervisor can be assign to participating agent within an organization
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.testData.get("Agent")));
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.testData.get("Agent"))){
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.testData.get("Agent")+"' Actual "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Check 'Transfer Jobs' Checkbox 
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Check Transfer Jobs Checkbox";
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:transferContainer:transfer")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Select Job from the List 
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Select Job from the List";
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:transferDiv:fromOrganization")));
+				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
+			    for(WebElement option : options) {
+			    	if(option.getText().equals(sOrgName2)){
+			    			option.setSelected();
+			    			break;
+			    	}
+			    }
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+
+				// Check 'Take Copies' Checkbox 
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Take Copies";
+				GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:tabContainer:tabs:panel:transferDiv:copying")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Click on Done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Jobs Transferred";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);					
+				// Assertion: Verify that job has been transferred
+				GlobalVariables.oDriver.findElement(By.linkText(sOrgName2)).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(sOrgName1));
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase(sOrgName1)){
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Agent 1' "+" Actual "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription+""+GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				
+				// Click on 'undo update organization' option under 'actions' pop up menu 
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Undo Update Organization";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoUpdateOrganization"));
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+	
+				// Call logout()
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Logout is successful";
+				ApplicationFunctionLibrary.logout();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+								
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+			}
+			else{
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				System.out.println("Unable to Undo Transfer Jobs" + ReportFunctions.getScreenShot("Undo Transfer Jobs failed"));
+				GlobalVariables.oDriver.quit();
+			}
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -309,17 +315,18 @@ public class MAC0029_UndoTransferJobs
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to Undo Transfer Jobs"+ReportFunctions.getScreenShot("Undo Transfer Jobs failed"));
 				ApplicationFunctionLibrary.logout();
 			}
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Undo Transfer Jobs"+ReportFunctions.getScreenShot("Undo Transfer Jobs failed"));
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-			System.out.println("Unable to undo transfer jobs"+ReportFunctions.getScreenShot("Undo transfer job failed"));
 		}
-	}
+	  }
 	public static void main(String args[]) {
 		try {
 			GenericFunctionLibrary.initializeTestData();

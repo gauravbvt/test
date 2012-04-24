@@ -23,203 +23,209 @@ public class MAC0028_CopyFlow
 			System.out.println(GlobalVariables.sDescription);
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
-				if (GlobalVariables.bIsSuccess) {
+			if (GlobalVariables.bIsSuccess) {
 		
-					// Click on 'Information Sharing Model' link
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Navigated to Information Sharing Model";
-					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Click 'Add new segment' option under 'Actions' pop up menu
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "New segment added";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),"Add new segment");
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Enter the details for new segment
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Segment's details entered";
-					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
-						for (int i = 0; i <= 8; i++)
-							GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Copy Flow"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Click on 'done' button
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Segment updated";
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Add 'New Task' under Action pop-up menu
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="New task added";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewTask"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
-					// Add details for New Task
-					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-					for (int i = 0; i <= 50; i++)
+				// Click on 'Information Sharing Model' link
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Navigated to Information Sharing Model";
+				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Click 'Add new segment' option under 'Actions' pop up menu
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "New segment added";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),"Add new segment");
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Enter the details for new segment
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Segment's details entered";
+				GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
+					for (int i = 0; i <= 8; i++)
 						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Copy flow"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
-					// Click on hide details from action pop-menu bar
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Copy Flow"));
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Click on 'done' button
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Segment updated";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Add 'New Task' under Action pop-up menu
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="New task added";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewTask"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				// Add details for New Task
+				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
+				for (int i = 0; i <= 50; i++)
+					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Copy flow"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				// Click on hide details from action pop-menu bar
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Create flow
+				// Click on 'add info received' option under 'Receives'  section
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Receives Informations";
+				// Click on legend for maximize the graph
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name")).click();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Receives informations"));
+				GlobalVariables.oElement.sendKeys(Keys.ENTER);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:firstChoice")));
+				List<WebElement>  options = GlobalVariables.oDropDown.getOptions();
+			    for(WebElement option : options) {
+			    	if("Other...".equals(option.getText())){
+			    			option.setSelected();
+			    			break;
+			    	}
+			    }
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
+				for (int i = 0; i <= 50; i++)
+					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
+				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Click on copy flow option under more pop up menu
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Copy flow";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("copyFlow"));
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				
+				// Flow Copied
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Flow copied";
+				// Assertion: Verify that flow has been copied 
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathCopyAttachmentAssertion")));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+			    if(GlobalVariables.oElement.getText().equals("Flow copied")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Create flow
-					// Click on 'add info received' option under 'Receives'  section
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Receives Informations";
-					// Click on legend for maximize the graph
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Receives informations"));
-					GlobalVariables.oElement.sendKeys(Keys.ENTER);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:firstChoice")));
-					List<WebElement>  options = GlobalVariables.oDropDown.getOptions();
-				    for(WebElement option : options) {
-				    	if("Other...".equals(option.getText())){
-				    			option.setSelected();
-				    			break;
-				    	}
-				    }
-				    // WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
-					for (int i = 0; i <= 50; i++)
-						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					
-					// Click on copy flow option under more pop up menu
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Copy flow";
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("copyFlow"));
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
-					
-					// Flow Copied
-					GlobalVariables.iStepNo++;
-					GlobalVariables.sDescription="Flow copied";
-					// Assertion: Verify that flow has been copied 
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathCopyAttachmentAssertion")));
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-				    if(GlobalVariables.oElement.getText().equals("Flow copied")){
-						// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-								GlobalVariables.sBlank, GlobalVariables.sBlank);
-					}
-					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Flow copied' "+" Actual "+GlobalVariables.oElement.getText();
-				    	// Write Results
-						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-					}
-				    // WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
-					// Click on legend for maximize the graph
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCrossOnAttachmentCopiedMessage"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					// Click on 'Remove this segment' under 'Actions' pop up menu
-					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-					// Get a handle to the open alert, prompt or confirmation
-					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-					alert.accept();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(1000);
-					
-					// Call logout()
-					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Logout is successful";
-					ApplicationFunctionLibrary.logout();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-									
-					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				}
-				else
+				else{
+					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'Flow copied' "+" Actual "+GlobalVariables.oElement.getText();
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
+			    // WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(5000);
+				// Click on legend for maximize the graph
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCrossOnAttachmentCopiedMessage"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				// Click on 'Remove this segment' under 'Actions' pop up menu
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
+				// Get a handle to the open alert, prompt or confirmation
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(1000);
+				
+				// Call logout()
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Logout is successful";
+				ApplicationFunctionLibrary.logout();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+								
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
+			}
+			else{
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				System.out.println("Unable to Copy Flow" + ReportFunctions.getScreenShot("Copy Flow failed"));
+				GlobalVariables.oDriver.quit();
+			}
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
@@ -227,15 +233,16 @@ public class MAC0028_CopyFlow
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to Copy Flow"+ReportFunctions.getScreenShot("Copy Flow failed"));
 				ApplicationFunctionLibrary.logout();
 			}
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Copy Flow"+ReportFunctions.getScreenShot("Copy Flow failed"));
 				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-			System.out.println("Unable to copy flow"+ReportFunctions.getScreenShot("Copy flow failed"));
 		}
 	}
 	public static void main(String args[]) {
@@ -249,7 +256,7 @@ public class MAC0028_CopyFlow
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
-			System.out.println("Unable to copy flow"+ReportFunctions.getScreenShot("Copy flow failed"));
+			System.out.println("Unable to Copy flow"+ReportFunctions.getScreenShot("Copy flow failed"));
 		}
 	}
 }

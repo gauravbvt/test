@@ -197,27 +197,34 @@ public class MAC0032_RedoRemoveThisSegment {
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			}
-			else
+			else{
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-	} 
-	catch (Exception e) {
-		if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
-			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-					e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
-			GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
-			LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
-			ApplicationFunctionLibrary.logout();
+				System.out.println("Unable to Redo Remove This Segment" + ReportFunctions.getScreenShot("Redo Remove This Segment failed"));
+				GlobalVariables.oDriver.quit();
+			}
+		} 
+		catch (Exception e) {
+			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
+				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to Redo Remove This Segment"+ReportFunctions.getScreenShot("Redo Remove This Segment failed"));
+				ApplicationFunctionLibrary.logout();
+			}
+			else {
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Redo Remove This Segment"+ReportFunctions.getScreenShot("Redo Remove This Segment failed"));
+				ApplicationFunctionLibrary.logout();	
+			}
+			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 		}
-		else {
-			LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-					e.getMessage(),GlobalVariables.sBlank);
-			ApplicationFunctionLibrary.logout();	
-		}
-		System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-		System.out.println("Unable to redo remove this segment"+ReportFunctions.getScreenShot("Redo remove this segment failed"));
 	}
-  }
 	public static void main(String args[]) {
 		try {
 			GenericFunctionLibrary.initializeTestData();
