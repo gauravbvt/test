@@ -7,9 +7,13 @@
 <body>
 <wicket:panel>
     <span class="pointer">
-		<img wicket:id="warning" class="warning" src="images/warning.png" alt="Issues detected" />
+		<img wicket:id="warning" class="warning" src="images/warning.png" alt="Issues detected"/>
 		<span wicket:id="title">[flow title panel]</span>
-		<span class="channels-summary" wicket:id="channels">(555-1212)</span>
+        <span wicket:id="channels-list">
+		    <span  wicket:id="channels-summaries">
+                <span class="channels-summary" wicket:id="channel-summary">555-1212</span>
+            </span>
+        </span>
     </span>
     <span wicket:id="flowMedia" class="flowMediaRefs">[media references panel]</span>
 </wicket:panel>

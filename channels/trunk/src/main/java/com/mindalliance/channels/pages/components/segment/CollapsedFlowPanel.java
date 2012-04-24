@@ -9,11 +9,12 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import java.text.MessageFormat;
+import java.util.List;
 
 /**
  * A collapsed flow.
@@ -45,7 +46,25 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
                 update( target, new Change( Change.Type.Selected, getFlow() ) );
             }
         } );
-        final String c = Channel.toString( getFlow().getEffectiveChannels(), " / " );
+//        final String c = Channel.toString( getFlow().getEffectiveChannels(), " / " );
+        // Add channels list
+        List<Channel> channels = getFlow().getEffectiveChannels();
+        WebMarkupContainer channelsContainer = new WebMarkupContainer( "channels-list" );
+        ListView<Channel> channelsList = new ListView<Channel>(
+                "channels-summaries",
+                channels
+                ) {
+            @Override
+            protected void populateItem( ListItem<Channel> item ) {
+                Channel channel = item.getModelObject();
+                Label channelLabel = new Label( "channel-summary", channel.getLabel() );
+                item.add(  channelLabel );
+            }
+        };
+        channelsContainer.add( channelsList );
+        makeVisible( channelsContainer, !channels.isEmpty() );
+        add( channelsContainer );
+/*
         Label channel = new Label( "channels", new AbstractReadOnlyModel() {
 
             @Override
@@ -56,6 +75,7 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
         } );
         makeVisible( channel, c != null && !c.isEmpty() );
         add( channel );
+*/
         add( titlePanel );
     }
 
