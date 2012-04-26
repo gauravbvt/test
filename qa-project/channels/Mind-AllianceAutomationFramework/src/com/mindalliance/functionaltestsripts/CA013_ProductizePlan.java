@@ -87,13 +87,8 @@ public class CA013_ProductizePlan
 				//Thread sleep
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Navigate To Home Page
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathHomePageIcon"))).click();
-				//Thread sleep
-				Thread.currentThread();
-				Thread.sleep(2000);
 				// Assertion: Verify that plan productized successfully
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("switch-plan:plan-sel")));
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
 				options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.testData.get("New Plan v.1 (prod)").equals(option.getText())){
@@ -108,8 +103,6 @@ public class CA013_ProductizePlan
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Navigate to Channels Administration Link
-				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("channelsAdministration"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -150,22 +143,30 @@ public class CA013_ProductizePlan
 				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 				
 			}
-			else
+			else{
+				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
+				
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-		}
+				System.out.println("Unable to Productize Plan" + ReportFunctions.getScreenShot("Productize Plan failed"));
+				GlobalVariables.oDriver.quit();
+			}
+		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
 				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
+				System.out.println("Unable to Productize Plan" + ReportFunctions.getScreenShot("Productize Plan failed"));
 				ApplicationFunctionLibrary.logout();
 			}
 			else {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-					e.getMessage(),GlobalVariables.sBlank);
-				ApplicationFunctionLibrary.logout();
+						e.getMessage(),GlobalVariables.sBlank);
+				System.out.println("Unable to Productize Plan" + ReportFunctions.getScreenShot("Productize Plan failed"));
+				ApplicationFunctionLibrary.logout();	
 			}
 			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
 		}
@@ -179,7 +180,9 @@ public class CA013_ProductizePlan
 			ReportFunctions.generateAutomationReport();
 		} 
 		catch (Exception oException) {
+			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to Productize Plan"+ReportFunctions.getScreenShot("Productize Plan failed"));
 		}
 	}
 }
