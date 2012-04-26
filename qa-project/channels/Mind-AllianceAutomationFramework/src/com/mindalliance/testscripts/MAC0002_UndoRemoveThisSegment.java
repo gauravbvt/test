@@ -232,6 +232,7 @@ public class MAC0002_UndoRemoveThisSegment {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo add new task"+ReportFunctions.getScreenShot("Undo add new task failed"));
 		}
 	}
 }

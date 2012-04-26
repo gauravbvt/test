@@ -177,6 +177,7 @@ public class MAC0001_UndoAddSegment {
 		catch (Exception oException) {
 			// TODO Auto-generated catch block
 			oException.printStackTrace();
+			System.out.println("Unable to undo add new segment"+ReportFunctions.getScreenShot("Undo add new segment failed"));
 		}
 	}
 }
