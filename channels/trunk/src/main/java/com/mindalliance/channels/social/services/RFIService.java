@@ -1,10 +1,13 @@
 package com.mindalliance.channels.social.services;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
@@ -64,10 +67,10 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
     /**
      * Nag a user to complete an RFI.
      *
-     * @param plan         a plan
-     * @param username     who nags
-     * @param rfiSurvey    a survey
-     * @param userInfo     user info
+     * @param plan      a plan
+     * @param username  who nags
+     * @param rfiSurvey a survey
+     * @param userInfo  user info
      */
     void nag(
             Plan plan,
@@ -90,23 +93,41 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
     /**
      * Find the usernames of all participants in a survey.
      *
-     * @param plan         a plan
+     * @param plan      a plan
      * @param rfiSurvey a survey
      * @return a list of strings
      */
     List<String> findParticipants( Plan plan, RFISurvey rfiSurvey );
 
+
     /**
-     * Find the RFIs in a given survey with answers.
+     * Find all active RFIs for a user in a given plan.
      *
-     * @param plan             a plan
-     * @param rfiSurvey        a survey
-     * @param answerSetService the answer set service
-     * @return a string like "105c 95i 3d" (105 completed, 95 incomplete 3 declined)
+     * @param plan         a plan
+     * @param user         a user
+     * @param queryService a query service
+     * @param analyst      an analyst
+     * @return a list of RFIs
      */
-    List<RFI> findAnsweringRFIs(
-            Plan plan,
-            RFISurvey rfiSurvey,
-            AnswerSetService answerSetService );
+    List<RFI> listUserActiveRFIs( Plan plan, ChannelsUser user, QueryService queryService, Analyst analyst );
+
+    /**
+     * Find all RFIs sent to a given user that are ongoing in a given plan.
+     *
+     * @param plan         a plan
+     * @param user         a user
+     * @param queryService a query service
+     * @param analyst      an analyst
+     * @return a list of RFIs
+     */
+    List<RFI> listOngoingUserRFIs( Plan plan, ChannelsUser user, QueryService queryService, Analyst analyst );
+
+    /**
+     * Toggle declining an RFI.
+     *
+     * @param rfi an rfi
+     * @param reason a string
+     */
+    void toggleDecline( RFI rfi, String reason );
 
 }

@@ -18,10 +18,10 @@ import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
-import com.mindalliance.channels.social.services.AnswerSetService;
 import com.mindalliance.channels.social.services.RFIForwardService;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.RFISurveyService;
+import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -69,7 +69,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
     private RFIService rfiService;
 
     @SpringBean
-    private AnswerSetService answerSetService;
+    private SurveysDAO surveysDAO;
 
     @SpringBean
     private RFIForwardService rfiForwardService;
@@ -505,7 +505,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
             if ( rfi == null ) return null;
             return rfi.isDeclined()
                     ? "Declined"
-                    : answerSetService.isCompleted( rfi )
+                    : surveysDAO.isCompleted( rfi )
                     ? "Completed"
                     : "Incomplete";
         }
@@ -581,8 +581,8 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
         public boolean isNaggable() {
             return rfi != null
-                    && rfi.isLate( getQueryService() )
-                    && answerSetService.isIncomplete( rfi );
+                    && rfi.isLate( getQueryService(), getAnalyst() )
+                    && !surveysDAO.isCompleted( rfi );
 
         }
     }

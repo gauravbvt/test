@@ -11,12 +11,14 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
-import com.mindalliance.channels.social.services.AnswerSetService;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.RFISurveyService;
+import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -53,7 +55,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
     private RFIService rfiService;
 
     @SpringBean
-    private AnswerSetService answerSetService;
+    private SurveysDAO surveysDAO;
 
     private String about = null;
     private boolean onlyLaunched = false;
@@ -162,6 +164,28 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         rfiSurveyContainer.add( new Label(
                 "rfiSurveyLabel",
                 new PropertyModel<String>( this, "rfiSurveyLabel" ) ) );
+        AjaxLink<String> activateButton = new AjaxLink<String>( "activate" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                rfiSurveyService.toggleActivation( selectedRFISurvey );
+                rfiSurveyService.refresh( selectedRFISurvey );
+                addRFISurveyTable();
+                addRFISurvey();
+                target.add( rfiSurveyTable );
+                target.add( rfiSurveyContainer );
+            }
+        };
+        activateButton.add( new AttributeModifier(
+                "value",
+                new Model<String>( selectedRFISurvey == null
+                        || selectedRFISurvey.isObsolete( getQueryService(), getAnalyst() )
+                        ? ""
+                        : selectedRFISurvey.isClosed()
+                        ? "Activate survey"
+                        : "Close survey" ) ) );
+        activateButton.setVisible( selectedRFISurvey != null
+                && !selectedRFISurvey.isObsolete( getQueryService(), getAnalyst() ) );
+        rfiSurveyContainer.add( activateButton );
         rfiSurveyContainer.add( selectedRFISurvey == null
                 ? new Label( "rfiSurvey", "" )
                 : new RFISurveyPanel(
@@ -233,7 +257,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
     }
 
     private int getAnsweredCount( RFISurvey rfiSurvey ) {
-        return rfiService.findAnsweringRFIs( getPlan(), rfiSurvey, answerSetService ).size();
+        return surveysDAO.findAnsweringRFIs( getPlan(), rfiSurvey ).size();
     }
 
     @Override
@@ -338,7 +362,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         }
 
         public String getStatusLabel() {
-            return rfiSurvey.getStatusLabel( getQueryService() );
+            return rfiSurvey.getStatusLabel( getQueryService(), getAnalyst() );
         }
 
         public int getSentToCount() {
@@ -346,7 +370,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         }
 
         public String getResponseMetrics() {
-            return rfiSurveyService.findResponseMetrics( getPlan(), rfiSurvey, rfiService, answerSetService );
+            return surveysDAO.findResponseMetrics( getPlan(), rfiSurvey );
         }
 
     }

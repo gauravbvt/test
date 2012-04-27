@@ -46,7 +46,6 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
                 update( target, new Change( Change.Type.Selected, getFlow() ) );
             }
         } );
-//        final String c = Channel.toString( getFlow().getEffectiveChannels(), " / " );
         // Add channels list
         List<Channel> channels = getFlow().getEffectiveChannels();
         WebMarkupContainer channelsContainer = new WebMarkupContainer( "channels-list" );
@@ -64,18 +63,6 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
         channelsContainer.add( channelsList );
         makeVisible( channelsContainer, !channels.isEmpty() );
         add( channelsContainer );
-/*
-        Label channel = new Label( "channels", new AbstractReadOnlyModel() {
-
-            @Override
-            public Object getObject() {
-                return c != null && c.isEmpty() ? ""
-                        : MessageFormat.format( "{0}", c );
-            }
-        } );
-        makeVisible( channel, c != null && !c.isEmpty() );
-        add( channel );
-*/
         add( titlePanel );
     }
 

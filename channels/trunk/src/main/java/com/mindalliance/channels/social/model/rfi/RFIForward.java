@@ -1,12 +1,13 @@
 package com.mindalliance.channels.social.model.rfi;
 
-import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
-import com.mindalliance.channels.core.query.QueryService;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import java.util.Date;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -18,15 +19,10 @@ import javax.persistence.ManyToOne;
 @Entity
 public class RFIForward extends AbstractPersistentPlanObject {
 
-    /**
-     * username of user being questioned.
-     */
-    private String surveyedUsername;
+    @Column(length=1024)
+    private String forwardToEmail;
 
-    /**
-     * Name of actor user participates as in survey.
-     */
-    private long actorId;
+    private Date dateForwarded;
 
     @Column(length=3000)
     private String message = "";
@@ -36,26 +32,28 @@ public class RFIForward extends AbstractPersistentPlanObject {
 
     public RFIForward() {}
 
-    public RFIForward( String planUri, int planVersion, String fromUsername, PlanParticipation participation, QueryService queryService ) {
-        super( planUri, planVersion, fromUsername  );
-        surveyedUsername = participation.getUsername();
-        actorId = participation.getActor( queryService ).getId();
+    public RFIForward( Plan plan, ChannelsUser user, RFI rfi, String forwardToEmail, String message  ) {
+        super( plan.getUri(), plan.getVersion(), user.getUsername()  );
+        this.rfi = rfi;
+        this.forwardToEmail = forwardToEmail;
+        this.message = message;
     }
 
-    public String getSurveyedUsername() {
-        return surveyedUsername;
+    // Assumes valid email
+    public String getForwardToEmail() {
+        return forwardToEmail;
     }
 
-    public void setSurveyedUsername( String surveyedUsername ) {
-        this.surveyedUsername = surveyedUsername;
+    public void setForwardToEmail( String forwardToEmail ) {
+        this.forwardToEmail = forwardToEmail;
     }
 
-    public long getActorId() {
-        return actorId;
+    public Date getDateForwarded() {
+        return dateForwarded;
     }
 
-    public void setActorId( long actorId ) {
-        this.actorId = actorId;
+    public void setDateForwarded( Date dateForwarded ) {
+        this.dateForwarded = dateForwarded;
     }
 
     public RFI getRfi() {

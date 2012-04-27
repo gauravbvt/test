@@ -3,14 +3,10 @@ package com.mindalliance.channels.social.services.impl;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.rfi.AnswerSet;
 import com.mindalliance.channels.social.model.rfi.Question;
-import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFI;
-import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import com.mindalliance.channels.social.services.AnswerSetService;
 import com.mindalliance.channels.social.services.QuestionnaireService;
 import com.mindalliance.channels.social.services.RFISurveyService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -47,34 +43,6 @@ public class AnswerSetServiceImpl extends GenericSqlServiceImpl<AnswerSet, Long>
     }
 
     @Override
-    @Transactional( readOnly = true )
-    public boolean isCompleted( final RFI rfi ) {
-        RFISurvey survey = rfi.getRfiSurvey();
-        surveyService.refresh( survey );
-        Questionnaire questionnaire = survey.getQuestionnaire();
-        questionnaireService.refresh( questionnaire );
-        List<Question> questions = questionnaire.getQuestions();
-        // No required, unanswered questions
-        return !CollectionUtils.exists(
-                questions,     // todo - fails on creation
-                // unanswered, required question
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        Question question = (Question) object;
-                        if ( question.isAnswerRequired() ) {
-                            AnswerSet answerSet = findAnswers( rfi, question );
-                            return answerSet == null || answerSet.isEmpty();
-                        } else {
-                            return false;
-                        }
-
-                    }
-                }
-        );
-    }
-
-    @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
     public AnswerSet findAnswers( RFI rfi, Question question ) {
@@ -98,11 +66,5 @@ public class AnswerSetServiceImpl extends GenericSqlServiceImpl<AnswerSet, Long>
         return  criteria.list();
     }
 
-    @Override
-    @SuppressWarnings( "unchecked" )
-    @Transactional( readOnly = true )
-    public boolean isIncomplete( RFI rfi ) {
-        return !isCompleted( rfi );
-    }
 
 }

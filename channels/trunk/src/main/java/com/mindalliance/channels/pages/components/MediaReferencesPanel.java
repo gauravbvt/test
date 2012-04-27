@@ -67,11 +67,11 @@ public class MediaReferencesPanel extends AbstractUpdatablePanel {
                         : "";
                 WebMarkupContainer icon = new WebMarkupContainer( "icon" );
                 icon.add(  new AttributeModifier(
-                        "src",  true, new Model<String>( src ) ) );
+                        "src", new Model<String>( src ) ) );
                 icon.add(  new AttributeModifier(
-                        "alt",  true, new Model<String>( title ) ) );
+                        "alt", new Model<String>( title ) ) );
                 icon.add(  new AttributeModifier(
-                        "title",  true, new Model<String>( attachmentManager.getLabel( getPlan(), attachment ) ) ) );
+                        "title", new Model<String>( attachmentManager.getLabel( getPlan(), attachment ) ) ) );
                 link.add( icon );
             }
         };

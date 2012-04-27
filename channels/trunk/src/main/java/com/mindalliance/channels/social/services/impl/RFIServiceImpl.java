@@ -1,14 +1,16 @@
 package com.mindalliance.channels.social.services.impl;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
-import com.mindalliance.channels.social.services.AnswerSetService;
 import com.mindalliance.channels.social.services.RFIService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -145,17 +147,54 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<RFI> findAnsweringRFIs( Plan plan, RFISurvey rfiSurvey, final AnswerSetService answerSetService ) {
-        List<RFI> rfis = select( plan, rfiSurvey );
+    public List<RFI> listUserActiveRFIs(
+            Plan plan,
+            ChannelsUser user,
+            final QueryService queryService,
+            final Analyst analyst) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
+        criteria.add( Restrictions.eq( "surveyedUsername", user.getUsername() ) );
         return (List<RFI>) CollectionUtils.select(
-                rfis,
+                criteria.list(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return !answerSetService.select( (RFI) object ).isEmpty();
+                        RFI rfi = (RFI) object;
+                        return rfi.isActive( queryService, analyst );
                     }
-                }
-        );
+                } );
     }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    @Transactional( readOnly = true )
+    public List<RFI> listOngoingUserRFIs( Plan plan, ChannelsUser user, final QueryService queryService, final Analyst analyst ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
+        criteria.add( Restrictions.eq( "surveyedUsername", user.getUsername() ) );
+        return (List<RFI>) CollectionUtils.select(
+                criteria.list(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        RFI rfi = (RFI) object;
+                        return rfi.isOngoing( queryService, analyst );
+                    }
+                } );
+    }
+
+    @Override
+    @Transactional
+    public void toggleDecline( RFI rfi, String reason ) {
+        rfi.setDeclined( !rfi.isDeclined() );
+        rfi.setReasonDeclined( reason );
+        save( rfi );
+    }
+
 
 }

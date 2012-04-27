@@ -40,17 +40,6 @@ public interface RFISurveyService extends GenericSqlService<RFISurvey, Long> {
     List<RFISurvey> select( Plan plan, ModelObject modelObject );
 
     /**
-     * Find response metrics for a survey.
-     *
-     * @param plan             a plan
-     * @param rfiSurvey        a survey
-     * @param answerSetService the answer set service
-     * @param rfiService       an rfi service
-     * @return a string like "105c 95i 3d" (105 completed, 95 incomplete 3 declined)
-     */
-    String findResponseMetrics( Plan plan, RFISurvey rfiSurvey, RFIService rfiService, AnswerSetService answerSetService );
-
-    /**
      * Creates (i.e. launches) an RFISurvey on a model object using a questionnaire.
      *
      * @param plan          a plan
@@ -79,4 +68,10 @@ public interface RFISurveyService extends GenericSqlService<RFISurvey, Long> {
      */
     List<RFISurvey> findSurveys( Plan plan, Questionnaire questionnaire );
 
+    /**
+     * Toggle the activation status of a survey.
+     *
+     * @param rfiSurvey a survey
+     */
+    void toggleActivation( RFISurvey rfiSurvey );
 }

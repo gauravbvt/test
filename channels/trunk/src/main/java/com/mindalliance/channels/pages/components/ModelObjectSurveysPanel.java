@@ -8,10 +8,10 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
-import com.mindalliance.channels.social.services.AnswerSetService;
 import com.mindalliance.channels.social.services.QuestionnaireService;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.RFISurveyService;
+import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -50,7 +50,7 @@ public class ModelObjectSurveysPanel extends FloatingCommandablePanel {
     private RFIService rfiService;
 
     @SpringBean
-    private AnswerSetService answerSetService;
+    private SurveysDAO surveysDAO;
 
     @SpringBean
     private QuestionnaireService questionnaireService;
@@ -240,7 +240,7 @@ public class ModelObjectSurveysPanel extends FloatingCommandablePanel {
             if ( rfiSurvey != null ) {
                 return rfiSurvey.isClosed()
                         ? "Closed"
-                        : rfiSurvey.isOngoing( getQueryService() )
+                        : rfiSurvey.isOngoing( getQueryService(), getAnalyst() )
                         ? "Launched"
                         : "Closed";
             } else {
@@ -250,7 +250,7 @@ public class ModelObjectSurveysPanel extends FloatingCommandablePanel {
 
         public String getResponseMetrics() {
             if ( rfiSurvey != null )
-                return rfiSurveyService.findResponseMetrics( getPlan(), rfiSurvey, rfiService, answerSetService );
+                return surveysDAO.findResponseMetrics( getPlan(), rfiSurvey );
             else
                 return null;
         }

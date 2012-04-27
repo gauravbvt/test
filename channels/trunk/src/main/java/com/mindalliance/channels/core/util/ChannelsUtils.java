@@ -602,4 +602,82 @@ public final class ChannelsUtils {
         }
         return sb.toString();
     }
+
+    public static String getShortTimeIntervalString( long millis ) {
+        long diffInSeconds = millis / 1000;
+        /* sec */
+        long seconds = ( diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds );
+        /* min */
+        long minutes = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 60 ? diffInSeconds % 60 : diffInSeconds;
+        /* hours */
+        long hours = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 24 ? diffInSeconds % 24 : diffInSeconds;
+        /* days */
+        long days = diffInSeconds / 24;
+
+        StringBuilder sb = new StringBuilder();
+        if ( days > 0 ) {
+            sb.append( days );
+            sb.append( " day" );
+            sb.append( days > 1 ? "s" : "" );
+        }
+        if ( hours > 0 ) {
+            if ( sb.length() == 0 ) {
+                sb.append( hours );
+                sb.append( " hour" );
+                sb.append( hours > 1 ? "s" : "" );
+            }
+        }
+        if ( minutes > 0 ) {
+            if ( sb.length() == 0 ) {
+                sb.append( minutes );
+                sb.append( " minute" );
+                sb.append( minutes > 1 ? "s" : "" );
+            }
+        }
+        if ( sb.length() == 0 ) {
+            sb.append( seconds );
+            sb.append( " second" );
+            sb.append( seconds > 1 ? "s" : "" );
+        }
+        return sb.toString();
+    }
+
+    public static String getLongTimeIntervalString( long millis ) {
+        long diffInSeconds = millis / 1000;
+        /* sec */
+        long seconds = ( diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds );
+        /* min */
+        long minutes = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 60 ? diffInSeconds % 60 : diffInSeconds;
+        /* hours */
+        long hours = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 24 ? diffInSeconds % 24 : diffInSeconds;
+        /* days */
+        long days = diffInSeconds / 24;
+
+        StringBuilder sb = new StringBuilder();
+        if ( days > 0 ) {
+            sb.append( days );
+            sb.append( " day" );
+            sb.append( days > 1 ? "s" : "" );
+        }
+        if ( hours > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( hours );
+            sb.append( " hour" );
+            sb.append( hours > 1 ? "s" : "" );
+        }
+        if ( minutes > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( minutes );
+            sb.append( " minute" );
+            sb.append( minutes > 1 ? "s" : "" );
+        }
+        if ( sb.length() == 0 || seconds > 0 ) {
+            if ( sb.length() > 0 ) sb.append( ", " );
+            sb.append( seconds );
+            sb.append( " second" );
+            sb.append( seconds > 1 ? "s" : "" );
+        }
+        return sb.toString();
+    }
+
 }

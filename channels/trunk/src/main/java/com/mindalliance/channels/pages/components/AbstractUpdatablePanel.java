@@ -82,6 +82,11 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat( "M/d/yyyy HH:mm" );
 
+    /**
+     * Short date format.
+     */
+    private static final SimpleDateFormat shortDateFormat = new SimpleDateFormat( "M/d/yyyy" );
+
 
     /**
      * String comparator for equality tests.
@@ -131,6 +136,11 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     protected SimpleDateFormat getDateFormat() {
         return dateFormat;
     }
+
+    protected SimpleDateFormat getShortDateFormat() {
+        return shortDateFormat;
+    }
+
 
     /**
      * Get the query service from further up updatable parent.

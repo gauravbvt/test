@@ -25,22 +25,6 @@ public interface AnswerSetService extends GenericSqlService<AnswerSet, Long> {
     int getAnswerCount( Question question );
 
     /**
-     * Are all required questions answered?
-     *
-     * @param rfi an RFI
-     * @return a boolean
-     */
-    boolean isCompleted( RFI rfi );
-
-    /**
-     * Are some required questions unanswered?
-     *
-     * @param rfi an RFI
-     * @return a boolean
-     */
-    boolean isIncomplete( RFI rfi );
-
-    /**
      * Find the answer set in an RFI to a question.
      *
      * @param rfi      an RFI

@@ -84,13 +84,9 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
         this.rfis = rfis;
     }
 
-    public boolean isObsolete( QueryService queryService) {
-        return getModelObject( queryService ) == null;
-        // todo - deal with surveys on obsolete issues about non-obsolete MOs.
-    }
-    
-    public boolean isOngoing( QueryService queryService ) {
-        return !isClosed() && !isObsolete( queryService );
+
+    public boolean isOngoing( QueryService queryService, Analyst analyst ) {
+        return !isClosed() && !isObsolete( queryService, analyst );
     }
 
     public Date getDeadline() {
@@ -101,10 +97,10 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
         this.deadline = deadline;
     }
 
-    public String getStatusLabel( QueryService queryService ) {
+    public String getStatusLabel( QueryService queryService, Analyst analyst ) {
         return isClosed()
                 ? "Closed"
-                : isObsolete( queryService )
+                : isObsolete( queryService, analyst )
                 ? "Obsolete"
                 : "Ongoing";
                 
@@ -123,13 +119,15 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
 
     private String getModelObjectName( QueryService queryService ) {
         ModelObject mo = getModelObject( queryService );
-        return mo == null 
+        return mo == null
                 ? DELETED
                 : mo.getName();
     }
 
     public boolean isObsolete( QueryService queryService, Analyst analyst ) {
-        return getQuestionnaire().isObsolete( queryService, analyst );
+        return !getQuestionnaire().isActive()
+                || getModelObject( queryService ) == null
+                || getQuestionnaire().isObsolete( queryService, analyst );
     }
 
 }

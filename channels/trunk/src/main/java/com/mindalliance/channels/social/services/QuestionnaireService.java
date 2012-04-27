@@ -46,4 +46,6 @@ public interface QuestionnaireService extends GenericSqlService<Questionnaire, L
      * @return a questionnaire or null
      */
     Questionnaire findRemediationQuestionnaire( Plan plan, Issue issue );
+
+
 }

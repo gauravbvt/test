@@ -1,5 +1,7 @@
 package com.mindalliance.channels.social.services.impl;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFIForward;
@@ -38,5 +40,29 @@ public class RFIForwardServiceImpl extends GenericSqlServiceImpl<RFIForward, Lon
             usernames.add(  forward.getUsername() );
         }
         return new ArrayList<String>( usernames );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    @Transactional( readOnly = true )
+    public List<String> findForwardedTo( RFI rfi ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "rfi", rfi ) );
+        List<RFIForward> forwards = ( List<RFIForward>)criteria.list();
+        Set<String> fullNames = new HashSet<String>(  );
+        for ( RFIForward forward : forwards) {
+            fullNames.add( forward.getForwardToEmail() );
+        }
+        return new ArrayList<String>( fullNames );
+    }
+
+    @Override
+    @Transactional
+    public void forwardRFI( Plan plan, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message ) {
+        for ( String email : forwardedTo ) {
+            RFIForward forward = new RFIForward( plan, user, rfi, email, message  );
+            save( forward );
+        }
     }
 }

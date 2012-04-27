@@ -32,6 +32,7 @@ import com.mindalliance.channels.pages.reports.guidelines.AllGuidelinesPage;
 import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
+import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -183,9 +184,9 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
                     AbstractParticipantPage.createParameters(
                             new ResourceSpec(),
                             uri,
-                            plan.getVersion() ) ,
-                            null,
-                            plan );
+                            plan.getVersion() ),
+                    null,
+                    plan );
         } else {
             Actor actor = planParticipations.get( 0 ).getActor( queryService );
             guidelinesLink = newTargetedLink( id,
@@ -217,7 +218,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
                     AbstractParticipantPage.createParameters(
                             new ResourceSpec(),
                             uri,
-                            plan.getVersion() ) ,
+                            plan.getVersion() ),
                     null,
                     plan );
         } else {
@@ -236,6 +237,23 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
             infoNeedsLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return infoNeedsLink;
     }
+
+    public BookmarkablePageLink<? extends WebPage> getRFIsLink(
+            String id,
+            Plan plan,
+            boolean samePage ) {
+        BookmarkablePageLink<? extends WebPage> rfisLink = newTargetedLink(
+                id,
+                "",
+                RFIsPage.class,
+                new PageParameters(),
+                null,
+                plan );
+        if ( !samePage )
+            rfisLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
+        return rfisLink;
+    }
+
 
     /**
      * Build a new parameter container for the current selections.
@@ -411,7 +429,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     protected void setPlanFromParameters( PageParameters parameters ) {
         String encodedPlanUri = parameters.get( PLAN_PARM ).toString( null );
         if ( encodedPlanUri == null ) {
-            String userPlanUri =  user.getPlanUri() == null ? "" : user.getPlanUri();
+            String userPlanUri = user.getPlanUri() == null ? "" : user.getPlanUri();
             try {
                 encodedPlanUri = URLEncoder.encode( userPlanUri, "UTF-8" );
             } catch ( UnsupportedEncodingException e ) {

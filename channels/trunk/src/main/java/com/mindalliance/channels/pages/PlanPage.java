@@ -862,10 +862,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void annotateSegmentName() {
         Analyst analyst = getApp().getAnalyst();
         String issue = analyst.getIssuesSummary( getQueryService(), segment, Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        segmentNameLabel.add( new AttributeModifier( "class", true,// NON-NLS
+        segmentNameLabel.add( new AttributeModifier( "class",// NON-NLS
                 new Model<String>( issue.isEmpty() ? "no-error pointer"
                         : "error pointer" ) ) );  // NON-NLS
-        segmentNameLabel.add( new AttributeModifier( "title", true,// NON-NLS
+        segmentNameLabel.add( new AttributeModifier( "title",// NON-NLS
                 new Model<String>( issue.isEmpty()
                         ? "No known issue"
                         : issue ) ) );

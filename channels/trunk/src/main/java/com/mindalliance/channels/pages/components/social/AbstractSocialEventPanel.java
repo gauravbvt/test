@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -272,86 +273,17 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
     public String getShortTimeElapsedString( Date date ) {
-        if ( date == null ) return "";
-        Date end = new Date();
-        long diffInSeconds = ( end.getTime() - date.getTime() ) / 1000;
-        /* sec */
-        long seconds = ( diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds );
-        /* min */
-        long minutes = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 60 ? diffInSeconds % 60 : diffInSeconds;
-        /* hours */
-        long hours = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 24 ? diffInSeconds % 24 : diffInSeconds;
-        /* days */
-        long days = diffInSeconds / 24;
-
-        StringBuilder sb = new StringBuilder();
-        if ( days > 0 ) {
-            sb.append( days );
-            sb.append( " day" );
-            sb.append( days > 1 ? "s" : "" );
-        }
-        if ( hours > 0 ) {
-            if ( sb.length() == 0 ) {
-                sb.append( hours );
-                sb.append( " hour" );
-                sb.append( hours > 1 ? "s" : "" );
-            }
-        }
-        if ( minutes > 0 ) {
-            if ( sb.length() == 0 ) {
-                sb.append( minutes );
-                sb.append( " minute" );
-                sb.append( minutes > 1 ? "s" : "" );
-            }
-        }
-        if ( sb.length() == 0 ) {
-            sb.append( seconds );
-            sb.append( " second" );
-            sb.append( seconds > 1 ? "s" : "" );
-        }
-        sb.append( " ago" );
-        return sb.toString();
+        if ( date == null )
+            return "";
+        else
+            return ChannelsUtils.getShortTimeIntervalString( new Date( ).getTime() - date.getTime() ) + " ago";
     }
 
     public String getLongTimeElapsedString( Date date ) {
-        if ( date == null ) return "";
-        Date end = new Date();
-        long diffInSeconds = ( end.getTime() - date.getTime() ) / 1000;
-        /* sec */
-        long seconds = ( diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds );
-        /* min */
-        long minutes = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 60 ? diffInSeconds % 60 : diffInSeconds;
-        /* hours */
-        long hours = ( diffInSeconds = ( diffInSeconds / 60 ) ) >= 24 ? diffInSeconds % 24 : diffInSeconds;
-        /* days */
-        long days = diffInSeconds / 24;
-
-        StringBuilder sb = new StringBuilder();
-        if ( days > 0 ) {
-            sb.append( days );
-            sb.append( " day" );
-            sb.append( days > 1 ? "s" : "" );
-        }
-        if ( hours > 0 ) {
-            if ( sb.length() > 0 ) sb.append( ", " );
-            sb.append( hours );
-            sb.append( " hour" );
-            sb.append( hours > 1 ? "s" : "" );
-        }
-        if ( minutes > 0 ) {
-            if ( sb.length() > 0 ) sb.append( ", " );
-            sb.append( minutes );
-            sb.append( " minute" );
-            sb.append( minutes > 1 ? "s" : "" );
-        }
-        if ( sb.length() == 0 || seconds > 0 ) {
-            if ( sb.length() > 0 ) sb.append( ", " );
-            sb.append( seconds );
-            sb.append( " second" );
-            sb.append( seconds > 1 ? "s" : "" );
-        }
-        sb.append( " ago" );
-        return sb.toString();
+        if ( date == null )
+            return "";
+        else
+            return ChannelsUtils.getLongTimeIntervalString( new Date().getTime() - date.getTime() ) + " ago";
     }
 
     protected PersistentPlanObject getPersistentPlanObject() {

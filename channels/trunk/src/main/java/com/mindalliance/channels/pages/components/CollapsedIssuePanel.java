@@ -13,8 +13,8 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.menus.IssueActionsMenuPanel;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
-import com.mindalliance.channels.social.services.IssueRemediationSurveysDAO;
 import com.mindalliance.channels.social.services.RFISurveyService;
+import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -36,7 +36,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
      * Survey service.
      */
     @SpringBean
-    private IssueRemediationSurveysDAO surveysDao;
+    private SurveysDAO surveysDao;
 
     @SpringBean
     private RFISurveyService rfiSurveyService;
@@ -119,7 +119,6 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
             }
         } );
         ModelObject about = issue.getAbout();
-        // waiveCheckBox.setEnabled( isLockedByUserIfNeeded( about ) );
         waivedContainer.setVisible( isLockedByUserIfNeeded( about ) );
         waivedContainer.add( waiveCheckBox );
     }

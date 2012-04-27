@@ -11,12 +11,16 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.issues.IssuesPage;
 import com.mindalliance.channels.social.model.Feedback;
+import com.mindalliance.channels.social.services.RFIService;
+import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -64,6 +68,12 @@ public class UserPage extends AbstractChannelsWebPage {
      */
     @SpringBean
     private MailSender mailSender;
+
+    @SpringBean
+    private RFIService rfiService;
+
+    @SpringBean
+    private SurveysDAO surveysDAO;
 
     /**
      * The big form -- used for attachments and segment imports only.
@@ -350,6 +360,14 @@ public class UserPage extends AbstractChannelsWebPage {
                 .add(new AttributeModifier(
                 "title",
                 new Model<String>( getGotoInfoNeedsDescription( user, plan ) ) ));
+        // Surveys
+        BookmarkablePageLink<? extends WebPage> gotoRFIsLink =
+                getRFIsLink( "gotoRFIs", getPlan(), true );
+        Label gotoRFIsLabel = new Label( "rfisLabel", getRFIsLabel( user, plan ) );
+        gotoRFIsLink.add( gotoRFIsLabel )
+                .add(new AttributeModifier(
+                        "title",
+                        new Model<String>( getGotoRFIsDescription( user, plan ) ) ));
         // plan editor link
         BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlanPage.class, null, plan );
         gotoModelLink.add( new AttributeModifier(
@@ -382,6 +400,10 @@ public class UserPage extends AbstractChannelsWebPage {
                         .add( gotoInfoNeedsLink )
                         .setVisible( planner || !participations.isEmpty() ),
 
+                // Goto surveys
+                new WebMarkupContainer( "rfis" )
+                        .add( gotoRFIsLink ),
+
                 // Goto issues report
                 new WebMarkupContainer( "issues" )
                         .add( AbstractChannelsWebPage.newTargetedLink(
@@ -413,10 +435,52 @@ public class UserPage extends AbstractChannelsWebPage {
                 : "My information needs";
     }
 
+    private String getRFIsLabel( ChannelsUser user, Plan plan ) {
+        StringBuilder sb = new StringBuilder(  );
+        sb.append( "Planning surveys" );
+        int lateCount = surveysDAO.countLate( plan, user, getQueryService(), getAnalyst() );
+        if ( lateCount > 0 ) {
+            sb.append( " (" )
+                    .append( lateCount )
+                    .append( " past deadline)" );
+        }
+        return sb.toString();
+    }
+
     private String getGotoInfoNeedsDescription( ChannelsUser user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
                 ? "View the information needs of any participant or agent in this plan."
                 : "View my information needs and their status in this plan.";
+    }
+
+    private String getGotoRFIsDescription( ChannelsUser user, Plan plan ) {
+        QueryService queryService = getQueryService();
+        Analyst analyst = getAnalyst();
+        int activeCount = rfiService.listUserActiveRFIs( plan, user, queryService, analyst ).size();
+        StringBuilder sb = new StringBuilder( );
+        sb
+                .append( "I participate in " )
+                .append( activeCount == 0 ? "no" : activeCount )
+                .append( activeCount > 1 ? " surveys" : " survey");
+        if ( activeCount > 0 ) {
+            int noAnswerCount = surveysDAO.countUnanswered( plan, user, queryService, analyst );
+            int partialCount = surveysDAO.countIncomplete( plan, user, queryService, analyst );
+            int lateCount = surveysDAO.countLate( plan, user, queryService, getAnalyst() );
+            sb
+                    .append( " of which " )
+                    .append( noAnswerCount == 0 ? "none" : noAnswerCount )
+                    .append( noAnswerCount == 1 ? " is" : " are"  )
+                    .append( " unanswered and " )
+                    .append( partialCount == 0 ? "none" : partialCount )
+                    .append( partialCount == 1 ? " is" : " are" )
+                    .append( " partially answered." )
+                    .append( lateCount == 0 ? "None" : noAnswerCount )
+                    .append( lateCount == 1 ? " is" : " are"  )
+                    .append( " overdue." );
+        } else {
+                sb.append( "." );
+        }
+        return sb.toString();
     }
 
     private String getGotoModelDescription( ChannelsUser user, Plan plan ) {

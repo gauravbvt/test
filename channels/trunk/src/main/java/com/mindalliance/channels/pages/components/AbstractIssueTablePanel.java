@@ -12,8 +12,8 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
-import com.mindalliance.channels.social.services.IssueRemediationSurveysDAO;
 import com.mindalliance.channels.social.services.RFISurveyService;
+import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -73,7 +73,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
      */
 
     @SpringBean
-    IssueRemediationSurveysDAO surveysDAO;
+    SurveysDAO surveysDAO;
 
     @SpringBean
     RFISurveyService rfiSurveyService;

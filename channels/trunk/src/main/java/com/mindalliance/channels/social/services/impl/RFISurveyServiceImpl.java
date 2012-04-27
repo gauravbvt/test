@@ -7,10 +7,7 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
-import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
-import com.mindalliance.channels.social.services.AnswerSetService;
-import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.RFISurveyService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -21,7 +18,6 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -69,34 +65,6 @@ public class RFISurveyServiceImpl extends GenericSqlServiceImpl<RFISurvey, Long>
     }
 
     @Override
-    @Transactional( readOnly = true )
-    public String findResponseMetrics( Plan plan, final RFISurvey rfiSurvey, RFIService rfiService, final AnswerSetService answerSetService ) {
-        List<RFI> surveyedRFIs = rfiService.select( plan, rfiSurvey );
-        Integer[] counts = new Integer[3];
-        counts[0] = CollectionUtils.countMatches(
-                surveyedRFIs,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        Questionnaire questionnaire = rfiSurvey.getQuestionnaire();
-                        return questionnaire.isOptional() || answerSetService.isCompleted( (RFI) object );
-                    }
-                }
-        );
-        counts[1] = CollectionUtils.countMatches(
-                surveyedRFIs,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (RFI) object ).isDeclined();  //To change body of implemented methods use File | Settings | File Templates.
-                    }
-                }
-        );
-        counts[2] = surveyedRFIs.size() - ( counts[0] + counts[1] );
-        return new MessageFormat( "{0}c {1}d {2}i" ).format( counts );
-    }
-
-    @Override
     @Transactional
     public RFISurvey launch( Plan plan, String username, Questionnaire questionnaire, ModelObject modelObject ) {
         RFISurvey rfiSurvey = new RFISurvey(
@@ -130,6 +98,8 @@ public class RFISurveyServiceImpl extends GenericSqlServiceImpl<RFISurvey, Long>
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
+    @Transactional( readOnly = true )
     public List<RFISurvey> findSurveys( Plan plan, Questionnaire questionnaire ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -139,5 +109,9 @@ public class RFISurveyServiceImpl extends GenericSqlServiceImpl<RFISurvey, Long>
         return (List<RFISurvey>)criteria.list();
     }
 
-
+    @Override
+    public void toggleActivation( RFISurvey rfiSurvey ) {
+        rfiSurvey.setClosed( !rfiSurvey.isClosed() );
+        save( rfiSurvey );
+    }
 }

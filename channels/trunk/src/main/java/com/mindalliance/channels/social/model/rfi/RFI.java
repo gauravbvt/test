@@ -3,6 +3,8 @@ package com.mindalliance.channels.social.model.rfi;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Channels;
 
 import javax.persistence.CascadeType;
@@ -176,10 +178,54 @@ public class RFI extends AbstractPersistentPlanObject {
         this.answerSets = answerSets;
     }
 
-    public boolean isLate( QueryService queryService ) {
+    public boolean isLate( QueryService queryService, Analyst analyst ) {
         return !isDeclined()
                 && getDeadline() != null
                 && new Date().after( getDeadline() )
-                && getRfiSurvey().isOngoing( queryService );
+                && getRfiSurvey().isOngoing( queryService, analyst );
     }
+
+    public boolean isActive( QueryService queryService, Analyst analyst ) {
+        return !isDeclined()
+                && isOngoing( queryService, analyst );
+    }
+
+    public boolean isOngoing( QueryService queryService, Analyst analyst ) {
+        RFISurvey survey = getRfiSurvey();
+        return survey.isOngoing( queryService, analyst );
+    }
+
+    public long getTimeLeft() {
+        Date deadline = getDeadline();
+        if ( deadline == null ) {
+            return Long.MAX_VALUE;
+        } else {
+            return deadline.getTime() - new Date().getTime();
+        }
+    }
+
+    public String getShortTimeLeft() {
+        Date deadline = getDeadline();
+        if ( deadline == null ) {
+            return null;
+        } else {
+            long delta = deadline.getTime() - new Date().getTime();
+            boolean overdue = delta < 0;
+            String interval = ChannelsUtils.getShortTimeIntervalString( Math.abs( delta ) );
+            return ( overdue ? "Overdue by " : "Due in " ) + interval;
+        }
+    }
+
+    public String getLongTimeLeft() {
+        Date deadline = getDeadline();
+        if ( deadline == null ) {
+            return null;
+        } else {
+            long delta = deadline.getTime() - new Date().getTime();
+            boolean overdue = delta < 0;
+            String interval = ChannelsUtils.getLongTimeIntervalString( Math.abs( delta ) );
+            return ( overdue ? "Overdue by " : "Due in " ) + interval;
+        }
+    }
+
 }
