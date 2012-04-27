@@ -49,23 +49,6 @@ public abstract class Medium implements Serializable {
             return verb;
         }
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-                
-        sb.append( getAddress() );
-        if ( getType() != null )
-            sb.append( " (" ).append( getType() ).append( ")" );
-
-        return sb.toString();
-    }
-
-    @Transient
-    public String getMediumString() {
-        return "using " + getMediumType().getDescription();
-    }
-
     private static final long serialVersionUID = -754200895087374965L;
 
     @Id
@@ -129,6 +112,45 @@ public abstract class Medium implements Serializable {
      */
     @Transient
     public abstract String getCssClass();
+
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append( getAddress() );
+        if ( getType() != null )
+            sb.append( " (" ).append( getType() ).append( ')' );
+
+        return sb.toString();
+    }
+
+    /**
+     * Get a generic form of this medium's use.
+     * @return something like "using the phone at 555-1212"
+     */
+    @Transient
+    public String getDescription() {
+        return "using " + getMediumType().getDescription() + " at " + getAddress();
+    }
+
+    /**
+     * Get a pronoun-based description of how to use this medium.
+     * @param me true for "me", false for "you"
+     * @return something of the form "send me an email at bob@example.com"
+     *         or "call you at 555-1212"
+     */
+    public abstract String getDescription( boolean me );
+
+    /**
+     * Get a person-based description of how to use this medium.
+     *
+     * @param contact the person
+     * @param incoming if describing an incoming call or message.
+     * @return something of the form "send Bob Smith an email at bob@example.com"
+     *         or "call John Doe at 555-1212"
+     */
+    public abstract String getDescription( Contact contact, boolean incoming );
 
     /**
      * Get a link to include for a default action on this medium.

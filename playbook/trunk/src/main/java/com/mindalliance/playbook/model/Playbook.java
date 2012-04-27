@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,11 +52,6 @@ public class Playbook implements Serializable {
         this();
         this.account = account;
         this.me = me;
-    }
-
-    @Transient
-    long getAccountId() {
-        return account.getId();
     }
 
     /**

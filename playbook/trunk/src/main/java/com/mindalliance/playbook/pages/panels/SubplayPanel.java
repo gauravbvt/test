@@ -3,6 +3,9 @@ package com.mindalliance.playbook.pages.panels;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Play;
 import com.mindalliance.playbook.model.Step;
+import com.mindalliance.playbook.model.Subplay;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.extensions.markup.html.form.select.SelectOptions;
@@ -42,6 +45,18 @@ public class SubplayPanel extends Panel {
                                                  return new Model<Play>( value );
                                              }
                                          })
-            ) );
+            ).add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                @Override
+                protected void onUpdate( AjaxRequestTarget target ) {
+                    updateTo( getSubplay(), target );
+                }
+            } ) );
+    }
+
+    public void updateTo( Subplay subplay, AjaxRequestTarget target ) {
+    }
+    
+    public Subplay getSubplay() {
+        return (Subplay) getDefaultModelObject();
     }
 }

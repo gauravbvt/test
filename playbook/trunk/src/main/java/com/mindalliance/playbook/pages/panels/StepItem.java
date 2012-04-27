@@ -5,7 +5,10 @@ package com.mindalliance.playbook.pages.panels;
 
 import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.Contact;
+import com.mindalliance.playbook.model.Play;
 import com.mindalliance.playbook.model.Step;
+import com.mindalliance.playbook.model.Step.Type;
+import com.mindalliance.playbook.model.Subplay;
 import com.mindalliance.playbook.pages.ContactPic;
 import com.mindalliance.playbook.pages.EditStep;
 import org.apache.wicket.AttributeModifier;
@@ -50,16 +53,30 @@ public class StepItem extends Panel {
                     new Label( "description", step.getDescription() ) ),
                     new Label( "action", step.getActionText() )
                         .add( new AttributeModifier( "href", step.getActionLink() ) )
-                        .setVisible( step.getActionLink() != null ) );
+                        .setVisible( step.isCollaboration() && ( (Collaboration) step ).isSend() && step.getActionLink() != null ) );
     }
 
     private static String getSummary( Step step ) {
-        if ( !step.isCollaboration() )
+        switch ( step.getType() ) {
+
+        case SUBPLAY:
+            Play subplay = ( (Subplay) step ).getSubplay();
+            return subplay == null ? "Execute a subplay" : "Execute play: " + subplay.getTitle();
+
+        default:
+        case TASK:
             return step.getDescription();
-        
-        Collaboration collaboration = (Collaboration) step;
-        return "With " + collaboration.getWith() 
-               + " " + collaboration.getMediumString();
+
+        case SEND:
+        case RECEIVE:
+
+            Collaboration collaboration = (Collaboration) step;
+            Contact with = collaboration.getWith();
+            if ( with == null )
+                return step.getType() == Type.SEND ? "With someone" : "When someone contacts me";
+            else
+                return collaboration.getMediumString();
+        }        
     }
 
     private Serializable getPhotoUrl( Contact contact ) {

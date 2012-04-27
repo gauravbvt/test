@@ -2,10 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <body>
 <wicket:panel>
-    <div wicket:id="mediaDiv" data-role="fieldcontain" >
+    <div data-role="fieldcontain" wicket:id="mediaDiv">
         <div wicket:id="radioGroup">
             <fieldset data-role="controlgroup">
-                <legend>Using:</legend>
+                <legend wicket:id="label">Using:</legend>
                 <div wicket:id="media">
                     <input wicket:id="value" type="radio" id="officeType"/>
                     <label wicket:id="label" for="officeType">

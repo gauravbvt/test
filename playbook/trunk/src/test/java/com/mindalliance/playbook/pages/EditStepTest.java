@@ -2,7 +2,7 @@ package com.mindalliance.playbook.pages;
 
 import com.mindalliance.playbook.dao.PlayDao;
 import com.mindalliance.playbook.dao.StepDao;
-import com.mindalliance.playbook.dao.StepDao.Status;
+import com.mindalliance.playbook.dao.impl.StepDaoImpl.StepInformationImpl;
 import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Contact;
 import com.mindalliance.playbook.model.EmailMedium;
@@ -54,8 +54,7 @@ public class EditStepTest extends AbstractPageTest {
             new EmailMedium( "EMAIL", account.getUserId() ) ) ), "Test play" );
         step = new Task( play );
         
-        when( stepDao.load( 0L ) ).thenReturn( step );
-        when( stepDao.getStatus( step ) ).thenReturn( Status.UNCONFIRMED );
+        when( stepDao.getInformation( 0L ) ).thenReturn( new StepInformationImpl( step, null, null ) );
         
         context.putBean( account );
         context.putBean( stepDao );

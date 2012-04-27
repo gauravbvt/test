@@ -38,10 +38,13 @@ public class PlaysPageTest extends AbstractPageTest {
 
     @Override
     protected void init( ApplicationContextMock context ) {
+        when( account.getId() ).thenReturn( 123L );
         when( account.getUserId() ).thenReturn( "someone@somewhere.com" );
         when( account.getPlaybook() ).thenReturn( playbook );
+        when( oldPlay.getAccount() ).thenReturn( account );
+        when( newPlay.getAccount() ).thenReturn( account );
         when( oldPlay.getId() ).thenReturn( 123L );
-        
+
         List<Play> plays = new ArrayList<Play>();
         plays.add( oldPlay );
         when( playbook.getPlays() ).thenReturn( plays );

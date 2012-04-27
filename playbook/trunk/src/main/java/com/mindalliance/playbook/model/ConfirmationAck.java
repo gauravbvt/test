@@ -36,6 +36,8 @@ public abstract class ConfirmationAck implements Serializable, Timestamped {
     @OneToOne( mappedBy = "confirmation", optional = false )
     private ConfirmationReq request;
 
+    private String reason;
+
     //
     // Constructors
     //
@@ -44,6 +46,11 @@ public abstract class ConfirmationAck implements Serializable, Timestamped {
 
     protected ConfirmationAck( ConfirmationReq request ) {
         this.request = request;
+    }
+
+    protected ConfirmationAck( ConfirmationReq request, String reason ) {
+        this.request = request;
+        this.reason = reason;
     }
 
     public Date getDate() {
@@ -77,5 +84,13 @@ public abstract class ConfirmationAck implements Serializable, Timestamped {
 
     public void setRequest( ConfirmationReq request ) {
         this.request = request;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason( String reason ) {
+        this.reason = reason;
     }
 }

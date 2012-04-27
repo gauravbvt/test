@@ -33,4 +33,15 @@ public class IMMedium extends GenericMedium {
     public String getCssClass() {
         return "m-im";
     }
+
+    @Override
+    public String getDescription( boolean me ) {
+        return "Sending " + ( me ? "me" : "you" ) + " a message on " + getType();
+    }
+
+    @Override
+    public String getDescription( Contact contact, boolean incoming ) {
+        return incoming ? "Receiving a message by " + contact + " on " + getType()
+                        : "Send " + contact + " a message on " + getType() + " at " + getAddress();
+    }
 }

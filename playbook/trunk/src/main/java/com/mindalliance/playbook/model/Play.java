@@ -7,8 +7,17 @@
 package com.mindalliance.playbook.model;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.solr.analysis.ClassicFilterFactory;
+import org.apache.solr.analysis.ClassicTokenizerFactory;
+import org.apache.solr.analysis.LowerCaseFilterFactory;
+import org.apache.solr.analysis.PorterStemFilterFactory;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.AnalyzerDef;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.TokenFilterDef;
+import org.hibernate.search.annotations.TokenizerDef;
 
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
@@ -41,6 +50,14 @@ import java.util.StringTokenizer;
 @DiscriminatorColumn( discriminatorType = DiscriminatorType.STRING )
 @DiscriminatorValue( "play" )
 @Indexed
+@AnalyzerDef( name = "plays",
+    filters = { 
+        @TokenFilterDef( factory = ClassicFilterFactory.class ),
+        @TokenFilterDef( factory = LowerCaseFilterFactory.class ),
+        @TokenFilterDef( factory = PorterStemFilterFactory.class )
+    },
+    tokenizer = @TokenizerDef( factory = ClassicTokenizerFactory.class ) )
+@Analyzer( definition = "plays" )
 public class Play implements Serializable {
 
     private static final long serialVersionUID = -4665570662542782782L;
@@ -78,11 +95,6 @@ public class Play implements Serializable {
         this.playbook = playbook;
     }
 
-    @Transient
-    public long getAccountId() {
-        return playbook.getAccountId();
-    }
-
     @Field
     public String getTitle() {
         return title;
@@ -116,7 +128,8 @@ public class Play implements Serializable {
     public void setPlaybook( Playbook playbook ) {
         this.playbook = playbook;
     }
-
+                 
+    @IndexedEmbedded
     public Set<Tag> getTags() {
         return tags;
     }
@@ -184,5 +197,10 @@ public class Play implements Serializable {
     @Transient
     public Contact getOwner() {
         return playbook.getMe();
+    }
+
+    @Transient
+    public Account getAccount() {
+        return playbook.getAccount();
     }
 }

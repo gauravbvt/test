@@ -16,7 +16,7 @@ import javax.persistence.Entity;
 @DiscriminatorValue( "nack" )
 public class NAck extends ConfirmationAck {
 
-    private String reason;
+    private static final long serialVersionUID = 6158119150906794891L;
 
     //
     // Constructors
@@ -25,20 +25,11 @@ public class NAck extends ConfirmationAck {
     }
 
     public NAck( ConfirmationReq request, String reason ) {
-        super( request );
-        this.reason = reason;
+        super( request, reason );
     }
 
     @Override
     public boolean isAck() {
         return false;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason( String reason ) {
-        this.reason = reason;
     }
 }

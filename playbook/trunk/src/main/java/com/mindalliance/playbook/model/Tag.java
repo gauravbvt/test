@@ -6,6 +6,8 @@
 
 package com.mindalliance.playbook.model;
 
+import org.hibernate.search.annotations.Field;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
@@ -31,6 +33,7 @@ public class Tag implements Comparable<Tag>, Serializable {
         this.name = name;
     }
 
+    @Field
     public String getName() {
         return name;
     }

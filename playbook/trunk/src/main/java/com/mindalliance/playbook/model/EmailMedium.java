@@ -35,6 +35,17 @@ public class EmailMedium extends GenericMedium {
     }
 
     @Override
+    public String getDescription( boolean me ) {
+        return "Email " + ( me ? "me" : "you" ) + " at " + getAddress();
+    }
+
+    @Override
+    public String getDescription( Contact contact, boolean incoming ) {
+        return incoming ? "Receiving an email from " + contact
+               : "Email " + contact + " at " + getAddress();
+    }
+
+    @Override
     public String getActionUrl() {
         return "mailto:" + getAddress();
     }

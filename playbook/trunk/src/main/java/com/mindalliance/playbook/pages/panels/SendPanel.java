@@ -37,7 +37,13 @@ public class SendPanel extends Panel {
         setRenderBodyOnly( true );
 
         final MediaList mediaDiv = new MediaList( "mediaDiv", new PropertyModel<Medium>( model, "using" ),
-                                                              new PropertyModel<List<Medium>>( model, "with.media" ) )
+                                                              new PropertyModel<List<Medium>>( model, "with.media" ),
+                                                              "Contacting them using:" ) {
+            @Override
+            public void updateTo( Medium medium, AjaxRequestTarget target ) {
+                SendPanel.this.updateTo( medium, target );
+            }
+        }
             .showList( ( (Collaboration) model.getObject() ).getWith() != null ); 
         
         add(
@@ -45,19 +51,26 @@ public class SendPanel extends Panel {
                 new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     @Override
                     protected void onUpdate( AjaxRequestTarget target ) {
-                        boolean visible = ( (Collaboration) model.getObject() ).getWith() != null;
+                        Contact contact = ( (Collaboration) model.getObject() ).getWith();
+                        boolean visible = contact != null;
                         LOG.debug( "onChange: {}", visible );
                         mediaDiv.showList( visible );
                         target.add( mediaDiv );
+                        updateTo( contact, target );
+                        
                         if ( visible )
                             target.appendJavaScript( "$('#stepForm').trigger('create');" );
-//                        target.appendJavaScript( "$('#" + mediaDiv.getMarkupId() + "').trigger('create');" );
-//                            target.appendJavaScript( "$('#" + mediaDiv.getMarkupId() + "').listview('refresh');" );
                     }
                 } ),
 
             mediaDiv
 
         );
+    }
+
+    public void updateTo( Medium medium, AjaxRequestTarget target ) {
+    }
+
+    public void updateTo( Contact contact, AjaxRequestTarget target ) {
     }
 }

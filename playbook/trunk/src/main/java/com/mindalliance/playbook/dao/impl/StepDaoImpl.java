@@ -3,13 +3,16 @@ package com.mindalliance.playbook.dao.impl;
 import com.mindalliance.playbook.dao.AccountDao;
 import com.mindalliance.playbook.dao.AckDao;
 import com.mindalliance.playbook.dao.ConfirmationReqDao;
+import com.mindalliance.playbook.dao.PlayDao;
 import com.mindalliance.playbook.dao.StepDao;
+import com.mindalliance.playbook.dao.StepInformation;
+import com.mindalliance.playbook.model.Account;
 import com.mindalliance.playbook.model.Ack;
 import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.ConfirmationAck;
 import com.mindalliance.playbook.model.ConfirmationReq;
 import com.mindalliance.playbook.model.Contact;
-import com.mindalliance.playbook.model.Medium;
+import com.mindalliance.playbook.model.Play;
 import com.mindalliance.playbook.model.Receive;
 import com.mindalliance.playbook.model.Send;
 import com.mindalliance.playbook.model.Step;
@@ -35,10 +38,13 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
 
     @Autowired
     private AckDao ackDao;
+    
+    @Autowired
+    private PlayDao playDao;
 
     @Autowired
     private ConfirmationReqDao reqDao;
-
+    
     @SuppressWarnings( "unchecked" )
     @Override
     public List<Collaboration> getUnconfirmed() {
@@ -95,50 +101,15 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
             newStep = new Task( oldStep );
             break;
         }
-       
-        delete( oldStep );
+
+        refresh( oldStep );
+
+        Play play = oldStep.getPlay();
+        play.removeStep( oldStep );
         save( newStep );
-
+        delete( oldStep );
+          
         return newStep;
-    }
-
-    @Override
-    public boolean isConfirmable( Step step ) {
-        if ( !step.isCollaboration() )
-           return false;
-
-        Collaboration collaboration = (Collaboration) step;
-        Contact contact = collaboration.getWith();
-        if ( contact == null || collaboration.getUsing() == null )
-            return false;
-
-
-        if ( collaboration.isAgreed() )
-            return false;
-
-        ConfirmationReq request = getLastRequest( collaboration );
-        if ( request != null && request.getConfirmation() != null )
-            return false;
-
-        // Contact must be a registered playbook user for now...
-        // TODO remove this when email invitations are enabled
-
-        return accountDao.findByContact( contact ) != null;
-    }
-
-    @Override
-    public Status getStatus( Step step ) {
-        if ( !step.isCollaboration() )
-            return Status.CONFIRMED;
-
-        Collaboration collaboration = (Collaboration) step;
-        if ( collaboration.getWith() == null || collaboration.getUsing() == null )
-            return Status.UNCONFIRMED;
-        
-        if ( collaboration.isAgreed() )
-            return Status.AGREED;
-
-        return getStatus( getLastRequest( collaboration ) );
     }
 
     private static Status getStatus( ConfirmationReq request ) {
@@ -146,6 +117,25 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
              : request.getConfirmation() == null ? Status.PENDING 
              : request.getConfirmation().isAck() ? Status.CONFIRMED 
                                                  : Status.REJECTED;
+    }
+
+    @Override
+    public StepInformation getInformation( long id ) {
+        Step step = load( id );
+        return step == null ? null : getInformation( step );
+    }
+
+    @Override
+    public StepInformation getInformation( Step step ) {
+        ConfirmationReq req = null;
+        ConfirmationAck confirmation = null;
+        if ( step.isCollaboration() ) {
+            req = getLastRequest( (Collaboration) step );
+            if ( req != null )
+                confirmation = req.getConfirmation();
+        }
+
+        return new StepInformationImpl( step, req, confirmation );
     }
 
     /**
@@ -173,30 +163,136 @@ public class StepDaoImpl extends GenericHibernateDao<Step,Long> implements StepD
      */
     @Override
     public void delete( Step entity ) {
-        if ( entity instanceof Collaboration ) {
-            Collaboration collaboration = (Collaboration) entity;
-            ConfirmationReq request = collaboration.getRequest();
-            if ( request != null ) {
-                ConfirmationAck confirmation = request.getConfirmation();
-                request.setConfirmation( null );
-                reqDao.save( request );
-                if ( confirmation != null ) {
-                    confirmation.setRequest( null );
-                    ackDao.delete( confirmation );
-                }    
-            }
+        if ( entity.isCollaboration() )
+            deleteConfirmation( (Collaboration) entity );
+              
+        super.delete( entity );
+    }
 
-            Ack agreement = collaboration.getAgreement();
-            if ( agreement != null ) {
-                ConfirmationReq req = agreement.getRequest();
-                req.setConfirmation( null );
-                reqDao.save( req );
-                collaboration.setAgreement( null );
-                ackDao.delete( agreement );
+    @Override
+    public void deleteConfirmation( Collaboration collaboration ) {
+        ConfirmationReq request = collaboration.getRequest();
+        if ( request != null ) {
+            ConfirmationAck confirmation = request.getConfirmation();
+            request.setConfirmation( null );
+            reqDao.save( request );
+            if ( confirmation != null ) {
+                confirmation.setRequest( null );
+                ackDao.delete( confirmation );
             }
         }
-        
-        
-        super.delete( entity );
+
+        Ack agreement = collaboration.getAgreement();
+        if ( agreement != null ) {
+            ConfirmationReq req = agreement.getRequest();
+            req.setConfirmation( null );
+            reqDao.save( req );
+            collaboration.setAgreement( null );
+            ackDao.delete( agreement );
+        }
+    }
+
+    @Override
+    public void deleteRequest( Collaboration collaboration ) {
+        ConfirmationReq request = collaboration.getRequest();
+        if ( request != null ) {
+            reqDao.delete( request );
+        }
+
+        Ack agreement = collaboration.getAgreement();
+        if ( agreement != null ) {
+            ConfirmationReq req = agreement.getRequest();
+            req.setConfirmation( null );
+            reqDao.save( req );
+            collaboration.setAgreement( null );
+            ackDao.delete( agreement );
+        }
+    }
+
+    //=================================================================
+    public static class StepInformationImpl implements StepInformation {
+
+        private Step step;
+        private ConfirmationReq req;
+        private ConfirmationAck ack;
+
+        public StepInformationImpl( Step step, ConfirmationReq req, ConfirmationAck ack ) {
+            this.ack = ack;
+            this.req = req;
+            this.step = step;
+        }
+
+        @Override
+        public long getPlayId() {
+            return step.getPlay().getId();
+        }
+
+        @Override
+        public ConfirmationAck getAck() {
+            return ack;
+        }
+
+        @Override
+        public Status getStatus() {
+            if ( !step.isCollaboration() )
+                return Status.CONFIRMED;
+
+            Collaboration collaboration = (Collaboration) step;
+            if ( collaboration.getWith() == null || collaboration.getUsing() == null )
+                return Status.UNCONFIRMED;
+
+            if ( collaboration.isAgreed() )
+                return Status.AGREED;
+            
+            return req == null ? Status.UNCONFIRMED
+                               : ack == null ? Status.PENDING
+                                             : ack.isAck() ? Status.CONFIRMED
+                                                           : Status.REJECTED;
+        }
+
+        @Override
+        public boolean isConfirmable() {
+            if ( !isCollaboration() || req != null && ack != null )
+                return false;
+
+            Collaboration collaboration = (Collaboration) step;
+            Contact contact = collaboration.getWith();
+            if ( contact == null || collaboration.getUsing() == null )
+                return false;
+
+            if ( collaboration.isAgreed() )
+                return false;
+
+
+            // TODO remove this when email invitations are enabled
+            // Contact must be a registered playbook user for now...
+            return true;
+            //return accountDao.findByContact( contact ) != null;
+        }
+
+        @Override
+        public boolean isCollaboration() {
+            return step.isCollaboration();
+        }
+
+        @Override
+        public String getAckMessage() {
+            return ack == null ? null : ack.getReason();
+        }
+
+        @Override
+        public ConfirmationReq getReq() {
+            return req;
+        }
+
+        @Override
+        public Step getStep() {
+            return step;
+        }
+
+        @Override
+        public Account getAccount() {
+            return step.getPlay().getAccount();
+        }
     }
 }

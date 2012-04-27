@@ -4,16 +4,15 @@
 <wicket:panel>
 
     <div data-role="fieldcontain">
-        <label for="contact">From contact:</label>
-        <input data-type="search" wicket:id="with" id="contact" type="text" value="John Drummond"/>
+        <label for="contact">Respond to contact:</label>
+        <input data-type="search" wicket:id="with" id="contact" type="text" placeholder="Enter a contact"
+               value="John Drummond"/>
     </div>
     
     <div wicket:id="using">(Media list)</div>
-    
-    <div data-role="fieldcontain">
-        <input wicket:id="startingPlay" id="startingPlay" type="checkbox"/>
-        <label for="startingPlay">Start this play when received</label>
-    </div>
+
+    <input wicket:id="startingPlay" id="startingPlay" type="checkbox"/>
+    <label for="startingPlay">Start this play when received</label>
 
 </wicket:panel>
 </body>

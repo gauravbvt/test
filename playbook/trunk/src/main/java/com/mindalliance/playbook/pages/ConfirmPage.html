@@ -15,7 +15,10 @@
     <div data-role="content">
         <p>The following message will be sent to <span wicket:id="collaboration.with.fullName">other user</span>:</p>
         <form wicket:id="form">
-            <textarea wicket:id="description">John,
+            <label data-role="fieldcontain"><span wicket:id="action">Calling me</span> when
+                <input wicket:id="shortDescription" type="text" placeholder="(Short description)"/>
+            </label>
+            <textarea wicket:id="description" placeholder="(Details)">John,
 Please confirm that you agree that I will call you using your office phone every week to discuss our status in the context of the weekly meeting.</textarea>
 
             <input wicket:id="forwardable" id="forwardable" type="checkbox"/>
@@ -25,8 +28,8 @@ Please confirm that you agree that I will call you using your office phone every
             <!--</div>-->
             
             <div>
-                <input type="submit" data-role="button" data-icon="check" data-inline="true" value="Request 
-                Confirmation"/>
+                <input type="submit" data-role="button" data-icon="check" data-inline="true" 
+                       value="Request Confirmation"/>
             </div>
         </form>
     </div>

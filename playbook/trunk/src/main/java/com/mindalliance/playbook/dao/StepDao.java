@@ -16,15 +16,43 @@ import java.util.List;
 public interface StepDao extends GenericDao<Step,Long> {
 
     /**
+     * Remove attached request and agreement of a collaboration, if necessary.
+     * @param collaboration the collaboration
+     */
+    void deleteConfirmation( Collaboration collaboration );
+
+    /**
+     * Delete request attached to the step, if any.
+     * @param collaboration the collaboration
+     */
+    void deleteRequest( Collaboration collaboration );
+
+    /**
      * Status of a step.
      */
-    public enum Status {
+    enum Status {
         UNCONFIRMED,
         CONFIRMED,
         PENDING,
         REJECTED,
         AGREED
     }
+
+    /**
+     * Find all information for the collaboration status of a step.
+     * 
+     * @param id the id of the step
+     * @return some extended information or null if there is no step matching the id
+     */
+    StepInformation getInformation( long id );
+
+    /**
+     * Find all information for the collaboration status of a step.
+     *
+     * @param step the step
+     * @return some extended information
+     */
+    StepInformation getInformation( Step step );
 
     /**
      * Find all unconfirmed steps in any play of current user.
@@ -52,21 +80,4 @@ public interface StepDao extends GenericDao<Step,Long> {
      * @return the new step
      */
     Step switchStep( Type stepType, Step oldStep );
-
-    /**
-     * Test if a step is confirmable. 
-     * 
-     * @param step the step
-     * @return true if step is a collaboration that has valid contact and medium information
-     * that has not been confirmed or rejected.
-     */
-    boolean isConfirmable( Step step );
-
-    /**
-     * Return a descriptive text of the status of a step.
-     * 
-     * @param step the step
-     * @return either "Confirm", "Pending" or "Rejected"
-     */
-    Status getStatus( Step step );
 }

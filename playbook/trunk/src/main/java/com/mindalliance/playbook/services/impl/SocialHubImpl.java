@@ -60,7 +60,6 @@ import org.springframework.social.linkedin.api.LinkedInProfileFull;
 import org.springframework.social.linkedin.api.PhoneNumber;
 import org.springframework.social.linkedin.api.Position;
 import org.springframework.social.linkedin.api.TwitterAccount;
-import org.springframework.social.linkedin.api.UrlResource;
 import org.springframework.social.linkedin.connect.LinkedInConnectionFactory;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.api.TwitterProfile;
@@ -321,6 +320,12 @@ public class SocialHubImpl implements InitializingBean, SocialHub, SignInAdapter
     @Override
     public boolean isTwitterEnabled() {
         SocialProvider provider = providerMap.get( TwitterProvider.ID );
+        return provider != null && provider.isEnabled();
+    }
+
+    @Override
+    public boolean isGoogleEnabled() {
+        SocialProvider provider = providerMap.get( GoogleProvider.ID );
         return provider != null && provider.isEnabled();
     }
 

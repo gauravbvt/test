@@ -8,9 +8,11 @@
 <wicket:panel>
     <a wicket:id="link" href="#">
         <img wicket:id="photo" src="images/john_drummond.jpeg"/>
-        <h3><span wicket:id="title">Call John and ask about status</span></h3>
-        <p wicket:id="summary">(summary)</p>
-        <p wicket:id="description">(description)</p>
+        <p  class="ui-li-desc">
+            <strong wicket:id="origin">From/To someone:</strong>
+            <span wicket:id="summary">(summary)</span>
+        </p>
+        <p class="ui-li-desc" wicket:id="description">(description)</p>
     </a>
     <a wicket:id="delete" href="#">Withdraw</a>
 </wicket:panel>

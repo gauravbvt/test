@@ -33,7 +33,9 @@ public class Login extends MobilePage {
             new WebMarkupContainer( "fb" )
                 .setVisible( socialHub.isFacebookEnabled() ),
             new WebMarkupContainer( "tw" )
-                .setVisible( socialHub.isTwitterEnabled() )
+                .setVisible( socialHub.isTwitterEnabled() ),
+            new WebMarkupContainer( "goo" )
+                .setVisible( socialHub.isGoogleEnabled() )
         );
     }
 

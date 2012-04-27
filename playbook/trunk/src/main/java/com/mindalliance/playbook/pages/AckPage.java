@@ -33,11 +33,14 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValueConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -50,7 +53,7 @@ public class AckPage extends MobilePage {
 
     private static final long serialVersionUID = -268665698142575634L;
 
-    private final ConfirmationReq req;
+    private ConfirmationReq req;
 
     @SpringBean
     private PlayDao playDao;
@@ -94,7 +97,31 @@ public class AckPage extends MobilePage {
     @SpringBean
     private AckDao ackDao;
 
+    public AckPage( PageParameters parameters ) {
+        super( parameters );
+
+        try {
+            long id = parameters.get( "id" ).toLong();
+            ConfirmationReq r = reqDao.load( id );
+            if ( r == null )
+                throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_NOT_FOUND, "Not Found" );
+            
+            else if ( account.getOwner().isMergeableWith( r.getRecipient() ) )
+                init( r );
+            
+            else
+                throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized" );
+
+        } catch ( StringValueConversionException ignored ) {
+            throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_NOT_FOUND, "Not Found" );
+        }
+    }
+
     public AckPage( final ConfirmationReq request ) {
+        init( request );
+    }
+
+    private void init( ConfirmationReq request ) {
         setDefaultModel( new CompoundPropertyModel<AckPage>( this ) );
 
         // Build all possible answers.
@@ -247,6 +274,7 @@ public class AckPage extends MobilePage {
         },
 
             new Label( "req.sender" ),
+            new Label( "req.summary" ),
 
             new WebMarkupContainer( "photo" ).add(
                 new AttributeModifier( "src", photoUrl( contactId ) ) ).setVisible( contactId != 0L && hasPhoto ),

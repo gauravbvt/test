@@ -51,4 +51,10 @@ public class Receive extends Collaboration {
     public void setStartingPlay( boolean startingPlay ) {
         this.startingPlay = startingPlay;
     }
+
+    @Override
+    public String getMediumString() {
+        Medium using = getUsing();
+        return using == null ? "Somehow contacting" : using.getDescription( getWith(), true );
+    }
 }

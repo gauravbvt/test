@@ -105,10 +105,11 @@ div.details .job {
     margin-top: 0;    
 }
 
-.play-inset-list {
-    display: inline-block;
-    width: 60%;
-    margin: 0 !important;
+div.bottom-bar {
+    margin: 30px 0 0;
+}
+div.search-plays {
+    margin: 0 0 30px;
 }
 
 .contact-popup {
@@ -124,4 +125,8 @@ div.details .job {
 #replyForm {
     display: block;
     clear: both;
+}
+
+#steptype .ui-btn-inner {
+    padding: 0.55em 1.2em 0.5em ;
 }

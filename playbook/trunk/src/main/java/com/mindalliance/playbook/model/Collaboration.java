@@ -20,10 +20,10 @@ public abstract class Collaboration extends Step {
 
     private static final long serialVersionUID = -2318735159254336969L;
 
-    @ManyToOne
+    @ManyToOne( optional = true )
     private Medium using;
 
-    @ManyToOne
+    @ManyToOne( optional = true )
     private Contact with;
     
     @OneToOne( mappedBy = "collaboration", cascade = CascadeType.REMOVE, optional = true )
@@ -44,7 +44,7 @@ public abstract class Collaboration extends Step {
         if ( step.isCollaboration() ) {
             Collaboration collaboration = (Collaboration) step;
             
-            using = collaboration.getUsing();
+            //using = collaboration.getUsing();
             with = collaboration.getWith();
         }
 
@@ -77,25 +77,7 @@ public abstract class Collaboration extends Step {
 
     @Transient
     public String getDefaultDescription() {
-        // TODO implement this
-
-        StringBuilder sb = new StringBuilder();
-        
-        sb.append( "Dear " );
-        sb.append( with.getGivenName() );
-        sb.append( ',' );
-        sb.append( "\n\n" );
-        
-        if ( isSend() )
-            sb.append( "I would like to contact you at " +  getUsing() );
-        else
-            sb.append( "I need you to contact me at " + getUsing() );
-
-        sb.append( " in the context of my task \"" + getTitle() + "\". " );
-        
-        sb.append( "Is that OK?" );
-
-        return sb.toString();
+        return null;
     }
 
     public Medium getUsing() {
@@ -147,14 +129,5 @@ public abstract class Collaboration extends Step {
     public abstract boolean isSend();
 
     @Transient
-    public String getMediumString() {
-        StringBuilder sb = new StringBuilder();        
-
-        if ( !isSend() )
-            sb.append( "contacting me " );
-        
-        sb.append( using == null ? "somehow" : using.getMediumString() );
-        
-        return sb.toString();
-    }
+    public abstract String getMediumString();
 }

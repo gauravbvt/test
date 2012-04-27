@@ -44,8 +44,10 @@ public class RequestItem extends Panel {
         Link<?> link = new StatelessLink<Object>( "link" ) {
             @Override
             public void onClick() {
-                setResponsePage( incoming ? new AckPage( req )
-                                          : new ConfirmPage( collaboration ) );
+                if ( incoming )
+                    setResponsePage( AckPage.class, new PageParameters().add( "id", req.getId() ) );
+                else
+                    setResponsePage( new ConfirmPage( collaboration ) );
             }
         };
 
@@ -55,8 +57,8 @@ public class RequestItem extends Panel {
                     .add( new AttributeModifier( "src", getPhotoUrl( contact ) ) )
                     .setVisible( contact != null && contact.hasPhoto() ),
 
-                new Label( "title", collaboration.getTitle() ),
-                new Label( "summary", req.getSummary( incoming ) ),
+                new Label( "origin", req.getOrigin( incoming ) ),
+                new Label( "summary", req.getSummary() ),
                 new Label( "description", req.getDescription() ) ),
             
             new StatelessLink( "delete" ){

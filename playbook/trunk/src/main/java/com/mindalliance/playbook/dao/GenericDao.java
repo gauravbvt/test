@@ -25,10 +25,10 @@ public interface GenericDao<T, ID extends Serializable> {
     @Transactional
     T load( ID id );
 
-    @Transactional( readOnly = true )
+    @Transactional
     List<T> list();
 
-    @Transactional( readOnly = true )
+    @Transactional
     List<T> findByExample( T exampleInstance, String... excludeProperty );
 
     @Transactional
@@ -51,6 +51,6 @@ public interface GenericDao<T, ID extends Serializable> {
      * Refresh an object from the database.
      * @param object the object
      */
-    @Transactional( readOnly = true )
+    @Transactional    
     void refresh( T object );
 }

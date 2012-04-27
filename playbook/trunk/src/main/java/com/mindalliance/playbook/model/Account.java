@@ -28,14 +28,15 @@ import java.util.List;
  */
 @Entity
 @Indexed
-@Table( uniqueConstraints = @UniqueConstraint( columnNames = { "providerId", "userId" } ) )
+@Table( uniqueConstraints = @UniqueConstraint( columnNames = { "USERID", "PROVIDERID" } ) )
 public class Account implements Serializable, Timestamped {
 
     private static final long serialVersionUID = 1861272453366746780L;
 
-    @Id @GeneratedValue( strategy = GenerationType.AUTO )
+    @Id
+    @GeneratedValue( strategy = GenerationType.AUTO )
     private long id;
-    
+
     @Basic( optional = false )
     private String providerId;
 
@@ -51,19 +52,19 @@ public class Account implements Serializable, Timestamped {
     private Date lastModified;
 
     private boolean disabled;
-    
+
     private boolean confirmed;
-    
+
     private boolean viewByTags;
-    
+
     private boolean showInactive;
-    
+
     @OneToMany( mappedBy = "account", cascade = CascadeType.ALL )
     private List<Playbook> playbooks;
 
     @OneToMany( mappedBy = "account", cascade = CascadeType.ALL )
     private List<Contact> contacts;
-    
+
     //------------------------------------------
     public Account() {
     }
@@ -74,7 +75,7 @@ public class Account implements Serializable, Timestamped {
         this.providerId = providerId;
         this.userId = userId;
         created = new Date();
-        
+
         lastModified = created;
         playbooks = new ArrayList<Playbook>();
 
@@ -176,6 +177,7 @@ public class Account implements Serializable, Timestamped {
 
     /**
      * Return default playbook.
+     *
      * @return the first playbook available.
      */
     @Transient
@@ -218,15 +220,16 @@ public class Account implements Serializable, Timestamped {
     public void setShowInactive( boolean showInactive ) {
         this.showInactive = showInactive;
     }
-    
+
     public final Contact addContact( Contact contact ) {
         contact.setAccount( this );
-        contacts.add( contact );  
+        contacts.add( contact );
         return contact;
     }
 
     /**
      * Get the contact information of the owner of this account.
+     *
      * @return a contact
      */
     @Transient
@@ -251,5 +254,18 @@ public class Account implements Serializable, Timestamped {
     @Transient
     public String getUserKey() {
         return providerId + ':' + userId;
+    }
+
+    @Override
+    public boolean equals( Object obj ) {
+        return this == obj 
+            || obj != null 
+               && Account.class.isAssignableFrom( obj.getClass() ) 
+               && id == ( (Account) obj ).getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) ( id ^ id >>> 32 );
     }
 }

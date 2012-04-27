@@ -8,6 +8,7 @@ package com.mindalliance.playbook.model;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 /**
  * A step involving sending some information to another party.
@@ -40,5 +41,12 @@ public class Send extends Collaboration {
     @Override
     public Type getType() {
         return Type.SEND;
+    }
+
+    @Override
+    @Transient
+    public String getMediumString() {
+        Medium using = getUsing();
+        return using == null ? "Somehow" : using.getDescription( getWith(), false );
     }
 }

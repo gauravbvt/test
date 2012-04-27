@@ -52,7 +52,18 @@ public class PhoneMedium extends GenericMedium {
     }
 
     @Override
-    public String getMediumString() {
-        return "at " + getAddress();
+    public String getDescription() {
+        return "dialing " + getAddress();
+    }
+
+    @Override
+    public String getDescription( Contact contact, boolean incoming ) {
+        return incoming ? "Receiving a call from " + contact + " at " + getAddress()
+                        : "Call " + contact + " at " + getAddress();
+    }
+
+    @Override
+    public String getDescription( boolean me ) {
+        return "Calling " + ( me ? "me" : "you" ) + " at " + getAddress();
     }
 }

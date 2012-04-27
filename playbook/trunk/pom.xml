@@ -74,6 +74,16 @@
             <name>Spring Maven Milestone Repository</name>
             <url>http://maven.springframework.org/milestone</url>
         </repository>
+        <repository>
+            <id>JBoss</id>
+            <name>JBoss public</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/public-jboss/</url>
+        </repository>
+        <!--<repository>-->
+            <!--<id>wiquery-maven-repo</id>-->
+            <!--<name>WiQuery repository</name>-->
+            <!--<url>https://wiquery.googlecode.com/svn/repo/</url>-->
+        <!--</repository>-->
     </repositories>
 
     <dependencies>
@@ -104,6 +114,11 @@
             <artifactId>wicket-request</artifactId>
             <version>${wicket.version}</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.odlabs.wiquery</groupId>-->
+            <!--<artifactId>wiquery</artifactId>-->
+            <!--<version>1.5-M1</version>            -->
+        <!--</dependency>-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -212,12 +227,12 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>4.0.1.Final</version>
+            <version>4.1.1.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search</artifactId>
-            <version>4.1.0.Alpha1</version>
+            <version>4.1.0.CR3</version>
         </dependency>
         <dependency>
             <groupId>javassist</groupId>
@@ -297,6 +312,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>1.8.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

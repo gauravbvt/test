@@ -33,10 +33,21 @@ public class TwitterMedium extends GenericMedium {
     public String getCssClass() {
         return "m-twitter";
     }
-    
+
     @Override
     public String toString() {
         return '@' + getAddress();
+    }
+
+    @Override
+    public String getDescription( boolean me ) {
+        return "Tweeting " + ( me ? "me" : "you" ) + " at @" + getAddress();
+    }
+
+    @Override
+    public String getDescription( Contact contact, boolean incoming ) {
+        return incoming ? "Receiving a tweet from " + contact
+                        : "Send a tweet to @" + getAddress();
     }
 
     @Override

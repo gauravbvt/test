@@ -43,6 +43,17 @@ public class FacebookMedium extends GenericMedium {
         return name;
     }
 
+    @Override
+    public String getDescription( boolean me ) {
+        return "Contacting " + (me? "me" : "you") + " on Facebook";
+    }
+
+    @Override
+    public String getDescription( Contact contact, boolean incoming ) {
+        return incoming ? "Being contacted by " + contact + " on Facebook"
+                        : "Contact " + contact + " on Facebook";
+    }
+
     public String getName() {
         return name;
     }

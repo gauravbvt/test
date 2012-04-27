@@ -6,6 +6,7 @@
 
 package com.mindalliance.playbook;
 
+import com.mindalliance.playbook.pages.AckPage;
 import com.mindalliance.playbook.pages.ContactPic;
 import com.mindalliance.playbook.pages.EditPlay;
 import com.mindalliance.playbook.pages.EditStep;
@@ -59,6 +60,7 @@ public class WicketApplication extends WebApplication implements ApplicationCont
         mountPage( "jcaptcha.jpg", JCaptchaImage.class );
         mountPage( "contacts/${id}", ContactPic.class );
         mountPage( "collaborate.html", MessagesPage.class );
+        mountPage( "confirm/${id}", AckPage.class );
 
         mountPage( "settings.html", Settings.class );
     }

@@ -33,6 +33,17 @@ public class SkypeMedium extends GenericMedium {
     }
 
     @Override
+    public String getDescription( boolean me ) {
+        return "Calling " + ( me ? "me" : "you" ) + " on Skype";
+    }
+
+    @Override
+    public String getDescription( Contact contact, boolean incoming ) {
+        return incoming ? "Receiving a call from " + contact + " on Skype" 
+                        : "Call " + contact + " on Skype";
+    }
+
+    @Override
     public String getActionUrl() {
         return "skype:" + getAddress() + "?call";
     }

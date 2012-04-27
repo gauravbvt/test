@@ -35,16 +35,14 @@ import java.net.URL;
 @Entity
 @Table(
     appliesTo = "UserConnection",    
-    indexes = { @Index( name = "UserConnectionRank", columnNames = { "userId", "providerId", "providerUserId" } ) } )
+    indexes = { @Index( name = "UserConnectionRank", columnNames = { "USERID", "PROVIDERID", "RANK" } ) } )
 public class UserConnection implements Serializable {
 
     private static final long serialVersionUID = 1942785325805820704L;
 
-    @Basic( optional = false )
     @Id
     private String userId;
     
-    @Basic( optional = false )
     @Id
     private String providerId;
 
@@ -69,6 +67,15 @@ public class UserConnection implements Serializable {
     private String refreshToken;
     
     private Long expireTime;
+
+    public UserConnection( String userId, String providerId, String providerUserId ) {
+        this.userId = userId;
+        this.providerId = providerId;
+        this.providerUserId = providerUserId;
+    }
+
+    public UserConnection() {
+    }
 
     @Override
     public boolean equals( Object obj ) {

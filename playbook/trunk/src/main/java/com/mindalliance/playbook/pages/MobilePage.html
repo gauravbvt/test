@@ -8,9 +8,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <head>
     <title wicket:id="pageTitle">Active plays</title>
-    <!--<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>-->
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <script src="scripts/jquery-1.6.4.min.js"></script>
+    <script src="scripts/jquery-1.7.1.min.js"></script>
     <script type="text/javascript">
         // do not handle links via ajax by default
         $( document ).bind( "mobileinit", function () {
@@ -20,9 +20,11 @@
         // Circumvent a sign-in "feature" of Facebook...
         if ( window.location.hash == '#_=_' )window.location.hash = null;
     </script>
-    <link rel="stylesheet" href="css/jquery.mobile-1.0.1.min.css"/>
+    <script src="scripts/jquery-ui-1.8.19.custom.min.js"></script>
+    <script src="scripts/jquery.ui.touch-punch.min.js"></script>
+    <link rel="stylesheet" href="css/jquery.mobile-1.1.0-rc.1.min.css"/>
     <link rel="stylesheet" href="css/refinements.css">
-    <script src="scripts/jquery.mobile-1.0.1.min.js"></script>
+    <script src="scripts/jquery.mobile-1.1.0-rc.1.min.js"></script>
 </head>
 <body>
     <div data-role="page">

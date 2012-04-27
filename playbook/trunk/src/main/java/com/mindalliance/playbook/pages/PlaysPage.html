@@ -17,16 +17,28 @@
 
     <div data-role="content"data-theme="c">
 
-        <a wicket:id="addPlay" data-icon="add" data-role="button">Add play...</a>
-  
-        <ul data-role="listview" data-inset="true">
-            <li wicket:id="playbook.plays">
-            <a wicket:id="editlink" href="#">
-                <h3 wicket:id="title" class="ui-li-heading">Fire evacuation</h3>
-                <p wicket:id="tags" class="ui-li-desc">Work, Emergency</p>
-            </a>
+        <div class="search-plays" data-role="fieldcontain">
+            <label for="search" class="ui-hidden-accessible">Search:</label>
+            <input wicket:id="search" name="search" data-type="search" type="text"
+                   placeholder="Search plays..."/>
+        </div>
+        
+        <ul wicket:id="list" data-role="listview">
+            <li data-role="list-divider">Plays</li>
+            <li wicket:id="filteredPlays">
+                <a wicket:id="editlink" href="#">
+                    <h3 wicket:id="title" class="ui-li-heading">Fire evacuation</h3>
+                    <p wicket:id="tags" class="ui-li-aside">Work, Emergency</p>
+                    <p wicket:id="desc" class="ui-li-desc">(Description)</p>
+                </a>
             </li>
         </ul>
+        
+        <div class="bottom-bar" data-role="navbar">
+            <ul>
+                <li><a wicket:id="addPlay" data-icon="add" data-role="button">Add</a></li>
+            </ul>            
+        </div>
     </div>
 </wicket:extend>
 </body>

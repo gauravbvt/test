@@ -6,8 +6,8 @@ import com.mindalliance.playbook.model.Play;
 import com.mindalliance.playbook.model.Step;
 import com.mindalliance.playbook.model.Task;
 import com.mindalliance.playbook.pages.panels.StepItem;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -16,12 +16,12 @@ import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -38,8 +38,10 @@ public class EditPlay extends NavigablePage {
 
     @SpringBean
     private PlayDao playDao;
+    
+    private int dragStart;
 
-    private String newStepName;
+    private static final Logger LOG = LoggerFactory.getLogger( EditPlay.class );
 
     public EditPlay( PageParameters parameters ) {
         super( parameters );
@@ -49,34 +51,21 @@ public class EditPlay extends NavigablePage {
         setDefaultModel( new CompoundPropertyModel<Play>( play ) );
 
         add(
-            new Label( "hTitle", new PropertyModel<Object>( play, "title" ) ),
             new BookmarkablePageLink<PlaysPage>( "back", PlaysPage.class ),
-            new StatelessForm( "form" ) {
-                @Override
-                protected void onSubmit() {
-                    super.onSubmit();
-
-                    if ( newStepName != null && !newStepName.isEmpty() ) {
-                        Task step = new Task( play );
-                        step.setTitle( newStepName );
-                        play.addStep( step );
-
-                        List<Step> steps = play.getSteps();
-                        for ( int i = 0, stepsSize = steps.size(); i < stepsSize; i++ )
-                            steps.get( i ).setSequence( i + 1 );
+            new StatelessForm( "form" ).add(
+                new TextField( "title" ).add(
+                    new AjaxFormComponentUpdatingBehavior( "onblur" ) {
+                        @Override
+                        protected void onUpdate( AjaxRequestTarget target ) {
+                            playDao.save( play );
+                        }
+                    } ), new TextArea( "description" ).add(
+                new AjaxFormComponentUpdatingBehavior( "onblur" ) {
+                    @Override
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        playDao.save( play );
                     }
-
-                    playDao.save( play );
-
-                    // TODO find the proper way of doing this
-                    WebResponse response = (WebResponse) getResponse();
-                    response.sendRedirect(
-                        newStepName == null ? "../plays.html" : Long.toString( play.getId() ) );
-                }
-            }.add(
-                new TextField( "title" ), new TextField( "schedule" ), new TextArea( "description" ),
-
-                new TextField<String>( "newStep", new PropertyModel<String>( this, "newStepName" ) ),
+                } ),
 
                 new StatelessLink( "deletePlay" ) {
                     @Override
@@ -84,19 +73,38 @@ public class EditPlay extends NavigablePage {
                         playDao.delete( play );
                         setResponsePage( PlaysPage.class );
                     }
-                }, 
-                
-                new TextField( "tagString" ),
+                },
 
-                new WebMarkupContainer( "stepDiv" ).add(
-                    new ListView<Step>( "steps" ) {
+                new StatelessLink( "addStep" ) {
+                    @Override
+                    public void onClick() {
+                        Task step = new Task( play );
+                        play.addStep( step );
+
+                        List<Step> steps = play.getSteps();
+                        for ( int i = 0, stepsSize = steps.size(); i < stepsSize; i++ )
+                            steps.get( i ).setSequence( i + 1 );
+
+                        playDao.save( play );
+                        setResponsePage( EditStep.class, new PageParameters().add( "id", step.getId() ) );
+                    }
+                },
+
+                new TextField( "tagString" ).add(
+                    new AjaxFormComponentUpdatingBehavior( "onblur" ) {
                         @Override
-                        protected void populateItem( ListItem<Step> item ) {
-                            item.add( new StepItem( "step", item.getModel(), false ) );
+                        protected void onUpdate( AjaxRequestTarget target ) {
+                            playDao.save( play );
                         }
-                    } ).setVisible( !play.getSteps().isEmpty() )
+                    } ),
 
-                ) );
+                new ListView<Step>( "steps" ) {
+                    @Override
+                    protected void populateItem( final ListItem<Step> item ) {
+                        item.add( new StepItem( "step", item.getModel(), false ) );
+                    }
+                }
+            ) );
     }
 
     private Play getPlay( PageParameters parameters ) {
@@ -110,7 +118,8 @@ public class EditPlay extends NavigablePage {
             throw new AbortWithHttpErrorCodeException(
                 HttpServletResponse.SC_NOT_FOUND, "Not Found" );
 
-        if ( play.getAccountId() != account.getId() )
+        // Use getId() because .equals() doesn't work on proxies, for some reason...  
+        if ( account.getId() != play.getAccount().getId() )
             throw new AbortWithHttpErrorCodeException(
                 HttpServletResponse.SC_FORBIDDEN, "Unauthorized" );
         return play;
@@ -119,13 +128,5 @@ public class EditPlay extends NavigablePage {
     @Override
     public String getPageTitle() {
         return "Edit play";
-    }
-
-    public String getNewStepName() {
-        return newStepName;
-    }
-
-    public void setNewStepName( String newStepName ) {
-        this.newStepName = newStepName;
     }
 }

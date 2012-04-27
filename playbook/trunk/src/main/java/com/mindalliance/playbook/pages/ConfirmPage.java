@@ -4,10 +4,12 @@ import com.mindalliance.playbook.dao.ConfirmationReqDao;
 import com.mindalliance.playbook.dao.StepDao;
 import com.mindalliance.playbook.model.Collaboration;
 import com.mindalliance.playbook.model.ConfirmationReq;
+import com.mindalliance.playbook.model.Medium;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -37,6 +39,9 @@ public class ConfirmPage extends MobilePage {
 
         IModel<ConfirmationReq> model = new CompoundPropertyModel<ConfirmationReq>( req );
         setDefaultModel( model );
+
+        Medium using = collaboration.getUsing();
+        String description = using == null ? "Incomplete" : using.getDescription( !collaboration.isSend() );
         
         add(
             new Label( "hTitle", getPageTitle() ),
@@ -50,13 +55,15 @@ public class ConfirmPage extends MobilePage {
                     confirmationReqDao.save( req );
 
                     if ( saved )
-                        setResponsePage( EditStep.class, new PageParameters().add( "id",
-                            req.getCollaboration().getId() ) );
+                        setResponsePage( EditStep.class, new PageParameters()
+                            .add( "id", collaboration.getId() ) );
                     else
                         setResponsePage( MessagesPage.class );
                 }
             }.add(
                 new Label( "collaboration.with.givenName" ),
+                new Label( "action", description ),
+                new TextField<String>( "shortDescription" ),
                 new TextArea<String>( "description" ),
                 new CheckBox( "forwardable" )
             )

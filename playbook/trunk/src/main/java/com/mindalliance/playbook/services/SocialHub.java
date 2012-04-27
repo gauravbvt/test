@@ -54,4 +54,10 @@ public interface SocialHub {
      * @param connection the provider client connection
      */
     void syncContacts( Account account, Connection<?> connection );
+
+    /**
+     * Test if Google connections are enabled on this server.
+     * @return true if they are
+     */
+    boolean isGoogleEnabled();
 }

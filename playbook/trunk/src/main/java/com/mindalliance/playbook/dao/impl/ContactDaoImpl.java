@@ -43,7 +43,7 @@ public class ContactDaoImpl extends IndexedHibernateDao<Contact, Long> implement
     private AccountDao accountDao;
 
     private Analyzer analyzer;
-
+    
     public ContactDaoImpl() {
         Map<String,String> args = Collections.singletonMap(
             IndexSchema.LUCENE_MATCH_VERSION_PARAM,

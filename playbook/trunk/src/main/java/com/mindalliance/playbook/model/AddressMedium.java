@@ -56,8 +56,18 @@ public class AddressMedium extends Medium {
 
     @Override
     @Transient
-    public String getMediumString() {
-        return "at " + address;
+    public String getDescription() {
+        return "meeting at " + address;
+    }
+
+    @Override
+    public String getDescription( Contact contact, boolean incoming ) {
+        return "Meet " + contact.getFullName() + " at " + address;
+    }
+
+    @Override
+    public String getDescription( boolean me ) {
+        return "Meeting " + ( me ? "me" : "you" ) + " at " + address;
     }
 
     @Override

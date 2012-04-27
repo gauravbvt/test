@@ -106,7 +106,7 @@ public abstract class IndexedHibernateDao<T, ID extends Serializable> extends Ge
         fields = fieldNames.toArray( new String[fieldNames.size()] );
     }
 
-    private void addFields( Class<?> aClass, Collection<String> fieldNames, String prefix ) {
+    protected void addFields( Class<?> aClass, Collection<String> fieldNames, String prefix ) {
         for ( Method method : aClass.getMethods() ) {
             PropertyDescriptor propertyForMethod = BeanUtils.findPropertyForMethod( method );
             if ( method.getAnnotation( Field.class ) != null ) {

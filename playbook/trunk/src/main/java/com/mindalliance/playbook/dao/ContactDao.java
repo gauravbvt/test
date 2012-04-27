@@ -23,7 +23,7 @@ public interface ContactDao extends IndexedDao<Contact,Long> {
      * @param suffixes suffixes
      * @return matching contacts
      */
-    @Transactional( readOnly = true )
+    @Transactional
     List<Contact> findByName( String givenName, String additionalNames, String familyName, String suffixes );
 
     /**
@@ -31,7 +31,7 @@ public interface ContactDao extends IndexedDao<Contact,Long> {
      * @param contact a contact to look for
      * @return list of potential synonyms
      */
-    @Transactional( readOnly = true )
+    @Transactional
     List<Contact> findByName( Contact contact );
 
     /**

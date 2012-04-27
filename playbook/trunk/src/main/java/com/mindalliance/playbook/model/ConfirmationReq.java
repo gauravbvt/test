@@ -24,27 +24,30 @@ public class ConfirmationReq implements Serializable, Timestamped {
 
     private static final long serialVersionUID = 1171444045850660147L;
 
-    @Id @GeneratedValue
-    private long id ;
+    @Id
+    @GeneratedValue
+    private long id;
+    
+    private String shortDescription;
 
     private String description;
 
     private Date date = new Date();
 
     private boolean forwardable;
-    
+
     @OneToOne( optional = true )
     private Collaboration collaboration;
-    
+
     @OneToOne( optional = true, cascade = CascadeType.REMOVE )
     private ConfirmationAck confirmation;
-    
+
     @OneToOne( optional = true, cascade = CascadeType.REMOVE )
     private RedirectReq redirect;
 
     @ManyToOne
     private Playbook playbook;
-    
+
     //
     // Constructors
     //
@@ -62,36 +65,45 @@ public class ConfirmationReq implements Serializable, Timestamped {
 
     /**
      * Get a short description of the collaboration.
-     * @param incoming true if seen from the incoming side
+     *
      * @return a description of who and how
      */
-    public String getSummary( boolean incoming ) {
+    public String getSummary() {
+        Collaboration step = getCollaboration();
         if ( isRedirect() )
-            return "Forwarding request on behalf of " + getCollaboration().getOwner();
+            return "Forwarding request on behalf of " + step.getOwner();
         else {
-            String prefix = incoming ? "Receiving from " + getSender()
-                                     : "Contacting " + getRecipient();
-            return prefix + " using " + getCollaboration().getUsing();
+            Medium medium = step.getUsing();
+            return ( medium == null ? "somehow" : medium.getDescription( !step.isSend() ) ) 
+                   + ( shortDescription != null ? " when " + shortDescription : "" );
         }
+    }
+
+    public String getOrigin( boolean incoming ) {
+        Contact recipient = getRecipient();
+        return ( incoming ? "From " + getSender() 
+                          : "To " + ( recipient == null ? "someone" : recipient ) ) 
+               + ": ";
     }
 
     /**
      * Get the sender of the collaboration request.
+     *
      * @return a contact information, local to the sender
      */
     @Transient
     public Contact getSender() {
         return playbook.getMe();
     }
-    
+
     /**
      * Get the recipient of the redirect request.
+     *
      * @return a local contact of the sender
      */
     public Contact getRecipient() {
         return collaboration.getWith();
     }
-
 
     public Collaboration getCollaboration() {
         return collaboration;
@@ -109,7 +121,7 @@ public class ConfirmationReq implements Serializable, Timestamped {
     public boolean isPending() {
         return confirmation == null;
     }
-    
+
     @Transient
     public boolean isRedirect() {
         return false;
@@ -148,6 +160,14 @@ public class ConfirmationReq implements Serializable, Timestamped {
 
     public void setRedirect( RedirectReq redirect ) {
         this.redirect = redirect;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription( String shortDescription ) {
+        this.shortDescription = shortDescription;
     }
 
     public long getId() {

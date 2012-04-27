@@ -11,56 +11,50 @@
     <form id="stepForm" wicket:id="form">
         <div data-role="header" data-theme="b">
             <a href="javascript:history.go(-1)"  onMouseOver="self.status=document.referrer;return true" data-icon="arrow-l" data-role="button" data-inline="true">Back</a>
-            <h1 wicket:id="hTitle">1. Call John and ask about status</h1>
-            <a wicket:id="home" data-role="button" data-direction="reverse" data-icon="home" data-iconpos="notext">Hom
-                e</a>
+            <h1><span wicket:id="hTitle">1. Call John and ask about status</span></h1>
+            <a wicket:id="home" data-role="button" data-direction="reverse" data-icon="home" 
+               data-iconpos="notext">Home</a>
         </div>
 
         <div data-role="content" data-theme="c">
             <p wicket:id="feedback" class="error">(Error messages go here)</p>
 
-            <div data-role="fieldcontain">
-                <label for="title">Title:</label>
-                <input wicket:id="title" id="title" type="text" value="Call John and ask about status">
+            <p>
+                <label for="title" class="ui-hidden-accessible">Title:</label>
+                <input wicket:id="step.title" id="title" type="text" value="Call John and ask about status"
+                       placeholder="Untitled">
+            </p>
+            <p>
+                <label for="descr" class="ui-hidden-accessible">Description:</label>
+                <textarea wicket:id="step.description" id="descr" rows="3" cols="40"
+                          placeholder="Enter a description...">Daily discussion</textarea>
+            </p>
+
+            <div wicket:id="stepType">
+                <fieldset id="steptype" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <input wicket:id="typeTask" type="radio" id="steptype-a"/>
+                    <label for="steptype-a">Task</label>
+
+                    <input wicket:id="typeSend" type="radio" id="steptype-b"/>
+                    <label for="steptype-b">Send</label>
+
+                    <input wicket:id="typeReceive" type="radio" id="steptype-c"/>
+                    <label for="steptype-c">Receive</label>
+
+                    <input wicket:id="typePlay" type="radio" id="steptype-d"/>
+                    <label for="steptype-d">Play</label>
+                </fieldset>
             </div>
-            <div data-role="fieldcontain">
-                <label for="descr">Description:</label>
-                <textarea wicket:id="description" id="descr" rows="3" cols="40">Daily discussion</textarea>
-            </div>
-            <div data-role="fieldcontain">
-                <div wicket:id="stepType" data-role="fieldcontain">
-                    <fieldset data-role="controlgroup" data-type="horizontal">
-                        <legend>Step type:</legend>
-                        <input wicket:id="typeTask" checked="checked" type="radio" id="steptype-a"/>
-                        <label for="steptype-a">Task</label>
 
-                        <input wicket:id="typeSend" type="radio" id="steptype-b"/>
-                        <label for="steptype-b">Send</label>
-
-                        <input wicket:id="typeReceive" type="radio" id="steptype-c"/>
-                        <label for="steptype-c">Receive</label>
-
-                        <input wicket:id="typePlay" type="radio" id="steptype-d"/>
-                        <label for="steptype-d">Play</label>
-                    </fieldset>
-                </div>
-            </div>
-
-            <div wicket:id="details"></div>
-
-            <div data-role="fieldcontain">
-                <label for="due">Duration:</label>
-                <input wicket:id="duration" id="due" type="text" value="">
-            </div>
-            <div data-role="fieldcontain">
-                <label for="depends">Depends On:</label>
-                <input id="depends" type="text" value="">
+            <div wicket:id="detailsDiv">
+                <div wicket:id="details"></div>
             </div>
 
             <div>
-                <a wicket:id="delete" data-icon="delete" data-role="button" data-inline="true">Delete</a>
-                <input data-icon="check" data-role="button" type="submit" value="Save" data-inline="true"/>
-                <input id="confirm" data-icon="forward" data-role="button" type="submit" value="Confirm" data-inline="true" wicket:id="confirm"/>               
+                <input type="button" wicket:id="delete" data-icon="delete" data-role="button" data-inline="true" 
+                       value="Delete"/>
+                <input type="button" wicket:id="confirm" data-icon="forward" data-role="button" data-inline="true" 
+                       value="Confirm"/>
             </div>
         </div>
     </form>

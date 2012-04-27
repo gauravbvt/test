@@ -36,6 +36,6 @@ public interface IndexedDao<T, ID extends Serializable> extends GenericDao<T, ID
      * @param query a string to query for in indexed fields.
      * @return whatever matches, sorted by relevance. In query is null or empty, will return an empty list.
      */
-    @Transactional( readOnly = true )
+    @Transactional
     List<T> find( String query );
 }

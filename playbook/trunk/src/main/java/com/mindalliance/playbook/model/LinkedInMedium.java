@@ -12,9 +12,9 @@ import javax.persistence.Entity;
 public class LinkedInMedium extends GenericMedium {
 
     private static final long serialVersionUID = -8589015332679716862L;
-    
+
     private String profileUrl;
-    
+
     private String displayName;
 
     public LinkedInMedium() {
@@ -57,15 +57,25 @@ public class LinkedInMedium extends GenericMedium {
     public void setDisplayName( String displayName ) {
         this.displayName = displayName;
     }
-    
+
     @Override
     public String toString() {
         return displayName;
     }
 
     @Override
+    public String getDescription( boolean me ) {
+        return "Sending " + ( me ? "me" : "you" ) + " a message through LinkedIn";
+    }
+
+    @Override
+    public String getDescription( Contact contact, boolean incoming ) {
+        return incoming ? "Receiving a message from " + contact + " on LinkedIn"
+                        : "Send " + contact + " a message through LinkedIn";
+    }
+
+    @Override
     public String getActionUrl() {
         return profileUrl;
     }
-    
 }
