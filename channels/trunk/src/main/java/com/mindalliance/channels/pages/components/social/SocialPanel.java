@@ -102,6 +102,24 @@ public class SocialPanel extends AbstractUpdatablePanel {
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
+        if ( showTabs.contains( USER ) ) {
+            AbstractTab tab = new AbstractTab( new Model<String>( "About Me") ) {
+                public Panel getPanel( String id ) {
+                    userProfilePanel = new UserInfoPanel( id, SocialPanel.this, collapsible );
+                    return userProfilePanel;
+                }
+            };
+            tabs.add( tab );
+        }
+        if ( showTabs.contains( PARTICIPATION ) ) {
+            AbstractTab tab = new AbstractTab( new Model<String>( "What I do" ) ) {
+                public Panel getPanel( String id ) {
+                    userParticipationPanel = new UserParticipationPanel( id, SocialPanel.this, collapsible );
+                    return userParticipationPanel;
+                }
+            };
+            tabs.add( tab );
+        }
         if ( showTabs.contains( PRESENCE ) )
             tabs.add( new AbstractTab( new Model<String>( "Presence" ) ) {
                 public Panel getPanel( String id ) {
@@ -139,24 +157,6 @@ public class SocialPanel extends AbstractUpdatablePanel {
             };
             tabs.add( tab );
         }*/
-        if ( showTabs.contains( USER ) ) {
-            AbstractTab tab = new AbstractTab( new Model<String>( "About Me") ) {
-                public Panel getPanel( String id ) {
-                    userProfilePanel = new UserInfoPanel( id, SocialPanel.this, collapsible );
-                    return userProfilePanel;
-                }
-            };
-            tabs.add( tab );
-        }
-        if ( showTabs.contains( PARTICIPATION ) ) {
-            AbstractTab tab = new AbstractTab( new Model<String>( "What I do" ) ) {
-                public Panel getPanel( String id ) {
-                    userParticipationPanel = new UserParticipationPanel( id, SocialPanel.this, collapsible );
-                    return userParticipationPanel;
-                }
-            };
-            tabs.add( tab );
-        }
       return tabs;
     }
 

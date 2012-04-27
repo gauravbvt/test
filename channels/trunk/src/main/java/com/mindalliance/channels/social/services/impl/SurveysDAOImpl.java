@@ -342,6 +342,42 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     @Override
     @Transactional( readOnly = true )
+    public int getOptionalQuestionCount( RFI rfi ) {
+        return getOptionalQuestions( rfi ).size();
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public int getOptionalAnswersCount( RFI rfi ) {
+        int count = 0;
+        for ( Question question : getOptionalQuestions( rfi )) {
+            AnswerSet answerSet = answerSetService.findAnswers( rfi, question );
+            if ( answerSet != null ) count++;
+        }
+        return count;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Question> getOptionalQuestions( RFI rfi ) {
+        RFISurvey survey = rfi.getRfiSurvey();
+        rfiSurveyService.refresh( survey );
+        Questionnaire questionnaire = survey.getQuestionnaire();
+        return (List<Question>)CollectionUtils.select(
+                questionnaire.getQuestions(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Question question = (Question)object;
+                        questionService.refresh( question );
+                        return !question.isAnswerRequired();
+                    }
+                }
+        );
+    }
+
+
+    @Override
+    @Transactional( readOnly = true )
     public String findResponseMetrics( Plan plan, final RFISurvey rfiSurvey ) {
         List<RFI> surveyedRFIs = rfiService.select( plan, rfiSurvey );
         Integer[] counts = new Integer[3];

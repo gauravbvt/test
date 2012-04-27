@@ -206,7 +206,7 @@ public class Questionnaire extends AbstractPersistentPlanObject {
                 + " \""
                 + issue.getAbout().getLabel()
                 + "\" "
-                + "[" + mo.getId() + "]"
+                // + "[" + mo.getId() + "]"
                 + ( mo.isSegmentObject()
                 ? ( " in \"" + ( (SegmentObject) mo ).getSegment().getName() + "\"" )
                 : "" );

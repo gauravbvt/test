@@ -122,6 +122,22 @@ public interface SurveysDAO {
      */
     int getRequiredAnswersCount( RFI rfi );
 
+    /**
+     * Get count of optional questions in an rfi.
+     *
+     * @param rfi an RFI
+     * @return and int
+     */
+    int getOptionalQuestionCount( RFI rfi );
+
+    /**
+     * Get count of optional answers given in an rfi.
+     *
+     * @param rfi an RFI
+     * @return and int
+     */
+    int getOptionalAnswersCount( RFI rfi );
+
     String findResponseMetrics( Plan plan, final RFISurvey rfiSurvey );
 
     /**

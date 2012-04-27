@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.surveys;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.model.rfi.RFI;
@@ -24,11 +25,13 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
+ * Panel showing an RFI to a user.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -46,14 +49,13 @@ public class RFIPanel extends AbstractUpdatablePanel {
     @SpringBean
     private RFIForwardService rfiForwardService;
 
-    private Label headerLabel;
-
     WebMarkupContainer rfiContainer;
     /**
      * Modal dialog window.
      */
     private ModalWindow dialogWindow;
     private AjaxLink<String> declineButton;
+    private WebMarkupContainer headerContainer;
 
 
     public RFIPanel( String id, IModel<RFI> rfiModel ) {
@@ -68,7 +70,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
         addHeader();
         addAnswerSetsPanel();
         addDeclineButton();
-        addForwardButton();
+        addForwarding();
     }
 
     private void addModalDialog(
@@ -118,9 +120,67 @@ public class RFIPanel extends AbstractUpdatablePanel {
 
 
     private void addHeader() {
-        headerLabel = new Label( "rfiHeader", getHeaderString() );
+        RFI rfi = getRFI();
+        headerContainer = new WebMarkupContainer( "header" );
+        headerContainer.setOutputMarkupId( true );
+        // name
+        Label headerLabel = new Label( "name", getHeaderString() );
         headerLabel.setOutputMarkupId( true );
-        rfiContainer.addOrReplace( headerLabel );
+        headerContainer.addOrReplace( headerLabel );
+        // sent by
+        Label sentByLabel = new Label( "sentBy", getSentBy() );
+        headerContainer.add( sentByLabel );
+        // deadline
+        Label deadlineLabel = new Label( "deadline", getDeadline() );
+        headerContainer.add( deadlineLabel );
+        // completion
+        Label sentCompletion = new Label( "completion", getCompletion() );
+        headerContainer.add( sentCompletion );
+
+        rfiContainer.addOrReplace(  headerContainer );
+    }
+
+    private String getSentBy() {
+        String sentBy = getRFI().getRfiSurvey().getUsername();
+        return "Sent by " + getUserFullName( sentBy );
+    }
+
+    private String getDeadline() {
+        Date deadline = getRFI().getDeadline();
+        long delta = deadline.getTime() - new Date( ).getTime();
+        String interval = ChannelsUtils.getShortTimeIntervalString( delta );
+        return delta < 0 ? "Overdue by " : "Due in " + interval;
+    }
+
+    private String getCompletion() {
+        RFI rfi = getRFI();
+        int requiredQuestionsCount = surveysDAO.getRequiredQuestionCount( rfi );
+        int requiredAnswersCount = surveysDAO.getRequiredAnswersCount( rfi );
+        int optionalQuestionsCount = surveysDAO.getOptionalQuestionCount( rfi );
+        int optionalAnswersCount = surveysDAO.getOptionalAnswersCount( rfi );
+        int percent =  ( requiredAnswersCount / requiredQuestionsCount ) * 100;
+        StringBuilder sb = new StringBuilder(  );
+        sb.append( percent )
+                .append( "% done: " );
+        if ( requiredQuestionsCount != 0 ) {
+            sb.append( "Missing " )
+                    .append( requiredQuestionsCount - requiredAnswersCount )
+                    .append( " out of " )
+                    .append( requiredQuestionsCount )
+                    .append( " required " )
+                    .append( requiredQuestionsCount > 1 ? "answers" : "answer" )
+                    .append( ". " );
+        }
+        if ( optionalQuestionsCount != 0 ) {
+            sb.append(  "Missing " )
+                .append( optionalQuestionsCount - optionalAnswersCount )
+                    .append( " out of " )
+                    .append( optionalQuestionsCount )
+                    .append( " optional " )
+                    .append( optionalQuestionsCount > 1 ? "answers" : "answer" )
+                    .append( "." );
+        }
+        return sb.toString();
     }
 
     private String getHeaderString() {
@@ -141,7 +201,9 @@ public class RFIPanel extends AbstractUpdatablePanel {
         return sb.toString();
     }
 
-    private void addForwardButton() {
+    private void addForwarding() {
+        boolean canForward = getRFI().getRfiSurvey().isCanBeForwarded();
+        // button
         AjaxLink<String> forwardButton = new AjaxLink<String>( "forward" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -153,11 +215,16 @@ public class RFIPanel extends AbstractUpdatablePanel {
             }
         };
         forwardButton.setOutputMarkupId( true );
+        forwardButton.setVisible( canForward );
         rfiContainer.addOrReplace( forwardButton );
+        // can't forward notice
+        Label cantForwardLabel = new Label( "cantForward", "This survey can not be forwarded" );
+        cantForwardLabel.setVisible( !canForward ) ;
+        rfiContainer.add( cantForwardLabel );
     }
 
     private void addAnswerSetsPanel() {
-        rfiContainer.add( new Label("answers", "UNDER CONSTRUCTION") );
+        rfiContainer.add( new Label("answers", "ANSWERS FORM UNDER CONSTRUCTION") );
         // todo
     }
 

@@ -164,6 +164,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         rfiSurveyContainer.add( new Label(
                 "rfiSurveyLabel",
                 new PropertyModel<String>( this, "rfiSurveyLabel" ) ) );
+        // activate
         AjaxLink<String> activateButton = new AjaxLink<String>( "activate" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -186,11 +187,23 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         activateButton.setVisible( selectedRFISurvey != null
                 && !selectedRFISurvey.isObsolete( getQueryService(), getAnalyst() ) );
         rfiSurveyContainer.add( activateButton );
+        // can forward
+        AjaxCheckBox canForwardCheckBox = new AjaxCheckBox(
+                "canForward",
+                new PropertyModel<Boolean>( this, "canBeForwarded" ) ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                //do nothing
+            }
+        };
+        rfiSurveyContainer.add( canForwardCheckBox );
+        // rfi panel
         rfiSurveyContainer.add( selectedRFISurvey == null
                 ? new Label( "rfiSurvey", "" )
                 : new RFISurveyPanel(
                 "rfiSurvey",
                 new Model<RFISurvey>( selectedRFISurvey ) ) );
+
         addOrReplace( rfiSurveyContainer );
     }
 
@@ -258,6 +271,17 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
 
     private int getAnsweredCount( RFISurvey rfiSurvey ) {
         return surveysDAO.findAnsweringRFIs( getPlan(), rfiSurvey ).size();
+    }
+
+    public boolean isCanBeForwarded() {
+        return selectedRFISurvey != null && selectedRFISurvey.isCanBeForwarded();
+    }
+
+    public void setCanBeForwarded( boolean val ) {
+        if ( selectedRFISurvey != null ) {
+            selectedRFISurvey.setCanBeForwarded( val );
+            rfiSurveyService.save( selectedRFISurvey );
+        }
     }
 
     @Override

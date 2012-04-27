@@ -30,6 +30,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
     @ManyToOne
     private Questionnaire questionnaire;
     private boolean closed = false;
+    private boolean canBeForwarded = true;
     private Date deadline;
     // Questionnaire's about.
     private String about;
@@ -74,6 +75,14 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
 
     public void setClosed( boolean closed ) {
         this.closed = closed;
+    }
+
+    public boolean isCanBeForwarded() {
+        return canBeForwarded;
+    }
+
+    public void setCanBeForwarded( boolean canBeForwarded ) {
+        this.canBeForwarded = canBeForwarded;
     }
 
     public List<RFI> getRfis() {
