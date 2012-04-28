@@ -89,8 +89,10 @@ public class ModelObjectSurveysPanel extends FloatingCommandablePanel {
         List<SurveyWrapper> surveyWrappers = new ArrayList<SurveyWrapper>();
         Set<Questionnaire> questionnairesUsed = new HashSet<Questionnaire>();
         for ( RFISurvey survey : rfiSurveyService.select( getPlan(), getModelObject() ) ) {
-            surveyWrappers.add( new SurveyWrapper( survey ) );
-            questionnairesUsed.add( survey.getQuestionnaire() );
+            if ( !survey.getQuestionnaire().isIssueRemediation() ) {
+                surveyWrappers.add( new SurveyWrapper( survey ) );
+                questionnairesUsed.add( survey.getQuestionnaire() );
+            }
         }
         for ( Questionnaire questionnaire : questionnaireService.findApplicableQuestionnaires(
                 getPlan(),

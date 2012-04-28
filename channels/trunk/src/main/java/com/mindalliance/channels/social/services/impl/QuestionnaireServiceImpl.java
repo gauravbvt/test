@@ -61,6 +61,7 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
         criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
         criteria.add( Restrictions.eq( "about", modelObject.getClassLabel() ) );
         criteria.add( Restrictions.eq( "status", Questionnaire.Status.ACTIVE ) );
+        criteria.add( Restrictions.isNull( "remediatedModelObjectRefString" ) );
         criteria.addOrder( Order.desc( "created" ) );
         return (List<Questionnaire>) criteria.list();
     }

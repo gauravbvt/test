@@ -39,6 +39,7 @@ public interface RFIForwardService extends GenericSqlService<RFIForward, Long> {
      * @param rfi an rfi
      * @param forwardedTo  a list of strings
      * @param message a string
+     * @return a list of string (the new emails the RFI has been forwarded to
      */
-    void forwardRFI( Plan plan, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message );
+    List<String> forwardRFI( Plan plan, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message );
 }

@@ -17,7 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/** Implementation of the RFIForward service.
+/**
+ * Implementation of the RFIForward service.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -34,10 +35,10 @@ public class RFIForwardServiceImpl extends GenericSqlServiceImpl<RFIForward, Lon
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "rfi", rfi ) );
-        List<RFIForward> forwards = ( List<RFIForward>)criteria.list();
-        Set<String> usernames = new HashSet<String>(  );
-        for ( RFIForward forward : forwards) {
-            usernames.add(  forward.getUsername() );
+        List<RFIForward> forwards = (List<RFIForward>) criteria.list();
+        Set<String> usernames = new HashSet<String>();
+        for ( RFIForward forward : forwards ) {
+            usernames.add( forward.getUsername() );
         }
         return new ArrayList<String>( usernames );
     }
@@ -49,20 +50,27 @@ public class RFIForwardServiceImpl extends GenericSqlServiceImpl<RFIForward, Lon
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "rfi", rfi ) );
-        List<RFIForward> forwards = ( List<RFIForward>)criteria.list();
-        Set<String> fullNames = new HashSet<String>(  );
-        for ( RFIForward forward : forwards) {
-            fullNames.add( forward.getForwardToEmail() );
+        List<RFIForward> forwards = (List<RFIForward>) criteria.list();
+        Set<String> emails = new HashSet<String>();
+        for ( RFIForward forward : forwards ) {
+            emails.add( forward.getForwardToEmail() );
         }
-        return new ArrayList<String>( fullNames );
+        return new ArrayList<String>( emails );
     }
 
     @Override
     @Transactional
-    public void forwardRFI( Plan plan, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message ) {
+    public List<String> forwardRFI( Plan plan, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message ) {
+        List<String> alreadyForwardedTo = findForwardedTo( rfi );
+        List<String> actualForwards = new ArrayList<String>(  );
         for ( String email : forwardedTo ) {
-            RFIForward forward = new RFIForward( plan, user, rfi, email, message  );
-            save( forward );
+            if ( !alreadyForwardedTo.contains( email ) ) {
+                RFIForward forward = new RFIForward( plan, user, rfi, email, message );
+                actualForwards.add( email );
+                alreadyForwardedTo.add( email );
+                save( forward );
+            }
         }
+        return actualForwards;
     }
 }

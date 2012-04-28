@@ -9,11 +9,10 @@
 <wicket:panel>
     <div class="dialog">
         <h3>Forward survey &quot;<span wicket:id="surveyName">survey name</span>&quot;? </h3>
+        <div wicket:id="alreadyForwardedTo">ALready forwarded to so and so</div>
         <label for="emails">List email addresses separated by commas</label>
         <textarea wicket:id="emails" id="emails" rows="3" cols="60">something</textarea>
-        <div wicket:id="invalidsContainer" class="error">Invalid email addresses:
-            <span wicket:id="invalids">email, email</span>
-        </div>
+        <div wicket:id="invalids">email, email</div>
         <label for="message">Add a short message</label>
         <textarea wicket:id="message" id="message" rows="3" cols="60">something</textarea>
         <div>

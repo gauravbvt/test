@@ -31,6 +31,7 @@ public interface QuestionnaireService extends GenericSqlService<Questionnaire, L
 
     /**
      * Find all questionnaires that can be used in surveys about a model object.
+     * Exclude issue remediation questionnaires.
      *
      * @param plan        a plan
      * @param modelObject a model object

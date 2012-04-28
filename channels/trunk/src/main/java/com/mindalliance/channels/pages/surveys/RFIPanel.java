@@ -136,8 +136,18 @@ public class RFIPanel extends AbstractUpdatablePanel {
         // completion
         Label sentCompletion = new Label( "completion", getCompletion() );
         headerContainer.add( sentCompletion );
+        // forwarded to
+        String emails = getForwardedTo();
+        Label forwardedTo = new Label( "forwardedTo", emails );
+        forwardedTo.setVisible( !emails.isEmpty() );
+        headerContainer.add( forwardedTo );
 
-        rfiContainer.addOrReplace(  headerContainer );
+        rfiContainer.addOrReplace( headerContainer );
+    }
+
+    private String getForwardedTo() {
+        String emails = StringUtils.join( rfiForwardService.findForwardedTo( getRFI() ), ", ");
+        return emails.isEmpty() ? "" : "Forwarded to " + emails;
     }
 
     private String getSentBy() {
@@ -147,7 +157,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
 
     private String getDeadline() {
         Date deadline = getRFI().getDeadline();
-        long delta = deadline.getTime() - new Date( ).getTime();
+        long delta = deadline.getTime() - new Date().getTime();
         String interval = ChannelsUtils.getShortTimeIntervalString( delta );
         return delta < 0 ? "Overdue by " : "Due in " + interval;
     }
@@ -158,8 +168,8 @@ public class RFIPanel extends AbstractUpdatablePanel {
         int requiredAnswersCount = surveysDAO.getRequiredAnswersCount( rfi );
         int optionalQuestionsCount = surveysDAO.getOptionalQuestionCount( rfi );
         int optionalAnswersCount = surveysDAO.getOptionalAnswersCount( rfi );
-        int percent =  ( requiredAnswersCount / requiredQuestionsCount ) * 100;
-        StringBuilder sb = new StringBuilder(  );
+        int percent = ( requiredAnswersCount / requiredQuestionsCount ) * 100;
+        StringBuilder sb = new StringBuilder();
         sb.append( percent )
                 .append( "% done: " );
         if ( requiredQuestionsCount != 0 ) {
@@ -172,8 +182,8 @@ public class RFIPanel extends AbstractUpdatablePanel {
                     .append( ". " );
         }
         if ( optionalQuestionsCount != 0 ) {
-            sb.append(  "Missing " )
-                .append( optionalQuestionsCount - optionalAnswersCount )
+            sb.append( "Missing " )
+                    .append( optionalQuestionsCount - optionalAnswersCount )
                     .append( " out of " )
                     .append( optionalQuestionsCount )
                     .append( " optional " )
@@ -219,12 +229,12 @@ public class RFIPanel extends AbstractUpdatablePanel {
         rfiContainer.addOrReplace( forwardButton );
         // can't forward notice
         Label cantForwardLabel = new Label( "cantForward", "This survey can not be forwarded" );
-        cantForwardLabel.setVisible( !canForward ) ;
+        cantForwardLabel.setVisible( !canForward );
         rfiContainer.add( cantForwardLabel );
     }
 
     private void addAnswerSetsPanel() {
-        rfiContainer.add( new Label("answers", "ANSWERS FORM UNDER CONSTRUCTION") );
+        rfiContainer.add( new Label( "answers", "ANSWERS FORM UNDER CONSTRUCTION" ) );
         // todo
     }
 
@@ -265,6 +275,8 @@ public class RFIPanel extends AbstractUpdatablePanel {
                 String message = (String) change.getQualifier( "message" );
                 List<String> forwardedTo = forwardRFI( emails, message );
                 if ( !forwardedTo.isEmpty() ) {
+                    addHeader();
+                    target.add( headerContainer );
                     target.appendJavaScript( "alert(' Survey forwarded to " + StringUtils.join( forwardedTo, ", " ) + "');" );
                 }
                 hideDialog( target );
@@ -281,8 +293,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
                 validatedEmails.add( email );
         }
         List<String> forwardedTo = new ArrayList<String>( validatedEmails );
-        rfiForwardService.forwardRFI( getPlan(), getUser(), getRFI(), forwardedTo, message );
-        return forwardedTo;
+        return rfiForwardService.forwardRFI( getPlan(), getUser(), getRFI(), forwardedTo, message );
     }
 
     private RFI getRFI() {
@@ -374,7 +385,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
         private List<String> invalidEmails;
         private List<String> validEmails;
         private AjaxLink<String> doItButton;
-        private WebMarkupContainer invalidsContainer;
+        private Label invalidsLabel;
 
         private ForwardRFIPanel( String id, IModel<RFI> rfiModel ) {
             super( id, rfiModel );
@@ -384,11 +395,19 @@ public class RFIPanel extends AbstractUpdatablePanel {
 
         private void initialize() {
             addSurveyName();
+            addAlreadyForwardedTo();
             addEmailsText();
             addMessage();
             addInvalids();
             addDoItButton();
             addCancelButton();
+        }
+
+        private void addAlreadyForwardedTo() {
+            String already = StringUtils.join( rfiForwardService.findForwardedTo( getRFI() ), ", " );
+            Label alreadyForwardedTo = new Label( "alreadyForwardedTo", "Already forwarded to " + already );
+            add( alreadyForwardedTo );
+            alreadyForwardedTo.setVisible( !already.isEmpty() );
         }
 
         private void addSurveyName() {
@@ -400,23 +419,31 @@ public class RFIPanel extends AbstractUpdatablePanel {
             TextArea<String> emailsArea = new TextArea<String>(
                     "emails",
                     new PropertyModel<String>( this, "emails" ) );
-            emailsArea.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            emailsArea.add( new AjaxFormComponentUpdatingBehavior( "onkeyup" ) {
                 @Override
                 protected void onUpdate( AjaxRequestTarget target ) {
-                    addInvalids();
-                    target.add( invalidsContainer );
+                    // addInvalids();
+                    target.add( invalidsLabel );
+                }
+            } );
+            emailsArea.add( new AjaxFormComponentUpdatingBehavior( "onblur" ) {
+                @Override
+                protected void onUpdate( AjaxRequestTarget target ) {
+                    // addInvalids();
+                    target.add( invalidsLabel );
                 }
             } );
             add( emailsArea );
         }
 
         private void addInvalids() {
-            invalidsContainer = new WebMarkupContainer( "invalidsContainer" );
-            invalidsContainer.setOutputMarkupId( true );
-            String invalids = invalidEmails == null ? "" : StringUtils.join( invalidEmails,", " );
-            invalidsContainer.add( new Label( "invalids", invalids ) );
-            makeVisible( invalidsContainer, !invalids.isEmpty() );
-            addOrReplace( invalidsContainer );
+            invalidsLabel = new Label( "invalids", new PropertyModel<String>( this, "invalids" ) );
+            invalidsLabel.setOutputMarkupId( true );
+            add( invalidsLabel );
+        }
+
+        public String getInvalids() {
+            return invalidEmails == null || invalidEmails.isEmpty() ? "" : "Not valid: " + StringUtils.join( invalidEmails, ", " );
         }
 
         private void addMessage() {
@@ -436,10 +463,14 @@ public class RFIPanel extends AbstractUpdatablePanel {
             doItButton = new AjaxLink<String>( "doIt" ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
-                    Change change = new Change( Change.Type.Updated, rfi, "forwarded" );
-                    change.addQualifier( "emails", StringUtils.join( validEmails, "," ) );
-                    change.addQualifier( "message", message );
-                    update( target, change );
+                    if ( !getInvalids().isEmpty() ) {
+                        target.appendJavaScript( "alert('" + getInvalids() + "');" );
+                    } else {
+                        Change change = new Change( Change.Type.Updated, rfi, "forwarded" );
+                        change.addQualifier( "emails", StringUtils.join( validEmails, "," ) );
+                        change.addQualifier( "message", message );
+                        update( target, change );
+                    }
                 }
             };
             doItButton.setOutputMarkupId( true );
@@ -467,8 +498,8 @@ public class RFIPanel extends AbstractUpdatablePanel {
 
         private void validateEmails() {
             if ( getEmails() != null ) {
-                validEmails = new ArrayList<String>(  );
-                invalidEmails = new ArrayList<String>(  );
+                validEmails = new ArrayList<String>();
+                invalidEmails = new ArrayList<String>();
                 EmailValidator emailValidator = EmailValidator.getInstance();
                 for ( String email : StringUtils.split( getEmails(), "," ) ) {
                     if ( emailValidator.isValid( email ) ) {
