@@ -29,9 +29,6 @@ public interface GenericDao<T, ID extends Serializable> {
     List<T> list();
 
     @Transactional
-    List<T> findByExample( T exampleInstance, String... excludeProperty );
-
-    @Transactional
     T save( T entity );
 
     @Transactional

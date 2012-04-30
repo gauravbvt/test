@@ -19,6 +19,15 @@
     border-radius: 0;
 }
 
+.ui-input-text {
+    display: block !important;
+    width: 100% !important;
+}
+
+.ui-field-contain .ui-input-search {
+    display: block !important;
+    width: auto !important;
+}
 .m-twitter {
     background: url("../images/twitter.png") no-repeat transparent;
     padding-left: 20px;

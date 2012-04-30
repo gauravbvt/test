@@ -18,9 +18,11 @@
     <div data-role="content"data-theme="c">
 
         <div class="search-plays" data-role="fieldcontain">
-            <label for="search" class="ui-hidden-accessible">Search:</label>
-            <input wicket:id="search" name="search" data-type="search" type="text"
-                   placeholder="Search plays..."/>
+            <form wicket:id="form">
+                <label for="search" class="ui-hidden-accessible">Search:</label>
+                <input wicket:id="search" name="search" data-type="search" type="text"
+                       placeholder="Search plays..."/>
+            </form>
         </div>
         
         <ul wicket:id="list" data-role="listview">

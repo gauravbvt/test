@@ -22,7 +22,7 @@
                     $( "form ul" ).sortable({  
                         items: '.step'
                                             });
-                    $( "form ul li" ).disableSelection();
+//                    $( "form ul li" ).disableSelection();
                 });
             </script>
             <ul data-role="listview">
@@ -42,10 +42,9 @@
                     </div>
                     <div data-role="fieldcontain">
                         <label for="schedule" class="ui-hidden-accessible">Do this:</label>
-                        <input id="schedule" type="button" value="Do anytime" >
+                        <input id="schedule" type="text" value="Do anytime" >
                     </div>
                 </li>
-                <li data-role="list-divider">Steps</li>
                 <li class="step" wicket:id="steps"><span wicket:id="step">A step</span></li>
             </ul>
 

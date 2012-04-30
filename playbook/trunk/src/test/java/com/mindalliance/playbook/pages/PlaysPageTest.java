@@ -48,6 +48,7 @@ public class PlaysPageTest extends AbstractPageTest {
         List<Play> plays = new ArrayList<Play>();
         plays.add( oldPlay );
         when( playbook.getPlays() ).thenReturn( plays );
+        when( playDao.find( "" ) ).thenReturn( plays );
         when( playDao.load( 0L ) ).thenReturn( newPlay );
         
         context.putBean( account );
@@ -62,12 +63,15 @@ public class PlaysPageTest extends AbstractPageTest {
     @Test
     public void addPlay() {
         tester.startPage( getTestedClass() );
+        
+        // For coverage...
+        PlaysPage p = (PlaysPage) tester.getLastRenderedPage();
+        p.setFilteredPlays( null );
+
         tester.clickLink( "addPlay" );
         tester.assertRenderedPage( EditPlay.class );
-
+        
         verify( playDao ).save( (Play) notNull() );
-        verify( oldPlay ).getTitle();
-        verify( oldPlay ).getTagString();
     }
     
     /**
@@ -79,6 +83,8 @@ public class PlaysPageTest extends AbstractPageTest {
         tester.assertBookmarkablePageLink( "settingsLink", Settings.class, new PageParameters() );
         tester.assertBookmarkablePageLink( "todos", TodoPage.class, new PageParameters() );
         tester.assertBookmarkablePageLink( "messages", MessagesPage.class, new PageParameters() );
-        tester.assertBookmarkablePageLink( "playbook.plays:0:editlink", EditPlay.class, new PageParameters().add( "id", 123L ) );
+        tester.assertBookmarkablePageLink( "list:filteredPlays:0:editlink", EditPlay.class, 
+            new PageParameters().add( "id", 
+            123L ) );
     }
 }

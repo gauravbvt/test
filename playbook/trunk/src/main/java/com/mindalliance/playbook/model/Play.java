@@ -148,7 +148,7 @@ public class Play implements Serializable {
         List<Tag> list = new ArrayList<Tag>( tags );
         Collections.sort( list );
 
-        for ( Tag tag : tags ) {
+        for ( Tag tag : list ) {
             if ( sb.length() > 0 )
                 sb.append( ", " );
             sb.append( tag.getName() );

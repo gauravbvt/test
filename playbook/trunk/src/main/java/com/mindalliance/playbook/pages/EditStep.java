@@ -76,8 +76,7 @@ public class EditStep extends NavigablePage {
 
         detailsDiv = new WebMarkupContainer( "detailsDiv" );
 
-        final Component title = new Label( "hTitle", new PropertyModel<String>( model, "step.title" ) )
-            .setOutputMarkupId( true );
+        final Component title = new Label( "hTitle", "Edit step" );
 
         confirmButton = new AjaxButton( "confirm", new PropertyModel<String>( this, "status" ) ) {
             @Override

@@ -82,7 +82,7 @@ public class Settings extends NavigablePage {
 
         add( new BookmarkablePageLink( "home", PlaysPage.class ),
 
-             form.add( new Label( "userId" ),
+             form.add( new Label( "owner.fullName" ),
                        new Label( "contacts.size" ),
                        new CheckBox( "viewByTags" ),
                        new CheckBox( "showInactive" ),

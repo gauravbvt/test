@@ -13,10 +13,6 @@ public abstract class NavigablePage extends MobilePage {
 
     private static final long serialVersionUID = 6042783408505087087L;
 
-    protected NavigablePage() {
-        init();
-    }
-    
     protected NavigablePage( PageParameters parameters ) {
         super( parameters );
         init();

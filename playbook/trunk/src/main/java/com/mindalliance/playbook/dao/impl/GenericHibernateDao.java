@@ -15,7 +15,6 @@ import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Example;
 import org.hibernate.search.FullTextQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,18 +44,6 @@ abstract class GenericHibernateDao<T, ID extends Serializable> implements Generi
     @Override
     public void delete( T entity ) {
         getSession().delete( deproxy( entity ) );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    @Override
-    public List<T> findByExample( T exampleInstance, String... excludeProperty ) {
-        Criteria crit = getSession().createCriteria( persistentClass );
-        Example example = Example.create( deproxy( exampleInstance ) );
-        for ( String exclude : excludeProperty )
-            example.excludeProperty( exclude );
-
-        crit.add( example );
-        return (List<T>) crit.list();
     }
 
     @Override

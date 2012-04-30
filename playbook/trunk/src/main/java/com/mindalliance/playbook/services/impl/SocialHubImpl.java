@@ -362,8 +362,8 @@ public class SocialHubImpl implements InitializingBean, SocialHub, SignInAdapter
             } catch ( MalformedURLException ignored ) {
                 LOG.error( "Invalid URL: {}", url );
 
-            } catch ( IOException e ) {
-                LOG.error( "Unable to read image", e );
+            } catch ( IOException ignored ) {
+                LOG.debug( "Unable to read image: {}", url );
             }
         }
 
@@ -637,11 +637,13 @@ public class SocialHubImpl implements InitializingBean, SocialHub, SignInAdapter
                 contact.setPhoto( new ImageAdapter( profilePictureUrl ).getBytes() );
 
             if ( fullProfile != null ) {
-                for ( Position position : fullProfile.getPositions() )
-                    if ( position.getIsCurrent() ) {
-                        contact.setOrganization( position.getCompany().getName() );
-                        contact.setTitle( position.getTitle() );
-                    }
+                List<Position> positions = fullProfile.getPositions();
+                if ( positions != null )
+                    for ( Position position : positions )
+                        if ( position.getIsCurrent() ) {
+                            contact.setOrganization( position.getCompany().getName() );
+                            contact.setTitle( position.getTitle() );
+                        }
 
                 List<ImAccount> imAccounts = fullProfile.getImAccounts();
                 if ( imAccounts != null )

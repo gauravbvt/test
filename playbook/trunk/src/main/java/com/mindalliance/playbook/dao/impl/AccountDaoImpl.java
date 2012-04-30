@@ -68,7 +68,9 @@ public class AccountDaoImpl extends GenericHibernateDao<Account,Long> implements
     @Override
     public Account findByUserKey( String userKey ) {
         StringTokenizer t = new StringTokenizer( userKey, ":|" );
-        return findByUserId( t.nextToken(), t.nextToken() );       
+        String providerId = t.nextToken();
+        return t.hasMoreTokens() ? findByUserId( providerId, t.nextToken() )
+                                 : findByUserId( "pb", providerId );
     }
 
     @Override
@@ -156,7 +158,7 @@ public class AccountDaoImpl extends GenericHibernateDao<Account,Long> implements
 
         private final Account account;
 
-        public AccountDetails( Account account ) {
+        private AccountDetails( Account account ) {
             this.account = account;
         }
 

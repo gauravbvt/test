@@ -79,6 +79,7 @@ public class EditPlay extends NavigablePage {
                     @Override
                     public void onClick() {
                         Task step = new Task( play );
+                        step.setTitle( "Unnamed" );
                         play.addStep( step );
 
                         List<Step> steps = play.getSteps();

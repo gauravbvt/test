@@ -7,6 +7,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.StatelessLink;
@@ -48,15 +49,16 @@ public class PlaysPage extends NavigablePage {
         add(
             new BookmarkablePageLink<TodoPage>( "home", TodoPage.class ),
             new Label( "title", new PropertyModel<String>( this, "pageTitle" ) ),
-            new TextField<String>(
+            new Form<String>( "form" ).add( new TextField<String>(
                 "search", new PropertyModel<String>( this, "searchTerm" ) ).add(
-                new AjaxFormComponentUpdatingBehavior( "onblur" ) {
+                new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     @Override
                     protected void onUpdate( AjaxRequestTarget target ) {
                         target.add( list );
                         target.appendJavaScript( "$('#" + list.getMarkupId() + "').listview();" );
                     }
-                } ),
+                } ) ),
+            
 
             list.add(
                 new ListView<Play>(

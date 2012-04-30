@@ -47,7 +47,6 @@ public class StepItem extends Panel {
                             "playTitle",
                             step.getPlay().getTitle() ) ).setVisible( showPlay ),
 
-                    new Label( "sequence", String.valueOf( step.getSequence() ) ),
                     new Label( "title", step.getTitle() ),
                     new Label( "summary", getSummary( step ) ),
                     new Label( "description", step.getDescription() ) ),
@@ -65,7 +64,7 @@ public class StepItem extends Panel {
 
         default:
         case TASK:
-            return step.getDescription();
+            return "";
 
         case SEND:
         case RECEIVE:

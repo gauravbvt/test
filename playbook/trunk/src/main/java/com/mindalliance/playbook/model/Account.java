@@ -80,6 +80,7 @@ public class Account implements Serializable, Timestamped {
         playbooks = new ArrayList<Playbook>();
 
         contacts = new ArrayList<Contact>();
+        contact.setMain( true );
         addContact( contact );
 
         playbooks.add( new Playbook( this, contact ) );

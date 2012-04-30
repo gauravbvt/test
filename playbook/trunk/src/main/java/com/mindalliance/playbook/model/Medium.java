@@ -183,23 +183,14 @@ public abstract class Medium implements Serializable {
 
     @Override
     public boolean equals( Object obj ) {
-        if ( this == obj )
-            return true;
-        if ( obj == null || getClass() != obj.getClass() )
-            return false;
-
-        Medium medium = (Medium) obj;
-
-        return getAddress().equals( medium.getAddress() ) 
-            && ( type == null ? medium.getType() == null :
-                                type.equals( medium.getType() ) );
+        return this == obj 
+            || obj != null 
+               && getClass() == obj.getClass()
+               && getActionUrl().equals( ( (Medium) obj ).getAddress() );
     }
 
     @Override
     public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
-        result = 31 * result + getMediumType().hashCode();
-        result = 31 * result + getAddress().hashCode();
-        return result;
+        return getAddress().hashCode();
     }
 }
