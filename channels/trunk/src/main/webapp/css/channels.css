@@ -437,10 +437,17 @@ div.issues div.section-title ul.menu li a:hover {
 
 div.issues ol li table span a.menubar {
     background: none repeat scroll 0 0 #8b0000;
-    border-radius: 5px 5px 5px 5px;
     color: #FFFFFF;
-    padding: 5px;
-    text-transform: capitalize;
+    font-family: Lucida Console,monospace;
+    padding: 3px 5px;
+    text-transform: uppercase;
+    border: 1px solid #ffffff;
+}
+
+div.issues ol li table span a.menubar:hover {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #8B0000;
+    color: #8B0000;
 }
 
 
@@ -2130,7 +2137,7 @@ span.none,
 /* ----- Sends and Receives Channels ----- */
 
 span.channels-summary {
-    background: none repeat scroll 0 0 #CCD3E5;
+    background: none repeat scroll 0 0 #E4EEFE;
     border: 1px solid #999999;
     border-radius: 5px 5px 5px 5px;
     color: #333333;
