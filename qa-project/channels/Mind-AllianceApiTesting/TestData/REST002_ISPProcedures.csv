@@ -7,3 +7,13 @@ agentName,A special ops
 hasUniqueIdentity,false
 isAnonymous,false
 kind,actual
+eventId,8
+phaseId,3
+taskName,Detecting threats
+taskKind,mitigate risk
+environmentEventID,2
+envirnomentName,Attack suspected
+environmentIncident,true
+environmentSelfTerminating,false
+environmentLocationId,110
+environmentPlannedPhaseId,3
