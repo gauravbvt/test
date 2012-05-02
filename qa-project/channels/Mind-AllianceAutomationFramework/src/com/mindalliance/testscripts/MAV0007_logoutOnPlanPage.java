@@ -25,8 +25,7 @@ public class MAV0007_logoutOnPlanPage
 			  // Call login()
 			  GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			  
-			  if (GlobalVariables.bIsSuccess) {
-				  
+			  if (GlobalVariables.bIsSuccess) {				  
 				  // Click on 'Information Sharing Model' link
 				  GlobalVariables.iStepNo++ ;
 				  GlobalVariables.sDescription = "Navigated to Information Sharing Model";
@@ -46,15 +45,11 @@ public class MAV0007_logoutOnPlanPage
 				  Alert alert=GlobalVariables.oDriver.switchTo().alert();
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(1000); 
+				  Thread.sleep(2000); 
 				  alert.accept();
-			      // Write Results
-				  LogFunctions.writeLogs(GlobalVariables.sDescription);
-				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(2000);  
+				  Thread.sleep(1000);  
 				  // Assertion: Verify that 'Channel information Sharing system' loaded
 				  GlobalVariables.iStepNo++;
 				  GlobalVariables.sDescription = "'Channels Information Sharing Planning' renders";
