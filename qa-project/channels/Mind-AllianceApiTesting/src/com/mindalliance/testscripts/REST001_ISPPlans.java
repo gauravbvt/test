@@ -14,20 +14,94 @@ import junit.framework.TestCase;
 public class REST001_ISPPlans extends TestCase{
 	
 	/**
-	 * Invoke testISPPlan() and get plans, versions and planners identities.
+	 * Invoke testISPPlanIdentifier() and get planners identities.
 	 */
 	public static void testISPPlanIdentifier(){
 		try {
 			LogFunctions.generateLogsDirectory();	
 			GlobalVariables.steps = 0;
-			GlobalVariables.testCaseId = "REST001_ISPPlans";
+			GlobalVariables.testCaseId = "REST001_ISPPlanIdentifier";
 			
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST001_ISPPlans Execution Started");
+			System.out.println("1) Test Case : REST001_ISPPlanIdentifier Execution Started");
 			System.out.println("testISPPlanIdentifier Method");
-			LogFunctions.logDescription(GlobalVariables.steps + ") REST001_ISPPlans Execution Started");
+			LogFunctions.logDescription(GlobalVariables.steps + ") REST001_ISPPlanIdentifier Execution Started");
+			
+			// For managing SSL connections
+			Configurations.validateTrustManager();			
+			// Reading input data from CSV File
+			GlobalVariables.steps++;
+			Configurations.getTestData("REST001_ISPPlans.csv");
+			System.out.println("2) Reading Data From CSV File");
+			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
+
+			// Send Request
+			GlobalVariables.userCredentials=GlobalVariables.testData.get("username")+":"+GlobalVariables.testData.get("password");
+			String data =GlobalVariables.userCredentials;
+			GlobalVariables.steps++;
+			Configurations.sendRequest(data);
+			System.out.println("3) Sending Request");
+			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
+			
+			// Receive Response in XML File (response.xml)
+			GlobalVariables.steps++;
+			Configurations.getResponse();
+			System.out.println("4) Getting Response");
+			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
+					
+			// Assertion: verify that PlanSummary
+			GlobalVariables.steps++;
+			boolean planIdentifierResult;
+			// Verify URI
+			planIdentifierResult=Configurations.parseResponse("planIdentifier","uri",GlobalVariables.testData.get("uri"));	
+			Assert.assertEquals("Plan URI is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")));
+			// Verify Plan Name
+			planIdentifierResult=Configurations.parseResponse("planIdentifier","name",GlobalVariables.testData.get("name"));	
+			Assert.assertEquals("Plan Name is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("name")));
+			// Verify Version
+			planIdentifierResult=Configurations.parseResponse("planIdentifier","version",GlobalVariables.testData.get("version"));
+			Assert.assertEquals("Version is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("version")));
+			// Verify Release
+			planIdentifierResult=Configurations.parseResponse("planIdentifier","release",GlobalVariables.testData.get("release"));
+			Assert.assertEquals("Plan release is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("release")));
+			// Verify Date Versioned
+			planIdentifierResult=Configurations.parseResponse("planIdentifier","dateVersioned",GlobalVariables.testData.get("dateVersioned"));
+			Assert.assertEquals("Date Versioned is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("dateVersioned")));			
+			System.out.println("5) Plan Summary Assertion Pass");
+			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
+
+			// Execution Completed
+			GlobalVariables.steps++;
+			System.out.println("6) Test Case : REST001_ISPPlanIdentifier Execution Completed");
+			System.out.println("");
+			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : REST001_ISPPlanIdentifier Execution Completed");
+			
+		}catch (AssertionError ar) {
+			System.out.println("5)Assertion Failed : ");
+			ar.printStackTrace();
+			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
+		} catch (Exception e) {
+			LogFunctions.logException(e.getMessage());
+		}
+	}
+	
+	/**
+	 * Invoke testISPPlanner() and get planners.
+	 */
+	public static void testISPPlanner(){
+		try {
+			LogFunctions.generateLogsDirectory();	
+			GlobalVariables.steps = 0;
+			GlobalVariables.testCaseId = "REST001_ISPPlanner";
+			
+			// Create Log Files
+			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
+			GlobalVariables.steps++;
+			System.out.println("1) Test Case : REST001_ISPPlanner Execution Started");
+			System.out.println("testISPPlanPlanner Method");
+			LogFunctions.logDescription(GlobalVariables.steps + ") REST001_ISPPlanner Execution Started");
 			
 			// For managing SSL connections
 			Configurations.validateTrustManager();			
@@ -51,32 +125,25 @@ public class REST001_ISPPlans extends TestCase{
 			System.out.println("4) Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
-			boolean planIdentifierResult;
-			
-			// Assertion: verify that PlanSummary
+			// Assertion: verify that Planners
 			GlobalVariables.steps++;
+			boolean planPlannerResult;
 			// Verify URI
-			planIdentifierResult=Configurations.parseResponse("planIdentifier","uri",GlobalVariables.testData.get("uri"));	
-			Assert.assertEquals("Plan URI is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")));
+			planPlannerResult=Configurations.parseResponse("planner","username",GlobalVariables.testData.get("username"));	
+			Assert.assertEquals("Planner UserName",planPlannerResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("username")));
 			// Verify Plan Name
-			planIdentifierResult=Configurations.parseResponse("planSummary","name",GlobalVariables.testData.get("name"));	
-			Assert.assertEquals("Plan Name is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("name")));
+			planPlannerResult=Configurations.parseResponse("planner","fullName",GlobalVariables.testData.get("fullName"));	
+			Assert.assertEquals("Full Name is",planPlannerResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("fullName")));
 			// Verify Version
-			planIdentifierResult=Configurations.parseResponse("planSummary","version",GlobalVariables.testData.get("version"));
-			Assert.assertEquals("Version is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("version")));
-			// Verify Release
-			planIdentifierResult=Configurations.parseResponse("planSummary","release",GlobalVariables.testData.get("release"));
-			Assert.assertEquals("Plan release is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("release")));
-			// Verify Date Versioned
-			planIdentifierResult=Configurations.parseResponse("planSummary","dateVersioned",GlobalVariables.testData.get("dateVersioned"));
-			Assert.assertEquals("Date Versioned is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("dateVersioned")));			
+			planPlannerResult=Configurations.parseResponse("planner","email",GlobalVariables.testData.get("email"));
+			Assert.assertEquals("Email is",planPlannerResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("email")));
 			System.out.println("5) Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
-
+			
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST001_ISPPlans Execution Completed");
-			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : ISP001 Execution Completed");
+			System.out.println("6) Test Case : REST001_ISPPlanner Execution Completed");
+			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : REST001_ISPPlanner Execution Completed");
 			
 		}catch (AssertionError ar) {
 			System.out.println("5)Assertion Failed : ");
