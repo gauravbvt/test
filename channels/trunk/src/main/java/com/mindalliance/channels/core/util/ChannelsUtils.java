@@ -14,12 +14,15 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Tag;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.EmailValidator;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -678,6 +681,19 @@ public final class ChannelsUtils {
             sb.append( seconds > 1 ? "s" : "" );
         }
         return sb.toString();
+    }
+
+    public static String convertTemplate( String template, Object bean ) {
+        StringWriter writer = new StringWriter(  );
+        try {
+            Map<String,Object> context = new HashMap<String, Object>(  );
+            BeanUtils.populate( bean, context );
+            Velocity.evaluate( new VelocityContext( context ), writer, "",  template );
+        } catch ( Exception e ) {
+            LOG.warn( "Invalid templating ", e );
+            return template;
+        }
+        return writer.toString();
     }
 
 }

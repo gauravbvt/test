@@ -147,7 +147,7 @@ public class QuestionPanel extends AbstractUpdatablePanel {
 
     private void addAnswerOptionsPanel() {
         if ( getQuestionType() == Question.Type.CHOICE ) {
-            answerOptionsPanel = new AnswerChoicesPanel(
+            answerOptionsPanel = new QuestionChoicesPanel(
                     "answerOptions",
                     new Model<Question>( getQuestion() )
             );

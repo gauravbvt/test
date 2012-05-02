@@ -164,8 +164,8 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
             this.rfi = rfi;
         }
 
-        public String getSurveyName() {
-            return rfi.getRfiSurvey().getQuestionnaire().getName();
+        public String getSurveyLabel() {
+            return rfi.getLabel( getQueryService() );
         }
 
         public String getJob() {
@@ -231,9 +231,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
         }
 
         public int getCompletionPercent() {
-            int requiredQuestionsCount = surveysDAO.getRequiredQuestionCount( rfi );
-            int requiredAnswersCount = surveysDAO.getRequiredAnswersCount( rfi );
-            return ( requiredAnswersCount / requiredQuestionsCount ) * 100;
+            return surveysDAO.getPercentCompletion( rfi );
         }
 
         public String getAnswersRequired() {
@@ -310,7 +308,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // Columns
-            columns.add( makeColumn( "Survey", "surveyName", EMPTY ) );
+            columns.add( makeColumn( "Survey", "surveyLabel", EMPTY ) );
             columns.add( makeColumn( "Sent by", "sentBy", EMPTY ) );
             columns.add( makeColumn( "On", "shortSentOn", null, EMPTY, "sentOn" ) );
             columns.add( makeColumn( "To you as", "job", EMPTY ) );

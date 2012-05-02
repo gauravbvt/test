@@ -1,5 +1,8 @@
 package com.mindalliance.channels.core.orm.model;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Plan;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,6 +45,10 @@ public abstract class AbstractPersistentPlanObject implements PersistentPlanObje
 
     public AbstractPersistentPlanObject( String username ) {
         this(null , 0, username );
+    }
+
+    public AbstractPersistentPlanObject( Plan plan, ChannelsUser user ) {
+        this( plan.getUri(), plan.getVersion(), user.getUsername() );
     }
 
     
@@ -146,5 +153,9 @@ public abstract class AbstractPersistentPlanObject implements PersistentPlanObje
     @Override
     public int hashCode() {
         return new Long( getId() ).hashCode();
+    }
+
+    public boolean isPersisted() {
+        return getId() != 0;
     }
 }

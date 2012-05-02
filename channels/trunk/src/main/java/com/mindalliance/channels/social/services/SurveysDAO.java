@@ -5,6 +5,8 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.social.model.rfi.AnswerSet;
+import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 
@@ -143,12 +145,45 @@ public interface SurveysDAO {
     /**
      * Find the RFIs in a given survey with answers.
      *
-     * @param plan             a plan
-     * @param rfiSurvey        a survey
+     * @param plan      a plan
+     * @param rfiSurvey a survey
      * @return a string like "105c 95i 3d" (105 completed, 95 incomplete 3 declined)
      */
     List<RFI> findAnsweringRFIs(
             Plan plan,
             RFISurvey rfiSurvey );
 
+    /**
+     * Find all shared answers to question from other RFIs.
+     *
+     * @param rfi      an RFI
+     * @param question a question
+     * @return a list of answer sets
+     */
+    List<AnswerSet> findOtherAnswers( RFI rfi, Question question );
+
+    /**
+     * Gives a value between 0 and 100 representing percent of required questions answered.
+     *
+     * @param rfi an rfi
+     * @return an int
+     */
+    int getPercentCompletion( RFI rfi );
+
+    /**
+     * Save answers and delete those marked for removal. Save answerSet.
+     *
+     * @param answerSet an answer set
+     */
+    void saveAnswerSet( AnswerSet answerSet );
+
+    /**
+     * Whether an rfi is incomplete and late.
+     *
+     * @param rfi          an rfi
+     * @param queryService a query service
+     * @param analyst      an analyst
+     * @return a boolean
+     */
+    boolean isOverdue( RFI rfi, QueryService queryService, Analyst analyst );
 }

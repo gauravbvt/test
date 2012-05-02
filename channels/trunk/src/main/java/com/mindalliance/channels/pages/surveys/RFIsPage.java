@@ -72,8 +72,12 @@ public class RFIsPage extends AbstractChannelsWebPage {
 
     @Override
     public void changed( Change change ) {
-        if ( change.isForInstanceOf( RFI.class ) && change.isExpanded() ) {
-            selectedRFI = (RFI) change.getSubject( getQueryService() );
+        if ( change.isForInstanceOf( RFI.class ) ) {
+            if ( change.isExpanded() ) {
+                selectedRFI = (RFI) change.getSubject( getQueryService() );
+            } else if ( change.isCollapsed() ) {
+                selectedRFI = null;
+            }
         } else if ( change.isRefreshNeeded() ) {
             selectedRFI = null;
         } else {
@@ -87,12 +91,14 @@ public class RFIsPage extends AbstractChannelsWebPage {
             addRFIPanel();
             target.add( rfiPanel );
         } else if ( change.isForInstanceOf( RFI.class ) ) {
-            if ( change.isExpanded() ) {
+            if ( change.isExpanded() || change.isCollapsed() ) {
                 addRFIPanel();
                 target.add( rfiPanel );
             } else if ( change.isUpdated() ) {
                 userRFIsPanel.refresh( target, change );
-                if ( change.isForProperty( "declined" ) || change.isForProperty( "accepted" ) ) {
+                if ( change.isForProperty( "declined" )
+                        || change.isForProperty( "accepted" )
+                        || change.isForProperty( "submitted" ) ) {
                     selectedRFI = null;
                     addRFIPanel();
                     target.add( rfiPanel );

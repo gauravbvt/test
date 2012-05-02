@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Implementation of the answer service.
+ * Implementation of the answerSet service.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -45,7 +45,7 @@ public class AnswerSetServiceImpl extends GenericSqlServiceImpl<AnswerSet, Long>
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public AnswerSet findAnswers( RFI rfi, Question question ) {
+    public AnswerSet findAnswerSet( RFI rfi, Question question ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "rfi", rfi ) );

@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.social.rfi.SurveyAnswersPanel;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.services.RFIForwardService;
 import com.mindalliance.channels.social.services.RFIService;
@@ -168,7 +169,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
         int requiredAnswersCount = surveysDAO.getRequiredAnswersCount( rfi );
         int optionalQuestionsCount = surveysDAO.getOptionalQuestionCount( rfi );
         int optionalAnswersCount = surveysDAO.getOptionalAnswersCount( rfi );
-        int percent = ( requiredAnswersCount / requiredQuestionsCount ) * 100;
+        int percent = surveysDAO.getPercentCompletion( rfi );
         StringBuilder sb = new StringBuilder();
         sb.append( percent )
                 .append( "% done: " );
@@ -196,18 +197,10 @@ public class RFIPanel extends AbstractUpdatablePanel {
     private String getHeaderString() {
         StringBuilder sb = new StringBuilder();
         RFI rfi = getRFI();
-        int requiredQuestionsCount = surveysDAO.getRequiredQuestionCount( rfi );
-        int requiredAnswersCount = surveysDAO.getRequiredAnswersCount( rfi );
-        int percent = ( requiredAnswersCount / requiredQuestionsCount ) * 100;
         if ( rfi.isDeclined() ) {
             sb.append( "Declined: " );
         }
-        sb.append( rfi.getRfiSurvey().getQuestionnaire().getName() )
-                .append( " (" )
-                .append( percent )
-                .append( "% done - " )
-                .append( rfi.getShortTimeLeft().toLowerCase() )
-                .append( ")" );
+        sb.append( rfi.getRfiSurvey().getQuestionnaire().getName() );
         return sb.toString();
     }
 
@@ -234,8 +227,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
     }
 
     private void addAnswerSetsPanel() {
-        rfiContainer.add( new Label( "answers", "ANSWERS FORM UNDER CONSTRUCTION" ) );
-        // todo
+        rfiContainer.add( new SurveyAnswersPanel( "answers", new Model<RFI>( getRFI()  ) ) );
     }
 
     private void addDeclineButton() {

@@ -464,7 +464,8 @@ public class UserPage extends AbstractChannelsWebPage {
                 .append( activeCount > 1 ? " surveys" : " survey");
         if ( activeCount > 0 ) {
             int noAnswerCount = surveysDAO.countUnanswered( plan, user, queryService, analyst );
-            int partialCount = surveysDAO.countIncomplete( plan, user, queryService, analyst );
+            int incompleteCount = surveysDAO.countIncomplete( plan, user, queryService, analyst );
+            int partialCount = incompleteCount - noAnswerCount;
             int lateCount = surveysDAO.countLate( plan, user, queryService, getAnalyst() );
             sb
                     .append( " of which " )
@@ -473,9 +474,9 @@ public class UserPage extends AbstractChannelsWebPage {
                     .append( " unanswered and " )
                     .append( partialCount == 0 ? "none" : partialCount )
                     .append( partialCount == 1 ? " is" : " are" )
-                    .append( " partially answered." )
-                    .append( lateCount == 0 ? "None" : noAnswerCount )
-                    .append( lateCount == 1 ? " is" : " are"  )
+                    .append( " partially answered. " )
+                    .append( lateCount == 0 ? "None" : lateCount )
+                    .append( lateCount <= 1 ? " is" : " are"  )
                     .append( " overdue." );
         } else {
                 sb.append( "." );

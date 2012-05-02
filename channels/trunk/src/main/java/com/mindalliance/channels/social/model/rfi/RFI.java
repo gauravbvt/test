@@ -210,9 +210,9 @@ public class RFI extends AbstractPersistentPlanObject {
             return null;
         } else {
             long delta = deadline.getTime() - new Date().getTime();
-            boolean overdue = delta < 0;
+            boolean past = delta < 0;
             String interval = ChannelsUtils.getShortTimeIntervalString( Math.abs( delta ) );
-            return ( overdue ? "Overdue by " : "Due in " ) + interval;
+            return past ? interval + " ago" : "In " + interval;
         }
     }
 
@@ -222,10 +222,19 @@ public class RFI extends AbstractPersistentPlanObject {
             return null;
         } else {
             long delta = deadline.getTime() - new Date().getTime();
-            boolean overdue = delta < 0;
+            boolean past = delta < 0;
             String interval = ChannelsUtils.getLongTimeIntervalString( Math.abs( delta ) );
-            return ( overdue ? "Overdue by " : "Due in " ) + interval;
+            return past ? interval + " ago" : "In " + interval;
         }
     }
 
+    @Override
+    public String getName() {
+        return getRfiSurvey().getName();
+    }
+
+
+    public String getLabel( QueryService queryService ) {
+        return getRfiSurvey().getLabel( queryService );
+    }
 }

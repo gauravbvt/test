@@ -34,7 +34,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
     private Date deadline;
     // Questionnaire's about.
     private String about;
-    @OneToMany( mappedBy="rfiSurvey", cascade = CascadeType.ALL )
+    @OneToMany( mappedBy = "rfiSurvey", cascade = CascadeType.ALL )
     private List<RFI> rfis;
 
     public RFISurvey() {
@@ -112,17 +112,18 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
                 : isObsolete( queryService, analyst )
                 ? "Obsolete"
                 : "Ongoing";
-                
+
     }
 
     public String getLabel( QueryService queryService ) {
-        StringBuilder sb = new StringBuilder(  );
+        StringBuilder sb = new StringBuilder();
         sb
-                .append( isClosed() ? "Closed survey \""  : "Survey \"")
-                .append(  getQuestionnaire().getName() )
-                .append( "\"" )
-                .append( " about " )
-                .append( getMoLabel() );
+                .append( isClosed() ? "Closed survey on " : "Survey on " )
+                .append( getQuestionnaire().getName() );
+        if ( !getQuestionnaire().isIssueRemediation() ) {
+            sb.append( ", about " )
+                    .append( getMoLabel() );
+        }
         return sb.toString();
     }
 
@@ -138,5 +139,11 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
                 || getModelObject( queryService ) == null
                 || getQuestionnaire().isObsolete( queryService, analyst );
     }
+
+    @Override
+    public String getName() {
+        return getQuestionnaire().getName();
+    }
+
 
 }

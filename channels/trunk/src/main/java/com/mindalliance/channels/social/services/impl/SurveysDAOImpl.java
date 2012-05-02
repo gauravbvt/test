@@ -7,11 +7,13 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.social.model.rfi.Answer;
 import com.mindalliance.channels.social.model.rfi.AnswerSet;
 import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
+import com.mindalliance.channels.social.services.AnswerService;
 import com.mindalliance.channels.social.services.AnswerSetService;
 import com.mindalliance.channels.social.services.QuestionService;
 import com.mindalliance.channels.social.services.QuestionnaireService;
@@ -64,6 +66,9 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     @Autowired
     private AnswerSetService answerSetService;
+
+    @Autowired
+    private AnswerService answerService;
 
     @Override
     @Transactional
@@ -226,7 +231,7 @@ public class SurveysDAOImpl implements SurveysDAO {
                     @Override
                     public boolean evaluate( Object object ) {
                         RFI rfi = (RFI) object;
-                        return rfi.isLate( queryService, analyst );
+                        return isOverdue( rfi, queryService, analyst );
                     }
                 }
         ).size();
@@ -278,7 +283,7 @@ public class SurveysDAOImpl implements SurveysDAO {
                     public boolean evaluate( Object object ) {
                         Question question = (Question) object;
                         if ( question.isAnswerRequired() ) {
-                            AnswerSet answerSet = answerSetService.findAnswers( rfi, question );
+                            AnswerSet answerSet = answerSetService.findAnswerSet( rfi, question );
                             return answerSet == null || answerSet.isEmpty();
                         } else {
                             return false;
@@ -334,7 +339,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     public int getRequiredAnswersCount( RFI rfi ) {
         int count = 0;
         for ( Question question : getRequiredQuestions( rfi )) {
-            AnswerSet answerSet = answerSetService.findAnswers( rfi, question );
+            AnswerSet answerSet = answerSetService.findAnswerSet( rfi, question );
             if ( answerSet != null ) count++;
         }
         return count;
@@ -351,7 +356,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     public int getOptionalAnswersCount( RFI rfi ) {
         int count = 0;
         for ( Question question : getOptionalQuestions( rfi )) {
-            AnswerSet answerSet = answerSetService.findAnswers( rfi, question );
+            AnswerSet answerSet = answerSetService.findAnswerSet( rfi, question );
             if ( answerSet != null ) count++;
         }
         return count;
@@ -418,6 +423,37 @@ public class SurveysDAOImpl implements SurveysDAO {
                     }
                 }
         );
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public List<AnswerSet> findOtherAnswers( RFI rfi, Question question ) {
+        return new ArrayList<AnswerSet>(  ); // todo
+    }
+
+    @Override
+    public int getPercentCompletion( RFI rfi ) {
+        return Math.round( ( (float)getRequiredAnswersCount( rfi ) / getRequiredQuestionCount( rfi ) ) * 100 );
+    }
+
+    @Override
+    @Transactional
+    public void saveAnswerSet( AnswerSet answerSet ) {
+        List<Answer> removedAnswers = answerSet.deleteRemovedAnswers( );
+        for ( Answer answer : removedAnswers ) {
+            answerService.delete( answer );
+        }
+        if ( answerSet.isEmpty() ) {
+            answerSetService.delete( answerSet );
+        } else {
+            answerSetService.save( answerSet );
+        }
+    }
+
+    @Override
+    public boolean isOverdue( RFI rfi, QueryService queryService, Analyst analyst ) {
+        return rfi.isLate( queryService, analyst )
+                && !isCompleted( rfi );
     }
 
 

@@ -6,6 +6,7 @@ import org.apache.commons.validator.UrlValidator;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -31,6 +32,15 @@ public class Answer extends AbstractPersistentPlanObject {
 
     private static final String NO = "no";
 
+    @Transient
+    private boolean removed;
+
+    public Answer() {}
+
+    public Answer( AnswerSet answerSet ) {
+        super( answerSet.getPlanUri(), answerSet.getPlanVersion(), answerSet.getUsername() );
+        this.answerSet = answerSet;
+    }
 
     public AnswerSet getAnswerSet() {
         return answerSet;
@@ -56,6 +66,10 @@ public class Answer extends AbstractPersistentPlanObject {
         return text.equals( YES );
     }
 
+    public boolean isGiven() {
+        return !getText().isEmpty();
+    }
+
     public void setUrl( String s ) {
         if ( new UrlValidator().isValid( s ) ) {
             text = s;
@@ -78,5 +92,17 @@ public class Answer extends AbstractPersistentPlanObject {
 
     public void setSequence( int sequence ) {
         this.sequence = sequence;
+    }
+
+    public void reset() {
+        text= "";
+    }
+
+    public void remove() {
+        removed = true;
+    }
+
+    public boolean wasRemoved() {
+        return removed;
     }
 }

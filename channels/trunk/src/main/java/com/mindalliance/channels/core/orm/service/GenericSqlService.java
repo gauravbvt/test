@@ -41,7 +41,8 @@ public interface GenericSqlService<T, ID extends Serializable> {
      * Refresh an object from the database.
      *
      * @param object the object
+     * @return the object
      */
-    void refresh( T object );
+    T refresh( T object );
 }
 

@@ -30,7 +30,7 @@ import java.util.List;
  * Date: 4/9/12
  * Time: 11:27 AM
  */
-public class AnswerChoicesPanel extends AbstractUpdatablePanel {
+public class QuestionChoicesPanel extends AbstractUpdatablePanel {
 
     private static final int MAX_LENGTH = 30;
 
@@ -42,7 +42,7 @@ public class AnswerChoicesPanel extends AbstractUpdatablePanel {
     private WebMarkupContainer answerChoicesContainer;
     private TextField<String> newChoiceField;
 
-    public AnswerChoicesPanel( String id, IModel<? extends Identifiable> model ) {
+    public QuestionChoicesPanel( String id, IModel<? extends Identifiable> model ) {
         super( id, model );
         init();
     }

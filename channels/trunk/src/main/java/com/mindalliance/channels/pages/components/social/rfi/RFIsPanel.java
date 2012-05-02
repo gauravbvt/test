@@ -581,8 +581,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
         public boolean isNaggable() {
             return rfi != null
-                    && rfi.isLate( getQueryService(), getAnalyst() )
-                    && !surveysDAO.isCompleted( rfi );
+                    && surveysDAO.isOverdue( rfi, getQueryService(), getAnalyst() );
 
         }
     }

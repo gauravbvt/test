@@ -8,7 +8,7 @@ import com.mindalliance.channels.social.model.rfi.RFI;
 import java.util.List;
 
 /**
- * Answer service.
+ * AnswerSet service.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -31,7 +31,7 @@ public interface AnswerSetService extends GenericSqlService<AnswerSet, Long> {
      * @param question a question
      * @return an answer set
      */
-    AnswerSet findAnswers( RFI rfi, Question question );
+    AnswerSet findAnswerSet( RFI rfi, Question question );
 
     /**
      * Find all answer sets for an RFI.
@@ -40,4 +40,5 @@ public interface AnswerSetService extends GenericSqlService<AnswerSet, Long> {
      * @return a list of answer sets
      */
     List<AnswerSet> select( RFI rfi );
+
 }

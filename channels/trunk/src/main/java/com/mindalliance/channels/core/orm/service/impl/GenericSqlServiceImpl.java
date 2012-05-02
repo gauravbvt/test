@@ -156,8 +156,9 @@ public abstract class GenericSqlServiceImpl<T, ID extends Serializable> implemen
 
     @Override
     @Transactional
-    public void refresh( T object ) {
+    public T refresh( T object ) {
         getSession().refresh( object );
+        return object;
     }
 
 }

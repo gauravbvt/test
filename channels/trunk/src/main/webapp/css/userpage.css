@@ -1109,3 +1109,8 @@ a.more:hover {
     content: "%";
 }
 
+.required .question:after {
+    content: " (required)";
+    color: red;
+}
+
