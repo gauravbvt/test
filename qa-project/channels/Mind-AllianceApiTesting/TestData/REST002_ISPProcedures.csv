@@ -21,6 +21,38 @@ employmentTitle,Police Officer
 employmentRoleId,126
 employmentSupervisorId,286
 employmentConfirmed,true
+procedureAgentId,2587
+situationEventId,8
+situationPhaseId,3
+taskName,Detecting threats
+goalKind,mitigate risk
+goalDescription,Passengers could be injured or killed by the blast of the IED but many more could be injured in the ensuing panic.
+goalLevel,Severe
+goalorganizationId,9
+taskFailureImpact,Severe
+informationName,Threat detected
+outNotificationIntent,Alarm
+outNotificationTaskFailed,false
+outNotificationReceiptConfirmationRequested,false
+outNotificationContactAll,false
+outNotificationFailureImpact,Minor
+maxDelayAmount,0
+maxDelayUnit,seconds
+maxDelaySeconds,0
+identityName,Amanda Nevin
+identityOrganizationId,2584
+identityTitle,Police Chief
+identityRoleId,287
+identitySupervisorId,283
+identityConfirmed,true
+workChannelMediumId,-984
+workChannelMedium,Cell
+workChannelAddress,1-545-546-8764
+organizationChannelMediumId,-986
+organizationChannelMedium,Landline
+organizationChannelAddress,800-234-5678
+consumingTaskName,Collecting threat reports
+consumingTaskFailureImpact,Minor
 planUri,mindalliance_com_channels_plans_railsec
 planVersion,4
 planName,Rail Security
