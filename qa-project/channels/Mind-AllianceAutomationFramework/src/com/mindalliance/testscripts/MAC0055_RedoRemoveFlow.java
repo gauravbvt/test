@@ -192,17 +192,7 @@ public class MAC0055_RedoRemoveFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
-				options = GlobalVariables.oDropDown.getOptions();
-			    for(WebElement option : options) {
-			    	if(option.getText().equals("Segment For Redo Remove Flow")){
-			    			option.setSelected();
-			    			break;
-			    	}
-			    }
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
+				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// Get a handle to the open alert, prompt or confirmation
 				alert = GlobalVariables.oDriver.switchTo().alert();

@@ -193,18 +193,6 @@ public class MAC0057_RedoBreakUpFlow
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
-				// Assertion: Verify that When clicked on 'Redo break up flow' option, the operation 'Break up flow' should be performed on respective flow				
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
-				options = GlobalVariables.oDropDown.getOptions();
-			    for(WebElement option : options) {
-			    	if(option.getText().equals("Segment For Redo break up flow")){
-			    			option.setSelected();
-			    			break;
-			    	}
-			    }
-			    // WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// Get a handle to the open alert, prompt or confirmation
 				alert = GlobalVariables.oDriver.switchTo().alert();

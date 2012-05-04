@@ -32,7 +32,7 @@ public class MAC0063_UndoRemoveRequirement
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(2000);  
 				 
 				// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 				GlobalVariables.iStepNo++ ;
@@ -56,7 +56,7 @@ public class MAC0063_UndoRemoveRequirement
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  
+				Thread.sleep(2000);  
 				  
 				// Click on New Button to Add Requirement
 				GlobalVariables.iStepNo++ ;
@@ -65,7 +65,7 @@ public class MAC0063_UndoRemoveRequirement
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathNewRequirement"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				// Assertion: Verify that New Requirement can be added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionRequirementName")));
 				if(GlobalVariables.oElement.getText().equals("UNNAMED")){
@@ -75,7 +75,7 @@ public class MAC0063_UndoRemoveRequirement
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError ="Verification Failed Expected " + GlobalVariables.viewElements.get("UNNAMED") + " Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError ="Verification Failed Expected 'UNNAMED' Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -92,7 +92,7 @@ public class MAC0063_UndoRemoveRequirement
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathRemoveRequirement"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				// Get a handle to the open alert, prompt or confirmation
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// WebElement Synchronization
@@ -146,6 +146,10 @@ public class MAC0063_UndoRemoveRequirement
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);	
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"), GlobalVariables.viewElements.get("redoRemoveRequirement"));
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				// Remove Segment
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// WebElement Synchronization

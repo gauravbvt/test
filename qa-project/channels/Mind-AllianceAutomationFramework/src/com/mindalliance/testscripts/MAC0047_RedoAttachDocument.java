@@ -132,7 +132,7 @@ public class MAC0047_RedoAttachDocument {
 						break;
 					}
 					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.testData.get("AttachmentFileName")+"' "+" Actual " + li.getText();
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
@@ -175,7 +175,7 @@ public class MAC0047_RedoAttachDocument {
 						break;
 					}
 					else{
-						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'CAP' "+" Actual " + li.getText();
+						GlobalVariables.sVerifyError ="Verification Failed "+"Expected '"+GlobalVariables.testData.get("AttachmentFileName")+"' "+" Actual " + li.getText();
 				    	// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
