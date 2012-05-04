@@ -33,7 +33,7 @@
 <aboutPlan>About plan</aboutPlan>
 <allEvents>All events</allEvents>
 <conceptual>. Conceptual.</conceptual>
-<informationSharingModel>Information sharing model</informationSharingModel>
+<informationSharingModel>Information sharing plan</informationSharingModel>
 <secrecyClassification>Secrecy classifications</secrecyClassification>
 <allOrganizations>All organizations</allOrganizations>
 <allTypes>All types</allTypes>
@@ -226,6 +226,7 @@
 <prohibited>. PROHIBITED.</prohibited>
 <responding>Responding</responding>
 <unnamed>unnamed</unnamed>
+<UNNAMED>UNNAMED</UNNAMED>
 <taskStart>. The task starts with "responding while unnamed".</taskStart>
 <taskEnd>. The task can end "responding while unnamed".</taskEnd>
 <myInformationSharingGuidelines>My information sharing guidelines</myInformationSharingGuidelines>
