@@ -7,8 +7,6 @@ agentName,A special ops
 hasUniqueIdentity,false
 isAnonymous,false
 kind,actual
-eventId,8
-phaseId,3
 taskName,Detecting threats
 taskKind,mitigate risk
 environmentEventID,2
@@ -17,3 +15,42 @@ environmentIncident,true
 environmentSelfTerminating,false
 environmentLocationId,110
 environmentPlannedPhaseId,3
+employmentName,A special ops
+employmentOrganizationId,2584
+employmentTitle,Police Officer
+employmentRoleId,126
+employmentSupervisorId,286
+employmentConfirmed,true
+planUri,mindalliance_com_channels_plans_railsec
+planVersion,4
+planName,Rail Security
+planRelease,production
+planDateVersioned,2011/07/07 23:35:12 IST
+eventId,2
+eventName,Attack suspected
+eventIncident,true
+eventSelfTerminating,false
+eventLocationId,110
+eventPlannedPhaseId,3
+phaseId,3
+phaseName,Responding
+phaseTiming,Co-event
+organizationId,2584
+organizationName,Public Transit Agency
+organizationCategoryId,9
+organizationKind,actual
+organizationParentId,282
+organizationParticipating,true
+documentsType,Picture
+documentsUrl,uploads/security.jpeg
+roleId,504
+roleName,Station Manager
+roleCategoryId,505
+placeId,299
+placeName,Walnut Grove Terminal
+placeKind,actual
+placeCategoryId,117
+transmissionMediumName,Phone
+transmissionMediumId,-987
+transmissionMediumMode,Unicast
+transmissionMediumSynchronous,true
