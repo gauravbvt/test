@@ -118,26 +118,26 @@ public class REST002_ISPProcedures extends TestCase{
 			GlobalVariables.steps++;
 			boolean planAgentResult;
 			// Verify Agent ID
-			planAgentResult=Configurations.parseResponse("procedure","agentId",GlobalVariables.testData.get("agentId"));	
-			Assert.assertEquals("Agent ID is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("agentId")));
+			planAgentResult=Configurations.parseResponse("procedure","agentId",GlobalVariables.testData.get("procedureAgentId"));	
+			Assert.assertEquals("Agent ID is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("procedureAgentId")));
 			// Verify Agent Event ID
-			planAgentResult=Configurations.parseResponse("situation","eventId",GlobalVariables.testData.get("eventId"));	
-			Assert.assertEquals("Event ID is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("eventId")));
+			planAgentResult=Configurations.parseResponse("situation","eventId",GlobalVariables.testData.get("situationEventId"));	
+			Assert.assertEquals("Event ID is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("situationEventId")));
 			// Verify Agent Phase ID
-			planAgentResult=Configurations.parseResponse("situation","phaseId",GlobalVariables.testData.get("phaseId"));	
-			Assert.assertEquals("Phase ID is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("phaseId")));
+			planAgentResult=Configurations.parseResponse("situation","phaseId",GlobalVariables.testData.get("situationPhaseId"));	
+			Assert.assertEquals("Phase ID is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("situationPhaseId")));
 			// Verify Agent Anonymous
 			planAgentResult=Configurations.parseResponse("task","name",GlobalVariables.testData.get("taskName"));	
 			Assert.assertEquals("Task is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("taskName")));
 			// Verify Agent Kind
-			planAgentResult=Configurations.parseResponse("goal","kind",GlobalVariables.testData.get("taskKind"));	
-			Assert.assertEquals("Task Kind is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("taskKind")));			
+			planAgentResult=Configurations.parseResponse("goal","kind",GlobalVariables.testData.get("goalKind"));	
+			Assert.assertEquals("goal Kind is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("goalKind")));			
 			// Verify goal description
 			planAgentResult=Configurations.parseResponse("goal","description",GlobalVariables.testData.get("goalDescription"));	
 			Assert.assertEquals("Goal Description is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("goalDescription")));			
 			// Verify goal Category
-			planAgentResult=Configurations.parseResponse("goal","category",GlobalVariables.testData.get("goalCategory"));	
-			Assert.assertEquals("Goal Category is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("goalCategory")));			
+//			planAgentResult=Configurations.parseResponse("goal","category",GlobalVariables.testData.get("goalCategory"));	
+//			Assert.assertEquals("Goal Category is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("goalCategory")));			
 			// Verify goal level
 			planAgentResult=Configurations.parseResponse("goal","level",GlobalVariables.testData.get("goalLevel"));	
 			Assert.assertEquals("Goal Level is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("goalLevel")));			
@@ -166,17 +166,14 @@ public class REST002_ISPProcedures extends TestCase{
 			planAgentResult=Configurations.parseResponse("outNotification","failureImpact",GlobalVariables.testData.get("outNotificationFailureImpact"));	
 			Assert.assertEquals("OutNotification failureImpact is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("outNotificationFailureImpact")));			
 			// Verify maxDelay unit
-			planAgentResult=Configurations.parseResponse("maxDelay","unit",GlobalVariables.testData.get("maxDelayAmount"));	
-			Assert.assertEquals("MaxDelay unit is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("maxDelayAmount")));			
+			planAgentResult=Configurations.parseResponse("maxDelay","amount",GlobalVariables.testData.get("maxDelayAmount"));	
+			Assert.assertEquals("MaxDelay amount is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("maxDelayAmount")));			
 			// Verify maxDelay Amount
 			planAgentResult=Configurations.parseResponse("maxDelay","unit",GlobalVariables.testData.get("maxDelayUnit"));	
-			Assert.assertEquals("MaxDelay Amount is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("maxDelayUnit")));			
-			// Verify maxDelay Amount
-			planAgentResult=Configurations.parseResponse("maxDelay","unit",GlobalVariables.testData.get("maxDelayUnit"));	
-			Assert.assertEquals("MaxDelay Amount is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("maxDelayUnit")));			
+			Assert.assertEquals("MaxDelay unit is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("maxDelayUnit")));			
 			// Verify maxDelay seconds
 			planAgentResult=Configurations.parseResponse("maxDelay","seconds",GlobalVariables.testData.get("maxDelaySeconds"));	
-			Assert.assertEquals("MaxDelay Amount is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("maxDelaySeconds")));			
+			Assert.assertEquals("MaxDelay seconds is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("maxDelaySeconds")));			
 			// Verify identity name
 			planAgentResult=Configurations.parseResponse("identity","name",GlobalVariables.testData.get("identityName"));	
 			Assert.assertEquals("Identity Name is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("identityName")));			
