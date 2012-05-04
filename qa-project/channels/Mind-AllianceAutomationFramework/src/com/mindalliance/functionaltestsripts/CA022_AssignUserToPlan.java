@@ -174,7 +174,7 @@ public class CA022_AssignUserToPlan
 			    //Assertion : Verify that User is able to view & access the plan created by Administrator
 			    GlobalVariables.iStepNo++ ;
 			    GlobalVariables.sDescription = "User is able to view the plan created by Administrator";
-			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[2]/div[2]/div[2]/div/span"));
+			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("//html/body/form/div[2]/div[2]/div[2]/div/span"));
 			    if(GlobalVariables.oElement.getText().contains(GlobalVariables.viewElements.get("newPlan"))) {
 				    // Write Results
 			    	LogFunctions.writeLogs(GlobalVariables.sDescription);
