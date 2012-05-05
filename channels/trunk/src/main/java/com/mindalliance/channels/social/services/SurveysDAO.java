@@ -11,6 +11,8 @@ import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An issue remediation survey service that combines rfi repositories.
@@ -153,14 +155,6 @@ public interface SurveysDAO {
             Plan plan,
             RFISurvey rfiSurvey );
 
-    /**
-     * Find all shared answers to question from other RFIs.
-     *
-     * @param rfi      an RFI
-     * @param question a question
-     * @return a list of answer sets
-     */
-    List<AnswerSet> findOtherAnswers( RFI rfi, Question question );
 
     /**
      * Gives a value between 0 and 100 representing percent of required questions answered.
@@ -186,4 +180,21 @@ public interface SurveysDAO {
      * @return a boolean
      */
     boolean isOverdue( RFI rfi, QueryService queryService, Analyst analyst );
+
+    /**
+     * Process all answers to a question in a survey.
+     *
+     * @param plan         a plan
+     * @param rfiSurvey    a survey
+     * @param question     a question
+     * @param sharedOnly   a boolean - only answers that are shared vs. all answers
+     * @param excludedUsername a string
+     * @return a map - text of answer => list of usernames who gave it
+     */
+    Map<String, Set<String>> processAnswers(
+            Plan plan,
+            RFISurvey rfiSurvey,
+            Question question,
+            boolean sharedOnly,
+            String excludedUsername );
 }

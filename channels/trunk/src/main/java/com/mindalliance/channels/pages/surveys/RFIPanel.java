@@ -12,11 +12,9 @@ import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.EmailValidator;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -51,10 +49,6 @@ public class RFIPanel extends AbstractUpdatablePanel {
     private RFIForwardService rfiForwardService;
 
     WebMarkupContainer rfiContainer;
-    /**
-     * Modal dialog window.
-     */
-    private ModalWindow dialogWindow;
     private AjaxLink<String> declineButton;
     private WebMarkupContainer headerContainer;
 
@@ -67,57 +61,12 @@ public class RFIPanel extends AbstractUpdatablePanel {
     private void init() {
         rfiContainer = new WebMarkupContainer( "rfiContainer" );
         add( rfiContainer );
-        addModalDialog();
         addHeader();
         addAnswerSetsPanel();
         addDeclineButton();
         addForwarding();
     }
 
-    private void addModalDialog(
-    ) {
-        dialogWindow = new ModalWindow( "dialog" );
-        dialogWindow.setOutputMarkupId( true );
-        dialogWindow.setResizable( true );
-        dialogWindow.setContent(
-                new Label(
-                        dialogWindow.getContentId(),
-                        "" ) );
-        dialogWindow.setTitle( "" );
-        dialogWindow.setCookieName( "rfi-action" );
-        dialogWindow.setCloseButtonCallback(
-                new ModalWindow.CloseButtonCallback() {
-                    public boolean onCloseButtonClicked( AjaxRequestTarget target ) {
-                        return true;
-                    }
-                } );
-        dialogWindow.setWindowClosedCallback( new ModalWindow.WindowClosedCallback() {
-            public void onClose( AjaxRequestTarget target ) {
-                // do nothing
-            }
-        } );
-        dialogWindow.setHeightUnit( "px" );
-        dialogWindow.setInitialHeight( 0 );
-        dialogWindow.setInitialWidth( 0 );
-        rfiContainer.addOrReplace( dialogWindow );
-    }
-
-    private void showDialog(
-            String title,
-            int height,
-            int width,
-            Component contents,
-            AjaxRequestTarget target ) {
-        dialogWindow.setTitle( title );
-        dialogWindow.setInitialHeight( height );
-        dialogWindow.setInitialWidth( width );
-        dialogWindow.setContent( contents );
-        dialogWindow.show( target );
-    }
-
-    private void hideDialog( AjaxRequestTarget target ) {
-        dialogWindow.close( target );
-    }
 
 
     private void addHeader() {
@@ -211,10 +160,10 @@ public class RFIPanel extends AbstractUpdatablePanel {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 ForwardRFIPanel forwardingRFIPanel = new ForwardRFIPanel(
-                        dialogWindow.getContentId(),
+                        getModalableParent().getModalContentId(),
                         new Model<RFI>( getRFI() )
                 );
-                showDialog( "Forwarding survey", 600, 500, forwardingRFIPanel, target );
+                getModalableParent().showDialog( "Forwarding survey", 600, 500, forwardingRFIPanel, RFIPanel.this, target );
             }
         };
         forwardButton.setOutputMarkupId( true );
@@ -237,9 +186,15 @@ public class RFIPanel extends AbstractUpdatablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 if ( declining ) {
                     DeclineRFIPanel declineRFIPanel = new DeclineRFIPanel(
-                            dialogWindow.getContentId(),
+                            getModalableParent().getModalContentId(),
                             new Model<RFI>( getRFI() ) );
-                    showDialog( "Declining survey", 600, 500, declineRFIPanel, target );
+                    getModalableParent().showDialog(
+                            "Declining survey",
+                            600,
+                            500,
+                            declineRFIPanel,
+                            RFIPanel.this,
+                            target );
                 } else {
                     rfiService.toggleDecline( getRFI(), null );
                     update( target, new Change( Change.Type.Updated, getRFI(), "accepted" ) );
@@ -261,7 +216,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
                 rfiService.toggleDecline( getRFI(), reason );
                 addDeclineButton();
                 target.add( declineButton );
-                hideDialog( target );
+                getModalableParent().hideDialog( target );
             } else if ( change.isForProperty( "forwarded" ) ) {
                 String emails = (String) change.getQualifier( "emails" );
                 String message = (String) change.getQualifier( "message" );
@@ -271,7 +226,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
                     target.add( headerContainer );
                     target.appendJavaScript( "alert(' Survey forwarded to " + StringUtils.join( forwardedTo, ", " ) + "');" );
                 }
-                hideDialog( target );
+                getModalableParent().hideDialog( target );
             }
         }
         super.updateWith( target, change, updatables );
@@ -351,7 +306,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
             AjaxLink<String> cancelButton = new AjaxLink<String>( "cancel" ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
-                    RFIPanel.this.hideDialog( target );
+                    RFIPanel.this.getModalableParent().hideDialog( target );
                 }
             };
             add( cancelButton );
@@ -473,7 +428,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
             AjaxLink<String> cancelButton = new AjaxLink<String>( "cancel" ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
-                    RFIPanel.this.hideDialog( target );
+                    RFIPanel.this.getModalableParent().hideDialog( target );
                 }
             };
             add( cancelButton );

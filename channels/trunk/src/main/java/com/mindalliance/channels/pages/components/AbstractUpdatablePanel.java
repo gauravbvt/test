@@ -25,6 +25,7 @@ import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.pages.Modalable;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import org.apache.commons.collections.CollectionUtils;
@@ -107,6 +108,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * The change that caused this panel to open.
      */
     private Change change;
+    /**
+     * Subsituted update target.
+     */
+    private Updatable updateTarget;
 
     /**
      * Name pattern.
@@ -247,6 +252,18 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         component.add( new AttributeModifier( "style", new Model<String>( visible ? "" : "display:none" ) ) );
     }
 
+    public Updatable getUpdateTarget() {
+        return updateTarget;
+    }
+
+    public void setUpdateTarget( Updatable updateTarget ) {
+        this.updateTarget = updateTarget;
+    }
+
+    protected Modalable getModalableParent() {
+        return findParent( Modalable.class );
+    }
+
     @Override
     public void changed( Change change ) {
         Updatable updatableParent = findUpdatableParent();
@@ -264,7 +281,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     protected Updatable findUpdatableParent() {
-        return findParent( Updatable.class );
+        return updateTarget != null ? updateTarget : findParent( Updatable.class );
     }
 
     @Override
@@ -374,7 +391,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                             new Model<String>( hasIssues ? "All issues waived" : "" ) ) );
         else
             component.add( new AttributeModifier( "class", new Model<String>( "error" ) ),
-                    new AttributeModifier( "title",  new Model<String>( summary ) ) );
+                    new AttributeModifier( "title", new Model<String>( summary ) ) );
     }
 
     public ChannelsUser getUser() {
@@ -543,7 +560,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
             return null;
         }
     }
-    
+
     protected String getUserFullName( String userName ) {
         ChannelsUser aUser = userDao.getUserNamed( userName );
         return aUser == null ? userName : aUser.getFullName();

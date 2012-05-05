@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class UserRFIsPanel extends AbstractUpdatablePanel {
 
-    private static final int MAX_ROWS = 25;
+    private static final int MAX_ROWS = 5;
 
     @SpringBean
     private SurveysDAO surveysDAO;

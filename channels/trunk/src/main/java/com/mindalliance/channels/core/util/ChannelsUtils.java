@@ -686,9 +686,7 @@ public final class ChannelsUtils {
     public static String convertTemplate( String template, Object bean ) {
         StringWriter writer = new StringWriter(  );
         try {
-            Map<String,Object> context = new HashMap<String, Object>(  );
-            BeanUtils.populate( bean, context );
-            Velocity.evaluate( new VelocityContext( context ), writer, "",  template );
+            Velocity.evaluate( new VelocityContext( BeanUtils.describe( bean ) ), writer, "",  template );
         } catch ( Exception e ) {
             LOG.warn( "Invalid templating ", e );
             return template;

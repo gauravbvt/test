@@ -34,7 +34,11 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -128,7 +132,7 @@ public class SurveysDAOImpl implements SurveysDAO {
         String severity = issue.getSeverity().getNegativeLabel().toLowerCase();
         intro.setText(
                 "Your help is requested to resolve "
-                + ( ChannelsUtils.startsWithVowel( severity ) ? "an " : "a" )
+                        + ( ChannelsUtils.startsWithVowel( severity ) ? "an " : "a" )
                         + severity
                         + " issue that was detected about "
                         + mo.getKindLabel()
@@ -141,11 +145,11 @@ public class SurveysDAOImpl implements SurveysDAO {
         Question description = new Question( username, questionnaire );
         description.setType( Question.Type.STATEMENT );
         description.setText( issue.getDescription() );
-        questions.add(  description );
+        questions.add( description );
         // Remediation options (open, multiple choice)
         List<String> options = getRemediationOptions( issue );
         Question remediationOptions = new Question( username, questionnaire );
-        remediationOptions.setText( "Please choose solutions that you believe are appropriate:");
+        remediationOptions.setText( "Please choose solutions that you believe are appropriate:" );
         remediationOptions.setType( Question.Type.CHOICE );
         remediationOptions.setOpenEnded( true );
         remediationOptions.setMultipleAnswers( true );
@@ -241,7 +245,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
     public List<RFI> findIncompleteRFIs( Plan plan, ChannelsUser user, QueryService queryService, Analyst analyst ) {
-        return (List<RFI>)CollectionUtils.select(
+        return (List<RFI>) CollectionUtils.select(
                 rfiService.listUserActiveRFIs( plan, user, queryService, analyst ),
                 new Predicate() {
                     @Override
@@ -256,7 +260,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
     public List<RFI> findCompletedRFIs( Plan plan, ChannelsUser user, QueryService queryService, Analyst analyst ) {
-        return (List<RFI>)CollectionUtils.select(
+        return (List<RFI>) CollectionUtils.select(
                 rfiService.listUserActiveRFIs( plan, user, queryService, analyst ),
                 new Predicate() {
                     @Override
@@ -299,7 +303,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
     public List<RFI> findDeclinedRFIs( Plan plan, ChannelsUser user, QueryService queryService, Analyst analyst ) {
-        return (List<RFI>)CollectionUtils.select(
+        return (List<RFI>) CollectionUtils.select(
                 rfiService.listOngoingUserRFIs( plan, user, queryService, analyst ),
                 new Predicate() {
                     @Override
@@ -321,12 +325,12 @@ public class SurveysDAOImpl implements SurveysDAO {
         RFISurvey survey = rfi.getRfiSurvey();
         rfiSurveyService.refresh( survey );
         Questionnaire questionnaire = survey.getQuestionnaire();
-        return (List<Question>)CollectionUtils.select(
+        return (List<Question>) CollectionUtils.select(
                 questionnaire.getQuestions(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        Question question = (Question)object;
+                        Question question = (Question) object;
                         questionService.refresh( question );
                         return question.isAnswerRequired();
                     }
@@ -338,7 +342,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Transactional( readOnly = true )
     public int getRequiredAnswersCount( RFI rfi ) {
         int count = 0;
-        for ( Question question : getRequiredQuestions( rfi )) {
+        for ( Question question : getRequiredQuestions( rfi ) ) {
             AnswerSet answerSet = answerSetService.findAnswerSet( rfi, question );
             if ( answerSet != null ) count++;
         }
@@ -355,7 +359,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Transactional( readOnly = true )
     public int getOptionalAnswersCount( RFI rfi ) {
         int count = 0;
-        for ( Question question : getOptionalQuestions( rfi )) {
+        for ( Question question : getOptionalQuestions( rfi ) ) {
             AnswerSet answerSet = answerSetService.findAnswerSet( rfi, question );
             if ( answerSet != null ) count++;
         }
@@ -367,12 +371,12 @@ public class SurveysDAOImpl implements SurveysDAO {
         RFISurvey survey = rfi.getRfiSurvey();
         rfiSurveyService.refresh( survey );
         Questionnaire questionnaire = survey.getQuestionnaire();
-        return (List<Question>)CollectionUtils.select(
+        return (List<Question>) CollectionUtils.select(
                 questionnaire.getQuestions(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        Question question = (Question)object;
+                        Question question = (Question) object;
                         questionService.refresh( question );
                         return !question.isAnswerRequired();
                     }
@@ -426,20 +430,14 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
-    public List<AnswerSet> findOtherAnswers( RFI rfi, Question question ) {
-        return new ArrayList<AnswerSet>(  ); // todo
-    }
-
-    @Override
     public int getPercentCompletion( RFI rfi ) {
-        return Math.round( ( (float)getRequiredAnswersCount( rfi ) / getRequiredQuestionCount( rfi ) ) * 100 );
+        return Math.round( ( (float) getRequiredAnswersCount( rfi ) / getRequiredQuestionCount( rfi ) ) * 100 );
     }
 
     @Override
     @Transactional
     public void saveAnswerSet( AnswerSet answerSet ) {
-        List<Answer> removedAnswers = answerSet.deleteRemovedAnswers( );
+        List<Answer> removedAnswers = answerSet.deleteRemovedAnswers();
         for ( Answer answer : removedAnswers ) {
             answerService.delete( answer );
         }
@@ -451,10 +449,67 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
+    @Transactional( readOnly = true )
     public boolean isOverdue( RFI rfi, QueryService queryService, Analyst analyst ) {
         return rfi.isLate( queryService, analyst )
                 && !isCompleted( rfi );
     }
 
-
+    @Override
+    @Transactional( readOnly = true )
+    public Map<String, Set<String>> processAnswers(
+            Plan plan,
+            RFISurvey rfiSurvey,
+            Question question,
+            boolean sharedOnly,
+            String excludedUsername ) {
+        Map<String, Set<String>> results = new HashMap<String, Set<String>>();
+        List<RFI> rfis = findAnsweringRFIs( plan, rfiSurvey );
+        List<Answer> openAnswers = new ArrayList<Answer>();
+        List<Answer> anonymousAnswers = new ArrayList<Answer>(  );
+        // collect answers
+        for ( RFI rfi : rfis ) {
+            if ( excludedUsername == null || !rfi.getSurveyedUsername().equals( excludedUsername ) ) {
+                AnswerSet answerSet = answerSetService.findAnswerSet( rfi, question );
+                if ( answerSet != null && ( !sharedOnly || answerSet.isShared() ) ) {
+                    if ( question.isMultipleAnswers() ) {
+                        if ( answerSet.isAnonymous() )
+                            anonymousAnswers.addAll( answerSet.getValidAnswers() );
+                        else
+                            openAnswers.addAll( answerSet.getValidAnswers() );
+                    } else {
+                        Answer answer = answerSet.getAnswer();
+                        if ( answer != null && !answer.wasRemoved() ) {
+                            if ( answerSet.isAnonymous() )
+                                anonymousAnswers.add( answer );
+                            else
+                                openAnswers.add( answer );
+                        }
+                    }
+                }
+            }
+        }
+        // process answers
+        for ( Answer answer : openAnswers ) {
+            String text = answer.getText();
+            String username = answer.getUsername();
+            Set<String> usernames = results.get( text );
+            if ( usernames == null ) {
+                usernames = new HashSet<String>();
+                results.put( text, usernames );
+            }
+            usernames.add( username );
+        }
+        for ( Answer answer : anonymousAnswers ) {
+            String text = answer.getText();
+            String username = ChannelsUser.ANONYMOUS_USERNAME;
+            Set<String> usernames = results.get( text );
+            if ( usernames == null ) {
+                usernames = new HashSet<String>();
+                results.put( text, usernames );
+            }
+            usernames.add( username );
+        }
+        return results;
+    }
 }

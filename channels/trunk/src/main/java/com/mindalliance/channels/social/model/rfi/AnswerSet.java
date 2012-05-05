@@ -33,7 +33,7 @@ public class AnswerSet extends AbstractPersistentPlanObject {
     @ManyToOne
     private RFI rfi;
 
-    private boolean shared;
+    private boolean shared = true; // answers are shared by default
 
     private boolean anonymous;
 

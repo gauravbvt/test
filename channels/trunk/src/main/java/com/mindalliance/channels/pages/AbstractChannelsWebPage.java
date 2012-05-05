@@ -106,6 +106,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     @SpringBean
     private PlanParticipationService planParticipationService;
 
+    /**
+     * Subsituted update target.
+     */
+    private Updatable updateTarget;
+
+
 
     //-------------------------------
     public AbstractChannelsWebPage() {
@@ -486,6 +492,11 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         // do nothing
+    }
+
+    @Override
+    public void setUpdateTarget( Updatable updatable ) {
+        updateTarget = updatable;
     }
 
     public AttachmentManager getAttachmentManager() {

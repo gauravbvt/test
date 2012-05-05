@@ -33,6 +33,8 @@ public class ChannelsUser implements UserDetails {
 
     private static final ChannelsUser ANONYMOUS = new ChannelsUser();
 
+    public static final String ANONYMOUS_USERNAME = "(Anonymous)";
+
     /**
      * Persistent information from database.
      */
@@ -55,7 +57,7 @@ public class ChannelsUser implements UserDetails {
     //----------------------------------------
     public ChannelsUser() {
         anonymous = true;
-        userInfo = new ChannelsUserInfo( "(Anonymous)", "bla,Anonymous,bla" );
+        userInfo = new ChannelsUserInfo( ANONYMOUS_USERNAME, "bla,Anonymous,bla" );
     }
 
 

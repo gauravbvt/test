@@ -20,6 +20,13 @@ import java.util.List;
 public interface Updatable {
 
     /**
+     * Replace the default update target with a given one.
+     *
+     * @param updatable an updatable
+     */
+    void setUpdateTarget( Updatable updatable );
+
+    /**
      * An identifiable object  was changed; change state accordingly.
      * This is in anticipation of receiving an "updateWith" message.
      *
@@ -87,13 +94,15 @@ public interface Updatable {
 
     /**
      * Get the plan of the page or panel.
+     *
      * @return a plan
      */
     Plan getPlan();
 
     /**
      * Get current user.
-     * @return  a user
+     *
+     * @return a user
      */
     ChannelsUser getUser();
 }

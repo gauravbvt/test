@@ -24,8 +24,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An abstract RFI answer panel.
@@ -36,6 +37,8 @@ import java.util.List;
  * Time: 1:28 PM
  */
 abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
+
+    private static final boolean SHARED_ONLY = true;
 
     @SpringBean
     private RFIService rfiService;
@@ -58,6 +61,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     private boolean changed = false;
     private WebMarkupContainer questionAndAnswerContainer;
     private WebMarkupContainer anonymousContainer;
+    private Map<String, Set<String>> results;
 
 
     public AbstractAnswerPanel( String id, IModel<Question> questionModel, IModel<RFI> rfiModel ) {
@@ -68,11 +72,21 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
+        processOtherResults();
         addQuestion();
         addComment();
         addOtherAnswersLink();
         addPrivacy();
         moreInit();
+    }
+
+    private void processOtherResults() {
+        results = surveysDAO.processAnswers(
+                getPlan(),
+                getRFI().getRfiSurvey(),
+                getQuestion(),
+                SHARED_ONLY,
+                getUsername() );
     }
 
     abstract protected void moreInit();
@@ -116,41 +130,46 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     }
 
     private void addOtherAnswersLink() {
-        final List<AnswerSet> otherAnswers = getSharedAnswers();
+        final String answerersLabel = getOtherAnswersLabel( );
         AjaxLink<String> otherAnswersLink = new AjaxLink<String>(
                 "others",
-                new Model<String>( getOtherAnswersLabel( otherAnswers ) )
+                new Model<String>( answerersLabel )
         ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                if ( !otherAnswers.isEmpty() ) {
-                    //Todo -- open dialog on other answers
-                    target.appendJavaScript( "alert('Not yet implemented');" );
+                if ( !results.isEmpty() ) {
+                    QuestionResultsPanel questionResultsPanel = new QuestionResultsPanel(
+                            getModalableParent().getModalContentId(),
+                            results );
+                    getModalableParent().showDialog(
+                            "What others answered",
+                            300,
+                            500,
+                            questionResultsPanel,
+                            AbstractAnswerPanel.this,
+                            target );
                 }
             }
         };
         otherAnswersLink.setOutputMarkupId( true );
-        makeVisible( otherAnswersLink, !otherAnswers.isEmpty() );
+        makeVisible( otherAnswersLink, !answerersLabel.isEmpty() );
         questionAndAnswerContainer.addOrReplace( otherAnswersLink );
     }
 
-    private String getOtherAnswersLabel( List<AnswerSet> otherAnswers ) {
-        if ( otherAnswers.isEmpty() )
+    private String getOtherAnswersLabel( ) {
+        if ( results.isEmpty() )
             return "";
         else {
-            int n = otherAnswers.size();
+            Set<String> answerers = new HashSet<String>(  );
+            for ( String text : results.keySet() ) {
+                answerers.addAll( results.get( text ) );
+            }
+            int n = answerers.size();
             return "What "
                     + n
                     + ( n > 1 ? " others " : " other " )
                     + "answered";
         }
-    }
-
-    private List<AnswerSet> getSharedAnswers() {
-        if ( getQuestion().isAnswerable() )
-            return surveysDAO.findOtherAnswers( getRFI(), getQuestion() );
-        else
-            return new ArrayList<AnswerSet>();
     }
 
     private void addPrivacy() {

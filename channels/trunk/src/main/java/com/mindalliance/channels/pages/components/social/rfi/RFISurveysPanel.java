@@ -66,7 +66,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
      */
     private Map<String, ModelObject> filters = new HashMap<String, ModelObject>();
     private WebMarkupContainer rfiSurveyContainer;
-    private static final int MAX_ROWS = 10;
+    private static final int MAX_ROWS = 5;
     private RFISurveyTable rfiSurveyTable;
 
 

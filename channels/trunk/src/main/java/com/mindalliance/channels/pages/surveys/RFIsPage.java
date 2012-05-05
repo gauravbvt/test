@@ -2,12 +2,14 @@ package com.mindalliance.channels.pages.surveys;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
+import com.mindalliance.channels.pages.Modalable;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -22,10 +24,14 @@ import java.util.List;
  * Date: 4/23/12
  * Time: 1:31 PM
  */
-public class RFIsPage extends AbstractChannelsWebPage {
+public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
 
     private RFI selectedRFI;
     private Component rfiPanel;
+    /**
+     * Modal dialog window.
+     */
+    private ModalWindow dialogWindow;
     private UserRFIsPanel userRFIsPanel;
 
     public RFIsPage() {
@@ -39,6 +45,7 @@ public class RFIsPage extends AbstractChannelsWebPage {
 
     private void init() {
         addHeading();
+        addModalDialog();
         addUserRFIsPanel();
         addRFIPanel();
     }
@@ -57,6 +64,60 @@ public class RFIsPage extends AbstractChannelsWebPage {
     private void addUserRFIsPanel() {
         userRFIsPanel = new UserRFIsPanel( "rfis" );
         addOrReplace( userRFIsPanel );
+    }
+
+    private void addModalDialog(
+    ) {
+        dialogWindow = new ModalWindow( "dialog" );
+        dialogWindow.setOutputMarkupId( true );
+        dialogWindow.setResizable( true );
+        dialogWindow.setContent(
+                new Label(
+                        dialogWindow.getContentId(),
+                        "" ) );
+        dialogWindow.setTitle( "" );
+        dialogWindow.setCookieName( "rfi-action" );
+        dialogWindow.setCloseButtonCallback(
+                new ModalWindow.CloseButtonCallback() {
+                    public boolean onCloseButtonClicked( AjaxRequestTarget target ) {
+                        return true;
+                    }
+                } );
+        dialogWindow.setWindowClosedCallback( new ModalWindow.WindowClosedCallback() {
+            public void onClose( AjaxRequestTarget target ) {
+                // do nothing
+            }
+        } );
+        dialogWindow.setHeightUnit( "px" );
+        dialogWindow.setInitialHeight( 0 );
+        dialogWindow.setInitialWidth( 0 );
+        addOrReplace( dialogWindow );
+    }
+
+    @Override
+    public void showDialog(
+            String title,
+            int height,
+            int width,
+            Updatable contents,
+            Updatable updateTarget,
+            AjaxRequestTarget target ) {
+        dialogWindow.setTitle( title );
+        dialogWindow.setInitialHeight( height );
+        dialogWindow.setInitialWidth( width );
+        dialogWindow.setContent( (Component) contents );
+        contents.setUpdateTarget( updateTarget );
+        dialogWindow.show( target );
+    }
+
+    @Override
+    public void hideDialog( AjaxRequestTarget target ) {
+        dialogWindow.close( target );
+    }
+
+    @Override
+    public String getModalContentId() {
+        return dialogWindow.getContentId();
     }
 
     private void addRFIPanel() {

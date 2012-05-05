@@ -4,6 +4,7 @@ import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -38,7 +39,10 @@ public class AnswerChoicePanel extends AbstractAnswerPanel {
         addMultipleChoice();
     }
     private void addSingleChoice() {
-        RadioChoice<String> singleChoice = new RadioChoice<String>(
+        WebMarkupContainer singleChoiceContainer = new WebMarkupContainer( "singleChoiceContainer" );
+        singleChoiceContainer.setVisible( !getQuestion().isMultipleAnswers() );
+        getContainer().add( singleChoiceContainer );
+        final RadioChoice<String> singleChoice = new RadioChoice<String>(
                 "singleChoice",
                 new PropertyModel<String>( this, "singleChoice" ),
                 getQuestion().getAnswerChoices()
@@ -49,8 +53,20 @@ public class AnswerChoicePanel extends AbstractAnswerPanel {
                 setChanged( true );
             }
         } );
-        singleChoice.setVisible( !getQuestion().isMultipleAnswers() );
-        getContainer().add( singleChoice );
+        singleChoice.setOutputMarkupId( true );
+        singleChoiceContainer.add( singleChoice );
+        AjaxLink<String> deselectLink = new AjaxLink<String>( "deselect" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                String choice = getSingleChoice();
+                if ( choice != null ) {
+                    setSingleChoice( choice );
+                    setChanged( true );
+                    target.add(  singleChoice );
+                }
+            }
+        };
+        singleChoiceContainer.add( deselectLink );
     }
 
     public String getSingleChoice() {
