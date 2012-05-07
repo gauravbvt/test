@@ -70,6 +70,7 @@ public class SurveyAnswersPanel extends AbstractUpdatablePanel {
         AjaxLink<String> acceptLink = new AjaxLink<String>( "accept" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
+                if ( getRFI().isPersisted() ) {
                 answerSetListView.visitChildren(
                         AbstractAnswerPanel.class,
                         new IVisitor<AbstractAnswerPanel,Void>() {
@@ -80,8 +81,10 @@ public class SurveyAnswersPanel extends AbstractUpdatablePanel {
                             }
                         } );
                 update( target, new Change( Change.Type.Updated, getRFI(), "submitted" ) );
+                }
              }
         };
+        acceptLink.setVisible( getRFI().isPersisted() );
         answerSetsContainer.add( acceptLink );
         AjaxLink<String> cancelLink = new AjaxLink<String>( "cancel" ) {
             @Override
@@ -89,6 +92,7 @@ public class SurveyAnswersPanel extends AbstractUpdatablePanel {
                 update( target, new Change( Change.Type.Collapsed, getRFI() ) );
             }
         };
+        cancelLink.setVisible( getRFI().isPersisted() );
         answerSetsContainer.add( cancelLink );
 
     }

@@ -25,6 +25,7 @@ import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareWebContainer;
@@ -59,7 +60,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -68,7 +69,6 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -222,11 +222,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private WebMarkupContainer spinner;
 
     /**
-     * Import segment "dialog".
-     */
-    // private SegmentImportPanel segmentImportPanel;
-
-    /**
      * Segment edit panel.
      */
     private Component segmentEditPanel;
@@ -314,11 +309,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * When last refreshed.
      */
     private long lastRefreshed = System.currentTimeMillis();
-
-    /**
-     * Modal dialog window.
-     */
-    private ModalWindow dialogWindow;
 
     /**
      * Maximized flow map panel.
@@ -454,7 +444,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
         WebMarkupContainer body = new IndicatorAwareWebContainer( "indicator", "spinner" );
         add( body );
-        addModalDialog( body );
+        addModalDialog( "dialog", "refresh-alert", body );
         addForm( body );
         addPlanName();
         addChannelsLogo();
@@ -784,8 +774,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void doTimedUpdate( AjaxRequestTarget target ) {
         if ( getCommander().isOutOfSync( getUser().getUsername() ) ) {
-            if ( !dialogWindow.isShown() )
-                dialogWindow.show( target );
+            showNewPlanVersionWarningDialog( target );
         }
         getCommander().keepAlive( getUser().getUsername(), REFRESH_DELAY );
         getCommander().processTimeOuts();
@@ -800,6 +789,20 @@ public final class PlanPage extends AbstractChannelsWebPage {
             fadeOutMessagePanel( target );
         }
         segmentPanel.updateSocialPanel( target );
+    }
+
+    private void showNewPlanVersionWarningDialog( AjaxRequestTarget target ) {
+        WarningPanel warningPanel = new WarningPanel( getModalContentId(), new Model<String>(
+                "There is a new version of the plan. "
+                        + "Closing this alert will switch you to it." ) );
+        showDialog(
+                "Warning: New Plan Version",
+                200,
+                300,
+                warningPanel,
+                PlanPage.this,
+                target
+                );
     }
 
     private void fadeOutMessagePanel( AjaxRequestTarget target ) {
@@ -820,7 +823,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             LOG.debug( "Refresh now requested" );
         }
         makeVisible( refreshNeededComponent, !reasonsToRefresh.isEmpty() );
-        refreshNeededComponent.add( new AttributeModifier( "title", true, new Model<String>(
+        refreshNeededComponent.add( new AttributeModifier( "title", new Model<String>(
                 "Refresh:" + reasonsToRefresh ) ) );
     }
 
@@ -925,30 +928,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
         } );
         segmentDropDownChoice.setOutputMarkupId( true );
         selectSegmentContainer.add( segmentDropDownChoice );
-    }
-
-    private void addModalDialog( WebMarkupContainer body ) {
-        dialogWindow = new ModalWindow( "dialog" );
-        dialogWindow.setResizable( false );
-        dialogWindow.setContent( new DialogPanel( dialogWindow.getContentId(), new Model<String>(
-                "There is a new version of the plan. "
-                        + "Closing this alert will switch you to it." ) ) );
-        dialogWindow.setTitle( "Alert" );
-        dialogWindow.setCookieName( "refresh-alert" );
-        dialogWindow.setCloseButtonCallback( new ModalWindow.CloseButtonCallback() {
-            public boolean onCloseButtonClicked( AjaxRequestTarget target ) {
-                return true;
-            }
-        } );
-        dialogWindow.setWindowClosedCallback( new ModalWindow.WindowClosedCallback() {
-            public void onClose( AjaxRequestTarget target ) {
-                redirectToPlan();
-            }
-        } );
-        dialogWindow.setHeightUnit( "px" );
-        dialogWindow.setInitialHeight( 100 );
-        dialogWindow.setInitialWidth( 400 );
-        body.add( dialogWindow );
     }
 
     private void addEntityPanel() {
@@ -2475,12 +2454,23 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * Dialog panel.
      */
-    private class DialogPanel extends Panel {
+    private class WarningPanel extends AbstractUpdatablePanel {
 
-        private DialogPanel( String id, IModel<String> iModel ) {
-            super( id, iModel );
+        private IModel<String> iModel;
+
+        private WarningPanel( String id, IModel<String> iModel ) {
+            super( id );
+            this.iModel = iModel;
             Label alertLabel = new Label( "alert", iModel );
             add( alertLabel );
+            AjaxLink<String> okLink = new AjaxLink<String>( "ok" ) {
+                @Override
+                public void onClick( AjaxRequestTarget target ) {
+                    hideDialog( target );
+                    redirectToPlan();
+                }
+            };
+            add( okLink );
         }
     }
 

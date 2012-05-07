@@ -30,8 +30,8 @@ public class QuestionServiceImpl extends GenericSqlServiceImpl<Question, Long> i
     @Transactional
     public List<Question> listQuestions( Questionnaire questionnaire ) {
         Session session = getSession();
-        Criteria criteria = session.createCriteria(  getPersistentClass() );
-        criteria.add( Restrictions.eq( "questionnaire",  questionnaire ) );
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "questionnaire", questionnaire ) );
         criteria.addOrder( Order.asc( "index" ) );
         return (List<Question>) criteria.list();
 
@@ -42,13 +42,13 @@ public class QuestionServiceImpl extends GenericSqlServiceImpl<Question, Long> i
     public void moveUp( Question question ) {
         int index = question.getIndex();
         if ( index > 0 ) {
-        for ( Question q : listQuestions( question.getQuestionnaire() ) ) {
-            if ( q.getIndex() == index -1 ) {
-                q.setIndex( index );
-                save( q );
-                break;
+            for ( Question q : listQuestions( question.getQuestionnaire() ) ) {
+                if ( q.getIndex() == index - 1 ) {
+                    q.setIndex( index );
+                    save( q );
+                    break;
+                }
             }
-        }
             question.setIndex( index - 1 );
             save( question );
         }
@@ -85,7 +85,7 @@ public class QuestionServiceImpl extends GenericSqlServiceImpl<Question, Long> i
 
     @Override
     @Transactional
-   public void moveUpAnswerChoice( Question question, String choice ) {
+    public void moveUpAnswerChoice( Question question, String choice ) {
         List<String> choices = question.getAnswerChoices();
         question.setAnswerChoices( ChannelsUtils.moveUp( choice, choices ) );
         save( question );
@@ -93,7 +93,7 @@ public class QuestionServiceImpl extends GenericSqlServiceImpl<Question, Long> i
 
     @Override
     @Transactional
-   public void moveDownAnswerChoice( Question question, String choice ) {
+    public void moveDownAnswerChoice( Question question, String choice ) {
         List<String> choices = question.getAnswerChoices();
         question.setAnswerChoices( ChannelsUtils.moveDown( choice, choices ) );
         save( question );
@@ -101,7 +101,7 @@ public class QuestionServiceImpl extends GenericSqlServiceImpl<Question, Long> i
 
     @Override
     @Transactional
-   public void deleteAnswerChoice( Question question, String choice ) {
+    public void deleteAnswerChoice( Question question, String choice ) {
         List<String> choices = question.getAnswerChoices();
         choices.remove( choice );
         question.setAnswerChoices( choices );

@@ -163,7 +163,13 @@ public class RFIPanel extends AbstractUpdatablePanel {
                         getModalableParent().getModalContentId(),
                         new Model<RFI>( getRFI() )
                 );
-                getModalableParent().showDialog( "Forwarding survey", 600, 500, forwardingRFIPanel, RFIPanel.this, target );
+                getModalableParent().showDialog(
+                        "Forwarding survey",
+                        600,
+                        500,
+                        forwardingRFIPanel,
+                        RFIPanel.this,
+                        target );
             }
         };
         forwardButton.setOutputMarkupId( true );

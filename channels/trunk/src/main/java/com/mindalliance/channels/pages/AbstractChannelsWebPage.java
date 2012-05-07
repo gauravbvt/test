@@ -35,8 +35,11 @@ import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.Model;
@@ -59,7 +62,7 @@ import java.util.List;
 /**
  * Abstract Channels Web Page.
  */
-public class AbstractChannelsWebPage extends WebPage implements Updatable {
+public class AbstractChannelsWebPage extends WebPage implements Updatable, Modalable {
 
     public static final String PLAN_PARM = "plan";
 
@@ -110,7 +113,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
      * Subsituted update target.
      */
     private Updatable updateTarget;
-
+    private ModalWindow dialogWindow;
 
 
     //-------------------------------
@@ -567,4 +570,61 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable {
     public void setUserDao( ChannelsUserDao userDao ) {
         this.userDao = userDao;
     }
+
+    // Modalable
+
+    public void addModalDialog( String id, String cookieName, MarkupContainer container ) {
+        dialogWindow = new ModalWindow( id );
+        dialogWindow.setOutputMarkupId( true );
+        dialogWindow.setResizable( true );
+        dialogWindow.setContent(
+                new Label(
+                        dialogWindow.getContentId(),
+                        "" ) );
+        dialogWindow.setTitle( "" );
+        dialogWindow.setCookieName( cookieName );
+        dialogWindow.setCloseButtonCallback(
+                new ModalWindow.CloseButtonCallback() {
+                    public boolean onCloseButtonClicked( AjaxRequestTarget target ) {
+                        return true;
+                    }
+                } );
+        dialogWindow.setWindowClosedCallback( new ModalWindow.WindowClosedCallback() {
+            public void onClose( AjaxRequestTarget target ) {
+                // do nothing
+            }
+        } );
+        dialogWindow.setHeightUnit( "px" );
+        dialogWindow.setInitialHeight( 0 );
+        dialogWindow.setInitialWidth( 0 );
+        container.addOrReplace( dialogWindow );
+    }
+
+    @Override
+    public void showDialog(
+            String title,
+            int height,
+            int width,
+            Updatable contents,
+            Updatable updateTarget,
+            AjaxRequestTarget target ) {
+        dialogWindow.setTitle( title );
+        dialogWindow.setInitialHeight( height );
+        dialogWindow.setInitialWidth( width );
+        dialogWindow.setContent( (Component) contents );
+        contents.setUpdateTarget( updateTarget );
+        dialogWindow.show( target );
+    }
+
+    @Override
+    public void hideDialog( AjaxRequestTarget target ) {
+        dialogWindow.close( target );
+    }
+
+    @Override
+    public String getModalContentId() {
+        return dialogWindow.getContentId();
+    }
+
+
 }

@@ -157,7 +157,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     }
 
     private String getOtherAnswersLabel( ) {
-        if ( results.isEmpty() )
+        if ( !getRFI().isPersisted() || results.isEmpty() )
             return "";
         else {
             Set<String> answerers = new HashSet<String>(  );
@@ -174,7 +174,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
 
     private void addPrivacy() {
         WebMarkupContainer privacyContainer = new WebMarkupContainer( "privacyContainer" );
-        privacyContainer.setVisible( getQuestion().isAnswerable() );
+        privacyContainer.setVisible( getRFI().isPersisted() && getQuestion().isAnswerable() );
         questionAndAnswerContainer.add( privacyContainer );
         privacyContainer.add( new AjaxCheckBox(
                 "shared",
@@ -205,7 +205,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     }
 
     public boolean isShared() {
-        return getQuestion().isAnswerable() && getAnswerSet().isShared();
+        return getRFI().isPersisted() && getQuestion().isAnswerable() && getAnswerSet().isShared();
     }
 
     public void setShared( boolean val ) {
@@ -213,7 +213,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     }
 
     public boolean isAnonymous() {
-        return getQuestion().isAnswerable() && getAnswerSet().isAnonymous();
+        return getRFI().isPersisted() && getQuestion().isAnswerable() && getAnswerSet().isAnonymous();
     }
 
     public void setAnonymous( boolean val ) {
@@ -239,11 +239,12 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     }
 
     protected AnswerSet getAnswerSet() {
-        if ( getQuestion().isAnswerable() && answerSet == null ) {
-            answerSet = answerSetService.findAnswerSet( getRFI(), getQuestion() );
-            if ( answerSet == null ) {
-                answerSet = new AnswerSet( getPlan(), getUser(), getRFI(), getQuestion() );
-            }
+        RFI rfi = getRFI();
+        if ( getQuestion().isAnswerable() && answerSet == null && rfi.isPersisted() ) {
+            answerSet = answerSetService.findAnswerSet( rfi, getQuestion() );
+        }
+        if ( answerSet == null ) {
+            answerSet = new AnswerSet( getPlan(), getUser(), getRFI(), getQuestion() );
         }
         return answerSet;
     }

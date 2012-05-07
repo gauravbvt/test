@@ -10,6 +10,7 @@ import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
+import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.RFISurveyService;
@@ -197,6 +198,14 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
             }
         };
         rfiSurveyContainer.add( canForwardCheckBox );
+        // preview
+        AjaxLink<String> previewLink = new AjaxLink<String>( "preview" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                openRFIPreview( target );
+            }
+        };
+        rfiSurveyContainer.add(  previewLink );
         // rfi panel
         rfiSurveyContainer.add( selectedRFISurvey == null
                 ? new Label( "rfiSurvey", "" )
@@ -205,6 +214,23 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
                 new Model<RFISurvey>( selectedRFISurvey ) ) );
 
         addOrReplace( rfiSurveyContainer );
+    }
+
+    private void openRFIPreview( AjaxRequestTarget target ) {
+        RFI transientRFI = new RFI( );
+        transientRFI.setRfiSurvey( selectedRFISurvey );
+        // open in dialog
+        SurveyAnswersPanel surveyAnswersPanel = new SurveyAnswersPanel(
+                getModalableParent().getModalContentId(),
+                new Model<RFI> (transientRFI) );
+        getModalableParent().showDialog(
+                "Survey preview",
+                600,
+                800,
+                surveyAnswersPanel,
+                RFISurveysPanel.this,
+                target
+        );
     }
 
     public String getRfiSurveyLabel() {

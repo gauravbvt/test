@@ -56,6 +56,7 @@ public class AssignedLocationPanel extends AbstractCommandablePanel {
     }
 
     private void adjustFields() {
+        placeReferencePanel.setEnabled( isLockedByUser( getPart() ) );
         makeVisible( placeReferencePanel, getKind() == AssignedLocation.Kind.NamedPlace );
         makeVisible( subjectContainer, getKind() == AssignedLocation.Kind.CommunicatedPlace );
         makeVisible( eoiContainer, getKind() == AssignedLocation.Kind.CommunicatedPlace
@@ -92,6 +93,7 @@ public class AssignedLocationPanel extends AbstractCommandablePanel {
                         ) );
             }
         } );
+        kindChoice.setEnabled( isLockedByUser(  getPart() ) );
         add( kindChoice );
     }
 

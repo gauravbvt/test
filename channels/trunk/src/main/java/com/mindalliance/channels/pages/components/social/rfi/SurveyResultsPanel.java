@@ -5,6 +5,8 @@ import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.SurveysDAO;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -15,6 +17,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -71,7 +74,7 @@ public class SurveyResultsPanel extends AbstractUpdatablePanel {
         DropDownChoice<Question> questionsChoice = new DropDownChoice<Question>(
                 "questions",
                 new PropertyModel<Question>( this, "selectedQuestion" ),
-                getRFISurvey().getQuestionnaire().getQuestions(),
+                getAnswerableQuestions(),
                 new IChoiceRenderer<Question>() {
                     @Override
                     public Object getDisplayValue( Question question ) {
@@ -92,6 +95,19 @@ public class SurveyResultsPanel extends AbstractUpdatablePanel {
             }
         } );
         add( questionsChoice );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Question> getAnswerableQuestions() {
+        return (List<Question>) CollectionUtils.select(
+                getRFISurvey().getQuestionnaire().getQuestions(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Question)object).isAnswerable();
+                    }
+                }
+        );
     }
 
     private void addQuestionResultsPanel() {

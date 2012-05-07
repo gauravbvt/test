@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages;
 
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**
@@ -10,6 +11,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  * Time: 7:51 PM
  */
 public interface Modalable {
+
+    public void addModalDialog( String id, String cookieName, MarkupContainer container );
 
     void showDialog( String title,
                      int height,

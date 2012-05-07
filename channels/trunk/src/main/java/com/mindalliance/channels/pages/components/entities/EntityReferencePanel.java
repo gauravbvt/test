@@ -102,7 +102,7 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
         this.defaultEntity = defaultEntity;
         this.referenceKind = referenceKind;
 
-        add( new AttributeModifier( "class", true, new Model<String>( "entityReference" ) ) );
+        add( new AttributeModifier( "class", new Model<String>( "entityReference" ) ) );
         init();
 
     }
