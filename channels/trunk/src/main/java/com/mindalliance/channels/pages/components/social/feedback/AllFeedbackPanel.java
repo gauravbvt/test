@@ -533,7 +533,7 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
             columns.add( makeColumn( "Type", "typeLabel", EMPTY ) );
             columns.add( makeUserColumn( "From", "fullName", EMPTY ) );
             columns.add( makeColumn( "Topic", "topic", EMPTY ) );
-            columns.add( makeFilterableLinkColumn( "About", "about", "moRefLabel", EMPTY, AllFeedbackPanel.this, true ) );
+            columns.add( makeFilterableLinkColumn( "About", "about", "moRefLabel", EMPTY, AllFeedbackPanel.this, false ) );
             columns.add( makeColumn( "Content", "abbreviatedText", null, EMPTY, "text" ) );
             columns.add( makeColumn( "Received", "formattedCreated", null, EMPTY, null, "created" ) );
             columns.add( makeColumn( "Last replied", "formattedLastReplied", EMPTY ) );
