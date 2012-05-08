@@ -9,11 +9,11 @@ aboutId,1
 aboutType,plan
 aboutName,Rail Security
 aboutDescription,IED attack on a public transit system.
-issueDetected,true
+issueDetected,TRUE
 issueType,Completeness
 issueKind,NoSegmentRespondsToIncident
-issueWaived,false
-issueDescription,No plan segment responds to incident "IED detonated".
+issueWaived,FALSE
+issueDescription,"No plan segment responds to incident ""IED detonated""."
 issueRemediation,Define a plan segment that responds to it remove the event's incident status.
 issueSeverity,High
 issueReportedBy,Channels
@@ -23,10 +23,10 @@ fullName,Administrator
 email,admin@gmail.com
 agentId,2587
 agentName,A special ops
-hasUniqueIdentity,false
-isAnonymous,false
+hasUniqueIdentity,FALSE
+isAnonymous,FALSE
 kind,actual
-always,true
+always,TRUE
 language,English
 documentsType,Picture
 documentsUrl,uploads/1_special_ops.jpeg

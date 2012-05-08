@@ -17,8 +17,8 @@ placeKind,type
 placeCategoryId,5280
 eventId,2
 eventName,Attack suspected
-eventIncident,true
-eventSelfTerminating,false
+eventIncident,TRUE
+eventSelfTerminating,FALSE
 eventLocationId,110
 eventPlannedPhaseId,3
 roleId,12
@@ -28,17 +28,17 @@ organizationId,282
 organizationName,Metropolis Transit Authority
 organizationCategoryId,9
 organizationKind,actual
-organizationParticipating,true
+organizationParticipating,TRUE
 documentsType,Picture
 documentsUrl,uploads/metropolis_transit_authority.jpeg
 agentId,305
 agenntName,John Mullen
-hasUniqueIdentity,true
-isAnonymous,false
+hasUniqueIdentity,TRUE
+isAnonymous,FALSE
 categoryId,32694
 categoryId,522
 kind,actual
-always,false
+always,FALSE
 dayOfWeek,Sunday
 value,Not available
 fromTime,-1
@@ -48,4 +48,4 @@ employmentOrganizationId,284
 employmentTitle,Station Manager
 employmentRoleId,504
 employmentJurisdictionId,292
-employmentConfirmed,true
+employmentConfirmed,TRUE

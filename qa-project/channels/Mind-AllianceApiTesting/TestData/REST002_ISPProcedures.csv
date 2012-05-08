@@ -4,15 +4,15 @@ password,admin
 uri,mindalliance_com_channels_plans_railsec
 agentId,2587
 agentName,A special ops
-hasUniqueIdentity,false
-isAnonymous,false
+hasUniqueIdentity,FALSE
+isAnonymous,FALSE
 kind,actual
 taskName,Detecting threats
 taskKind,mitigate risk
 environmentEventID,2
 envirnomentName,Attack suspected
-environmentIncident,true
-environmentSelfTerminating,false
+environmentIncident,TRUE
+environmentSelfTerminating,FALSE
 environmentLocationId,110
 environmentPlannedPhaseId,3
 employmentName,A special ops
@@ -20,7 +20,7 @@ employmentOrganizationId,2584
 employmentTitle,Police Officer
 employmentRoleId,126
 employmentSupervisorId,286
-employmentConfirmed,true
+employmentConfirmed,TRUE
 procedureAgentId,2587
 situationEventId,8
 situationPhaseId,3
@@ -32,9 +32,9 @@ goalorganizationId,9
 taskFailureImpact,Severe
 informationName,Threat detected
 outNotificationIntent,Alarm
-outNotificationTaskFailed,false
-outNotificationReceiptConfirmationRequested,false
-outNotificationContactAll,false
+outNotificationTaskFailed,FALSE
+outNotificationReceiptConfirmationRequested,FALSE
+outNotificationContactAll,FALSE
 outNotificationFailureImpact,Minor
 maxDelayAmount,0
 maxDelayUnit,seconds
@@ -44,7 +44,7 @@ identityOrganizationId,2584
 identityTitle,Police Chief
 identityRoleId,287
 identitySupervisorId,283
-identityConfirmed,true
+identityConfirmed,TRUE
 workChannelMediumId,-984
 workChannelMedium,Cell
 workChannelAddress,1-545-546-8764
@@ -60,8 +60,8 @@ planRelease,production
 planDateVersioned,2011/07/07 23:35:12 IST
 eventId,2
 eventName,Attack suspected
-eventIncident,true
-eventSelfTerminating,false
+eventIncident,TRUE
+eventSelfTerminating,FALSE
 eventLocationId,110
 eventPlannedPhaseId,3
 phaseId,3
@@ -72,7 +72,7 @@ organizationName,Public Transit Agency
 organizationCategoryId,9
 organizationKind,actual
 organizationParentId,282
-organizationParticipating,true
+organizationParticipating,TRUE
 documentsType,Picture
 documentsUrl,uploads/security.jpeg
 roleId,504
@@ -85,4 +85,4 @@ placeCategoryId,117
 transmissionMediumName,Phone
 transmissionMediumId,-987
 transmissionMediumMode,Unicast
-transmissionMediumSynchronous,true
+transmissionMediumSynchronous,TRUE
