@@ -30,14 +30,16 @@ organizationCategoryId,9
 organizationKind,actual
 organizationParticipating,TRUE
 documentsType,Picture
+documentsName,photos
 documentsUrl,uploads/metropolis_transit_authority.jpeg
 agentId,305
-agenntName,John Mullen
+agentName,John Mullen
 hasUniqueIdentity,TRUE
 isAnonymous,FALSE
 categoryId,32694
 categoryId,522
 kind,actual
+language,English
 always,FALSE
 dayOfWeek,Sunday
 value,Not available
@@ -48,3 +50,4 @@ employmentOrganizationId,284
 employmentTitle,Station Manager
 employmentRoleId,504
 employmentJurisdictionId,292
+employmentConfirmed,true
