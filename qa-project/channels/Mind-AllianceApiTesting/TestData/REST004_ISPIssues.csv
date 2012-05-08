@@ -1,5 +1,32 @@
-api,http://192.168.4.127:8081/channels/rest/isp/plan/mindalliance_com_channels_plans_railsec/version/5/issues
+api,http://192.168.4.127:8081/channels/rest/isp/plan/mindalliance_com_channels_plans_railsec
 username,admin
 password,admin
 uri,mindalliance_com_channels_plans_acme
 responseType,xml
+versionNumber,5
+release,development
+aboutId,1
+aboutType,plan
+aboutName,Rail Security
+aboutDescription,IED attack on a public transit system.
+issueDetected,true
+issueType,Completeness
+issueKind,NoSegmentRespondsToIncident
+issueWaived,false
+issueDescription,No plan segment responds to incident "IED detonated".
+issueRemediation,Define a plan segment that responds to it remove the event's incident status.
+issueSeverity,High
+issueReportedBy,Channels
+countType,event
+countValue,7
+fullName,Administrator
+email,admin@gmail.com
+agentId,2587
+agentName,A special ops
+hasUniqueIdentity,false
+isAnonymous,false
+kind,actual
+always,true
+language,English
+documentsType,Picture
+documentsUrl,uploads/1_special_ops.jpeg
