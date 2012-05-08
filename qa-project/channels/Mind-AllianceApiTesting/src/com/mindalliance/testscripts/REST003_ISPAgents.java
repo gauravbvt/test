@@ -104,7 +104,7 @@ public class REST003_ISPAgents extends TestCase{
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			String data =GlobalVariables.testData.get("api")+"/procedures";
+			String data =GlobalVariables.testData.get("api")+"/procedures/agent/2587";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
 			System.out.println("3) Sending Request");
@@ -329,7 +329,7 @@ public class REST003_ISPAgents extends TestCase{
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			String data =GlobalVariables.testData.get("api")+"/procedures";
+			String data =GlobalVariables.testData.get("api")+"/procedures/agent/2587";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
 			System.out.println("3) Sending Request");
