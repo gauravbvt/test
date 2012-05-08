@@ -1,58 +1,50 @@
-"api","http://192.168.4.127:8081/channels/rest/isp/plan/mindalliance_com_channels_plans_railsec"
-"username","admin"
-"password","admin"
-"uri","mindalliance_com_channels_plans_acme"
-"responseType","xml"
-"identityName","Rail Security"
-"identityUri","mindalliance_com_channels_plans_railsec"
-"identityVersion",5
-"identityRelease","development"
-"identityDateVersioned","2011/07/07 21:31:23 IST"
-"phaseId",3
-"phaseName","Responding"
-"phaseTiming","Co-event"
-"placeId",36
-"placeName","Rail station"
-"placeKind","type"
-"placeCategoryId",5280
-"eventId",2
-"eventName","Attack suspected"
-"eventIncident",TRUE
-"eventSelfTerminating",FALSE
-"eventLocationId",110
-"eventPlannedPhaseId",3
-"roleId",12
-"roleName","Chief of Security"
-"roleCategoryId",19
-"organizationId",9
-"organizationName","Public Transit Agency"
-"organizationCategoryId",10561
-"organizationKind","type"
-"organizationParticipating",FALSE
-"organizationId",282
-"organizationName","Metropolis Transit Authority"
-"organizationCategoryId",9
-"organizationKind","actual"
-"organizationParticipating",TRUE
-"documentsType","Picture"
-"documentsName","photos"
-"documentsUrl","uploads/public_transit.jpg"
-"agentId",305
-"agentName","John Mullen"
-"hasUniqueIdentity",TRUE
-"isAnonymous",FALSE
-"language","English"
-"categoryId",32694
-"categoryId",522
-"kind","actual"
-"always",FALSE
-"dayOfWeek","Sunday"
-"value","Not available"
-"fromTime",-1
-"toTime",0
-"employmentName","Joseph Neumann"
-"employmentOrganizationId",284
-"employmentTitle","Station Manager"
-"employmentRoleId",504
-"employmentJurisdictionId",292
-"employmentConfirmed",TRUE
+api,http://192.168.4.127:8081/channels/rest/isp/plan/mindalliance_com_channels_plans_railsec
+username,admin
+password,admin
+uri,mindalliance_com_channels_plans_acme
+responseType,xml
+identityName,Rail Security
+identityUri,mindalliance_com_channels_plans_railsec
+identityVersion,5
+identityRelease,development
+identityDateVersioned,2011/07/07 21:31:23 IST
+phaseId,3
+phaseName,Responding
+phaseTiming,Co-event
+placeId,36
+placeName,Rail station
+placeKind,type
+placeCategoryId,5280
+eventId,2
+eventName,Attack suspected
+eventIncident,TRUE
+eventSelfTerminating,FALSE
+eventLocationId,110
+eventPlannedPhaseId,3
+roleId,12
+roleName,Chief of Security
+roleCategoryId,19
+organizationId,282
+organizationName,Metropolis Transit Authority
+organizationCategoryId,9
+organizationKind,actual
+organizationParticipating,TRUE
+documentsType,Picture
+documentsUrl,uploads/metropolis_transit_authority.jpeg
+agentId,305
+agenntName,John Mullen
+hasUniqueIdentity,TRUE
+isAnonymous,FALSE
+categoryId,32694
+categoryId,522
+kind,actual
+always,FALSE
+dayOfWeek,Sunday
+value,Not available
+fromTime,-1
+toTime,0
+employmentName,Joseph Neumann
+employmentOrganizationId,284
+employmentTitle,Station Manager
+employmentRoleId,504
+employmentJurisdictionId,292
