@@ -63,18 +63,18 @@ public class REST004_ISPIssues extends TestCase{
 			// Verify Issue Detected
 			planIdentifierResult=Configurations.parseResponse("issue","detected",GlobalVariables.testData.get("issueDetected"));
 			Assert.assertEquals("Issue Detected is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("issueDetected")));			
-//			// Verify Issue Type
+			// Verify Issue Type
 //			planIdentifierResult=Configurations.parseResponse("issue","type",GlobalVariables.testData.get("issueType"));
 //			Assert.assertEquals("Issue Type is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("issueType")));			
-//			// Verify Issue kind
+			// Verify Issue kind
 			planIdentifierResult=Configurations.parseResponse("issue","kind",GlobalVariables.testData.get("issueKind"));
 			Assert.assertEquals("Issue kind is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("issueKind")));			
 			// Verify Issue waived
 			planIdentifierResult=Configurations.parseResponse("issue","waived",GlobalVariables.testData.get("issueWaived"));
 			Assert.assertEquals("Issue waived is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("issueWaived")));			
-			// Verify Issue description
-			planIdentifierResult=Configurations.parseResponse("issue","description",GlobalVariables.testData.get("issueDescription"));
-			Assert.assertEquals("Issue description is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("issueDescription")));			
+//			// Verify Issue description
+//			planIdentifierResult=Configurations.parseResponse("issue","description",GlobalVariables.testData.get("issueDescription"));
+//			Assert.assertEquals("Issue description is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("issueDescription")));			
 			// Verify Issue remediation
 			planIdentifierResult=Configurations.parseResponse("issue","remediation",GlobalVariables.testData.get("issueRemediation"));
 			Assert.assertEquals("Issue remediation is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("issueRemediation")));			
