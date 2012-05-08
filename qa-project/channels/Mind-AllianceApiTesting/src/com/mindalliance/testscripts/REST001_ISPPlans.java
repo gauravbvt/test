@@ -38,8 +38,7 @@ public class REST001_ISPPlans extends TestCase{
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			GlobalVariables.userCredentials=GlobalVariables.testData.get("username")+":"+GlobalVariables.testData.get("password");
-			String data =GlobalVariables.userCredentials;
+			String data =GlobalVariables.testData.get("api");
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
 			System.out.println("3) Sending Request");
@@ -112,8 +111,7 @@ public class REST001_ISPPlans extends TestCase{
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			GlobalVariables.userCredentials=GlobalVariables.testData.get("username")+":"+GlobalVariables.testData.get("password");
-			String data =GlobalVariables.userCredentials;
+			String data =GlobalVariables.testData.get("api");
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
 			System.out.println("3) Sending Request");
