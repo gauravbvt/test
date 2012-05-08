@@ -61,7 +61,7 @@ public class MAP0019_deleteAttachFile
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 			    
 				// Click on 'Add new segment' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++;
@@ -121,7 +121,7 @@ public class MAP0019_deleteAttachFile
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Attach file to segment
 				GlobalVariables.iStepNo++;
@@ -204,13 +204,12 @@ public class MAP0019_deleteAttachFile
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
-				
+				Thread.sleep(1000);				
 				// Click on 'Remove this segment' under 'Actions' pop up menu
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
 				// Get a handle to the open alert, prompt or confirmation
-//					alert = GlobalVariables.oDriver.switchTo().alert();
-//					alert.accept();
+				alert = GlobalVariables.oDriver.switchTo().alert();
+				alert.accept();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(1000);

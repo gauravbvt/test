@@ -60,7 +60,7 @@ public class MAP0018_attachFile
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 			    
 				// Click on 'Add new segment' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++;
@@ -72,7 +72,7 @@ public class MAP0018_attachFile
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 				
 				// Details of Segment
 				GlobalVariables.iStepNo++;
@@ -89,7 +89,7 @@ public class MAP0018_attachFile
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 				
 				// Select the Segment from 'Select Plan Segment' drop down, located on the top right corner
 				GlobalVariables.iStepNo++ ;
@@ -120,7 +120,7 @@ public class MAP0018_attachFile
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Attach file to segment
 				GlobalVariables.iStepNo++;
@@ -131,7 +131,7 @@ public class MAP0018_attachFile
 				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:submit")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
