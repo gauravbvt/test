@@ -114,7 +114,7 @@ public class Configurations {
 	 */
 	public static void sendRequest(String data) {
 		try {
-			URL url = new URL(GlobalVariables.testData.get("api"));		
+			URL url = new URL(data);		
 			GlobalVariables.connection = (HttpURLConnection) url.openConnection();
 			GlobalVariables.connection.setRequestMethod("GET");
 			
