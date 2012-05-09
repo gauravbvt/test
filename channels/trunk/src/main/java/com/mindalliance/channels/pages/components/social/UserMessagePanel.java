@@ -26,7 +26,7 @@ public class UserMessagePanel extends UserStatementPanel {
         this.showReceived = showReceived;
     }
 
-    protected String getDisplayedUserNameLabel() {
+    protected String getPersistentPlanObjectUsername() {
         return showReceived
                 ? getUserMessage().getFromUsername()
                 : getUserMessage().getToUsername();
@@ -40,7 +40,7 @@ public class UserMessagePanel extends UserStatementPanel {
     }
 
     protected String getTimeLabel() {
-        return ( getUserMessage().isEmailed() ? "emailed " : "" )
+        return ( getUserMessage().isNotificationSent() ? "emailed " : "" )
                 + getTime();
     }
 

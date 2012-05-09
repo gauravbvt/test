@@ -183,8 +183,8 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
                         || selectedRFISurvey.isObsolete( getQueryService(), getAnalyst() )
                         ? ""
                         : selectedRFISurvey.isClosed()
-                        ? "Activate survey"
-                        : "Close survey" ) ) );
+                        ? "Activate this survey"
+                        : "Retire this survey" ) ) );
         activateButton.setVisible( selectedRFISurvey != null
                 && !selectedRFISurvey.isObsolete( getQueryService(), getAnalyst() ) );
         rfiSurveyContainer.add( activateButton );

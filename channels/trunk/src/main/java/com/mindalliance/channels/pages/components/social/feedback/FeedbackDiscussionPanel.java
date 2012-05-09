@@ -163,7 +163,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
             Plan plan = getPlan();
             UserMessage message = new UserMessage( plan.getUri(), plan.getVersion(), getUsername(), reply );
             message.setText( reply );
-            message.setEmailIt( emailIt );
+            message.setSendNotification( emailIt );
             feedbackService.addReplyTo( feedback, message, userMessageService );
         }
     }

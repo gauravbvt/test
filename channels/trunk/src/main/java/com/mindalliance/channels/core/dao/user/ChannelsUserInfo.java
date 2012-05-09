@@ -48,6 +48,17 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
     public static final String ROLE_USER = "ROLE_USER";
 
     /**
+     * Short hand username for all planners in current plan.
+     */
+    public static final String PLANNERS = "__planners__";
+
+    /**
+     * Short hand username for all users in current plan.
+     */
+    public static final String USERS = "__users__";
+
+
+    /**
      * The email.
      */
     private String email = "";

@@ -15,9 +15,6 @@ import java.util.Iterator;
  */
 public interface UserMessageService extends GenericSqlService<UserMessage, Long> {
 
-    public static final String PLANNERS = "__planners__";
-    public static final String USERS = "__users__";
-
     void sendMessage( UserMessage message, boolean emailIt );
     
     void deleteMessage( UserMessage message );
@@ -30,9 +27,9 @@ public interface UserMessageService extends GenericSqlService<UserMessage, Long>
     
     Date getWhenLastReceived( String username, String planUri, int planVersion );
 
-    void emailed( UserMessage message );
+    void markNotified( UserMessage message );
 
-    Iterator<UserMessage> listMessagesToEmail();
+    Iterator<UserMessage> listMessagesToNotify();
 
-    void email( UserMessage message );
+    void markToNotify( UserMessage message );
 }

@@ -113,7 +113,7 @@ public class SocialItemMenuPanel extends MenuPanel {
                     };
                     menuItems.add( new LinkMenuItem(
                             "menuItem",
-                            new Model<String>( message.isEmailed() ? "Resend email" : "Email this message" ),
+                            new Model<String>( message.isNotificationSent() ? "Resend email" : "Email this message" ),
                             emailLink ) );
                 }
             }

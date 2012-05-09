@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 2/7/12
  * Time: 1:55 PM
  */
-public interface ChannelsUserDao extends GenericSqlService<ChannelsUserInfo,Long>, UserDetailsService {
+public interface ChannelsUserDao extends GenericSqlService<ChannelsUserInfo, Long>, UserDetailsService {
 
     @Secured( "ROLE_ADMIN" )
     ChannelsUser createUser( String username ) throws DuplicateKeyException;
@@ -76,30 +76,48 @@ public interface ChannelsUserDao extends GenericSqlService<ChannelsUserInfo,Long
     /**
      * Change the user's password and email a notice.
      *
-     * @param user       a user
+     * @param user        a user
      * @param planManager a plan manager
-     * @param mailSender a mail sender service
+     * @param mailSender  a mail sender service
      * @return a boolean indicating success
      */
     boolean changePassword( ChannelsUser user, PlanManager planManager, MailSender mailSender );
 
     /**
      * Create a user info.
-     * @param username  a string
+     *
+     * @param username a string
      * @param password as string (not encoded)
      * @param fullName a string
-     * @param email a string
-     * @return  a user info
+     * @param email    a string
+     * @return a user info
      */
     ChannelsUserInfo createUserInfo( String username, String password, String fullName, String email );
 
     /**
      * Update a persisted user info from the values of another.
+     *
      * @param userInfo a persisted user info
-     * @param update another user info with undigested password
+     * @param update   another user info with undigested password
      */
     void updateIdentity( ChannelsUserInfo userInfo, ChannelsUserInfo update );
 
+    /**
+     * Whether username of a participant in given plan.
+     *
+     * @param username a string
+     * @param planUri  a string
+     * @return a boolean
+     */
+    boolean isParticipant( final String username, String planUri );
 
+    /**
+     * Whether username of a participant in given plan.
+     *
+     * @param username a string
+     * @param planUri  a string
+     * @return a boolean
+     */
+    boolean isPlanner( final String username, String planUri );
 
 }

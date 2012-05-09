@@ -3,6 +3,8 @@ package com.mindalliance.channels.core.dao.user;
 import com.mindalliance.channels.core.dao.DuplicateKeyException;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,6 +135,26 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
 
         return result;
     }
+
+    @Override
+    @Transactional( readOnly = true )
+    public boolean isPlanner( final String username, String planUri ) {
+        return CollectionUtils.exists(
+                getPlanners( planUri ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (ChannelsUser) object ).getUsername().equals( username );
+                    }
+                } );
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public boolean isParticipant( final String username, String planUri ) {
+        return getUsernames( planUri ).contains( username );
+    }
+
 
     @Override
     @Transactional( readOnly = true )

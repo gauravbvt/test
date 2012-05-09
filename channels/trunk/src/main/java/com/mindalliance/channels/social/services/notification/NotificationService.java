@@ -1,4 +1,4 @@
-package com.mindalliance.channels.social.services;
+package com.mindalliance.channels.social.services.notification;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -9,9 +9,9 @@ package com.mindalliance.channels.social.services;
  */
 public interface NotificationService {
 
-    void sendUrgentNotifications();
+    void notifyOfUrgentFeedback();
 
-    void sendBatchedFeedbackNotifications();
+    void reportOnNewFeedback();
 
-    void emailUserMessages();
+    void notifyOfUserMessages();
 }

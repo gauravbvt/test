@@ -76,8 +76,8 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private Date whenLastRefreshed;
 
     static {
-        ALL_PLANNERS = new ChannelsUser( new ChannelsUserInfo(  UserMessageService.PLANNERS, "bla,Anonymous,bla" ) );
-        ALL_USERS = new ChannelsUser( new ChannelsUserInfo( UserMessageService.USERS, "bla,Anonymous,bla" ) );
+        ALL_PLANNERS = new ChannelsUser( new ChannelsUserInfo(  ChannelsUserInfo.PLANNERS, "bla,Anonymous,bla" ) );
+        ALL_USERS = new ChannelsUser( new ChannelsUserInfo( ChannelsUserInfo.USERS, "bla,Anonymous,bla" ) );
     }
 
     public UserMessageListPanel( String id, Updatable updatable, boolean collapsible, boolean showProfile ) {
@@ -433,15 +433,18 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     public void emailMessage( UserMessage message, AjaxRequestTarget target ) {
-        userMessageService.email( message );
+        userMessageService.markToNotify( message );
         addUserMessages();
         adjustComponents( target );
         update(
                 target,
                 Change.message(
-                        "Message will be emailed to " + ( message.isBroadcast( getUser() )
-                                ? "all planners"
-                                : message.getToUsername() ) ) );
+                        "Message will be emailed to "
+                                + ( message.isBroadcast( getUser() )
+                                ? message.isToAllPlanners()
+                                   ? "all planners"
+                                   : "all users"
+                                : getUserFullName( message.getToUsername() ) ) ) );
     }
 
     public List<UserMessage> getUserMessages( ChannelsUser user ) {

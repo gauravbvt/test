@@ -1,8 +1,13 @@
 package com.mindalliance.channels.social.model;
 
+import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.social.services.notification.Messageable;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,7 +24,7 @@ import java.util.List;
  * Time: 9:38 AM
  */
 @Entity
-public class Feedback extends UserStatement implements Notifiable {
+public class Feedback extends UserStatement implements Messageable {
 
     public static final Feedback UNKNOWN = new Feedback( Channels.UNKNOWN_FEEDBACK_ID );
     public static final String GUIDELINES = "Guidelines";
@@ -168,5 +173,75 @@ public class Feedback extends UserStatement implements Notifiable {
         }
     }
 
+    // Messageable
+
+
+    @Override
+    public String getToUsername() {
+        return ChannelsUserInfo.PLANNERS;
+    }
+
+    @Override
+    public String getFromUsername() {
+        return getUsername();
+    }
+
+    @Override
+    public String getContent( Format format, int maxLength ) {
+        // Ignore format
+        return "Plan: " + getPlanUri()
+                + ":"
+                + getPlanVersion()
+                + "\nUser: " + getUsername()
+                + "\n"
+                + DATE_FORMAT.format( getCreated() )
+                + aboutString(  )
+                + "\n----------------------------------------------------------------------------\n\n"
+                + getText()
+                + "\n\n----------------------------------------------------------------------------\n";
+    }
+
+    private String aboutString(  ) {
+        String about = getMoRef();
+        if ( about == null ) {
+            return "";
+        } else {
+            ModelObjectRef moRef = ModelObjectRef.fromString( about );
+            StringBuilder sb = new StringBuilder();
+            sb.append( "\nAbout: " );
+            sb.append( moRef.getTypeName() );
+            sb.append( " \"" );
+            sb.append( moRef.getName() );
+            sb.append( "\" [" );
+            sb.append( moRef.getId() );
+            sb.append( "]" );
+            String segmentName = moRef.getSegmentName();
+            if ( !segmentName.isEmpty() ) {
+                sb.append( " in segment \"" );
+                sb.append( segmentName );
+            }
+            String topic = getTopic();
+            if ( topic != null && !topic.isEmpty() ) {
+                sb.append( " (" );
+                sb.append( topic );
+                sb.append( ')' );
+            }
+            return sb.toString();
+        }
+    }
+
+
+    @Override
+    public String getSubject( Format format, int maxLength ) {
+        // Ignore format
+        StringBuilder sb = new StringBuilder();
+        sb.append( "Feedback" );
+        if ( isUrgent() ) sb.append( " [ASAP]" );
+        sb.append( " - " );
+        sb.append( WordUtils.capitalize( getType().name() ) );
+        sb.append( " - " );
+        sb.append( getText().replaceAll( "\\s", " " ) );
+        return StringUtils.abbreviate( sb.toString(), maxLength );
+    }
 
 }

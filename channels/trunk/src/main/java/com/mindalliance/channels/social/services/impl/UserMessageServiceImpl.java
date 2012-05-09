@@ -1,9 +1,12 @@
 package com.mindalliance.channels.social.services.impl;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.UserMessage;
 import com.mindalliance.channels.social.services.UserMessageService;
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.Predicate;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -47,7 +50,7 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     @Override
     @Transactional
     public void sendMessage( UserMessage message, boolean emailIt ) {
-        message.setEmailIt( emailIt );
+        message.setSendNotification( emailIt );
         save( message );
         changed( message.getPlanUri() );
     }
@@ -60,19 +63,34 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     }
 
     @Override
-    @Transactional( readOnly = true)
-    public Iterator<UserMessage> getReceivedMessages( String username, String planUri, int planVersion ) {
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public Iterator<UserMessage> getReceivedMessages( final String username, final String planUri, int planVersion ) {
+        String[] toValues = new String[3];
+        toValues[0] = username;
+        toValues[1] = ChannelsUserInfo.PLANNERS;
+        toValues[2] = ChannelsUserInfo.USERS;
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "planUri", planUri ) );
         criteria.add( Restrictions.eq( "planVersion", planVersion ) );
-        criteria.add( Restrictions.eq( "toUsername", username ) );
+        criteria.add( Restrictions.in( "toUsername", toValues ) );
         criteria.addOrder( Order.desc( "created" ) );
-        return (Iterator<UserMessage>) criteria.list().iterator();
+        return (Iterator<UserMessage>) IteratorUtils.filteredIterator(
+                criteria.list().iterator(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        UserMessage userMessage = (UserMessage) object;
+                        return ( !userMessage.isToAllPlanners() || userDao.isPlanner( username, planUri ) )
+                                && ( !userMessage.isToAllUsers() || userDao.isParticipant( username, planUri ) );
+                    }
+                } );
     }
 
     @Override
-    @Transactional( readOnly = true)
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public Iterator<UserMessage> getSentMessages( String username, String planUri, int planVersion ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -84,26 +102,27 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     }
 
     @Override
-    @Transactional( readOnly = true)
-   public Iterator<UserMessage> listMessagesToEmail() {
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public Iterator<UserMessage> listMessagesToNotify() {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "emailIt", true ) );
-        criteria.add( Restrictions.isNull( "whenEmailed" ) );
+        criteria.add( Restrictions.eq( "sendNotification", true ) );
+        criteria.add( Restrictions.isNull( "whenNotificationSent" ) );
         criteria.addOrder( Order.desc( "created" ) );
         return (Iterator<UserMessage>) criteria.list().iterator();
     }
 
     @Override
     @Transactional
-    public void email( UserMessage message ) {
-        message.setEmailIt( true );
+    public void markToNotify( UserMessage message ) {
+        message.setSendNotification( true );
         save( message );
     }
 
     @Override
-    @Transactional( readOnly = true)
-    public Date getWhenLastReceived( String username, String planUri , int planVersion) {
+    @Transactional( readOnly = true )
+    public Date getWhenLastReceived( String username, String planUri, int planVersion ) {
         Iterator<UserMessage> received = getReceivedMessages( username, planUri, planVersion );
         if ( received.hasNext() ) {
             return received.next().getCreated();
@@ -119,8 +138,8 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
 
     @Override
     @Transactional
-    public void emailed( UserMessage message ) {
-        message.setWhenEmailed( new Date() );
+    public void markNotified( UserMessage message ) {
+        message.setWhenNotificationSent( new Date() );
         save( message );
     }
 

@@ -16,7 +16,6 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.menus.SocialItemMenuPanel;
 import com.mindalliance.channels.social.model.PresenceRecord;
 import com.mindalliance.channels.social.services.PresenceRecordService;
-import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -174,9 +173,9 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
             String poUserName = getPersistentPlanObjectUsername();
             if ( poUserName == null ) {
                 return "?";
-            } else if ( poUserName.equals( UserMessageService.PLANNERS ) ) {
+            } else if ( poUserName.equals( ChannelsUserInfo.PLANNERS ) ) {
                 return "All planners";
-            } else if ( poUserName.equals( UserMessageService.USERS ) ) {
+            } else if ( poUserName.equals( ChannelsUserInfo.USERS ) ) {
                 return "Everyone";
             } else {
                 String name = getQueryService().findUserFullName( poUserName );
