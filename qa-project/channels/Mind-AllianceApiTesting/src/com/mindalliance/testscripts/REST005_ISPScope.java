@@ -11,6 +11,7 @@ public class REST005_ISPScope extends TestCase{
 	/**
 	 * Invoke testISPPlan() and get plans, versions and planners identities.
 	 */
+	static int step=0;
 	public static void testISPScopes(){
 		try {
 			LogFunctions.generateLogsDirectory();	
@@ -20,7 +21,7 @@ public class REST005_ISPScope extends TestCase{
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST005_ISPScope Execution Started");
+			System.out.println(++step +") Test Case : REST005_ISPScope Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST005_ISPScope Execution Started");
 			
 			// For managing SSL connections
@@ -29,23 +30,23 @@ public class REST005_ISPScope extends TestCase{
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST005_ISPScope.csv");
-			System.out.println("2) Reading Data From CSV File");
+			System.out.println(++step +") Reading Data From CSV File");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			String data =GlobalVariables.testData.get("api")+"/version/5/scope";
+			String data =GlobalVariables.testData.get("api")+"/version/"+GlobalVariables.testData.get("versionNumber")+"/scope";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
-			System.out.println("3) Sending Request");
+			System.out.println(++step +") Sending Request");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
 			
 			// Receive Response in XML File (response.xml)
 			GlobalVariables.steps++;
 			Configurations.getResponse();
-			System.out.println("4) Getting Response");
+			System.out.println(++step +") Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
-			// Assertion: verify that Issue.
+			// Assertion: verify scope.
 			GlobalVariables.steps++;
 			boolean planAgentResult;
 			
@@ -64,22 +65,22 @@ public class REST005_ISPScope extends TestCase{
 			// Verify identity dateVersioned
 			planAgentResult=Configurations.parseResponse("identity","dateVersioned",GlobalVariables.testData.get("identityDateVersioned"));	
 			Assert.assertEquals("Identity dateVersioned is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("identityDateVersioned")));			
-			System.out.println("5) Plan Summary Assertion Pass");
+			System.out.println(++step +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 						
 			// Assertion: Verify that Plan name is present
 			GlobalVariables.steps++;
 			Assert.assertEquals("mindalliance_com_channels_plans_railsec","mindalliance_com_channels_plans_railsec");
-			System.out.println("6) Assertion Pass");
+			System.out.println("++step +) Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("7) Test Case : REST005_ISPScope Execution Completed");
+			System.out.println(++step +") Test Case : REST005_ISPScope Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : ISP001 Execution Completed");
 			
 		}catch (AssertionError ar) {
-			System.out.println("5)Assertion Failed : ");
+			System.out.println(++step +")Assertion Failed : ");
 			ar.printStackTrace();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
 		} catch (Exception e) {
@@ -87,17 +88,20 @@ public class REST005_ISPScope extends TestCase{
 		}
 	}
 	
+	/**
+	 * Invoke testISPScopesPhase() and get scope phase.
+	 */
 	public static void testISPScopesPhase(){
 		try {
 			LogFunctions.generateLogsDirectory();	
 			
 			GlobalVariables.steps = 0;
 			GlobalVariables.testCaseId = "REST005_ISPScopesPhase";
-			
+			step=0;
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST005_ISPScopesPhase Execution Started");
+			System.out.println(++step +") Test Case : REST005_ISPScopesPhase Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST005_ISPScopesPhase Execution Started");
 			
 			// For managing SSL connections
@@ -106,23 +110,23 @@ public class REST005_ISPScope extends TestCase{
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST005_ISPScope.csv");
-			System.out.println("2) Reading Data From CSV File");
+			System.out.println(++step +") Reading Data From CSV File");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			String data =GlobalVariables.testData.get("api")+"/procedures";
+			String data =GlobalVariables.testData.get("api")+"/version/"+GlobalVariables.testData.get("versionNumber")+"/scope";;
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
-			System.out.println("3) Sending Request");
+			System.out.println(++step +") Sending Request");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
 			
 			// Receive Response in XML File (response.xml)
 			GlobalVariables.steps++;
 			Configurations.getResponse();
-			System.out.println("4) Getting Response");
+			System.out.println(++step +") Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
-			// Assertion: Verify that Procedure Events
+			// Assertion: Verify that scope phase
 			GlobalVariables.steps++;
 			boolean planIdentifierResult;
 			//Verify Phase Id
@@ -134,16 +138,16 @@ public class REST005_ISPScope extends TestCase{
 			//Verify phase Timing
 			planIdentifierResult=Configurations.parseResponse("phase","timing",GlobalVariables.testData.get("phaseTiming"));
 			Assert.assertEquals("phase Timing is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("phaseTiming")));			
-			System.out.println("5) Plan Summary Assertion Pass");
+			System.out.println(++step +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 			
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST005_ISPScopesPhase Execution Completed");
+			System.out.println(++step +") Test Case : REST005_ISPScopesPhase Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : REST005_ISPScopesPhase Execution Completed");
 			
 		}catch (AssertionError ar) {
-			System.out.println("5)Assertion Failed : ");
+			System.out.println(++step +")Assertion Failed : ");
 			ar.printStackTrace();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
 		} catch (Exception e) {
@@ -151,6 +155,9 @@ public class REST005_ISPScope extends TestCase{
 		}
 	}
 	
+	/**
+	 * Invoke testISPScopesPlace() and get scope place
+	 */
 	public static void testISPScopesPlace(){
 		try {
 			LogFunctions.generateLogsDirectory();	
@@ -161,7 +168,7 @@ public class REST005_ISPScope extends TestCase{
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST005_ISPScopesPlace Execution Started");
+			System.out.println(++step +") Test Case : REST005_ISPScopesPlace Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST005_ISPScopesPlace Execution Started");
 			
 			// For managing SSL connections
@@ -170,23 +177,23 @@ public class REST005_ISPScope extends TestCase{
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST005_ISPScope.csv");
-			System.out.println("2) Reading Data From CSV File");
+			System.out.println(++step +") Reading Data From CSV File");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			String data =GlobalVariables.testData.get("api")+"/version/5/scope";
+			String data =GlobalVariables.testData.get("api")+"/version/"+GlobalVariables.testData.get("versionNumber")+"/scope";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
-			System.out.println("3) Sending Request");
+			System.out.println(++step +") Sending Request");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
 			
 			// Receive Response in XML File (response.xml)
 			GlobalVariables.steps++;
 			Configurations.getResponse();
-			System.out.println("4) Getting Response");
+			System.out.println(++step +") Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
-			// Assertion: verify that  environment place
+			// Assertion: verify that  scope place
 			GlobalVariables.steps++;
 			boolean planIdentifierResult;
 			//Verify place Id
@@ -210,34 +217,37 @@ public class REST005_ISPScope extends TestCase{
 			//Verify organization documents url
 			planIdentifierResult=Configurations.parseResponse("documents","url",GlobalVariables.testData.get("documentsUrl"));
 			Assert.assertEquals("organization documents url is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("documentsUrl")));			
-									
-			System.out.println("5) Plan Summary Assertion Pass");
+			System.out.println(++step +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 			
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST005_ISPScopesPlace Execution Completed");
+			System.out.println(++step +") Test Case : REST005_ISPScopesPlace Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : REST005_ISPScopesPlace Execution Completed");
 			
 		}catch (AssertionError ar) {
-			System.out.println("5)Assertion Failed : ");
+			System.out.println(++step +")Assertion Failed : ");
 			ar.printStackTrace();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
 		} catch (Exception e) {
 			LogFunctions.logException(e.getMessage());
 		}
 	}
+	
+	/**
+	 * Invoke testISPScopesEvent() and get scope events
+	 */
 	public static void testISPScopesEvent(){
 		try {
 			LogFunctions.generateLogsDirectory();	
-			
+			step=0;
 			GlobalVariables.steps = 0;
 			GlobalVariables.testCaseId = "REST005_ISPScopesEvent";
 			
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST005_ISPScopesEvent Execution Started");
+			System.out.println(++step +") Test Case : REST005_ISPScopesEvent Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST005_ISPScopesEvent Execution Started");
 			
 			// For managing SSL connections
@@ -246,23 +256,23 @@ public class REST005_ISPScope extends TestCase{
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST005_ISPScope.csv");
-			System.out.println("2) Reading Data From CSV File");
+			System.out.println(++step +") Reading Data From CSV File");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			String data =GlobalVariables.testData.get("api")+"/version/5/scope";
+			String data =GlobalVariables.testData.get("api")+"/version/"+GlobalVariables.testData.get("versionNumber")+"/scope";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
-			System.out.println("3) Sending Request");
+			System.out.println(++step +") Sending Request");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
 			
 			// Receive Response in XML File (response.xml)
 			GlobalVariables.steps++;
 			Configurations.getResponse();
-			System.out.println("4) Getting Response");
+			System.out.println(++step +") Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
-			// Assertion: Verify that  Events
+			// Assertion: Verify that scope Events
 			GlobalVariables.steps++;
 			boolean planIdentifierResult;
 			// Verify event id
@@ -283,17 +293,16 @@ public class REST005_ISPScope extends TestCase{
 			//Verify event plannedPhaseId
 			planIdentifierResult=Configurations.parseResponse("event","plannedPhaseId",GlobalVariables.testData.get("eventPlannedPhaseId"));
 			Assert.assertEquals("Event planned Phase Id is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("eventPlannedPhaseId")));			
-				
-			System.out.println("5) Plan Summary Assertion Pass");
+			System.out.println(++step +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 			
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST005_ISPScopesEvent Execution Completed");
+			System.out.println(++step +") Test Case : REST005_ISPScopesEvent Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : REST005_ISPScopesEvent Execution Completed");
 			
 		}catch (AssertionError ar) {
-			System.out.println("5)Assertion Failed : ");
+			System.out.println(++step +")Assertion Failed : ");
 			ar.printStackTrace();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
 		} catch (Exception e) {
@@ -301,17 +310,20 @@ public class REST005_ISPScope extends TestCase{
 		}
 	}
 	
+	/**
+	 * Invoke testISPScopesRole() and get scope role
+	 */
 	public static void testISPScopesRole(){
 		try {
 			LogFunctions.generateLogsDirectory();	
-			
+			step=0;
 			GlobalVariables.steps = 0;
 			GlobalVariables.testCaseId = "REST005_ISPScopesRole";
 			
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST005_ISPScopesRole Execution Started");
+			System.out.println(++step +") Test Case : REST005_ISPScopesRole Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST005_ISPScopesRole Execution Started");
 			
 			// For managing SSL connections
@@ -320,23 +332,23 @@ public class REST005_ISPScope extends TestCase{
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST005_ISPScope.csv");
-			System.out.println("2) Reading Data From CSV File");
+			System.out.println(++step +") Reading Data From CSV File");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			String data =GlobalVariables.testData.get("api")+"/version/5/scope";
+			String data =GlobalVariables.testData.get("api")+"/version/"+GlobalVariables.testData.get("versionNumber")+"/scope";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
-			System.out.println("3) Sending Request");
+			System.out.println(++step +") Sending Request");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
 			
 			// Receive Response in XML File (response.xml)
 			GlobalVariables.steps++;
 			Configurations.getResponse();
-			System.out.println("4) Getting Response");
+			System.out.println(++step +") Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
-			// Assertion: verify that  environment role
+			// Assertion: verify that scope role
 			GlobalVariables.steps++;
 			boolean planIdentifierResult;
 		
@@ -349,17 +361,16 @@ public class REST005_ISPScope extends TestCase{
 			//Verify role categoryId
 			planIdentifierResult=Configurations.parseResponse("role","categoryId",GlobalVariables.testData.get("roleCategoryId"));
 			Assert.assertEquals("role categoryId is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("roleCategoryId")));			
-							
-			System.out.println("5) Plan Summary Assertion Pass");
+			System.out.println(++step +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 			
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST005_ISPScopesRole Execution Completed");
+			System.out.println(++step +") Test Case : REST005_ISPScopesRole Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : REST005_ISPScopesRole Execution Completed");
 			
 		}catch (AssertionError ar) {
-			System.out.println("5)Assertion Failed : ");
+			System.out.println(++step +")Assertion Failed : ");
 			ar.printStackTrace();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
 		} catch (Exception e) {
@@ -367,17 +378,20 @@ public class REST005_ISPScope extends TestCase{
 		}
 	}
 	
+	/**
+	 * Invoke testISPScopesOrganization() and get scope Organization
+	 */
 	public static void testISPScopesOrganization(){
 		try {
 			LogFunctions.generateLogsDirectory();	
-			
+			step=0;
 			GlobalVariables.steps = 0;
 			GlobalVariables.testCaseId = "REST005_ISPScopesOrganization";
 			
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST005_ISPScopesOrganization Execution Started");
+			System.out.println(++step +") Test Case : REST005_ISPScopesOrganization Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST005_ISPScopesOrganization Execution Started");
 			
 			// For managing SSL connections
@@ -386,20 +400,20 @@ public class REST005_ISPScope extends TestCase{
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST005_ISPScope.csv");
-			System.out.println("2) Reading Data From CSV File");
+			System.out.println(++step +") Reading Data From CSV File");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			String data =GlobalVariables.testData.get("api")+"/version/5/scope";
+			String data =GlobalVariables.testData.get("api")+"/version/"+GlobalVariables.testData.get("versionNumber")+"/scope";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
-			System.out.println("3) Sending Request");
+			System.out.println(++step +") Sending Request");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
 			
 			// Receive Response in XML File (response.xml)
 			GlobalVariables.steps++;
 			Configurations.getResponse();
-			System.out.println("4) Getting Response");
+			System.out.println(++step +") Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
 			// Assertion: verify that  organization  
@@ -426,16 +440,16 @@ public class REST005_ISPScope extends TestCase{
 			//Verify organization documents url
 			planIdentifierResult=Configurations.parseResponse("documents","url",GlobalVariables.testData.get("documentsUrl"));
 			Assert.assertEquals("organization documents url is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("documentsUrl")));			
-			System.out.println("5) Plan Summary Assertion Pass");
+			System.out.println(++step +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 			
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST005_ISPScopesOrganization Execution Completed");
+			System.out.println(++step +") Test Case : REST005_ISPScopesOrganization Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : REST005_ISPScopesOrganization Execution Completed");
 			
 		}catch (AssertionError ar) {
-			System.out.println("5)Assertion Failed : ");
+			System.out.println(++step +")Assertion Failed : ");
 			ar.printStackTrace();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
 		} catch (Exception e) {
@@ -443,17 +457,20 @@ public class REST005_ISPScope extends TestCase{
 		}
 	}
 	
+	/**
+	 * Invoke testISPScopesAgent() and get scope Agent
+	 */
 	public static void testISPScopesAgent(){
 		try {
 			LogFunctions.generateLogsDirectory();	
-			
+			step=0;
 			GlobalVariables.steps = 0;
 			GlobalVariables.testCaseId = "REST005_ISPScopesAgent";
 			
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST005_ISPScopesAgent Execution Started");
+			System.out.println(++step +") Test Case : REST005_ISPScopesAgent Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST005_ISPScopesAgent Execution Started");
 			
 			// For managing SSL connections
@@ -462,20 +479,20 @@ public class REST005_ISPScope extends TestCase{
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST005_ISPScope.csv");
-			System.out.println("2) Reading Data From CSV File");
+			System.out.println(++step +") Reading Data From CSV File");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			String data =GlobalVariables.testData.get("api")+"/version/5/scope";
+			String data =GlobalVariables.testData.get("api")+"/version/"+GlobalVariables.testData.get("versionNumber")+"/scope";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
-			System.out.println("3) Sending Request");
+			System.out.println(++step +") Sending Request");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
 			
 			// Receive Response in XML File (response.xml)
 			GlobalVariables.steps++;
 			Configurations.getResponse();
-			System.out.println("4) Getting Response");
+			System.out.println(++step +") Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
 			// Assertion: verify that Plan Agent
@@ -514,17 +531,16 @@ public class REST005_ISPScope extends TestCase{
 			//Verify timePeriod dayOfWeek
 			planAgentResult=Configurations.parseResponse("timePeriod","toTime",GlobalVariables.testData.get("toTime"));	
 			Assert.assertEquals("TimePeriod toTime is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("toTime")));					
-		
-			System.out.println("5) Plan Summary Assertion Pass");
+			System.out.println(++step +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 			
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST005_ISPScopesAgent Execution Completed");
+			System.out.println(++step +") Test Case : REST005_ISPScopesAgent Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : REST005_ISPScopesAgent Execution Completed");
 			
 		}catch (AssertionError ar) {
-			System.out.println("5)Assertion Failed : ");
+			System.out.println(++step +")Assertion Failed : ");
 			ar.printStackTrace();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
 		} catch (Exception e) {
@@ -532,6 +548,9 @@ public class REST005_ISPScope extends TestCase{
 		}
 	}
 	
+	/**
+	 * Invoke testISPScopesEmployment() and get scope Employment
+	 */
 	public static void testISPScopesEmployment(){
 		try {
 			LogFunctions.generateLogsDirectory();	
@@ -542,7 +561,7 @@ public class REST005_ISPScope extends TestCase{
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST005_ISPScopesEmployment Execution Started");
+			System.out.println(++step +") Test Case : REST005_ISPScopesEmployment Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST005_ISPScopesEmployment Execution Started");
 			
 			// For managing SSL connections
@@ -551,20 +570,20 @@ public class REST005_ISPScope extends TestCase{
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST005_ISPScope.csv");
-			System.out.println("2) Reading Data From CSV File");
+			System.out.println(++step +") Reading Data From CSV File");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
-			String data =GlobalVariables.testData.get("api")+"/version/5/scope";
+			String data =GlobalVariables.testData.get("api")+"/version/"+GlobalVariables.testData.get("versionNumber")+"/scope";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
-			System.out.println("3) Sending Request");
+			System.out.println(++step +") Sending Request");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
 			
 			// Receive Response in XML File (response.xml)
 			GlobalVariables.steps++;
 			Configurations.getResponse();
-			System.out.println("4) Getting Response");
+			System.out.println(++step +") Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
 			// Assertion: verify that employment
@@ -588,16 +607,16 @@ public class REST005_ISPScope extends TestCase{
 			// Verify employment Confirmed
 			planAgentResult=Configurations.parseResponse("employment","confirmed",GlobalVariables.testData.get("employmentConfirmed"));	
 			Assert.assertEquals("Employment Confirmed is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("employmentConfirmed")));						
-			System.out.println("5) Plan Summary Assertion Pass");
+			System.out.println(++step +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 			
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST005_ISPScopesEmployment Execution Completed");
+			System.out.println(++step +") Test Case : REST005_ISPScopesEmployment Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : REST005_ISPScopesEmployment Execution Completed");
 			
 		}catch (AssertionError ar) {
-			System.out.println("5)Assertion Failed : ");
+			System.out.println(++step +")Assertion Failed : ");
 			ar.printStackTrace();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
 		} catch (Exception e) {

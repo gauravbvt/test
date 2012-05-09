@@ -11,6 +11,7 @@ public class REST003_ISPAgents extends TestCase{
 	/**
 	 * Invoke testISPPlan() and get plans, versions and planners identities.
 	 */
+	static int step=0;
 	public static void testISPAgents(){
 		try {
 			LogFunctions.generateLogsDirectory();	
@@ -20,7 +21,7 @@ public class REST003_ISPAgents extends TestCase{
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST003_ISPAgents Execution Started");
+			System.out.println(++step +") Test Case : REST003_ISPAgents Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST003_ISPAgents Execution Started");
 			
 			// For managing SSL connections
@@ -29,23 +30,23 @@ public class REST003_ISPAgents extends TestCase{
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST003_ISPAgents.csv");
-			System.out.println("2) Reading Data From CSV File");
+			System.out.println(++step +") Reading Data From CSV File");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
 			String data =GlobalVariables.testData.get("api")+"/procedures/agent/2587";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
-			System.out.println("3) Sending Request");
+			System.out.println(++step +") Sending Request");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
 			
 			// Receive Response in XML File (response.xml)
 			GlobalVariables.steps++;
 			Configurations.getResponse();
-			System.out.println("4) Getting Response");
+			System.out.println(++step +") Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 								
-			// Assertion: verify that PlanAgent
+			// Assertion: verify that Plan Agent
 			GlobalVariables.steps++;
 			boolean planAgentResult;
 			// Verify Agent ID
@@ -63,16 +64,16 @@ public class REST003_ISPAgents extends TestCase{
 			// Verify Agent Kind
 			planAgentResult=Configurations.parseResponse("agent","kind",GlobalVariables.testData.get("kind"));	
 			Assert.assertEquals("Agent Kind is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("kind")));			
-			System.out.println("5) Plan Summary Assertion Pass");
+			System.out.println(++step +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST003_ISPAgents Execution Completed");
+			System.out.println(++step +") Test Case : REST003_ISPAgents Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : ISP001 Execution Completed");
 			
 		}catch (AssertionError ar) {
-			System.out.println("5)Assertion Failed : ");
+			System.out.println(++step +")Assertion Failed : ");
 			ar.printStackTrace();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
 		} catch (Exception e) {
@@ -80,18 +81,20 @@ public class REST003_ISPAgents extends TestCase{
 		}
 	}
 	
-	
+	/**
+	 * Invoke testISPPlan() and get plans, versions and planners identities.
+	 */
 	public static void testISPPlan(){
 		try {
 			LogFunctions.generateLogsDirectory();	
-			
+			step=0;
 			GlobalVariables.steps = 0;
 			GlobalVariables.testCaseId = "REST003_ISPPlan";
 			
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST003_ISPPlan Execution Started");
+			System.out.println(++step +") Test Case : REST003_ISPPlan Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST003_ISPPlan Execution Started");
 			
 			// For managing SSL connections
@@ -100,20 +103,20 @@ public class REST003_ISPAgents extends TestCase{
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST003_ISPAgents.csv");
-			System.out.println("2) Reading Data From CSV File");
+			System.out.println(++step +") Reading Data From CSV File");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
 			String data =GlobalVariables.testData.get("api")+"/procedures/agent/2587";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
-			System.out.println("3) Sending Request");
+			System.out.println(++step +") Sending Request");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
 			
 			// Receive Response in XML File (response.xml)
 			GlobalVariables.steps++;
 			Configurations.getResponse();
-			System.out.println("4) Getting Response");
+			System.out.println(++step +") Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
 			// Assertion: verify that  procedure Plan
@@ -134,12 +137,12 @@ public class REST003_ISPAgents extends TestCase{
 			// Verify Date Versioned
 			planIdentifierResult=Configurations.parseResponse("plan","dateVersioned",GlobalVariables.testData.get("planDateVersioned"));
 			Assert.assertEquals("Date Versioned is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("planDateVersioned")));			
-			System.out.println("5) Plan Summary Assertion Pass");
+			System.out.println(++step +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST003_ISPPlan Execution Completed");
+			System.out.println(++step +") Test Case : REST003_ISPPlan Execution Completed");
 			System.out.println("");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : REST003_ISPPlan Execution Completed");
 			
@@ -152,17 +155,20 @@ public class REST003_ISPAgents extends TestCase{
 		}
 	}
 	
+	/**
+	 * Invoke testISPProcedures() and get agent Procedures.
+	 */
 	public static void testISPProcedures(){
 		try {
 			LogFunctions.generateLogsDirectory();	
-			
+			step=0;
 			GlobalVariables.steps = 0;
 			GlobalVariables.testCaseId = "REST003_ISPProcedures";
 			
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST003_ISPProcedures Execution Started");
+			System.out.println(++step +") Test Case : REST003_ISPProcedures Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST003_ISPProcedures Execution Started");
 			
 			// For managing SSL connections
@@ -171,14 +177,14 @@ public class REST003_ISPAgents extends TestCase{
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST003_ISPAgents.csv");
-			System.out.println("2) Reading Data From CSV File");
+			System.out.println(++step +") Reading Data From CSV File");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
 
 			// Send Request
 			String data =GlobalVariables.testData.get("api")+"/procedures/agent/2587";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
-			System.out.println("3) Sending Request");
+			System.out.println("++step +) Sending Request");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
 			
 			// Receive Response in XML File (response.xml)
@@ -187,7 +193,7 @@ public class REST003_ISPAgents extends TestCase{
 			System.out.println("4) Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
-			// Assertion: verify that PlanAgent
+			// Assertion: verify that Plan procedure
 			GlobalVariables.steps++;
 			boolean planAgentResult;
 			// Verify Agent ID
@@ -289,34 +295,37 @@ public class REST003_ISPAgents extends TestCase{
 			// Verify consumingTask FailureImpact
 			planAgentResult=Configurations.parseResponse("consumingTask","failureImpact",GlobalVariables.testData.get("consumingTaskFailureImpact"));	
 			Assert.assertEquals("ConsumingTask Failure Impact is",planAgentResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("consumingTaskFailureImpact")));			
-																																																							
-			System.out.println("5) Plan Summary Assertion Pass");
+			System.out.println(++step +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST003_ISPProcedures Execution Completed");
+			System.out.println(++step +") Test Case : REST003_ISPProcedures Execution Completed");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : REST003_ISPProcedures Execution Completed");
 			
 		}catch (AssertionError ar) {
-			System.out.println("6)Assertion Failed : ");
+			System.out.println(++step +")Assertion Failed : ");
 			ar.printStackTrace();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
 		} catch (Exception e) {
 			LogFunctions.logException(e.getMessage());
 		}
 	}
+	
+	/**
+	 * Invoke testISPEnvironment() and get agent Environment
+	 */
 	public static void testISPEnvironment(){
 		try {
 			LogFunctions.generateLogsDirectory();	
 			
 			GlobalVariables.steps = 0;
 			GlobalVariables.testCaseId = "REST003_ISPEnvironment";
-			
+			step=0;
 			// Create Log Files
 			GlobalVariables.testResultLogFile = LogFunctions.generateLogFile(GlobalVariables.logFile + "_"+ GlobalVariables.testCaseId + ".log");
 			GlobalVariables.steps++;
-			System.out.println("1) Test Case : REST003_ISPEnvironment Execution Started");
+			System.out.println(++step +") Test Case : REST003_ISPEnvironment Execution Started");
 			LogFunctions.logDescription(GlobalVariables.steps + ") REST003_ISPEnvironment Execution Started");
 			
 			// For managing SSL connections
@@ -325,23 +334,23 @@ public class REST003_ISPAgents extends TestCase{
 			// Reading input data from CSV File
 			GlobalVariables.steps++;
 			Configurations.getTestData("REST003_ISPAgents.csv");
-			System.out.println("2) Reading Data From CSV File");
+			System.out.println(++step +") Reading Data From CSV File");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Reading Data From CSV File");
             // int agentId=
 			// Send Request
 			String data =GlobalVariables.testData.get("api")+"/procedures/agent/2587";
 			GlobalVariables.steps++;
 			Configurations.sendRequest(data);
-			System.out.println("3) Sending Request");
+			System.out.println(++step +") Sending Request");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Request Sent");
 			
 			// Receive Response in XML File (response.xml)
 			GlobalVariables.steps++;
 			Configurations.getResponse();
-			System.out.println("4) Getting Response");
+			System.out.println(++step +") Getting Response");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Response Received");
 			
-			// Assertion: verify that  procedure event
+			// Assertion: verify that  Environment
 			GlobalVariables.steps++;
 			boolean planIdentifierResult;
 			// Verify event id
@@ -430,17 +439,17 @@ public class REST003_ISPAgents extends TestCase{
 			//Verify transmissionMedium Synchronous
 			planIdentifierResult=Configurations.parseResponse("transmissionMedium","synchronous",GlobalVariables.testData.get("transmissionMediumSynchronous"));
 			Assert.assertEquals("transmissionMedium Synchronous is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("transmissionMediumSynchronous")));			
-			System.out.println("5) Plan Summary Assertion Pass");
+			System.out.println(++step +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
 			// Execution Completed
 			GlobalVariables.steps++;
-			System.out.println("6) Test Case : REST003_ISPEnvironment Execution Completed");
+			System.out.println(++step +") Test Case : REST003_ISPEnvironment Execution Completed");
 			System.out.println("");
 			LogFunctions.logDescription(GlobalVariables.steps+ ") Test Case : REST003_ISPEnvironment Execution Completed");
 			
 		}catch (AssertionError ar) {
-			System.out.println("5)Assertion Failed : ");
+			System.out.println(++step +")Assertion Failed : ");
 			ar.printStackTrace();
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Failed");
 		} catch (Exception e) {
