@@ -84,24 +84,31 @@ public class Configurations {
 	 * @throws Exception
 	 */
 	
-	public static String getTestData(String csvFileName) throws Exception {
+	public static String getTestData(String csvFileName)  {
+		String strLine =null, key = "", value = "";
 		try {
 			// CSV file containing data
 			GlobalVariables.testDataDirectoryPath = GlobalVariables.currentDirectory.getCanonicalPath().toString() + "\\TestData\\";
 			File testDataFile = new File(GlobalVariables.testDataDirectoryPath+ csvFileName);
 			BufferedReader testData = new BufferedReader(new FileReader(testDataFile));
-			String strLine = "", key = "", value = "";
+			
 			StringTokenizer st = null;
 			while ((strLine = testData.readLine()) != null) {
 				st = new StringTokenizer(strLine, ",");
 				while (st.hasMoreTokens()) {
 					key = st.nextToken();
+					//System.out.println("key ="+key);
 					value = st.nextToken();
-					GlobalVariables.testData.put(key, value);
+					//System.out.println("value ="+value);
+				    GlobalVariables.testData.put(key, value);
 				}
 			}
 		} catch (FileNotFoundException file) {
 			System.out.println(file.getMessage());
+			
+		}
+		catch(Exception e){
+			System.out.println("  Error "+key+" Value is missed");
 		}
 		return csvFileName;
 	}
