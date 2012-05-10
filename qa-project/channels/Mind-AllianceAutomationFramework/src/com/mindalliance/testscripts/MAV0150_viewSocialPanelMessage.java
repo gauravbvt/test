@@ -10,10 +10,8 @@ import com.mindalliance.globallibrary.ReportFunctions;
 
 public class MAV0150_viewSocialPanelMessage
 {
-	public MAV0150_viewSocialPanelMessage()
-	{
-		try{
-			
+	public MAV0150_viewSocialPanelMessage(){
+		try{			
 			GlobalVariables.sTestCaseId = "MAV0150_viewSocialPanelMessage";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);

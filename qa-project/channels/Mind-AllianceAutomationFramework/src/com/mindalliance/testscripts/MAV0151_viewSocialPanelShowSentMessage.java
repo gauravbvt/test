@@ -25,14 +25,14 @@ public class MAV0151_viewSocialPanelShowSentMessage
 				// Click on Message tab on social panel
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Message tab is present";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialMessages")));
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialMessages"))).click();
 				// Write Results
 			    LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 			    		GlobalVariables.sBlank, GlobalVariables.sBlank);
 			    // WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Click on Show show message link
 				GlobalVariables.iStepNo++;

@@ -24,6 +24,9 @@ public class MAV0161_viewSocialPanelAboutMe
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="About me tab is present";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialAboutMe"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialAboutMe")));
 				// Assertion: Verify that message tab is present on social panel
 				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("aboutMe"))) {
@@ -46,8 +49,7 @@ public class MAV0161_viewSocialPanelAboutMe
 				// Call logout()
 			    GlobalVariables.iStepNo++ ;
 			    GlobalVariables.sDescription = "Logout is successful";
-//			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
-			    GlobalVariables.oDriver.findElement(By.className("logout")).click();
+			    GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathLogoutHomePage"))).click();
 			    GlobalVariables.oDriver.quit();
 			    // Write Results
 			    LogFunctions.writeLogs(GlobalVariables.sDescription);

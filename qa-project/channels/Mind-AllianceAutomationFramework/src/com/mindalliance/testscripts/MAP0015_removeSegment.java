@@ -118,8 +118,7 @@ public class MAP0015_removeSegment {
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
 				options = GlobalVariables.oDropDown.getOptions();
 				for (WebElement option : options) {
-					if (GlobalVariables.testData.get(
-							"Segment For Remove Segment").equals(option.getText())) {
+					if (GlobalVariables.testData.get("Segment For Remove Segment").equals(option.getText())) {
 						// Write Results
 						GlobalVariables.bIsSuccess = Boolean.TRUE;
 						break;

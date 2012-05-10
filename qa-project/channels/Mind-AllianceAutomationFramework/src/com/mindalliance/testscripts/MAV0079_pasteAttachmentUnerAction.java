@@ -48,9 +48,10 @@ public class MAV0079_pasteAttachmentUnerAction
 				Thread.sleep(3000);  	
 				
 				// Attach a File to the segment
-				String file="This is File 1";
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="File Attached to the Segment";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:name"));
-				GlobalVariables.oElement.sendKeys(file);
+				GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("task1234"));
 				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:upload"));
 				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
 				// WebElement Synchronization
@@ -73,6 +74,10 @@ public class MAV0079_pasteAttachmentUnerAction
 				alert.accept();
 				// Click on Done
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);

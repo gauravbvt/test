@@ -23,7 +23,7 @@ public class MAV0073_helpSendFeedback
 				// Click on 'Information Sharing Model' link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Information Sharing Model";
-				GlobalVariables.oDriver.findElement(By.linkText("Information sharing model")).click();
+				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -51,7 +51,7 @@ public class MAV0073_helpSendFeedback
 			    // click on send Feedback link on help window
 			    GlobalVariables.iStepNo++;
 			    GlobalVariables.sDescription="Send Feedback";
-			    GlobalVariables.oDriver.findElement(By.xpath("/html/body/span/div/a")).click();
+			    GlobalVariables.oDriver.findElement(By.xpath("//span/div/a")).click();
 			    // Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

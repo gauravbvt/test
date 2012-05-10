@@ -25,7 +25,7 @@ public class MAV0152_viewSocialPanelShowReceivedMessage
 				// Click on Message tab on social panel
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Message tab is present";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialMessages")));
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.home.get("sXpathSocialMessages"))).click();
 				// Write Results
 			    LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

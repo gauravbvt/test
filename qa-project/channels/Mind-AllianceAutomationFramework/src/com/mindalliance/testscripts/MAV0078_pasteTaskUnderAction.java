@@ -41,13 +41,12 @@ public class MAV0078_pasteTaskUnderAction
 		    	// WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);
-			    String task="This is Task 1234";
 				// Write Task
 				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
 				for (int i = 0; i <= 50; i++)
 					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-				GlobalVariables.oElement.sendKeys(task);
+				GlobalVariables.oElement.sendKeys(GlobalVariables.viewElements.get("task1234"));
 				// WebElement Synchronization
 			    Thread.currentThread();
 			    Thread.sleep(1000);
@@ -77,7 +76,7 @@ public class MAV0078_pasteTaskUnderAction
 			    
 			    // Click on Paste Task under Action pop up menu
 			    GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Paste task done";
+				GlobalVariables.sDescription = "Task Pasted";
 		    	ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("pasteTask"));
 				// WebElement Synchronization
 			    Thread.currentThread();
@@ -90,8 +89,8 @@ public class MAV0078_pasteTaskUnderAction
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAbtPlanSegShowMenu"),GlobalVariables.viewElements.get("taskMover"));
 				// WebElement Synchronization
 			    Thread.currentThread();
-			    Thread.sleep(1000);
-			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(task));
+			    Thread.sleep(3000);
+			    GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("task1234")));
 			    if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("task1234"))){
 			    	// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -108,6 +107,23 @@ public class MAV0078_pasteTaskUnderAction
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);					   
+			    
+				// Click on Done
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Done";
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(1000);
+				// Undo Paste task
+			    ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoPasteTask"));
+				// WebElement Synchronization
+			    Thread.currentThread();
+			    Thread.sleep(1000);
 			    
 			    // Call logout()
 				GlobalVariables.iStepNo++ ;
