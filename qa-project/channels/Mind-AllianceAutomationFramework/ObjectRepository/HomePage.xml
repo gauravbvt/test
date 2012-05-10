@@ -3,9 +3,9 @@
 <xPathLogoutHomePage>/html/body/form/div[2]/div/div/div[2]/a</xPathLogoutHomePage>
 <xPathAssignmentsAndCommitmentsSignout>/html/body/div/span[2]/div/ul/li[3]/a</xPathAssignmentsAndCommitmentsSignout>
 <xPathAllParticipantsSignout>/html/body/div/div/ul/li/a</xPathAllParticipantsSignout>
-<xPathSocialAboutMe>//div[2]/div[2]/div[3]/span/div/div/div/ul/li[3]/a/span</xPathSocialAboutMe>
-<xPathSocialCalendar>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div/ul/li[2]/a/span</xPathSocialCalendar>
-<xPathSocialMessages>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div/ul/li/a/span</xPathSocialMessages>
+<xPathSocialAboutMe>//div[2]/div[2]/div[3]/span/div/div/div/ul/li/a/span</xPathSocialAboutMe>
+<xPathSocialCalendar>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div/ul/li[4]/a/span</xPathSocialCalendar>
+<xPathSocialMessages>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div/ul/li[3]/a/span</xPathSocialMessages>
 <xPathSocialSurvey>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div/ul/li[3]/a/span</xPathSocialSurvey>
 <xPathShowSentReceiveMessages>/html/body/form/div[2]/div[2]/div[3]/span/div/div/div[2]/div/div/a[2]/span</xPathShowSentReceiveMessages>
 <xPathHomePageIcon>/html/body/div/div/a/img</xPathHomePageIcon>
