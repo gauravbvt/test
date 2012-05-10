@@ -1,12 +1,11 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.SurveysDAO;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -78,7 +77,9 @@ public class SurveyResultsPanel extends AbstractUpdatablePanel {
                 new IChoiceRenderer<Question>() {
                     @Override
                     public Object getDisplayValue( Question question ) {
-                        return question.getText();
+                        return ChannelsUtils.convertTemplate(
+                                question.getText(),
+                                getRFISurvey().getAbout( getQueryService() ) );
                     }
 
                     @Override
@@ -97,17 +98,8 @@ public class SurveyResultsPanel extends AbstractUpdatablePanel {
         add( questionsChoice );
     }
 
-    @SuppressWarnings( "unchecked" )
     private List<Question> getAnswerableQuestions() {
-        return (List<Question>) CollectionUtils.select(
-                getRFISurvey().getQuestionnaire().getQuestions(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ((Question)object).isAnswerable();
-                    }
-                }
-        );
+        return surveysDAO.listAnswerableQuestions( getRFISurvey() );
     }
 
     private void addQuestionResultsPanel() {

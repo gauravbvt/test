@@ -31,6 +31,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -340,6 +341,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
     public class RFISurveyWrapper implements Identifiable {
 
         private RFISurvey rfiSurvey;
+        private Map<String,Integer> metrics;
 
         private RFISurveyWrapper( RFISurvey rfiSurvey ) {
             this.rfiSurvey = rfiSurvey;
@@ -419,9 +421,39 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
             return rfiSurvey.getRfis().size();
         }
 
-        public String getResponseMetrics() {
-            return surveysDAO.findResponseMetrics( getPlan(), rfiSurvey );
+        public String getShortResponseMetrics() {
+            if ( rfiSurvey != null ) {
+                Map<String,Integer> metrics = getResponseMetrics();
+                Integer[] values = new Integer[3];
+                values[0] = metrics.get( "completed" );
+                values[1] = metrics.get( "declined" );
+                values[2] = metrics.get( "incomplete" );
+                return MessageFormat.format( "{0}c {1}d {2}i", values );
+            }
+            else
+                return null;
         }
+
+        public String getLongResponseMetrics() {
+            if ( rfiSurvey != null ) {
+                Map<String,Integer> metrics = getResponseMetrics();
+                Integer[] values = new Integer[3];
+                values[0] = metrics.get( "completed" );
+                values[1] = metrics.get( "declined" );
+                values[2] = metrics.get( "incomplete" );
+                return MessageFormat.format( "{0} completed, {1} declined and {2} incomplete", values );
+            }
+            else
+                return null;
+        }
+
+        private Map<String,Integer> getResponseMetrics() {
+            if ( metrics == null ) {
+                metrics = surveysDAO.findResponseMetrics( getPlan(), rfiSurvey );
+            }
+            return metrics;
+        }
+
 
     }
 
@@ -445,7 +477,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
             columns.add( makeFilterableLinkColumn( "In segment", "segment", "segment.name", EMPTY, RFISurveysPanel.this ) );
             columns.add( makeColumn( "Status", "statusLabel", EMPTY ) );
             columns.add( makeColumn( "Sent to", "sentToCount", EMPTY ) );
-            columns.add( makeColumn( "Responses", "responseMetrics", EMPTY ) );
+            columns.add( makeColumn( "Responses", "shortResponseMetrics", null, EMPTY, "longResponseMetrics" ) );
             columns.add( makeExpandLinkColumn( "", "", "more..." ) );
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "rfiSurveys",

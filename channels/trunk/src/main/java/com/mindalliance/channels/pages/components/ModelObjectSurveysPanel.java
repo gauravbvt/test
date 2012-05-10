@@ -19,10 +19,12 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -211,6 +213,7 @@ public class ModelObjectSurveysPanel extends FloatingCommandablePanel {
 
         private Questionnaire questionnaire;
         private RFISurvey rfiSurvey;
+        private Map<String,Integer> metrics;
 
         private SurveyWrapper( RFISurvey rfiSurvey ) {
             this.rfiSurvey = rfiSurvey;
@@ -250,11 +253,38 @@ public class ModelObjectSurveysPanel extends FloatingCommandablePanel {
             }
         }
 
-        public String getResponseMetrics() {
-            if ( rfiSurvey != null )
-                return surveysDAO.findResponseMetrics( getPlan(), rfiSurvey );
+        public String getShortResponseMetrics() {
+            if ( rfiSurvey != null ) {
+                Map<String,Integer> metrics = getResponseMetrics();
+                Integer[] values = new Integer[3];
+                values[0] = metrics.get( "completed" );
+                values[1] = metrics.get( "declined" );
+                values[2] = metrics.get( "incomplete" );
+                return MessageFormat.format( "{0}c {1}d {2}i", values );
+            }
             else
                 return null;
+        }
+
+        public String getLongResponseMetrics() {
+            if ( rfiSurvey != null ) {
+                Map<String,Integer> metrics = getResponseMetrics();
+                Integer[] values = new Integer[3];
+                values[0] = metrics.get( "completed" );
+                values[1] = metrics.get( "declined" );
+                values[2] = metrics.get( "incomplete" );
+                return MessageFormat.format( "{0} completed, {1} declined and {2} incomplete", values );
+            }
+            else
+                return null;
+        }
+
+
+        private Map<String,Integer> getResponseMetrics() {
+            if ( metrics == null ) {
+                metrics = surveysDAO.findResponseMetrics( getPlan(), rfiSurvey );
+            }
+            return metrics;
         }
 
         public String getAction() {
@@ -325,7 +355,7 @@ public class ModelObjectSurveysPanel extends FloatingCommandablePanel {
             columns.add( makeColumn( "Survey", "questionnaire.name", EMPTY ) );
             columns.add( makeColumn( "Status", "status", EMPTY ) );
             columns.add( makeColumn( "Launched on", "launchDate", EMPTY ) );
-            columns.add( makeColumn( "Responses", "responseMetrics", EMPTY ) );
+            columns.add( makeColumn( "Responses", "shortResponseMetrics", null, EMPTY, "longResponseMetrics" ) );
             columns.add( makeFlexibleExpandLinkColumn( "", "", "action", "" ) );
             // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable(

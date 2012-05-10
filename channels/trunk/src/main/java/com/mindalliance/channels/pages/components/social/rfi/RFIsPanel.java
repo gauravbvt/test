@@ -238,12 +238,12 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         actionsContainer = new WebMarkupContainer( "actions" );
         actionsContainer.setOutputMarkupId( true );
         addOrReplace( actionsContainer );
-        addActionLabels(  );
-        addDeadline(  );
-        addActionButtons( );
+        addActionLabels();
+        addDeadline();
+        addActionButtons();
     }
 
-    private void addActionLabels( ) {
+    private void addActionLabels() {
         int selectedCount = getSelectedSurveyParticipations().size();
         actionsContainer.add( new Label( "selectionCount", Integer.toString( selectedCount ) ) );
         actionsContainer.add( new Label( "userOrUsers", selectedCount > 1 ? "users" : "user" ) );
@@ -268,13 +268,14 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
     }
 
     @SuppressWarnings( "unchecked" )
-    private void addActionButtons(  ) {
+    private void addActionButtons() {
         // send or update RFIs
         Date deadlineDate = getDeadlineDate();
         ConfirmedAjaxFallbackLink<String> createRFIsLink = new ConfirmedAjaxFallbackLink<String>(
                 "sendRFI",
-                "Send or update RFIS to "
+                "Send or update survey participation survey request to "
                         + getSelectedSurveyParticipations().size()
+                        + ( getSelectedSurveyParticipations().size() > 1 ? " persons" : " person" )
                         + ( deadlineDate == null
                         ? " with no deadline "
                         : ( " with deadline on " + getDateFormat().format( deadlineDate ) ) )
@@ -328,7 +329,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         actionsContainer.add( nagLink );
     }
 
-    private void addDeadline(  ) {
+    private void addDeadline() {
         deadlineContainer = new WebMarkupContainer( "deadlineContainer" );
         deadlineContainer.setOutputMarkupId( true );
         makeVisible( deadlineContainer, isHasDeadline() );

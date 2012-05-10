@@ -162,6 +162,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
         if ( reply != null && !reply.trim().isEmpty() ) {
             Plan plan = getPlan();
             UserMessage message = new UserMessage( plan.getUri(), plan.getVersion(), getUsername(), reply );
+            message.setToUsername( feedback.getUsername() );
             message.setText( reply );
             message.setSendNotification( emailIt );
             feedbackService.addReplyTo( feedback, message, userMessageService );

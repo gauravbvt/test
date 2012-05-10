@@ -65,7 +65,7 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public Iterator<UserMessage> getReceivedMessages( final String username, final String planUri, int planVersion ) {
+    public Iterator<UserMessage> getReceivedMessages( final String username, final String planUri ) {
         String[] toValues = new String[3];
         toValues[0] = username;
         toValues[1] = ChannelsUserInfo.PLANNERS;
@@ -73,7 +73,6 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "planUri", planUri ) );
-        criteria.add( Restrictions.eq( "planVersion", planVersion ) );
         criteria.add( Restrictions.in( "toUsername", toValues ) );
         criteria.addOrder( Order.desc( "created" ) );
         return (Iterator<UserMessage>) IteratorUtils.filteredIterator(
@@ -91,11 +90,10 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public Iterator<UserMessage> getSentMessages( String username, String planUri, int planVersion ) {
+    public Iterator<UserMessage> getSentMessages( String username, String planUri ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "planUri", planUri ) );
-        criteria.add( Restrictions.eq( "planVersion", planVersion ) );
         criteria.add( Restrictions.eq( "username", username ) );
         criteria.addOrder( Order.desc( "created" ) );
         return (Iterator<UserMessage>) criteria.list().iterator();
@@ -122,8 +120,8 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
 
     @Override
     @Transactional( readOnly = true )
-    public Date getWhenLastReceived( String username, String planUri, int planVersion ) {
-        Iterator<UserMessage> received = getReceivedMessages( username, planUri, planVersion );
+    public Date getWhenLastReceived( String username, String planUri ) {
+        Iterator<UserMessage> received = getReceivedMessages( username, planUri );
         if ( received.hasNext() ) {
             return received.next().getCreated();
         } else {

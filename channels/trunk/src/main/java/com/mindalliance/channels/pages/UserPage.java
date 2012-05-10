@@ -349,60 +349,65 @@ public class UserPage extends AbstractChannelsWebPage {
                 getGuidelinesLink( "gotoGuidelines", getQueryService(), getPlan(), user, true );
         Label gotoGuidelinesLabel = new Label( "guidelinesLabel", getGuidelinesReportLabel( user, plan ) );
         gotoGuidelinesLink.add( gotoGuidelinesLabel )
-                .add(new AttributeModifier(
-                "title",
-                new Model<String>( getGotoGuidelinesDescription( user, plan ) ) ));
+                .add( new AttributeModifier(
+                        "title",
+                        new Model<String>( getGotoGuidelinesDescription( user, plan ) ) ) );
         // info needs link
         BookmarkablePageLink<? extends WebPage> gotoInfoNeedsLink =
                 getInfoNeedsLink( "gotoInfoNeeds", getQueryService(), getPlan(), user, true );
         Label gotoInfoNeedsLabel = new Label( "infoNeedsLabel", getInfoNeedsReportLabel( user, plan ) );
         gotoInfoNeedsLink.add( gotoInfoNeedsLabel )
-                .add(new AttributeModifier(
-                "title",
-                new Model<String>( getGotoInfoNeedsDescription( user, plan ) ) ));
+                .add( new AttributeModifier(
+                        "title",
+                        new Model<String>( getGotoInfoNeedsDescription( user, plan ) ) ) );
         // Surveys
         BookmarkablePageLink<? extends WebPage> gotoRFIsLink =
                 getRFIsLink( "gotoRFIs", getPlan(), true );
         Label gotoRFIsLabel = new Label( "rfisLabel", getRFIsLabel( user, plan ) );
         gotoRFIsLink.add( gotoRFIsLabel )
-                .add(new AttributeModifier(
+                .add( new AttributeModifier(
                         "title",
-                        new Model<String>( getGotoRFIsDescription( user, plan ) ) ));
+                        new Model<String>( getGotoRFIsDescription( user, plan ) ) ) );
         // plan editor link
         BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlanPage.class, null, plan );
         gotoModelLink.add( new AttributeModifier(
                 "title",
                 new Model<String>( getGotoModelDescription( user, plan ) ) ) );
         // gotos
-        form.add(
+        form.addOrReplace(
                 // Goto admin
                 new WebMarkupContainer( "admin" )
                         .add( newTargetedLink( "gotoAdmin", "", AdminPage.class, null, plan ) )
-                        .setVisible( user.isAdmin() ),
+                        .setVisible( user.isAdmin() )
+                        .setOutputMarkupId( true ),
 
                 // Goto model
                 new WebMarkupContainer( "model" )
                         .add( gotoModelLink )
-                        .setVisible( planner || plan.isTemplate() ),
+                        .setVisible( planner || plan.isTemplate() )
+                        .setOutputMarkupId( true ),
 
- /*               // Goto mapped procedures
-                new WebMarkupContainer( "procedures" )
-                        .add( newTargetedLink( "gotoProcedures", "", ProcedureMapPage.class, null, plan ) ).
-                                setVisible( planner || plan.isTemplate() ),
-*/
+                /*               // Goto mapped procedures
+                                new WebMarkupContainer( "procedures" )
+                                        .add( newTargetedLink( "gotoProcedures", "", ProcedureMapPage.class, null, plan ) ).
+                                                setVisible( planner || plan.isTemplate() ),
+                */
                 // Goto guidelines
                 new WebMarkupContainer( "guidelines" )
                         .add( gotoGuidelinesLink )
-                        .setVisible( planner || !participations.isEmpty() ),
+                        .setVisible( planner || !participations.isEmpty() )
+                        .setOutputMarkupId( true ),
 
                 // Goto info needs
                 new WebMarkupContainer( "infoNeeds" )
                         .add( gotoInfoNeedsLink )
-                        .setVisible( planner || !participations.isEmpty() ),
+                        .setVisible( planner || !participations.isEmpty() )
+                        .setOutputMarkupId( true ),
 
                 // Goto surveys
                 new WebMarkupContainer( "rfis" )
-                        .add( gotoRFIsLink ),
+                        .add( gotoRFIsLink )
+                        .setOutputMarkupId( true ),
 
                 // Goto issues report
                 new WebMarkupContainer( "issues" )
@@ -413,7 +418,8 @@ public class UserPage extends AbstractChannelsWebPage {
                                 IssuesPage.createParameters( uri, plan.getVersion() ),
                                 null,
                                 plan ) )
-                        .setVisible( planner || plan.isTemplate() ) );
+                        .setVisible( planner || plan.isTemplate() ) )
+                        .setOutputMarkupId( true );
 
     }
 
@@ -436,7 +442,7 @@ public class UserPage extends AbstractChannelsWebPage {
     }
 
     private String getRFIsLabel( ChannelsUser user, Plan plan ) {
-        StringBuilder sb = new StringBuilder(  );
+        StringBuilder sb = new StringBuilder();
         sb.append( "Planning surveys" );
         int lateCount = surveysDAO.countLate( plan, user, getQueryService(), getAnalyst() );
         if ( lateCount > 0 ) {
@@ -457,11 +463,11 @@ public class UserPage extends AbstractChannelsWebPage {
         QueryService queryService = getQueryService();
         Analyst analyst = getAnalyst();
         int activeCount = rfiService.listUserActiveRFIs( plan, user, queryService, analyst ).size();
-        StringBuilder sb = new StringBuilder( );
+        StringBuilder sb = new StringBuilder();
         sb
                 .append( "I participate in " )
                 .append( activeCount == 0 ? "no" : activeCount )
-                .append( activeCount > 1 ? " surveys" : " survey");
+                .append( activeCount > 1 ? " surveys" : " survey" );
         if ( activeCount > 0 ) {
             int noAnswerCount = surveysDAO.countUnanswered( plan, user, queryService, analyst );
             int incompleteCount = surveysDAO.countIncomplete( plan, user, queryService, analyst );
@@ -470,16 +476,16 @@ public class UserPage extends AbstractChannelsWebPage {
             sb
                     .append( " of which " )
                     .append( noAnswerCount == 0 ? "none" : noAnswerCount )
-                    .append( noAnswerCount == 1 ? " is" : " are"  )
+                    .append( noAnswerCount == 1 ? " is" : " are" )
                     .append( " unanswered and " )
                     .append( partialCount == 0 ? "none" : partialCount )
                     .append( partialCount == 1 ? " is" : " are" )
                     .append( " partially answered. " )
                     .append( lateCount == 0 ? "None" : lateCount )
-                    .append( lateCount <= 1 ? " is" : " are"  )
+                    .append( lateCount <= 1 ? " is" : " are" )
                     .append( " overdue." );
         } else {
-                sb.append( "." );
+            sb.append( "." );
         }
         return sb.toString();
     }
@@ -519,10 +525,14 @@ public class UserPage extends AbstractChannelsWebPage {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUpdated()
-                && change.isForInstanceOf( Plan.class )
-                && change.isForProperty( "user" ) ) {
-            addWelcome();
-            target.add( welcomeLabel );
+                && change.isForInstanceOf( Plan.class ) ) {
+            if ( change.isForProperty( "user" ) ) {
+                addWelcome();
+                target.add( welcomeLabel );
+            } else if ( change.isForProperty( "participation" ) ) {
+                addGotoLinks( getPlan(), getUser() );
+                target.add( form );
+            }
         }
         String message = change.getMessage();
         if ( message != null ) {

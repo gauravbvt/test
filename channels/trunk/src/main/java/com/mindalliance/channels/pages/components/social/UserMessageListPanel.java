@@ -116,7 +116,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                 adjustComponents( target );
             }
         };
-        showHideBroadcastsLink.setVisible( isPlanner() );
+        // showHideBroadcastsLink.setVisible( isPlanner() );
         add( showHideBroadcastsLink );
     }
 
@@ -142,7 +142,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                 adjustComponents( target );
             }
         };
-        sentReceivedLink.setVisible( isPlanner() );
+       // sentReceivedLink.setVisible( isPlanner() );
         add( sentReceivedLink );
     }
 
@@ -178,7 +178,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private void addAboutMessages( int numberListed ) {
         aboutMessagesLabel = new Label( "aboutMessages", getAboutMessage( numberListed ) );
         aboutMessagesLabel.setOutputMarkupId( true );
-        aboutMessagesLabel.setVisible( isPlanner() );
+        // aboutMessagesLabel.setVisible( isPlanner() );
         addOrReplace( aboutMessagesLabel );
     }
 
@@ -453,9 +453,9 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         List<UserMessage> userMessages = new ArrayList<UserMessage>();
         Iterator<UserMessage> iterator;
         if ( isShowReceived() ) {
-            iterator = userMessageService.getReceivedMessages( username, plan.getUri(), plan.getVersion() );
+            iterator = userMessageService.getReceivedMessages( username, plan.getUri() );
         } else {
-            iterator = userMessageService.getSentMessages( username, plan.getUri(), plan.getVersion() );
+            iterator = userMessageService.getSentMessages( username, plan.getUri() );
         }
         while ( iterator.hasNext() && userMessages.size() < numberToShow ) {
             UserMessage userMessage = iterator.next();

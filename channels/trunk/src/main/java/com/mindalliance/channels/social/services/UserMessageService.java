@@ -19,13 +19,13 @@ public interface UserMessageService extends GenericSqlService<UserMessage, Long>
     
     void deleteMessage( UserMessage message );
     
-    Iterator<UserMessage> getReceivedMessages( String username, String planUri, int planVersion );
+    Iterator<UserMessage> getReceivedMessages( String username, String planUri );
 
-    Iterator<UserMessage> getSentMessages( String username, String planUri, int planVersion );
+    Iterator<UserMessage> getSentMessages( String username, String planUri );
     
     Date getWhenLastChanged( String planUri );
     
-    Date getWhenLastReceived( String username, String planUri, int planVersion );
+    Date getWhenLastReceived( String username, String planUri );
 
     void markNotified( UserMessage message );
 

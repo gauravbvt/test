@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.social;
 
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
@@ -96,6 +97,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                     protected void onUpdate( AjaxRequestTarget target ) {
                         resetAll();
                         target.add( userParticipationContainer );
+                        update( target, new Change( Change.Type.Updated, getPlan(), "participation") );
                     }
                 };
                 boolean open = participationWrapper.isOpen( getQueryService() );

@@ -12,7 +12,6 @@ import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -172,19 +171,6 @@ public class Questionnaire extends AbstractPersistentPlanObject {
 
     public boolean isActive() {
         return getStatus().equals( Status.ACTIVE );
-    }
-
-    @Transactional( readOnly = true )
-    public boolean isOptional() {
-        return !CollectionUtils.exists(
-                getQuestions(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Question) object ).isAnswerRequired();
-                    }
-                }
-        );
     }
 
     public boolean isAboutRemediation( Issue issue ) {

@@ -14,4 +14,8 @@ public interface NotificationService {
     void reportOnNewFeedback();
 
     void notifyOfUserMessages();
+
+    void notifyOfSurveys();
+
+    void reportOnSurveys();
 }

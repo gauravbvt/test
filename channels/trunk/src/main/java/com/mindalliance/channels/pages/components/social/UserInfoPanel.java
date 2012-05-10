@@ -62,6 +62,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
 
     private Pattern emailPattern;
+    private String passwordHash;
     private boolean passwordOk = false;
     private String newPassword = "";
     private String repeatNewPassword = "";
@@ -147,14 +148,14 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     private void addPassword() {
-        PasswordTextField passwordField = new PasswordTextField( "password", new PropertyModel<String>( this, "password" ) );
-        passwordField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        PasswordTextField passwordText = new PasswordTextField( "password", new PropertyModel<String>( this, "password" ) );
+        passwordText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 adjustFields( target );
             }
         } );
-        userInfoContainer.add( passwordField );
+        userInfoContainer.add( passwordText );
         newPasswordText = new TextField<String>( "newPassword", new PropertyModel<String>( this, "newPassword" ) );
         newPasswordText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
@@ -252,10 +253,10 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         resetErrors();
         addErrors();
         target.add( errorsContainer );
-        // applyButton.setEnabled( canSave() );
-        // target.add( applyButton );
+ //       passwordText.setEnabled( newPassword.isEmpty() && repeatNewPassword.isEmpty() );
         newPasswordText.setEnabled( passwordOk );
         repeatNewPasswordText.setEnabled( passwordOk );
+ //       target.add( passwordText );
         target.add( newPasswordText );
         target.add( repeatNewPasswordText );
     }
@@ -289,7 +290,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     private boolean save() throws IOException {
-        if ( !newPassword.isEmpty() && isValidNewPassword() ) {
+        if ( passwordOk && !newPassword.isEmpty() && isValidNewPassword() ) {
             temp.setPassword( newPassword );
         }
         if ( canSave() ) {
@@ -327,10 +328,14 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     public void setPassword( String val ) {
-        temp.setPassword( val == null ? "" : val );
-        passwordOk = temp.getPassword().equals( user.getPassword() );
+        passwordHash = val == null ? "" : ChannelsUserInfo.digestPassword( val.trim() );
+        passwordOk = isValidPassword( );
         newPassword = "";
         repeatNewPassword = "";
+    }
+
+    private boolean isValidPassword(  ) {
+        return passwordHash.equals( user.getPassword() );
     }
 
     public String getNewPassword() {

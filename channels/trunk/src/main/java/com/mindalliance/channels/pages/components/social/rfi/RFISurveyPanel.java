@@ -35,7 +35,7 @@ public class RFISurveyPanel extends AbstractUpdatablePanel {
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
-        tabs.add( new AbstractTab( new Model<String>( "RFIs" ) ) {
+        tabs.add( new AbstractTab( new Model<String>( "Participation" ) ) {
             public Panel getPanel( String id ) {
                 return new RFIsPanel( id, new Model<RFISurvey>( getRFISurvey() ) );
             }

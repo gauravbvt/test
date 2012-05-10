@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -387,20 +386,20 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     @Override
     @Transactional( readOnly = true )
-    public String findResponseMetrics( Plan plan, final RFISurvey rfiSurvey ) {
+    public Map<String,Integer> findResponseMetrics( Plan plan, final RFISurvey rfiSurvey ) {
         List<RFI> surveyedRFIs = rfiService.select( plan, rfiSurvey );
-        Integer[] counts = new Integer[3];
-        counts[0] = CollectionUtils.countMatches(
+        Map<String, Integer> metrics = new HashMap<String, Integer>();
+        int completed = CollectionUtils.countMatches(
                 surveyedRFIs,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         Questionnaire questionnaire = rfiSurvey.getQuestionnaire();
-                        return questionnaire.isOptional() || isCompleted( (RFI) object );
+                        return isOptional( questionnaire ) || isCompleted( (RFI) object );
                     }
                 }
         );
-        counts[1] = CollectionUtils.countMatches(
+        int declined = CollectionUtils.countMatches(
                 surveyedRFIs,
                 new Predicate() {
                     @Override
@@ -409,8 +408,23 @@ public class SurveysDAOImpl implements SurveysDAO {
                     }
                 }
         );
-        counts[2] = surveyedRFIs.size() - ( counts[0] + counts[1] );
-        return new MessageFormat( "{0}c {1}d {2}i" ).format( counts );
+        int incomplete = surveyedRFIs.size() - ( completed + declined );
+        metrics.put( "completed", completed );
+        metrics.put( "declined", declined );
+        metrics.put( "incomplete", incomplete );
+        return metrics;
+    }
+
+    private boolean isOptional( Questionnaire questionnaire ) {
+        return !CollectionUtils.exists(
+                questionnaire.getQuestions(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Question) object ).isAnswerRequired();
+                    }
+                }
+        );
     }
 
     @Override
@@ -466,7 +480,7 @@ public class SurveysDAOImpl implements SurveysDAO {
         Map<String, Set<String>> results = new HashMap<String, Set<String>>();
         List<RFI> rfis = findAnsweringRFIs( plan, rfiSurvey );
         List<Answer> openAnswers = new ArrayList<Answer>();
-        List<Answer> anonymousAnswers = new ArrayList<Answer>(  );
+        List<Answer> anonymousAnswers = new ArrayList<Answer>();
         // collect answers
         for ( RFI rfi : rfis ) {
             if ( excludedUsername == null || !rfi.getSurveyedUsername().equals( excludedUsername ) ) {
@@ -511,5 +525,22 @@ public class SurveysDAOImpl implements SurveysDAO {
             usernames.add( username );
         }
         return results;
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<Question> listAnswerableQuestions( RFISurvey rfiSurvey ) {
+        Questionnaire questionnaire = rfiSurvey.getQuestionnaire();
+        return (List<Question>) CollectionUtils.select(
+                questionService.listQuestions( questionnaire ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Question)object).isAnswerable();
+                    }
+                }
+        );
+
     }
 }

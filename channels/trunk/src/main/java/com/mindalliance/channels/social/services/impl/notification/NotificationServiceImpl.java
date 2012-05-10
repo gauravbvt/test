@@ -131,6 +131,36 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         }
     }
 
+    //// SURVEYS ////
+
+    @Override
+    @Scheduled( fixedDelay = 60000 )     // each minute
+    @Async
+    @Transactional
+    public void notifyOfSurveys() {
+        // to survey participants
+        /*sendNags();
+        sendDealineApproachingNotifications();
+        sendNewSurveyNotifications();
+        sendSurveyUpdatedNotifications();
+        // to planners
+        sendSurveyForwadedNotifications();
+        sendSurveyDeclinedNotifications();
+        sendSurveyCompletedNotifications();*/
+    }
+
+    @Override
+    @Scheduled( fixedDelay = 86400000 )   // each day
+    @Async
+    @Transactional
+    public void reportOnSurveys() {
+        // to survey participants
+       /* sendIncompleteSurveysReports();
+        // to planners
+        sendSurveyStatusReports();*/
+    }
+
+
     //
 
     private boolean sendNotifications(

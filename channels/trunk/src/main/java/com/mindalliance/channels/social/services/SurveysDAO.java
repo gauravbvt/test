@@ -142,7 +142,7 @@ public interface SurveysDAO {
      */
     int getOptionalAnswersCount( RFI rfi );
 
-    String findResponseMetrics( Plan plan, final RFISurvey rfiSurvey );
+    Map<String, Integer> findResponseMetrics( Plan plan, final RFISurvey rfiSurvey );
 
     /**
      * Find the RFIs in a given survey with answers.
@@ -184,10 +184,10 @@ public interface SurveysDAO {
     /**
      * Process all answers to a question in a survey.
      *
-     * @param plan         a plan
-     * @param rfiSurvey    a survey
-     * @param question     a question
-     * @param sharedOnly   a boolean - only answers that are shared vs. all answers
+     * @param plan             a plan
+     * @param rfiSurvey        a survey
+     * @param question         a question
+     * @param sharedOnly       a boolean - only answers that are shared vs. all answers
      * @param excludedUsername a string
      * @return a map - text of answer => list of usernames who gave it
      */
@@ -197,4 +197,12 @@ public interface SurveysDAO {
             Question question,
             boolean sharedOnly,
             String excludedUsername );
+
+    /**
+     * List answerable questions in a survey.
+     *
+     * @param rfiSurvey a survey
+     * @return a list of questions
+     */
+    List<Question> listAnswerableQuestions( RFISurvey rfiSurvey );
 }

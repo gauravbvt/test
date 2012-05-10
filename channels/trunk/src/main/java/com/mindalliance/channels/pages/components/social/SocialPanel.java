@@ -46,7 +46,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     public static final String EMAIL_MESSAGE = "emailMessage";
 
     private AjaxTabbedPanel tabbedPanel;
-    private UserMessageListPanel plannerMessageListPanel;
+    private UserMessageListPanel userMessageListPanel;
     private ExecutedCommandsListPanel commandEventListPanel;
     private UserPresenceListPanel plannerPresenceListPanel;
     // private SurveyListPanel surveyListPanel;
@@ -135,10 +135,10 @@ public class SocialPanel extends AbstractUpdatablePanel {
                 }
             } );
         if ( showTabs.contains( MESSAGES ) )
-            tabs.add( new AbstractTab( new Model<String>( getMessagesTabTitle() ) ) {
+            tabs.add( new AbstractTab( new Model<String>( "Messages" ) ) {
                 public Panel getPanel( String id ) {
-                    plannerMessageListPanel = new UserMessageListPanel( id, SocialPanel.this, collapsible, showProfile );
-                    return plannerMessageListPanel;
+                    userMessageListPanel = new UserMessageListPanel( id, SocialPanel.this, collapsible, showProfile );
+                    return userMessageListPanel;
                 }
             } );
         if ( showTabs.contains( CALENDAR ) )
@@ -175,14 +175,13 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( commandEventListPanel != null && getSelectedTabTitle().equals( "Activities" )  ) {
             commandEventListPanel.refresh( target, change );
         }
-        if ( plannerMessageListPanel != null && getSelectedTabTitle().equals( getMessagesTabTitle() )  ) {
-            plannerMessageListPanel.refresh( target, change );
+        if ( userMessageListPanel != null && getSelectedTabTitle().equals( getMessagesTabTitle() )  ) {
+            userMessageListPanel.refresh( target, change );
         }
         Plan plan = getPlan();
         Date whenLastReceived = userMessageService.getWhenLastReceived(
                 getUser().getUsername(),
-                plan.getUri(),
-                plan.getVersion() );
+                plan.getUri() );
         if ( whenLastReceived != null && whenLastReceived.after( whenLastRefreshed ) ) {
             update( target, Change.message( "New message" ) );
         }
@@ -199,13 +198,13 @@ public class SocialPanel extends AbstractUpdatablePanel {
             }
 
             if ( object instanceof String && action.equals( SEND_MESSAGE ) ) {
-                plannerMessageListPanel.newMessage( (String) object, target );
+                userMessageListPanel.newMessage( (String) object, target );
             }
             if ( object instanceof UserMessage && action.equals( DELETE_MESSAGE ) ) {
-                plannerMessageListPanel.deleteMessage( (UserMessage) object, target );
+                userMessageListPanel.deleteMessage( (UserMessage) object, target );
             }
             if ( object instanceof UserMessage && action.equals( EMAIL_MESSAGE ) ) {
-                plannerMessageListPanel.emailMessage( (UserMessage) object, target );
+                userMessageListPanel.emailMessage( (UserMessage) object, target );
             }
         }
     }
@@ -224,7 +223,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
         ModelObject about = (ModelObject) change.getSubject( getQueryService() );
         String sendTo = change.getProperty();
         selectTabTitled( getMessagesTabTitle() );
-        plannerMessageListPanel.newMessage( sendTo == null ? "" : sendTo, about, target );
+        userMessageListPanel.newMessage( sendTo == null ? "" : sendTo, about, target );
         target.add( tabbedPanel );
     }
 
