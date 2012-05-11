@@ -77,9 +77,10 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     @Override
     @Transactional( readOnly = true)
     @SuppressWarnings( "unchecked" )
-    public List<Feedback> listNotYetNotifiedUrgentFeedbacks() {
+    public List<Feedback> listNotYetNotifiedUrgentFeedbacks( Plan plan ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
         criteria.add( Restrictions.isNull( "whenNotified" ) );
         criteria.add( Restrictions.eq( "urgent", true ) );
         criteria.addOrder( Order.desc( "created" ) );

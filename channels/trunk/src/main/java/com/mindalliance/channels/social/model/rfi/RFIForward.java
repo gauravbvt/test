@@ -27,6 +27,8 @@ public class RFIForward extends AbstractPersistentPlanObject {
     @Column(length=3000)
     private String message = "";
 
+    private boolean notified;
+
     @ManyToOne
     private RFI rfi;
 
@@ -70,5 +72,13 @@ public class RFIForward extends AbstractPersistentPlanObject {
 
     public void setMessage( String message ) {
         this.message = message;
+    }
+
+    public boolean isNotified() {
+        return notified;
+    }
+
+    public void setNotified( boolean notified ) {
+        this.notified = notified;
     }
 }

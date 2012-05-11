@@ -3,9 +3,8 @@ package com.mindalliance.channels.social.model;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.social.services.notification.Messageable;
-import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -20,7 +19,7 @@ import java.util.Date;
  * Time: 11:28 AM
  */
 @Entity
-public class UserMessage extends UserStatement implements Messageable {
+public class UserMessage extends UserStatement {
 
     private String toUsername;
     private boolean sendNotification;
@@ -86,10 +85,23 @@ public class UserMessage extends UserStatement implements Messageable {
         return getUsername();
     }
 
+    public boolean isToAllPlanners() {
+        return toUsername.equals( ChannelsUserInfo.PLANNERS );
+    }
+
+    public boolean isToAllUsers() {
+        return toUsername.equals( ChannelsUserInfo.USERS );
+    }
+
     // Messageable
 
+
     @Override
-    public String getContent( Format format, int maxLength ) {
+    public String getToUsername( String topic ) {
+        return getToUsername();
+    }
+
+    public String getTextContent( Format format, PlanService planService ) {
         // Ignore TEXT vs HTML for now
         Date now = new Date();
         StringBuilder sb = new StringBuilder();
@@ -111,25 +123,12 @@ public class UserMessage extends UserStatement implements Messageable {
         sb.append( "\n\n -- Message first sent in Channels " )
                 .append( ChannelsUtils.getLongTimeIntervalString( now.getTime() - getCreated().getTime() ) )
                 .append( " ago --" );
-        return StringUtils.abbreviate( sb.toString(), maxLength );
+        return sb.toString();
     }
 
-    @Override
-    public String getSubject( Format format, int maxLength ) {
-        return StringUtils.abbreviate( "[" + getPlanUri() + "] " + getText(), maxLength );
+    public String getTextSubject( Format format, PlanService planService ) {
+        return "[" + getPlanUri() + "] " + getText();
     }
 
-    @Override
-    public Date getWhenNotified() {
-        return getWhenNotificationSent();
-    }
-
-    public boolean isToAllPlanners() {
-        return toUsername.equals( ChannelsUserInfo.PLANNERS );
-    }
-
-    public boolean isToAllUsers() {
-        return toUsername.equals( ChannelsUserInfo.USERS );
-    }
 
 }

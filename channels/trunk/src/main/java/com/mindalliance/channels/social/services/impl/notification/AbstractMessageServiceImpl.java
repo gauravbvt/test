@@ -5,6 +5,8 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.notification.Messageable;
 import com.mindalliance.channels.social.services.notification.MessagingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +29,9 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
     @Autowired
     private ChannelsUserDao userDao;
 
-    protected List<ChannelsUserInfo> getToUsers( Messageable messageable ) {
+    protected List<ChannelsUserInfo> getToUsers( Messageable messageable, String topic ) {
         List<ChannelsUser> toUsers = new ArrayList<ChannelsUser>();
-        String toUsername = messageable.getToUsername();
+        String toUsername = messageable.getToUsername( topic );
         String urn = messageable.getPlanUri();
         if ( toUsername.equals( ChannelsUserInfo.PLANNERS ) )
             toUsers = userDao.getPlanners( urn );
@@ -44,9 +46,14 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
         return answer;
     }
 
-    protected ChannelsUserInfo getFromUser( Messageable messageable ) {
-        ChannelsUser fromUser = userDao.getUserNamed( messageable.getFromUsername() );
-        return fromUser.getUserInfo();
+    protected ChannelsUserInfo getFromUser( Messageable messageable, String topic ) {
+        String fromUsername = messageable.getFromUsername( topic );
+        if ( fromUsername != null ) {
+            ChannelsUser fromUser = userDao.getUserNamed( fromUsername );
+            return fromUser.getUserInfo();
+        } else {
+            return null;
+        }
     }
 
     protected Plan getPlan( Messageable messageable ) {
@@ -61,10 +68,15 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
         return planManager.getDefaultSupportCommunity();
     }
 
-    protected String makeReportSubject( String planUri, List<? extends Messageable> messageables ) {
+    protected String makeReportSubject(
+            String planUri,
+            List<? extends Messageable> messageables,
+            String topic,
+            PlanService planService,
+            SurveysDAO surveysDAO ) {
         StringBuilder sb = new StringBuilder();
         int n = messageables.size();
-        String kind = messageables.get( 0 ).getTypeName();
+        String kind = messageables.get( 0 ).getTypeName() + " " + topic;
         sb.append( kind )
                 .append( " report" )
                 .append( " (" )
@@ -74,10 +86,15 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
         return sb.toString();
     }
 
-    protected String makeReportContent( Messageable.Format format, List<? extends Messageable> messageables ) {
+    protected String makeReportContent(
+            Messageable.Format format,
+            List<? extends Messageable> messageables,
+            String topic,
+            PlanService planService,
+            SurveysDAO surveysDAO ) {
         StringBuilder sb = new StringBuilder();
         for ( Messageable messageable : messageables ) {
-            sb.append( messageable.getContent( format, Integer.MAX_VALUE ) );
+            sb.append( messageable.getContent( topic, format, planService, surveysDAO ) );
             sb.append( "\n============================================\n\n" );
         }
         return sb.toString();

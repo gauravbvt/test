@@ -294,6 +294,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
                             getDeadlineDate()
                     );
                 }
+                surveyParticipations = null;
                 update( target, new Change( Change.Type.Updated, getRFISurvey(), "updated" ) );
             }
         };
@@ -311,7 +312,10 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         );
         ConfirmedAjaxFallbackLink<String> nagLink = new ConfirmedAjaxFallbackLink<String>(
                 "nag",
-                "Nag " + naggableParticipations.size() + "?" ) {
+                "Nag "
+                        + naggableParticipations.size()
+                        + (naggableParticipations.size() > 1 ? " persons" : " person" )
+                        + "?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 for ( SurveyParticipation participation : naggableParticipations ) {
@@ -322,6 +326,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
                             participation.getUserInfo()
                     );
                 }
+                surveyParticipations = null;
                 update( target, new Change( Change.Type.Updated, getRFISurvey(), "updated" ) );
             }
         };

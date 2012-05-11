@@ -2,16 +2,21 @@ package com.mindalliance.channels.social.model.rfi;
 
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.social.services.SurveysDAO;
+import com.mindalliance.channels.social.services.notification.Messageable;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +28,14 @@ import java.util.List;
  * Time: 1:50 PM
  */
 @Entity
-public class RFI extends AbstractPersistentPlanObject {
+public class RFI extends AbstractPersistentPlanObject implements Messageable {
+
+
+    public static final String NEW = "new";
+    public static final String DECLINED = "declined";
+    public static final String DEADLINE = "deadline";
+    public static final String NAG = "nag";
+
 
     public static final RFI UNKNOWN = new RFI( Channels.UNKNOWN_RFI_ID );
 
@@ -48,6 +60,8 @@ public class RFI extends AbstractPersistentPlanObject {
     private String reasonDeclined = "";
 
     private boolean naggingRequested = false;
+
+    private String notifications;
 
     @OneToMany( mappedBy = "rfi", cascade = CascadeType.ALL )
     private List<RFIForward> forwards = new ArrayList<RFIForward>();
@@ -156,6 +170,21 @@ public class RFI extends AbstractPersistentPlanObject {
 
     public void setNagged( Date nagged ) {
         this.nagged = nagged;
+        setNaggingRequested( false );
+        addNotification( NAG );
+    }
+
+    public void nag() {
+        setNaggingRequested( true );
+        removeNotification( NAG );
+    }
+
+    public String getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications( String notifications ) {
+        this.notifications = notifications;
     }
 
     public List<RFIForward> getForwards() {
@@ -237,4 +266,109 @@ public class RFI extends AbstractPersistentPlanObject {
     public String getLabel( QueryService queryService ) {
         return getRfiSurvey().getLabel( queryService );
     }
+
+    public void nagged() {
+        naggingRequested = false;
+        nagged = new Date();
+    }
+
+    public boolean isNotificationSent( String notification ) {
+        return notifications != null && allNotifications().contains( notification );
+    }
+
+    private List<String> allNotifications() {
+        return notifications == null
+                ? new ArrayList<String>()
+                : Arrays.asList( notifications.split( "," ) );
+    }
+
+    public void addNotification( String notification ) {
+        List<String> list = allNotifications();
+        if ( !list.contains( notification ) ) {
+            list.add( notification );
+        }
+        notifications = StringUtils.join( list, "," );
+    }
+
+    public void removeNotification( String notification ) {
+        List<String> list = allNotifications();
+        list.remove( notification );
+        notifications = StringUtils.join( list, "," );
+    }
+
+
+    /// MESSAGEABLE ///
+
+
+    @Override
+    public String getToUsername( String topic ) {
+        if ( topic.equals( NAG ) )
+            return getSurveyedUsername();
+        else
+            throw new RuntimeException();
+    }
+
+
+    @Override
+    public String getFromUsername( String topic ) {
+        if ( topic.equals( NAG ) ) return null;
+        else
+            throw new RuntimeException();
+    }
+
+    @Override
+    public String getContent(
+            String topic,
+            Format format,
+            PlanService planService,
+            SurveysDAO surveysDAO ) {
+        if ( topic.equals( NAG ) )
+            return getNagContent( format, planService, surveysDAO );
+        else
+            throw new RuntimeException( "invalid content" );
+    }
+
+    @Override
+    public String getSubject(
+            String topic,
+            Format format,
+            PlanService planService,
+            SurveysDAO surveysDAO ) {
+        if ( topic.equals( NAG ) )
+            return getNagSubject( format, planService );
+        else
+            throw new RuntimeException( "invalid content" );
+    }
+
+    private String getNagContent(
+            Format format,
+            PlanService planService,
+            SurveysDAO surveysDAO ) {
+        StringBuilder sb = new StringBuilder();
+        boolean overdue = getDeadline() != null && new Date().after( getDeadline() );
+        sb.append( "This is a reminder to complete " )
+                .append( getLabel( planService ) )
+                .append( "." );
+        if ( overdue ) {
+            sb.append( " The survey was due on " )
+                    .append( Messageable.DATE_FORMAT.format( getDeadline() ) )
+                    .append( "." );
+        }
+        sb.append( "\n\n" );
+        sb.append( "We want to hear from you! You have so far answered " )
+                .append( surveysDAO.getPercentRequiredQuestionsAnswered( this ) )
+                .append( "% of all required questions. Completing this survey would be greatly appreciated!\n\n" )
+                .append( "Regards,\n\n" )
+                .append( "The planners of " )
+                .append( planService.getPlan().getName() );
+        return sb.toString();
+    }
+
+    private String getNagSubject( Format format, PlanService planService ) {
+        // ignore format
+        return getLabel( planService )
+                + "is due on "
+                + Messageable.DATE_FORMAT.format( getDeadline() );
+    }
+
 }

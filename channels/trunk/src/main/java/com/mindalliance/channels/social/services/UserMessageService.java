@@ -27,9 +27,9 @@ public interface UserMessageService extends GenericSqlService<UserMessage, Long>
     
     Date getWhenLastReceived( String username, String planUri );
 
-    void markNotified( UserMessage message );
+    void markSent( UserMessage message );
 
-    Iterator<UserMessage> listMessagesToNotify();
+    Iterator<UserMessage> listMessagesToSend( String planUri );
 
     void markToNotify( UserMessage message );
 }

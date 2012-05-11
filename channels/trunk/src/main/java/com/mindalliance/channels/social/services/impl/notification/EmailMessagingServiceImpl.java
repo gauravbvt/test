@@ -2,9 +2,12 @@ package com.mindalliance.channels.social.services.impl.notification;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.notification.EmailMessagingService;
 import com.mindalliance.channels.social.services.notification.Messageable;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +43,19 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
     }
 
     @Override
-    public boolean sendMessage( Messageable messageable ) {
-        List<ChannelsUserInfo> toUsers = getToUsers( messageable );
-        ChannelsUserInfo fromUser = getFromUser( messageable );
-        String subject = messageable.getSubject( Messageable.Format.TEXT, MAX_SUBJECT_SIZE );
-        String content = messageable.getContent( Messageable.Format.TEXT, Integer.MAX_VALUE );
+    public boolean sendMessage(
+            Messageable messageable,
+            String topic,
+            PlanService planService,
+            SurveysDAO surveysDAO ) {
+        List<ChannelsUserInfo> toUsers = getToUsers( messageable, topic );
+        ChannelsUserInfo fromUser = getFromUser( messageable, topic );
+        String subject = StringUtils.abbreviate(
+                messageable.getSubject( topic, Messageable.Format.TEXT, planService, surveysDAO ),
+                MAX_SUBJECT_SIZE );
+        String content = StringUtils.abbreviate(
+                messageable.getContent( topic, Messageable.Format.TEXT, planService, surveysDAO ),
+                Integer.MAX_VALUE );
         boolean notificationSent = false;
         for ( ChannelsUserInfo toUser : toUsers ) {
             boolean success = sendEmail( toUser.getEmail(),
@@ -59,13 +70,16 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
 
     @Override
     public boolean sendReport(
-            Plan plan,
             List<ChannelsUserInfo> recipients,
-            List<? extends Messageable> messageables ) {
+            List<? extends Messageable> messageables,
+            String topic,
+            PlanService planService,
+            SurveysDAO surveysDAO ) {
         boolean reported = false;
+        Plan plan = planService.getPlan();
         if ( !messageables.isEmpty() ) {
-            String subject = makeReportSubject( plan.getUri(), messageables );
-            String content = makeReportContent( Messageable.Format.TEXT, messageables );  // always as text for now
+            String subject = makeReportSubject( plan.getUri(), messageables, topic, planService, surveysDAO );
+            String content = makeReportContent( Messageable.Format.TEXT, messageables, topic, planService, surveysDAO );  // always as text for now
             for ( ChannelsUserInfo recipient : recipients ) {
                 boolean success = sendEmail(
                         recipient.getEmail(),

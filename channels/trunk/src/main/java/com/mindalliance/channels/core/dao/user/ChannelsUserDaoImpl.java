@@ -152,6 +152,12 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
     }
 
     @Override
+    public String getFullName( String username ) {
+        ChannelsUser user = getUserNamed( username );
+        return user == null ? username : user.getFullName();
+    }
+
+    @Override
     @Transactional( readOnly = true )
     public boolean isParticipant( final String username, String planUri ) {
         return getUsernames( planUri ).contains( username );

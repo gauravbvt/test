@@ -205,4 +205,10 @@ public interface SurveysDAO {
      * @return a list of questions
      */
     List<Question> listAnswerableQuestions( RFISurvey rfiSurvey );
+
+    /**
+     * Calculates the percentage (e.g. 50) of required questions answered.
+     * @param rfi an RFI
+     * @return a long      */
+    long getPercentRequiredQuestionsAnswered( RFI rfi );
 }

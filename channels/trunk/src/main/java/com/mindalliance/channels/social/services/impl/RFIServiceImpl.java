@@ -107,7 +107,7 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
             ChannelsUserInfo userInfo ) {
         RFI rfi = find( plan, rfiSurvey, userInfo.getUsername() );
         if ( rfi != null ) {
-            rfi.setNaggingRequested( true );
+            rfi.nag();
             save( rfi );
         }
     }
@@ -194,6 +194,25 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
         rfi.setDeclined( !rfi.isDeclined() );
         rfi.setReasonDeclined( reason );
         save( rfi );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    @Transactional( readOnly = true )
+    public List<RFI> listRequestedNags( Plan plan ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "naggingRequested", true ) );
+        return  (List<RFI>) CollectionUtils.select(
+                criteria.list(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        RFI rfi = (RFI) object;
+                        return !rfi.isNotificationSent( RFI.NAG );
+                    }
+                } );
     }
 
 

@@ -120,4 +120,11 @@ public interface ChannelsUserDao extends GenericSqlService<ChannelsUserInfo, Lon
      */
     boolean isPlanner( final String username, String planUri );
 
+    /**
+     * Get a user's full name.
+     *
+     * @param username a username
+     * @return a string
+     */
+    String getFullName( String username );
 }

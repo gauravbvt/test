@@ -5,7 +5,6 @@ import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.plan.PlanSummariesData;
 import com.mindalliance.channels.api.plan.PlanSummaryData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
-import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
@@ -13,12 +12,13 @@ import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -46,11 +46,12 @@ public class ChannelsServiceImpl implements ChannelsService {
      */
     private static final Logger LOG = LoggerFactory.getLogger( ChannelsServiceImpl.class );
 
+    @Autowired
+    PlanServiceFactory planServiceFactory;
+
 
     private PlanManager planManager;
-    private SemanticMatcher semanticMatcher;
     private ChannelsUserDao userDao;
-    private AttachmentManager attachmentManager;
     private Analyst analyst;
     private PlanParticipationService planParticipationService;
 
@@ -209,19 +210,10 @@ public class ChannelsServiceImpl implements ChannelsService {
         this.planManager = planManager;
     }
 
-    @WebMethod( exclude = true )
-    public void setSemanticMatcher( SemanticMatcher semanticMatcher ) {
-        this.semanticMatcher = semanticMatcher;
-    }
 
     @WebMethod( exclude = true )
     public void setUserDao( ChannelsUserDao userDao ) {
         this.userDao = userDao;
-    }
-
-    @WebMethod( exclude = true )
-    public void setAttachmentManager( AttachmentManager attachmentManager ) {
-        this.attachmentManager = attachmentManager;
     }
 
     @WebMethod( exclude = true )
@@ -236,12 +228,6 @@ public class ChannelsServiceImpl implements ChannelsService {
 
 
     private PlanService getPlanService( Plan plan ) {
-        return new PlanService(
-                planManager,
-                semanticMatcher,
-                userDao,
-                attachmentManager,
-                planParticipationService,
-                plan );
+        return planServiceFactory.getService( plan );
     }
 }

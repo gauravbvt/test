@@ -5,9 +5,15 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.UserMessage;
+import com.mindalliance.channels.social.model.UserStatement;
+import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.services.FeedbackService;
+import com.mindalliance.channels.social.services.RFIService;
+import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.UserMessageService;
 import com.mindalliance.channels.social.services.notification.ChannelsMessagingService;
 import com.mindalliance.channels.social.services.notification.EmailMessagingService;
@@ -45,8 +51,11 @@ public class NotificationServiceImpl implements NotificationService, Initializin
      */
     private final Logger LOG = LoggerFactory.getLogger( NotificationServiceImpl.class );
 
-    private final static boolean EXCLUDE_INTERNAL_NOTIFICATIONS = true;
+    private final static boolean EXCLUDE_INTERNAL_MESSAGES = true;
 
+
+    @Autowired
+    PlanServiceFactory planServiceFactory;
 
     @Autowired
     private FeedbackService feedbackService;
@@ -64,6 +73,10 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     private EmailMessagingService emailMessagingService;
     @Autowired
     private ChannelsMessagingService channelsMessagingService;
+    @Autowired
+    private RFIService rfiService;
+    @Autowired
+    private SurveysDAO surveysDAO;
 
     private List<MessagingService> messagingServices;
 
@@ -81,13 +94,20 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Async
     @Transactional
     public void notifyOfUserMessages() {
-        LOG.info( "Sending out notifications of user messages" );
-        Iterator<UserMessage> messagesToNotifyOf = userMessageService.listMessagesToNotify();
-        while ( messagesToNotifyOf.hasNext() ) {
-            UserMessage messageToNotifyOf = messagesToNotifyOf.next();
-            boolean success = sendNotifications( messageToNotifyOf, EXCLUDE_INTERNAL_NOTIFICATIONS );
-            // success = at least one notification went out. No retries. Todo: retry each notification failure?
-            if ( success ) userMessageService.markNotified( messageToNotifyOf );
+        LOG.info( "Sending out user messages" );
+        for ( Plan plan : planManager.getPlans() ) {
+            PlanService planService = planServiceFactory.getService( plan );
+            Iterator<UserMessage> messagesToSend = userMessageService.listMessagesToSend( plan.getUri() );
+            while ( messagesToSend.hasNext() ) {
+                UserMessage messageToSend = messagesToSend.next();
+                boolean success = sendMessages(
+                        messageToSend,
+                        UserStatement.TEXT,
+                        EXCLUDE_INTERNAL_MESSAGES,
+                        planService );
+                // success = at least one message went out. No retries. Todo: retry each messaging failure?
+                if ( success ) userMessageService.markSent( messageToSend );
+            }
         }
     }
 
@@ -99,13 +119,20 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Async
     @Transactional
     public void notifyOfUrgentFeedback() {
-        LOG.info( "Sending out notifications of urgent feedback" );
-        List<Feedback> urgentFeedbacks = feedbackService.listNotYetNotifiedUrgentFeedbacks();
-        for ( Feedback urgentFeedback : urgentFeedbacks ) {
-            boolean success = sendNotifications( urgentFeedback, !EXCLUDE_INTERNAL_NOTIFICATIONS );
-            if ( success ) {
-                urgentFeedback.setWhenNotified( new Date() );
-                feedbackService.save( urgentFeedback );
+        LOG.info( "Sending out urgent feedback" );
+        for ( Plan plan : planManager.getPlans() ) {
+            PlanService planService = planServiceFactory.getService( plan );
+            List<Feedback> urgentFeedbacks = feedbackService.listNotYetNotifiedUrgentFeedbacks( plan );
+            for ( Feedback urgentFeedback : urgentFeedbacks ) {
+                boolean success = sendMessages(
+                        urgentFeedback,
+                        UserStatement.TEXT,
+                        !EXCLUDE_INTERNAL_MESSAGES,
+                        planService );
+                if ( success ) {
+                    urgentFeedback.setWhenNotified( new Date() );
+                    feedbackService.save( urgentFeedback );
+                }
             }
         }
     }
@@ -117,10 +144,14 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     public void reportOnNewFeedback() {
         LOG.info( "Sending out reports of new feedback" );
         for ( Plan plan : planManager.getPlans() ) {
+            PlanService planService = planServiceFactory.getService( plan );
             List<Feedback> normalFeedbacks = feedbackService.listNotYetNotifiedNormalFeedbacks( plan );
             if ( !normalFeedbacks.isEmpty() ) {
-                boolean success;
-                success = sendReport( plan, getPlanners( plan ), normalFeedbacks );
+                boolean success = sendReport(
+                        getPlanners( plan ),
+                        normalFeedbacks,
+                        UserStatement.TEXT,
+                        planService );
                 if ( success ) {
                     for ( Feedback normalFeedback : normalFeedbacks ) {
                         normalFeedback.setWhenNotified( new Date() );
@@ -138,15 +169,55 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Async
     @Transactional
     public void notifyOfSurveys() {
-        // to survey participants
-        /*sendNags();
-        sendDealineApproachingNotifications();
-        sendNewSurveyNotifications();
-        sendSurveyUpdatedNotifications();
-        // to planners
-        sendSurveyForwadedNotifications();
-        sendSurveyDeclinedNotifications();
-        sendSurveyCompletedNotifications();*/
+        for ( Plan plan : planManager.getPlans() ) {
+            PlanService planService = planServiceFactory.getService( plan );
+            // to survey participants
+            sendNags( planService );
+            sendDeadlineApproachingNotifications( planService );
+            sendNewSurveyNotifications( planService );
+            sendSurveyUpdatedNotifications( planService );
+            // to planners
+            sendSurveyForwardedNotifications( planService );
+            sendSurveyDeclinedNotifications( planService );
+            sendSurveyCompletedNotifications( planService );
+        }
+    }
+
+    private void sendNags( PlanService planService ) {
+        LOG.info( "Sending out nags about overdue RFIs" );
+        List<RFI> nagRFIs = rfiService.listRequestedNags( planService.getPlan() );
+        for ( RFI nagRfi : nagRFIs ) {
+            boolean success = sendMessages( nagRfi, RFI.NAG, planService );
+            if ( success ) {
+                nagRfi.nagged();
+                rfiService.save( nagRfi );
+            }
+        }
+    }
+
+
+    private void sendDeadlineApproachingNotifications( PlanService planService ) {
+        // todo
+    }
+
+    private void sendNewSurveyNotifications( PlanService planService ) {
+        // todo
+    }
+
+    private void sendSurveyUpdatedNotifications( PlanService planService ) {
+        // todo
+    }
+
+    private void sendSurveyForwardedNotifications( PlanService planService ) {
+        // todo
+    }
+
+    private void sendSurveyDeclinedNotifications( PlanService planService ) {
+        // todo
+    }
+
+    private void sendSurveyCompletedNotifications( PlanService planService ) {
+        // todo
     }
 
     @Override
@@ -155,21 +226,40 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Transactional
     public void reportOnSurveys() {
         // to survey participants
-       /* sendIncompleteSurveysReports();
+        sendIncompleteSurveysReports();
         // to planners
-        sendSurveyStatusReports();*/
+        sendSurveyStatusReports();
+    }
+
+    private void sendSurveyStatusReports() {
+        // todo
+    }
+
+    private void sendIncompleteSurveysReports() {
+        // todo
     }
 
 
     //
 
-    private boolean sendNotifications(
+
+    private boolean sendMessages( Messageable messageable, String topic, PlanService planService ) {
+        return sendMessages( messageable, topic, !EXCLUDE_INTERNAL_MESSAGES, planService );
+    }
+
+    private boolean sendMessages(
             Messageable messageable,
-            boolean excludeInternalNotifications ) {
+            String topic,
+            boolean excludeInternalMessages,
+            PlanService planService ) {
         boolean notified = false;
         for ( MessagingService messagingService : messagingServices ) {
-            if ( !( excludeInternalNotifications && messagingService.isInternal() ) ) {
-                boolean success = messagingService.sendMessage( messageable );
+            if ( !( excludeInternalMessages && messagingService.isInternal() ) ) {
+                boolean success = messagingService.sendMessage(
+                        messageable,
+                        topic,
+                        planService,
+                        surveysDAO );
                 notified = notified || success;
             }
         }
@@ -178,12 +268,18 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
 
     private boolean sendReport(
-            Plan plan,
             List<ChannelsUserInfo> recipients,
-            List<? extends Messageable> messageables ) {
+            List<? extends Messageable> messageables,
+            String topic,
+            PlanService planService ) {
         boolean reported = false;
         for ( MessagingService messagingService : messagingServices ) {
-            boolean success = messagingService.sendReport( plan, recipients, messageables );
+            boolean success = messagingService.sendReport(
+                    recipients,
+                    messageables,
+                    topic,
+                    planService,
+                    surveysDAO );
             reported = reported || success;
         }
         return reported;

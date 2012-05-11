@@ -36,7 +36,7 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
 
     List<Feedback> listNotYetNotifiedNormalFeedbacks( Plan plan );
 
-    List<Feedback> listNotYetNotifiedUrgentFeedbacks( );
+    List<Feedback> listNotYetNotifiedUrgentFeedbacks( Plan plan );
     
     void addReplyTo( Feedback feedback, UserMessage reply, UserMessageService messageService );
 

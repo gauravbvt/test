@@ -130,4 +130,10 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
      */
     void toggleDecline( RFI rfi, String reason );
 
+    /**
+     * Find all rfis for which planners have requested nagging.
+     * @param plan a plan
+     * @return a list of RFIs
+     */
+    List<RFI> listRequestedNags( Plan plan );
 }

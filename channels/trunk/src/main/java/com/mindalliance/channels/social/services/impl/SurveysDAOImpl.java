@@ -386,7 +386,7 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     @Override
     @Transactional( readOnly = true )
-    public Map<String,Integer> findResponseMetrics( Plan plan, final RFISurvey rfiSurvey ) {
+    public Map<String, Integer> findResponseMetrics( Plan plan, final RFISurvey rfiSurvey ) {
         List<RFI> surveyedRFIs = rfiService.select( plan, rfiSurvey );
         Map<String, Integer> metrics = new HashMap<String, Integer>();
         int completed = CollectionUtils.countMatches(
@@ -537,10 +537,16 @@ public class SurveysDAOImpl implements SurveysDAO {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Question)object).isAnswerable();
+                        return ( (Question) object ).isAnswerable();
                     }
                 }
         );
 
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public long getPercentRequiredQuestionsAnswered( RFI rfi ) {
+        return Math.round( ( getRequiredAnswersCount( rfi ) / ( 1.0 * getRequiredQuestions( rfi ).size() ) ) * 100 );
     }
 }

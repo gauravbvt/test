@@ -4,9 +4,8 @@ import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.social.services.notification.Messageable;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 
 import javax.persistence.CascadeType;
@@ -24,7 +23,7 @@ import java.util.List;
  * Time: 9:38 AM
  */
 @Entity
-public class Feedback extends UserStatement implements Messageable {
+public class Feedback extends UserStatement {
 
     public static final Feedback UNKNOWN = new Feedback( Channels.UNKNOWN_FEEDBACK_ID );
     public static final String GUIDELINES = "Guidelines";
@@ -177,22 +176,16 @@ public class Feedback extends UserStatement implements Messageable {
 
 
     @Override
-    public String getToUsername() {
+    public String getToUsername( String topic ) {
         return ChannelsUserInfo.PLANNERS;
     }
 
-    @Override
-    public String getFromUsername() {
-        return getUsername();
-    }
-
-    @Override
-    public String getContent( Format format, int maxLength ) {
+    protected String getTextContent( Format format, PlanService planService ) {
         // Ignore format
         return "Plan: " + getPlanUri()
                 + ":"
                 + getPlanVersion()
-                + "\nUser: " + getUsername()
+                + "\nUser: " + planService.getUserDao().getFullName( getUsername() )
                 + "\n"
                 + DATE_FORMAT.format( getCreated() )
                 + aboutString(  )
@@ -230,9 +223,7 @@ public class Feedback extends UserStatement implements Messageable {
         }
     }
 
-
-    @Override
-    public String getSubject( Format format, int maxLength ) {
+    protected String getTextSubject( Format format, PlanService planService ) {
         // Ignore format
         StringBuilder sb = new StringBuilder();
         sb.append( "Feedback" );
@@ -241,7 +232,7 @@ public class Feedback extends UserStatement implements Messageable {
         sb.append( WordUtils.capitalize( getType().name() ) );
         sb.append( " - " );
         sb.append( getText().replaceAll( "\\s", " " ) );
-        return StringUtils.abbreviate( sb.toString(), maxLength );
+        return sb.toString();
     }
 
 }

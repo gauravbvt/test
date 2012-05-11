@@ -1,8 +1,10 @@
 package com.mindalliance.channels.social.services.notification;
 
 
+import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.social.services.SurveysDAO;
+
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Something that can be the subject of a message.
@@ -14,8 +16,6 @@ import java.util.Date;
  */
 public interface Messageable {
 
-
-
     enum Format {
         TEXT,
         HTML
@@ -26,13 +26,26 @@ public interface Messageable {
      */
     static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "M/d/yyyy HH:mm" );
 
-    String getToUsername();
-    String getFromUsername();
-    String getContent( Format format, int maxLength );
-    String getSubject( Format format, int maxLength );
+    String getToUsername( String topic );
+
+    String getFromUsername( String topic );
+
+    String getContent(
+            String topic,
+            Format format,
+            PlanService planService,
+            SurveysDAO surveysDAO );
+
+    String getSubject(
+            String topic,
+            Format format,
+            PlanService planService,
+            SurveysDAO surveysDAO );
+
     String getPlanUri();
+
     int getPlanVersion();
-    Date getWhenNotified();
+
     String getTypeName();
 
 

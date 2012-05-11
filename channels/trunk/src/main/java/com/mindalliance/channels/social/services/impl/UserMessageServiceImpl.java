@@ -102,9 +102,10 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public Iterator<UserMessage> listMessagesToNotify() {
+    public Iterator<UserMessage> listMessagesToSend( String planUri ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", planUri ) );
         criteria.add( Restrictions.eq( "sendNotification", true ) );
         criteria.add( Restrictions.isNull( "whenNotificationSent" ) );
         criteria.addOrder( Order.desc( "created" ) );
@@ -136,7 +137,7 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
 
     @Override
     @Transactional
-    public void markNotified( UserMessage message ) {
+    public void markSent( UserMessage message ) {
         message.setWhenNotificationSent( new Date() );
         save( message );
     }
