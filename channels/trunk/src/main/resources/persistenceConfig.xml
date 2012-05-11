@@ -89,6 +89,7 @@
         <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandUndone(..))" advice-ref="cacheClear" order="1"/>
         <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandRedone(..))" advice-ref="cacheClear" order="1"/>
         <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.started(..))" advice-ref="cacheClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.clearCache(..))" advice-ref="cacheClear" order="1"/>
 
         <!-- Permanent caching -->
         <aop:advisor pointcut="execution(String com.mindalliance.channels.engine.geo.GeoService.*(..))"

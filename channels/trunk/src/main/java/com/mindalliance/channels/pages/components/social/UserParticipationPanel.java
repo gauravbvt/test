@@ -281,6 +281,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             } else {
                 planParticipationService.delete( participation );
             }
+            getPlanManager().clearCache(); // Must manually clear the cache
         }
 
         public Actor getActor( QueryService queryService ) {

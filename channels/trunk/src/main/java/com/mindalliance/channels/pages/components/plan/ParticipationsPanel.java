@@ -506,6 +506,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             } else {
                 participation = null;
             }
+            getPlanManager().clearCache();
         }
 
         public List<Actor> getDomain() {

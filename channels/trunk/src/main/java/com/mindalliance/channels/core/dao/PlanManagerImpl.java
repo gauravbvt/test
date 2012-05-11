@@ -570,6 +570,13 @@ public class PlanManagerImpl implements PlanManager {
     public void started( Commander commander ) {
     }
 
+    @Override
+    public void clearCache() {
+        LOG.info( "Clearing cache" );
+    }
+
+
+
     /**
      * Listener event management.
      */

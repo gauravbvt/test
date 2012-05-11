@@ -244,4 +244,10 @@ public interface PlanManager extends CommandListener {
      * @return a list of uris
      */
     List<String> getPlanUris();
+
+    /**
+     * Clear the cache.
+     */
+    void clearCache();
+
 }
