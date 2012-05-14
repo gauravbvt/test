@@ -572,7 +572,7 @@ public class PlanManagerImpl implements PlanManager {
 
     @Override
     public void clearCache() {
-        LOG.info( "Clearing cache" );
+        // clearing done via aspect
     }
 
 

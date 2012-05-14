@@ -322,15 +322,13 @@ public class SurveysDAOImpl implements SurveysDAO {
     @SuppressWarnings( "unchecked" )
     private List<Question> getRequiredQuestions( RFI rfi ) {
         RFISurvey survey = rfi.getRfiSurvey();
-        rfiSurveyService.refresh( survey );
         Questionnaire questionnaire = survey.getQuestionnaire();
         return (List<Question>) CollectionUtils.select(
-                questionnaire.getQuestions(),
+                questionService.listQuestions( questionnaire ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         Question question = (Question) object;
-                        questionService.refresh( question );
                         return question.isAnswerRequired();
                     }
                 }

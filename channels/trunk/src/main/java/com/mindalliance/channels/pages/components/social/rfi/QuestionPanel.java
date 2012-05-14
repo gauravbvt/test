@@ -226,7 +226,10 @@ public class QuestionPanel extends AbstractUpdatablePanel {
     private void addRetirement() {
         retirementContainer = new WebMarkupContainer( "retirementContainer" );
         retirementContainer.setOutputMarkupId( true );
-        retirementContainer.add( new Label( "answered", getAnsweredLabel() ) );
+        WebMarkupContainer answeredContainer = new WebMarkupContainer( "answeredContainer" );
+        answeredContainer.setVisible( getQuestion().isAnswerable() );
+        retirementContainer.add( answeredContainer );
+        answeredContainer.add( new Label( "answered", getAnsweredLabel() ) );
         // activate it
         activateIt = new AjaxLink<String>( "activateIt" ) {
             @Override
