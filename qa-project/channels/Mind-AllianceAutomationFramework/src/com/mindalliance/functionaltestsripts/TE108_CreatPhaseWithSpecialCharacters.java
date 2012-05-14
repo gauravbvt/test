@@ -1,8 +1,11 @@
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
@@ -50,12 +53,24 @@ public class TE108_CreatPhaseWithSpecialCharacters
 					//Enter the new phase in text box for the plan inside 'Phase' section
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/span/div/div[2]/table/tbody/tr[5]/td"));
+					List<WebElement> uls = GlobalVariables.oElement.findElements(By.tagName("ul"));
+					List<WebElement> lis;
+					int i=0;
+					for(WebElement ul: uls) {
+						lis = ul.findElements(By.tagName("li"));
+		    			for(WebElement li: lis) {	
+		    				if(li.getText().isEmpty()){
+		    					// Write Results
+								GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:"+(i)+":name-container:name-input"));
+								GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get(")(*&^%$#!"));
+								GlobalVariables.oElement.sendKeys(Keys.TAB);
+								// WebElement Synchronization
+								Thread.currentThread();
+								Thread.sleep(3000);
+							}i++;	
+		    			}
+				    }
 					// Assertion: Verify that Phase has been created
 					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathPhaseCreatedAssertion")));
 					if(GlobalVariables.oElement.getText().equalsIgnoreCase(GlobalVariables.testData.get(")(*&^%$#!"))) {

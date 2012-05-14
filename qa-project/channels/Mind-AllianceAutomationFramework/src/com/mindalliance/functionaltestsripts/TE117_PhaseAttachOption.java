@@ -54,10 +54,22 @@ public class TE117_PhaseAttachOption
 					//Enter the new phase in text box for the plan inside 'Phase' section
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
 					String sPhaseName = LogFunctions.getDateTime();
-					GlobalVariables.oElement.sendKeys(sPhaseName);
-//					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Phase 1"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/span/div/div[2]/table/tbody/tr[5]/td"));
+					List<WebElement> uls = GlobalVariables.oElement.findElements(By.tagName("ul"));
+					List<WebElement> lis;
+					int i=0;
+					for(WebElement ul: uls) {
+						lis = ul.findElements(By.tagName("li"));
+		    			for(WebElement li: lis) {	
+		    				if(li.getText().isEmpty()){
+		    					// Write Results
+								GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:"+(i)+":name-container:name-input"));
+								GlobalVariables.oElement.sendKeys("Phase 1");
+								GlobalVariables.oElement.sendKeys(Keys.TAB);
+							}i++;	
+		    			}
+				    }
 					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

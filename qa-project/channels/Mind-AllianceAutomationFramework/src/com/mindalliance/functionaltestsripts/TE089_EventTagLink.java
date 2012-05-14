@@ -1,7 +1,10 @@
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
@@ -61,22 +64,30 @@ public class TE089_EventTagLink
 				// Create an event
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Add Event";
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:name-container:name-input"));
-				String sEventName = LogFunctions.getDateTime();
-				GlobalVariables.oElement.sendKeys(sEventName);
-				GlobalVariables.oElement.sendKeys(Keys.ENTER);
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
+    			String sEventName = LogFunctions.getDateTime();
+            	Thread.currentThread();
+				Thread.sleep(3000);
+				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/span/div/div[2]/span/div/table/tbody"));
+				List<WebElement> trs = GlobalVariables.oElement.findElements(By.tagName("tr"));
+				List<WebElement> tds;
+				int i=0;
+				for(WebElement tr: trs) {
+					tds = tr.findElements(By.tagName("td"));
+				        if(tds.get(0).getText().equals("")){
+							// Write Results
+							GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:"+(i)+":name-container:name-input"));
+							GlobalVariables.oElement.sendKeys(sEventName);
+							GlobalVariables.oElement.sendKeys(Keys.ENTER);     
+							// WebElement Synchronization
+							Thread.currentThread();
+							Thread.sleep(3000);
+							GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:"+(i)+":confirmed")).click();
+					    }
+				        i++; 
+				}
 				// Select check box
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Event Added";
-				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:incidents:eventsDiv:event:1:confirmed")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
