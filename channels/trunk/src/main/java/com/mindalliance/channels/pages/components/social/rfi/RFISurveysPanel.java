@@ -478,7 +478,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
             columns.add( makeColumn( "Status", "statusLabel", EMPTY ) );
             columns.add( makeColumn( "Sent to", "sentToCount", EMPTY ) );
             columns.add( makeColumn( "Responses", "shortResponseMetrics", null, EMPTY, "longResponseMetrics" ) );
-            columns.add( makeExpandLinkColumn( "", "", "more..." ) );
+            columns.add( makeExpandLinkColumn( "", "", "more" ) );
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "rfiSurveys",
                     columns,

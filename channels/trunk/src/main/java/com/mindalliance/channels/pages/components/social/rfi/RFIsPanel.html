@@ -7,35 +7,29 @@
         lang="en">
 <body>
 <wicket:panel>
-    Show <select wicket:id="recipients">
-    <option>every one</option>
-    <option>participants only</option>
-    <option>non-participants only</option>
-</select>
+	<div class="filters">
+	Show
+	<select wicket:id="recipients">
+		<option>every one</option>
+		<option>participants only</option>
+		<option>non-participants only</option>
+	</select>
+	</div>
 
     <div wicket:id="participation">[survey participation table]</div>
-    <table wicket:id="actions">
-        <tr>
-            <td>
-                Action on
-                <span wicket:id="selectionCount"> 20 </span>
-                <span wicket:id="userOrUsers">users</span>
-                out of
-                <span wicket:id="userCount">140</span>:
-            </td>
-            <td>
-                <input wicket:id="sendRFI" type="button" value="Request or update participation..."/>
-                <input wicket:id="hasDeadline" type="checkbox"/> with deadline
-                <span wicket:id="deadlineContainer"> in <input wicket:id="deadline" type="text" class="no-expand"/> days </span>
-            </td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>
-                <input wicket:id="nag" type="button" value="Nag..."/>
-            </td>
-        </tr>
-    </table>
+    <div class="filters large" wicket:id="actions">
+        <div class="filters-group">
+           Action on
+           <span wicket:id="selectionCount"> 20 </span>
+           <span wicket:id="userOrUsers">users</span>
+           out of
+           <span wicket:id="userCount">140</span>:
+           <input wicket:id="hasDeadline" type="checkbox"/> with deadline
+           <span wicket:id="deadlineContainer"> in <input wicket:id="deadline" type="text" class="no-expand"/> days </span>
+        </div>
+        <input wicket:id="sendRFI" type="button" value="Request or update participation..."/>
+        <input wicket:id="nag" type="button" value="Nag..."/>
+    </div>
 </wicket:panel>
 </body>
 </html>

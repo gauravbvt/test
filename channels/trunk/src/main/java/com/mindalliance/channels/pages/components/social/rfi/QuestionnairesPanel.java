@@ -457,7 +457,7 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
             columns.add( makeColumn( "Last modified on", "lastModifiedOn", EMPTY ) );
             columns.add( makeColumn( "# of surveys", "surveyCount", EMPTY ) );
             columns.add( makeColumn( "# of RFIs", "rfiCount", EMPTY ) );
-            columns.add( makeExpandLinkColumn( "", "", "edit..." ) );
+            columns.add( makeExpandLinkColumn( "", "", "edit" ) );
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "questionnaires",
                     columns,

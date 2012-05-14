@@ -7,54 +7,38 @@
         lang="en">
 <body>
 <wicket:panel>
-    Questionnaire named
-    <input wicket:id="name" type="text" class="phrase"/>
-    for RFIs about
-    <select wicket:id="about">
-        <option>This plan</option>
-    </select>
-    <table>
-        <tr>
-            <td>
-                <table>
-                    <tr>
-                        <td valign="top">
-                            <table wicket:id="questionsContainer">
-                               <tr wicket:id="questions">
-                                   <td>
-                                       <span wicket:id="index">1</span>.
-                                   </td>
-                                  <td>
-                                      <a wicket:id="select" href="#">
-                                          <span wicket:id="questionLabel">Please list the...</span>
-                                      </a>
-                                  </td>
-                                   <td>
-                                       <a wicket:id="moveUp" href="#">
-                                           <img border="0" src="images/arrow_up_blue.png" alt="Move up" title="Move up"/>
-                                       </a>
-                                   </td>
-                                   <td>
-                                       <a wicket:id="moveDown" href="#">
-                                           <img border="0" src="images/arrow_down_blue.png" alt="Move down" title="Move down"/>
-                                       </a>
-                                   </td>
-                               </tr>
-                            </table>
-                         </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input wicket:id="add" type="button" value="Add new question"/>
-                        </td>
-                    </tr>
-                 </table>
+    <div class="name-about">
+        Name of Questionnaire:&nbsp;
+        <input wicket:id="name" type="text" class="phrase"/>
+        &nbsp;&nbsp;&nbsp;|&nbsp; Questionnaire for RFI's about:&nbsp;
+        <select wicket:id="about">
+            <option>This plan</option>
+        </select>
+    </div>
+    <table class="questions-cont" wicket:id="questionsContainer" width="100%">
+        <tr wicket:id="questions">
+            <td width="10%" class="number">
+                <span wicket:id="index">1</span>.
             </td>
-            <td>
-                <span wicket:id="question">[question panel]</span>
+            <td width="70%">
+                <a wicket:id="select" href="#">
+                    <span wicket:id="questionLabel">Please list the...</span>
+                </a>
+            </td>
+            <td width="10%">
+                <a wicket:id="moveUp" href="#">
+                    <img border="0" src="images/up.png" alt="Move up" title="Move up"/>
+                </a>
+            </td>
+            <td width="10%">
+                <a wicket:id="moveDown" href="#">
+                    <img border="0" src="images/down.png" alt="Move down" title="Move down"/>
+                </a>
             </td>
         </tr>
     </table>
+    <span wicket:id="question">[question panel]</span>
+    <input class="add-new-question" wicket:id="add" type="button" value="Add new question"/>
 </wicket:panel>
 </body>
 </html>

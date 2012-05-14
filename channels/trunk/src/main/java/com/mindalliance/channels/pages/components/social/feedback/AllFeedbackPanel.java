@@ -538,7 +538,7 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
             columns.add( makeColumn( "Received", "formattedCreated", null, EMPTY, null, "created" ) );
             columns.add( makeColumn( "Last replied", "formattedLastReplied", EMPTY ) );
             columns.add( makeColumn( "Resolved", "resolvedLabel", EMPTY ) );
-            columns.add( makeExpandLinkColumn( "", "", "more..." ) );
+            columns.add( makeExpandLinkColumn( "", "", "more" ) );
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "feedbacks",
                     columns,

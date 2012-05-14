@@ -1443,32 +1443,62 @@ div.aspect div.picture, div.aspect div.procedureMap {
 
 /* --------- Buttons -------------*/
 
-a.button {
-	background: url("../images/button-bg.png") repeat-x scroll 0 0 transparent;
+a.button,
+.aspect input[type='button'] {
+	background: #e8e8e8;
 	border: 1px solid #A7A9AC;
 	color: #666666;
 	cursor: pointer;
 	font-size: 11px;
 	font-weight: bold;
-	letter-spacing: 1px;
 	padding: 5px 10px;
-    margin:0 5px 0 0;
-    float: right;
+	margin:0 0 0 5px;
+	float: right;
+	text-transform: uppercase;
+	font-family: arial;
+	line-height: 100%;
+}
+
+a.button {
+	padding: 7px 13px 8px 13px;
 }
 
 input.submit:hover,
-a.button:hover {
+a.button:hover,
+.aspect input[type='button']:hover {
 	color:#000000;
 	border: 1px solid #000000;
 }
 
+.aspect input.add-new-questionnaire[type='button'] {
+	margin: 20px 0 0 5px;
+}
+
+.aspect input.add-new-question[type='button'] {
+	margin-bottom: 20px;
+}
+
+/*
+
+.aspect input[type='button'] {
+	font-size: 9px;
+	text-transform: uppercase;
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+	border: 1px solid #ffffff;
+	color: #ffffff;
+	background: #999999;
+	padding: 1px 3px;
+}
+
+*/
 
 /* ----- Floating Panels - Data Tables ----- */
 
 .aspect table.data-table {
     border-collapse: collapse;
 	font-size:11px;
-	margin:0 0 5px 0;
+	margin:0 0 0 0;
 	border-top:1px solid #999999;
 }
 
@@ -1515,7 +1545,7 @@ a.button:hover {
 
 .aspect table.data-table tr.odd,
 .aspect table.data-table tr.parent {
-    background: #E8E8E8;
+    background: #f3f3f3;
 }
 
 .aspect table.data-table tr.even td,
@@ -1570,6 +1600,22 @@ td.late span {
 }
 
 /* ----- Floating Panels - Data Tables - Controls ----- */
+
+.aspect div.filters.large {
+	height: 30px;
+	margin: 0 0 10px 0;
+	border-bottom: 1px solid #999999;
+	border-top: none;
+}
+
+.aspect div.filters-group {
+	float: left;
+	padding: 5px 0 0 2px;
+}
+
+.aspect div.filters.large input[type='text'] {
+    padding: 0;
+}
 
 .aspect div.filters {
 	background:#E8E8E8;
@@ -1812,6 +1858,8 @@ td.late span {
 	z-index:0;
 }
 
+/* ----- Floating Panels - Header 4 Typography ----- */
+
 .aspect h4 {
 	background:#DCDDDE;
 	border-bottom:1px solid #666666;
@@ -1822,6 +1870,30 @@ td.late span {
 	margin:5px 0 10px;
 	padding:5px 9px;
 	text-transform:uppercase;
+}
+
+.aspect h4.questionnaire-label {
+	margin-top: 35px;
+}
+
+.aspect h4.rfi-survey-label input[type='button'] {
+	float: right;
+}
+
+.aspect div.survey-action-cont {
+	height: 30px;
+	padding: 20px 0 5px 0;
+}
+
+.aspect span.can-forward {
+	background: #E8E8E8;
+	border: 1px solid #A7A9AC;
+	color: #666666;
+	float: right;
+	font-size: 11px;
+	font-weight: bold;
+	padding: 4px 10px;
+	text-transform: uppercase;
 }
 
 
@@ -1840,6 +1912,72 @@ td.late span {
 .aspect fieldset textarea {
 	padding:5px;
 	width:98%;
+}
+
+
+/* ----- Floating Panels - Form Builder ----- */
+
+.aspect div.questionnaire-cont {
+	padding: 20px 0 0 0;
+}
+
+.aspect div.questionnaire-cont div.name-about {
+    margin: 0;
+    padding: 0 10px 10px 5px;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: bold;
+    color: #333333;
+}
+
+.aspect div.questionnaire-cont table.questions-cont {
+	background: #f3f3f3;
+	width: 35%;
+	float: left;
+	border-top: 1px solid #999999;
+}
+
+.aspect div.questionnaire-cont table.questions-cont tr {
+	border-bottom: 1px solid #C7C8CA;	
+}
+
+.aspect div.questionnaire-cont table.questions-cont tr td {
+	padding: 5px 10px;
+}
+
+.aspect div.questionnaire-cont table.questions-cont tr td.number {
+	font-weight: bold;
+	text-align: center;
+}
+
+.aspect div.questionnaire-cont table.questions-cont a {
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.aspect div.questionnaire-cont table.question-cont {
+	background: #f3f3f3;
+	width: 65%;
+	float: left;
+	border-bottom: 1px solid #999999;
+   border-left: 5px solid #FFFFFF;
+   border-top: 1px solid #999999;
+   margin-bottom: 10px;
+}
+
+.aspect div.questionnaire-cont table.question-cont tr td {
+	padding: 10px 10px 0;
+}
+
+.aspect div.questionnaire-cont table.question-cont tr td div.answer-choices-cont {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px dotted #999999;
+    display: block;
+    padding: 5px;
+}
+
+.aspect div.questionnaire-cont table.question-cont tr td div.answer-choices-cont table tr td {
+	padding: 0 5px;
 }
 
 
@@ -2693,8 +2831,9 @@ a.window {
 	border:1px solid #C7C8CA;
 	color:#666666;
 	padding:0 3px 0 14px;
-	font-size:11px;
-	/* text-transform:lowercase;*/
+	font-size:10px;
+	font-family: Verdana;
+	text-transform: uppercase;
 }
 
 a.more {

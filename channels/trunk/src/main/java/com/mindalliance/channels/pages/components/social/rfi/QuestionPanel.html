@@ -7,7 +7,7 @@
         lang="en">
 <body>
 <wicket:panel>
-    <table>
+    <table class="question-cont">
         <tr>
             <td align="right"> Question:</td>
             <td colspan="2"><input wicket:id="questionText" type="text"/></td>
@@ -19,13 +19,13 @@
                     <li>None</li>
                 </select>
             </td>
-            <td>
+            <td class="answer-options">
                 <span wicket:id="answerOptions">[answer options panel]</span>
             </td>
         </tr>
         <tr>
             <td>&nbsp;</td>
-            <td colspan="2" wicket:id="constraints"> The answer
+            <td colspan="2" wicket:id="constraints" class="constraints"> The answer
                 <span wicket:id="requiredContainer">
                     <input wicket:id="required" type="checkbox"/> is required
                 </span>
@@ -43,9 +43,13 @@
             </td>
             <td>
                 This question <span wicket:id="answered">has been answered</span>.
+                <br /><br />
                 <input wicket:id="activateIt" type="button" value="Activate it"/>
+                <br />
                 <input wicket:id="deactivateIt" type="button" value="Deactivate it"/>
+                <br />
                 <input wicket:id="deleteIt" type="button" value="Delete it"/>
+                <br /><br />
             </td>
         </tr>
     </table>
