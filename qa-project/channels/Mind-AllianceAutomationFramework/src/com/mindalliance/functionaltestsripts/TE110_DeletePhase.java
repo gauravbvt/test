@@ -53,8 +53,7 @@ public class TE110_DeletePhase
 					//Enter the new phase in text box for the plan inside 'Phase' section
 					GlobalVariables.iStepNo++;
 					GlobalVariables.sDescription="Phase added successfully";
-			    	String sPhaseName = LogFunctions.getDateTime();
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/span/div/div[2]/table/tbody/tr[5]/td"));
+			    	GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/span/div/div[2]/table/tbody/tr[5]/td"));
 					List<WebElement> uls = GlobalVariables.oElement.findElements(By.tagName("ul"));
 					List<WebElement> lis;
 					int i=0;
@@ -66,6 +65,9 @@ public class TE110_DeletePhase
 								GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:"+(i)+":name-container:name-input"));
 								GlobalVariables.oElement.sendKeys("Phase 1");
 								GlobalVariables.oElement.sendKeys(Keys.TAB);
+								// WebElement Synchronization
+								Thread.currentThread();
+								Thread.sleep(3000);
 							}i++;	
 		    			}
 				    }

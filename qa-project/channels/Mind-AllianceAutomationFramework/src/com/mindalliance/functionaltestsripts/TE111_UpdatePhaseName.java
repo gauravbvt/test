@@ -64,18 +64,26 @@ public class TE111_UpdatePhaseName
 		    				if(li.getText().isEmpty()){
 		    					// Write Results
 								GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:"+(i)+":name-container:name-input"));
-								GlobalVariables.oElement.sendKeys("Phase 1");
+								GlobalVariables.oElement.sendKeys(sPhaseName);
 								GlobalVariables.oElement.sendKeys(Keys.TAB);
+								// Write Results
+								LogFunctions.writeLogs(GlobalVariables.sDescription);
+								LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+										GlobalVariables.sBlank, GlobalVariables.sBlank);
+							
+								// WebElement Synchronization
+								Thread.currentThread();
+								Thread.sleep(3000);
 							}i++;	
 		    			}
 				    }
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-							GlobalVariables.sBlank, GlobalVariables.sBlank);
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(2000);
+//					// Write Results
+//					LogFunctions.writeLogs(GlobalVariables.sDescription);
+//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+//							GlobalVariables.sBlank, GlobalVariables.sBlank);
+//					// WebElement Synchronization
+//					Thread.currentThread();
+//					Thread.sleep(2000);
 					
 					// Click on Phase
 					GlobalVariables.iStepNo++;

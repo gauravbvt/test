@@ -64,7 +64,7 @@ public class TE126_CopyPhaseAttachment
 		    				if(li.getText().isEmpty()){
 		    					// Write Results
 								GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:"+(i)+":name-container:name-input"));
-								GlobalVariables.oElement.sendKeys("Phase 1");
+								GlobalVariables.oElement.sendKeys(sPhaseName);
 								GlobalVariables.oElement.sendKeys(Keys.TAB);
 							}i++;	
 		    			}

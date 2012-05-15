@@ -54,21 +54,6 @@ public class TE109_ViewPhase
 				//Enter the new phase in text box for the plan inside 'Phase' section
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Phase added successfully";
-				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input")).click();
-				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input"));
-				GlobalVariables.oElement.sendKeys("Phase 1");
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				
-				// Click on Index under show pop up menu
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Index";
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[4]/div/span/div/div[2]/table/tbody/tr[5]/td"));
 				List<WebElement> uls = GlobalVariables.oElement.findElements(By.tagName("ul"));
 				List<WebElement> lis;
@@ -84,6 +69,18 @@ public class TE109_ViewPhase
 						}i++;	
 	    			}
 			    }
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
+				// Click on Index under show pop up menu
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Index";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("index"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
