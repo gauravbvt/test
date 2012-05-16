@@ -54,19 +54,19 @@ public class REST001_ISPPlans extends TestCase{
 			boolean planIdentifierResult;
 			// Verify URI
 			planIdentifierResult=Configurations.parseResponse("planIdentifier","uri",GlobalVariables.testData.get("uri"));	
-			Assert.assertEquals("Plan URI is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("uri")));
+			Assert.assertEquals("Plan URI is", true, planIdentifierResult);
 			// Verify Plan Name
 			planIdentifierResult=Configurations.parseResponse("planIdentifier","name",GlobalVariables.testData.get("name"));	
-			Assert.assertEquals("Plan Name is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("name")));
+			Assert.assertEquals("Plan Name is",true,planIdentifierResult);
 			// Verify Version
 			planIdentifierResult=Configurations.parseResponse("planIdentifier","version",GlobalVariables.testData.get("version"));
-			Assert.assertEquals("Version is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("version")));
+			Assert.assertEquals("Version is",true,planIdentifierResult);
 			// Verify Release
 			planIdentifierResult=Configurations.parseResponse("planIdentifier","release",GlobalVariables.testData.get("release"));
-			Assert.assertEquals("Plan release is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("release")));
+			Assert.assertEquals("Plan release is",true,planIdentifierResult);
 			// Verify Date Versioned
 			planIdentifierResult=Configurations.parseResponse("planIdentifier","dateVersioned",GlobalVariables.testData.get("dateVersioned"));
-			Assert.assertEquals("Date Versioned is",planIdentifierResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("dateVersioned")));			
+			Assert.assertEquals("Date Versioned is",true,planIdentifierResult);			
 			System.out.println(GlobalVariables.steps+" Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
