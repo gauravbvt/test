@@ -84,9 +84,23 @@ public class TE116_RemovePhaseCategories
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(1000);
-					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
-					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an Categories"));
-					GlobalVariables.oElement.sendKeys(Keys.TAB);
+//					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
+//					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an Categories"));
+//					GlobalVariables.oElement.sendKeys(Keys.TAB);
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td"));
+					uls = GlobalVariables.oElement.findElements(By.tagName("ul"));
+					i=0;
+					for(WebElement ul: uls) {
+						lis = ul.findElements(By.tagName("li"));
+		    			for(WebElement li: lis) {	
+		    				if(li.getText().isEmpty()){
+		    					// Write Results
+								GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:"+(i)+":typeContainer:newType"));
+								GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an Categories"));
+								GlobalVariables.oElement.sendKeys(Keys.TAB);
+							}i++;	
+		    			}
+				    }
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
