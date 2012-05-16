@@ -4,7 +4,9 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 
@@ -19,6 +21,15 @@ import java.util.List;
  * Time: 11:16 AM
  */
 public interface RFISurveyService extends GenericSqlService<RFISurvey, Long> {
+
+    /**
+     * List all active surveys in a plan.
+     *
+     * @param planService a plan service
+     * @param analyst     an analyst
+     * @return a list of surveys
+     */
+    List<RFISurvey> listActive( PlanService planService, Analyst analyst );
 
     /**
      * Get all surveys for a plan, possibly restricting to open ones about a given what the questionnaire is about.
@@ -74,4 +85,5 @@ public interface RFISurveyService extends GenericSqlService<RFISurvey, Long> {
      * @param rfiSurvey a survey
      */
     void toggleActivation( RFISurvey rfiSurvey );
+
 }

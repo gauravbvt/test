@@ -3,6 +3,7 @@ package com.mindalliance.channels.social.services;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.social.model.rfi.AnswerSet;
@@ -208,7 +209,18 @@ public interface SurveysDAO {
 
     /**
      * Calculates the percentage (e.g. 50) of required questions answered.
+     *
      * @param rfi an RFI
-     * @return a long      */
+     * @return a long
+     */
     long getPercentRequiredQuestionsAnswered( RFI rfi );
+
+    /**
+     * List incomplete but active RFIs in a plan.
+     *
+     * @param planService a plan service
+     * @param analyst     analyst
+     * @return a list of RFIs
+     */
+    List<RFI> listIncompleteActiveRFIs( PlanService planService, Analyst analyst );
 }

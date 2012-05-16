@@ -57,10 +57,10 @@ public class AnswerYesNoPanel extends AbstractAnswerPanel {
 
     public void setYes( boolean val ) {
         if ( val ) {
-            getAnswer().setYesOrNo( "Yes" );
+            getAnswer().setYes();
         }
         else {
-           getAnswer().reset();
+            getAnswer().remove();
         }
     }
 
@@ -70,11 +70,11 @@ public class AnswerYesNoPanel extends AbstractAnswerPanel {
 
     public void setNo( boolean val ) {
         if ( val ) {
-            getAnswer().setYesOrNo( "No" );
+            getAnswer().setNo();
         }
         else {
-            getAnswer().reset();
+            getAnswer().remove();
         }
     }
 
- }
+}

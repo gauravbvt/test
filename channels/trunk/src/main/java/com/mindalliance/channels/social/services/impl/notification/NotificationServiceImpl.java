@@ -7,12 +7,15 @@ import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.UserMessage;
 import com.mindalliance.channels.social.model.UserStatement;
 import com.mindalliance.channels.social.model.rfi.RFI;
+import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import com.mindalliance.channels.social.services.FeedbackService;
 import com.mindalliance.channels.social.services.RFIService;
+import com.mindalliance.channels.social.services.RFISurveyService;
 import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.UserMessageService;
 import com.mindalliance.channels.social.services.notification.ChannelsMessagingService;
@@ -25,14 +28,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A scheduled notification service.
@@ -67,6 +71,9 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     private PlanManager planManager;
 
     @Autowired
+    private Analyst analyst;
+
+    @Autowired
     private UserMessageService userMessageService;
 
     @Autowired
@@ -76,9 +83,13 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Autowired
     private RFIService rfiService;
     @Autowired
+    private RFISurveyService rfiSurveyService;
+    @Autowired
     private SurveysDAO surveysDAO;
 
     private List<MessagingService> messagingServices;
+
+    private static final long WARNING_DELAY = 1000 * 60 * 60 * 24; // 1 day in msecs
 
     @Override
     public void afterPropertiesSet() {
@@ -90,7 +101,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// USER MESSAGES ////
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // every minute
+//    @Scheduled( fixedDelay = 60000 )     // every minute
     @Async
     @Transactional
     public void notifyOfUserMessages() {
@@ -115,7 +126,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// FEEDBACK ////
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // each minute
+//    @Scheduled( fixedDelay = 60000 )     // each minute
     @Async
     @Transactional
     public void notifyOfUrgentFeedback() {
@@ -138,7 +149,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-    @Scheduled( fixedDelay = 86400000 )   // each day
+//    @Scheduled( fixedDelay = 86400000 )   // each day
     @Async
     @Transactional
     public void reportOnNewFeedback() {
@@ -165,7 +176,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// SURVEYS ////
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // each minute
+//    @Scheduled( fixedDelay = 60000 )     // each minute
     @Async
     @Transactional
     public void notifyOfSurveys() {
@@ -174,12 +185,6 @@ public class NotificationServiceImpl implements NotificationService, Initializin
             // to survey participants
             sendNags( planService );
             sendDeadlineApproachingNotifications( planService );
-            sendNewSurveyNotifications( planService );
-            sendSurveyUpdatedNotifications( planService );
-            // to planners
-            sendSurveyForwardedNotifications( planService );
-            sendSurveyDeclinedNotifications( planService );
-            sendSurveyCompletedNotifications( planService );
         }
     }
 
@@ -197,46 +202,67 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
 
     private void sendDeadlineApproachingNotifications( PlanService planService ) {
-        // todo
-    }
-
-    private void sendNewSurveyNotifications( PlanService planService ) {
-        // todo
-    }
-
-    private void sendSurveyUpdatedNotifications( PlanService planService ) {
-        // todo
-    }
-
-    private void sendSurveyForwardedNotifications( PlanService planService ) {
-        // todo
-    }
-
-    private void sendSurveyDeclinedNotifications( PlanService planService ) {
-        // todo
-    }
-
-    private void sendSurveyCompletedNotifications( PlanService planService ) {
-        // todo
+        LOG.info( "Sending RFI deadline warnings" );
+        List<RFI> deadlineRFIs = rfiService.listApproachingDeadline( planService.getPlan(), WARNING_DELAY );
+        for ( RFI deadlineRfi : deadlineRFIs ) {
+            boolean success = sendMessages( deadlineRfi, RFI.DEADLINE, planService );
+            if ( success ) {
+                deadlineRfi.addNotification( RFI.DEADLINE );
+                rfiService.save( deadlineRfi );
+            }
+        }
     }
 
     @Override
-    @Scheduled( fixedDelay = 86400000 )   // each day
+ //   @Scheduled( fixedDelay = 86400000 )   // each day
     @Async
     @Transactional
     public void reportOnSurveys() {
-        // to survey participants
-        sendIncompleteSurveysReports();
-        // to planners
-        sendSurveyStatusReports();
+        LOG.info( "Sending out reports of new feedback" );
+        for ( Plan plan : planManager.getPlans() ) {
+            PlanService planService = planServiceFactory.getService( plan );
+            // to survey participants
+            sendIncompleteRFIReports( planService );
+            // to planners
+            sendSurveyStatusReports( planService );
+        }
     }
 
-    private void sendSurveyStatusReports() {
-        // todo
+    private void sendSurveyStatusReports( PlanService planService ) {
+        List<RFISurvey> activeSurveys = rfiSurveyService.listActive( planService, analyst );
+        if ( !activeSurveys.isEmpty() ) {
+            sendReport(
+                    getPlanners( planService.getPlan() ),
+                    activeSurveys,
+                    RFISurvey.STATUS,
+                    planService );
+        }
     }
 
-    private void sendIncompleteSurveysReports() {
-        // todo
+    private void sendIncompleteRFIReports( PlanService planService ) {
+        List<RFI> incompleteRFIs = surveysDAO.listIncompleteActiveRFIs( planService, analyst );
+        Map<String,List<RFI>> userRFIs = new HashMap<String, List<RFI>>(  );
+        for ( RFI incompleteRFI : incompleteRFIs ) {
+            String surveyedUsername = incompleteRFI.getSurveyedUsername();
+            List<RFI> rfis = userRFIs.get( surveyedUsername );
+            if ( rfis == null ) {
+                rfis = new ArrayList<RFI>(  );
+                userRFIs.put( surveyedUsername, rfis );
+            }
+            rfis.add( incompleteRFI );
+        }
+        for ( String surveyedUsername : userRFIs.keySet() ) {
+            ChannelsUser user = userDao.getUserNamed( surveyedUsername );
+            if ( user != null ) {
+                List<RFI> rfis = userRFIs.get( surveyedUsername );
+                sendReport(
+                        user.getUserInfo(),
+                        rfis,
+                        RFI.TODO,
+                        planService
+                );
+            }
+        }
     }
 
 
@@ -266,8 +292,17 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         return notified;
     }
 
-
     private boolean sendReport(
+            ChannelsUserInfo recipient,
+            List<? extends Messageable> messageables,
+            String topic,
+            PlanService planService ) {
+        List<ChannelsUserInfo> recipients = new ArrayList<ChannelsUserInfo>(  );
+        recipients.add(  recipient );
+        return sendReport( recipients, messageables, topic, planService );
+    }
+
+        private boolean sendReport(
             List<ChannelsUserInfo> recipients,
             List<? extends Messageable> messageables,
             String topic,

@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -341,7 +342,7 @@ public class SurveysDAOImpl implements SurveysDAO {
         int count = 0;
         for ( Question question : getRequiredQuestions( rfi ) ) {
             AnswerSet answerSet = answerSetService.findAnswerSet( rfi, question );
-            if ( answerSet != null ) count++;
+            if ( answerSet != null && !answerSet.isEmpty() ) count++;
         }
         return count;
     }
@@ -374,8 +375,7 @@ public class SurveysDAOImpl implements SurveysDAO {
                     @Override
                     public boolean evaluate( Object object ) {
                         Question question = (Question) object;
-                        questionService.refresh( question );
-                        return !question.isAnswerRequired();
+                        return question.isAnswerable() && !question.isAnswerRequired();
                     }
                 }
         );
@@ -449,7 +449,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Override
     @Transactional
     public void saveAnswerSet( AnswerSet answerSet ) {
-        List<Answer> removedAnswers = answerSet.deleteRemovedAnswers();
+        List<Answer> removedAnswers = answerSet.deleteRemovedOrEmptyAnswers();
         for ( Answer answer : removedAnswers ) {
             answerService.delete( answer );
         }
@@ -546,5 +546,20 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Transactional( readOnly = true )
     public long getPercentRequiredQuestionsAnswered( RFI rfi ) {
         return Math.round( ( getRequiredAnswersCount( rfi ) / ( 1.0 * getRequiredQuestions( rfi ).size() ) ) * 100 );
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<RFI> listIncompleteActiveRFIs( PlanService planService, Analyst analyst ) {
+        List<RFI> activeRFIs = rfiService.listActiveRFIs( planService, analyst );
+        return (List<RFI>) CollectionUtils.select(
+                activeRFIs,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !isCompleted( (RFI) object );
+                    }
+                } );
     }
 }

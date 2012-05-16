@@ -23,19 +23,20 @@ public class Answer extends AbstractPersistentPlanObject {
     @ManyToOne
     private AnswerSet answerSet;
 
-    @Column(length=3000)
+    @Column( length = 3000 )
     private String text = "";
 
     private int sequence = 0;
 
-    private static final String YES = "yes";
+    public static final String YES = "yes";
 
-    private static final String NO = "no";
+    public static final String NO = "no";
 
     @Transient
     private boolean removed;
 
-    public Answer() {}
+    public Answer() {
+    }
 
     public Answer( AnswerSet answerSet ) {
         super( answerSet.getPlanUri(), answerSet.getPlanVersion(), answerSet.getUsername() );
@@ -57,11 +58,16 @@ public class Answer extends AbstractPersistentPlanObject {
     public void setText( String s ) {
         text = s;
     }
-    
-    public void setYesOrNo( String s ) {
-        text = s.trim().toLowerCase().equals( YES ) ? YES : NO;
+
+    public void setYes() {
+        text = YES;
     }
-    
+
+    public void setNo() {
+        text = NO;
+    }
+
+
     public boolean isYes() {
         return text.equals( YES );
     }
@@ -77,10 +83,10 @@ public class Answer extends AbstractPersistentPlanObject {
             text = "";
         }
     }
-    
+
     public URL getUrl() {
         try {
-            return text != null && !text .isEmpty() ? new URL( text ) : null;
+            return text != null && !text.isEmpty() ? new URL( text ) : null;
         } catch ( MalformedURLException e ) {
             return null;
         }
@@ -95,7 +101,7 @@ public class Answer extends AbstractPersistentPlanObject {
     }
 
     public void reset() {
-        text= "";
+        text = "";
     }
 
     public void remove() {

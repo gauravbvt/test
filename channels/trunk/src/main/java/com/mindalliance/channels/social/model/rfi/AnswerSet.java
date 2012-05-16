@@ -201,13 +201,14 @@ public class AnswerSet extends AbstractPersistentPlanObject {
     }
 
     @SuppressWarnings( "unchecked" )
-    public List<Answer> deleteRemovedAnswers() {
+    public List<Answer> deleteRemovedOrEmptyAnswers() {
         List<Answer> toBeRemoved = (List<Answer>)CollectionUtils.select(
                 getAnswers(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Answer)object).wasRemoved();
+                        Answer answer = (Answer)object;
+                        return answer.wasRemoved() || !answer.isGiven();
                     }
                 }
         );

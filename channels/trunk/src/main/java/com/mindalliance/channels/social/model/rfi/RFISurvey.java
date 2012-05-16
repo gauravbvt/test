@@ -1,11 +1,15 @@
 package com.mindalliance.channels.social.model.rfi;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.social.model.AbstractModelObjectReferencingPPO;
+import com.mindalliance.channels.social.services.SurveysDAO;
+import com.mindalliance.channels.social.services.notification.Messageable;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,10 +27,11 @@ import java.util.List;
  * Time: 10:50 AM
  */
 @Entity
-public class RFISurvey extends AbstractModelObjectReferencingPPO {
+public class RFISurvey extends AbstractModelObjectReferencingPPO implements Messageable {
 
     public static final RFISurvey UNKNOWN = new RFISurvey( Channels.UNKNOWN_RFI_SURVEY_ID );
     private static final String DELETED = "(DELETED)";
+    public static final String STATUS = "status";
     @ManyToOne
     private Questionnaire questionnaire;
     private boolean closed = false;
@@ -145,5 +150,44 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO {
         return getQuestionnaire().getName();
     }
 
+    /// Messageable
 
+
+    @Override
+    public String getToUsername( String topic ) {
+        return topic.equals( STATUS )
+                ? ChannelsUserInfo.PLANNERS
+                : null;
+    }
+
+    @Override
+    public String getFromUsername( String topic ) {
+        return null;
+    }
+
+    @Override
+    public String getContent(
+            String topic,
+            Format format,
+            PlanService planService,
+            SurveysDAO surveysDAO ) {
+        if ( topic.equals( STATUS ) ) {
+            return getStatusContent( format, planService, surveysDAO );
+        } else {
+            throw new RuntimeException( "Unknown topic " + topic );
+        }
+    }
+
+    private String getStatusContent( Format format, PlanService planService, SurveysDAO surveysDAO ) {
+        return null; // todo
+    }
+
+    @Override
+    public String getSubject(
+            String topic,
+            Format format,
+            PlanService planService,
+            SurveysDAO surveysDAO ) {
+        return null;
+    }
 }

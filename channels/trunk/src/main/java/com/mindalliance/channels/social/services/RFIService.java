@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
@@ -103,6 +104,15 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
     /**
      * Find all active RFIs for a user in a given plan.
      *
+     * @param planService         a plan service
+     * @param analyst      an analyst
+     * @return a list of RFIs
+     */
+    List<RFI> listActiveRFIs( PlanService planService, Analyst analyst );
+
+    /**
+     * Find all active RFIs for a user in a given plan.
+     *
      * @param plan         a plan
      * @param user         a user
      * @param queryService a query service
@@ -136,4 +146,13 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
      * @return a list of RFIs
      */
     List<RFI> listRequestedNags( Plan plan );
+
+    /**
+     * Find all RFIs for which an approaching deadline notification needs to be sent.
+     * @param plan a plan
+     * @param warningDelay a long - msecs until deadline triggering warning
+     * @return a list of RFIs
+     */
+    List<RFI> listApproachingDeadline( Plan plan, long warningDelay );
+
 }

@@ -31,10 +31,9 @@ import java.util.List;
 public class RFI extends AbstractPersistentPlanObject implements Messageable {
 
 
-    public static final String NEW = "new";
-    public static final String DECLINED = "declined";
     public static final String DEADLINE = "deadline";
     public static final String NAG = "nag";
+    public static final String TODO = "todo";
 
 
     public static final RFI UNKNOWN = new RFI( Channels.UNKNOWN_RFI_ID );
@@ -302,18 +301,20 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
 
     @Override
     public String getToUsername( String topic ) {
-        if ( topic.equals( NAG ) )
+        if ( topic.equals( NAG )
+                || topic.equals( DEADLINE ) )
             return getSurveyedUsername();
-        else
-            throw new RuntimeException();
+       else
+            throw new RuntimeException("Unknown topic " + topic );
     }
 
 
     @Override
     public String getFromUsername( String topic ) {
-        if ( topic.equals( NAG ) ) return null;
+        if ( topic.equals( NAG )
+                || topic.equals( DEADLINE ) ) return null;
         else
-            throw new RuntimeException();
+            throw new RuntimeException("Unknown topic " + topic );
     }
 
     @Override
@@ -322,11 +323,14 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
             Format format,
             PlanService planService,
             SurveysDAO surveysDAO ) {
-        if ( topic.equals( NAG ) )
+        if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
             return getNagContent( format, planService, surveysDAO );
+        else if ( topic.equals( TODO ) )
+            return getTodoContent( format, planService, surveysDAO );
         else
-            throw new RuntimeException( "invalid content" );
+            throw new RuntimeException( "Unknown topic " + topic   );
     }
+
 
     @Override
     public String getSubject(
@@ -334,10 +338,17 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
             Format format,
             PlanService planService,
             SurveysDAO surveysDAO ) {
-        if ( topic.equals( NAG ) )
+        if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
             return getNagSubject( format, planService );
         else
-            throw new RuntimeException( "invalid content" );
+            throw new RuntimeException( "Unknown topic " + topic  );
+    }
+
+    private String getNagSubject( Format format, PlanService planService ) {
+        // ignore format
+        return getLabel( planService )
+                + "is due on "
+                + Messageable.DATE_FORMAT.format( getDeadline() );
     }
 
     private String getNagContent(
@@ -353,6 +364,10 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
             sb.append( " The survey was due on " )
                     .append( Messageable.DATE_FORMAT.format( getDeadline() ) )
                     .append( "." );
+        } else {
+            sb.append( " The survey is due on " )
+                    .append( Messageable.DATE_FORMAT.format( getDeadline() ) )
+                    .append( "." );
         }
         sb.append( "\n\n" );
         sb.append( "We want to hear from you! You have so far answered " )
@@ -364,11 +379,10 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         return sb.toString();
     }
 
-    private String getNagSubject( Format format, PlanService planService ) {
-        // ignore format
-        return getLabel( planService )
-                + "is due on "
-                + Messageable.DATE_FORMAT.format( getDeadline() );
+    private String getTodoContent( Format format, PlanService planService, SurveysDAO surveysDAO ) {
+        // Ignore format
+        return null; // todo
     }
+
 
 }
