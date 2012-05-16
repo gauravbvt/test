@@ -84,9 +84,6 @@ public class TE115_PhaseCategories
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-//					GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("entity:content:mo:aspect:mo-details:types:typesDiv:types:1:typeContainer:newType"));
-//					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is an Categories"));
-//					GlobalVariables.oElement.sendKeys(Keys.TAB);
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td"));
 					uls = GlobalVariables.oElement.findElements(By.tagName("ul"));
 					i=0;
