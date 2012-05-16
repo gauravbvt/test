@@ -149,7 +149,7 @@
 <xPathTaskCausesEvent>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[10]/th/label/span/a/span</xPathTaskCausesEvent>
 <xPathTaskEventUnnamed>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[4]/span</xPathTaskEventUnnamed>
 <xPathTaskPhaseResponding>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[2]/span</xPathTaskPhaseResponding>
-<xPathDeletePhaseCategories>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeletePhaseCategories>
+<xPathDeletePhaseCategories>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a</xPathDeletePhaseCategories>
 <xPathDeletePhaseAttachment>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img</xPathDeletePhaseAttachment>
 <xPathCopyPhaseAttachment>//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyPhaseAttachment>
 <xPathCopyTaskAttachment>//span/div/div[3]/div[@class='part-header']/div[@class='section-content']/table[@class='part-description']/tbody/tr[14]/td[@class='grouped']/span/ul[@class='attach list']/li[@class='doc_Reference']/ul[@class='menu']/li/a</xPathCopyTaskAttachment>
@@ -255,6 +255,7 @@
 <xPathAddInfoReceiveAssertion>//span/div/div[3]/div[2]/div[2]/div/div/span/span</xPathAddInfoReceiveAssertion>
 <xPathAddInfoSendAssertion>//span/div/div[3]/div[3]/div[2]/div/div/span/span</xPathAddInfoSendAssertion>
 <xPathEventAttachmentAssertion>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/a</xPathEventAttachmentAssertion>
+<xPathEventID>/html/body/form/div[4]/div/span/div/div[2]/span/div/table/tbody</xPathEventID>
 <xPathEventUrlAttachmentAssertion>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/a</xPathEventUrlAttachmentAssertion>
 <xPathAssertionOrgSeg>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/h3/span</xPathAssertionOrgSeg>
 </elements>
