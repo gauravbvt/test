@@ -59,6 +59,9 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
+        if ( !getQuestions().isEmpty() ) {
+            selectedQuestion = getQuestions().get( 0 );
+        }
         addNameField();
         addAboutChoice();
         addQuestionList();

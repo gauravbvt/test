@@ -27,12 +27,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -103,10 +104,9 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 60000 )     // every minute
-    @Async
     @Transactional
     public void notifyOfUserMessages() {
-        LOG.info( "Sending out user messages" );
+        LOG.debug( "Sending out user messages" );
         for ( Plan plan : planManager.getPlans() ) {
             PlanService planService = planServiceFactory.getService( plan );
             Iterator<UserMessage> messagesToSend = userMessageService.listMessagesToSend( plan.getUri() );
@@ -128,10 +128,9 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 60000 )     // each minute
-    @Async
     @Transactional
     public void notifyOfUrgentFeedback() {
-        LOG.info( "Sending out urgent feedback" );
+        LOG.debug( "Sending out urgent feedback" );
         for ( Plan plan : planManager.getPlans() ) {
             PlanService planService = planServiceFactory.getService( plan );
             List<Feedback> urgentFeedbacks = feedbackService.listNotYetNotifiedUrgentFeedbacks( plan );
@@ -151,14 +150,20 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 86400000 )   // each day
-    @Async
     @Transactional
     public void reportOnNewFeedback() {
-        LOG.info( "Sending out reports of new feedback" );
+        LOG.debug( "Sending out reports of new feedback" );
         for ( Plan plan : planManager.getPlans() ) {
             PlanService planService = planServiceFactory.getService( plan );
             List<Feedback> normalFeedbacks = feedbackService.listNotYetNotifiedNormalFeedbacks( plan );
             if ( !normalFeedbacks.isEmpty() ) {
+                Collections.sort( normalFeedbacks,
+                        new Comparator<Feedback>() {
+                            @Override
+                            public int compare( Feedback f1, Feedback f2 ) {
+                                return f1.getCreated().compareTo( f2.getCreated() );
+                            }
+                        });
                 boolean success = sendReport(
                         getPlanners( plan ),
                         normalFeedbacks,
@@ -178,7 +183,6 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 60000 )     // each minute
-    @Async
     @Transactional
     public void notifyOfSurveys() {
         for ( Plan plan : planManager.getPlans() ) {
@@ -190,7 +194,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     private void sendNags( PlanService planService ) {
-        LOG.info( "Sending out nags about overdue RFIs" );
+        LOG.debug( "Sending out nags about overdue RFIs" );
         List<RFI> nagRFIs = rfiService.listRequestedNags( planService.getPlan() );
         for ( RFI nagRfi : nagRFIs ) {
             boolean success = sendMessages( nagRfi, RFI.NAG, planService );
@@ -203,7 +207,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
 
     private void sendDeadlineApproachingNotifications( PlanService planService ) {
-        LOG.info( "Sending RFI deadline warnings" );
+        LOG.debug( "Sending RFI deadline warnings" );
         List<RFI> deadlineRFIs = rfiService.listApproachingDeadline( planService.getPlan(), WARNING_DELAY );
         for ( RFI deadlineRfi : deadlineRFIs ) {
             boolean success = sendMessages( deadlineRfi, RFI.DEADLINE, planService );
@@ -216,10 +220,9 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 86400000 )   // each day
-    @Async
     @Transactional
     public void reportOnSurveys() {
-        LOG.info( "Sending out reports of new feedback" );
+        LOG.debug( "Sending out reports of new feedback" );
         for ( Plan plan : planManager.getPlans() ) {
             PlanService planService = planServiceFactory.getService( plan );
             // to survey participants
@@ -230,7 +233,16 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     private void sendSurveyStatusReports( PlanService planService ) {
+        // to planners
         List<RFISurvey> activeSurveys = rfiSurveyService.listActive( planService, analyst );
+        Collections.sort(
+                activeSurveys,
+                new Comparator<RFISurvey>() {
+                    @Override
+                    public int compare( RFISurvey s1, RFISurvey s2 ) {
+                        return s2.getCreated().compareTo( s1.getCreated() );
+                    }
+                });
         if ( !activeSurveys.isEmpty() ) {
             sendReport(
                     getPlanners( planService.getPlan() ),
@@ -241,6 +253,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     private void sendIncompleteRFIReports( PlanService planService ) {
+        // to survey participants
         List<RFI> incompleteRFIs = surveysDAO.listIncompleteActiveRFIs( planService, analyst );
         Map<String,List<RFI>> userRFIs = new HashMap<String, List<RFI>>(  );
         for ( RFI incompleteRFI : incompleteRFIs ) {
@@ -256,6 +269,14 @@ public class NotificationServiceImpl implements NotificationService, Initializin
             ChannelsUser user = userDao.getUserNamed( surveyedUsername );
             if ( user != null ) {
                 List<RFI> rfis = userRFIs.get( surveyedUsername );
+                Collections.sort(
+                        rfis,
+                        new Comparator<RFI>() {
+                            @Override
+                            public int compare( RFI rfi1, RFI rfi2 ) {
+                                return rfi1.compareUrgencyTo( rfi2, surveysDAO );
+                            }
+                        });
                 sendReport(
                         user.getUserInfo(),
                         rfis,

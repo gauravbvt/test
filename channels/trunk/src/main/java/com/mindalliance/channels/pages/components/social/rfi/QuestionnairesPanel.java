@@ -60,7 +60,7 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
     private boolean remediation = false;
     private WebMarkupContainer questionnaireContainer;
 
-    private static final int MAX_ROWS = 10;
+    private static final int MAX_ROWS = 5;
     private QuestionnaireTable questionnaireTable;
 
 

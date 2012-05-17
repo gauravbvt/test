@@ -400,11 +400,11 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         int requiredQuestionsCount = surveysDAO.getRequiredQuestionCount( this );
         int optionalQuestionsCount = surveysDAO.getOptionalQuestionCount( this );
         sb.append( "You answered " )
-        .append( surveysDAO.getRequiredAnswersCount( this ) )
+                .append( surveysDAO.getRequiredAnswersCount( this ) )
                 .append( " out of " )
-                .append(  requiredQuestionsCount )
+                .append( requiredQuestionsCount )
                 .append( " required " )
-        .append( requiredQuestionsCount > 1 ? "questions" : "question" )
+                .append( requiredQuestionsCount > 1 ? "questions" : "question" )
                 .append( " and " )
                 .append( surveysDAO.getOptionalAnswersCount( this ) )
                 .append( " out of " )
@@ -414,11 +414,28 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
                 .append( ".\n\n" );
         int surveyCompletionCount = surveysDAO.findAllCompletedRFIs( planService.getPlan(), getRfiSurvey() ).size();
         sb.append( surveyCompletionCount )
-                .append( " other ")
+                .append( " other " )
                 .append( surveyCompletionCount > 1 ? "participants" : "participant" )
                 .append( " completed this survey.\n" );
         return sb.toString();
     }
 
-
+    public int compareUrgencyTo( RFI other, SurveysDAO surveysDAO ) {
+        if ( getDeadline() == null && other.getDeadline() == null ) {
+            int percent = surveysDAO.getPercentCompletion( this );
+            int otherPercent = surveysDAO.getPercentCompletion( other );
+            return
+                    percent < otherPercent
+                            ? -1
+                            : percent > otherPercent
+                            ? 1
+                            : getCreated().compareTo( other.getCreated() );
+        } else {
+            return other.getDeadline() == null
+                    ? -1
+                    : getDeadline() == null
+                    ? 1
+                    : getDeadline().compareTo( other.getDeadline() );
+        }
+    }
 }

@@ -108,8 +108,7 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
                 }
                 email.setSubject( subject );
                 email.setText( content );
-                LOG.info( " emailing \"" + subject + "\" to "
-                        + toAddress );
+                LOG.info( "Emailing " + subject + " to " + toAddress + " from " + fromAddress );
                 mailSender.send( email );
 
                 success = true;
