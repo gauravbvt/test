@@ -69,7 +69,8 @@ public class PlanParticipationServiceImpl
 //        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
         criteria.add( Restrictions.eq( "actorId", actor.getId() ) );
         criteria.addOrder( Order.desc( "created" ) );
-        return validParticipations( (List<PlanParticipation>) criteria.list(), queryService );    }
+        return validParticipations( (List<PlanParticipation>) criteria.list(), queryService );
+    }
 
     @Override
     @Transactional( readOnly = true )
@@ -164,8 +165,10 @@ public class PlanParticipationServiceImpl
         List<PlanParticipation> results = new ArrayList<PlanParticipation>();
         for ( PlanParticipation planParticipation : planParticipations ) {
             try {
-                queryService.find( Actor.class, planParticipation.getActorId() );
-                results.add( planParticipation );
+                if ( planParticipation.getParticipant() != null ) {
+                    queryService.find( Actor.class, planParticipation.getActorId() ); // exception if not found
+                    results.add( planParticipation );
+                }
             } catch ( NotFoundException e ) {
                 // ignore
             }
