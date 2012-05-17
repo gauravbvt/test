@@ -9,6 +9,7 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.social.model.rfi.AnswerSet;
 import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.RFI;
+import com.mindalliance.channels.social.model.rfi.RFIForward;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 
 import java.util.List;
@@ -223,4 +224,41 @@ public interface SurveysDAO {
      * @return a list of RFIs
      */
     List<RFI> listIncompleteActiveRFIs( PlanService planService, Analyst analyst );
+
+    /**
+     * Find all completed RFIs in a survey.
+     *
+     * @param plan a plan
+     * @param rfiSurvey a survey
+     * @return a list of RFIs
+     */
+    List<RFI> findAllCompletedRFIs( Plan plan, RFISurvey rfiSurvey );
+
+    /**
+     * Find all completed RFIs in a survey.
+     *
+     * @param plan a plan
+     * @param rfiSurvey a survey
+     * @return a list of RFIs
+     */
+    List<RFI> findAllIncompleteRFIs( Plan plan, RFISurvey rfiSurvey );
+
+    /**
+     * Find all declined RFIs in a survey.
+     *
+     * @param plan a plan
+     * @param rfiSurvey a survey
+     * @return a list of RFIs
+     */
+    List<RFI> findAllDeclinedRFIs( Plan plan, RFISurvey rfiSurvey );
+
+    /**
+     * Find all RFI forwardings in a survey.
+     *
+     * @param plan a plan
+     * @param rfiSurvey a survey
+     * @return a list of rfi forwards
+     */
+    List<RFIForward> findAllRFIForwards( Plan plan, RFISurvey rfiSurvey );
+
 }

@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,7 +102,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// USER MESSAGES ////
 
     @Override
-//    @Scheduled( fixedDelay = 60000 )     // every minute
+    @Scheduled( fixedDelay = 60000 )     // every minute
     @Async
     @Transactional
     public void notifyOfUserMessages() {
@@ -126,7 +127,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// FEEDBACK ////
 
     @Override
-//    @Scheduled( fixedDelay = 60000 )     // each minute
+    @Scheduled( fixedDelay = 60000 )     // each minute
     @Async
     @Transactional
     public void notifyOfUrgentFeedback() {
@@ -149,7 +150,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-//    @Scheduled( fixedDelay = 86400000 )   // each day
+    @Scheduled( fixedDelay = 86400000 )   // each day
     @Async
     @Transactional
     public void reportOnNewFeedback() {
@@ -176,7 +177,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// SURVEYS ////
 
     @Override
-//    @Scheduled( fixedDelay = 60000 )     // each minute
+    @Scheduled( fixedDelay = 60000 )     // each minute
     @Async
     @Transactional
     public void notifyOfSurveys() {
@@ -214,7 +215,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
- //   @Scheduled( fixedDelay = 86400000 )   // each day
+    @Scheduled( fixedDelay = 86400000 )   // each day
     @Async
     @Transactional
     public void reportOnSurveys() {

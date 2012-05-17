@@ -141,7 +141,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
 
     public boolean isObsolete( QueryService queryService, Analyst analyst ) {
         return !getQuestionnaire().isActive()
-                || getModelObject( queryService ) == null
+                || ( getAboutRef() != null && getModelObject( queryService ) == null )
                 || getQuestionnaire().isObsolete( queryService, analyst );
     }
 
@@ -179,7 +179,90 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
     }
 
     private String getStatusContent( Format format, PlanService planService, SurveysDAO surveysDAO ) {
-        return null; // todo
+        StringBuilder sb = new StringBuilder();
+        sb.append( getLabel( planService ) )
+                .append( ".\n" )
+                .append( "Launched on " )
+                .append( DATE_FORMAT.format( getCreated() ) )
+                .append( " by " )
+                .append( planService.getUserDao().getFullName( getUsername() ) )
+                .append( ".\n\n" );
+        Plan plan = planService.getPlan();
+        List<RFI> completedRFIs = surveysDAO.findAllCompletedRFIs( plan, this );
+        List<RFI> incompleteRFIs = surveysDAO.findAllIncompleteRFIs( plan, this );
+        List<RFI> declinedRFIs = surveysDAO.findAllDeclinedRFIs( plan, this );
+        List<RFIForward> forwards = surveysDAO.findAllRFIForwards( plan, this );
+        addCompletedRFIContent( "completed", completedRFIs, sb, planService );
+        addIncompleteRFIContent( "incomplete", incompleteRFIs, sb, planService, surveysDAO );
+        addForwardContent( "forwarded", forwards, sb, planService );
+        addDeclinedContent( "declined", declinedRFIs, sb, planService );
+        sb.append( "\n" );
+        return sb.toString();
+    }
+
+    private void addCompletedRFIContent(
+            String title,
+            List<RFI> rfisList,
+            StringBuilder sb,
+            PlanService planService ) {
+        sb.append( rfisList.size() ).append( " " ).append( title ).append( ":\n" );
+        for ( RFI rfi : rfisList ) {
+            sb.append( "\t" )
+                    .append( planService.getUserDao().getFullName( rfi.getSurveyedUsername() ) )
+                    .append( "\n" );
+        }
+    }
+
+    private void addIncompleteRFIContent(
+            String title,
+            List<RFI> rfisList,
+            StringBuilder sb,
+            PlanService planService,
+            SurveysDAO surveysDAO ) {
+        Date now = new Date();
+        sb.append( rfisList.size() ).append( " " ).append( title ).append( ":\n" );
+        for ( RFI rfi : rfisList ) {
+            sb.append( "\t" );
+            sb.append( planService.getUserDao().getFullName( rfi.getSurveyedUsername() ) ).append( "(" );
+            int percent = surveysDAO.getPercentCompletion( rfi );
+            sb.append( percent ).append( "%" );
+            Date dueDate = rfi.getDeadline();
+            if ( dueDate != null && now.after( dueDate ) ) {
+                sb.append( ", OVERDUE" );
+            }
+            sb.append( ")\n" );
+        }
+    }
+
+    private void addDeclinedContent(
+            String title,
+            List<RFI> rfisList,
+            StringBuilder sb,
+            PlanService planService ) {
+        sb.append( rfisList.size() ).append( " " ).append( title ).append( ":\n" );
+        for ( RFI rfi : rfisList ) {
+            sb.append( "\t" )
+                    .append( planService.getUserDao().getFullName( rfi.getSurveyedUsername() ) )
+                    .append( " (" )
+                    .append( rfi.getReasonDeclined().isEmpty() ? "No reason given." : rfi.getReasonDeclined() )
+                    .append( ")\n" );
+        }
+    }
+
+    private void addForwardContent(
+            String title,
+            List<RFIForward> forwards,
+            StringBuilder sb,
+            PlanService planService ) {
+        sb.append( forwards.size() ).append( " " ).append( title ).append( ":\n" );
+        for ( RFIForward forward : forwards ) {
+            sb.append( "\t" )
+                    .append( "from " )
+                    .append( planService.getUserDao().getFullName( forward.getUsername() ) )
+                    .append( " to " )
+                    .append( planService.getUserDao().getFullName( forward.getForwardToEmail() ) )
+                    .append( "\n" );
+        }
     }
 
     @Override

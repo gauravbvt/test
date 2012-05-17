@@ -13,11 +13,13 @@ import com.mindalliance.channels.social.model.rfi.AnswerSet;
 import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFI;
+import com.mindalliance.channels.social.model.rfi.RFIForward;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import com.mindalliance.channels.social.services.AnswerService;
 import com.mindalliance.channels.social.services.AnswerSetService;
 import com.mindalliance.channels.social.services.QuestionService;
 import com.mindalliance.channels.social.services.QuestionnaireService;
+import com.mindalliance.channels.social.services.RFIForwardService;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.RFISurveyService;
 import com.mindalliance.channels.social.services.SurveysDAO;
@@ -73,6 +75,9 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     @Autowired
     private AnswerService answerService;
+
+    @Autowired
+    private RFIForwardService rfiForwardService;
 
     @Override
     @Transactional
@@ -562,4 +567,56 @@ public class SurveysDAOImpl implements SurveysDAO {
                     }
                 } );
     }
+
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<RFI> findAllCompletedRFIs( Plan plan, RFISurvey rfiSurvey ) {
+        return (List<RFI>) CollectionUtils.select(
+                rfiService.select( plan, rfiSurvey ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return isCompleted( (RFI) object );
+                    }
+                } );
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<RFI> findAllIncompleteRFIs( Plan plan, RFISurvey rfiSurvey ) {
+        return (List<RFI>) CollectionUtils.select(
+                rfiService.select( plan, rfiSurvey ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        RFI rfi = (RFI) object;
+                        return !rfi.isDeclined() && !isCompleted( rfi );
+                    }
+                } );
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<RFI> findAllDeclinedRFIs( Plan plan, RFISurvey rfiSurvey ) {
+        return (List<RFI>) CollectionUtils.select(
+                rfiService.select( plan, rfiSurvey ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        RFI rfi = (RFI) object;
+                        return rfi.isDeclined();
+                    }
+                } );
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<RFIForward> findAllRFIForwards( Plan plan, RFISurvey rfiSurvey ) {
+        return rfiForwardService.select( plan, rfiSurvey );
+    }
+
 }

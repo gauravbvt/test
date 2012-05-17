@@ -12,6 +12,8 @@ import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,6 +44,12 @@ public class Questionnaire extends AbstractPersistentPlanObject {
          */
         INACTIVE
     }
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( Questionnaire.class );
+
 
     public static final Questionnaire UNKNOWN = new Questionnaire( Channels.UNKNOWN_QUESTIONNAIRE_ID );
 
@@ -150,15 +158,24 @@ public class Questionnaire extends AbstractPersistentPlanObject {
         boolean obsolete = false;
         if ( isIssueRemediation() ) {
             ModelObject mo = ModelObjectRef.resolveFromString( remediatedModelObjectRefString, queryService );
-            obsolete = mo == null
-                    || !CollectionUtils.exists(
-                    analyst.listUnwaivedIssues( queryService, mo, false ),
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            return ( (Issue) object ).getKind().equals( issueKind );
-                        }
-                    } );
+            if ( mo == null ) {
+                obsolete = true;
+            } else {
+                // TODO : Apparently, cache bug raises exception
+                try {
+                    List<? extends Issue> unwaivedIssues = analyst.listUnwaivedIssues( queryService, mo, false );
+                    obsolete = !CollectionUtils.exists(
+                            unwaivedIssues,
+                            new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                    return ( (Issue) object ).getKind().equals( issueKind );
+                                }
+                            } );
+                } catch ( Exception e ) {
+                    LOG.debug( "Failed to look up issues" );
+                }
+            }
         }
         return obsolete;
     }

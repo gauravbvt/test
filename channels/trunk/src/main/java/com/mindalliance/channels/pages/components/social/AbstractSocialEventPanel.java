@@ -221,6 +221,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         while ( employments.hasNext() ) {
             Employment employment = employments.next();
             String title = employment.getJob().getTitle();
+            if ( title.isEmpty() ) title = employment.getJob().getRoleName();
             if ( !titleSet.contains( title ) ) {
                 titleSet.add( title );
                 if ( sb.length() > 0 ) sb.append( ", " );

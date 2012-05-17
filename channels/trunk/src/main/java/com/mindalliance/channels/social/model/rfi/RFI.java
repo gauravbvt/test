@@ -140,7 +140,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
     }
 
     public String getReasonDeclined() {
-        return reasonDeclined;
+        return reasonDeclined == null ? "" : reasonDeclined;
     }
 
     public void setReasonDeclined( String reasonDeclined ) {
@@ -304,8 +304,8 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         if ( topic.equals( NAG )
                 || topic.equals( DEADLINE ) )
             return getSurveyedUsername();
-       else
-            throw new RuntimeException("Unknown topic " + topic );
+        else
+            throw new RuntimeException( "Unknown topic " + topic );
     }
 
 
@@ -314,7 +314,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         if ( topic.equals( NAG )
                 || topic.equals( DEADLINE ) ) return null;
         else
-            throw new RuntimeException("Unknown topic " + topic );
+            throw new RuntimeException( "Unknown topic " + topic );
     }
 
     @Override
@@ -328,7 +328,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         else if ( topic.equals( TODO ) )
             return getTodoContent( format, planService, surveysDAO );
         else
-            throw new RuntimeException( "Unknown topic " + topic   );
+            throw new RuntimeException( "Unknown topic " + topic );
     }
 
 
@@ -341,7 +341,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
             return getNagSubject( format, planService );
         else
-            throw new RuntimeException( "Unknown topic " + topic  );
+            throw new RuntimeException( "Unknown topic " + topic );
     }
 
     private String getNagSubject( Format format, PlanService planService ) {
@@ -381,7 +381,43 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
 
     private String getTodoContent( Format format, PlanService planService, SurveysDAO surveysDAO ) {
         // Ignore format
-        return null; // todo
+        StringBuilder sb = new StringBuilder();
+        sb.append( getLabel( planService ) );
+        if ( getDeadline() != null ) {
+            Date now = new Date();
+            sb.append( now.after( getDeadline() ) ? " was" : " is" )
+                    .append( " sent to you on " )
+                    .append( DATE_FORMAT.format( getDeadline() ) )
+                    .append( " and" );
+        }
+        int percentComplete = surveysDAO.getPercentCompletion( this );
+        sb.append( " is " )
+                .append( percentComplete )
+                .append( "% complete.\n\n" );
+        sb.append( "Your participation was requested by " )
+                .append( planService.getUserDao().getFullName( getUsername() ) )
+                .append( ".\n\n" );
+        int requiredQuestionsCount = surveysDAO.getRequiredQuestionCount( this );
+        int optionalQuestionsCount = surveysDAO.getOptionalQuestionCount( this );
+        sb.append( "You answered " )
+        .append( surveysDAO.getRequiredAnswersCount( this ) )
+                .append( " out of " )
+                .append(  requiredQuestionsCount )
+                .append( " required " )
+        .append( requiredQuestionsCount > 1 ? "questions" : "question" )
+                .append( " and " )
+                .append( surveysDAO.getOptionalAnswersCount( this ) )
+                .append( " out of " )
+                .append( optionalQuestionsCount )
+                .append( " optional " )
+                .append( optionalQuestionsCount > 1 ? "questions" : "question" )
+                .append( ".\n\n" );
+        int surveyCompletionCount = surveysDAO.findAllCompletedRFIs( planService.getPlan(), getRfiSurvey() ).size();
+        sb.append( surveyCompletionCount )
+                .append( " other ")
+                .append( surveyCompletionCount > 1 ? "participants" : "participant" )
+                .append( " completed this survey.\n" );
+        return sb.toString();
     }
 
 

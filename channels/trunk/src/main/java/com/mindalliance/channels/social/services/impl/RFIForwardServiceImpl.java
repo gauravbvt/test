@@ -5,7 +5,10 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFIForward;
+import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import com.mindalliance.channels.social.services.RFIForwardService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -72,5 +75,24 @@ public class RFIForwardServiceImpl extends GenericSqlServiceImpl<RFIForward, Lon
             }
         }
         return actualForwards;
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    @Transactional( readOnly = true )
+    public List<RFIForward> select( Plan plan, final RFISurvey rfiSurvey ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        return (List<RFIForward>) CollectionUtils.select(
+                criteria.list(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        RFIForward forward = (RFIForward)object;
+                        return forward.getRfi().getRfiSurvey().equals(  rfiSurvey );
+                    }
+                }
+        );
     }
 }
