@@ -246,7 +246,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
                 validatedEmails.add( email );
         }
         List<String> forwardedTo = new ArrayList<String>( validatedEmails );
-        return rfiForwardService.forwardRFI( getPlan(), getUser(), getRFI(), forwardedTo, message );
+        return surveysDAO.forwardRFI( getPlan(), getUser(), getRFI(), forwardedTo, message );
     }
 
     private RFI getRFI() {

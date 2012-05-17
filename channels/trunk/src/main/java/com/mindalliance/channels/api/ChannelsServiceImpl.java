@@ -71,6 +71,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             String uri = plan.getUri();
             if ( !user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED )
                     && ( user.isPlanner( uri ) || plan.isProduction() ) ) {
+                user.setPlan( plan );
                 result.add( new PlanSummaryData( getPlanService( plan ), userDao ) );
             }
         }
@@ -93,6 +94,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             if ( plan == null || !user.isPlanner( uri ) ) {
                 throw new Exception( "Plan " + uri + " is not available" );
             } else {
+                user.setPlan( plan );
                 return ( new PlanScopeData( plan, getPlanService( plan ) ) );
             }
         } catch ( Exception e ) {
@@ -119,6 +121,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             if ( !canSeeProcedures( user, actor, planService ) ) {
                 throw new Exception( "Procedures not visible to " + user.getUsername() + " for plan with uri " + uri );
             }
+            user.setPlan( plan );
             return new ProceduresData(
                     plan,
                     actor,
@@ -148,6 +151,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             if ( participations.isEmpty() ) {
                 throw new Exception( user.getUsername() + " does not participate in production plan " + uri );
             }
+            user.setPlan( plan );
             return new ProceduresData(
                     plan,
                     participations,
@@ -183,6 +187,7 @@ public class ChannelsServiceImpl implements ChannelsService {
                             .entity( "No plan available with uri " + uri )
                             .build() );
         } else {
+            user.setPlan( plan );
             PlanService planService = getPlanService( plan );
             return new IssuesData( planService, analyst, userDao );
         }

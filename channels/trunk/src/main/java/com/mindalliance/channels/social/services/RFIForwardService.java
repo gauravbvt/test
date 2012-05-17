@@ -1,6 +1,5 @@
 package com.mindalliance.channels.social.services;
 
-import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 import com.mindalliance.channels.social.model.rfi.RFI;
@@ -33,17 +32,6 @@ public interface RFIForwardService extends GenericSqlService<RFIForward, Long> {
      */
     List<String> findForwardedTo( RFI rfi );
 
-    /**
-     * A user forwards and RFI to a list of valid email addresses.
-     *
-     * @param plan        a plan
-     * @param user        a user
-     * @param rfi         an rfi
-     * @param forwardedTo a list of strings
-     * @param message     a string
-     * @return a list of string (the new emails the RFI has been forwarded to
-     */
-    List<String> forwardRFI( Plan plan, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message );
 
     /**
      * Find all forwards in a survey.

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.social.model.rfi;
 
 import com.mindalliance.channels.core.model.Employment;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
@@ -34,6 +35,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
     public static final String DEADLINE = "deadline";
     public static final String NAG = "nag";
     public static final String TODO = "todo";
+    public static final String NEW = "new";
 
 
     public static final RFI UNKNOWN = new RFI( Channels.UNKNOWN_RFI_ID );
@@ -85,6 +87,12 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         title = employment.getTitle();
         organizationId = employment.getOrganization().getId();
         roleId = employment.getRole().getId();
+    }
+
+    public RFI( RFI rfi ) {
+        this( rfi.getUsername(), rfi.getPlanUri(), rfi.getPlanVersion() );
+        setDeadline( rfi.getDeadline() );
+        setRfiSurvey( rfi.getRfiSurvey() );
     }
 
     public boolean isUnknown() {
@@ -295,6 +303,25 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         notifications = StringUtils.join( list, "," );
     }
 
+    public int compareUrgencyTo( RFI other, SurveysDAO surveysDAO ) {
+        if ( getDeadline() == null && other.getDeadline() == null ) {
+            int percent = surveysDAO.getPercentCompletion( this );
+            int otherPercent = surveysDAO.getPercentCompletion( other );
+            return
+                    percent < otherPercent
+                            ? -1
+                            : percent > otherPercent
+                            ? 1
+                            : getCreated().compareTo( other.getCreated() );
+        } else {
+            return other.getDeadline() == null
+                    ? -1
+                    : getDeadline() == null
+                    ? 1
+                    : getDeadline().compareTo( other.getDeadline() );
+        }
+    }
+
 
     /// MESSAGEABLE ///
 
@@ -327,10 +354,11 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
             return getNagContent( format, planService, surveysDAO );
         else if ( topic.equals( TODO ) )
             return getTodoContent( format, planService, surveysDAO );
+        else if ( topic.equals( NEW ) )
+            return getNewRFIContent( format, planService, surveysDAO );
         else
             throw new RuntimeException( "Unknown topic " + topic );
     }
-
 
     @Override
     public String getSubject(
@@ -340,6 +368,8 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
             SurveysDAO surveysDAO ) {
         if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
             return getNagSubject( format, planService );
+        else if ( topic.equals( NEW ) )
+            return getNewRFISubject( format, planService, surveysDAO );
         else
             throw new RuntimeException( "Unknown topic " + topic );
     }
@@ -420,22 +450,37 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         return sb.toString();
     }
 
-    public int compareUrgencyTo( RFI other, SurveysDAO surveysDAO ) {
-        if ( getDeadline() == null && other.getDeadline() == null ) {
-            int percent = surveysDAO.getPercentCompletion( this );
-            int otherPercent = surveysDAO.getPercentCompletion( other );
-            return
-                    percent < otherPercent
-                            ? -1
-                            : percent > otherPercent
-                            ? 1
-                            : getCreated().compareTo( other.getCreated() );
-        } else {
-            return other.getDeadline() == null
-                    ? -1
-                    : getDeadline() == null
-                    ? 1
-                    : getDeadline().compareTo( other.getDeadline() );
-        }
+    private String getNewRFISubject( Format format, PlanService planService, SurveysDAO surveysDAO ) {
+        // ignore format
+        return "New survey: " + getName();
     }
+
+    private String getNewRFIContent( Format format, PlanService planService, SurveysDAO surveysDAO ) {
+        // ignore format
+        Plan plan = planService.getPlan();
+        StringBuilder sb = new StringBuilder( );
+        sb.append( "You are invited to participate in a survey to help define the \"" )
+                .append( plan.getName() )
+                .append( "\" information sharing plan.\n\n" );
+        if ( !plan.getDescription().isEmpty() ) {
+            sb.append( "About the plan: " )
+                    .append( plan.getDescription() )
+                    .append( "\n" );
+            if ( plan.getLocale() != null ) {
+                sb.append( "Targeted location: " )
+                        .append( plan.getLocale().getName() )
+                        .append( "\n" );
+            }
+        }
+        sb.append( "\n---------------------------------\n" )
+                .append( getLabel( planService ) )
+                .append( "---------------------------------\n\n" );
+        // todo
+        // survey link
+        // login instruction if new user
+        // forwarded by
+        return sb.toString();
+    }
+
+
 }

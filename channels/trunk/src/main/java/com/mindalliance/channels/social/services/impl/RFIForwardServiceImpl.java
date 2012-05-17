@@ -1,6 +1,5 @@
 package com.mindalliance.channels.social.services.impl;
 
-import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.rfi.RFI;
@@ -61,21 +60,6 @@ public class RFIForwardServiceImpl extends GenericSqlServiceImpl<RFIForward, Lon
         return new ArrayList<String>( emails );
     }
 
-    @Override
-    @Transactional
-    public List<String> forwardRFI( Plan plan, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message ) {
-        List<String> alreadyForwardedTo = findForwardedTo( rfi );
-        List<String> actualForwards = new ArrayList<String>(  );
-        for ( String email : forwardedTo ) {
-            if ( !alreadyForwardedTo.contains( email ) ) {
-                RFIForward forward = new RFIForward( plan, user, rfi, email, message );
-                actualForwards.add( email );
-                alreadyForwardedTo.add( email );
-                save( forward );
-            }
-        }
-        return actualForwards;
-    }
 
     @Override
     @SuppressWarnings( "unchecked" )

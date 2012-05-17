@@ -190,6 +190,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
             // to survey participants
             sendNags( planService );
             sendDeadlineApproachingNotifications( planService );
+ //           sendNewRFIs( planService );
         }
     }
 
@@ -209,14 +210,29 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     private void sendDeadlineApproachingNotifications( PlanService planService ) {
         LOG.debug( "Sending RFI deadline warnings" );
         List<RFI> deadlineRFIs = rfiService.listApproachingDeadline( planService.getPlan(), WARNING_DELAY );
-        for ( RFI deadlineRfi : deadlineRFIs ) {
-            boolean success = sendMessages( deadlineRfi, RFI.DEADLINE, planService );
+        for ( RFI deadlineRFI : deadlineRFIs ) {
+            boolean success = sendMessages( deadlineRFI, RFI.DEADLINE, planService );
             if ( success ) {
-                deadlineRfi.addNotification( RFI.DEADLINE );
-                rfiService.save( deadlineRfi );
+                deadlineRFI.addNotification( RFI.DEADLINE );
+                rfiService.save( deadlineRFI );
             }
         }
     }
+
+    private void sendNewRFIs( PlanService planService ) {
+        LOG.debug( "Sending new RFI notices" );
+        List<RFI> newRFIs = rfiService.listNewRFIs( planService.getPlan() );
+        for ( RFI newRFI : newRFIs ) {
+            boolean success = sendMessages( newRFI, RFI.NEW, planService );
+            if ( success ) {
+                newRFI.addNotification( RFI.NEW );
+                rfiService.save( newRFI );
+            }
+        }
+
+    }
+
+
 
     @Override
     @Scheduled( fixedDelay = 86400000 )   // each day

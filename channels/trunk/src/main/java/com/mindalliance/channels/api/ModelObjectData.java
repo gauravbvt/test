@@ -22,6 +22,7 @@ abstract public class ModelObjectData {
     }
 
     public ModelObjectData( ModelObject modelObject, Plan plan ) {
+        assert modelObject != null;
          this.modelObject = modelObject;
         this.plan = plan;
     }

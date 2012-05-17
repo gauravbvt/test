@@ -261,4 +261,15 @@ public interface SurveysDAO {
      */
     List<RFIForward> findAllRFIForwards( Plan plan, RFISurvey rfiSurvey );
 
+    /**
+     * A user forwards and RFI to a list of valid email addresses.
+     *
+     * @param plan        a plan
+     * @param user        a user
+     * @param rfi         an rfi
+     * @param forwardedTo a list of strings
+     * @param message     a string
+     * @return a list of string (the new emails the RFI has been forwarded to
+     */
+    List<String> forwardRFI( Plan plan, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message );
 }

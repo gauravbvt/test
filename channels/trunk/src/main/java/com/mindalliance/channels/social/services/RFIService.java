@@ -155,4 +155,10 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
      */
     List<RFI> listApproachingDeadline( Plan plan, long warningDelay );
 
+    /**
+     * Find all RFIs of which surveyed user has yet to be notified.
+     * @param plan a plan
+     * @return a list of RFIs
+     */
+    List<RFI> listNewRFIs( Plan plan );
 }

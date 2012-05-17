@@ -120,7 +120,7 @@ public abstract class ModelObject
     }
 
     public String getDescription() {
-        return description;
+        return description == null ? "" : description;
     }
 
     /**

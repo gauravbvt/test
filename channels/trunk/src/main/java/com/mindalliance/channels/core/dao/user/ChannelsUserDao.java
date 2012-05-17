@@ -127,4 +127,11 @@ public interface ChannelsUserDao extends GenericSqlService<ChannelsUserInfo, Lon
      * @return a string
      */
     String getFullName( String username );
+
+    /**
+     * Create a new user given an email address.
+     * @param email a string
+     * @return a clear password or null if user creation failed
+     */
+    String makeNewUserFromEmail( String email );
 }

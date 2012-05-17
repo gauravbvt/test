@@ -1,6 +1,7 @@
 package com.mindalliance.channels.social.services.impl;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
@@ -78,6 +79,9 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     @Autowired
     private RFIForwardService rfiForwardService;
+
+    @Autowired
+    private ChannelsUserDao userDao;
 
     @Override
     @Transactional
@@ -617,6 +621,38 @@ public class SurveysDAOImpl implements SurveysDAO {
     @SuppressWarnings( "unchecked" )
     public List<RFIForward> findAllRFIForwards( Plan plan, RFISurvey rfiSurvey ) {
         return rfiForwardService.select( plan, rfiSurvey );
+    }
+
+    @Override
+    @Transactional
+    public List<String> forwardRFI( Plan plan, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message ) {
+        List<String> alreadyForwardedTo = rfiForwardService.findForwardedTo( rfi );
+        List<String> emailsOfParticipants = getParticipantsEmails( plan, rfi.getRfiSurvey() );
+        List<String> actualForwards = new ArrayList<String>(  );
+        for ( String email : forwardedTo ) {
+            if ( !alreadyForwardedTo.contains( email ) && !emailsOfParticipants.contains( email ) ) {
+                RFIForward forward = new RFIForward( plan, user, rfi, email, message );
+                actualForwards.add( email );
+                alreadyForwardedTo.add( email );
+                // Create new user if needed. Remember generated password.
+                String forwardedToPassword = userDao.makeNewUserFromEmail( email ); // null if no new user created
+                forward.setForwardedToPassword( forwardedToPassword );
+                RFI newRFI = new RFI( rfi );
+                rfiService.save( newRFI );
+                rfiForwardService.save( forward );
+            }
+        }
+         return actualForwards;
+    }
+
+    private List<String> getParticipantsEmails( Plan plan, RFISurvey rfiSurvey ) {
+        List<String> emails = new ArrayList<String>(  );
+        List<RFI> rfis = rfiService.select( plan, rfiSurvey );
+        for ( RFI rfi : rfis ) {
+            ChannelsUser user = userDao.getUserNamed( rfi.getSurveyedUsername() );
+            if ( user != null ) emails.add( user.getEmail() );
+        }
+        return emails;
     }
 
 }

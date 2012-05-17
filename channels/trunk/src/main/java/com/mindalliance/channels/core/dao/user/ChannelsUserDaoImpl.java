@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.dao.user;
 import com.mindalliance.channels.core.dao.DuplicateKeyException;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.hibernate.criterion.Restrictions;
@@ -155,6 +156,39 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
     public String getFullName( String username ) {
         ChannelsUser user = getUserNamed( username );
         return user == null ? username : user.getFullName();
+    }
+
+    @Override
+    public String makeNewUserFromEmail( String email ) {
+        if ( !ChannelsUtils.isValidEmailAddress( email )
+                || getUserNamed( email ) != null ) return null;
+        String newUsername = makeNewUsernameFromEmail( email );
+        String password = makeNewPassword();
+        try {
+            ChannelsUser newUser = createUser( newUsername, email );
+            newUser.getUserInfo().setPassword( password );
+            return password;
+        } catch ( DuplicateKeyException e ) {
+            LOG.warn( "Failed to create new user " + email, e );
+            return null;
+        }
+    }
+
+    private String makeNewUsernameFromEmail( String email ) {
+        int index = email.indexOf( '@' );
+        String candidate = email.substring( 0, index );
+        String username = candidate;
+        boolean success = false;
+        int i = 2;
+        do {
+            if ( getUserNamed( username ) == null ) {
+                success = true;
+            } else {
+                username = candidate + i;
+                i++;
+            }
+        } while (!success);
+        return username;
     }
 
     @Override

@@ -252,5 +252,23 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
                 } );
     }
 
+    @Override
+    @SuppressWarnings( "unchecked" )
+    @Transactional( readOnly = true )
+    public List<RFI> listNewRFIs( Plan plan ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        return  (List<RFI>) CollectionUtils.select(
+                criteria.list(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        RFI rfi = (RFI) object;
+                        return !rfi.isDeclined() && !rfi.isNotificationSent( RFI.NEW );
+                    }
+                } );
+    }
+
 
 }
