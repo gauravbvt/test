@@ -204,14 +204,14 @@ public class Questionnaire extends AbstractPersistentPlanObject {
         ModelObject mo = issue.getAbout();
         return "Remediating \""
                 + issue.getDetectorLabel()
-                + "\" for "
+                + "\"- for "
                 + issue.getAbout().getTypeName()
                 + " \""
                 + issue.getAbout().getLabel()
-                + "\" "
+                + "\""
                 // + "[" + mo.getId() + "]"
                 + ( mo.isSegmentObject()
-                ? ( " in \"" + ( (SegmentObject) mo ).getSegment().getName() + "\"" )
+                ? ( "- in scenario \"" + ( (SegmentObject) mo ).getSegment().getName() + "\"" )
                 : "" );
     }
 

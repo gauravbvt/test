@@ -607,7 +607,7 @@ public final class ChannelsUtils {
     }
 
     public static String getShortTimeIntervalString( long millis ) {
-        long diffInSeconds = millis / 1000;
+        long diffInSeconds = Math.abs( millis / 1000 );
         /* sec */
         long seconds = ( diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds );
         /* min */
@@ -646,7 +646,7 @@ public final class ChannelsUtils {
     }
 
     public static String getLongTimeIntervalString( long millis ) {
-        long diffInSeconds = millis / 1000;
+        long diffInSeconds = Math.abs( millis / 1000 );
         /* sec */
         long seconds = ( diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds );
         /* min */

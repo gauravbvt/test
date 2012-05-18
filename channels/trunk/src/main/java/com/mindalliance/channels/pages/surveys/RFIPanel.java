@@ -18,12 +18,15 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +41,8 @@ import java.util.Set;
  * Time: 3:26 PM
  */
 public class RFIPanel extends AbstractUpdatablePanel {
+
+    private static final String NAME_PART_SEP = "-";
 
     @SpringBean
     private SurveysDAO surveysDAO;
@@ -68,20 +73,16 @@ public class RFIPanel extends AbstractUpdatablePanel {
     }
 
 
-
     private void addHeader() {
-        RFI rfi = getRFI();
         headerContainer = new WebMarkupContainer( "header" );
         headerContainer.setOutputMarkupId( true );
-        // name
-        Label headerLabel = new Label( "name", getHeaderString() );
-        headerLabel.setOutputMarkupId( true );
-        headerContainer.addOrReplace( headerLabel );
+        addName();
         // sent by
         Label sentByLabel = new Label( "sentBy", getSentBy() );
         headerContainer.add( sentByLabel );
         // deadline
-        Label deadlineLabel = new Label( "deadline", getDeadline() );
+        String deadlineText = getDeadlineText();
+        Label deadlineLabel = new Label( "deadline", deadlineText );
         headerContainer.add( deadlineLabel );
         // completion
         Label sentCompletion = new Label( "completion", getCompletion() );
@@ -95,8 +96,30 @@ public class RFIPanel extends AbstractUpdatablePanel {
         rfiContainer.addOrReplace( headerContainer );
     }
 
+    private void addName() {
+        WebMarkupContainer nameContainer = new WebMarkupContainer( "name" );
+        nameContainer.setOutputMarkupId( true );
+        ListView<String> namePartListView = new ListView<String>(
+                "nameParts",
+                getNameParts()
+        ) {
+            @Override
+            protected void populateItem( ListItem<String> item ) {
+                String namePart = item.getModelObject();
+                item.add( new Label("namePart", namePart ) );
+            }
+        };
+        nameContainer.add( namePartListView );
+        headerContainer.addOrReplace( nameContainer );
+    }
+
+    private List<String> getNameParts() {
+        String name = getHeaderString();
+        return Arrays.asList( name.split( NAME_PART_SEP ) );
+    }
+
     private String getForwardedTo() {
-        String emails = StringUtils.join( rfiForwardService.findForwardedTo( getRFI() ), ", ");
+        String emails = StringUtils.join( rfiForwardService.findForwardedTo( getRFI() ), ", " );
         return emails.isEmpty() ? "" : "Forwarded to " + emails;
     }
 
@@ -105,11 +128,15 @@ public class RFIPanel extends AbstractUpdatablePanel {
         return "Sent by " + getUserFullName( sentBy );
     }
 
-    private String getDeadline() {
+    private String getDeadlineText() {
         Date deadline = getRFI().getDeadline();
-        long delta = deadline.getTime() - new Date().getTime();
-        String interval = ChannelsUtils.getShortTimeIntervalString( delta );
-        return delta < 0 ? "Overdue by " : "Due in " + interval;
+        if ( deadline == null ) {
+            return "No deadline";
+        } else {
+            long delta = deadline.getTime() - new Date().getTime();
+            String interval = ChannelsUtils.getShortTimeIntervalString( delta );
+            return (delta < 0 ? "Overdue by " : "Due in ") + interval;
+        }
     }
 
     private String getCompletion() {
@@ -182,7 +209,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
     }
 
     private void addAnswerSetsPanel() {
-        rfiContainer.add( new SurveyAnswersPanel( "answers", new Model<RFI>( getRFI()  ) ) );
+        rfiContainer.add( new SurveyAnswersPanel( "answers", new Model<RFI>( getRFI() ) ) );
     }
 
     private void addDeclineButton() {
