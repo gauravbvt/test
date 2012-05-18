@@ -825,7 +825,11 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                     update( target, change );
                 }
             };
-            link.add( new Label( "label", label ) );
+            String labelString =
+                    label.startsWith( "@" )
+                            ? (String) ChannelsUtils.getProperty( bean, label.substring( 1 ), "?" )
+                            : label;
+            link.add( new Label( "label", labelString ) );
             add( link );
         }
     }

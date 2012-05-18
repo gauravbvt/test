@@ -192,7 +192,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
                 );
                 getModalableParent().showDialog(
                         "Forwarding survey",
-                        600,
+                        300,
                         500,
                         forwardingRFIPanel,
                         RFIPanel.this,
@@ -223,7 +223,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
                             new Model<RFI>( getRFI() ) );
                     getModalableParent().showDialog(
                             "Declining survey",
-                            600,
+                            300,
                             500,
                             declineRFIPanel,
                             RFIPanel.this,

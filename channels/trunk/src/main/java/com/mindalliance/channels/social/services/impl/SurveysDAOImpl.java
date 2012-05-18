@@ -191,7 +191,7 @@ public class SurveysDAOImpl implements SurveysDAO {
             while ( ( line = reader.readLine() ) != null ) {
                 options.add( optionize( line ) );
             }
-            options.add( "Other (see below)" );
+            options.add( "Other (please elaborate below)" );
             return options;
         } catch ( IOException e ) {
             LOG.error( "Failed to get remediation options", e );

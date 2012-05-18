@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.model.rfi.RFI;
@@ -18,6 +19,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -47,8 +49,8 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
     private List<RFI> declinedRFIs;
     private AjaxTabbedPanel tabbedPanel;
 
-    public UserRFIsPanel( String id ) {
-        super( id );
+    public UserRFIsPanel( String id, IModel<RFI> rfiModel ) {
+        super( id, rfiModel );
         init();
     }
 
@@ -155,6 +157,10 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
         super.changed( change );
     }
 
+    private RFI getSelectedRFI() {
+        return (RFI) getModel().getObject();
+    }
+
 
     public class RFIWrapper implements Identifiable {
 
@@ -241,7 +247,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
             if ( left > 0 ) {
                 return left
                         + " more "
-                        + ( left > 1 ? "answers" : "answer")
+                        + ( left > 1 ? "answers" : "answer" )
                         + " required";
             } else {
                 return null;
@@ -255,6 +261,11 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
 
         public int getForwardedToCount() {
             return rfiForwardService.findForwardedTo( rfi ).size();
+        }
+
+        public String getExpandLabel() {
+            RFI selected = getSelectedRFI();
+            return selected != null && selected.equals( rfi ) ? "Close" : "Open";
         }
 
         public RFI getRFI() {
@@ -304,6 +315,14 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
             initialize();
         }
 
+        public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updatables ) {
+            if ( change.isExpanded() ) {
+                initialize();
+                target.add( this );
+            }
+            super.updateWith( target, change, updatables );
+        }
+
         @SuppressWarnings( "unchecked" )
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
@@ -315,9 +334,9 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
             columns.add( makeColumn( "Deadline", "shortTimeLeft", "@timeLeftStyle", EMPTY, "longTimeLeft" ) );
             columns.add( makeColumn( "Progress", "completionPercent", "percent", EMPTY, "answersRequired" ) );
             columns.add( makeColumn( "Forwarded to", "forwardedToCount", null, EMPTY, "forwardedTo" ) );
-            columns.add( makeExpandLinkColumn( "", "", "open" ) );
+            columns.add( makeExpandLinkColumn( "", "", "@expandLabel" ) );
             // Provider and table
-            add( new AjaxFallbackDefaultDataTable( "rfis",
+            addOrReplace( new AjaxFallbackDefaultDataTable( "rfis",
                     columns,
                     new SortableBeanProvider<RFIWrapper>( rfis,
                             "timeLeft" ),

@@ -12,6 +12,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
 
     private void init() {
         addHeading();
-        addModalDialog( "dialog", "rfi-surveys", this );
+        addModalDialog( "dialog", null, this );
         addUserRFIsPanel();
         addRFIPanel();
     }
@@ -62,7 +63,7 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
     }
 
     private void addUserRFIsPanel() {
-        userRFIsPanel = new UserRFIsPanel( "rfis" );
+        userRFIsPanel = new UserRFIsPanel( "rfis", new PropertyModel<RFI>( this, "selectedRFI"  ) );
         addOrReplace( userRFIsPanel );
     }
 
@@ -81,7 +82,12 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
     public void changed( Change change ) {
         if ( change.isForInstanceOf( RFI.class ) ) {
             if ( change.isExpanded() ) {
-                selectedRFI = (RFI) change.getSubject( getQueryService() );
+                RFI rfi = (RFI) change.getSubject( getQueryService() );
+                if ( selectedRFI != null && rfi.equals(  selectedRFI ) ) {
+                    selectedRFI = null;
+                } else {
+                    selectedRFI = rfi;
+                }
             } else if ( change.isCollapsed() ) {
                 selectedRFI = null;
             }
@@ -101,6 +107,9 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
             if ( change.isExpanded() || change.isCollapsed() ) {
                 addRFIPanel();
                 target.add( rfiPanel );
+                if ( change.isCollapsed() ) {
+                    userRFIsPanel.refresh( target, change );
+                }
             } else if ( change.isUpdated() ) {
                 userRFIsPanel.refresh( target, change );
                 if ( change.isForProperty( "declined" )
@@ -114,6 +123,10 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
         } else {
             super.updateWith( target, change, updatables );
         }
+    }
+
+    public RFI getSelectedRFI() {
+        return selectedRFI;
     }
 
 }

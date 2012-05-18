@@ -444,7 +444,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
         WebMarkupContainer body = new IndicatorAwareWebContainer( "indicator", "spinner" );
         add( body );
-        addModalDialog( "dialog", "refresh-alert", body );
+        addModalDialog( "dialog", null, body );
         addForm( body );
         addPlanName();
         addChannelsLogo();
