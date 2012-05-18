@@ -41,4 +41,13 @@ public interface RFIForwardService extends GenericSqlService<RFIForward, Long> {
      * @return a list of forwards
      */
     List<RFIForward> select( Plan plan, RFISurvey rfiSurvey );
+
+    /**
+     * Find all forwards to a user of a survey.
+     *
+     * @param surveyedUsername a string
+     * @param rfiSurvey        a survey
+     * @return a list of RFI forwards
+     */
+    List<RFIForward> findForwardsTo( String surveyedUsername, RFISurvey rfiSurvey );
 }

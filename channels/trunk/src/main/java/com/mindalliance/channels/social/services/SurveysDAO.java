@@ -1,6 +1,7 @@
 package com.mindalliance.channels.social.services;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
@@ -228,7 +229,7 @@ public interface SurveysDAO {
     /**
      * Find all completed RFIs in a survey.
      *
-     * @param plan a plan
+     * @param plan      a plan
      * @param rfiSurvey a survey
      * @return a list of RFIs
      */
@@ -237,7 +238,7 @@ public interface SurveysDAO {
     /**
      * Find all completed RFIs in a survey.
      *
-     * @param plan a plan
+     * @param plan      a plan
      * @param rfiSurvey a survey
      * @return a list of RFIs
      */
@@ -246,7 +247,7 @@ public interface SurveysDAO {
     /**
      * Find all declined RFIs in a survey.
      *
-     * @param plan a plan
+     * @param plan      a plan
      * @param rfiSurvey a survey
      * @return a list of RFIs
      */
@@ -255,7 +256,7 @@ public interface SurveysDAO {
     /**
      * Find all RFI forwardings in a survey.
      *
-     * @param plan a plan
+     * @param plan      a plan
      * @param rfiSurvey a survey
      * @return a list of rfi forwards
      */
@@ -272,4 +273,20 @@ public interface SurveysDAO {
      * @return a list of string (the new emails the RFI has been forwarded to
      */
     List<String> forwardRFI( Plan plan, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message );
+
+    /**
+     * Find the user who forwarded an RFI.
+     *
+     * @param rfiForward an RFI forwarding
+     * @return a user info
+     */
+    ChannelsUserInfo getForwarder( RFIForward rfiForward );
+
+    /**
+     * Find all forwards to a given RFI.
+     *
+     * @param rfi an RFI
+     * @return a list of RFI forwards
+     */
+    List<RFIForward> getForwardingsOf( RFI rfi );
 }

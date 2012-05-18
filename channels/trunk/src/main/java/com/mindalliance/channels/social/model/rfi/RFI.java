@@ -1,5 +1,7 @@
 package com.mindalliance.channels.social.model.rfi;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
@@ -458,7 +460,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
     private String getNewRFIContent( Format format, PlanService planService, SurveysDAO surveysDAO ) {
         // ignore format
         Plan plan = planService.getPlan();
-        StringBuilder sb = new StringBuilder( );
+        StringBuilder sb = new StringBuilder();
         sb.append( "You are invited to participate in a survey to help define the \"" )
                 .append( plan.getName() )
                 .append( "\" information sharing plan.\n\n" );
@@ -475,11 +477,47 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         sb.append( "\n---------------------------------\n" )
                 .append( getLabel( planService ) )
                 .append( "---------------------------------\n\n" );
-        // todo
         // survey link
-        // login instruction if new user
-        // forwarded by
+        String link = makeURL( plan);
+        sb.append( "You can access the survey here " )
+                .append( link )
+                .append( "\n\n" );
+        // New account login instructions
+        ChannelsUser surveyedUser = planService.getUserDao().getUserNamed( getSurveyedUsername() );
+        if ( surveyedUser != null ) {
+            String newPassword = surveyedUser.getUserInfo().getGeneratedPassword();
+            if ( newPassword != null ) {
+                sb.append( "A participant account was created for you to participate in this information sharing plan.\n\n Use your email address " )
+                        .append( surveyedUser.getEmail() )
+                        .append( " as user id and password " )
+                        .append( newPassword )
+                        .append( " to login into Channels. You can change your password once logged in.\n\n" );
+            }
+        }
+        // forwarding
+        List<RFIForward> rfiForwards = surveysDAO.getForwardingsOf( this );
+        if ( !rfiForwards.isEmpty() ) {
+            sb.append( "This survey was forwarded to you by:\n\n " );
+            for ( RFIForward rfiForward : rfiForwards ) {
+                ChannelsUserInfo forwarder = surveysDAO.getForwarder( rfiForward );
+                if ( forwarder != null ) {
+                    sb.append( forwarder.getFullName() )
+                            .append( " at " )
+                            .append( forwarder.getEmail() )
+                            .append( "\n" );
+                }
+                if ( !rfiForward.getMessage().isEmpty() ) {
+                    sb.append( "with this message: \"" )
+                            .append( rfiForward.getMessage() )
+                            .append( "\"\n" );
+                }
+            }
+        }
         return sb.toString();
+    }
+
+    private String makeURL( Plan plan ) {
+        return "some URL"; // todo
     }
 
 

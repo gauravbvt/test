@@ -64,9 +64,14 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
     private String email = "";
 
     /**
-     * The password.
+     * The hash-encoded password.
      */
     private String password;
+
+    /**
+     * Clear password generated when automatically creating a user.
+     */
+    private String generatedPassword;
 
     /**
      * The fullName.
@@ -246,6 +251,14 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     public void setDigestedPassword( String passwordDigest ) {
         this.password = passwordDigest;
+    }
+
+    public String getGeneratedPassword() {
+        return generatedPassword;
+    }
+
+    public void setGeneratedPassword( String generatedPassword ) {
+        this.generatedPassword = generatedPassword;
     }
 
     public List<PlanParticipation> getPlanParticipations() {

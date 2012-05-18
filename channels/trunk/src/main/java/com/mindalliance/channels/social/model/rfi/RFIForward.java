@@ -29,10 +29,6 @@ public class RFIForward extends AbstractPersistentPlanObject {
 
     private boolean notified;
 
-    /**
-     * Password created for new user.
-     */
-    private String forwardedToPassword;
 
     @ManyToOne
     private RFI rfi;
@@ -72,7 +68,7 @@ public class RFIForward extends AbstractPersistentPlanObject {
     }
 
     public String getMessage() {
-        return message;
+        return message == null ? "" : message;
     }
 
     public void setMessage( String message ) {
@@ -87,11 +83,4 @@ public class RFIForward extends AbstractPersistentPlanObject {
         this.notified = notified;
     }
 
-    public String getForwardedToPassword() {
-        return forwardedToPassword;
-    }
-
-    public void setForwardedToPassword( String forwardedToPassword ) {
-        this.forwardedToPassword = forwardedToPassword;
-    }
 }

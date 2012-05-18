@@ -72,7 +72,7 @@ public class ProceduresData {
         this.plan = plan;
         this.planService = planService;
         this.planParticipationService = planParticipationService;
-        this.actors = new ArrayList<Actor>(  );
+        this.actors = new ArrayList<Actor>();
         actors.add( actor );
     }
 
@@ -96,7 +96,7 @@ public class ProceduresData {
         return agentDataList;
     }
 
-    private List<Actor> getActors( List<PlanParticipation> participations )  {
+    private List<Actor> getActors( List<PlanParticipation> participations ) {
         List<Actor> participatingActors = new ArrayList<Actor>();
         for ( PlanParticipation participation : participations ) {
             Actor actor = participation.getActor( planService );
@@ -122,21 +122,21 @@ public class ProceduresData {
         if ( procedures == null ) {
             procedures = new ArrayList<ProcedureData>();
             Commitments allCommitments = planService.getAllCommitments( true, false );
-            Set<Assignment> assignments = new HashSet<Assignment>(  );
+            Set<Assignment> assignments = new HashSet<Assignment>();
             for ( Actor actor : actors ) {
                 for ( Assignment assignment : getActorAssignments( actor ) ) {
                     assignments.add( assignment );
                 }
-        }
+            }
             for ( Assignment assignment : assignments ) {
-                    procedures.add( new ProcedureData(
-                            assignment,
-                            allCommitments.benefiting( assignment ),
-                            allCommitments.committing( assignment ),
-                            planService,
-                            planParticipationService,
-                            user ) );
-                }
+                procedures.add( new ProcedureData(
+                        assignment,
+                        allCommitments.benefiting( assignment ),
+                        allCommitments.committing( assignment ),
+                        planService,
+                        planParticipationService,
+                        user ) );
+            }
         }
         return procedures;
     }

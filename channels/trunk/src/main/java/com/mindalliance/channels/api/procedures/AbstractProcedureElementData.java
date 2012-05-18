@@ -37,7 +37,7 @@ abstract public class AbstractProcedureElementData {
             Assignment assignment,
             PlanService planService,
             PlanParticipationService planParticipationService,
-            ChannelsUser user) {
+            ChannelsUser user ) {
         this.assignment = assignment;
         this.planService = planService;
         this.planParticipationService = planParticipationService;
@@ -65,6 +65,6 @@ abstract public class AbstractProcedureElementData {
     }
 
     protected String getUsername() {
-        return user.getUsername();
+        return user == null ? null : user.getUsername();
     }
 }

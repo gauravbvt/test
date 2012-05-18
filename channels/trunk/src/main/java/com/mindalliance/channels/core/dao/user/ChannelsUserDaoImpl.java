@@ -159,18 +159,24 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
     }
 
     @Override
-    public String makeNewUserFromEmail( String email ) {
-        if ( !ChannelsUtils.isValidEmailAddress( email )
-                || getUserNamed( email ) != null ) return null;
-        String newUsername = makeNewUsernameFromEmail( email );
-        String password = makeNewPassword();
-        try {
-            ChannelsUser newUser = createUser( newUsername, email );
-            newUser.getUserInfo().setPassword( password );
-            return password;
-        } catch ( DuplicateKeyException e ) {
-            LOG.warn( "Failed to create new user " + email, e );
-            return null;
+    public ChannelsUserInfo getOrMakeUserFromEmail( String email ) {
+        ChannelsUser userFromEmail = getUserNamed( email );
+        if ( userFromEmail != null ) {
+            return userFromEmail.getUserInfo();
+        } else {
+            if ( !ChannelsUtils.isValidEmailAddress( email ) ) return null;
+            String newUsername = makeNewUsernameFromEmail( email );
+            String password = makeNewPassword();
+            try {
+                ChannelsUser newUser = createUser( newUsername, email );
+                ChannelsUserInfo userInfo = newUser.getUserInfo();
+                userInfo.setPassword( password );
+                userInfo.setGeneratedPassword( password );
+                return userInfo;
+            } catch ( DuplicateKeyException e ) {
+                LOG.warn( "Failed to create new user " + email, e );
+                return null;
+            }
         }
     }
 
@@ -187,7 +193,7 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
                 username = candidate + i;
                 i++;
             }
-        } while (!success);
+        } while ( !success );
         return username;
     }
 

@@ -122,7 +122,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
                 actor,
                 getPlanService() );
         for ( PlanParticipation participation : participations ) {
-            if ( !getUsername().equals( participation.getParticipant().getUsername() ) ) {
+            if ( getUsername() == null || !getUsername().equals( participation.getParticipantUsername() ) ) {
                 otherParticipations.add( participation );
             }
         }

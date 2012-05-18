@@ -359,7 +359,11 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     public static <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
-            String id, String target, Class<T> pageClass, PopupSettings popupSettings, Plan plan ) {
+            String id,
+            String target,
+            Class<T> pageClass,
+            PopupSettings popupSettings,
+            Plan plan ) {
 
         BookmarkablePageLink<T> link = new BookmarkablePageLink<T>( id, pageClass );
         addPlanParameters( link, plan );
@@ -371,7 +375,11 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     public static <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
-            String id, String target, Class<T> pageClass, PageParameters parameters, PopupSettings popupSettings,
+            String id,
+            String target,
+            Class<T> pageClass,
+            PageParameters parameters,
+            PopupSettings popupSettings,
             Plan plan ) {
 
         BookmarkablePageLink<T> link = newTargetedLink( id, target, pageClass, popupSettings, plan );
@@ -574,7 +582,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     // Modalable
 
     public void addModalDialog( String id, String cookieName, MarkupContainer container ) {
-        dialogWindow = new ModalWindow( id );
+        dialogWindow = new ModalWindow( id ) /*{
+            @Override
+            protected ResourceReference newCssResource() {
+                return null;
+            }
+        }*/;
         dialogWindow.setOutputMarkupId( true );
         dialogWindow.setResizable( true );
         dialogWindow.setContent(

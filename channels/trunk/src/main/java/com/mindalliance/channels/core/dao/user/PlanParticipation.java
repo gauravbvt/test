@@ -63,4 +63,8 @@ public class PlanParticipation extends AbstractPersistentPlanObject {
     public boolean isObsolete( QueryService queryService ) {
         return getActor( queryService ) == null;
     }
+
+    public String getParticipantUsername() {
+        return getParticipant().getUsername();
+    }
 }

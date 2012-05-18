@@ -73,8 +73,26 @@ public class RFIForwardServiceImpl extends GenericSqlServiceImpl<RFIForward, Lon
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        RFIForward forward = (RFIForward)object;
-                        return forward.getRfi().getRfiSurvey().equals(  rfiSurvey );
+                        RFIForward forward = (RFIForward) object;
+                        return forward.getRfi().getRfiSurvey().equals( rfiSurvey );
+                    }
+                }
+        );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    @Transactional( readOnly = true )
+    public List<RFIForward> findForwardsTo( String surveyedUsername, final RFISurvey rfiSurvey ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "surveyedUsername", surveyedUsername ) );
+        return (List<RFIForward>) CollectionUtils.select(
+                criteria.list(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (RFIForward) object ).getRfi().getRfiSurvey().equals( rfiSurvey );
                     }
                 }
         );
