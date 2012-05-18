@@ -7,6 +7,8 @@
  * Time: 02:28:36 PM
  */
 
+@import url('modal.css');
+
 /* Display - None */
 div.about {
 	display:none;
@@ -1032,22 +1034,27 @@ tbody th a {
     border-bottom: 1px dotted #4F2D87;
 }
 
-a.more {
-    border:1px solid #C7C8CA;
-    color:#666666;
-    padding:0 3px 0 14px;
-    font-size:11px;
-    /* text-transform:lowercase;*/
+a.more,
+a.less,
+a.window {
+	border:1px solid #C7C8CA;
+	color:#666666;
+	padding:0 3px 0 14px;
+	font-size:10px;
+	font-family: Verdana, Geneva, sans-serif;
+	text-transform: uppercase;
+	font-weight: normal;
 }
 
 a.more {
-    background: url( '../images/link.more.png' ) no-repeat 2px 3px #DCDDDE;
+	background: url( '../images/link.more.png' ) no-repeat 2px 3px #DCDDDE;
 }
 
 a.more:hover {
-    border:1px solid #999999;
-    color:#333333;
+	border:1px solid #999999;
+	color:#333333;
 }
+
 
 /* ----- Tabs ----- */
 

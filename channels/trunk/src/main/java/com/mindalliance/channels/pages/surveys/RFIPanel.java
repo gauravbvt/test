@@ -121,24 +121,24 @@ public class RFIPanel extends AbstractUpdatablePanel {
         int percent = surveysDAO.getPercentCompletion( rfi );
         StringBuilder sb = new StringBuilder();
         sb.append( percent )
-                .append( "% done: " );
+                .append( "% done" );
         if ( requiredQuestionsCount != 0 ) {
-            sb.append( "Missing " )
+            sb.append( "  |  Missing " )
                     .append( requiredQuestionsCount - requiredAnswersCount )
                     .append( " out of " )
                     .append( requiredQuestionsCount )
                     .append( " required " )
                     .append( requiredQuestionsCount > 1 ? "answers" : "answer" )
-                    .append( ". " );
+                    .append( " " );
         }
         if ( optionalQuestionsCount != 0 ) {
-            sb.append( "Missing " )
+            sb.append( "  |  Missing " )
                     .append( optionalQuestionsCount - optionalAnswersCount )
                     .append( " out of " )
                     .append( optionalQuestionsCount )
                     .append( " optional " )
                     .append( optionalQuestionsCount > 1 ? "answers" : "answer" )
-                    .append( "." );
+                    .append( " " );
         }
         return sb.toString();
     }
@@ -209,7 +209,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
         };
         declineButton.add( new AttributeModifier(
                 "value",
-                new Model<String>( getRFI().isDeclined() ? "Accept survey" : "Decline survey..." ) ) );
+                new Model<String>( getRFI().isDeclined() ? "Accept survey" : "Decline survey" ) ) );
         declineButton.setOutputMarkupId( true );
         rfiContainer.addOrReplace( declineButton );
 

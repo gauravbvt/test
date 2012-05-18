@@ -7,13 +7,13 @@
         lang="en">
 <body>
 <wicket:extend>
-    <div wicket:id="multiChoicesContainer">
-        <span wicket:id="multiChoices">
+    <div class="multi-choices" wicket:id="multiChoicesContainer">
+        <div wicket:id="multiChoices">
             <input wicket:id="check" type="checkbox"/>
             <span wicket:id="choice">choice</span>
-        </span>
+        </div>
     </div>
-    <div wicket:id="singleChoiceContainer">
+    <div class="single-choice" wicket:id="singleChoiceContainer">
         <span wicket:id="singleChoice"></span>
         <a wicket:id="deselect">Deselect answer</a>
     </div>

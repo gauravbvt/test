@@ -1,3 +1,5 @@
+@import url('modal.css');
+
 body {
     font-size: 9pt;
     margin: 0;
@@ -2832,7 +2834,7 @@ a.window {
 	color:#666666;
 	padding:0 3px 0 14px;
 	font-size:10px;
-	font-family: Verdana;
+	font-family: Verdana, Geneva, sans-serif;
 	text-transform: uppercase;
 }
 

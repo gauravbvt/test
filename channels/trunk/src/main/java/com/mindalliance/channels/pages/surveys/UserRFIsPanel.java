@@ -315,7 +315,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
             columns.add( makeColumn( "Deadline", "shortTimeLeft", "@timeLeftStyle", EMPTY, "longTimeLeft" ) );
             columns.add( makeColumn( "Progress", "completionPercent", "percent", EMPTY, "answersRequired" ) );
             columns.add( makeColumn( "Forwarded to", "forwardedToCount", null, EMPTY, "forwardedTo" ) );
-            columns.add( makeExpandLinkColumn( "", "", "open..." ) );
+            columns.add( makeExpandLinkColumn( "", "", "open" ) );
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "rfis",
                     columns,
