@@ -36,6 +36,7 @@ import com.mindalliance.channels.pages.reports.guidelines.AllGuidelinesPage;
 import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
+import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -214,6 +215,7 @@ public class Channels extends WebApplication
         mountPage( "segment.xml", ExportPage.class );
         mountPage( "geomap", GeoMapPage.class );
         mountPage( "home", UserPage.class );
+        mountPage( "surveys", RFIsPage.class );
 
         mountResource( "uploads/${name}", new PngReference( UploadedImage.class ) );
         mountResource( "icons/${name}", new PngReference( IconPng.class ) );

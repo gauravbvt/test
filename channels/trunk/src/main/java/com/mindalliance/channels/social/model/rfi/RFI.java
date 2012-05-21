@@ -288,7 +288,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
     private List<String> allNotifications() {
         return notifications == null
                 ? new ArrayList<String>()
-                : Arrays.asList( notifications.split( "," ) );
+                : new ArrayList<String>( Arrays.asList( notifications.split( "," ) ) );
     }
 
     public void addNotification( String notification ) {
@@ -331,7 +331,8 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
     @Override
     public String getToUsername( String topic ) {
         if ( topic.equals( NAG )
-                || topic.equals( DEADLINE ) )
+                || topic.equals( DEADLINE )
+                || topic.equals( NEW ) )
             return getSurveyedUsername();
         else
             throw new RuntimeException( "Unknown topic " + topic );
@@ -341,7 +342,8 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
     @Override
     public String getFromUsername( String topic ) {
         if ( topic.equals( NAG )
-                || topic.equals( DEADLINE ) ) return null;
+                || topic.equals( DEADLINE )
+                || topic.equals( NEW ) ) return null;
         else
             throw new RuntimeException( "Unknown topic " + topic );
     }
@@ -461,37 +463,37 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         // ignore format
         Plan plan = planService.getPlan();
         StringBuilder sb = new StringBuilder();
-        sb.append( "You are invited to participate in a survey to help define the \"" )
+        sb.append( plan.getClient() );
+        sb.append( " has invited to participate in a survey about the \"" )
                 .append( plan.getName() )
                 .append( "\" information sharing plan.\n\n" );
         if ( !plan.getDescription().isEmpty() ) {
             sb.append( "About the plan: " )
                     .append( plan.getDescription() )
                     .append( "\n" );
-            if ( plan.getLocale() != null ) {
-                sb.append( "Targeted location: " )
-                        .append( plan.getLocale().getName() )
-                        .append( "\n" );
-            }
         }
-        sb.append( "\n---------------------------------\n" )
-                .append( getLabel( planService ) )
-                .append( "---------------------------------\n\n" );
-        // survey link
-        String link = makeURL( plan);
-        sb.append( "You can access the survey here " )
-                .append( link )
+        if ( plan.getLocale() != null ) {
+            sb.append( "Targeted location: " )
+                    .append( plan.getLocale().getName() )
+                    .append( "\n" );
+        }
+        sb.append( "\n" );
+        sb.append( getLabel( planService ) ).append( "\n" );
+        sb.append( "can be accessed here: " )
+                .append( surveysDAO.makeURL( planService, this ) )
                 .append( "\n\n" );
         // New account login instructions
         ChannelsUser surveyedUser = planService.getUserDao().getUserNamed( getSurveyedUsername() );
         if ( surveyedUser != null ) {
+            sb.append( "To access the survey, login with your email address " )
+                    .append( surveyedUser.getEmail() );
             String newPassword = surveyedUser.getUserInfo().getGeneratedPassword();
             if ( newPassword != null ) {
-                sb.append( "A participant account was created for you to participate in this information sharing plan.\n\n Use your email address " )
-                        .append( surveyedUser.getEmail() )
-                        .append( " as user id and password " )
+                sb.append( " and use password " )
                         .append( newPassword )
-                        .append( " to login into Channels. You can change your password once logged in.\n\n" );
+                        .append( "\n\n" );
+            } else {
+                sb.append( "." );
             }
         }
         // forwarding
@@ -513,12 +515,9 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
                 }
             }
         }
+        sb.append( "\nThank you,\n" );
+        sb.append( plan.getClient() );
         return sb.toString();
     }
-
-    private String makeURL( Plan plan ) {
-        return "some URL"; // todo
-    }
-
 
 }

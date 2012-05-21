@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.dao.user;
 import com.mindalliance.channels.core.dao.DuplicateKeyException;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.springframework.mail.MailSender;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -129,9 +130,10 @@ public interface ChannelsUserDao extends GenericSqlService<ChannelsUserInfo, Lon
     String getFullName( String username );
 
     /**
-     * Get or create a new user given an email address.
+     * Get or create a new user authorized for a plan given an email address.
      * @param email a string
+     * @param queryService a query service
      * @return a clear password or null if user creation failed
      */
-    ChannelsUserInfo getOrMakeUserFromEmail( String email );
+    ChannelsUserInfo getOrMakeUserFromEmail( String email, QueryService queryService );
 }

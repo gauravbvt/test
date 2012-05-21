@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.dao.user;
 import com.mindalliance.channels.core.dao.DuplicateKeyException;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -159,25 +160,34 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
     }
 
     @Override
-    public ChannelsUserInfo getOrMakeUserFromEmail( String email ) {
+    public ChannelsUserInfo getOrMakeUserFromEmail( String email, QueryService queryService ) {
+        ChannelsUserInfo userInfo = null;
         ChannelsUser userFromEmail = getUserNamed( email );
         if ( userFromEmail != null ) {
-            return userFromEmail.getUserInfo();
+            userInfo = userFromEmail.getUserInfo();
         } else {
             if ( !ChannelsUtils.isValidEmailAddress( email ) ) return null;
             String newUsername = makeNewUsernameFromEmail( email );
             String password = makeNewPassword();
             try {
                 ChannelsUser newUser = createUser( newUsername, email );
-                ChannelsUserInfo userInfo = newUser.getUserInfo();
+                userInfo = newUser.getUserInfo();
                 userInfo.setPassword( password );
                 userInfo.setGeneratedPassword( password );
-                return userInfo;
             } catch ( DuplicateKeyException e ) {
                 LOG.warn( "Failed to create new user " + email, e );
                 return null;
             }
         }
+        // Ensure user is authorized for plan in at least USER role
+        String planUri = queryService.getPlan().getUri();
+        if ( !( userInfo.isPlanner( planUri ) || userInfo.isUser( planUri ) ) ) {
+            userInfo.setAuthorities(
+                    ChannelsUserInfo.ROLE_USER,
+                    planUri,
+                    queryService.getPlanManager().getPlans() );
+        }
+        return userInfo;
     }
 
     private String makeNewUsernameFromEmail( String email ) {

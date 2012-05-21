@@ -7,6 +7,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.rfi.RFI;
+import com.mindalliance.channels.social.services.RFIService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -14,6 +15,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
 
@@ -34,6 +36,9 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
      */
     private ModalWindow dialogWindow;
     private UserRFIsPanel userRFIsPanel;
+    public static final String RFI_PARM = "rfi";
+    @SpringBean
+    private RFIService rfiService;
 
     public RFIsPage() {
         this( new PageParameters() );
@@ -41,10 +46,22 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
 
     public RFIsPage( PageParameters parameters ) {
         super( parameters );
+        processParameters( parameters );
         init();
     }
 
+    private void processParameters( PageParameters parameters ) {
+        String rfiId = parameters.get( RFI_PARM ).toString();
+        if ( rfiId != null ) {
+            Long id = Long.parseLong( rfiId );
+            if ( id != null ) {
+                selectedRFI = rfiService.load( id );
+            }
+        }
+    }
+
     private void init() {
+
         addHeading();
         addModalDialog( "dialog", null, this );
         addUserRFIsPanel();
@@ -63,7 +80,7 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
     }
 
     private void addUserRFIsPanel() {
-        userRFIsPanel = new UserRFIsPanel( "rfis", new PropertyModel<RFI>( this, "selectedRFI"  ) );
+        userRFIsPanel = new UserRFIsPanel( "rfis", new PropertyModel<RFI>( this, "selectedRFI" ) );
         addOrReplace( userRFIsPanel );
     }
 
@@ -83,7 +100,7 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
         if ( change.isForInstanceOf( RFI.class ) ) {
             if ( change.isExpanded() ) {
                 RFI rfi = (RFI) change.getSubject( getQueryService() );
-                if ( selectedRFI != null && rfi.equals(  selectedRFI ) ) {
+                if ( selectedRFI != null && rfi.equals( selectedRFI ) ) {
                     selectedRFI = null;
                 } else {
                     selectedRFI = rfi;

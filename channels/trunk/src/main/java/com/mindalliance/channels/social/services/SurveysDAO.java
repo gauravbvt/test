@@ -264,15 +264,16 @@ public interface SurveysDAO {
 
     /**
      * A user forwards and RFI to a list of valid email addresses.
+     * Must be called from a context where the plan is the current user's plan.
      *
-     * @param plan        a plan
-     * @param user        a user
+     * @param queryService a queryService
+     * @param user a user
      * @param rfi         an rfi
      * @param forwardedTo a list of strings
      * @param message     a string
      * @return a list of string (the new emails the RFI has been forwarded to
      */
-    List<String> forwardRFI( Plan plan, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message );
+    List<String> forwardRFI( QueryService queryService, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message );
 
     /**
      * Find the user who forwarded an RFI.
@@ -283,10 +284,19 @@ public interface SurveysDAO {
     ChannelsUserInfo getForwarder( RFIForward rfiForward );
 
     /**
-     * Find all forwards to a given RFI.
+     * Find all forwards to the RFI's target user of the RFI's survey.
      *
      * @param rfi an RFI
      * @return a list of RFI forwards
      */
     List<RFIForward> getForwardingsOf( RFI rfi );
+
+    /**
+     * Make url to point to an rfi.
+     *
+     * @param planService a plan service
+     * @param rfi  an RFI
+     * @return a string
+     */
+    String makeURL( PlanService planService, RFI rfi );
 }

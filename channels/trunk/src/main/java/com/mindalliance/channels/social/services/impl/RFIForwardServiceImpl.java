@@ -83,10 +83,10 @@ public class RFIForwardServiceImpl extends GenericSqlServiceImpl<RFIForward, Lon
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<RFIForward> findForwardsTo( String surveyedUsername, final RFISurvey rfiSurvey ) {
+    public List<RFIForward> findForwardsTo( String surveyedEmail, final RFISurvey rfiSurvey ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "surveyedUsername", surveyedUsername ) );
+        criteria.add( Restrictions.eq( "forwardToEmail", surveyedEmail ) );
         return (List<RFIForward>) CollectionUtils.select(
                 criteria.list(),
                 new Predicate() {

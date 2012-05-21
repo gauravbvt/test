@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class UserRFIsPanel extends AbstractUpdatablePanel {
 
-    private static final int MAX_ROWS = 5;
+    private static final int MAX_ROWS = 3;
 
     @SpringBean
     private SurveysDAO surveysDAO;
@@ -317,8 +317,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
 
         public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updatables ) {
             if ( change.isExpanded() ) {
-                initialize();
-                target.add( this );
+                 target.add( this );
             }
             super.updateWith( target, change, updatables );
         }

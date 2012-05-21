@@ -190,7 +190,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
             // to survey participants
             sendNags( planService );
             sendDeadlineApproachingNotifications( planService );
- //           sendNewRFIs( planService );
+            sendNewRFIs( planService );
         }
     }
 

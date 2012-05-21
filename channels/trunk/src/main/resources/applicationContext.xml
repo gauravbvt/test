@@ -187,7 +187,8 @@ CONFIGURATION NOTES:
     </bean>
 
     <bean id="planServiceFactory" class="com.mindalliance.channels.core.query.PlanServiceFactoryImpl"
-          destroy-method="destroy"/>
+          destroy-method="destroy">
+    </bean>
 
     <!-- Note: don't use planService directly... Use through the factory... Here for proper aspect initialization. -->
     <bean id="planService" class="com.mindalliance.channels.core.query.PlanService" scope="prototype" autowire="no">
@@ -196,7 +197,8 @@ CONFIGURATION NOTES:
         <constructor-arg ref="userDao"/>
         <constructor-arg ref="attachmentManager"/>
         <constructor-arg ref="planParticipationService"/>
-   </bean>
+        <property name="serverUrl" value="${server.url}"/>
+    </bean>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
         <property name="resourceLoaderPath" value="/WEB-INF/templates"/>

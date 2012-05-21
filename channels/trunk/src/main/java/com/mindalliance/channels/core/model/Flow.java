@@ -1039,11 +1039,12 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean isSatisfied() {
-        assert isNeed();
-        for ( Iterator<Flow> it = getTarget().receives(); it.hasNext(); ) {
-            Flow flow = it.next();
-            if ( flow.isSharing() && Matcher.same( getName(), flow.getName() ) )
-                return true;
+        if ( isNeed() ) {
+            for ( Iterator<Flow> it = getTarget().receives(); it.hasNext(); ) {
+                Flow flow = it.next();
+                if ( flow.isSharing() && Matcher.same( getName(), flow.getName() ) )
+                    return true;
+            }
         }
         return false;
     }
@@ -1054,8 +1055,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean isSatisfying() {
-        assert isCapability();
-        return ( (Connector) getTarget() ).externalFlows().hasNext()
+        return isCapability() && ( (Connector) getTarget() ).externalFlows().hasNext()
                 ||
                 CollectionUtils.exists(
                         IteratorUtils.toList( getSource().sends() ),

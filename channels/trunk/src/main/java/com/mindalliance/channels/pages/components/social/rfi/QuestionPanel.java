@@ -41,7 +41,6 @@ public class QuestionPanel extends AbstractUpdatablePanel {
 
     private Component answerOptionsPanel;
     private WebMarkupContainer constraintsContainer;
-    private WebMarkupContainer retirementContainer;
     private TextField<String> questionTextField;
     private DropDownChoice<Question.Type> typeChoice;
     private WebMarkupContainer requiredContainer;
@@ -53,6 +52,7 @@ public class QuestionPanel extends AbstractUpdatablePanel {
     private AjaxLink<String> deactivateIt;
     private AjaxLink<String> deleteIt;
     private AjaxLink<String> activateIt;
+    private WebMarkupContainer answeredContainer;
 
     public QuestionPanel( String id, IModel<Question> questionModel ) {
         super( id, questionModel );
@@ -64,6 +64,7 @@ public class QuestionPanel extends AbstractUpdatablePanel {
         addAnswerTypeChoice();
         addAnswerOptionsPanel();
         addConstraints();
+        addAnswered();
         addRetirement();
         updateFields();
     }
@@ -81,6 +82,7 @@ public class QuestionPanel extends AbstractUpdatablePanel {
         makeVisible( deactivateIt, getQuestion().isActivated() );
         makeVisible( deleteIt, canBeDeleted() );
         makeVisible( activateIt, !getQuestion().isActivated() );
+        makeVisible( answeredContainer, getQuestion().isAnswerable() );
     }
 
     private void updateFields( AjaxRequestTarget target ) {
@@ -223,13 +225,17 @@ public class QuestionPanel extends AbstractUpdatablePanel {
         constraintsContainer.add( multipleContainer );
     }
 
-    private void addRetirement() {
-        retirementContainer = new WebMarkupContainer( "retirementContainer" );
-        retirementContainer.setOutputMarkupId( true );
-        WebMarkupContainer answeredContainer = new WebMarkupContainer( "answeredContainer" );
+    private void addAnswered() {
+        answeredContainer = new WebMarkupContainer( "answeredContainer" );
+        answeredContainer.setOutputMarkupId( true );
         answeredContainer.setVisible( getQuestion().isAnswerable() );
-        retirementContainer.add( answeredContainer );
         answeredContainer.add( new Label( "answered", getAnsweredLabel() ) );
+        addOrReplace( answeredContainer );
+    }
+
+    private void addRetirement() {
+        WebMarkupContainer retirementContainer = new WebMarkupContainer( "retirementContainer" );
+        retirementContainer.setOutputMarkupId( true );
         // activate it
         activateIt = new AjaxLink<String>( "activateIt" ) {
             @Override

@@ -20,6 +20,8 @@ public class PlanService extends DefaultQueryService {
 
     private Plan plan;
 
+    private String serverUrl;
+
     public PlanService() {
     }
 
@@ -46,4 +48,13 @@ public class PlanService extends DefaultQueryService {
         this.plan = plan;
     }
 
- }
+    public String getServerUrl() {
+        return serverUrl;
+    }
+
+    public void setServerUrl( String serverUrl ) {
+        this.serverUrl = serverUrl;
+    }
+
+
+}

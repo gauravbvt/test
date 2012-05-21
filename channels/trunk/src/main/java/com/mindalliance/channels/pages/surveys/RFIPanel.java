@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.surveys;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -125,7 +126,8 @@ public class RFIPanel extends AbstractUpdatablePanel {
 
     private String getSentBy() {
         String sentBy = getRFI().getRfiSurvey().getUsername();
-        return "Sent by " + getUserFullName( sentBy );
+        return "A survey by planner "
+                + getUserFullName( sentBy );
     }
 
     private String getDeadlineText() {
@@ -253,7 +255,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
             } else if ( change.isForProperty( "forwarded" ) ) {
                 String emails = (String) change.getQualifier( "emails" );
                 String message = (String) change.getQualifier( "message" );
-                List<String> forwardedTo = forwardRFI( emails, message );
+                List<String> forwardedTo = forwardRFI( emails, message, getQueryService() );
                 if ( !forwardedTo.isEmpty() ) {
                     addHeader();
                     target.add( headerContainer );
@@ -265,7 +267,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
         super.updateWith( target, change, updatables );
     }
 
-    private List<String> forwardRFI( String emails, String message ) {
+    private List<String> forwardRFI( String emails, String message, QueryService queryService ) {
         Set<String> validatedEmails = new HashSet<String>();
         EmailValidator emailValidator = EmailValidator.getInstance();
         for ( String email : StringUtils.split( emails, "," ) ) {
@@ -273,7 +275,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
                 validatedEmails.add( email );
         }
         List<String> forwardedTo = new ArrayList<String>( validatedEmails );
-        return surveysDAO.forwardRFI( getPlan(), getUser(), getRFI(), forwardedTo, message );
+        return surveysDAO.forwardRFI( queryService, getUser(), getRFI(), forwardedTo, message );
     }
 
     private RFI getRFI() {

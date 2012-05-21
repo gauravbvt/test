@@ -86,7 +86,7 @@ public abstract class AbstractModelObjectReferencingPPO extends AbstractPersiste
         if ( mo != null ) {
             description = mo.getKindLabel() + " \"" + mo.getLabel() + "\"";
             if ( mo instanceof SegmentObject ) {
-                description += " in segment \"" + ( (SegmentObject) mo ).getSegment().getLabel() + "\"";
+                description += " in scenario \"" + ( (SegmentObject) mo ).getSegment().getLabel() + "\"";
             }
         }
         return description;
