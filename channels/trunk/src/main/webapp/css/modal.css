@@ -162,10 +162,13 @@ div.rfi-container {
 
 div.rfi-container div.header h3 {
     border-bottom: 1px solid #CCCCCC;
-    font-size: 16px;
-    line-height: 150%;
     margin: 0 0 10px;
     padding: 0 0 10px;
+}
+
+div.rfi-container div.header h3 div span {
+    font-size: 16px;
+    line-height: 150%;
 }
 
 div.rfi-container div.header div {
