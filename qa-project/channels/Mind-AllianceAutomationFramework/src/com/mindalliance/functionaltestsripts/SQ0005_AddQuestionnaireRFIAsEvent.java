@@ -1,9 +1,13 @@
 
 package com.mindalliance.functionaltestsripts;
 
+import java.util.List;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
@@ -48,10 +52,10 @@ public class SQ0005_AddQuestionnaireRFIAsEvent {
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				// Click on Questionnaire Tab
+				// Click on Add new Questionnaire button
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Questionnaire Tab Opened";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathQuestionnaireTab"))).click();
+				GlobalVariables.sDescription = "New Questionnaire Added";
+				GlobalVariables.oDriver.findElement(By.className("add-new-questionnaire")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -59,14 +63,7 @@ public class SQ0005_AddQuestionnaireRFIAsEvent {
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-
-				// Click on Add new Questionnaire button
-				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "New Questionnaire Added";
-				GlobalVariables.oDriver.findElement(By.className("add-new-questionnaire")).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
+				
 				// Enter the name of Questionnaire
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Enter Questionnaire name";
@@ -74,28 +71,60 @@ public class SQ0005_AddQuestionnaireRFIAsEvent {
 				GlobalVariables.oElement.click();
 				GlobalVariables.oElement.sendKeys("Questionnaire 1");
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
-//				//html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[3]/span/div/select
-				ApplicationFunctionLibrary.MouseOverAndClick("/html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[3]/span/div/select",GlobalVariables.viewElements.get("agents"));
-//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("dataCollection:content:tabs:panel:questionnaire:questionnaireManager:name:agent"));
-//				GlobalVariables.oElement.click();
+			    GlobalVariables.oElement.click();
+			    // Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Assertion: Verify that Named Questionnaire gets added
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionNewQuestionnaire")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Questionnaire 1")){
+								
+				// Select the RFI'S
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="Select QUESTIONNAIRE FOR RFI'S IS ABOUT 'EVENT'";
+				GlobalVariables.bIsSuccess=Boolean.FALSE;
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("dataCollection:content:tabs:panel:questionnaire:questionnaireManager:about")));
+				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
+			    for(WebElement option : options) {
+			    	if("events".equals(option.getText())){
+			    			option.setSelected();
+			    			GlobalVariables.bIsSuccess=Boolean.TRUE;
+			    			break;
+			    	}
+			    }
+			    if(GlobalVariables.bIsSuccess==Boolean.TRUE){
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+								
+				// Assertion: Verify that the RFI For 'this plan' gets selected
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="RFI for 'event'";
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionForRFIType")));
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Event")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
-				else{
-					GlobalVariables.sVerifyError="Verification failed Expected 'Questionnaire 1' Actual "+GlobalVariables.oElement.getText();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				}
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
@@ -107,6 +136,7 @@ public class SQ0005_AddQuestionnaireRFIAsEvent {
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";

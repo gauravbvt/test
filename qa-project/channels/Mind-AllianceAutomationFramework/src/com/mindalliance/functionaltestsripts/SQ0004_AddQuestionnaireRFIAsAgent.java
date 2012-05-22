@@ -67,9 +67,14 @@ public class SQ0004_AddQuestionnaireRFIAsAgent {
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Questionnaire Added";
 				GlobalVariables.oDriver.findElement(By.className("add-new-questionnaire")).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				
 				// Enter the name of Questionnaire
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Enter Questionnaire name";
@@ -78,46 +83,49 @@ public class SQ0004_AddQuestionnaireRFIAsAgent {
 				GlobalVariables.oElement.sendKeys("Questionnaire 1");
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 			    GlobalVariables.oElement.click();
+			    // Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
-				
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Assertion: Verify that Named Questionnaire gets added
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionNewQuestionnaire")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Questionnaire 1")){
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
-				else{
-					GlobalVariables.sVerifyError="Verification failed Expected 'Questionnaire 1' Actual "+GlobalVariables.oElement.getText();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				}
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
+								
 				// Select the RFI'S
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Select RFI'S";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("dataCollection:content:tabs:panel:questionnaire:questionnaireManager:about"));
-				GlobalVariables.oElement.click();
-			   // GlobalVariables.oElement.sendKeys(Keys.TAB);
+				GlobalVariables.sDescription="Select QUESTIONNAIRE FOR RFI'S IS ABOUT 'AGENT'";
+				GlobalVariables.bIsSuccess=Boolean.FALSE;
 				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("dataCollection:content:tabs:panel:questionnaire:questionnaireManager:about")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
-			    	if(GlobalVariables.testData.get("agents").equals(option.getText())){
-			    		GlobalVariables.bIsSuccess=Boolean.TRUE;
-			    		option.setSelected();
-			    		break;
+			    	if("agents".equals(option.getText())){
+			    			option.setSelected();
+			    			GlobalVariables.bIsSuccess=Boolean.TRUE;
+			    			break;
 			    	}
 			    }
 			    if(GlobalVariables.bIsSuccess==Boolean.TRUE){
 			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+				
+				// Assertion: Verify that the RFI For 'this plan' gets selected
+				GlobalVariables.iStepNo++;
+				GlobalVariables.sDescription="RFI for 'Agents'";
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionForRFIType")));
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Agents")){
+					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
@@ -139,6 +147,7 @@ public class SQ0004_AddQuestionnaireRFIAsAgent {
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				
 				// Call logout()
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Logout is successful";
