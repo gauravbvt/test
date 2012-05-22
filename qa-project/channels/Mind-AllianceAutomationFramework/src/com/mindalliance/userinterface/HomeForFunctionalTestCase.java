@@ -38,7 +38,7 @@ import com.mindalliance.globallibrary.ReportFunctions;
 
 public class HomeForFunctionalTestCase extends JFrame implements ActionListener, ItemListener {
 	
-	boolean clFlag=true,hpFlag=true,caFlag=true,dcFlag=true,ceFlag=true,cpFlag=true,psFlag=true,tfFlag=true,teFlag=true,isgFlag=true,ifmFlag=true,acFlag=true,lfFlag=true,misgFlag=true,isrFlag=true;
+	boolean clFlag=true,hpFlag=true,caFlag=true,dcFlag=true,ceFlag=true,cpFlag=true,psFlag=true,tfFlag=true,teFlag=true,isgFlag=true,ifmFlag=true,acFlag=true,lfFlag=true,misgFlag=true,isrFlag=true,sqFlag=true;
 	private static final long serialVersionUID = 1L;
 	private static int jListCount=0;
 	private static int cnt;
@@ -73,6 +73,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	private JCheckBox jCheckBoxLockFunctionality;
 	private JCheckBox jCheckBoxInfoGuidelines;
 	private JCheckBox jCheckBoxIssueReportSummary;
+	private JCheckBox jCheckBoxSurveyQuestionnaire;
 	private JLabel jLabelNumberOfTestCasesExecuted;
 	private JLabel jLabelStartDateTime;
 	private JLabel jLabelEndDateTime;
@@ -156,6 +157,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		add(getJCheckBox13(), new Constraints(new Leading(100, 960, 850), new Leading(270, 10, 10)));
 		add(getJCheckBox14(), new Constraints(new Leading(100, 970, 850), new Leading(290, 10, 10)));
 		add(getJCheckBox15(), new Constraints(new Leading(100, 990, 850), new Leading(310, 10, 10)));
+		add(getJCheckBox16(), new Constraints(new Leading(100, 1011, 850), new Leading(330, 10, 10)));
 	
 		setSize(1356, 698);
 	}
@@ -494,6 +496,15 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxIssueReportSummary;
 	}
+	
+	private JCheckBox getJCheckBox16(){
+		if(jCheckBoxSurveyQuestionnaire == null){
+			jCheckBoxSurveyQuestionnaire = new JCheckBox();
+			jCheckBoxSurveyQuestionnaire.setText("Survey and Questionnaire");
+			jCheckBoxSurveyQuestionnaire.addItemListener(this);
+		}
+		return jCheckBoxSurveyQuestionnaire;
+	}
 
 	// JList
 	private JList getJList3() {
@@ -544,7 +555,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	}
 	private Component getJListModified0(String textCaseName) {
 		int j=0;
-		arrayOfTestCaseIdNew=new String[500];
+		arrayOfTestCaseIdNew=new String[600];
 		for(int i=0;i<jListCount;i++){
 			if(!(arrayOfTestCaseIdOld[i].substring(0,2).equals(textCaseName))){
 				arrayOfTestCaseIdNew[j++]=arrayOfTestCaseIdOld[i];
@@ -936,6 +947,17 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				else{
 					jScrollPane0.setViewportView(getJListModified0("IS"));
 					isrFlag=true;
+				}
+			}
+			
+			else if(chk.getText().equalsIgnoreCase("Survey_And_Questionnaire")){
+				if(chk.isSelected() && sqFlag==true){
+					jScrollPane0.setViewportView(getJList0(19));
+					sqFlag=false;
+				}
+				else{
+					jScrollPane0.setViewportView(getJListModified0("SQ"));
+					sqFlag=true;
 				}
 			}
 
