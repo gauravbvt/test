@@ -138,6 +138,8 @@ public class GenericFunctionLibrary {
 			GlobalVariables.home.put("sXpathFeedbackSend",oXmlEleHomePage.getElementsByTagName("xPathFeedbackSend").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathHideShowAllSurvey",oXmlEleHomePage.getElementsByTagName("xPathHideShowAllSurvey").item(0).getChildNodes().item(0).getNodeValue());
 			//Channels Plan Page
+			GlobalVariables.plan.put("sXpathDeleteQuestionnaire",oXmlElePlanPage.getElementsByTagName("xPathDeleteQuestionnaire").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathQuestionnaireTab",oXmlElePlanPage.getElementsByTagName("xPathQuestionnaireTab").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathAddNewIssuseSegmentMenu",oXmlElePlanPage.getElementsByTagName("xPathAddNewIssuseSegmentMenu").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathLocaleViewAllTypes",oXmlElePlanPage.getElementsByTagName("xPathLocaleViewAllTypes").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathCollebrationSentReceiveMessageLink",oXmlElePlanPage.getElementsByTagName("xPathCollebrationSentReceiveMessageLink").item(0).getChildNodes().item(0).getNodeValue());
@@ -329,6 +331,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathWhenTabOfReceiversOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathWhenTabOfReceiversOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathHowManyOfReceiversOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathHowManyOfReceiversOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
+			GlobalVariables.assertion.put("sXpathAssertionNewQuestionnaire",oXmlElePlanPage.getElementsByTagName("xPathAssertionNewQuestionnaire").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionReceivesInfoNewMedium",oXmlElePlanPage.getElementsByTagName("xPathAssertionReceivesInfoNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionSendInfoNewMedium",oXmlElePlanPage.getElementsByTagName("xPathAssertionSendInfoNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXPathAssertionRemoveRequirement",oXmlElePlanPage.getElementsByTagName("xPathAssertionRemoveRequirement").item(0).getChildNodes().item(0).getNodeValue());
