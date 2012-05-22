@@ -63,7 +63,7 @@ public class SQ0004_AddQuestionnaireRFIAsAgent {
 				Thread.currentThread();
 				Thread.sleep(2000);
 
-				// Click on Add new Questionnaire button
+     			// Click on Add new Questionnaire button
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Questionnaire Added";
 				GlobalVariables.oDriver.findElement(By.className("add-new-questionnaire")).click();
@@ -77,10 +77,7 @@ public class SQ0004_AddQuestionnaireRFIAsAgent {
 				GlobalVariables.oElement.click();
 				GlobalVariables.oElement.sendKeys("Questionnaire 1");
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
-//				//html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[3]/span/div/select
-//				ApplicationFunctionLibrary.MouseOverAndClick("/html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[3]/span/div/select",GlobalVariables.viewElements.get("agents"));
-//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("dataCollection:content:tabs:panel:questionnaire:questionnaireManager:name:"));
-//				GlobalVariables.oElement.click();
+			    GlobalVariables.oElement.click();
 				// WebElement Synchronization
 				
 				Thread.currentThread();
@@ -104,14 +101,13 @@ public class SQ0004_AddQuestionnaireRFIAsAgent {
 				Thread.currentThread();
 				Thread.sleep(3000);
 				
-				// Select the 
+				// Select the RFI'S
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Enter Questionnaire name";
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("dataCollection:content:tabs:panel:questionnaire:questionnaireManager:name"));
+				GlobalVariables.sDescription="Select RFI'S";
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("dataCollection:content:tabs:panel:questionnaire:questionnaireManager:about"));
 				GlobalVariables.oElement.click();
-				GlobalVariables.oElement.sendKeys("Questionnaire 1");
-				GlobalVariables.oElement.sendKeys(Keys.TAB);
-				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("dataCollection:content:tabs:panel:questionnaire:questionnaireManager:name")));
+			   // GlobalVariables.oElement.sendKeys(Keys.TAB);
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("dataCollection:content:tabs:panel:questionnaire:questionnaireManager:about")));
 				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
 			    for(WebElement option : options) {
 			    	if(GlobalVariables.testData.get("agents").equals(option.getText())){
