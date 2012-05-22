@@ -15,7 +15,6 @@ import com.mindalliance.globallibrary.ReportFunctions;
 public class MAV0009_viewAboutPlanWindow
 {
 	public MAV0009_viewAboutPlanWindow(){
-		
 		try {
 			GlobalVariables.sTestCaseId = "MAV0009_viewAboutPlanWindow";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
