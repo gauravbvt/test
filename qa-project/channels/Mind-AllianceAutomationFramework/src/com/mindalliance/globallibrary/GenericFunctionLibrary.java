@@ -331,6 +331,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.plan.put("sXpathWhenTabOfReceiversOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathWhenTabOfReceiversOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathHowManyOfReceiversOfRequirement",oXmlElePlanPage.getElementsByTagName("xPathHowManyOfReceiversOfRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			// Assertions
+			GlobalVariables.assertion.put("sXpathAssertionForRFIType",oXmlElePlanPage.getElementsByTagName("xPathAssertionForRFIType").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionNewQuestionnaire",oXmlElePlanPage.getElementsByTagName("xPathAssertionNewQuestionnaire").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionReceivesInfoNewMedium",oXmlElePlanPage.getElementsByTagName("xPathAssertionReceivesInfoNewMedium").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionSendInfoNewMedium",oXmlElePlanPage.getElementsByTagName("xPathAssertionSendInfoNewMedium").item(0).getChildNodes().item(0).getNodeValue());
