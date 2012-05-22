@@ -9,6 +9,7 @@ import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.UserMessage;
 import com.mindalliance.channels.social.services.FeedbackService;
 import com.mindalliance.channels.social.services.UserMessageService;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -49,10 +50,24 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
     private AjaxLink<String> resetButton;
     private WebMarkupContainer repliesContainer;
     private boolean showProfile;
+    private boolean canResolve;
+    private WebMarkupContainer resolvedContainer;
 
-    public FeedbackDiscussionPanel( String id, Model<Feedback> feedbackModel, boolean showProfile ) {
+    public FeedbackDiscussionPanel(
+            String id,
+            Model<Feedback> feedbackModel,
+            boolean showProfile ) {
+        this( id, feedbackModel, showProfile, false );
+    }
+
+    public FeedbackDiscussionPanel(
+            String id,
+            Model<Feedback> feedbackModel,
+            boolean showProfile,
+            boolean canResolve) {
         super( id, feedbackModel );
         this.showProfile = showProfile;
+        this.canResolve = canResolve;
         feedback = feedbackModel.getObject();
         feedbackService.refresh( feedback );
         init();
@@ -65,6 +80,25 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
         addReplyButton();
         addReplyAndEmailButton();
         addResetButton();
+        addResolve();
+    }
+
+    private void addResolve() {
+        String resolvedValue = getFeedback().isResolved() ? "Unresolve" : "Resolve";
+        resolvedContainer = new WebMarkupContainer( "resolvedContainer" );
+        AjaxLink<String> resolvedButton = new AjaxLink<String>( "resolvedButton") {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                feedbackService.toggleResolved( getFeedback() );
+                addResolve();
+                target.add( resolvedContainer );
+            }
+        };
+        resolvedButton.add( new AttributeModifier( "value", new Model<String>( resolvedValue) ) );
+        resolvedButton.setOutputMarkupId( true );
+        resolvedContainer.add( resolvedButton );
+        resolvedContainer.setVisible( canResolve );
+        add( resolvedContainer );
     }
 
     private void addFeedbackPanel() {
@@ -175,6 +209,10 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
 
     public void setReply( String content ) {
         reply = content;
+    }
+
+    public Feedback getFeedback() {
+        return (Feedback) getModel().getObject();
     }
 
 }

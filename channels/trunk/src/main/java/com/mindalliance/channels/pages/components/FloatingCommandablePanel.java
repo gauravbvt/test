@@ -208,7 +208,7 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
                 getPadBottom(),
                 getPadRight()
         );
-        resizer.add( new AttributeModifier( "onMouseDown", true, new Model<String>( resizeScript ) ) );
+        resizer.add( new AttributeModifier( "onMouseDown", new Model<String>( resizeScript ) ) );
         add( resizer );
     }
 

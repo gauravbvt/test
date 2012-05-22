@@ -47,6 +47,7 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
      * @param notRepliedToOnly true if not replied to only
      * @param topic topic or null if any topic
      * @param containing substring of the contents or null if any
+     * @param username string - creator of feedback, or null if don't care
      * @return
      */
     List<Feedback> selectInitialFeedbacks(
@@ -54,5 +55,13 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
             Boolean unresolvedOnly,
             Boolean notRepliedToOnly,
             String topic,
-            String containing );
+            String containing,
+            String username );
+
+
+    /**
+     * Mark the feedback as resolved if unresolved, or unresolved if resolved.
+     * @param feedback a feedback
+     */
+    void toggleResolved( Feedback feedback );
 }

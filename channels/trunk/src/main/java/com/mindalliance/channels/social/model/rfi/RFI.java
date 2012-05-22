@@ -464,7 +464,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         Plan plan = planService.getPlan();
         StringBuilder sb = new StringBuilder();
         sb.append( plan.getClient() );
-        sb.append( " has invited to participate in a survey about the \"" )
+        sb.append( " invites you to participate in a survey about the \"" )
                 .append( plan.getName() )
                 .append( "\" information sharing plan.\n\n" );
         if ( !plan.getDescription().isEmpty() ) {
@@ -485,11 +485,11 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         // New account login instructions
         ChannelsUser surveyedUser = planService.getUserDao().getUserNamed( getSurveyedUsername() );
         if ( surveyedUser != null ) {
-            sb.append( "To access the survey, login with your email address " )
+            sb.append( "To login, use your email address as user name" )
                     .append( surveyedUser.getEmail() );
             String newPassword = surveyedUser.getUserInfo().getGeneratedPassword();
             if ( newPassword != null ) {
-                sb.append( " and use password " )
+                sb.append( " and enter password " )
                         .append( newPassword )
                         .append( "\n\n" );
             } else {
@@ -499,23 +499,23 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         // forwarding
         List<RFIForward> rfiForwards = surveysDAO.getForwardingsOf( this );
         if ( !rfiForwards.isEmpty() ) {
-            sb.append( "This survey was forwarded to you by:\n\n " );
+            sb.append( "This survey was forwarded to you by:" );
             for ( RFIForward rfiForward : rfiForwards ) {
                 ChannelsUserInfo forwarder = surveysDAO.getForwarder( rfiForward );
                 if ( forwarder != null ) {
-                    sb.append( forwarder.getFullName() )
+                    sb.append("\n")
+                            .append( forwarder.getFullName() )
                             .append( " at " )
-                            .append( forwarder.getEmail() )
-                            .append( "\n" );
+                            .append( forwarder.getEmail() );
                 }
                 if ( !rfiForward.getMessage().isEmpty() ) {
-                    sb.append( "with this message: \"" )
+                    sb.append( "\nwith this message: \"" )
                             .append( rfiForward.getMessage() )
                             .append( "\"\n" );
                 }
             }
         }
-        sb.append( "\nThank you,\n" );
+        sb.append( "\nThank you!\n" );
         sb.append( plan.getClient() );
         return sb.toString();
     }

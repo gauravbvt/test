@@ -105,7 +105,8 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
             Boolean notResolvedOnly,
             Boolean notRepliedToOnly,
             String topic,
-            String containing ) {
+            String containing,
+            String username ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria(  getPersistentClass() );
         if ( urgentOnly ) {
@@ -123,8 +124,18 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
         if ( containing != null && !containing.isEmpty() ) {
             criteria.add( Restrictions.ilike( "text", "%" + containing + "%" ) );
         }
+        if ( username != null && !username.isEmpty() ) {
+            criteria.add( Restrictions.eq( "username", username ) );
+        }
         criteria.addOrder( Order.desc( "created" ) );
         return (List<Feedback>) criteria.list();
+    }
+
+    @Override
+    @Transactional
+    public void toggleResolved( Feedback feedback ) {
+        feedback.setResolved( !feedback.isResolved() );
+        save( feedback );
     }
 
 }

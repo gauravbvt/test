@@ -101,17 +101,34 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
     boolean notRepliedToOnly;
     String containing = "";
     private boolean showProfile;
+    private boolean personalOnly;
 
     public AllFeedbackPanel( String id, Model<Plan> planModel, boolean showProfile ) {
+        this( id, planModel, showProfile, false );
+    }
+
+    public AllFeedbackPanel(
+            String id,
+            Model<Plan> planModel,
+            boolean showProfile,
+            boolean personalOnly ) {
         super( id, planModel, null );
         this.showProfile = showProfile;
+        this.personalOnly = personalOnly;
         init();
     }
 
     private void init() {
+        addHeading();
         addFilters();
         addFeedbackTable();
         addSelectedFeedback();
+    }
+
+    private void addHeading() {
+        getContentContainer().add( new Label(
+                "heading",
+                personalOnly ? "Feedback I sent" : "Feedback from all users" ) );
     }
 
     public void select( Feedback feedback ) {
@@ -186,7 +203,8 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
                 unresolvedOnly,
                 notRepliedToOnly,
                 getTopic().equals( ANY ) ? null : getTopic(),
-                containing
+                containing,
+                personalOnly ? getUsername() : null
         );
         for ( Feedback f : feedbacks ) {
             if ( !isFilteredOut( f ) )
@@ -369,15 +387,11 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
     }
 
     public Feedback getSelectedFeedback() {
-        if ( selectedFeedback != null ) {
-            feedbackService.refresh( selectedFeedback );
-        }
         return selectedFeedback;
     }
 
     public void setSelectedFeedback( Feedback selectedFeedback ) {
         this.selectedFeedback = selectedFeedback;
-        feedbackService.refresh( selectedFeedback );
     }
 
     @Override
@@ -393,7 +407,11 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
     public void changed( Change change ) {
         if ( change.isForInstanceOf( FeedbackWrapper.class ) && change.isExpanded() ) {
             FeedbackWrapper fw = (FeedbackWrapper) change.getSubject( getQueryService() );
-            setSelectedFeedback( fw.getFeedback() );
+            if ( selectedFeedback != null && fw.getFeedback().equals( selectedFeedback ) ) {
+                setSelectedFeedback( null );
+            } else {
+                setSelectedFeedback( fw.getFeedback() );
+            }
         } else {
             super.changed( change );
         }
@@ -509,6 +527,12 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
         public String getFullName() {
             return feedback.getUserFullName( userDao );
         }
+
+        public String getExpandLabel() {
+            Feedback selected = getSelectedFeedback();
+            return selected != null && selected.equals( feedback ) ? "Close" : "Open";
+        }
+
     }
 
 
@@ -525,6 +549,13 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
             initialize();
         }
 
+        public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updatables ) {
+            if ( change.isExpanded() ) {
+                target.add( this );
+            }
+            super.updateWith( target, change, updatables );
+        }
+
         @SuppressWarnings( "unchecked" )
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
@@ -538,7 +569,7 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
             columns.add( makeColumn( "Received", "formattedCreated", null, EMPTY, null, "created" ) );
             columns.add( makeColumn( "Last replied", "formattedLastReplied", EMPTY ) );
             columns.add( makeColumn( "Resolved", "resolvedLabel", EMPTY ) );
-            columns.add( makeExpandLinkColumn( "", "", "more" ) );
+            columns.add( makeExpandLinkColumn( "", "", "@expandLabel" ) );
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "feedbacks",
                     columns,

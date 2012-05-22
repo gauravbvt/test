@@ -7,20 +7,34 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div class="feedback-messages">
-        <div wicket:id="feedback">[feedback statement]</div>
-        <div wicket:id="replies">
-                <span wicket:id="reply">
-                    <div wicket:id="message">[user message panel]</div>
-                </span>
-        </div>
-    </div>
-    <div class="feedback-new-message">
-        <textarea wicket:id="reply" rows="3" cols ="60">text</textarea>
-        <input wicket:id="replyButton" type="button" value="Send reply"/>
-        <input wicket:id="replyAndEmailButton" type="button" value="Send and email reply"/>
-        <input wicket:id="resetButton" type="button" value="Reset"/>
-    </div>
-</wicket:panel>
+    <table>
+        <tr>
+            <td>
+                <div class="feedback-new-message">
+                    <textarea wicket:id="reply" rows="3" cols ="60">text</textarea>
+                    <input wicket:id="replyButton" type="button" value="Send reply"/>
+                    <input wicket:id="replyAndEmailButton" type="button" value="Send and email reply"/>
+                    <input wicket:id="resetButton" type="button" value="Reset"/>
+                </div>
+            </td>
+            <td rowspan="2">
+                <div class="feedback-messages">
+                    <div wicket:id="feedback">[feedback statement]</div>
+                    <div wicket:id="replies">
+                        <div wicket:id="reply">
+                            <span wicket:id="message">[user message panel]</span>
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+        </tr>
+        <tr wicket:id="resolvedContainer">
+            <td>
+                <input wicket:id="resolvedButton" type="button" value="Resolved"/>
+            </td>
+        </tr>
+    </table>
+ </wicket:panel>
 </body>
 </html>
