@@ -1,22 +1,24 @@
 package com.mindalliance.functionaltestsripts;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class TE001_CreateAgent 
-{
-	public TE001_CreateAgent() {
-		try{
+public class SQ0002_AddQuestionnaireName {
+	public SQ0002_AddQuestionnaireName() {
+		try{		
 			
-			GlobalVariables.sTestCaseId = "TE001_CreateAgent";
+			GlobalVariables.sTestCaseId = "SQ0002_AddQuestionnaireName";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
+			
 			// Call login()
 			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
 			if (GlobalVariables.bIsSuccess) {
@@ -35,8 +37,8 @@ public class TE001_CreateAgent
 				
 				//About Plan Window Opened
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "About Plan Window Opened";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlan"));
+				GlobalVariables.sDescription = "All Surveys Opened";
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("surveys"));
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -45,10 +47,22 @@ public class TE001_CreateAgent
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				// Click on 'Participation' Option under 'Show' Pop up Menu 
+				// Click on Questionnaire Tab
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Click on 'Participation' option under 'Show' pop up menu";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("participation"));
+				GlobalVariables.sDescription = "Questionnaire Tab Opened";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathQuestionnaireTab"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+
+				// Click on Add new Questionnaire button
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "New Questionnaire Added";
+				GlobalVariables.oDriver.findElement(By.className("add-new-questionnaire")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -57,56 +71,40 @@ public class TE001_CreateAgent
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				//Create Agent
+				// Enter the name of Questionnaire
 				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="Agent Created";
-				GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName")).clear();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(1000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("plan:content:mo:aspect:participations:participationsTable:participations:body:rows:1:cells:4:cell:entityName"));
-				String sAgentName = LogFunctions.getDateTime();
-				GlobalVariables.oElement.sendKeys(sAgentName);
-				GlobalVariables.oElement.sendKeys(Keys.ENTER);
+				GlobalVariables.sDescription="Enter Questionnaire name";
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("dataCollection:content:tabs:panel:questionnaire:questionnaireManager:name"));
+				GlobalVariables.oElement.click();
+				GlobalVariables.oElement.sendKeys("Questionnaire 1");
+				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				//Assertion : Verify that Agent Created Successfully
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgentContacts"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAgent")));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(2000);
-				//Select 'Agent' Option from List
-		    	if(GlobalVariables.oElement.getText().equalsIgnoreCase(sAgentName)){
-			    	// Write Results
+				// Assertion: Verify that Named Questionnaire gets added
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionNewQuestionnaire")));
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Questionnaire 1")){
+					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    }
-		    	else{
-		    		GlobalVariables.sVerifyError="Verification Failed. Expected '"+sAgentName+"' Actual '"+GlobalVariables.oElement.getText()+"'";
-			    	// Write Results
+				}
+				else{
+					GlobalVariables.sVerifyError="Verification failed Expected 'Questionnaire 1' Actual "+GlobalVariables.oElement.getText();
+					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						GlobalVariables.sVerifyError, GlobalVariables.sBlank);
-			    }
-			    // WebElement Synchronization
+						GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
+				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				
-				//Close About Plan Window
-				GlobalVariables.iStepNo++;
-				GlobalVariables.sDescription="About Plan window closed";
-				GlobalVariables.oDriver.findElement(By.className("close")).click();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
-			    // WebElement Synchronization
+				Thread.sleep(3000);
+				// Delete the button
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionnaire"))).click();
+				Alert alert = GlobalVariables.oDriver.switchTo().alert();
+				// And acknowledge the alert (equivalent to clicking "OK")
+				alert.accept();
+				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
@@ -151,7 +149,7 @@ public class TE001_CreateAgent
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new TE001_CreateAgent();
+			new SQ0002_AddQuestionnaireName();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 
