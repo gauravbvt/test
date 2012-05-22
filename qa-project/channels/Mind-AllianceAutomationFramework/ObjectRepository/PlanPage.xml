@@ -1,5 +1,7 @@
 <?xml version="1.0"?>	
 <elements>
+<xPathDeleteQuestionnaire>//div[15]/div/span/div/div[2]/div/div[2]/div[3]/a</xPathDeleteQuestionnaire>
+<xPathQuestionnaireTab>/html/body/form/div[15]/div/span/div/div[2]/div/div/ul/li[2]/a/span</xPathQuestionnaireTab>
 <xPathAddNewIssuseSegmentMenu>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[5]/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathAddNewIssuseSegmentMenu>
 <xPathEditRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/span/table/tbody/tr/td[8]/span/a/span</xPathEditRequirement>
 <xPathRequirementNetwork>//div[4]/div/span/div/div[2]/div/div/ul/li[2]/a/span</xPathRequirementNetwork>
@@ -188,6 +190,7 @@
 <xPathWhenTabOfReceiversOfRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[2]/a/span</xPathWhenTabOfReceiversOfRequirement>
 <xPathHowManyOfReceiversOfRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[3]/a/span</xPathHowManyOfReceiversOfRequirement>
 <!-- Assertions -->
+<xPathAssertionNewQuestionnaire>/html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[2]/table/tbody/tr/td/span</xPathAssertionNewQuestionnaire>
 <xPathAssertionReceivesInfoNewMedium>//span/div/div[3]/div[@class='sends']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/table/tbody/tr[9]/td/ol[@class='channels']/li/span/a[@class='entity-link']/span</xPathAssertionReceivesInfoNewMedium>
 <xPathAssertionSendInfoNewMedium>//span/div/div[3]/div[@class='sends']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/table/tbody/tr[9]/td/ol[@class='channels']/li/span/a[@class='entity-link']/span</xPathAssertionSendInfoNewMedium>
 <xPathAssertionInfoTagsRequirement>//div[4]/div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='req-defs']/span/table[@class='data-table']/tbody/tr[@class='even']/td[4]/span</xPathAssertionInfoTagsRequirement>
