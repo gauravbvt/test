@@ -157,8 +157,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		add(getJCheckBox13(), new Constraints(new Leading(100, 960, 850), new Leading(270, 10, 10)));
 		add(getJCheckBox14(), new Constraints(new Leading(100, 970, 850), new Leading(290, 10, 10)));
 		add(getJCheckBox15(), new Constraints(new Leading(100, 990, 850), new Leading(310, 10, 10)));
-		add(getJCheckBox16(), new Constraints(new Leading(100, 1011, 850), new Leading(330, 10, 10)));
-	
+		add(getJCheckBox16(), new Constraints(new Leading(100, 1011, 860), new Leading(330, 10, 10)));
 		setSize(1356, 698);
 	}
 
@@ -950,7 +949,7 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				}
 			}
 			
-			else if(chk.getText().equalsIgnoreCase("Survey_And_Questionnaire")){
+			else if(chk.getText().equalsIgnoreCase("Survey And Questionnaire")){
 				if(chk.isSelected() && sqFlag==true){
 					jScrollPane0.setViewportView(getJList0(19));
 					sqFlag=false;
