@@ -266,4 +266,5 @@
 <xPathEventID>/html/body/form/div[4]/div/span/div/div[2]/span/div/table/tbody</xPathEventID>
 <xPathEventUrlAttachmentAssertion>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/a</xPathEventUrlAttachmentAssertion>
 <xPathAssertionOrgSeg>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/h3/span</xPathAssertionOrgSeg>
+<xPathAssertionAddQuestion>//div[15]/div/span/div/div[2]/div/div[2]/div[3]/span/table/tbody/tr/td[2]/a/span</xPathAssertionAddQuestion>
 </elements>
