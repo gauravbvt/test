@@ -97,30 +97,30 @@ public class MAP0005_deletePlan
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// Click on 'OK" button of message box in order to confirm it
 				alert.accept();
-//				//Assertion:Verify that plan should get deleted.  Need to change
-//				GlobalVariables.bIsSuccess=Boolean.FALSE;
-//				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
-//				options=GlobalVariables.oDropDown.getOptions();
-//			    for(WebElement option : options)
-//			    {
-//			    	if(GlobalVariables.testData.get("Delete plan").equals(option.getText())){
-//				     // Write Results
-//			        GlobalVariables.bIsSuccess=Boolean.TRUE;
-//				     break;
-//			    	}
-//			    }
-//			    if(GlobalVariables.bIsSuccess==Boolean.FALSE){
-//			    	// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//			    }
-//			    else{
-//			    	// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-//			    }
+				//Assertion:Verify that plan should get deleted.  Need to change
+				GlobalVariables.bIsSuccess=Boolean.FALSE;
+				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("plan-sel")));
+				options=GlobalVariables.oDropDown.getOptions();
+			    for(WebElement option : options)
+			    {
+			    	if(GlobalVariables.testData.get("Delete plan").equals(option.getText())){
+				     // Write Results
+			        GlobalVariables.bIsSuccess=Boolean.TRUE;
+				     break;
+			    	}
+			    }
+			    if(GlobalVariables.bIsSuccess==Boolean.FALSE){
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+							GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    }
+			    else{
+			    	// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+			    }
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
