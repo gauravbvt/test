@@ -60,11 +60,22 @@ public class SQ0015_ActivateQuestionnaire {
 				// Click on Activate Questionnaire button
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Activate Questionnaire";
-				GlobalVariables.oDriver.findElement(By.className("")).click();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathActivateQuestionnaireButton"))).click();
+				// Assertion: Verify that Questionnaire is Activated
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionActivateQuestionnaire")));
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("ACTIVE")){
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError="Verification failed Expected 'Questionnaire 1' Actual "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
