@@ -82,7 +82,7 @@ public class SQ0004_AddQuestionnaireRFIAsAgent {
 				GlobalVariables.oElement.click();
 				GlobalVariables.oElement.sendKeys("Questionnaire 1");
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
-			    GlobalVariables.oElement.click();
+			    //GlobalVariables.oElement.click();
 			    // Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

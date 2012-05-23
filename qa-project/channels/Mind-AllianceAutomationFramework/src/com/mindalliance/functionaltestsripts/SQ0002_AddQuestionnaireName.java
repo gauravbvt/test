@@ -83,7 +83,7 @@ public class SQ0002_AddQuestionnaireName {
 				Thread.sleep(2000);
 				// Assertion: Verify that Named Questionnaire gets added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionNewQuestionnaire")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Questionnaire 1")){
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("unnamedQuestionnaire 1")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
