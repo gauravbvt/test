@@ -79,7 +79,7 @@ public class SQ0018_AddQuestion {
 				Thread.sleep(2000);
 				// Assertion: Verify that Questionnaire is Activated
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAddQuestion")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("(Inactive) --TBD--")){
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("(Inactive) This is Question")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -110,6 +110,7 @@ public class SQ0018_AddQuestion {
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
+				
 				// Delete the button
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionnaire"))).click();
 				alert = GlobalVariables.oDriver.switchTo().alert();
