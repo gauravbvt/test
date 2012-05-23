@@ -44,6 +44,18 @@ public class SQ0017_DeleteQuestionnaire {
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
+				// Click on Questionnaire Tab
+				GlobalVariables.iStepNo++ ;
+				GlobalVariables.sDescription = "Questionnaire Tab Opened";
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathQuestionnaireTab"))).click();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
+				
 				// Click on Add new Questionnaire button
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Questionnaire Added";
