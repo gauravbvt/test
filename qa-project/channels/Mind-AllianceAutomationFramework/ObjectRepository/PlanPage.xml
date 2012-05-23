@@ -1,5 +1,6 @@
 <?xml version="1.0"?>	
 <elements>
+<xPathDeleteQuestionButton>//div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/span/span/table[@class='question-cont']/tbody/tr[4]/td[2]/input[3]</xPathDeleteQuestionButton>
 <xPathActivateQuestionnaireButton>//div[@class='floating']/span/div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/a[2]</xPathActivateQuestionnaireButton>
 <xPathDeleteQuestionnaire>//div[15]/div/span/div/div[2]/div/div[2]/div[3]/a</xPathDeleteQuestionnaire>
 <xPathQuestionnaireTab>/html/body/form/div[15]/div/span/div/div[2]/div/div/ul/li[2]/a/span</xPathQuestionnaireTab>
@@ -191,6 +192,7 @@
 <xPathWhenTabOfReceiversOfRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[2]/a/span</xPathWhenTabOfReceiversOfRequirement>
 <xPathHowManyOfReceiversOfRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[3]/a/span</xPathHowManyOfReceiversOfRequirement>
 <!-- Assertions -->
+<xPathAssertionAddQuestion>/html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[3]/span/table/tbody/tr/td[2]/a/span</xPathAssertionAddQuestion>
 <xPathAssertionActivateQuestionnaire>//div[15]/div/span/div/div[2]/div/div[2]/div[2]/table/tbody/tr/td[3]/span</xPathAssertionActivateQuestionnaire>
 <xPathAssertionForRFIType>//div[15]/div/span/div/div[2]/div/div[2]/div[2]/table/tbody/tr/td[2]</xPathAssertionForRFIType>
 <xPathAssertionNewQuestionnaire>/html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[2]/table/tbody/tr/td/span</xPathAssertionNewQuestionnaire>
