@@ -73,7 +73,7 @@ public class SQ0015_ActivateQuestionnaire {
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				}
 				else{
-					GlobalVariables.sVerifyError="Verification failed Expected 'Questionnaire 1' Actual "+GlobalVariables.oElement.getText();
+					GlobalVariables.sVerifyError="Verification failed Expected 'ACTIVE' Actual "+GlobalVariables.oElement.getText();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
