@@ -2,17 +2,18 @@ package com.mindalliance.functionaltestsripts;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.LogFunctions;
 import com.mindalliance.globallibrary.ReportFunctions;
 
-public class SQ0015_ActivateQuestionnaire {
-	public SQ0015_ActivateQuestionnaire() {
+public class SQ0016_DeactivateQuestionnaire {
+	public SQ0016_DeactivateQuestionnaire() {
 		try{		
 			
-			GlobalVariables.sTestCaseId = "SQ0015_ActivateQuestionnaire";
+			GlobalVariables.sTestCaseId = "SQ0016_DeactivateQuestionnaire";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -57,16 +58,16 @@ public class SQ0015_ActivateQuestionnaire {
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				// Click on Activate Questionnaire button
+				// Click on Deactivate Questionnaire button
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Activate Questionnaire";
+				GlobalVariables.sDescription = "Deactivate Questionnaire";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathActivateQuestionnaireButton"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
 				// Assertion: Verify that Questionnaire is Activated
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionActivateQuestionnaire")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("ACTIVE")){
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("INACTIVE")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -132,7 +133,7 @@ public class SQ0015_ActivateQuestionnaire {
 		try {
 			GenericFunctionLibrary.initializeTestData();
 			GenericFunctionLibrary.loadObjectRepository();
-			new SQ0015_ActivateQuestionnaire();
+			new SQ0016_DeactivateQuestionnaire();
 			GenericFunctionLibrary.tearDownTestData();
 			ReportFunctions.generateAutomationReport();
 		} 
