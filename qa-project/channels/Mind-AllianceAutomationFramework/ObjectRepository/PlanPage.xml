@@ -1,5 +1,6 @@
 <?xml version="1.0"?>	
 <elements>
+<xPathActivateQuestionnaireButton>//div[@class='floating']/span/div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/a[2]</xPathActivateQuestionnaireButton>
 <xPathDeleteQuestionnaire>//div[15]/div/span/div/div[2]/div/div[2]/div[3]/a</xPathDeleteQuestionnaire>
 <xPathQuestionnaireTab>/html/body/form/div[15]/div/span/div/div[2]/div/div/ul/li[2]/a/span</xPathQuestionnaireTab>
 <xPathAddNewIssuseSegmentMenu>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[5]/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathAddNewIssuseSegmentMenu>
@@ -190,6 +191,7 @@
 <xPathWhenTabOfReceiversOfRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[2]/a/span</xPathWhenTabOfReceiversOfRequirement>
 <xPathHowManyOfReceiversOfRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/div/div/div[2]/div/div/ul/li[3]/a/span</xPathHowManyOfReceiversOfRequirement>
 <!-- Assertions -->
+<xPathAssertionActivateQuestionnaire>//div[15]/div/span/div/div[2]/div/div[2]/div[2]/table/tbody/tr/td[3]/span</xPathAssertionActivateQuestionnaire>
 <xPathAssertionForRFIType>//div[15]/div/span/div/div[2]/div/div[2]/div[2]/table/tbody/tr/td[2]</xPathAssertionForRFIType>
 <xPathAssertionNewQuestionnaire>/html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[2]/table/tbody/tr/td/span</xPathAssertionNewQuestionnaire>
 <xPathAssertionReceivesInfoNewMedium>//span/div/div[3]/div[@class='sends']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/table/tbody/tr[9]/td/ol[@class='channels']/li/span/a[@class='entity-link']/span</xPathAssertionReceivesInfoNewMedium>
