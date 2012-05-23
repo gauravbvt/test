@@ -264,8 +264,24 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
        return rfisLink;
    }
 
+    public BookmarkablePageLink<? extends WebPage> getFeedbackLink(
+            String id,
+            Plan plan,
+            boolean samePage ) {
+        BookmarkablePageLink<? extends WebPage> feedbackLink = newTargetedLink(
+                id,
+                "",
+                FeedbackPage.class,
+                new PageParameters(),
+                null,
+                plan );
+        if ( !samePage )
+            feedbackLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
+        return feedbackLink;
+    }
 
-   /**
+
+    /**
     * Build a new parameter container for the current selections.
     *
     * @return the parameters

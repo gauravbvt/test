@@ -10,8 +10,8 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.services.FeedbackService;
 import org.apache.commons.lang.StringUtils;
@@ -42,20 +42,10 @@ import java.util.Map;
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: 2/22/12
- * Time: 12:01 PM
+ * Date: 5/22/12
+ * Time: 3:29 PM
  */
-public class AllFeedbackPanel extends FloatingCommandablePanel implements Filterable {
-
-    /**
-     * Min width on resize.
-     */
-    private static final int MIN_WIDTH = 300;
-
-    /**
-     * Min height on resize.
-     */
-    private static final int MIN_HEIGHT = 300;
+public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filterable {
 
     /**
      * Simple date format.
@@ -102,19 +92,22 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
     String containing = "";
     private boolean showProfile;
     private boolean personalOnly;
+    private boolean canResolve;
 
-    public AllFeedbackPanel( String id, Model<Plan> planModel, boolean showProfile ) {
-        this( id, planModel, showProfile, false );
+    public AllUserFeedbackPanel( String id, Model<Plan> planModel, boolean showProfile ) {
+        this( id, planModel, showProfile, false, false );
     }
 
-    public AllFeedbackPanel(
+    public AllUserFeedbackPanel(
             String id,
-            Model<Plan> planModel,
+            IModel<Plan> planModel,
             boolean showProfile,
-            boolean personalOnly ) {
+            boolean personalOnly,
+            boolean canResolve ) {
         super( id, planModel, null );
         this.showProfile = showProfile;
         this.personalOnly = personalOnly;
+        this.canResolve = canResolve;
         init();
     }
 
@@ -126,7 +119,7 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
     }
 
     private void addHeading() {
-        getContentContainer().add( new Label(
+        add( new Label(
                 "heading",
                 personalOnly ? "Feedback I sent" : "Feedback from all users" ) );
     }
@@ -137,19 +130,19 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
 
 
     private void addFilters() {
-        getContentContainer().add( new AjaxCheckBox( "urgent", new PropertyModel<Boolean>( this, "urgentOnly" ) ) {
+        add( new AjaxCheckBox( "urgent", new PropertyModel<Boolean>( this, "urgentOnly" ) ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateTableAndSelected( target );
             }
         } );
-        getContentContainer().add( new AjaxCheckBox( "unresolved", new PropertyModel<Boolean>( this, "unresolvedOnly" ) ) {
+        add( new AjaxCheckBox( "unresolved", new PropertyModel<Boolean>( this, "unresolvedOnly" ) ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateTableAndSelected( target );
             }
         } );
-        getContentContainer().add( new AjaxCheckBox( "notRepliedTo", new PropertyModel<Boolean>( this, "notRepliedToOnly" ) ) {
+        add( new AjaxCheckBox( "notRepliedTo", new PropertyModel<Boolean>( this, "notRepliedToOnly" ) ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 updateTableAndSelected( target );
@@ -166,7 +159,7 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
                 updateTableAndSelected( target );
             }
         } );
-        getContentContainer().add( topicsChoice );
+        add( topicsChoice );
         TextField<String> containingField = new TextField<String>(
                 "containing",
                 new PropertyModel<String>( this, "containing" )
@@ -177,7 +170,7 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
                 updateTableAndSelected( target );
             }
         } );
-        getContentContainer().add( containingField );
+        add( containingField );
     }
 
     private void updateTableAndSelected( AjaxRequestTarget target ) {
@@ -193,7 +186,7 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
                 "feedbackTable",
                 new PropertyModel<List<FeedbackWrapper>>( this, "filteredFeedbacks" ) );
         feedbacksTable.setOutputMarkupId( true );
-        getContentContainer().addOrReplace( feedbacksTable );
+        addOrReplace( feedbacksTable );
     }
 
     public List<FeedbackWrapper> getFilteredFeedbacks() {
@@ -222,7 +215,7 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
     private void addFeedbackTitle() {
         Label feedbackTitle = new Label( "feedbackLabel", getFeedbackTitle() );
         feedbackTitle.setOutputMarkupId( true );
-        getContentContainer().addOrReplace( feedbackTitle );
+        addOrReplace( feedbackTitle );
     }
 
     private String getFeedbackTitle() {
@@ -281,49 +274,11 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
                 : new FeedbackDiscussionPanel(
                 "discussion",
                 new Model<Feedback>( feedback ),
-                showProfile ) );
-        getContentContainer().addOrReplace( selectedFeedbackContainer );
-    }
-
-    @Override
-    protected String getTitle() {
-        return "Feedback";
-    }
-
-    @Override
-    protected int getPadTop() {
-        return PAD_TOP;
-    }
-
-    @Override
-    protected int getPadLeft() {
-        return PAD_LEFT;
-    }
-
-    @Override
-    protected int getPadBottom() {
-        return PAD_BOTTOM;
-    }
-
-    @Override
-    protected int getPadRight() {
-        return PAD_RIGHT;
-    }
-
-    @Override
-    protected int getMinWidth() {
-        return MIN_WIDTH;
-    }
-
-    @Override
-    protected int getMinHeight() {
-        return MIN_HEIGHT;
-    }
-
-    @Override
-    protected void doClose( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, Feedback.UNKNOWN );
-        update( target, change );
+                showProfile,
+                canResolve,
+                personalOnly
+        ) );
+        addOrReplace( selectedFeedbackContainer );
     }
 
     @Override
@@ -564,7 +519,7 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
             columns.add( makeColumn( "Type", "typeLabel", EMPTY ) );
             columns.add( makeUserColumn( "From", "fullName", EMPTY ) );
             columns.add( makeColumn( "Topic", "topic", EMPTY ) );
-            columns.add( makeFilterableLinkColumn( "About", "about", "moRefLabel", EMPTY, AllFeedbackPanel.this, false ) );
+            columns.add( makeFilterableLinkColumn( "About", "about", "moRefLabel", EMPTY, AllUserFeedbackPanel.this, false ) );
             columns.add( makeColumn( "Content", "abbreviatedText", null, EMPTY, "text" ) );
             columns.add( makeColumn( "Received", "formattedCreated", null, EMPTY, null, "created" ) );
             columns.add( makeColumn( "Last replied", "formattedLastReplied", EMPTY ) );
@@ -580,4 +535,5 @@ public class AllFeedbackPanel extends FloatingCommandablePanel implements Filter
 
 
     }
+
 }

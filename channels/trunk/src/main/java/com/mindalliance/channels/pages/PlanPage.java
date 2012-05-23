@@ -33,6 +33,7 @@ import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.ModelObjectSurveysPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
+import com.mindalliance.channels.pages.components.plan.AllFeedbackFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanActionsMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanShowMenuPanel;
@@ -45,7 +46,6 @@ import com.mindalliance.channels.pages.components.segment.PartAssignmentsPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentPanel;
 import com.mindalliance.channels.pages.components.segment.SharingCommitmentsPanel;
-import com.mindalliance.channels.pages.components.social.feedback.AllFeedbackPanel;
 import com.mindalliance.channels.pages.components.social.rfi.DataCollectionPanel;
 import com.mindalliance.channels.pages.components.support.FlowLegendPanel;
 import com.mindalliance.channels.social.model.Feedback;
@@ -576,12 +576,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
             allFeedbackPanel.setOutputMarkupId( true );
             makeVisible( allFeedbackPanel, false );
         } else {
-            allFeedbackPanel = new AllFeedbackPanel(
+            allFeedbackPanel = new AllFeedbackFloatingPanel(
                     "feedbacks",
                     new Model<Plan>( getPlan() ),
                     true );
             if ( !feedback.isUnknown() ) {
-                ((AllFeedbackPanel) allFeedbackPanel ).select( feedback );
+                ((AllFeedbackFloatingPanel) allFeedbackPanel ).select( feedback );
             }
         }
         form.addOrReplace( allFeedbackPanel );
@@ -2265,8 +2265,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     : expandedFeedback;
             addAllFeedbackPanel( viewedFeedback );
             target.add( allFeedbackPanel );
-        } else if ( allFeedbackPanel instanceof AllFeedbackPanel ) {
-            ( (AllFeedbackPanel) allFeedbackPanel ).refresh( target,
+        } else if ( allFeedbackPanel instanceof AllFeedbackFloatingPanel ) {
+            ( (AllFeedbackFloatingPanel) allFeedbackPanel ).refresh( target,
                     change,
                     updated,
                     getAspectShown( Feedback.UNKNOWN ) );

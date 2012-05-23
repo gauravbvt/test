@@ -1,8 +1,11 @@
 package com.mindalliance.channels.social.services.impl;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.UserMessage;
 import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.commons.collections.IteratorUtils;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -117,6 +121,30 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     public void markToNotify( UserMessage message ) {
         message.setSendNotification( true );
         save( message );
+    }
+
+    @Override
+    public int countNewFeedbackReplies( Plan plan, ChannelsUser user ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "toUsername", user.getUsername() ) );
+        criteria.add( Restrictions.isNotNull( "feedback" ) );
+        criteria.add( Restrictions.eq( "read", false ) );
+        return criteria.list().size();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    @Transactional
+    public void markFeedbackRepliesRead( Feedback feedback ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "feedback", feedback ) );
+        for (UserMessage replyMessage : (List<UserMessage>)criteria.list()) {
+            replyMessage.setRead( true );
+            save( replyMessage );
+        }
     }
 
     @Override

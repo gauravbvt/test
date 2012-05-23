@@ -19,8 +19,10 @@ import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.issues.IssuesPage;
 import com.mindalliance.channels.social.model.Feedback;
+import com.mindalliance.channels.social.services.FeedbackService;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.SurveysDAO;
+import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -74,6 +76,12 @@ public class UserPage extends AbstractChannelsWebPage {
 
     @SpringBean
     private SurveysDAO surveysDAO;
+
+    @SpringBean
+    private UserMessageService userMessageService;
+
+    @SpringBean
+    private FeedbackService feedbackService;
 
     /**
      * The big form -- used for attachments and segment imports only.
@@ -368,6 +376,14 @@ public class UserPage extends AbstractChannelsWebPage {
                 .add( new AttributeModifier(
                         "title",
                         new Model<String>( getGotoRFIsDescription( user, plan ) ) ) );
+        // Feedback
+        BookmarkablePageLink<? extends WebPage> gotoFeedbackLink =
+                getFeedbackLink( "gotoFeedback", getPlan(), true );
+        Label gotoFeedbackLabel = new Label( "feedbackLabel", getFeedbackLabel( user, plan ) );
+        gotoFeedbackLink.add( gotoFeedbackLabel )
+                .add( new AttributeModifier(
+                        "title",
+                        new Model<String>( getGotoFeedbackDescription( user, plan ) ) ) );
         // plan editor link
         BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlanPage.class, null, plan );
         gotoModelLink.add( new AttributeModifier(
@@ -409,6 +425,11 @@ public class UserPage extends AbstractChannelsWebPage {
                         .add( gotoRFIsLink )
                         .setOutputMarkupId( true ),
 
+                // Goto feedback
+                new WebMarkupContainer( "allFeedback" )
+                        .add( gotoFeedbackLink )
+                        .setOutputMarkupId( true ),
+
                 // Goto issues report
                 new WebMarkupContainer( "issues" )
                         .add( AbstractChannelsWebPage.newTargetedLink(
@@ -419,7 +440,7 @@ public class UserPage extends AbstractChannelsWebPage {
                                 null,
                                 plan ) )
                         .setVisible( planner || plan.isTemplate() ) )
-                        .setOutputMarkupId( true );
+                .setOutputMarkupId( true );
 
     }
 
@@ -452,6 +473,21 @@ public class UserPage extends AbstractChannelsWebPage {
         }
         return sb.toString();
     }
+
+    private String getFeedbackLabel( ChannelsUser user, Plan plan ) {
+        StringBuilder sb = new StringBuilder();
+        sb.append( "Feedback and replies" );
+        int count = userMessageService.countNewFeedbackReplies( plan, user );
+        if ( count > 0 ) {
+            sb.append( " (" )
+                    .append( count )
+                    .append( " new " )
+                    .append( count > 1 ? "replies" : "reply" )
+                    .append( ")" );
+        }
+        return sb.toString();
+    }
+
 
     private String getGotoInfoNeedsDescription( ChannelsUser user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
@@ -486,6 +522,27 @@ public class UserPage extends AbstractChannelsWebPage {
                     .append( " overdue." );
         } else {
             sb.append( "." );
+        }
+        return sb.toString();
+    }
+
+    private String getGotoFeedbackDescription( ChannelsUser user, Plan plan ) {
+        int unresolvedCount = feedbackService.countUnresolvedFeedback( plan, user );
+        int newReplyCount = userMessageService.countNewFeedbackReplies( plan, user );
+        StringBuilder sb = new StringBuilder();
+        if ( unresolvedCount == 0 ) {
+            sb.append( "All feedback are resolved." );
+        } else {
+            sb.append( unresolvedCount )
+                    .append( " feedback" )
+            .append(  unresolvedCount > 1 ? " are " : " is " )
+            .append( "unresolved." );
+        }
+        if ( newReplyCount > 0 ) {
+            sb.append( " You have" )
+                    .append( newReplyCount )
+                    .append( " new " )
+                    .append( newReplyCount > 1 ? "replies." : "reply." );
         }
         return sb.toString();
     }

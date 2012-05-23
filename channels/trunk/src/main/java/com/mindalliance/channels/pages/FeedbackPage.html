@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
+      lang="en">
+<head>
+    <title>Channels - Planning Surveys</title>
+    <link rel="stylesheet" href="css/userpage.css" type="text/css" />
+</head>
+<body>
+<div id="container">
+    <div id="header">
+        <a href="home"><img class="logo" src="images/logo_home.png" width="48" height="48" alt="Channels Logo" /></a>
+        <h1>Channels &ndash; <span wicket:id="planName">Plan name</span> <span wicket:id="planVersion">v1</span> &ndash; Feedback</h1>
+        <span wicket:id="feedback" class="feedback-container">[feedback panel]</span>
+    </div>
+    <div id="contents">
+        <div class="title-desc">
+            <h1 class="subtitle">
+                My feedback for
+            </h1>
+            <h2 wicket:id="planDescription" class="description">Plan name</h2>
+        </div>
+        <div wicket:id="allFeedback">[All feedback panel]</div>
+    </div>
+</div>
+
+</body>
+</html>

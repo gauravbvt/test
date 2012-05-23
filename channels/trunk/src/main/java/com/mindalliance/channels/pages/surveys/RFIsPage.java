@@ -20,7 +20,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.util.List;
 
 /**
- * My rfis page.
+ * My surveys page.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

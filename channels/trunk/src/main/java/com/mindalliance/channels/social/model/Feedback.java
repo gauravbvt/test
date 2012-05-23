@@ -32,6 +32,8 @@ public class Feedback extends UserStatement {
     public static final String PLANNING = "Planning";
     public static final String PARTICIPATING = "Participating";
     public static final String ISSUES = "Issues";
+    public static final String FEEDBACK = "Feedback";
+
 
     public enum Type {
         QUESTION,

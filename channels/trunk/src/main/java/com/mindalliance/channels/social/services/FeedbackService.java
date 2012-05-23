@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.services;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
@@ -37,17 +38,18 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
     List<Feedback> listNotYetNotifiedNormalFeedbacks( Plan plan );
 
     List<Feedback> listNotYetNotifiedUrgentFeedbacks( Plan plan );
-    
+
     void addReplyTo( Feedback feedback, UserMessage reply, UserMessageService messageService );
 
     /**
      * Select feedbacks that are not replies to other feedbacks.
-     * @param urgentOnly true if urgent only
-     * @param unresolvedOnly true if unresolved only
+     *
+     * @param urgentOnly       true if urgent only
+     * @param unresolvedOnly   true if unresolved only
      * @param notRepliedToOnly true if not replied to only
-     * @param topic topic or null if any topic
-     * @param containing substring of the contents or null if any
-     * @param username string - creator of feedback, or null if don't care
+     * @param topic            topic or null if any topic
+     * @param containing       substring of the contents or null if any
+     * @param username         string - creator of feedback, or null if don't care
      * @return
      */
     List<Feedback> selectInitialFeedbacks(
@@ -61,7 +63,17 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
 
     /**
      * Mark the feedback as resolved if unresolved, or unresolved if resolved.
+     *
      * @param feedback a feedback
      */
     void toggleResolved( Feedback feedback );
+
+    /**
+     * Count the unresolved feedback of a user in a plan.
+     *
+     * @param plan a plan
+     * @param user a user
+     * @return an int
+     */
+    int countUnresolvedFeedback( Plan plan, ChannelsUser user );
 }

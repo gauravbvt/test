@@ -216,6 +216,7 @@ public class Channels extends WebApplication
         mountPage( "geomap", GeoMapPage.class );
         mountPage( "home", UserPage.class );
         mountPage( "surveys", RFIsPage.class );
+        mountPage( "feedback", FeedbackPage.class );
 
         mountResource( "uploads/${name}", new PngReference( UploadedImage.class ) );
         mountResource( "icons/${name}", new PngReference( IconPng.class ) );

@@ -1,6 +1,9 @@
 package com.mindalliance.channels.social.services;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
+import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.UserMessage;
 
 import java.util.Date;
@@ -32,4 +35,8 @@ public interface UserMessageService extends GenericSqlService<UserMessage, Long>
     Iterator<UserMessage> listMessagesToSend( String planUri );
 
     void markToNotify( UserMessage message );
+
+    int countNewFeedbackReplies( Plan plan, ChannelsUser user );
+
+    void markFeedbackRepliesRead( Feedback feedback );
 }

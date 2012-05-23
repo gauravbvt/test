@@ -82,6 +82,8 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
 
+
+
     private void init() {
         addNewFeedbackLink();
         AjaxIndicatorAwareContainer indicatorAware = new AjaxIndicatorAwareContainer( "aware", "spinner" );

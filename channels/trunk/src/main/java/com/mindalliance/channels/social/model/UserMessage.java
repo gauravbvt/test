@@ -24,6 +24,7 @@ public class UserMessage extends UserStatement {
     private String toUsername;
     private boolean sendNotification;
     private Date whenNotificationSent;
+    private boolean read;
 
     @ManyToOne
     private Feedback feedback;
@@ -91,6 +92,14 @@ public class UserMessage extends UserStatement {
 
     public boolean isToAllUsers() {
         return toUsername.equals( ChannelsUserInfo.USERS );
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead( boolean read ) {
+        this.read = read;
     }
 
     // Messageable

@@ -21,6 +21,10 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -51,23 +55,26 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
     private WebMarkupContainer repliesContainer;
     private boolean showProfile;
     private boolean canResolve;
+    private boolean personalOnly;
     private WebMarkupContainer resolvedContainer;
 
     public FeedbackDiscussionPanel(
             String id,
             Model<Feedback> feedbackModel,
             boolean showProfile ) {
-        this( id, feedbackModel, showProfile, false );
+        this( id, feedbackModel, showProfile, false, false );
     }
 
     public FeedbackDiscussionPanel(
             String id,
             Model<Feedback> feedbackModel,
             boolean showProfile,
-            boolean canResolve) {
+            boolean canResolve,
+            boolean personalOnly ) {
         super( id, feedbackModel );
         this.showProfile = showProfile;
         this.canResolve = canResolve;
+        this.personalOnly = personalOnly;
         feedback = feedbackModel.getObject();
         feedbackService.refresh( feedback );
         init();
@@ -98,7 +105,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
         resolvedButton.setOutputMarkupId( true );
         resolvedContainer.add( resolvedButton );
         resolvedContainer.setVisible( canResolve );
-        add( resolvedContainer );
+        addOrReplace( resolvedContainer );
     }
 
     private void addFeedbackPanel() {
@@ -174,9 +181,16 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
         repliesContainer = new WebMarkupContainer( "replies" );
         repliesContainer.setOutputMarkupId( true );
         addOrReplace( repliesContainer );
+        List<UserMessage> replies = feedback.getReplies();
+        Collections.sort( replies , new Comparator<UserMessage>() {
+            @Override
+            public int compare( UserMessage m1, UserMessage m2 ) {
+                return m1.getCreated().compareTo( m2.getCreated() ) ;
+            }
+        });
         ListView<UserMessage> userMessagesListView = new ListView<UserMessage>(
                 "reply",
-                feedback.getReplies() ) {
+                replies ) {
             @Override
             protected void populateItem( ListItem<UserMessage> item ) {
                 item.add( new UserMessagePanel(
@@ -189,6 +203,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
                 ) );
             }
         };
+        if ( personalOnly ) userMessageService.markFeedbackRepliesRead( feedback );
         repliesContainer.add( userMessagesListView );
     }
 
