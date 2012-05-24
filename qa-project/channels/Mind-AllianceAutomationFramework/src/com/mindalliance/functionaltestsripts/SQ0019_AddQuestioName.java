@@ -116,9 +116,7 @@ public class SQ0019_AddQuestioName {
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Delete Question";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionButton"))).click();
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
+
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

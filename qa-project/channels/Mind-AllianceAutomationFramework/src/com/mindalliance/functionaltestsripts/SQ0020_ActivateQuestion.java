@@ -93,25 +93,7 @@ public class SQ0020_ActivateQuestion {
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				// Assertion: Verify that Named Questionnaire gets added
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAddQuestion")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("(Inactive) This is Question")){
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
-				else{
-					GlobalVariables.sVerifyError="Verification failed Expected '(Inactive) This is Question' Actual "+GlobalVariables.oElement.getText();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				}
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-				
+					
 				// Click on Activate it 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Activate Question ";
@@ -121,10 +103,32 @@ public class SQ0020_ActivateQuestion {
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);	
 				
+				// Assertion: Verify that Named Questionnaire gets added
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAddQuestion")));
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("This is Question")){
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
+				}
+				else{
+					GlobalVariables.sVerifyError="Verification failed Expected 'This is Question' Actual "+GlobalVariables.oElement.getText();
+					// Write Results
+					LogFunctions.writeLogs(GlobalVariables.sDescription);
+					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
+						GlobalVariables.sBlank, GlobalVariables.sVerifyError);
+				}
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
+			
 				// Click on Deactivate it 
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Activate Question ";
+				GlobalVariables.sDescription = "Deactivate Question ";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXPathDeactivateItButton"))).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
