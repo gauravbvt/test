@@ -94,20 +94,17 @@ public class SQ0020_ActivateQuestion {
 				Thread.currentThread();
 				Thread.sleep(2000);
 					
-				// Click on Activate it 
+				// Click on Activate it Button. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Activate Question ";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathActivateItButton"))).click();
-				// Write Results
-				LogFunctions.writeLogs(GlobalVariables.sDescription);
-				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-					GlobalVariables.sBlank, GlobalVariables.sBlank);
+    			GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[3]/span/span/table/tbody/tr[4]/td[2]/input"));
+				GlobalVariables.oElement.click();
 				
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);	
 				
-				// Assertion: Verify that Named Questionnaire gets added
+				// Assertion: Verify that Named Question gets added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAddQuestion")));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("This is Question")){
 					// Write Results
@@ -129,7 +126,8 @@ public class SQ0020_ActivateQuestion {
 				// Click on Deactivate it 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Deactivate Question ";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXPathDeactivateItButton"))).click();
+				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[3]/span/span/table/tbody/tr[4]/td[2]/input[2]"));
+				GlobalVariables.oElement.click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -142,9 +140,7 @@ public class SQ0020_ActivateQuestion {
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Delete Question";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionButton"))).click();
-				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-				// And acknowledge the alert (equivalent to clicking "OK")
-				alert.accept();
+			
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
