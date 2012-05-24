@@ -1,8 +1,9 @@
 <?xml version="1.0"?>	
 <elements>
 <xPathDeleteQuestionButton>//div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/span/span/table[@class='question-cont']/tbody/tr[4]/td[2]/input[3]</xPathDeleteQuestionButton>
-<xPathActivateItButton>//div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/span/span/table[@class='question-cont']/tbody/tr[4]/td[2]/input</xPathActivateItButton>
-<xPathDeactivateItButton>//div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/span/span/table[@class='question-cont']/tbody/tr[4]/td[2]/input[2]</xPathDeactivateItButton>
+<xPathActivateQuestionButton>//div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/span/span/table[@class='question-cont']/tbody/tr[4]/td[2]/input</xPathActivateQuestionButton>
+<xPathDeactivateQuestionButton>//div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/span/span/table[@class='question-cont']/tbody/tr[4]/td[2]/input[2]</xPathDeactivateQuestionButton>
+<xPathDeleteChoiceButton>html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[3]/span/span/table/tbody/tr[2]/td[3]/span/div/table/tbody/tr/td[5]/a/img</xPathDeleteChoiceButton>
 <xPathActivateQuestionnaireButton>//div[@class='floating']/span/div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/a[2]</xPathActivateQuestionnaireButton>
 <xPathDeleteQuestionnaire>//div[15]/div/span/div/div[2]/div/div[2]/div[3]/a</xPathDeleteQuestionnaire>
 <xPathQuestionnaireTab>/html/body/form/div[15]/div/span/div/div[2]/div/div/ul/li[2]/a/span</xPathQuestionnaireTab>
