@@ -16,19 +16,17 @@
         <div wicket:id="accordion">
             <wicket:container wicket:id="groups">
                 <h3><a href="#" wicket:id="title"/></h3>
-                <div>
-                    <ul>
-                        <li wicket:id="activities">
-                            <a wicket:id="activityLink" href="#">
-                                <span wicket:id="activityName">activity name</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                <ul>
+                    <li wicket:id="activities">
+                        <a wicket:id="activityLink" href="#">
+                            <span wicket:id="activityName">activity name</span>
+                        </a>
+                    </li>
+                </ul>
             </wicket:container>
         </div>
-        <div wicket:id="doc">
-            <h3 wicket:id="activity">Activity</h3>
+        <div wicket:id="doc" style="overflow: auto">
+            <h4 wicket:id="activity">Activity</h4>
             <ul wicket:id="actionContainer">
                 <li wicket:id="actions">
                     <a wicket:id="actionLink"><span wicket:id="action"> Do it</span></a>
@@ -39,9 +37,9 @@
                 Next:
                 <ul>
                     <li wicket:id="doNexts">
-                            <a wicket:id="doNextLink" href="#">
-                                <span wicket:id="doNextText"> Scoping - Events</span>
-                            </a>
+                        <a wicket:id="doNextLink" href="#">
+                            <span wicket:id="doNextText"> Scoping - Events</span>
+                        </a>
                     </li>
                 </ul>
             </div>

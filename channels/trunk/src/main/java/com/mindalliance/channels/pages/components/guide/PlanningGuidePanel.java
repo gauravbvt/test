@@ -129,14 +129,12 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
             @Override
             protected void populateItem( ListItem<ActivityChange> item ) {
                 final ActivityChange activityChange = item.getModelObject();
+                final Change change = makeChange( activityChange );
                 AjaxLink<String> doItLink = new AjaxLink<String>( "actionLink" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
-                        if ( activityChange != null ) {
-                            Change change = makeChange( activityChange );
                             if ( change != null )
                                 update( target, change );
-                        }
                     }
                 };
                 doItLink.add( new Label(
@@ -145,6 +143,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                                 ? ""
                                 : activityChange.getAction() ) );
                 item.add( doItLink );
+                item.setVisible( change != null );
             }
         };
         actionContainer.add( changesListView );
@@ -158,23 +157,24 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                 : selectedActivity.getActivityChanges();
     }
 
-    private Change makeChange( ActivityChange doIt ) {
+    private Change makeChange( ActivityChange activityChange ) {
+        if ( activityChange == null ) return null;
         Change change;
-        Change.Type type = Change.Type.valueOf( doIt.getChangeType() );
-        if ( doIt.getSubjectId() != null ) {
-            change = new Change( type, doIt.getSubjectId() );
+        Change.Type type = Change.Type.valueOf( activityChange.getChangeType() );
+        if ( activityChange.getSubjectId() != null ) {
+            change = new Change( type, activityChange.getSubjectId() );
         } else {
             Page planPage = findPage();
             Identifiable identifiable = (Identifiable) ChannelsUtils.getProperty(
                     planPage,
-                    doIt.getSubjectPath(),
+                    activityChange.getSubjectPath(),
                     null );
             if ( identifiable == null )
                 return null;
             else
                 change = new Change( type, identifiable );
         }
-        change.setProperty( doIt.getProperty() );
+        change.setProperty( activityChange.getProperty() );
         return change;
     }
 
@@ -191,7 +191,9 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                 + "doc/channels_user_guide/";
         if ( selectedActivity != null ) {
             WikiModel wikiModel = new WikiModel( helpUrl+"${image}", helpUrl+"${title}" );
-            return wikiModel.render( selectedActivity.getDescription().trim() );
+            String html = wikiModel.render( selectedActivity.getDescription().trim() );
+            html = html.replaceAll( "<a ", "<a target='_blank' " );
+            return html;
         } else {
             return "";
         }
