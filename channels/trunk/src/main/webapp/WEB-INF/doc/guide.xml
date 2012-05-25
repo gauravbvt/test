@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guide xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="guide.xsd">
+    <name>Planning guide</name>
+    <group id="scoping">
+        <name>Scoping</name>
+        <activity id="events">
+            <name>Events in scope</name>
+            <description>Name '''events in scope''' and identify those that are ''incidents''.
+
+See [http://localhost:8081/channels/doc/channels_user_guide/ch01s05.html more] about scoping.
+            </description>
+            <change>
+                <action>See all events in scope</action>
+                <subjectPath>plan</subjectPath>
+                <type>Expanded</type>
+                <property>All events</property>
+            </change>
+            <next group="profiling" activity="profiling-organization"/>
+        </activity>
+        <activity id="organizations">
+            <name>Organizations in scope</name>
+            <description>Name the '''organizations''' in scope.</description>
+            <change>
+                <action>See all participating organzations</action>
+                <subjectPath>plan</subjectPath>
+                <type>Expanded</type>
+                <property>All organizations</property>
+            </change>
+        </activity>
+    </group>
+    <group id="profiling">
+        <name>Profiling</name>
+        <activity id="profiling-agent">
+            <name>Profiling an agent</name>
+            <description>Define the '''profile''' of an agent</description>
+            <change>
+                <action>Open the index</action>
+                <subjectPath>plan</subjectPath>
+                <type>Expanded</type>
+                <property>Index</property>
+            </change>
+            <change>
+                <action>See all participating organzations</action>
+                <subjectPath>plan</subjectPath>
+                <type>Expanded</type>
+                <property>All organizations</property>
+            </change>
+            <next group="profiling" activity="profiling-organization"/>
+        </activity>
+        <activity id="profiling-organization">
+            <name>Profiling an organization</name>
+            <description>Define the '''profile''' of an organization.</description>
+            <change>
+                <action>Open the index</action>
+                <subjectPath>plan</subjectPath>
+                <type>Expanded</type>
+                <property>Index</property>
+            </change>
+        </activity>
+    </group>
+    
+</guide>

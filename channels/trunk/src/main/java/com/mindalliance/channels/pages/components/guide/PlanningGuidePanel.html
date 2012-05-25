@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div id="guide">
+        <div>
+            <span wicket:id="guideName">Guide</span>
+            <a wicket:id="hideGuide" href="#"><img src="images/hide_left.png" alt="Hide guide panel"
+                                                   title="Hide this panel"/></a>
+        </div>
+        <div wicket:id="accordion">
+            <wicket:container wicket:id="groups">
+                <h3><a href="#" wicket:id="title"/></h3>
+                <div>
+                    <ul>
+                        <li wicket:id="activities">
+                            <a wicket:id="activityLink" href="#">
+                                <span wicket:id="activityName">activity name</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </wicket:container>
+        </div>
+        <div wicket:id="doc">
+            <ul wicket:id="actionContainer">
+                <li wicket:id="actions">
+                    <a wicket:id="actionLink"><span wicket:id="action"> Do it</span></a>
+                </li>
+            </ul>
+            <div wicket:id="description">Description from wikimedia format</div>
+            <div wicket:id="doNextContainer">
+                Next:
+                <ul>
+                    <li wicket:id="doNexts">
+                            <a wicket:id="doNextLink" href="#">
+                                <span wicket:id="doNextText"> Scoping - Events</span>
+                            </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

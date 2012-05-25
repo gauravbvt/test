@@ -21,6 +21,7 @@ import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.MediaReferencesPanel;
+import com.mindalliance.channels.pages.components.guide.PlanningGuidePanel;
 import com.mindalliance.channels.pages.components.segment.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.segment.menus.PartShowMenuPanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
@@ -81,6 +82,13 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      * CSS id.
      */
     private static final String SOCIAL_PANEL_ID = "#social";
+    /**
+     * CSS id.
+     */
+    private static final String GUIDE_PANEL_ID = "#guide";
+
+    private static final int GUIDE_WIDTH = 15;
+    private static final int SOCIAL_WIDTH = 20;
 
     private boolean maximized;
 
@@ -138,6 +146,8 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      */
     private WebMarkupContainer taskTitleContainer;
 
+    private PlanningGuidePanel planningGuidePanel;
+
     //-------------------------------
     public SegmentPanel( String id, IModel<Segment> segmentModel, IModel<Part> partModel, Set<Long> expansions ) {
         super( id, segmentModel, partModel, expansions );
@@ -151,6 +161,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         addFlowDiagram();
         addPartAndFlows();
         addSocialPanel();
+        addPlanningGuide();
     }
 
     private void addPartAndFlows() {
@@ -270,10 +281,44 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         addOrReplace( sendsFlowPanel );
     }
 
+    private void addPlanningGuide() {
+        planningGuidePanel = new PlanningGuidePanel( "guide" );
+        add( planningGuidePanel );
+    }
+
     private void addSocialPanel() {
         String[] tabsShown = { SocialPanel.PRESENCE, SocialPanel.ACTIVITIES, SocialPanel.MESSAGES };
         socialPanel = new SocialPanel( "social", tabsShown );
         add( socialPanel );
+    }
+
+    public void resizeSocialAndGuidePanels( AjaxRequestTarget target, Change change ) {
+        if ( change.isUnknown() || change.isCommunicated()
+                || change.getId() == Channels.SOCIAL_ID && change.isDisplay()
+                || change.getId() == Channels.GUIDE_ID && change.isDisplay() )  {
+            boolean socialExpanded = getExpansions().contains( Channels.SOCIAL_ID );
+            boolean guideExpanded = getExpansions().contains( Channels.GUIDE_ID );
+            int socialPanelWidth = socialExpanded ? SOCIAL_WIDTH : 0;
+            int guidePanelWidth = guideExpanded ? GUIDE_WIDTH : 0;
+            int segmentPanelWidth = 100 - socialPanelWidth - guidePanelWidth;
+            int segmentPanelLeft = guideExpanded ? GUIDE_WIDTH : 0;
+            final String script =
+                    "$(\"" + SEGMENT_PANEL_ID + "\")" + ".css(\"width\",\"" + segmentPanelWidth + "%" + "\");"
+                            + "$(\"" + SEGMENT_PANEL_ID + "\")" + ".css(\"left\",\"" + segmentPanelLeft + "%" + "\");"
+                            + "$(\"" + GUIDE_PANEL_ID + "\")" + ".css(\"width\",\"" + guidePanelWidth + "%" + "\");"
+                            + "$(\"" + SOCIAL_PANEL_ID + "\")" + ".css(\"width\",\"" + socialPanelWidth + "%" + "\");";
+            target.prependJavaScript( script );
+            target.add( flowMapDiagramPanel );
+        }
+    }
+
+    /**
+     * Update social panel.
+     *
+     * @param target an ajax request target
+     */
+    public void updateSocialPanel( AjaxRequestTarget target ) {
+        socialPanel.refresh( target, new Change( Change.Type.Unknown ) );
     }
 
     //-------------------------------
@@ -308,7 +353,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 + " else {__graph_bottom = \"49.5%\"; __part_top = \"50.5%\";}" + " $(\"" + FLOWMAP_DOM_ID
                 + "\").css(\"bottom\",__graph_bottom); " + " $(\"" + PART_DOM_ID + "\").css(\"top\",__part_top);"
                 + " __channels_flowmap_minimized__ = !__channels_flowmap_minimized__;";
-        shrinkExpand.add( new AttributeModifier( "onMouseUp", true, new Model<String>( script ) ) );
+        shrinkExpand.add( new AttributeModifier( "onMouseUp", new Model<String>( script ) ) );
         shrinkExpand.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
@@ -321,10 +366,8 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         // icon
         WebMarkupContainer icon = new WebMarkupContainer( "split_icon" );
         icon.add( new AttributeModifier( "src",
-                                         true,
                                          new Model<String>( minimized ? "images/split_on.png" : "images/split.png" ) ) );
         icon.add( new AttributeModifier( "title",
-                                         true,
                                          new Model<String>( minimized ? "Shrink back forms" : "Stretch up forms" ) ) );
         shrinkExpand.add( icon );
     }
@@ -383,7 +426,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      * {@inheritDoc}
      */
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        resizeSocialPanel( target, change );
+        resizeSocialAndGuidePanels( target, change );
         refreshMenus( target );
         Identifiable identifiable = change.getSubject( getQueryService() );
         boolean stopUpdates = false;
@@ -460,7 +503,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      * @param change a change referencing what the communication is about
      */
     public void refreshSocialPanel( AjaxRequestTarget target, Change change ) {
-        resizeSocialPanel( target, change );
+        resizeSocialAndGuidePanels( target, change );
         updateSocialPanel( target );
     }
 
@@ -560,32 +603,11 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         } );
     }
 
-    public void resizeSocialPanel( AjaxRequestTarget target, Change change ) {
-        if ( change.isUnknown() || change.isCommunicated()
-             || change.getId() == Channels.SOCIAL_ID && change.isDisplay() )
-        {
-            String segmentPanelWidth;
-            String socialPanelWidth;
-            if ( getExpansions().contains( Channels.SOCIAL_ID ) ) {
-                segmentPanelWidth = "80%";
-                socialPanelWidth = "20%";
-            } else {
-                segmentPanelWidth = "100%";
-                socialPanelWidth = "0%";
-            }
-            final String script =
-                    "$(\"" + SEGMENT_PANEL_ID + "\")" + ".css(\"width\",\"" + segmentPanelWidth + "\");" + "$(\""
-                    + SOCIAL_PANEL_ID + "\")" + ".css(\"width\",\"" + socialPanelWidth + "\");";
-            target.prependJavaScript( script );
-            target.add( flowMapDiagramPanel );
-        }
-    }
-
-    /**
-     * Set part description.
-     *
-     * @param description a string
-     */
+        /**
+        * Set part description.
+        *
+        * @param description a string
+        */
     public void setPartDescription( String description ) {
         doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "description", description ) );
     }
@@ -611,21 +633,12 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     }
 
     /**
-     * Update social panel.
-     *
-     * @param target an ajax request target
-     */
-    public void updateSocialPanel( AjaxRequestTarget target ) {
-        socialPanel.refresh( target, new Change( Change.Type.Unknown ) );
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     @SuppressWarnings( "unchecked" )
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        resizeSocialPanel( target, change );
+        resizeSocialAndGuidePanels( target, change );
         boolean stopUpdates = false;
         setPartOrFlowUpdated( isPartOrFlowUpdated()
                               || change.hasQualifier( "updated" ) && (Boolean) change.getQualifier( "updated" ) );

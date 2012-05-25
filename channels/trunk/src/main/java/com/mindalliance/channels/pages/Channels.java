@@ -73,6 +73,10 @@ public class Channels extends WebApplication
      * Expansion id for social panel.
      */
     public static final long SOCIAL_ID = -1;
+    /**
+     * Expansion id for guide panel.
+     */
+    public static final long GUIDE_ID = -2;
 
     public static final long UNKNOWN_FEEDBACK_ID = Long.MIN_VALUE;
     public static final long UNKNOWN_QUESTIONNAIRE_ID = Long.MIN_VALUE + 1;

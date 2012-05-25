@@ -85,6 +85,16 @@
             <name>Maven Central</name>
             <url>https://repository.jboss.org/nexus/content/repositories/central/</url>
         </repository>
+        <repository>
+            <id>info-bliki-repository</id>
+            <url>http://gwtwiki.googlecode.com/svn/maven-repository/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -502,6 +512,18 @@
             <version>1.8.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Guide -->
+        <dependency>
+            <groupId>info.bliki.wiki</groupId>
+            <artifactId>bliki-addons</artifactId>
+            <version>3.0.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
+            <version>3.0.4.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -589,7 +611,7 @@
                 <configuration>
                     <contextPath>${contextPath}</contextPath>
                     <webAppSourceDirectory>${project.build.directory}/${project.build.finalName}</webAppSourceDirectory>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <scanIntervalSeconds>0</scanIntervalSeconds>
 
                     <!--
                                         <scanIntervalSeconds>10</scanIntervalSeconds>
@@ -677,7 +699,7 @@
                 </configuration>
             </plugin>
 
-  <!--          <plugin>
+      <!--      <plugin>
                 <groupId>org.zeroturnaround</groupId>
                 <artifactId>jrebel-maven-plugin</artifactId>
                 <version>1.1.1</version>
@@ -690,8 +712,8 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
--->
+            </plugin>-->
+
         </plugins>
     </build>
 

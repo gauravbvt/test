@@ -506,18 +506,23 @@ public class UserPage extends AbstractChannelsWebPage {
                 .append( activeCount > 1 ? " surveys" : " survey" );
         if ( activeCount > 0 ) {
             int noAnswerCount = surveysDAO.countUnanswered( plan, user, queryService, analyst );
-            int incompleteCount = surveysDAO.countIncomplete( plan, user, queryService, analyst );
-            int partialCount = incompleteCount - noAnswerCount;
+            // int incompleteCount = surveysDAO.countIncomplete( plan, user, queryService, analyst );
+            int partialCount = activeCount - noAnswerCount;
             int lateCount = surveysDAO.countLate( plan, user, queryService, getAnalyst() );
             sb
                     .append( " of which " )
                     .append( noAnswerCount == 0 ? "none" : noAnswerCount )
                     .append( noAnswerCount == 1 ? " is" : " are" )
-                    .append( " unanswered and " )
-                    .append( partialCount == 0 ? "none" : partialCount )
-                    .append( partialCount == 1 ? " is" : " are" )
-                    .append( " partially answered. " )
-                    .append( lateCount == 0 ? "None" : lateCount )
+                    .append( " unanswered" );
+            if ( partialCount != 0 ) {
+                sb.append( " and " )
+                        .append( partialCount )
+                        .append( partialCount == 1 ? " is" : " are" )
+                        .append( " partially answered. " );
+            } else {
+                sb.append( ". " );
+            }
+            sb.append( lateCount == 0 ? "None" : lateCount )
                     .append( lateCount <= 1 ? " is" : " are" )
                     .append( " overdue." );
         } else {
@@ -535,8 +540,8 @@ public class UserPage extends AbstractChannelsWebPage {
         } else {
             sb.append( unresolvedCount )
                     .append( " feedback" )
-            .append(  unresolvedCount > 1 ? " are " : " is " )
-            .append( "unresolved." );
+                    .append( unresolvedCount > 1 ? " are " : " is " )
+                    .append( "unresolved." );
         }
         if ( newReplyCount > 0 ) {
             sb.append( " You have" )

@@ -74,4 +74,5 @@ public interface ChannelsService {
      */
     IssuesData getIssues( @PathParam( "uri" ) String uri, @PathParam( "version" ) String version );
 
+
 }

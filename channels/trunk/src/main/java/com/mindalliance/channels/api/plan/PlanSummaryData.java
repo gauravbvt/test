@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.Set;
  * Date: 12/12/11
  * Time: 1:36 PM
  */
-@XmlType( propOrder = {"planIdentifier", "description", "planners", "participations", "supervised", "documentation"} )
+@XmlType( propOrder = {"planIdentifier", "dateVersioned", "description", "planners", "participations", "supervised", "documentation"} )
 
 public class PlanSummaryData {
 
@@ -45,6 +46,10 @@ public class PlanSummaryData {
         return new PlanIdentifierData( getPlan() );
     }
 
+    @XmlElement
+    public String getDateVersioned() {
+        return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( getPlan().getWhenVersioned() );
+    }
     @XmlElement
     public String getDescription() {
         return getPlan().getDescription();

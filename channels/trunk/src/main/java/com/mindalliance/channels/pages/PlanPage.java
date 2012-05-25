@@ -440,6 +440,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
         setVersioned( false );
         expanded.add( Channels.SOCIAL_ID );
+        expanded.add( Channels.GUIDE_ID );
         add( new Label( "sg-title",
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
         WebMarkupContainer body = new IndicatorAwareWebContainer( "indicator", "spinner" );
@@ -1892,7 +1893,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
             if ( (Boolean) change.getQualifier( "updated" ) ) {
                 refreshSegmentPanel( target, change, updated );
             }
-        } else if ( change.getId() == -1 || change.isForInstanceOf( SegmentObject.class ) ) {
+        } else if ( change.getId() == Channels.SOCIAL_ID
+                || change.getId() == Channels.GUIDE_ID
+                || change.isForInstanceOf( SegmentObject.class ) ) {
             refreshSegmentPanel( target, change, updated );
         /*} else if ( change.isForInstanceOf( Survey.class ) ) {
             refreshSurveysPanel( target, change, updated );

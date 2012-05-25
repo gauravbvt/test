@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="guide">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                <xs:element ref="group" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="group">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                <xs:element ref="activity" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:ID"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="activity">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                <xs:element name="description" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                <xs:element ref="change" maxOccurs="unbounded" minOccurs="0"/>
+                <xs:element ref="next" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:ID"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="change">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="action" type="xs:string"/>
+                <xs:choice>
+                    <xs:element name="subjectId" type="xs:long"/>
+                    <xs:element name="subjectPath" type="xs:string"/>
+                </xs:choice>
+                <xs:element ref="type"/> 
+                <xs:element name="property" type="xs:string" maxOccurs="1" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:element name="next">
+        <xs:complexType>
+            <xs:attribute name="group" type="xs:IDREF"/>
+            <xs:attribute name="activity" type="xs:IDREF"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="type">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="Expanded"/>
+                <xs:enumeration value="AspectViewed"/>
+                <xs:enumeration value="AspectReplaced"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+
+
+</xs:schema>

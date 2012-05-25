@@ -15,7 +15,7 @@ import java.util.Set;
  * Date: 12/1/11
  * Time: 10:27 AM
  */
-@XmlType( propOrder = {"name", "organizationId", "title", "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
+@XmlType( propOrder = {"actorId", "organizationId", "title", "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
 public class EmploymentData {
 
     private Employment employment;
@@ -33,12 +33,10 @@ public class EmploymentData {
         this.employment = employment;
         this.userInfo = userInfo;
     }
-    
-    @XmlElement
-    public String getName() {
-        return userInfo != null
-                ? userInfo.getFullName()
-                : employment.getActor().getName();
+
+    @XmlElement( name = "agentId" )
+    public Long getActorId() {
+        return employment.getActor().getId();
     }
 
     @XmlElement

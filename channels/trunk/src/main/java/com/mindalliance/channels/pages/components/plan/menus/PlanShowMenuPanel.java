@@ -62,6 +62,7 @@ public class PlanShowMenuPanel extends MenuPanel {
             menuItems.addAll(
                     Arrays.asList(
                             collapsible( Channels.SOCIAL_ID, "Hide planners", "Planners" ),
+                            collapsible( Channels.GUIDE_ID, "Hide guide", "Guide" ),
                             collapsible( plan, "Hide about plan", "About plan" ),
                             collapsible(
                                     getSegment(), "Hide about plan segment", "About plan segment" ) ) );
@@ -123,9 +124,9 @@ public class PlanShowMenuPanel extends MenuPanel {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         final boolean expanded = isExpanded( id );
-                        update( target,
-                                new Change( expanded ? Change.Type.Collapsed : Change.Type.Expanded,
-                                        id ) );
+                        Change change = new Change( expanded ? Change.Type.Collapsed : Change.Type.Expanded,
+                                id );
+                        update( target, change );
                     }
                 } );
     }

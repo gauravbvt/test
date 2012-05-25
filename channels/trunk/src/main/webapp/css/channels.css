@@ -53,10 +53,11 @@ div.header .help-icon {
     position: absolute;
     top: 5em;
     bottom: 10px;
-    left: 0;
-    width: 80%;
+    left: 15%;
+    width: 65%;
     overflow: hidden;
     padding-bottom: 5px;
+    float:left;
 }
 
 .maximized {
@@ -2304,6 +2305,21 @@ div.section-content > div.flow > div > span.pointer > span.title {
 
 div.section-content > div.flow > div > img {
 	float: right;
+}
+
+/* ---- Guide ----- */
+
+#guide {
+    position: absolute;
+    top: 5.8em;
+    bottom: 0;
+    left: 0;
+    width: 15%;
+    margin-bottom: 10px;
+    background:#c3d9ff;
+    border-left:1px solid #7794C7;
+    float:left;
+    overflow:hidden;
 }
 
 /* ---- Social ----- */

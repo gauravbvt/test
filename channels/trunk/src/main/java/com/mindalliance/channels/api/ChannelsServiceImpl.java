@@ -15,7 +15,6 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +53,6 @@ public class ChannelsServiceImpl implements ChannelsService {
     private ChannelsUserDao userDao;
     private Analyst analyst;
     private PlanParticipationService planParticipationService;
-
-    @SpringBean
-    private ChannelsUser user;
 
     @Override
     /**
@@ -235,4 +231,5 @@ public class ChannelsServiceImpl implements ChannelsService {
     private PlanService getPlanService( Plan plan ) {
         return planServiceFactory.getService( plan );
     }
+
 }

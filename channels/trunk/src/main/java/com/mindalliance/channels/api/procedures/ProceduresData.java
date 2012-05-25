@@ -1,6 +1,5 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -34,7 +33,7 @@ import java.util.Set;
  * Time: 12:25 PM
  */
 @XmlRootElement( name = "procedures", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"date", "planIdentifier", "agents", "employments", "procedures", "environment"} )
+@XmlType( propOrder = {"date", "planIdentifier", "dateVersioned", "actorIds", "employments", "procedures"/*, "environment"*/} )
 public class ProceduresData {
 
     private Plan plan;
@@ -87,13 +86,18 @@ public class ProceduresData {
         return new PlanIdentifierData( plan );
     }
 
-    @XmlElement( name = "agent" )
-    public List<AgentData> getAgents() {
-        List<AgentData> agentDataList = new ArrayList<AgentData>();
+    @XmlElement
+    public String getDateVersioned() {
+        return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( plan.getWhenVersioned() );
+    }
+
+    @XmlElement( name = "agentId" )
+    public List<Long> getActorIds() {
+        List<Long> actorIds = new ArrayList<Long>();
         for ( Actor actor : actors ) {
-            agentDataList.add( new AgentData( actor, plan ) );
+            actorIds.add( actor.getId() );
         }
-        return agentDataList;
+        return actorIds;
     }
 
     private List<Actor> getActors( List<PlanParticipation> participations ) {
@@ -141,10 +145,12 @@ public class ProceduresData {
         return procedures;
     }
 
+/*
     @XmlElement
     public EnvironmentData getEnvironment() {
         return new EnvironmentData( this, planService );
     }
+*/
 
     private Assignments getActorAssignments( Actor actor ) {
         if ( assignments == null ) {
