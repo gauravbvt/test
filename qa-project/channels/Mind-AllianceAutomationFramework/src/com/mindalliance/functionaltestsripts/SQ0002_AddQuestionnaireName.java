@@ -76,6 +76,8 @@ public class SQ0002_AddQuestionnaireName {
 				GlobalVariables.sDescription="Enter Questionnaire name";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.name("dataCollection:content:tabs:panel:questionnaire:questionnaireManager:name"));
 				GlobalVariables.oElement.click();
+				for (int i = 0; i <= 20; i++)
+					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
 				GlobalVariables.oElement.sendKeys("Questionnaire 1");
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
 				// WebElement Synchronization
