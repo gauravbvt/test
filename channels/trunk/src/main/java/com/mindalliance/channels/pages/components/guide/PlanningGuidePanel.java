@@ -112,6 +112,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     private void addDoc() {
         docContainer = new WebMarkupContainer( "doc" );
         docContainer.setOutputMarkupId( true );
+        docContainer.add( new Label("activity", selectedActivity == null ? "" : selectedActivity.getName() ) );
         docContainer.add( getActionContainer() );
         docContainer.add( getDescriptionLabel() );
         docContainer.add( getDoNextContainer() );
