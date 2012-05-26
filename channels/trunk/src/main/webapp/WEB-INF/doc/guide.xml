@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <guide xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="guide.xsd">
-    <name>Planning guide</name>
+    <name>Guide</name>
+    <description>Select a group of activities and then an activity within that group.</description>
     <group id="scoping">
         <name>Scoping</name>
         <activity id="events">

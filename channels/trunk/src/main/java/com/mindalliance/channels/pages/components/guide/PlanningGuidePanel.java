@@ -41,6 +41,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     private GuideReader guideReader;
 
     private Guide guide;
+    private ActivityGroup selectedGroup;
     private Activity selectedActivity;
     private AccordionWebMarkupContainer accordion;
     private WebMarkupContainer docContainer;
@@ -95,6 +96,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                                 Change change = new Change( Change.Type.Selected, Channels.GUIDE_ID );
                                 change.setProperty( "activity" );
                                 change.addQualifier( "activity", activity );
+                                change.addQualifier( "group", group );
                                 update( target, change );
                             }
                         };
@@ -112,7 +114,10 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     private void addDoc() {
         docContainer = new WebMarkupContainer( "doc" );
         docContainer.setOutputMarkupId( true );
-        docContainer.add( new Label("activity", selectedActivity == null ? "" : selectedActivity.getName() ) );
+        docContainer.add( new Label( "activityInGroup",
+                selectedActivity == null
+                        ? ""
+                        : ( selectedGroup.getName() + " - " + selectedActivity.getName() ) ) );
         docContainer.add( getActionContainer() );
         docContainer.add( getDescriptionLabel() );
         docContainer.add( getDoNextContainer() );
@@ -133,8 +138,8 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                 AjaxLink<String> doItLink = new AjaxLink<String>( "actionLink" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
-                            if ( change != null )
-                                update( target, change );
+                        if ( change != null )
+                            update( target, change );
                     }
                 };
                 doItLink.add( new Label(
@@ -189,14 +194,13 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         String helpUrl = serverUrl
                 + ( serverUrl.endsWith( "/" ) ? "" : "/" )
                 + "doc/channels_user_guide/";
-        if ( selectedActivity != null ) {
-            WikiModel wikiModel = new WikiModel( helpUrl+"${image}", helpUrl+"${title}" );
-            String html = wikiModel.render( selectedActivity.getDescription().trim() );
-            html = html.replaceAll( "<a ", "<a target='_blank' " );
-            return html;
-        } else {
-            return "";
-        }
+        String wikimedia = selectedActivity != null
+                ? selectedActivity.getDescription()
+                : guide.getDescription();
+        WikiModel wikiModel = new WikiModel( helpUrl + "${image}", helpUrl + "${title}" );
+        String html = wikiModel.render( wikimedia.trim() );
+        html = html.replaceAll( "<a ", "<a target='_blank' " );
+        return html;
     }
 
     private WebMarkupContainer getDoNextContainer() {
@@ -246,6 +250,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     @Override
     public void changed( Change change ) {
         if ( change.isSelected() && change.getId() == Channels.GUIDE_ID ) {
+            selectedGroup = (ActivityGroup) change.getQualifier( "group" );
             selectedActivity = (Activity) change.getQualifier( "activity" );
         } else {
             super.changed( change );

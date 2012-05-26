@@ -18,6 +18,8 @@ public class Guide implements Serializable {
 
     private String name;
 
+    private String description;
+
     @XStreamImplicit( itemFieldName = "group" )
     private List<ActivityGroup> activityGroups;
 
@@ -30,6 +32,14 @@ public class Guide implements Serializable {
 
     public void setName( String name ) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription( String description ) {
+        this.description = description;
     }
 
     public List<ActivityGroup> getActivityGroups() {

@@ -4,7 +4,8 @@
     <xs:element name="guide">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="description" type="xs:string"/>
                 <xs:element ref="group" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
@@ -13,7 +14,7 @@
     <xs:element name="group">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                <xs:element name="name" type="xs:string"/>
                 <xs:element ref="activity" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attribute name="id" type="xs:ID"/>
@@ -23,8 +24,8 @@
     <xs:element name="activity">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1"/>
-                <xs:element name="description" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="description" type="xs:string"/>
                 <xs:element ref="change" maxOccurs="unbounded" minOccurs="0"/>
                 <xs:element ref="next" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
