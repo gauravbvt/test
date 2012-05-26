@@ -214,11 +214,10 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     private void addPartTitleContainer() {
         taskTitleContainer = new WebMarkupContainer( "task-title" );
         taskTitleContainer.setOutputMarkupId( true );
-        taskTitleContainer.add( new AttributeModifier( "class", true, new Model<String>( cssClasses() ) ) );
+        taskTitleContainer.add( new AttributeModifier( "class", new Model<String>( cssClasses() ) ) );
         List<String> conceptualCauses = getAnalyst().findConceptualCauses( getQueryService(), getPart() );
         if ( !conceptualCauses.isEmpty() ) {
             taskTitleContainer.add( new AttributeModifier( "title",
-                                                           true,
                                                            new Model<String>(
                                                                    "Not executable: " + StringUtils.capitalize(
                                                                            ChannelsUtils.listToString( conceptualCauses,
@@ -320,6 +319,16 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     public void updateSocialPanel( AjaxRequestTarget target ) {
         socialPanel.refresh( target, new Change( Change.Type.Unknown ) );
     }
+
+    /**
+     * Update guide panel.
+     *
+     * @param target an ajax request target
+     */
+    public void updateGuidePanel( AjaxRequestTarget target ) {
+        planningGuidePanel.refresh( target, new Change( Change.Type.Unknown ) );
+    }
+
 
     //-------------------------------
     protected void addFlowMapViewingControls() {

@@ -1823,6 +1823,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
         if ( !change.isNone() ) {
             refreshAllMenus( target );
+            segmentPanel.updateGuidePanel( target );
             if ( change.isForInstanceOf( Plan.class ) && change.isSelected() ) {  // Not caused anymore
                 redirectToPlan();
             } else if ( change.isAspectReplaced() ) {

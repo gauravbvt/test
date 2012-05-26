@@ -45,6 +45,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     private Activity selectedActivity;
     private AccordionWebMarkupContainer accordion;
     private WebMarkupContainer docContainer;
+    private WikiModel wikiModel;
 
     public PlanningGuidePanel( String id ) {
         super( id );
@@ -245,6 +246,12 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         } else {
             return new ArrayList<ActivityRef>();
         }
+    }
+
+    @Override
+    public void refresh( AjaxRequestTarget target, Change change ) {
+        addDoc();
+        target.add( docContainer );
     }
 
     @Override
