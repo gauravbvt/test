@@ -62,8 +62,8 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     @Override
     @Transactional
     public void deleteMessage( UserMessage message ) {
-        delete( message );
-        changed( message.getPlanUri() );
+            delete( message );
+            changed( message.getPlanUri() );
     }
 
     @Override

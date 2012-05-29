@@ -25,6 +25,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -43,6 +45,11 @@ import java.util.List;
  * Time: 1:32:35 PM
  */
 public class UserMessageListPanel extends AbstractSocialListPanel {
+
+    /**
+     * The logger.
+     */
+    private final Logger LOG = LoggerFactory.getLogger( UserMessageListPanel.class );
 
     @SpringBean
     private UserMessageService userMessageService;
@@ -76,7 +83,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private Date whenLastRefreshed;
 
     static {
-        ALL_PLANNERS = new ChannelsUser( new ChannelsUserInfo(  ChannelsUserInfo.PLANNERS, "bla,Anonymous,bla" ) );
+        ALL_PLANNERS = new ChannelsUser( new ChannelsUserInfo( ChannelsUserInfo.PLANNERS, "bla,Anonymous,bla" ) );
         ALL_USERS = new ChannelsUser( new ChannelsUserInfo( ChannelsUserInfo.USERS, "bla,Anonymous,bla" ) );
     }
 
@@ -121,7 +128,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     private boolean isPlanner() {
-        return  getUser().isPlanner();
+        return getUser().isPlanner();
     }
 
     private void addShowHideBroadcastsLabel() {
@@ -142,7 +149,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                 adjustComponents( target );
             }
         };
-       // sentReceivedLink.setVisible( isPlanner() );
+        // sentReceivedLink.setVisible( isPlanner() );
         add( sentReceivedLink );
     }
 
@@ -182,8 +189,8 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         addOrReplace( aboutMessagesLabel );
     }
 
-    private String getAboutMessage(int numberListed ) {
-       String message = (numberListed == 0 ? "No" : "Showing") + " messages";
+    private String getAboutMessage( int numberListed ) {
+        String message = ( numberListed == 0 ? "No" : "Showing" ) + " messages";
         message += showReceived ? " received" : " sent";
         if ( privateOnly ) message += " (excluding broadcasts)";
         return message;
@@ -385,10 +392,10 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         String text = getNewMessageText();
         if ( !text.isEmpty() ) {
             Plan plan = getPlan();
-            UserMessage userMessage = new UserMessage( 
-                    plan.getUri(), 
-                    plan.getVersion(), 
-                    sender.getUsername(), 
+            UserMessage userMessage = new UserMessage(
+                    plan.getUri(),
+                    plan.getVersion(),
+                    sender.getUsername(),
                     text );
             userMessage.setToUsername( getNewMessageRecipient().getUsername() );
             if ( getNewMessageAbout() != null )
@@ -400,15 +407,15 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         }
     }
 
-    private void adjustComponents( AjaxRequestTarget target) {
-        adjustComponents( );
+    private void adjustComponents( AjaxRequestTarget target ) {
+        adjustComponents();
         target.add( userMessagesContainer );
         target.add( showAFew );
         target.add( showMore );
         target.add( aboutMessagesLabel );
     }
 
-    private void adjustComponents(  ) {
+    private void adjustComponents() {
         List<UserMessage> userMessages = getUserMessages( getUser() );
         addAboutMessages( userMessages.size() );
         makeVisible( showMore, !allShown );
@@ -428,7 +435,11 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     public void deleteMessage( UserMessage message, AjaxRequestTarget target ) {
-        userMessageService.deleteMessage( message );
+        try {
+            userMessageService.deleteMessage( message );
+        } catch ( Exception e ) {
+            LOG.warn( "Error while deleting message (double delete?): " + e );
+        }
         refresh( target, new Change( Change.Type.Communicated ) );
     }
 
@@ -442,8 +453,8 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                         "Message will be emailed to "
                                 + ( message.isBroadcast( getUser() )
                                 ? message.isToAllPlanners()
-                                   ? "all planners"
-                                   : "all users"
+                                ? "all planners"
+                                : "all users"
                                 : getUserFullName( message.getToUsername() ) ) ) );
     }
 
@@ -471,7 +482,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
 
     public void refresh( AjaxRequestTarget target, Change change ) {
         Date whenLastChanged = userMessageService.getWhenLastChanged( planVersionUri() );
-        if ( whenLastChanged != null && whenLastChanged.after( whenLastRefreshed ) ) {
+        if ( whenLastChanged == null || whenLastChanged.after( whenLastRefreshed ) ) {
             addUserMessages();
             adjustComponents( target );
             whenLastRefreshed = new Date();
