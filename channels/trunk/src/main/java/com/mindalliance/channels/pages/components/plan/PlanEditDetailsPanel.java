@@ -44,7 +44,9 @@ import java.util.Set;
  */
 public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
-    /** The plan definition manager. */
+    /**
+     * The plan definition manager.
+     */
     @SpringBean
     private DefinitionManager definitionManager;
 
@@ -52,6 +54,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
      * Issues panel.
      */
     private IssuesPanel issuesPanel;
+    private ModelObjectLink localeLink;
 
     public PlanEditDetailsPanel(
             String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
@@ -62,56 +65,91 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     }
 
     private void init( final Plan plan ) {
-        add(    new Label( "uri", plan.getUri() ),
-                new TextField<String>( "name", new PropertyModel<String>( this, "name" ) )
-                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                        @Override
-                        protected void onUpdate( AjaxRequestTarget target ) {
-                            update( target, new Change( Change.Type.Updated, getPlan(), "name" ) );
-                        }
-                    } )
-                .setEnabled( isLockedByUser( plan ) ),
-
-             new TextArea<String>( "description", new PropertyModel<String>( this, "description" ) )
-                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                        @Override
-                        protected void onUpdate( AjaxRequestTarget target ) {
-                            update( target,
-                                    new Change( Change.Type.Updated, getPlan(), "description" ) );
-                        }
-                    } )
-                .setEnabled( isLockedByUser( plan ) ),
-             new AjaxCheckBox(
-                     "template",
-                     new PropertyModel<Boolean>( this, "template") ) {
-                 @Override
-                 protected void onUpdate( AjaxRequestTarget target ) {
-                     update( target, new Change( Change.Type.Updated, plan) );
-                 }
-             }.setEnabled( isLockedByUser( plan ) ),
-             new PhaseListPanel( "phases" ),
-
-             new ModelObjectLink( "locale-link",
-                        new PropertyModel<Organization>( plan, "locale" ),
-                        new Model<String>( "Locale" ) ),
-
-             createScopePanel().setEnabled( isLockedByUser( plan ) ),
-
-                new TextField<String>( "defaultLanguage", new PropertyModel<String>( this, "defaultLanguage" ) )
-                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                        @Override
-                        protected void onUpdate( AjaxRequestTarget target ) {
-                            update( target, new Change( Change.Type.Updated, getPlan(), "defaultLanguage" ) );
-                        }
-                    } )
-                .setEnabled( isLockedByUser( plan ) ),
-
-             new AttachmentPanel( "attachments", new Model<ModelObject>( plan ) )
-        );
-
+        addUri();
+        addName();
+        addDescription();
+        addIsTemplate();
+        addPhases();
+        addLocale();
+        addDefaultLanguage();
+        addAttachments();
         addOrReplace( createIssuePanel() );
-
         adjustComponents();
+    }
+
+    private void addUri() {
+        add( new Label( "uri", getPlan().getUri() ) );
+    }
+
+    private void addName() {
+        add( new TextField<String>( "name", new PropertyModel<String>( this, "name" ) )
+                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                    @Override
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        update( target, new Change( Change.Type.Updated, getPlan(), "name" ) );
+                    }
+                } )
+                .setEnabled( isLockedByUser( getPlan() ) ) );
+    }
+
+    private void addDescription() {
+        add( new TextArea<String>( "description", new PropertyModel<String>( this, "description" ) )
+                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                    @Override
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        update( target,
+                                new Change( Change.Type.Updated, getPlan(), "description" ) );
+                    }
+                } )
+                .setEnabled( isLockedByUser( getPlan() ) ) );
+    }
+
+    private void addIsTemplate() {
+        final Plan plan = getPlan();
+        add( new AjaxCheckBox(
+                "template",
+                new PropertyModel<Boolean>( this, "template" ) ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, plan ) );
+            }
+        }.setEnabled( isLockedByUser( plan ) ) );
+    }
+
+    private void addPhases() {
+        add( new PhaseListPanel( "phases" ) );
+    }
+
+    private void addLocale() {
+        addLocaleLink();
+        add( new EntityReferencePanel<Place>(
+                "localePanel",
+                new Model<Plan>( getPlan() ), getQueryService().findAllEntityNames( Place.class ),
+                "locale",
+                Place.class
+        ) );
+    }
+
+    private void addLocaleLink() {
+        localeLink = new ModelObjectLink( "locale-link",
+                new PropertyModel<Organization>( getPlan(), "locale" ),
+                new Model<String>( "Locale" ) );
+        addOrReplace( localeLink );
+    }
+
+    private void addDefaultLanguage() {
+        add( new TextField<String>( "defaultLanguage", new PropertyModel<String>( this, "defaultLanguage" ) )
+                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                    @Override
+                    protected void onUpdate( AjaxRequestTarget target ) {
+                        update( target, new Change( Change.Type.Updated, getPlan(), "defaultLanguage" ) );
+                    }
+                } )
+                .setEnabled( isLockedByUser( getPlan() ) ) );
+    }
+
+    private void addAttachments() {
+        add( new AttachmentPanel( "attachments", new Model<ModelObject>( getPlan() ) ) );
     }
 
 
@@ -126,8 +164,8 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
     private IssuesPanel createIssuePanel() {
         issuesPanel = new IssuesPanel( "issues",
-                                       new PropertyModel<ModelObject>( this, "plan" ),
-                                       getExpansions() );
+                new PropertyModel<ModelObject>( this, "plan" ),
+                getExpansions() );
         issuesPanel.setOutputMarkupId( true );
 
         return issuesPanel;
@@ -164,7 +202,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     public void setName( String name ) {
         if ( name != null && !isSame( getName(), name ) )
             doCommand( new PlanRename( getUser().getUsername(),
-                                       getPlan(), definitionManager.makeUniqueName( name ) ) );
+                    getPlan(), definitionManager.makeUniqueName( name ) ) );
     }
 
     /**
@@ -224,7 +262,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
                             "template",
                             val,
                             UpdateObject.Action.Set )
-                    );
+            );
         }
     }
 
@@ -241,13 +279,16 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isForProperty( "phases" ) ) {
-            // Only unused phases can be removed, added ones at not yet referenced.
+        if ( change.isUpdated() ) {
             addOrReplace( createIssuePanel() );
             target.add( issuesPanel );
-        } else {
-            super.updateWith( target, change, updated );
         }
+        if ( change.isForProperty( "locale" ) ) {
+            // Only unused phases can be removed, added ones at not yet referenced.
+            addLocaleLink();
+            target.add( localeLink );
+        }
+        super.updateWith( target, change, updated );
     }
 
 

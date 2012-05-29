@@ -102,6 +102,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     private WebMarkupContainer commitmentsContainer;
     private WebMarkupContainer moreContainer;
     private WebMarkupContainer mediaNotDeployedContainer;
+    private WebMarkupContainer locationContainer;
 
     public OrganizationDetailsPanel(
             String id,
@@ -120,6 +121,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         addParentLink();
         addParentField();
         addLocationField();
+        addLocationLink();
         addContactInfoPanel();
         addMediaNotDeployedPanel();
         addReceiveFields();
@@ -187,14 +189,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     }
 
     private void addLocationField() {
-        WebMarkupContainer locationContainer = new WebMarkupContainer( "locationContainer" );
+        locationContainer = new WebMarkupContainer( "locationContainer" );
+        locationContainer.setOutputMarkupId( true );
         locationContainer.setVisible( getOrganization().isActual() );
         moDetailsDiv.add( locationContainer );
-        Organization organization = getOrganization();
-        locationContainer.add(
-                new ModelObjectLink( "loc-link",
-                        new PropertyModel<Organization>( organization, "location" ),
-                        new Model<String>( "Location" ) ) );
         final List<String> locationChoices = getQueryService().findAllEntityNames( Place.class );
         locationField = new AutoCompleteTextField<String>( "location",
                 new PropertyModel<String>( this, "locationName" ) ) {
@@ -216,6 +214,13 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             }
         } );
         locationContainer.add( locationField );
+    }
+
+    private void addLocationLink() {
+        ModelObjectLink localeLink =  new ModelObjectLink( "loc-link",
+                new PropertyModel<Organization>( getOrganization(), "location" ),
+                new Model<String>( "Location" ) );
+        locationContainer.addOrReplace( localeLink );
     }
 
     private void addContactInfoPanel() {
@@ -718,6 +723,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
                         target,
                         new Change( Change.Type.Updated, getOrganization(), "types" ),
                         updated );
+            }
+            if ( property.equals( "location" ) ) {
+                addLocationLink();
+                target.add( locationContainer );
             }
         }
         super.updateWith( target, change, updated );
