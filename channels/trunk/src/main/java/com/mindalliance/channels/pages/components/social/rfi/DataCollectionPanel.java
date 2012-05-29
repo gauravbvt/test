@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -24,7 +25,7 @@ import java.util.Set;
  * Date: 3/2/12
  * Time: 1:11 PM
  */
-public class DataCollectionPanel extends FloatingCommandablePanel {
+public class DataCollectionPanel extends FloatingCommandablePanel implements Releaseable {
 
     /**
      * Min width on resize.
@@ -39,6 +40,7 @@ public class DataCollectionPanel extends FloatingCommandablePanel {
     private RFISurveysPanel rfisPanel;
     private QuestionnairesPanel questionnairesPanel;
     private IModel<RFISurvey> rfiSurveyModel;
+    private RFISurveysPanel rfiSurveysPanel;
 
 
     public DataCollectionPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
@@ -52,31 +54,49 @@ public class DataCollectionPanel extends FloatingCommandablePanel {
     }
 
     private void init() {
-        AjaxTabbedPanel tabbedPanel = new AjaxTabbedPanel( "tabs", getTabs() );
+        AjaxTabbedPanel tabbedPanel = new AjaxTabbedPanel( "tabs", getTabs() ) {
+            @Override
+            protected void onAjaxUpdate( AjaxRequestTarget target ) {
+                clearSelections();
+                super.onAjaxUpdate( target );
+            }
+        };
         tabbedPanel.setOutputMarkupId( true );
         getContentContainer().add( tabbedPanel );
+    }
+
+    private void clearSelections() {
+        if ( questionnairesPanel != null ) {
+            questionnairesPanel.clearSelectionWith( this );
+        }
+        if ( rfiSurveysPanel != null ) {
+            rfiSurveysPanel.clearSelectionWith( this );
+        }
     }
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
         tabs.add( new AbstractTab( new Model<String>( "Surveys" ) ) {
             public Panel getPanel( String id ) {
-                return new RFISurveysPanel( id, rfiSurveyModel );
+                rfiSurveysPanel = new RFISurveysPanel( id, rfiSurveyModel );
+                return rfiSurveysPanel;
             }
         } );
+
         tabs.add( new AbstractTab( new Model<String>( "Questionnaires" ) ) {
             public Panel getPanel( String id ) {
-                return new QuestionnairesPanel( id );
+                questionnairesPanel = new QuestionnairesPanel( id );
+                return questionnairesPanel;
             }
         } );
 
         return tabs;
-   }
+    }
 
 
     @Override
     protected String getTitle() {
-        return "Data collection";
+        return "Surveys";
     }
 
     @Override
@@ -111,9 +131,29 @@ public class DataCollectionPanel extends FloatingCommandablePanel {
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
+        clearSelections();
         Change change = new Change( Change.Type.Collapsed, RFISurvey.UNKNOWN );
         update( target, change );
     }
 
+    /**
+     * Release any lock on an identifiable.
+     *
+     * @param identifiable an identifiable
+     */
+    @Override
+    public void releaseAnyLockOn( Identifiable identifiable ) {
+        getCommander().releaseAnyLockOn( getUser().getUsername(), identifiable );
+    }
+
+    /**
+     * Release any lock on an identifiable.
+     *
+     * @param identifiable an identifiable
+     */
+    @Override
+    public void requestLockOn( Identifiable identifiable ) {
+        getCommander().requestLockOn( getUser().getUsername(), identifiable );
+    }
 
 }

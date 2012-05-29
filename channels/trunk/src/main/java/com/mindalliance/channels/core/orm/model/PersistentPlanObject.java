@@ -1,8 +1,8 @@
 package com.mindalliance.channels.core.orm.model;
 
+import com.mindalliance.channels.core.ChannelsLockable;
 import com.mindalliance.channels.core.model.Identifiable;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +12,7 @@ import java.util.Date;
  * Date: 2/2/12
  * Time: 11:16 AM
  */
-public interface PersistentPlanObject extends Timestamped, Identifiable, Serializable {
+public interface PersistentPlanObject extends Timestamped, Identifiable, ChannelsLockable {
 
     /**
      * Get the date associated with this object.

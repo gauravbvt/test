@@ -259,7 +259,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * The surveys panel.
      */
- //   private Component surveysPanel;
+    //   private Component surveysPanel;
 
     /**
      * Failure impacts panel.
@@ -350,7 +350,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
      */
     private long message_time = 0;
 
-    private Map<Long, Boolean> showSimpleForm = new HashMap<Long, Boolean>(  );
+    private Map<Long, Boolean> showSimpleForm = new HashMap<Long, Boolean>();
 
     /**
      * Survey service.
@@ -467,7 +467,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addEOIsPanel();
         addFailureImpactsPanel();
         addDisseminationPanel( null, false );
-        addModelObjectSurveysPanel( );
+        addModelObjectSurveysPanel();
         addOverridesPanel();
         addSegmentEditPanel();
         addPlanEditPanel( null );
@@ -513,7 +513,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         channels_logo.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                setResponsePage( UserPage.class, planParameters( getPlan() )  );
+                setResponsePage( UserPage.class, planParameters( getPlan() ) );
             }
         } );
         form.add( channels_logo );
@@ -566,7 +566,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void addAllFeedbackPanel() {
         addAllFeedbackPanel( null );
     }
-    
+
     private void addDataCollectionPanel() {
         addDataCollectionPanel( null );
     }
@@ -582,7 +582,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     new Model<Plan>( getPlan() ),
                     true );
             if ( !feedback.isUnknown() ) {
-                ((AllFeedbackFloatingPanel) allFeedbackPanel ).select( feedback );
+                ( (AllFeedbackFloatingPanel) allFeedbackPanel ).select( feedback );
             }
         }
         form.addOrReplace( allFeedbackPanel );
@@ -803,7 +803,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 warningPanel,
                 PlanPage.this,
                 target
-                );
+        );
     }
 
     private void fadeOutMessagePanel( AjaxRequestTarget target ) {
@@ -1022,7 +1022,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         form.addOrReplace( disseminationPanel );
     }
 
-    private void addModelObjectSurveysPanel( ) {
+    private void addModelObjectSurveysPanel() {
         ModelObject modelObject = getModelObjectViewed( ModelObject.class, "surveys" );
         if ( modelObject == null ) {
             modelObjectSurveysPanel = new Label( "moSurveys", "" );
@@ -1207,7 +1207,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * Redirect to current plan page.
      */
     public void redirectToPlan() {
-        setResponsePage( PlanPage.class, planParameters( getPlan() )  );
+        setResponsePage( PlanPage.class, planParameters( getPlan() ) );
     }
 
     /**
@@ -1307,7 +1307,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     public static Set<Long> findExpansions( PageParameters parameters ) {
         if ( parameters == null )
             return new HashSet<Long>();
-        Set<Long> result = new HashSet<Long>( );
+        Set<Long> result = new HashSet<Long>();
         if ( parameters.getNamedKeys().contains( EXPAND_PARM ) ) {
             List<StringValue> stringList = parameters.getValues( EXPAND_PARM );
             for ( StringValue id : stringList )
@@ -1445,7 +1445,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void expand( Change change ) {
         tryAcquiringLock( change );
         if ( isSingleExpansion( change ) ) {
-            ModelObject subject = (ModelObject)change.getSubject( getQueryService() );
+            ModelObject subject = (ModelObject) change.getSubject( getQueryService() );
             ModelObject previous = findExpanded( subject );
             if ( previous != null && !previous.equals( subject ) ) {
                 collapse( new Change( Change.Type.None, previous ) );
@@ -1455,15 +1455,17 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private boolean isSingleExpansion( Change change ) {
-        return  change.isForInstanceOf( ModelEntity.class )
+        return change.isForInstanceOf( ModelEntity.class )
                 || change.isForInstanceOf( Requirement.class );
     }
 
     private void tryAcquiringLock( Change change ) {
-        // Never lock anything in a production plan
-        if ( getPlan().isDevelopment() && change.isForInstanceOf( ModelObject.class )
-                && getCommander().isLockable( change.getClassName() ) ) {
-            getCommander().requestLockOn( getUser().getUsername(), change.getId() );
+        if ( change.isForInstanceOf( Identifiable.class ) ) {
+            Identifiable identifiable = change.getSubject( getQueryService() );
+            if ( ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
+                    && getCommander().isLockable( change.getClassName() ) ) {
+                getCommander().requestLockOn( getUser().getUsername(), change.getId() );
+            }
         }
     }
 
@@ -1681,7 +1683,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     public void setShowSimpleForm( Identifiable identifiable, boolean simple ) {
-        showSimpleForm.put(  identifiable.getId(), simple );
+        showSimpleForm.put( identifiable.getId(), simple );
     }
 
     /**
@@ -1772,7 +1774,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             if ( change.isUpdated() && change.isForProperty( "other" ) ) {
                 expandFlow( change );
             } else if ( change.isSelected() ) {
-               /* if ( flowMaximized ) {
+                /* if ( flowMaximized ) {
                     change.setType( Change.Type.Recomposed );
                 } else {
                     change.setType( Change.Type.Expanded );
@@ -1780,7 +1782,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 flowMaximized = false;
                 if ( !changedFlow.getSegment().equals( segment ) ) {
                     setSegment( changedFlow.getSegment() );
-                   // change.setType( Change.Type.Recomposed );
+                    // change.setType( Change.Type.Recomposed );
                 }
                 if ( !changedFlow.hasPart( getPart() ) ) {
                     setPart( changedFlow.getLocalPart() );
@@ -1803,7 +1805,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         if ( change.isForInstanceOf( Requirement.class ) && change.isSelected() ) {
             change.setType( Change.Type.Expanded );
             change.addQualifier( "requirement", change.getId() );
-            change.setSubject(  getPlan() );
+            change.setSubject( getPlan() );
             change.setProperty( PlanEditPanel.REQUIREMENTS );
         }
     }
@@ -1852,7 +1854,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 // refreshSegmentPanel( target, change, updated );
             }/* else if ( change.isCopied() ) {
                 refreshAllMenus( target );
-            } */else if ( change.isRefreshNeeded() ) {
+            } */ else if ( change.isRefreshNeeded() ) {
                 change.setScript( "alert('The action failed because the page was out of sync.');" );
                 refreshAll( target );
             } else if ( change.isCommunicated() ) {
@@ -1898,12 +1900,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 || change.getId() == Channels.GUIDE_ID
                 || change.isForInstanceOf( SegmentObject.class ) ) {
             refreshSegmentPanel( target, change, updated );
-        /*} else if ( change.isForInstanceOf( Survey.class ) ) {
-            refreshSurveysPanel( target, change, updated );
-        */
-        }  else if ( change.isForInstanceOf( Feedback.class ) ) {
+            /*} else if ( change.isForInstanceOf( Survey.class ) ) {
+                refreshSurveysPanel( target, change, updated );
+            */
+        } else if ( change.isForInstanceOf( Feedback.class ) ) {
             refreshAllFeedbackPanel( target, change, updated );
-        }  else if ( change.isForInstanceOf( RFISurvey.class ) ) {
+        } else if ( change.isForInstanceOf( RFISurvey.class ) ) {
             refreshDataCollectionPanel( target, change, updated );
         }
         refreshHeadersMenusAndNavigation( target, change, updated );
@@ -1990,7 +1992,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addFlowLegendPanel();
         target.add( flowLegendPanel );
     }
-    
+
     private void updateAllFeedbackPanel( AjaxRequestTarget target ) {
         addAllFeedbackPanel();
         target.add( allFeedbackPanel );

@@ -77,11 +77,11 @@ public interface LockManager {
     void reset();
 
     /**
-     * Attempt to get lock on identitifiable.
+     * Attempt to get lock on identifiable.
      *
      * @param username the user
      * @param id an identifiable object's id
-     * @return a boolean indiciating success (true) or failure (false)
+     * @return a boolean indicating success (true) or failure (false)
      */
     boolean requestLock( String username, Long id );
 

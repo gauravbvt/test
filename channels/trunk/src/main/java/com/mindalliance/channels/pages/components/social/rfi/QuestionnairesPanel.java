@@ -4,9 +4,10 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.services.QuestionnaireService;
@@ -37,7 +38,7 @@ import java.util.List;
  * Date: 3/6/12
  * Time: 2:37 PM
  */
-public class QuestionnairesPanel extends AbstractUpdatablePanel {
+public class QuestionnairesPanel extends AbstractCommandablePanel {
 
     private static final String ANYTHING = "anything";
     private static final String ALL = "all";
@@ -263,10 +264,9 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
 
 
     public void select( Questionnaire questionnaire ) {
-        selectedQuestionnaire = questionnaire.isUnknown()
+        setSelectedQuestionnaire( questionnaire == null || questionnaire.isUnknown()
                 ? null
-                : selectedQuestionnaire;
-        refreshSelected();
+                : questionnaire );
     }
 
 
@@ -315,7 +315,22 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
     }
 
     public void setSelectedQuestionnaire( Questionnaire questionnaire ) {
+        unlockQuestionnaire();
         selectedQuestionnaire = questionnaire;
+        lockQuestionnaire();
+        refreshSelected();
+    }
+
+    private void unlockQuestionnaire() {
+        if ( selectedQuestionnaire != null ) {
+            releaseAnyLockOn( selectedQuestionnaire );
+        }
+    }
+
+    private void lockQuestionnaire() {
+        if ( selectedQuestionnaire != null ) {
+            requestLockOn( selectedQuestionnaire );
+        }
     }
 
     private void addNewQuestionnaireButton() {
@@ -338,7 +353,13 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
     public void changed( Change change ) {
         if ( change.isForInstanceOf( QuestionnaireWrapper.class ) && change.isExpanded() ) {
             QuestionnaireWrapper qw = (QuestionnaireWrapper) change.getSubject( getQueryService() );
-            setSelectedQuestionnaire( qw.getQuestionnaire() );
+            Questionnaire questionnaire = qw.getQuestionnaire();
+            if ( selectedQuestionnaire != null && questionnaire.equals( selectedQuestionnaire ) ) {
+                setSelectedQuestionnaire( null );
+            } else {
+                if ( !isLockedByOtherUser( questionnaire ) )
+                    setSelectedQuestionnaire( questionnaire );  // acquires lock
+            }
         } else {
             super.changed( change );
         }
@@ -347,8 +368,14 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( QuestionnaireWrapper.class ) && change.isExpanded() ) {
-            addQuestionnaireContainer();
-            target.add( questionnaireContainer );
+            QuestionnaireWrapper qw = (QuestionnaireWrapper)change.getSubject( getQueryService() );
+            if ( isLockedByOtherUser( qw.getQuestionnaire() ) ) {
+                addQuestionnaireTable();
+                target.add( questionnaireTable );
+            } else {
+                addQuestionnaireContainer();
+                target.add( questionnaireContainer );
+            }
         } else {
             if ( change.isUpdated() && change.isForInstanceOf( Questionnaire.class ) ) {
                 addQuestionnaireTable();
@@ -360,6 +387,12 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
             }
         }
         target.add( this );
+    }
+
+    public void clearSelectionWith( Releaseable releaseable ) {
+        if ( selectedQuestionnaire != null ) {
+            releaseable.releaseAnyLockOn( selectedQuestionnaire );
+        }
     }
 
 
@@ -433,7 +466,19 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
         public int getSurveyCount() {
             return rfiSurveyService.findSurveys( getPlan(), questionnaire ).size();
         }
+
+        public String getExpandLabel() {
+            Questionnaire selected = getSelectedQuestionnaire();
+            return selected != null && selected.equals( questionnaire )
+                    ? "Close"
+                    : isLockedByOtherUser( questionnaire )
+                        ? ( getUserFullName( getLockOwner( questionnaire ) ) + " editing" )
+                        : "Edit";
+        }
+
     }
+
+
 
     public class QuestionnaireTable extends AbstractTablePanel<QuestionnaireWrapper> {
 
@@ -457,7 +502,7 @@ public class QuestionnairesPanel extends AbstractUpdatablePanel {
             columns.add( makeColumn( "Last modified on", "lastModifiedOn", EMPTY ) );
             columns.add( makeColumn( "# of surveys", "surveyCount", EMPTY ) );
             columns.add( makeColumn( "# of RFIs", "rfiCount", EMPTY ) );
-            columns.add( makeExpandLinkColumn( "", "", "edit" ) );
+            columns.add( makeExpandLinkColumn( "", "", "@expandLabel" ) );
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "questionnaires",
                     columns,

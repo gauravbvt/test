@@ -7,8 +7,6 @@
 package com.mindalliance.channels.core.command;
 
 import com.mindalliance.channels.core.model.Identifiable;
-import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,30 +44,21 @@ public class DefaultLockManager implements LockManager {
 
     @Override
     public Lock lock( String userName, long id ) throws LockingException {
-        try {
-            ModelObject mo = queryService.find( ModelObject.class, id );
+        Lock lock;
+        synchronized ( locks ) {
+            lock = locks.get( id );
+            if ( lock == null ) {
+                lock = new Lock( userName, id );
+                locks.put( id, lock );
 
-            Lock lock;
-            synchronized ( locks ) {
-                lock = locks.get( id );
-                if ( lock == null ) {
-                    lock = new Lock( userName, id );
-                    locks.put( id, lock );
-
-                } else if ( !userName.equals( lock.getUserName() ) )
-                    throw new LockingException(
-                            userName + " can't lock " + mo.getName() + ": it is locked by "
-                                    + lock.getUserName() );
-            }
-
-            LOG.debug( "{} locks {}", userName, id );
-            return lock;
-
-        } catch ( NotFoundException ignored ) {
-            LOG.debug( "Could not lock: {} not found (likely deleted by prior subcommand)", id );
-            locks.remove( id );
-            return null;
+            } else if ( !userName.equals( lock.getUserName() ) )
+                throw new LockingException(
+                        userName + " can't lock " + id + ": it is locked by "
+                                + lock.getUserName() );
         }
+
+        LOG.debug( userName + " locks " + id );
+        return lock;
     }
 
     @Override
@@ -162,6 +151,7 @@ public class DefaultLockManager implements LockManager {
 
     private Lock getLock( long id ) {
         Lock lock = locks.get( id );
+/*
         if ( lock != null )
             try {
                 queryService.find( ModelObject.class, id );
@@ -171,6 +161,7 @@ public class DefaultLockManager implements LockManager {
                 lock = null;
             }
 
+*/
         return lock;
     }
 

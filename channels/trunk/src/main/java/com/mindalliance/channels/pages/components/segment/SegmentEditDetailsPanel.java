@@ -115,7 +115,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TAGS ) );
             }
         };
-        tagsLink.add( new AttributeModifier( "class", true, new Model<String>( "model-object-link" ) ) );
+        tagsLink.add( new AttributeModifier( "class", new Model<String>( "model-object-link" ) ) );
         add( tagsLink );
         TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getSegment() ) );
         add( tagsPanel );

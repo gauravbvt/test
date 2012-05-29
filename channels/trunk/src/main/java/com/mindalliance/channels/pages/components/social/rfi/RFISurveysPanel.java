@@ -5,9 +5,10 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFI;
@@ -46,7 +47,7 @@ import java.util.Map;
  * Date: 3/6/12
  * Time: 2:36 PM
  */
-public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterable {
+public class RFISurveysPanel extends AbstractCommandablePanel implements Filterable {
 
     private static final String ANYTHING = "anything";
 
@@ -244,9 +245,36 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         return selectedRFISurvey;
     }
 
-    public void setSelectedRFISurvey( RFISurvey rfiSurvey ) {
-        this.selectedRFISurvey = rfiSurvey.isUnknown() ? null : rfiSurvey;
+    public void select( RFISurvey rfiSurvey ) {
+        setSelectedRFISurvey( rfiSurvey == null || rfiSurvey.isUnknown()
+                ? null
+                : rfiSurvey );
     }
+
+
+    public void setSelectedRFISurvey( RFISurvey rfiSurvey ) {
+        unlockRFISurvey();
+        selectedRFISurvey = rfiSurvey == null || rfiSurvey.isUnknown() ? null : rfiSurvey;
+        lockRFISurvey();
+        refreshSelected();
+    }
+
+    private void unlockRFISurvey() {
+        if ( selectedRFISurvey != null ) {
+            releaseAnyLockOn( selectedRFISurvey );
+        }
+    }
+
+    private void lockRFISurvey() {
+        if ( selectedRFISurvey != null ) {
+            requestLockOn( selectedRFISurvey );
+        }
+    }
+
+    private void refreshSelected() {
+        if ( selectedRFISurvey != null ) rfiSurveyService.refresh( selectedRFISurvey );
+    }
+
 
     @Override
     public void toggleFilter( Identifiable identifiable, String property, AjaxRequestTarget target ) {
@@ -311,11 +339,21 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
         }
     }
 
+    private RFISurvey getSelectedSurvey() {
+        return selectedRFISurvey;
+    }
+
     @Override
     public void changed( Change change ) {
         if ( change.isForInstanceOf( RFISurveyWrapper.class ) && change.isExpanded() ) {
             RFISurveyWrapper fw = (RFISurveyWrapper) change.getSubject( getQueryService() );
-            setSelectedRFISurvey( fw.getRfiSurvey() );
+            RFISurvey rfiSurvey = fw.getRfiSurvey();
+            if ( selectedRFISurvey != null && rfiSurvey.equals( selectedRFISurvey ) ) {
+                setSelectedRFISurvey( null );
+            } else {
+                if ( !isLockedByOtherUser( rfiSurvey ) )
+                    setSelectedRFISurvey( rfiSurvey );  // acquires lock
+            }
         } else {
             super.changed( change );
         }
@@ -324,8 +362,17 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( RFISurveyWrapper.class ) && change.isExpanded() ) {
-            addRFISurvey();
-            target.add( rfiSurveyContainer );
+            RFISurveyWrapper fw = (RFISurveyWrapper) change.getSubject( getQueryService() );
+            RFISurvey rfiSurvey = fw.getRfiSurvey();
+            if ( isLockedByOtherUser( rfiSurvey ) ) {
+                addRFISurveyTable();
+                target.add( rfiSurveyTable );
+            } else {
+                addRFISurveyTable();
+                target.add( rfiSurveyTable );
+                addRFISurvey();
+                target.add( rfiSurveyContainer );
+            }
         } else if ( change.isForInstanceOf( RFISurvey.class ) ) {
             addRFISurveyTable();
             target.add( rfiSurveyTable );
@@ -336,6 +383,12 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
 
     private RFISurvey getRFISurvey() {
         return (RFISurvey) getModel().getObject();
+    }
+
+    public void clearSelectionWith( Releaseable releaseable ) {
+        if ( selectedRFISurvey != null ) {
+            releaseable.releaseAnyLockOn( selectedRFISurvey );
+        }
     }
 
     public class RFISurveyWrapper implements Identifiable {
@@ -454,6 +507,15 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
             return metrics;
         }
 
+        public String getExpandLabel() {
+            RFISurvey selected = getSelectedSurvey();
+            return selected != null && selected.equals( rfiSurvey )
+                    ? "Close"
+                    : isLockedByOtherUser( rfiSurvey )
+                    ? ( getUserFullName( getLockOwner( rfiSurvey ) ) + " modifying" )
+                    : "Open";
+        }
+
 
     }
 
@@ -478,7 +540,7 @@ public class RFISurveysPanel extends AbstractUpdatablePanel implements Filterabl
             columns.add( makeColumn( "Status", "statusLabel", EMPTY ) );
             columns.add( makeColumn( "Sent to", "sentToCount", EMPTY ) );
             columns.add( makeColumn( "Responses", "shortResponseMetrics", null, EMPTY, "longResponseMetrics" ) );
-            columns.add( makeExpandLinkColumn( "", "", "more" ) );
+            columns.add( makeExpandLinkColumn( "", "", "@expandLabel" ) );
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "rfiSurveys",
                     columns,

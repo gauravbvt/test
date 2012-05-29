@@ -82,7 +82,8 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a boolean
      */
     protected boolean isLockedByUserIfNeeded( Identifiable identifiable ) {
-        return getPlan().isDevelopment() && ( isImmutable( identifiable ) || isLockedByUser( identifiable ) );
+        return ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
+                && ( isImmutable( identifiable ) || isLockedByUser( identifiable ) );
     }
 
     private boolean isImmutable( Identifiable identifiable ) {
