@@ -25,19 +25,36 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="name" type="xs:string"/>
-                <xs:element name="description" type="xs:string"/>
-                <xs:element ref="change" maxOccurs="unbounded" minOccurs="0"/>
+                <xs:element ref="step" maxOccurs="unbounded" minOccurs="1"/>
                 <xs:element ref="next" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attribute name="id" type="xs:ID"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="step">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="description" type="xs:string"/>
+                <xs:element ref="script" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="script">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="action" type="xs:string"/>
+                <xs:element ref="change" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
         </xs:complexType>
     </xs:element>
 
     <xs:element name="change">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="action" type="xs:string"/>
-                <xs:choice>
+                <xs:element name="updateTargetPath" type="xs:string" maxOccurs="1" minOccurs="0"/>
+                    <xs:choice>
                     <xs:element name="subjectId" type="xs:long"/>
                     <xs:element name="subjectPath" type="xs:string"/>
                 </xs:choice>

@@ -9,13 +9,17 @@ import com.mindalliance.channels.guide.Activity;
 import com.mindalliance.channels.guide.ActivityChange;
 import com.mindalliance.channels.guide.ActivityGroup;
 import com.mindalliance.channels.guide.ActivityRef;
+import com.mindalliance.channels.guide.ActivityScript;
+import com.mindalliance.channels.guide.ActivityStep;
 import com.mindalliance.channels.guide.Guide;
 import com.mindalliance.channels.guide.GuideReader;
 import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import info.bliki.wiki.model.WikiModel;
-import org.apache.wicket.Page;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -46,7 +50,6 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     private Activity selectedActivity;
     private AccordionWebMarkupContainer accordion;
     private WebMarkupContainer docContainer;
-    private WikiModel wikiModel;
 
     public PlanningGuidePanel( String id ) {
         super( id );
@@ -57,7 +60,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         guide = guideReader.getGuide();
         addGuideName();
         addHideImage();
-        addGuideAccordion( );
+        addGuideAccordion();
         addDoc();
     }
 
@@ -118,52 +121,108 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     private void addDoc() {
         docContainer = new WebMarkupContainer( "doc" );
         docContainer.setOutputMarkupId( true );
-        docContainer.add( new Label( "activityInGroup",
-                selectedActivity == null
-                        ? ""
-                        : ( selectedGroup.getName() + " - " + selectedActivity.getName() ) ) );
-        docContainer.add( getActionContainer() );
-        docContainer.add( getDescriptionLabel() );
-        docContainer.add( getDoNextContainer() );
+        docContainer.add( getActivityDoc() );
+        docContainer.add( getGuideDoc() );
         addOrReplace( docContainer );
     }
 
-    private WebMarkupContainer getActionContainer() {
-        List<ActivityChange> activityChanges = getActivityChanges();
-        WebMarkupContainer actionContainer = new WebMarkupContainer( "actionContainer" );
-        ListView<ActivityChange> changesListView = new ListView<ActivityChange>(
-                "actions",
-                activityChanges
-        ) {
-            @Override
-            protected void populateItem( ListItem<ActivityChange> item ) {
-                final ActivityChange activityChange = item.getModelObject();
-                final Change change = makeChange( activityChange );
-                AjaxLink<String> doItLink = new AjaxLink<String>( "actionLink" ) {
-                    @Override
-                    public void onClick( AjaxRequestTarget target ) {
-                        if ( change != null )
-                            update( target, change );
-                    }
-                };
-                doItLink.add( new Label(
-                        "action",
-                        activityChange == null
-                                ? ""
-                                : activityChange.getAction() ) );
-                item.add( doItLink );
-                item.setVisible( change != null );
-            }
-        };
-        actionContainer.add( changesListView );
-        actionContainer.setVisible( !activityChanges.isEmpty() );
-        return actionContainer;
+    private WebMarkupContainer getActivityDoc() {
+        WebMarkupContainer activityDoc = new WebMarkupContainer( "activityDoc" );
+        activityDoc.add( new Label( "activityInGroup",
+                selectedActivity == null
+                        ? ""
+                        : ( selectedGroup.getName() + " - " + selectedActivity.getName() ) ) );
+        activityDoc.add( getStepsList() );
+        activityDoc.add( getDoNextContainer() );
+        activityDoc.setVisible( selectedActivity != null );
+        return activityDoc;
     }
 
-    private List<ActivityChange> getActivityChanges() {
+    private Label getGuideDoc() {
+        Label label = new Label( "guideDoc", wikimediaToHtml(
+                selectedActivity == null
+                        ? guide.getDescription()
+                        : "" ) );
+        label.setEscapeModelStrings( false );
+        label.setVisible( selectedActivity == null);
+        return label;
+    }
+
+    private ListView<ActivityStep> getStepsList() {
+        List<ActivityStep> activitySteps = getActivitySteps();
+        ListView<ActivityStep> stepsListView = new ListView<ActivityStep>(
+                "steps",
+                activitySteps
+        ) {
+            @Override
+            protected void populateItem( ListItem<ActivityStep> item ) {
+                final ActivityStep activityStep = item.getModelObject();
+                final ActivityScript activityScript = activityStep.getActivityScript();
+                AjaxLink<String> actionLink = new AjaxLink<String>( "actionLink" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        if ( activityScript != null )
+                        runActivityScript( activityScript, target );
+                    }
+                };
+                actionLink.add( new Label(
+                        "action",
+                        activityScript == null
+                                ? ""
+                                : activityScript.getAction() ) );
+                item.add( actionLink );
+                actionLink.setVisible( canRunScript( activityScript ) );
+                item.add( getDescriptionLabel( activityStep )
+                        .setVisible( !activityStep.getDescription().isEmpty() ) );
+            }
+        };
+        return stepsListView;
+    }
+
+    private boolean canRunScript( ActivityScript activityScript ) {
+        return activityScript != null && !CollectionUtils.exists(
+                activityScript.getActivityChanges(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return makeChange( (ActivityChange) object ) == null;
+                    }
+                }
+        );
+    }
+
+    private void runActivityScript( ActivityScript activityScript, AjaxRequestTarget target ) {
+        if ( activityScript != null ) {
+        for ( ActivityChange activityChange : activityScript.getActivityChanges() ) {
+            Change change = makeChange( activityChange );
+            if ( change != null ) {
+                Updatable updatable = getUpdatable( activityChange );
+                if ( updatable != null ) {
+                    updatable.changed( change );
+                    updatable.updateWith( target, change, new ArrayList<Updatable>() );
+                } else {
+                    break;
+                }
+            } else {
+                break; // stop running the script
+            }
+        }
+        }
+    }
+
+    private Updatable getUpdatable( ActivityChange activityChange ) {
+        String updatableTargetPath = activityChange.getUpdateTargetPath();
+        if ( updatableTargetPath == null ) {
+            return getPlanPage();
+        } else {
+            return (Updatable) ChannelsUtils.getProperty( getPlanPage(), updatableTargetPath, null );
+        }
+    }
+
+    private List<ActivityStep> getActivitySteps() {
         return selectedActivity == null
-                ? new ArrayList<ActivityChange>()
-                : selectedActivity.getActivityChanges();
+                ? new ArrayList<ActivityStep>()
+                : selectedActivity.getActivitySteps();
     }
 
     private Change makeChange( ActivityChange activityChange ) {
@@ -173,9 +232,8 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         if ( activityChange.getSubjectId() != null ) {
             change = new Change( type, activityChange.getSubjectId() );
         } else {
-            Page planPage = findPage();
             Identifiable identifiable = (Identifiable) ChannelsUtils.getProperty(
-                    planPage,
+                    this,
                     activityChange.getSubjectPath(),
                     null );
             if ( identifiable == null )
@@ -187,20 +245,17 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         return change;
     }
 
-    private Label getDescriptionLabel() {
-        Label label = new Label( "description", getDescriptionHTML() );
+    private Label getDescriptionLabel( ActivityStep step ) {
+        Label label = new Label( "description", wikimediaToHtml( step.getDescription() ) );
         label.setEscapeModelStrings( false );
         return label;
     }
 
-    private String getDescriptionHTML() {
+    private String wikimediaToHtml( String wikimedia ) {
         String serverUrl = guideReader.getServerUrl();
         String helpUrl = serverUrl
                 + ( serverUrl.endsWith( "/" ) ? "" : "/" )
                 + "doc/channels_user_guide/";
-        String wikimedia = selectedActivity != null
-                ? selectedActivity.getDescription()
-                : guide.getDescription();
         WikiModel wikiModel = new WikiModel( helpUrl + "${image}", helpUrl + "${title}" );
         String html = wikiModel.render( wikimedia.trim() );
         html = html.replaceAll( "<a ", "<a target='_blank' " );
@@ -276,4 +331,11 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
             super.updateWith( target, change, updated );
         }
     }
+
+    // Script support
+
+    public PlanPage getPlanPage() {
+        return findParent( PlanPage.class );
+    }
+
 }

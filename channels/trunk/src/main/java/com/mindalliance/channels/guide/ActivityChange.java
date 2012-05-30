@@ -13,19 +13,19 @@ import java.io.Serializable;
  */
 public class ActivityChange implements Serializable {
 
-    private String action;
     private Long subjectId;
     private String subjectPath;
     @XStreamAlias( "type" )
     private String changeType;
     private String property;
+    private String updateTargetPath;
 
-    public String getAction() {
-        return action;
+    public String getUpdateTargetPath() {
+        return updateTargetPath;
     }
 
-    public void setAction( String action ) {
-        this.action = action;
+    public void setUpdateTargetPath( String updateTargetPath ) {
+        this.updateTargetPath = updateTargetPath;
     }
 
     public Long getSubjectId() {

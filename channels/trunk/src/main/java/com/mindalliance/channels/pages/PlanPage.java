@@ -417,6 +417,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
         init( sc, p, new HashSet<Long>() );
     }
 
+    // Guide scripting support
+    public SegmentPanel getSegmentPanel() {
+        return segmentPanel;
+    }
+
     public void renderHead( HtmlHeaderContainer container ) {
         container.getHeaderResponse().renderJavaScript( PlanPage.IE7CompatibilityScript, null );
         super.renderHead( container );

@@ -21,10 +21,8 @@ public class Activity implements Serializable {
 
     private String name;
 
-    private String description;
-
-    @XStreamImplicit( itemFieldName = "change" )
-    private List<ActivityChange> activityChanges;
+    @XStreamImplicit( itemFieldName = "step" )
+    private List<ActivityStep> activitySteps;
 
     @XStreamImplicit( itemFieldName = "next" )
     private List<ActivityRef> nextActivities;
@@ -48,20 +46,12 @@ public class Activity implements Serializable {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description == null ? "" : description;
+    public List<ActivityStep> getActivitySteps() {
+        return activitySteps;
     }
 
-    public void setDescription( String description ) {
-        this.description = description;
-    }
-
-    public List<ActivityChange> getActivityChanges() {
-        return activityChanges == null ? new ArrayList<ActivityChange>() : activityChanges;
-    }
-
-    public void setActivityChanges( List<ActivityChange> activityChanges ) {
-        this.activityChanges = activityChanges;
+    public void setActivitySteps( List<ActivityStep> activitySteps ) {
+        this.activitySteps = activitySteps;
     }
 
     public List<ActivityRef> getNextActivities() {

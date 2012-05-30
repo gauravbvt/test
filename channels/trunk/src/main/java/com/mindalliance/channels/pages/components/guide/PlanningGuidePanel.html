@@ -26,23 +26,26 @@
             </wicket:container>
         </div>
         <div wicket:id="doc" style="overflow: auto">
-            <h4 wicket:id="activityInGroup">Group - Activity</h4>
-            <ul wicket:id="actionContainer">
-                <li wicket:id="actions">
+            <div wicket:id="activityDoc">
+                <h4 wicket:id="activityInGroup">Group - Activity</h4>
+
+                <div wicket:id="steps">
                     <a wicket:id="actionLink"><span wicket:id="action"> Do it</span></a>
-                </li>
-            </ul>
-            <div wicket:id="description">Description from wikimedia format</div>
-            <div wicket:id="doNextContainer">
-                Next:
-                <ul>
-                    <li wicket:id="doNexts">
-                        <a wicket:id="doNextLink" href="#">
-                            <span wicket:id="doNextText"> Scoping - Events</span>
-                        </a>
-                    </li>
-                </ul>
+
+                    <div wicket:id="description">Description from wikimedia format</div>
+                </div>
+                <div wicket:id="doNextContainer">
+                    Next:
+                    <ul>
+                        <li wicket:id="doNexts">
+                            <a wicket:id="doNextLink" href="#">
+                                <span wicket:id="doNextText"> Scoping - Events</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
+            <div wicket:id="guideDoc">about guide</div>
         </div>
     </div>
 </wicket:panel>
