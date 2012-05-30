@@ -498,7 +498,6 @@ public class TransmissionMedium extends ModelEntity {
         return effectiveMedia;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -528,9 +527,12 @@ public class TransmissionMedium extends ModelEntity {
     @Override
     public boolean isUndefined() {
         return super.isUndefined()
+                && qualification == null
                 && cast == null
                 && delegatedToMedia.isEmpty()
-                && security.isEmpty();
+                && security.isEmpty()
+                && reach == null
+                && addressPattern.isEmpty();
     }
 
     /**

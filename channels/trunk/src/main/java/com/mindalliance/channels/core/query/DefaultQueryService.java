@@ -352,17 +352,20 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     @SuppressWarnings( "unchecked" )
     public Integer countReferences( final ModelObject mo ) {
-        Set<ModelObject> referencers = new HashSet<ModelObject>();
-        boolean hasReference = false;
+        int count = 0;
         Iterator classes = ModelObject.referencingClasses().iterator();
-        if ( getPlan().references( mo ) ) referencers.add( getPlan() );
         while ( classes.hasNext() ) {
             List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
             for ( ModelObject ref : mos ) {
-                if ( ref.references( mo ) ) referencers.add( ref );
+                if ( ref.references( mo ) ) count++;
             }
         }
-        return referencers.size();
+        // Include plan as possible referencer
+        if ( getPlan().references( mo )
+                || planParticipationService.references( getPlan(), mo, this ) ) {
+            count++;
+        }
+        return count;
     }
 
     @Override
@@ -827,30 +830,30 @@ public abstract class DefaultQueryService implements QueryService {
         if ( flow.isCanBypassIntermediate() ) {
             List<Flow> bypassFlows;
             if ( flow.isNotification() ) {
-                Part intermediate = (Part)flow.getTarget();
-                bypassFlows = (List<Flow>)CollectionUtils.select(
+                Part intermediate = (Part) flow.getTarget();
+                bypassFlows = (List<Flow>) CollectionUtils.select(
                         intermediate.getAllSharingSends(),
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                return flow.containsAsMuchAs( ((Flow)object) );
+                                return flow.containsAsMuchAs( ( (Flow) object ) );
                             }
                         }
                 );
             } else { // request-reply
-                Part intermediate = (Part)flow.getSource();
-                bypassFlows = (List<Flow>)CollectionUtils.select(
+                Part intermediate = (Part) flow.getSource();
+                bypassFlows = (List<Flow>) CollectionUtils.select(
                         intermediate.getAllSharingReceives(),
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                return ((Flow)object).containsAsMuchAs( flow );
+                                return ( (Flow) object ).containsAsMuchAs( flow );
                             }
                         }
                 );
             }
             for ( Flow byPassFlow : bypassFlows ) {
-                commitments.addAll( findAllCommitments( byPassFlow,false, false ) );
+                commitments.addAll( findAllCommitments( byPassFlow, false, false ) );
             }
         }
         return new ArrayList<Commitment>( commitments );
@@ -1857,16 +1860,22 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public <T extends ModelObject> List<T> findAllReferencing( final ModelObject mo, Class<T> clazz ) {
-        return (List<T>) CollectionUtils.select(
-                findAllModelObjects( clazz ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (ModelObject) object ).references( mo );
-                    }
+    public <T extends ModelObject> List<T> findAllReferencing( final ModelObject referenced, final Class<T> clazz ) {
+        List<T> referencers = new ArrayList<T>();
+        if ( Plan.class.isAssignableFrom( clazz ) ) {
+            Plan plan = getPlan();
+            if ( plan.references( referenced )
+                    || planParticipationService.references( plan, referenced, DefaultQueryService.this ) ) {
+                referencers.add( (T) plan );
+            }
+        } else {
+            for ( ModelObject referencer : findAllModelObjects( clazz ) ) {   // does not include plan
+                if ( referencer.references( referenced ) ) {
+                    referencers.add( (T) referencer );
                 }
-        );
+            }
+        }
+        return referencers;
     }
 
 
@@ -3225,6 +3234,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     @SuppressWarnings( "unchecked" )
     public Boolean isReferenced( final ModelObject mo ) {
+        // Optimized form for return this.countReferences( mo ) > 0;
         boolean hasReference = false;
         Iterator classes = ModelObject.referencingClasses().iterator();
         if ( getPlan().references( mo ) ) return true;
@@ -3240,6 +3250,7 @@ public abstract class DefaultQueryService implements QueryService {
                     }
             );
         }
+        hasReference = hasReference || planParticipationService.references( getPlan(), mo, this );
         return hasReference;
     }
 

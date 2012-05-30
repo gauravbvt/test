@@ -240,6 +240,15 @@ public class Place extends ModelEntity implements GeoLocatable, Specable {
         return true;
     }
 
+    public boolean isUndefined() {
+        return super.isUndefined()
+                && mustContain == null
+                && mustBeContainedIn == null
+                && within == null
+                && streetAddress.isEmpty()
+                && postalCode.isEmpty();
+    }
+
     private boolean isCircular( Place locale ) {
         return isWithinCircular( new HashSet<Place>() )
                 || isMustContainCircular( new HashSet<Place>(), locale )

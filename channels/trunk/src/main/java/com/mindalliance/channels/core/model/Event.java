@@ -99,6 +99,11 @@ public class Event extends ModelEntity implements GeoLocatable {
                && ModelEntity.implies( event.getScope(), scope, locale );
     }
 
+    public boolean isUndefined() {
+        return super.isUndefined()
+                && scope == null;
+    }
+
     //-------------------------------
     public Place getScope() {
         return scope;

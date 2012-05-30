@@ -210,6 +210,13 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         } else return false;
     }
 
+    public boolean isUndefined() {
+        return super.isUndefined()
+                && languages.isEmpty()
+                && clearances.isEmpty()
+                && availability.isAlways();
+    }
+
     /**
      * Actor can speak a given language.
      *

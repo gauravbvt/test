@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.dao.user;
 
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
@@ -157,6 +158,12 @@ public class PlanParticipationServiceImpl
         criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
         //       criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
         return validParticipations( (List<PlanParticipation>) criteria.list(), queryService );
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public boolean references( Plan plan, ModelObject mo, QueryService queryService ) {
+        return mo instanceof Actor && !getParticipations( plan, (Actor) mo, queryService ).isEmpty();
     }
 
     private List<PlanParticipation> validParticipations(

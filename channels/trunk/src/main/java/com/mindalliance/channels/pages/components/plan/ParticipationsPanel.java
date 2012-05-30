@@ -470,7 +470,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         }
 
         public boolean hasActor() {
-            return participation.getActor( getQueryService() ) != null;
+            return participation != null && participation.getActor( getQueryService() ) != null;
         }
 
         public String getUserFullName() {

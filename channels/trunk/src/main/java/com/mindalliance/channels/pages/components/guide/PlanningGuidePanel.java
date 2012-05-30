@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.guide;
 
+import com.google.code.jqwicket.ui.accordion.AccordionOptions;
 import com.google.code.jqwicket.ui.accordion.AccordionWebMarkupContainer;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -56,7 +57,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         guide = guideReader.getGuide();
         addGuideName();
         addHideImage();
-        addGuideAccordion();
+        addGuideAccordion( );
         addDoc();
     }
 
@@ -77,7 +78,9 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     }
 
     private void addGuideAccordion() {
-        accordion = new AccordionWebMarkupContainer( "accordion" );
+        AccordionOptions options = new AccordionOptions();
+        // options.setCssResourceReferences( new CssResourceReference( getClass(), "res/guide.css" ) );
+        accordion = new AccordionWebMarkupContainer( "accordion", options );
         accordion.add( new ListView<ActivityGroup>(
                 "groups",
                 guide.getActivityGroups() ) {

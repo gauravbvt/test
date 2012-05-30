@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.dao.user;
 
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 import com.mindalliance.channels.core.query.QueryService;
@@ -34,5 +35,7 @@ public interface PlanParticipationService extends GenericSqlService<PlanParticip
     void removeParticipation( String username, Plan plan, PlanParticipation participation );
 
     List<PlanParticipation> getAllParticipations( Plan plan, QueryService queryService );
+
+    boolean references( Plan plan, ModelObject mo, QueryService queryService );
 
 }
