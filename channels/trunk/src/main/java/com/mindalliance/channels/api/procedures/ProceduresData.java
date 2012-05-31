@@ -33,7 +33,7 @@ import java.util.Set;
  * Time: 12:25 PM
  */
 @XmlRootElement( name = "procedures", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"date", "planIdentifier", "dateVersioned", "actorIds", "employments", "procedures"/*, "environment"*/} )
+@XmlType( propOrder = {"date", "planIdentifier", "dateVersioned", "actorIds", "employments", "procedures", "environment"} )
 public class ProceduresData {
 
     private Plan plan;
@@ -145,12 +145,10 @@ public class ProceduresData {
         return procedures;
     }
 
-/*
     @XmlElement
     public EnvironmentData getEnvironment() {
         return new EnvironmentData( this, planService );
     }
-*/
 
     private Assignments getActorAssignments( Actor actor ) {
         if ( assignments == null ) {

@@ -241,16 +241,16 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * Make menu items from commands.
      *
      * @param id       id of the menu item
-     * @param commands a list of wrapped commands
+     * @param commandWrappers a list of wrapped commands
      * @return a list of menu item components
      */
-    protected List<Component> getCommandMenuItems( String id, List<CommandWrapper> commands ) {
+    protected List<Component> getCommandMenuItems( String id, List<CommandWrapper> commandWrappers ) {
 
         List<Component> menuItems = new ArrayList<Component>();
 
         Commander commander = getCommander();
 
-        for ( final CommandWrapper commandWrapper : commands )
+        for ( final CommandWrapper commandWrapper : commandWrappers )
             try {
                 final Command command = commandWrapper.getCommand();
                 String label = command.getLabel( commander );

@@ -220,7 +220,9 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         final List<String> choices = allLanguageChoices();
         languagesContainer = new WebMarkupContainer( "languagesContainer" );
         languagesContainer.setOutputMarkupId( true );
-        ListView<String> languageList = new ListView<String>( "languages", getLanguages() ) {
+        ListView<String> languageList = new ListView<String>(
+                "languages",
+                new PropertyModel<List<String>>(this, "languages") ) {
             /** {@inheritDoc} */
             protected void populateItem( ListItem<String> item ) {
                 addLanguageNameCell( item, choices );
@@ -250,7 +252,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         };
         newLanguageField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addLanguages();
+                // addLanguages();
                 target.add( languagesContainer );
                 update( target, new Change( Change.Type.Updated, getActor(), "languages" ) );
             }
@@ -306,7 +308,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     }
 
 
-    private List<String> getLanguages() {
+    public List<String> getLanguages() {
         List<String> languages = new ArrayList<String>();
         for ( String language : getActor().getLanguages() ) {
             languages.add( StringUtils.capitalize( language ) );

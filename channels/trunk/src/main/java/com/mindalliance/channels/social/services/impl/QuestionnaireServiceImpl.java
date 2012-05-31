@@ -5,12 +5,15 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
+import com.mindalliance.channels.social.services.QuestionService;
 import com.mindalliance.channels.social.services.QuestionnaireService;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,9 @@ import java.util.List;
  */
 @Repository
 public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnaire, Long> implements QuestionnaireService {
+
+    @Autowired
+    private QuestionService questionService;
 
     @Override
     @SuppressWarnings( "unchecked" )
@@ -81,6 +87,14 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
         criteria.add( Restrictions.eq( "status", Questionnaire.Status.ACTIVE ) );
         List<Questionnaire> result = (List<Questionnaire>) criteria.list();
         return result.isEmpty() ? null : result.get( 0 );
+    }
+
+    @Transactional
+    public void delete( Questionnaire questionnaire ) {
+        for ( Question question : questionnaire.getQuestions() ) {
+            questionService.delete( question );
+        }
+        super.delete( questionnaire );
     }
 
 }

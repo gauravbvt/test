@@ -2,18 +2,21 @@
 <guide xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="guide.xsd">
     <name>Guide</name>
-    <description>Select a group of activities and then an activity within that group.</description>
+    <description>Select a group of activities (Scoping, for example) and then an activity to see
+* a brief explanation with links into the full documentation,
+* shortcuts into Channels,
+* and follow-up activities.
+The full documentation is [http://localhost:8081/channels/doc/channels_user_guide/ch01.html here].
+    </description>
     <group id="scoping">
         <name>Scoping</name>
         <activity id="events">
-            <name>Events in scope</name>
+            <name>Name all events</name>
             <step>
-                <description>Name '''events in scope''' and identify those that are ''incidents''.
-
-See [http://localhost:8081/channels/doc/channels_user_guide/ch01s05.html more] about scoping.
+                <description><![CDATA[Name the '''events''' within the scope of the plan and identify those that are ''incidents''  &ndash; <small>events that are not caused by planned tasks.</small> &ndash;]]>
             </description>
                 <script>
-                    <action>See all events in scope</action>
+                    <action>Open all events</action>
                     <change>
                         <subjectPath>plan</subjectPath>
                         <type>Expanded</type>
@@ -21,14 +24,40 @@ See [http://localhost:8081/channels/doc/channels_user_guide/ch01s05.html more] a
                     </change>
                 </script>
             </step>
-            <next group="profiling" activity="profiling-organization"/>
+            <step>
+                <description>Note that events can also be named anywhere they are used to define another plan element. When they are, they are automatically added to the scope of the plan.</description>
+            </step>
+            <step>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
+            </step>
+            <next group="scoping" activity="phases"/>
+        </activity>
+        <activity id="phases">
+            <name>Name all phases</name>
+            <step>
+                <description><![CDATA[Name the '''phases''' within the scope of the plan. Channels will now expect to see at least one segment for each combination of phase and event in scope.
+The list is part of the plan's ''details''.]]></description>
+                <script>
+                    <action>Edit list of phases in scope</action>
+                    <change>
+                        <subjectPath>plan</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
+            </step>
+            <next group="scoping" activity="add-define-segment"/>
+            <next group="scoping" activity="organizations"/>
         </activity>
         <activity id="organizations">
-            <name>Organizations in scope</name>
+            <name>Identify participating organizations</name>
             <step>
-                <description>Name the '''organizations''' in scope.</description>
+                <description><![CDATA[Name all the (actual) '''organizations''' in scope and indicate which ones are expected to participate &ndash; <small>that is, those who are expected to have agents assigned to tasks</small>. &ndash; .]]></description>
                 <script>
-                    <action>See all participating organzations</action>
+                    <action>Edit the list participating organizations</action>
                     <change>
                         <subjectPath>plan</subjectPath>
                         <type>Expanded</type>
@@ -36,6 +65,66 @@ See [http://localhost:8081/channels/doc/channels_user_guide/ch01s05.html more] a
                     </change>
                 </script>
             </step>
+            <step>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
+            </step>
+            <next group="scoping" activity="requirements"/>
+        </activity>
+        <activity id="requirements">
+            <name>Define requirements</name>
+            <step>
+                <description><![CDATA[Specify the information sharing commitments between organizations that the plan is required to generate.]]></description>
+                <script>
+                    <action>Access requirement definitions</action>
+                    <change>
+                        <subjectPath>plan</subjectPath>
+                        <type>Expanded</type>
+                        <property>Information sharing requirements</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
+            </step>
+        </activity>
+        <activity id="add-define-segment">
+            <name>Adding and defining a segment</name>
+            <step>
+                <description><![CDATA[From the top action menu, add new segment, then name it and identify the ''scenario' it addresses &ndash;<small>the phase of one event, possibly in the context of past or current events</small>.&ndash;]]></description>
+                <script>
+                    <action>Define a segment</action>
+                    <change>
+                        <subjectPath>planPage.segment</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
+            </step>          
+            <next group="scoping" activity="segment-goals"/>            
+        </activity>
+        <activity id="segment-goals">
+            <name>Adding and defining a segment</name>
+            <step>
+                <description><![CDATA[Define a small number of goals the segment is meant to address. For each goal
+* set the type of goal,
+* the organization, type or actual, whose goal it is,
+* the severity/importance of the risk to be mitigated or gain to be achieved.
+Naming the goal is optional.]]></description>
+                <script>
+                    <action>Set segment goals</action>
+                    <change>
+                        <subjectPath>planPage.segment</subjectPath>
+                        <type>Expanded</type>
+                        <property>goals</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
+            </step>          
         </activity>
     </group>
     <group id="profiling">
