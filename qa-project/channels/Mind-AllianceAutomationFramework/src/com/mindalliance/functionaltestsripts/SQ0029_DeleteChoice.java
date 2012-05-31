@@ -94,27 +94,13 @@ public class SQ0029_DeleteChoice {
 				GlobalVariables.oElement.click();
 				GlobalVariables.oElement.sendKeys("This is Question");
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				// Assertion: Verify that Named Questionnaire gets added
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAddQuestion")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("(Inactive) This is Question")){
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
-				else{
-					GlobalVariables.sVerifyError="Verification failed Expected '(Inactive) This is Question' Actual "+GlobalVariables.oElement.getText();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				}
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
+				Thread.sleep(2000);	
 				
 				// Select Answer as 'choice'
 				GlobalVariables.iStepNo++;
@@ -178,7 +164,6 @@ public class SQ0029_DeleteChoice {
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Delete Question";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionButton"))).click();
-
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -186,7 +171,6 @@ public class SQ0029_DeleteChoice {
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
 				// Delete the button
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionnaire"))).click();
 				Alert alert1 = GlobalVariables.oDriver.switchTo().alert();

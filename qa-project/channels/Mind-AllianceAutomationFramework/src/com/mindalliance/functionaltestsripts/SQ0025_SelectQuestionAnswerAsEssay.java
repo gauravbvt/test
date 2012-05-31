@@ -149,7 +149,6 @@ public class SQ0025_SelectQuestionAnswerAsEssay {
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Delete Question";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionButton"))).click();
-
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -116,7 +116,6 @@ public class SQ0019_AddQuestioName {
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Delete Question";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionButton"))).click();
-
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -124,7 +123,6 @@ public class SQ0019_AddQuestioName {
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
 				// Delete the button
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionnaire"))).click();
 				Alert alert1 = GlobalVariables.oDriver.switchTo().alert();

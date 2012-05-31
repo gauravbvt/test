@@ -109,8 +109,7 @@ public class SQ0018_AddQuestion {
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-				
+				Thread.sleep(2000);				
 				// Delete the button
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionnaire"))).click();
 				alert = GlobalVariables.oDriver.switchTo().alert();

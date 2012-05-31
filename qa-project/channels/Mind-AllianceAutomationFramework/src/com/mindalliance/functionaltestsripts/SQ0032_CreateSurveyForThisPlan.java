@@ -1,12 +1,7 @@
 package com.mindalliance.functionaltestsripts;
 
-import java.util.List;
-
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
-
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
@@ -81,33 +76,18 @@ public class SQ0032_CreateSurveyForThisPlan {
 				Alert alert = GlobalVariables.oDriver.switchTo().alert();
 				// And acknowledge the alert (equivalent to clicking "OK")
 				alert.accept();
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-//				// Assertion: Verify that Questionnaire is Activated
-//				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionActivateQuestionnaire")));
-//				if(GlobalVariables.oElement.getText().equalsIgnoreCase("ACTIVE")){
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				}
-//				else{
-//					GlobalVariables.sVerifyError="Verification failed Expected 'ACTIVE' Actual "+GlobalVariables.oElement.getText();
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//						GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-//				}
-//				
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(1000); 
-//				//Close 'About Plan Segment Window'
-//				GlobalVariables.oDriver.findElement(By.className("close")).click();
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(2000);
+				//Close 'About Plan Segment Window'
+				GlobalVariables.oDriver.findElement(By.className("close")).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(2000);
 				
 				//About Plan Window Opened
 				GlobalVariables.iStepNo++ ;
@@ -125,24 +105,6 @@ public class SQ0032_CreateSurveyForThisPlan {
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Surveys";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAboutPlanShowMenu"),GlobalVariables.viewElements.get("Surveys"));
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(2000);
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionDetails")));
-//				if (GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("Surveys"))) {
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);	    	     
-//				}
-//				else
-//				{
-//					GlobalVariables.sVerifyError ="Verification Failed "+"Expected " + GlobalVariables.viewElements.get("details") + " Actual "+GlobalVariables.oElement.getText();
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-//				}
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -154,7 +116,6 @@ public class SQ0032_CreateSurveyForThisPlan {
 				//Click on 'LAUNCH' Button.
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Click on 'LAUNCH' button";
-			//	GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[11]/div/span/div/div[2]/span/table/tbody/tr/td[5]/span/a")).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[11]/div/span/div/div[2]/span/table/tbody/tr/td[5]/span/a"));
 				GlobalVariables.oElement.click();
 				// Write Results
@@ -189,12 +150,13 @@ public class SQ0032_CreateSurveyForThisPlan {
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Questionnaire Tab Opened";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathQuestionnaireTab"))).click();
-			
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(2000);
-
-				// Click on Delete the button
+				Thread.sleep(2000);				// Click on Delete the button
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionnaire"))).click();
 				alert = GlobalVariables.oDriver.switchTo().alert();
 				// And acknowledge the alert (equivalent to clicking "OK")

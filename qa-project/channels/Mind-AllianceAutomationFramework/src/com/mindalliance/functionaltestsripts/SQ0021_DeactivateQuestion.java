@@ -35,7 +35,7 @@ public class SQ0021_DeactivateQuestion {
 				Thread.currentThread();
 				Thread.sleep(2000);
 				
-				//About Plan Window Opened
+				// About Plan Window Opened
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "All Surveys Opened";
 				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("surveys"));
@@ -90,6 +90,10 @@ public class SQ0021_DeactivateQuestion {
 				GlobalVariables.oElement.click();
 				GlobalVariables.oElement.sendKeys("This is Question");
 				GlobalVariables.oElement.sendKeys(Keys.TAB);
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
@@ -97,43 +101,24 @@ public class SQ0021_DeactivateQuestion {
 				// Click on Activate it 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Activate Question ";
-				//GlobalVariables.plan.get("sXpathActivateItButton"))
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[3]/span/span/table/tbody/tr[4]/td[2]/input"));
 				GlobalVariables.oElement.click();
-				
+				// Write Results
+				LogFunctions.writeLogs(GlobalVariables.sDescription);
+				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
+					GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);	
 				
-				// Assertion: Verify that Named Questionnaire gets added
-				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAddQuestion")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("This is Question")){
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						GlobalVariables.sBlank, GlobalVariables.sBlank);
-				}
-				else{
-					GlobalVariables.sVerifyError="Verification failed Expected 'This is Question' Actual "+GlobalVariables.oElement.getText();
-					// Write Results
-					LogFunctions.writeLogs(GlobalVariables.sDescription);
-					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-						GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-				}
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
-			
 				// Click on Deactivate it 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Deactivate Question ";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath("/html/body/form/div[15]/div/span/div/div[2]/div/div[2]/div[3]/span/span/table/tbody/tr[4]/td[2]/input[2]"));
 				GlobalVariables.oElement.click();
-					
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);	
-				
 				// Assertion: Verify that Named Questionnaire gets added
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionAddQuestion")));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("(Inactive) This is Question")){
@@ -152,11 +137,11 @@ public class SQ0021_DeactivateQuestion {
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(3000);
+				
 				// Delete Question
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Delete Question";
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionButton"))).click();
-				
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
@@ -164,7 +149,6 @@ public class SQ0021_DeactivateQuestion {
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(2000);
-				
 				// Delete the button
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteQuestionnaire"))).click();
 				Alert alert1 = GlobalVariables.oDriver.switchTo().alert();
