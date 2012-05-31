@@ -217,8 +217,9 @@ h1.title {
     display: block;
     float: left;
 	font-family:Georgia, "Times New Roman", Times, serif;
-    font-size: 22px;
+    font-size: 14px;
     font-weight: bold;
+    padding-top: 8px;
 }
 
 div.switch-plan {

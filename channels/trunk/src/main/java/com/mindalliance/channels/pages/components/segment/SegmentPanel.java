@@ -87,7 +87,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      */
     private static final String GUIDE_PANEL_ID = "#guide";
 
-    private static final int GUIDE_WIDTH = 15;
+    private static final int GUIDE_WIDTH = 20;
     private static final int SOCIAL_WIDTH = 20;
 
     private boolean maximized;
@@ -326,7 +326,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      * @param target an ajax request target
      */
     public void updateGuidePanel( AjaxRequestTarget target ) {
-        planningGuidePanel.refresh( target, new Change( Change.Type.Unknown ) );
+        planningGuidePanel.refresh( target, new Change( Change.Type.Refresh ) );
     }
 
 

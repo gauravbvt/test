@@ -16,37 +16,33 @@
         <div wicket:id="accordion">
             <wicket:container wicket:id="groups">
                 <h3><a href="#" wicket:id="title"/></h3>
-                <ul>
+                <ul class="activities">
                     <li wicket:id="activities">
                         <a wicket:id="activityLink" href="#">
                             <span wicket:id="activityName">activity name</span>
                         </a>
+                        <div wicket:id="activityDoc">
+                            <div wicket:id="steps">
+                                <a wicket:id="actionLink"><span wicket:id="action"> Do it</span></a>
+
+                                <div wicket:id="description">Description from wikimedia format</div>
+                            </div>
+                            <div wicket:id="doNextContainer">
+                                Next:
+                                <ul>
+                                    <li wicket:id="doNexts">
+                                        <a wicket:id="doNextLink" href="#">
+                                            <span wicket:id="doNextText"> Scoping - Events</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </wicket:container>
         </div>
-        <div wicket:id="doc" style="overflow: auto">
-            <div wicket:id="activityDoc">
-                <h4 wicket:id="activityInGroup">Group - Activity</h4>
-
-                <div wicket:id="steps">
-                    <a wicket:id="actionLink"><span wicket:id="action"> Do it</span></a>
-
-                    <div wicket:id="description">Description from wikimedia format</div>
-                </div>
-                <div wicket:id="doNextContainer">
-                    Next:
-                    <ul>
-                        <li wicket:id="doNexts">
-                            <a wicket:id="doNextLink" href="#">
-                                <span wicket:id="doNextText"> Scoping - Events</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div wicket:id="guideDoc">about guide</div>
-        </div>
+        <div wicket:id="guideDoc">about guide</div>
     </div>
 </wicket:panel>
 </body>

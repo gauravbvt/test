@@ -20,6 +20,7 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import info.bliki.wiki.model.WikiModel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -27,10 +28,14 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Planning guide panel.
@@ -46,10 +51,11 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     private GuideReader guideReader;
 
     private Guide guide;
-    private ActivityGroup selectedGroup;
     private Activity selectedActivity;
+    private Activity openedActivity;
     private AccordionWebMarkupContainer accordion;
-    private WebMarkupContainer docContainer;
+    private Map<Activity, WebMarkupContainer> activityDocs = new HashMap<Activity, WebMarkupContainer>();
+    private Map<Activity, Component> groupDivs = new HashMap<Activity,Component>();
 
     public PlanningGuidePanel( String id ) {
         super( id );
@@ -61,7 +67,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         addGuideName();
         addHideImage();
         addGuideAccordion();
-        addDoc();
+        addGuideDoc();
     }
 
     private void addGuideName() {
@@ -81,13 +87,15 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     }
 
     private void addGuideAccordion() {
+        groupDivs = new HashMap<Activity,Component>();
         AccordionOptions options = new AccordionOptions();
-        // options.setCssResourceReferences( new CssResourceReference( getClass(), "res/guide.css" ) );
+        options.addCssResourceReferences( new CssResourceReference( getClass(), "res/guide.css" ) );
         accordion = new AccordionWebMarkupContainer( "accordion", options );
+        accordion.setOutputMarkupId( true );
         accordion.add( new ListView<ActivityGroup>(
                 "groups",
                 guide.getActivityGroups() ) {
-            protected void populateItem( ListItem<ActivityGroup> groupItem ) {
+            protected void populateItem( final ListItem<ActivityGroup> groupItem ) {
                 final ActivityGroup group = groupItem.getModelObject();
                 groupItem.add( new Label( "title", group.getName() ) );
                 ListView<Activity> activityList = new ListView<Activity>(
@@ -97,14 +105,14 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                     @Override
                     protected void populateItem( ListItem<Activity> activityItem ) {
                         final Activity activity = activityItem.getModelObject();
+                        groupDivs.put( activity, groupItem );
+                        WebMarkupContainer doc = getDoc( activity );
+                        makeVisible( doc, false );
+                        activityItem.add( doc );
                         AjaxLink<String> activityLink = new AjaxLink<String>( "activityLink" ) {
                             @Override
                             public void onClick( AjaxRequestTarget target ) {
-                                Change change = new Change( Change.Type.Selected, Channels.GUIDE_ID );
-                                change.setProperty( "activity" );
-                                change.addQualifier( "activity", activity );
-                                change.addQualifier( "group", group );
-                                update( target, change );
+                                selectActivity( activity, target );
                             }
                         };
                         Label activityNameLabel = new Label( "activityName", activity.getName() );
@@ -115,27 +123,23 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                 groupItem.add( activityList );
             }
         } );
-        add( accordion );
+        addOrReplace( accordion );
     }
 
-    private void addDoc() {
-        docContainer = new WebMarkupContainer( "doc" );
-        docContainer.setOutputMarkupId( true );
-        docContainer.add( getActivityDoc() );
-        docContainer.add( getGuideDoc() );
-        addOrReplace( docContainer );
+    private WebMarkupContainer getDoc( Activity activity ) {
+        WebMarkupContainer docContainer = activityDocs.get( activity );
+        if ( docContainer == null ) {
+            docContainer = new WebMarkupContainer( "activityDoc" );
+            docContainer.setOutputMarkupId( true );
+            docContainer.add( getStepsList( activity ) );
+            docContainer.add( getDoNextContainer( activity ) );
+            activityDocs.put( activity, docContainer );
+        }
+        return docContainer;
     }
 
-    private WebMarkupContainer getActivityDoc() {
-        WebMarkupContainer activityDoc = new WebMarkupContainer( "activityDoc" );
-        activityDoc.add( new Label( "activityInGroup",
-                selectedActivity == null
-                        ? ""
-                        : ( selectedGroup.getName() + " - " + selectedActivity.getName() ) ) );
-        activityDoc.add( getStepsList() );
-        activityDoc.add( getDoNextContainer() );
-        activityDoc.setVisible( selectedActivity != null );
-        return activityDoc;
+    private void addGuideDoc() {
+        add( getGuideDoc() );
     }
 
     private Label getGuideDoc() {
@@ -144,15 +148,13 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                         ? guide.getDescription()
                         : "" ) );
         label.setEscapeModelStrings( false );
-        label.setVisible( selectedActivity == null);
         return label;
     }
 
-    private ListView<ActivityStep> getStepsList() {
-        List<ActivityStep> activitySteps = getActivitySteps();
+    private ListView<ActivityStep> getStepsList( Activity activity ) {
         ListView<ActivityStep> stepsListView = new ListView<ActivityStep>(
                 "steps",
-                activitySteps
+                new PropertyModel<List<ActivityStep>>( activity, "activitySteps" )
         ) {
             @Override
             protected void populateItem( ListItem<ActivityStep> item ) {
@@ -162,7 +164,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         if ( activityScript != null )
-                        runActivityScript( activityScript, target );
+                            runActivityScript( activityScript, target );
                     }
                 };
                 actionLink.add( new Label(
@@ -193,20 +195,20 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
 
     private void runActivityScript( ActivityScript activityScript, AjaxRequestTarget target ) {
         if ( activityScript != null ) {
-        for ( ActivityChange activityChange : activityScript.getActivityChanges() ) {
-            Change change = makeChange( activityChange );
-            if ( change != null ) {
-                Updatable updatable = getUpdatable( activityChange );
-                if ( updatable != null ) {
-                    updatable.changed( change );
-                    updatable.updateWith( target, change, new ArrayList<Updatable>() );
+            for ( ActivityChange activityChange : activityScript.getActivityChanges() ) {
+                Change change = makeChange( activityChange );
+                if ( change != null ) {
+                    Updatable updatable = getUpdatable( activityChange );
+                    if ( updatable != null ) {
+                        updatable.changed( change );
+                        updatable.updateWith( target, change, new ArrayList<Updatable>() );
+                    } else {
+                        break;
+                    }
                 } else {
-                    break;
+                    break; // stop running the script
                 }
-            } else {
-                break; // stop running the script
             }
-        }
         }
     }
 
@@ -217,12 +219,6 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         } else {
             return (Updatable) ChannelsUtils.getProperty( getPlanPage(), updatableTargetPath, null );
         }
-    }
-
-    private List<ActivityStep> getActivitySteps() {
-        return selectedActivity == null
-                ? new ArrayList<ActivityStep>()
-                : selectedActivity.getActivitySteps();
     }
 
     private Change makeChange( ActivityChange activityChange ) {
@@ -262,8 +258,8 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         return html;
     }
 
-    private WebMarkupContainer getDoNextContainer() {
-        List<ActivityRef> activityRefs = getNextActivityRefs();
+    private WebMarkupContainer getDoNextContainer( Activity activity ) {
+        List<ActivityRef> activityRefs = activity.getNextActivities();
         WebMarkupContainer doNextContainer = new WebMarkupContainer( "doNextContainer" );
         doNextContainer.setVisible( !activityRefs.isEmpty() );
         ListView<ActivityRef> doNextListView = new ListView<ActivityRef>(
@@ -281,9 +277,9 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         accordion.activate( target, guide.findGroupIndex( nextGroup ) );
-                        selectedActivity = nextActivity;
-                        addDoc();
-                        target.add( docContainer );
+                        selectActivity( nextActivity, target );
+                        String js = "$('ul.activities').scrollTop(0);";
+                        target.appendJavaScript( js );
                     }
                 };
                 String labelString = ( nextGroup == null ? "???" : nextGroup.getName() )
@@ -298,25 +294,30 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         return doNextContainer;
     }
 
-    private List<ActivityRef> getNextActivityRefs() {
+    @Override
+    public void refresh( AjaxRequestTarget target, Change change ) {
         if ( selectedActivity != null ) {
-            return selectedActivity.getNextActivities();
-        } else {
-            return new ArrayList<ActivityRef>();
+            target.add( getDoc( selectedActivity ) );
         }
     }
 
-    @Override
-    public void refresh( AjaxRequestTarget target, Change change ) {
-        addDoc();
-        target.add( docContainer );
+    private void selectActivity( Activity activity, AjaxRequestTarget target ) {
+        Change change = new Change( Change.Type.Selected, Channels.GUIDE_ID );
+        change.setProperty( "activity" );
+        change.addQualifier( "activity", activity );
+        update( target, change );
     }
 
     @Override
     public void changed( Change change ) {
         if ( change.isSelected() && change.getId() == Channels.GUIDE_ID ) {
-            selectedGroup = (ActivityGroup) change.getQualifier( "group" );
-            selectedActivity = (Activity) change.getQualifier( "activity" );
+            Activity activity = (Activity) change.getQualifier( "activity" );
+            openedActivity = selectedActivity;
+            if ( activity == null || selectedActivity != null && activity.equals( selectedActivity ) ) {
+                selectedActivity = null;
+            } else {
+                selectedActivity = activity;
+            }
         } else {
             super.changed( change );
         }
@@ -325,8 +326,14 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() && change.getId() == Channels.GUIDE_ID ) {
-            addDoc();
-            target.add( docContainer );
+            if ( openedActivity != null ) {
+                makeVisible( getDoc( openedActivity ), false );
+                target.add( getDoc( openedActivity ) );
+            }
+            if ( selectedActivity != null ) {
+                makeVisible( getDoc( selectedActivity ), true );
+                target.add( getDoc( selectedActivity ) );
+            }
         } else {
             super.updateWith( target, change, updated );
         }
