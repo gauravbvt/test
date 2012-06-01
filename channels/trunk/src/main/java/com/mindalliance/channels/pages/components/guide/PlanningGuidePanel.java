@@ -90,6 +90,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     private void addGuideAccordion() {
         groupDivs = new HashMap<Activity, Component>();
         AccordionOptions options = new AccordionOptions();
+        options.active( false );
         options.addCssResourceReferences( new CssResourceReference( getClass(), "res/guide.css" ) );
         accordion = new AccordionWebMarkupContainer( "accordion", options );
         accordion.setOutputMarkupId( true );
