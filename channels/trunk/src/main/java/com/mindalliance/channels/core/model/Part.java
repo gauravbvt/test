@@ -1131,7 +1131,13 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         }
     }
 
-
+    @SuppressWarnings( "unchecked" )
+    public List<Flow> getAllFlows() {
+        List<Flow> allFlows = new ArrayList<Flow>();
+        allFlows.addAll( (List<Flow>)IteratorUtils.toList( receives() ) );
+        allFlows.addAll( (List<Flow>)IteratorUtils.toList( sends() ) );
+        return allFlows;
+    }
 
     /**
      * Category of tasks.

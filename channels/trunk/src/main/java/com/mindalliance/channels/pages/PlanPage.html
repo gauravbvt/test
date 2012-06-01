@@ -49,13 +49,7 @@
 
 <body wicket:id="indicator">
 <div wicket:id="dialog"/>
-<div wicket:id="notifier">
-    <div id="basic-template">
-        <!--<a class="ui-notify-cross ui-notify-close" href="#">x</a>-->
-        <h1>#{title}</h1>
-        <p>#{text}</p>
-    </div>
-</div>
+
 <form wicket:id="big-form" class="stretch" action="#">
     <div class="maximized" wicket:id="maximized-flow">[fullflow panel]</div>
     <div wicket:id="entity">[entity panel]</div>
@@ -114,5 +108,12 @@
             &copy; Copyright 2011 Mind-Alliance Inc. All Rights Reserved.</p>
     </div>
 </form>
+<div id="notifier" wicket:id="notifier">
+    <div id="basic-template">
+        <!--<a class="ui-notify-cross ui-notify-close" href="#">x</a>-->
+        <h1>#{title}</h1>
+        <p>#{text}</p>
+    </div>
+</div>
 </body>
 </html>

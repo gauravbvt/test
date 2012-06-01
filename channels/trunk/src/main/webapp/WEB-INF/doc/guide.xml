@@ -69,6 +69,7 @@ The list is part of the plan's ''details''.]]></description>
                 <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
             </step>
             <next group="scoping" activity="requirements"/>
+            <next group="profiling" activity="profiling-organization"/>
         </activity>
         <activity id="requirements">
             <name>Define requirements</name>
@@ -102,8 +103,8 @@ The list is part of the plan's ''details''.]]></description>
             </step>
             <step>
                 <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
-            </step>          
-            <next group="scoping" activity="segment-goals"/>            
+            </step>
+            <next group="scoping" activity="segment-goals"/>
         </activity>
         <activity id="segment-goals">
             <name>Define a segment's goals</name>
@@ -124,7 +125,7 @@ Naming the goal is optional.]]></description>
             </step>
             <step>
                 <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
-            </step>          
+            </step>
         </activity>
         <activity id="classifications">
             <name>Define secrecy classifications</name>
@@ -144,7 +145,7 @@ Naming the goal is optional.]]></description>
             </step>
             <step>
                 <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
-            </step>          
+            </step>
         </activity>
         <activity id="participation">
             <name>Set user participation</name>
@@ -162,93 +163,180 @@ Note that users that self-associate with agents that have been defined as "open 
             </step>
             <step>
                 <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
-            </step>          
+            </step>
         </activity>
     </group>
     <group id="info-sharing">
         <name>Specifying info sharing</name>
         <activity id="add-task">
-            <name>Profiling an agent</name>
+            <name>Add a task</name>
             <step>
-                <description>Define the '''profile''' of an agent</description>
-                <script>
-                    <action>Open the index</action>
-                    <change>
-                        <subjectPath>plan</subjectPath>
-                        <type>Expanded</type>
-                        <property>Index</property>
-                    </change>
-                </script>
+                <description>Add new task to a segment by clicking ''ADD'' in the  Task panel or by selecting ''add new task'' from the top Actions menu.
+The newly created task is intially empty and presented as ''someone doing something''.</description>
             </step>
             <step>
-                <description>Setting organizations in scope</description>
-                <script>
-                    <action>See all participating organizations</action>
-                    <change>
-                        <subjectPath>plan</subjectPath>
-                        <type>Expanded</type>
-                        <property>All organizations</property>
-                    </change>
-                </script>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
             </step>
-            <next group="profiling" activity="profiling-organization"/>
+            <next group="info-sharing" activity="define-task"/>
         </activity>
         <activity id="define-task">
-            <name>Profiling an organization</name>
+            <name>Define a task</name>
             <step>
-                <description>Define the '''profile''' of an organization.</description>
+                <description>Define a task by
+* naming it
+* identifying where it is to be executed
+* profiling who is to be assigned to it
+* what goals it directly achieves
+* and more
+Note that as little and as much as wanted can be put into a task's definition.
+                </description>
                 <script>
-                    <action>Open the index</action>
+                    <action>Open the task form</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectPath>planPage.part</subjectPath>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
+            </step>
+            <next group="info-sharing" activity="add-need"/>
+            <next group="info-sharing" activity="add-capability"/>
+            <next group="info-sharing" activity="connect-with-flow"/>
+        </activity>
+        <activity id="add-need">
+            <name>Add info need to task</name>
+            <step>
+                <description>Add an '''information need''' to a task by clicking on the ''ADD'' button in the Receives panel. An info need specifies information that agents assigned to the task need to receive to
+ * trigger the task
+ * enable it to succeed (critical)
+ * terminate the task (useful)
+ * improve its execution
+                </description>
+            </step>
+            <step>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
+            </step>
+            <next group="info-sharing" activity="add-capability"/>
+            <next group="info-sharing" activity="define-flow"/>
+            <next group="info-sharing" activity="connect-with-flow"/>
+        </activity>
+        <activity id="add-capability">
+            <name>Add info capability to task</name>
+            <step>
+                <description>Add an ''informatio capability'' to a task by clicking on the ''ADD'' button in the Sends panel. An info capability specifies info agents assigned to a task expect to acquire and be able to share with others.</description>
+            </step>
+            <step>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
+            </step>
+            <next group="info-sharing" activity="add-need"/>
+            <next group="info-sharing" activity="define-flow"/>
+            <next group="info-sharing" activity="connect-with-flow"/>
+        </activity>
+        <activity id="define-flow">
+            <name>Define a send or receive</name>
+            <step>
+                <description>Specify an info need, capability or sharing by
+* naming the information
+* listing its elements
+* indicating whether it is ''pushed'' or ''pulled'
+* the communication channels to use
+* timeliness constraints
+* and more
+                </description>
+                <script>
+                    <action>Open the send/receive form</action>
+                    <change>
+                        <subjectPath>planPage.part.allFlows[0]</subjectPath>
                         <type>Expanded</type>
                         <property>Index</property>
                     </change>
                 </script>
             </step>
+            <step>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
+            </step>
+            <next group="info-sharing" activity="connect-with-flow"/>
+        </activity>
+        <activity id="connect-with-flow">
+            <name>Connect tasks with info sharing</name>
+            <step>
+                <description>An information sharing flow connect a tasks that ''produces'' information with a tasks that ''consumes'' it. It is equivalent to connecting an info capability of a task with the info need of another.
+A sharing flow is created by connecting an info need or a capability to a task. The flow appears in the ''Receives'' of the consuming task and in the ''Sends'' of the producing task.
+                </description>
+                <script>
+                    <action>Open the send/receive form</action>
+                    <change>
+                        <subjectPath>planPage.part.allFlows[0]</subjectPath>
+                        <type>Expanded</type>
+                        <property>Index</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
+            </step>
+            <next group="info-sharing" activity="add-task"/>
         </activity>
     </group>
     <group id="profiling">
-        <name>Profiling the environment</name>
-        <activity id="profiling-agent">
-            <name>Profiling an agent</name>
+        <name>Defining the plan's environment</name>
+        <activity id="profiling-organization">
+            <name>Profile an organization</name>
             <step>
-                <description>Define the '''profile''' of an agent</description>
+                <description><![CDATA[Define an actual or type of organization by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it with organization types
+* If an actual organization, by
+** naming the parent organization
+** listing the agents it employs
+** listing sharing agreements with other organizations
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
                 <script>
-                    <action>Open the index</action>
+                    <action>Open an organization profile</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectPath>guide.anyActualOrganization</subjectPath>
                         <type>Expanded</type>
-                        <property>Index</property>
+                        <property>details</property>
                     </change>
                 </script>
             </step>
             <step>
-                <description>Setting organizations in scope</description>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
+            </step>
+            <next group="profiling" activity="profiling-agent"/>
+            <next group="scoping" activity="requirements"/>
+        </activity>
+        <activity id="profiling-agent">
+            <name>Profile an agent</name>
+            <step>
+                <description><![CDATA[Define an actual or type of agent by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it with agent types
+* If an actual agent, by
+** declaring it a person or system
+** setting clearances, languages, availability
+** setting constraints on users participating as this agent
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
                 <script>
-                    <action>See all participating organizations</action>
+                    <action>Open an agent profile</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectPath>guide.anyActualAgent</subjectPath>
                         <type>Expanded</type>
-                        <property>All organizations</property>
+                        <property>details</property>
                     </change>
                 </script>
+            </step>
+            <step>
+                <description>For more information, see [http://localhost:8081/channels/doc/channels_user_guide/ch01.html this]</description>
             </step>
             <next group="profiling" activity="profiling-organization"/>
-        </activity>
-        <activity id="profiling-organization">
-            <name>Profiling an organization</name>
-            <step>
-                <description>Define the '''profile''' of an organization.</description>
-                <script>
-                    <action>Open the index</action>
-                    <change>
-                        <subjectPath>plan</subjectPath>
-                        <type>Expanded</type>
-                        <property>Index</property>
-                    </change>
-                </script>
-            </step>
+            <next group="scoping" activity="participation"/>
         </activity>
     </group>
     <group id="searching">
@@ -380,7 +468,5 @@ Note that users that self-associate with agents that have been defined as "open 
             </step>
         </activity>
     </group>
-    
-    
-    
+
 </guide>

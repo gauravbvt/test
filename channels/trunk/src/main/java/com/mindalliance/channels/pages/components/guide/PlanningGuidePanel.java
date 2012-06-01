@@ -3,7 +3,9 @@ package com.mindalliance.channels.pages.components.guide;
 import com.google.code.jqwicket.ui.accordion.AccordionOptions;
 import com.google.code.jqwicket.ui.accordion.AccordionWebMarkupContainer;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.guide.Activity;
 import com.mindalliance.channels.guide.ActivityChange;
@@ -37,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Planning guide panel.
@@ -52,6 +55,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     private GuideReader guideReader;
 
     private Guide guide;
+    private ActivityGroup selectedGroup;
     private Activity selectedActivity;
     private Activity openedActivity;
     private AccordionWebMarkupContainer accordion;
@@ -104,8 +108,16 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                 groupLabel.add( new AjaxEventBehavior( "onclick" ) {
                     @Override
                     protected void onEvent( AjaxRequestTarget target ) {
-                        selectActivity( null, target );
-                        String js = "setTimeout('" + accordion.resize().toString( true ) + "',500);";
+                        if ( selectedGroup != null && selectedGroup.equals( group ) ) {
+                            selectedGroup = null;
+                            selectedActivity = null;
+                            accordion.activate( target, false );
+                            target.add( accordion );
+                        } else {
+                            selectedGroup = group;
+                            selectActivity( selectedGroup, null, target );
+                        }
+                        String js = "setTimeout('"+ accordion.resize().toString( true ) + "',500);";
                         target.appendJavaScript( js );
                     }
                 } );
@@ -117,13 +129,13 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                     protected void populateItem( ListItem<Activity> activityItem ) {
                         final Activity activity = activityItem.getModelObject();
                         groupDivs.put( activity, groupItem );
-                        WebMarkupContainer doc = getDoc( activity );
+                        WebMarkupContainer doc = getDoc( group, activity );
                         makeVisible( doc, false );
                         activityItem.add( doc );
                         AjaxLink<String> activityLink = new AjaxLink<String>( "activityLink" ) {
                             @Override
                             public void onClick( AjaxRequestTarget target ) {
-                                selectActivity( activity, target );
+                                selectActivity( group, activity, target );
                             }
                         };
                         Label activityNameLabel = new Label( "activityName", activity.getName() );
@@ -137,13 +149,13 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         addOrReplace( accordion );
     }
 
-    private WebMarkupContainer getDoc( Activity activity ) {
+    private WebMarkupContainer getDoc( ActivityGroup group, Activity activity ) {
         WebMarkupContainer docContainer = activityDocs.get( activity );
         if ( docContainer == null ) {
             docContainer = new WebMarkupContainer( "activityDoc" );
             docContainer.setOutputMarkupId( true );
             docContainer.add( getStepsList( activity ) );
-            docContainer.add( getDoNextContainer( activity ) );
+            docContainer.add( getDoNextContainer( group, activity ) );
             activityDocs.put( activity, docContainer );
         }
         return docContainer;
@@ -243,10 +255,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         if ( activityChange.getSubjectId() != null ) {
             change = new Change( type, activityChange.getSubjectId() );
         } else {
-            Identifiable identifiable = (Identifiable) ChannelsUtils.getProperty(
-                    this,
-                    activityChange.getSubjectPath(),
-                    null );
+            Identifiable identifiable = getSubject( activityChange );
             if ( identifiable == null )
                 return null;
             else
@@ -254,6 +263,13 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         }
         change.setProperty( activityChange.getProperty() );
         return change;
+    }
+
+    private Identifiable getSubject( ActivityChange activityChange ) {
+        return (Identifiable) ChannelsUtils.getProperty(
+                this,
+                activityChange.getSubjectPath(),
+                null );
     }
 
     private Label getDescriptionLabel( ActivityStep step ) {
@@ -273,7 +289,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         return html;
     }
 
-    private WebMarkupContainer getDoNextContainer( Activity activity ) {
+    private WebMarkupContainer getDoNextContainer( final ActivityGroup group, Activity activity ) {
         List<ActivityRef> activityRefs = activity.getNextActivities();
         WebMarkupContainer doNextContainer = new WebMarkupContainer( "doNextContainer" );
         doNextContainer.setVisible( !activityRefs.isEmpty() );
@@ -292,14 +308,16 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         accordion.activate( target, guide.findGroupIndex( nextGroup ) );
-                        selectActivity( nextActivity, target );
+                        selectActivity( group, nextActivity, target );
                         //String js = "setTimeout(\"$('#guide').scrollTop(0)\",500);";
                         String js = "$('#guide').scrollTop(0);";
                         target.appendJavaScript( js );
                     }
                 };
-                String labelString = ( nextGroup == null ? "???" : nextGroup.getName() )
-                        + " - "
+                String groupPrefix = ( nextGroup == null || nextGroup.equals( selectedGroup )
+                        ? ""
+                        : "(" + nextGroup.getName() + ") " );
+                String labelString = groupPrefix
                         + ( nextActivity == null ? "???" : nextActivity.getName() );
                 Label doNextLabel = new Label( "doNextText", labelString );
                 nextLink.add( doNextLabel );
@@ -313,14 +331,15 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     @Override
     public void refresh( AjaxRequestTarget target, Change change ) {
         if ( selectedActivity != null ) {
-            target.add( getDoc( selectedActivity ) );
+            target.add( getDoc( selectedGroup, selectedActivity ) );
         }
     }
 
-    private void selectActivity( Activity activity, AjaxRequestTarget target ) {
+    private void selectActivity( ActivityGroup group, Activity activity, AjaxRequestTarget target ) {
         Change change = new Change( Change.Type.Selected, Channels.GUIDE_ID );
         change.setProperty( "activity" );
         change.addQualifier( "activity", activity );
+        change.addQualifier( "group", group );
         update( target, change );
     }
 
@@ -328,10 +347,12 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     public void changed( Change change ) {
         if ( change.isSelected() && change.getId() == Channels.GUIDE_ID ) {
             Activity activity = (Activity) change.getQualifier( "activity" );
+            ActivityGroup group = (ActivityGroup) change.getQualifier( "group" );
             openedActivity = selectedActivity;
             if ( activity == null || selectedActivity != null && activity.equals( selectedActivity ) ) {
                 selectedActivity = null;
             } else {
+                selectedGroup = group;
                 selectedActivity = activity;
             }
         } else {
@@ -343,12 +364,12 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() && change.getId() == Channels.GUIDE_ID ) {
             if ( openedActivity != null ) {
-                makeVisible( getDoc( openedActivity ), false );
-                target.add( getDoc( openedActivity ) );
+                makeVisible( getDoc( selectedGroup, openedActivity ), false );
+                target.add( getDoc( selectedGroup, openedActivity ) );
             }
             if ( selectedActivity != null ) {
-                makeVisible( getDoc( selectedActivity ), true );
-                target.add( getDoc( selectedActivity ) );
+                makeVisible( getDoc( selectedGroup, selectedActivity ), true );
+                target.add( getDoc( selectedGroup, selectedActivity ) );
             }
             accordion.resize( target );
         } else {
@@ -360,6 +381,24 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
 
     public PlanPage getPlanPage() {
         return findParent( PlanPage.class );
+    }
+
+    public PlanningGuidePanel getGuide() {
+        return this;
+    }
+
+    public Actor getAnyActualAgent() {
+        List<Actor> actualActors = getQueryService().listActualEntities( Actor.class );
+        return actualActors.isEmpty()
+                ? null
+                : actualActors.get( new Random( 13 ).nextInt( actualActors.size() ) );
+    }
+
+    public Organization getAnyActualOrganization() {
+        List<Organization> actualOrgs = getQueryService().listActualEntities( Organization.class );
+        return actualOrgs.isEmpty()
+                ? null
+                : actualOrgs.get( new Random( 13 ).nextInt( actualOrgs.size() ) );
     }
 
 }

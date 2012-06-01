@@ -44,13 +44,6 @@
 </head>
 
 <body>
-<div wicket:id="notifier">
-    <div id="basic-template">
-        <!--<a class="ui-notify-cross ui-notify-close" href="#">x</a>-->
-        <h1>#{title}</h1>
-        <p>#{text}</p>
-    </div>
-</div>
 
 <form wicket:id="big-form" class="stretch" action="#">
 	<div id="container">
@@ -169,5 +162,13 @@
 		</div>
 	</div>
 </form>
+<div id="notifier" wicket:id="notifier">
+    <div id="basic-template">
+        <!--<a class="ui-notify-cross ui-notify-close" href="#">x</a>-->
+        <h1>#{title}</h1>
+        <p>#{text}</p>
+    </div>
+</div>
+
 </body>
 </html>
