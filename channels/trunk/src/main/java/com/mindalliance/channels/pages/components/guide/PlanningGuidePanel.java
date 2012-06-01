@@ -292,7 +292,8 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                     public void onClick( AjaxRequestTarget target ) {
                         accordion.activate( target, guide.findGroupIndex( nextGroup ) );
                         selectActivity( nextActivity, target );
-                        String js = "setTimeout($('ul.activities').scrollTop(0),500);";
+                        //String js = "setTimeout(\"$('#guide').scrollTop(0)\",500);";
+                        String js = "$('#guide').scrollTop(0);";
                         target.appendJavaScript( js );
                     }
                 };
