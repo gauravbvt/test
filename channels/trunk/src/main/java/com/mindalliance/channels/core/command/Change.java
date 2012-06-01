@@ -300,7 +300,7 @@ public class Change implements Serializable {
     }
 
     public void setMessage( String message ) {
-        this.message = message;
+        this.message = message.replaceAll( "\"", "" );
     }
 
     /**

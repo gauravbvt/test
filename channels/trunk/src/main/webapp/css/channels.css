@@ -2319,7 +2319,7 @@ div.section-content > div.flow > div > img {
     background:#c3d9ff;
     border-left:1px solid #7794C7;
     float:left;
-    overflow:hidden;
+    overflow:auto;
 }
 
 /* ---- Social ----- */

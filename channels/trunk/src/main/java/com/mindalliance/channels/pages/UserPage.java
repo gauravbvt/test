@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.pages;
 
+import com.google.code.jqwicket.ui.notifier.NotifierWebMarkupContainer;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -14,7 +15,6 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
-import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.issues.IssuesPage;
@@ -61,11 +61,6 @@ public class UserPage extends AbstractChannelsWebPage {
     private static final Logger LOG = LoggerFactory.getLogger( UserPage.class );
 
     /**
-     * Minimium delay before a change message fades out.
-     */
-    public static final int MESSAGE_FADE_OUT_DELAY = 20;
-
-    /**
      * The mail sender.
      */
     @SpringBean
@@ -93,14 +88,10 @@ public class UserPage extends AbstractChannelsWebPage {
     private WebMarkupContainer spinner;
     private SocialPanel socialPanel;
     /**
-     * Message container.
+     * Notifier.
      */
-    private WebMarkupContainer messageContainer;
+    private NotifierWebMarkupContainer notifier;
     private String message;
-    /**
-     * Time at which a message appeared.
-     */
-    private long message_time = 0;
     private Label welcomeLabel;
 
 
@@ -118,7 +109,7 @@ public class UserPage extends AbstractChannelsWebPage {
         addPageTitle();
         addForm();
         addSpinner();
-        addChangeMessagePanel();
+        addNotifier();
         addWelcome();
         addLoggedIn();
         addHelp();
@@ -203,13 +194,9 @@ public class UserPage extends AbstractChannelsWebPage {
     }
 
 
-    private void addChangeMessagePanel() {
-        messageContainer = new WebMarkupContainer( "message-container" );
-        messageContainer.setOutputMarkupId( true );
-        makeVisible( messageContainer, !getMessage().isEmpty() );
-        form.addOrReplace( messageContainer );
-        messageContainer.add( new MessagePanel( "message", new Model<String>( getMessage() ) ) );
-        message_time = System.currentTimeMillis();
+    private void addNotifier() {
+        notifier = new NotifierWebMarkupContainer( "notifier" );
+        add( notifier );
     }
 
     private String getMessage() {
@@ -220,21 +207,7 @@ public class UserPage extends AbstractChannelsWebPage {
     private void doTimedUpdate( AjaxRequestTarget target ) {
         getCommander().keepAlive( getUser().getUsername(), REFRESH_DELAY );
         updateSocialPanel( target );
-        fadeOutMessagePanel( target );
     }
-
-    private void fadeOutMessagePanel( AjaxRequestTarget target ) {
-        if ( !getMessage().isEmpty() ) {
-            if ( ( System.currentTimeMillis() - message_time ) > ( MESSAGE_FADE_OUT_DELAY * 1000 ) ) {
-                target.appendJavaScript( "$('div.change-message').fadeOut('slow');" );
-                message = null;
-            }
-        } else {
-            makeVisible( messageContainer, false );
-        }
-        target.add( messageContainer );
-    }
-
 
     /**
      * Update social panel.
@@ -598,8 +571,9 @@ public class UserPage extends AbstractChannelsWebPage {
         }
         String message = change.getMessage();
         if ( message != null ) {
-            addChangeMessagePanel();
-            target.add( messageContainer );
+            notifier.create( target,
+                    "Notification",
+                    message );
         } else if ( change.isCommunicated() ) {
             newMessage( target, change );
             refreshSocialPanel( target, change );

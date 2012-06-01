@@ -329,7 +329,6 @@ Note that users that self-associate with agents that have been defined as "open 
                 <script>
                     <action>Open the index</action>
                     <change>
-                        <updateTargetPath>planPage</updateTargetPath>
                         <subjectPath>plan</subjectPath>
                         <type>Expanded</type>
                         <property>Index</property>
@@ -373,7 +372,6 @@ Note that users that self-associate with agents that have been defined as "open 
                 <script>
                     <action>Open the index</action>
                     <change>
-                        <updateTargetPath>planPage</updateTargetPath>
                         <subjectPath>plan</subjectPath>
                         <type>Expanded</type>
                         <property>Index</property>

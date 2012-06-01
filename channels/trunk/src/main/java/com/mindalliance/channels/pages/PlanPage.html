@@ -13,7 +13,7 @@
                 }
                 // Patch autocomplete field bug (choices list not hidden)
                 if ( t == 'text' ) {
-                    var autocompleteList = $(".wicket-aa-container");
+                    var autocompleteList = $( ".wicket-aa-container" );
                     if ( autocompleteList != null ) {
                         autocompleteList.hide();
                     }
@@ -29,25 +29,33 @@
         }
 
         if ( typeof window.event != 'undefined' ) // IE
-            document.onkeydown = function() { // IE
+            document.onkeydown = function () { // IE
                 var t = event.srcElement.type;
                 var kc = event.keyCode;
-                return channels_keypress(kc, t, event.srcElement);
+                return channels_keypress( kc, t, event.srcElement );
             }
         else
-            document.onkeypress = function( e ) { // FireFox/Others
+            document.onkeypress = function ( e ) { // FireFox/Others
                 var t = e.target.type;
                 var kc = e.keyCode;
-                return channels_keypress(kc, t, e.target);
+                return channels_keypress( kc, t, e.target );
             }
         // supports minimizing/restoring flow map panel
         var __channels_flowmap_minimized__ = false;
     </script>
-    <!--[if IE 7]><link rel="stylesheet" type="text/css" href="css/channels-ie.css" /><![endif]-->
+    <!--[if IE 7]>
+    <link rel="stylesheet" type="text/css" href="css/channels-ie.css"/><![endif]-->
 </head>
 
 <body wicket:id="indicator">
 <div wicket:id="dialog"/>
+<div wicket:id="notifier">
+    <div id="basic-template">
+        <!--<a class="ui-notify-cross ui-notify-close" href="#">x</a>-->
+        <h1>#{title}</h1>
+        <p>#{text}</p>
+    </div>
+</div>
 <form wicket:id="big-form" class="stretch" action="#">
     <div class="maximized" wicket:id="maximized-flow">[fullflow panel]</div>
     <div wicket:id="entity">[entity panel]</div>
@@ -65,6 +73,7 @@
     <div wicket:id="dataCollection">[data collection panel]</div>
     <!--   <span wicket:id="surveys">[surveys panel] </span> -->
     <img class="logo" wicket:id="channelsHome" src="images/logo_home.png" alt="Home" title="Home" style="border:0"/>
+
     <div class="header">
         <h1><span wicket:id="header">Title</span></h1>
         <span class="menubar">
@@ -73,20 +82,20 @@
             <span class="menuitem" wicket:id="planShowMenu">[show menu]</span><span class="menuitem"
                                                                                     wicket:id="planActionsMenu">[action menu]</span>
             <input wicket:id="refresh-needed" type="button" value="Please refresh now"/>
-            <a wicket:id="help-link" href="#"><img  class="help-icon" src="images/help_blue_small.png" alt="Help" title="Channels help and feedback"/></a>
+            <a wicket:id="help-link" href="#"><img class="help-icon" src="images/help_blue_small.png" alt="Help"
+                                                   title="Channels help and feedback"/></a>
             <span wicket:id="spinner" id="spinner" class="spinner"><img src="images/ajax-loader.gif"></span>
         </span>
 
         <p class="caption" wicket:id="sg-desc">A description.</p>
     </div>
-    <div class="change-message" wicket:id="message-container"><span wicket:id="message">[message panel]</span></div>
     <div id="history">
         <img wicket:id="goBack" class="navigation" src="images/go_back.png" title="Go back" alt="Go back">
         <img wicket:id="goForward" class="navigation" src="images/go_forward.png" title="Go forward" alt="Go forward">
     </div>
     <div id="controls">
         <ul id="sg-sel">
-            <li> <strong><span wicket:id="planName" class="pointer">Plan name</span></strong></li>
+            <li><strong><span wicket:id="planName" class="pointer">Plan name</span></strong></li>
             <li wicket:id="select-segment"><label>Select plan segment:
                 <select wicket:id="sg-sel" name="segment">
                     <option>Some segment</option>
@@ -98,7 +107,8 @@
         <span wicket:id="segment-import">[segment import dialog]</span>
     -->
     <span wicket:id="segment">[segment panel] </span>
-     <div id="footer">
+
+ <div id="footer">
         <hr>
         <p id="logout">Logged in as <span wicket:id="user">User</span> &mdash; <a href="logout">Sign out</a><br>
             &copy; Copyright 2011 Mind-Alliance Inc. All Rights Reserved.</p>

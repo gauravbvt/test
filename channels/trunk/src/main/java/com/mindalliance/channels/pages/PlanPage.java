@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.pages;
 
+import com.google.code.jqwicket.ui.notifier.NotifierWebMarkupContainer;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.model.Flow;
@@ -29,7 +30,6 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareWebContainer;
-import com.mindalliance.channels.pages.components.MessagePanel;
 import com.mindalliance.channels.pages.components.ModelObjectSurveysPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
@@ -100,10 +100,6 @@ import java.util.Set;
  * Note: When a user switches plan, this page *must* be reloaded.
  */
 public final class PlanPage extends AbstractChannelsWebPage {
-    /**
-     * Minimium delay before a change message fades out.
-     */
-    public static final int MESSAGE_FADE_OUT_DELAY = 20;
     /**
      * The 'expand' parameter in the URL.
      */
@@ -302,9 +298,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
      */
     private WebMarkupContainer goForwardContainer;
     /**
-     * Message container.
+     * Notifier.
      */
-    private WebMarkupContainer messageContainer;
+    private NotifierWebMarkupContainer notifier;
     /**
      * When last refreshed.
      */
@@ -345,10 +341,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * Message shown in message panel.
      */
     private String message;
-    /**
-     * Time at which a message appeared.
-     */
-    private long message_time = 0;
 
     private Map<Long, Boolean> showSimpleForm = new HashMap<Long, Boolean>();
 
@@ -448,24 +440,55 @@ public final class PlanPage extends AbstractChannelsWebPage {
         expanded.add( Channels.GUIDE_ID );
         add( new Label( "sg-title",
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
+        addBody();
+        commander.resynced( getUser().getUsername() );
+        LOG.debug( "Segment page generated" );
+        rememberState();
+    }
+
+    private void addBody() {
         WebMarkupContainer body = new IndicatorAwareWebContainer( "indicator", "spinner" );
         add( body );
+        addNotifier( body );
         addModalDialog( "dialog", null, body );
         addForm( body );
+    }
+
+    private void addForm( WebMarkupContainer body ) {
+        form = new Form( "big-form" ) {
+            @Override
+            protected void onSubmit() {
+                // Do nothing - everything is done via Ajax, even file uploads
+                // System.out.println( "Form submitted" );
+            }
+        };
+        form.setMultiPart( true );
+        body.add( form );
+        addHeader();
+        addMaximizedFlowPanel( new Change( Change.Type.None ) );
+        addFloatingPanels();
+        addSegmentPanel();
+        addFooter();
+    }
+
+    private void addHeader() {
+        addSegmentNameLabel();
+        // Add link to map of parts
+        form.addOrReplace( createPartsMapLink() );
+        addSegmentDescriptionLabel();
         addPlanName();
         addChannelsLogo();
         addSpinner();
-        addMaximizedFlowPanel( new Change( Change.Type.None ) );
-        addHeader();
-        addFooter();
         addRefreshNow();
         addHelp();
-        addChangeMessagePanel();
         addGoBackAndForward();
-        commander.resynced( getUser().getUsername() );
         addPlanMenubar();
         addSegmentSelector();
-        addSegmentPanel();
+        updateSelectorsVisibility();
+        updateNavigation();
+    }
+
+    private void addFloatingPanels() {
         addEntityPanel();
         addAssignmentsPanel();
         addCommitmentsPanel();
@@ -476,15 +499,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addOverridesPanel();
         addSegmentEditPanel();
         addPlanEditPanel( null );
-//        addSurveysPanel( Survey.UNKNOWN );
         addFlowLegendPanel();
         addAllFeedbackPanel();
         addDataCollectionPanel();
-
-        updateSelectorsVisibility();
-        updateNavigation();
-        LOG.debug( "Segment page generated" );
-        rememberState();
     }
 
     private void addPlanName() {
@@ -499,18 +516,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         } );
         form.addOrReplace( planNameLabel );
-    }
-
-    private void addForm( WebMarkupContainer body ) {
-        form = new Form( "big-form" ) {
-            @Override
-            protected void onSubmit() {
-                // Do nothing - everything is done via Ajax, even file uploads
-                // System.out.println( "Form submitted" );
-            }
-        };
-        form.setMultiPart( true );
-        body.add( form );
     }
 
     private void addChannelsLogo() {
@@ -616,29 +621,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         return getAspectShown( getSegment() );
     }
 
-    private void addHeader() {
-        segmentNameLabel = new Label( "header",
-                new AbstractReadOnlyModel() {
-                    @Override
-                    public Object getObject() {
-                        return StringUtils.abbreviate( segment.getName(),
-                                SEGMENT_NAME_MAX_LENGTH );
-                    }
-                } );
-        segmentNameLabel.setOutputMarkupId( true );
-        segmentNameLabel.add( new AjaxEventBehavior( "onclick" ) {
-            protected void onEvent( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getSegment() ) );
-            }
-        } );
-        // Add style mods from analyst.
-        annotateSegmentName();
-        form.addOrReplace( segmentNameLabel );
-
-        // Add link to map of parts
-        form.addOrReplace( createPartsMapLink() );
-
-        // Segment description
+    private void addSegmentDescriptionLabel() {
         segmentDescriptionLabel = new Label( "sg-desc",                                  // NON-NLS
                 new AbstractReadOnlyModel<String>() {
                     @Override
@@ -659,6 +642,26 @@ public final class PlanPage extends AbstractChannelsWebPage {
                             }
                         } ) );
         form.addOrReplace( segmentDescriptionLabel );
+    }
+
+    private void addSegmentNameLabel() {
+        segmentNameLabel = new Label( "header",
+                new AbstractReadOnlyModel() {
+                    @Override
+                    public Object getObject() {
+                        return StringUtils.abbreviate( segment.getName(),
+                                SEGMENT_NAME_MAX_LENGTH );
+                    }
+                } );
+        segmentNameLabel.setOutputMarkupId( true );
+        segmentNameLabel.add( new AjaxEventBehavior( "onclick" ) {
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getSegment() ) );
+            }
+        } );
+        // Add style mods from analyst.
+        annotateSegmentName();
+        form.addOrReplace( segmentNameLabel );
     }
 
     private void addFooter() {
@@ -744,13 +747,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
         form.add( helpLink );
     }
 
-    private void addChangeMessagePanel() {
-        messageContainer = new WebMarkupContainer( "message-container" );
-        messageContainer.setOutputMarkupId( true );
-        makeVisible( messageContainer, !getMessage().isEmpty() );
-        form.addOrReplace( messageContainer );
-        messageContainer.add( new MessagePanel( "message", new Model<String>( getMessage() ) ) );
-        message_time = System.currentTimeMillis();
+    private void addNotifier( WebMarkupContainer body ) {
+        notifier = new NotifierWebMarkupContainer( "notifier" );
+        body.add( notifier );
     }
 
     private String getMessage() {
@@ -792,7 +791,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
             if ( getPlan().isDevelopment() ) {
                 target.add( refreshNeededComponent );
             }
-            fadeOutMessagePanel( target );
         }
         segmentPanel.updateSocialPanel( target );
     }
@@ -809,18 +807,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 PlanPage.this,
                 target
         );
-    }
-
-    private void fadeOutMessagePanel( AjaxRequestTarget target ) {
-        if ( !getMessage().isEmpty() ) {
-            if ( ( System.currentTimeMillis() - message_time ) > ( MESSAGE_FADE_OUT_DELAY * 1000 ) ) {
-                target.appendJavaScript( "$('div.change-message').fadeOut('slow');" );
-                message = null;
-            }
-        } else {
-            makeVisible( messageContainer, false );
-        }
-        target.add( messageContainer );
     }
 
     private void updateRefreshNowNotice() {
@@ -1822,8 +1808,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
         // Hide message panel on changed message ( not null )
         String message = change.getMessage();
         if ( message != null ) {
-            addChangeMessagePanel();
-            target.add( messageContainer );
+            notifier.create( target,
+                    "Notification",
+                    message );
             if ( message.contains( "copied" ) ) {
                 refreshAllMenus( target );
             }

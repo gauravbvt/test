@@ -30,7 +30,7 @@ public class AbstractSocialListPanel extends AbstractUpdatablePanel {
         AjaxFallbackLink hideSocialLink = new AjaxFallbackLink( "hideAll" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Collapsed, Channels.SOCIAL_ID );
-                change.setMessage( "To re-open, select \"Planners\" in the top \"Show\" menu." );
+                change.setMessage( "To re-open, select Planners in the top Show menu." );
                 update( target, change );
             }
         };

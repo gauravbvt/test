@@ -96,6 +96,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                     @Override
                     protected void onUpdate( AjaxRequestTarget target ) {
                         resetAll();
+                        getPlanManager().clearCache();
                         target.add( userParticipationContainer );
                         update( target, new Change( Change.Type.Updated, getPlan(), "participation") );
                     }
