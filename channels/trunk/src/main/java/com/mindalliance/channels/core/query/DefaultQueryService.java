@@ -3331,6 +3331,20 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     @SuppressWarnings( "unchecked" )
+    public <T extends ModelEntity> List<T> listKnownEntity( Class<T> clazz ) {
+        return (List<T>) CollectionUtils.select(
+                list( clazz ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !( (T) object ).isUnknown();
+                    }
+                }
+        );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
     public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz ) {
         return (List<T>) CollectionUtils.select(
                 list( clazz ),

@@ -4,8 +4,14 @@ import com.google.code.jqwicket.ui.accordion.AccordionOptions;
 import com.google.code.jqwicket.ui.accordion.AccordionWebMarkupContainer;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.guide.Activity;
 import com.mindalliance.channels.guide.ActivityChange;
@@ -279,14 +285,20 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     }
 
     private String wikimediaToHtml( String wikimedia ) {
-        String serverUrl = guideReader.getServerUrl();
-        String helpUrl = serverUrl
-                + ( serverUrl.endsWith( "/" ) ? "" : "/" )
-                + "doc/channels_user_guide/";
-        WikiModel wikiModel = new WikiModel( helpUrl + "${image}", helpUrl + "${title}" );
-        String html = wikiModel.render( wikimedia.trim() );
+        // First substitute template variable
+        String convertedWikimedia = ChannelsUtils.convertTemplate( wikimedia.trim(), this );
+        String helpUrl = getHelpUrl();
+        WikiModel wikiModel = new WikiModel( helpUrl + "/${image}", helpUrl + "/${title}" );
+        String html = wikiModel.render( convertedWikimedia );
         html = html.replaceAll( "<a ", "<a target='_blank' " );
         return html;
+    }
+
+    public String getHelpUrl() {
+        String serverUrl = guideReader.getServerUrl();
+        return serverUrl
+                + ( serverUrl.endsWith( "/" ) ? "" : "/" )
+                + "doc/channels_user_guide";
     }
 
     private WebMarkupContainer getDoNextContainer( final ActivityGroup group, Activity activity ) {
@@ -387,6 +399,13 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         return this;
     }
 
+    public Flow getAnyFlow() {
+        List<Flow> flows = getPlanPage().getPart().getAllFlows();
+        return flows.isEmpty()
+                ? null
+                : flows.get( new Random( 13 ).nextInt( flows.size() ) );
+    }
+
     public Actor getAnyActualAgent() {
         List<Actor> actualActors = getQueryService().listActualEntities( Actor.class );
         return actualActors.isEmpty()
@@ -400,5 +419,43 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                 ? null
                 : actualOrgs.get( new Random( 13 ).nextInt( actualOrgs.size() ) );
     }
+
+    public Event getAnyEvent() {
+        List<Event> events = getQueryService().listKnownEntity( Event.class );
+        return events.isEmpty()
+                ? null
+                : events.get( new Random( 13 ).nextInt( events.size() ) );
+    }
+
+    public Phase getAnyPhase() {
+        List<Phase> phases = getQueryService().listKnownEntity(Phase.class );
+        return phases.isEmpty()
+                ? null
+                : phases.get( new Random( 13 ).nextInt( phases.size() ) );
+    }
+
+    public Place getAnyActualPlace() {
+        List<Place> actualPlaces = getQueryService().listActualEntities( Place.class );
+        return actualPlaces.isEmpty()
+                ? null
+                : actualPlaces.get( new Random( 13 ).nextInt( actualPlaces.size() ) );
+    }
+
+    public Role getAnyRole() {
+        List<Role> roles = getQueryService().listKnownEntity(Role.class );
+        return roles.isEmpty()
+                ? null
+                : roles.get( new Random( 13 ).nextInt( roles.size() ) );
+    }
+
+    public TransmissionMedium getAnyMedium() {
+        List<TransmissionMedium> media = getQueryService().listKnownEntity(TransmissionMedium.class );
+        return media.isEmpty()
+                ? null
+                : media.get( new Random( 13 ).nextInt( media.size() ) );
+    }
+
+
+
 
 }

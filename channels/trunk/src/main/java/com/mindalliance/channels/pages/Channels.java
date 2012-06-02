@@ -221,6 +221,7 @@ public class Channels extends WebApplication
         mountPage( "home", UserPage.class );
         mountPage( "surveys", RFIsPage.class );
         mountPage( "feedback", FeedbackPage.class );
+        mountPage( "help", HelpPage.class );
 
         mountResource( "uploads/${name}", new PngReference( UploadedImage.class ) );
         mountResource( "icons/${name}", new PngReference( IconPng.class ) );

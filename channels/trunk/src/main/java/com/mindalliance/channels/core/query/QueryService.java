@@ -103,6 +103,15 @@ public interface QueryService {
     <T extends ModelObject> List<T> list( Class<T> clazz );
 
     /**
+     * Get all objects of the given class.
+     *
+     * @param clazz the given subclass of model entity.
+     * @param <T>   a subclass of model entity.
+     * @return a list
+     */
+    <T extends ModelEntity> List<T> listKnownEntity( Class<T> clazz );
+
+    /**
      * Find all type entities of a given class.
      *
      * @param clazz a class of entities
