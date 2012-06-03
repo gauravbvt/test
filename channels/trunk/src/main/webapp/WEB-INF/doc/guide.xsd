@@ -60,6 +60,7 @@
                 </xs:choice>
                 <xs:element ref="type"/> 
                 <xs:element name="property" type="xs:string" maxOccurs="1" minOccurs="0"/>
+                <xs:element ref="qualifier" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -82,5 +83,13 @@
         </xs:simpleType>
     </xs:element>
 
+    <xs:element name="qualifier">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="value" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
 </xs:schema>

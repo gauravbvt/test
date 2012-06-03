@@ -1,8 +1,10 @@
 package com.mindalliance.channels.guide;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -19,6 +21,8 @@ public class ActivityChange implements Serializable {
     private String changeType;
     private String property;
     private String updateTargetPath;
+    @XStreamImplicit( itemFieldName = "qualifier" )
+    private List<ChangeQualifier> qualifiers;
 
     public String getUpdateTargetPath() {
         return updateTargetPath;
@@ -58,5 +62,13 @@ public class ActivityChange implements Serializable {
 
     public void setProperty( String property ) {
         this.property = property;
+    }
+
+    public List<ChangeQualifier> getQualifiers() {
+        return qualifiers;
+    }
+
+    public void setQualifiers( List<ChangeQualifier> qualifiers ) {
+        this.qualifiers = qualifiers;
     }
 }

@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -25,6 +26,8 @@ import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.social.model.Feedback;
+import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import info.bliki.wiki.model.WikiModel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -41,6 +44,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,7 +127,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                             selectedGroup = group;
                             selectActivity( selectedGroup, null, target );
                         }
-                        String js = "setTimeout('"+ accordion.resize().toString( true ) + "',500);";
+                        String js = "setTimeout('" + accordion.resize().toString( true ) + "',500);";
                         target.appendJavaScript( js );
                     }
                 } );
@@ -244,12 +248,12 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     private Updatable getUpdatable( ActivityChange activityChange ) {
         String updatableTargetPath = activityChange.getUpdateTargetPath();
         if ( updatableTargetPath == null ) {
-            return getPlanPage();
+            return planPage();
         } else {
             if ( updatableTargetPath.equals( "planPage" ) ) {
-                return getPlanPage();
+                return planPage();
             } else {
-                return (Updatable) ChannelsUtils.getProperty( getPlanPage(), updatableTargetPath, null );
+                return (Updatable) ChannelsUtils.getProperty( planPage(), updatableTargetPath, null );
             }
         }
     }
@@ -273,7 +277,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
 
     private Identifiable getSubject( ActivityChange activityChange ) {
         return (Identifiable) ChannelsUtils.getProperty(
-                this,
+                getGuide(),
                 activityChange.getSubjectPath(),
                 null );
     }
@@ -286,20 +290,15 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
 
     private String wikimediaToHtml( String wikimedia ) {
         // First substitute template variable
-        String convertedWikimedia = ChannelsUtils.convertTemplate( wikimedia.trim(), this );
-        String helpUrl = getHelpUrl();
+        GuideTemplateContext guideTemplateContext = new GuideTemplateContext();
+        String convertedWikimedia = ChannelsUtils.convertTemplate( wikimedia.trim(), guideTemplateContext );
+        String helpUrl = guideTemplateContext.getHelpUrl();
         WikiModel wikiModel = new WikiModel( helpUrl + "/${image}", helpUrl + "/${title}" );
         String html = wikiModel.render( convertedWikimedia );
         html = html.replaceAll( "<a ", "<a target='_blank' " );
         return html;
     }
 
-    public String getHelpUrl() {
-        String serverUrl = guideReader.getServerUrl();
-        return serverUrl
-                + ( serverUrl.endsWith( "/" ) ? "" : "/" )
-                + "doc/channels_user_guide";
-    }
 
     private WebMarkupContainer getDoNextContainer( final ActivityGroup group, Activity activity ) {
         List<ActivityRef> activityRefs = activity.getNextActivities();
@@ -389,73 +388,123 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         }
     }
 
-    // Script support
 
-    public PlanPage getPlanPage() {
-        return findParent( PlanPage.class );
+    // Script support: the bean against which all subject paths are evaluated
+
+    public GuideInfo getGuide() {
+        return new GuideInfo();
     }
 
-    public PlanningGuidePanel getGuide() {
-        return this;
+    public class GuideTemplateContext implements Serializable {
+
+        public GuideTemplateContext() {
+        }
+
+        public String getHelpUrl() {
+            String serverUrl = guideReader.getServerUrl();
+            return serverUrl
+                    + ( serverUrl.endsWith( "/" ) ? "" : "/" )
+                    + "doc/channels_user_guide";
+        }
+
     }
 
-    public Flow getAnyFlow() {
-        List<Flow> flows = getPlanPage().getPart().getAllFlows();
-        return flows.isEmpty()
-                ? null
-                : flows.get( new Random( 13 ).nextInt( flows.size() ) );
+    public class GuideInfo implements Serializable {
+
+        public GuideInfo() {
+        }
+
+        public GuideInfo getGuide() {
+            return this;
+        }
+
+        public Plan getPlan() {
+            return PlanningGuidePanel.this.getPlan();
+        }
+
+        public PlanPage getPlanPage() {
+            try {
+                return PlanningGuidePanel.this.planPage();
+            } catch( Exception e ) {
+                return null;
+            }
+        }
+
+        public Flow getAnyFlow() {
+            List<Flow> flows = getPlanPage().getPart().getAllFlows();
+            return flows.isEmpty()
+                    ? null
+                    : flows.get( new Random( 13 ).nextInt( flows.size() ) );
+        }
+
+        public Flow getAnySharingFlow() {
+            List<Flow> flows = new ArrayList<Flow>();
+            flows.addAll( getPlanPage().getPart().getAllSharingSends() );
+            flows.addAll( getPlanPage().getPart().getAllSharingReceives() );
+            return flows.isEmpty()
+                    ? null
+                    : flows.get( new Random( 13 ).nextInt( flows.size() ) );
+        }
+
+
+        public Actor getAnyActualAgent() {
+            List<Actor> actualActors = getQueryService().listActualEntities( Actor.class );
+            return actualActors.isEmpty()
+                    ? null
+                    : actualActors.get( new Random( 13 ).nextInt( actualActors.size() ) );
+        }
+
+        public Organization getAnyActualOrganization() {
+            List<Organization> actualOrgs = getQueryService().listActualEntities( Organization.class );
+            return actualOrgs.isEmpty()
+                    ? null
+                    : actualOrgs.get( new Random( 13 ).nextInt( actualOrgs.size() ) );
+        }
+
+        public Event getAnyEvent() {
+            List<Event> events = getQueryService().listKnownEntity( Event.class );
+            return events.isEmpty()
+                    ? null
+                    : events.get( new Random( 13 ).nextInt( events.size() ) );
+        }
+
+        public Phase getAnyPhase() {
+            List<Phase> phases = getQueryService().listKnownEntity( Phase.class );
+            return phases.isEmpty()
+                    ? null
+                    : phases.get( new Random( 13 ).nextInt( phases.size() ) );
+        }
+
+        public Place getAnyActualPlace() {
+            List<Place> actualPlaces = getQueryService().listActualEntities( Place.class );
+            return actualPlaces.isEmpty()
+                    ? null
+                    : actualPlaces.get( new Random( 13 ).nextInt( actualPlaces.size() ) );
+        }
+
+        public Role getAnyRole() {
+            List<Role> roles = getQueryService().listKnownEntity( Role.class );
+            return roles.isEmpty()
+                    ? null
+                    : roles.get( new Random( 13 ).nextInt( roles.size() ) );
+        }
+
+        public TransmissionMedium getAnyMedium() {
+            List<TransmissionMedium> media = getQueryService().listKnownEntity( TransmissionMedium.class );
+            return media.isEmpty()
+                    ? null
+                    : media.get( new Random( 13 ).nextInt( media.size() ) );
+        }
+
+        public RFISurvey getUnknownRFISurvey() {
+            return RFISurvey.UNKNOWN;
+        }
+
+        public Feedback getUnknownFeedback() {
+            return Feedback.UNKNOWN;
+        }
+
     }
-
-    public Actor getAnyActualAgent() {
-        List<Actor> actualActors = getQueryService().listActualEntities( Actor.class );
-        return actualActors.isEmpty()
-                ? null
-                : actualActors.get( new Random( 13 ).nextInt( actualActors.size() ) );
-    }
-
-    public Organization getAnyActualOrganization() {
-        List<Organization> actualOrgs = getQueryService().listActualEntities( Organization.class );
-        return actualOrgs.isEmpty()
-                ? null
-                : actualOrgs.get( new Random( 13 ).nextInt( actualOrgs.size() ) );
-    }
-
-    public Event getAnyEvent() {
-        List<Event> events = getQueryService().listKnownEntity( Event.class );
-        return events.isEmpty()
-                ? null
-                : events.get( new Random( 13 ).nextInt( events.size() ) );
-    }
-
-    public Phase getAnyPhase() {
-        List<Phase> phases = getQueryService().listKnownEntity(Phase.class );
-        return phases.isEmpty()
-                ? null
-                : phases.get( new Random( 13 ).nextInt( phases.size() ) );
-    }
-
-    public Place getAnyActualPlace() {
-        List<Place> actualPlaces = getQueryService().listActualEntities( Place.class );
-        return actualPlaces.isEmpty()
-                ? null
-                : actualPlaces.get( new Random( 13 ).nextInt( actualPlaces.size() ) );
-    }
-
-    public Role getAnyRole() {
-        List<Role> roles = getQueryService().listKnownEntity(Role.class );
-        return roles.isEmpty()
-                ? null
-                : roles.get( new Random( 13 ).nextInt( roles.size() ) );
-    }
-
-    public TransmissionMedium getAnyMedium() {
-        List<TransmissionMedium> media = getQueryService().listKnownEntity(TransmissionMedium.class );
-        return media.isEmpty()
-                ? null
-                : media.get( new Random( 13 ).nextInt( media.size() ) );
-    }
-
-
 
 
 }

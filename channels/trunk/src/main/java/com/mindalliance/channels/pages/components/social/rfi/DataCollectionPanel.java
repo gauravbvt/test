@@ -15,7 +15,6 @@ import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Data collection panel.
@@ -37,23 +36,24 @@ public class DataCollectionPanel extends FloatingCommandablePanel implements Rel
      */
     private static final int MIN_HEIGHT = 300;
 
-    private RFISurveysPanel rfisPanel;
+    public static final String QUESTIONNAIRES = "Questionnaires";
+    public static final String SURVEYS = "Surveys";
+
     private QuestionnairesPanel questionnairesPanel;
     private IModel<RFISurvey> rfiSurveyModel;
     private RFISurveysPanel rfiSurveysPanel;
 
-
-    public DataCollectionPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
-        super( id, iModel, expansions );
+    public DataCollectionPanel( String id, IModel<RFISurvey> rfiSurveyModel ) {
+        this( id, rfiSurveyModel, "" );
     }
 
-    public DataCollectionPanel( String id, IModel<RFISurvey> rfiSurveyModel ) {
+    public DataCollectionPanel( String id, IModel<RFISurvey> rfiSurveyModel, String initialTab ) {
         super( id );
         this.rfiSurveyModel = rfiSurveyModel;
-        init();
+        init( initialTab );
     }
 
-    private void init() {
+    private void init( String initialTab ) {
         AjaxTabbedPanel tabbedPanel = new AjaxTabbedPanel( "tabs", getTabs() ) {
             @Override
             protected void onAjaxUpdate( AjaxRequestTarget target ) {
@@ -62,6 +62,7 @@ public class DataCollectionPanel extends FloatingCommandablePanel implements Rel
             }
         };
         tabbedPanel.setOutputMarkupId( true );
+        tabbedPanel.setSelectedTab( initialTab.equals( QUESTIONNAIRES ) ? 1 : 0 );
         getContentContainer().add( tabbedPanel );
     }
 
@@ -76,14 +77,14 @@ public class DataCollectionPanel extends FloatingCommandablePanel implements Rel
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
-        tabs.add( new AbstractTab( new Model<String>( "Surveys" ) ) {
+        tabs.add( new AbstractTab( new Model<String>( SURVEYS ) ) {
             public Panel getPanel( String id ) {
                 rfiSurveysPanel = new RFISurveysPanel( id, rfiSurveyModel );
                 return rfiSurveysPanel;
             }
         } );
 
-        tabs.add( new AbstractTab( new Model<String>( "Questionnaires" ) ) {
+        tabs.add( new AbstractTab( new Model<String>( QUESTIONNAIRES ) ) {
             public Panel getPanel( String id ) {
                 questionnairesPanel = new QuestionnairesPanel( id );
                 return questionnairesPanel;

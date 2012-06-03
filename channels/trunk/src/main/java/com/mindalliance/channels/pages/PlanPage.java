@@ -578,7 +578,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addDataCollectionPanel() {
-        addDataCollectionPanel( null );
+        addDataCollectionPanel( null, null );
     }
 
     private void addAllFeedbackPanel( Feedback feedback ) {
@@ -598,15 +598,21 @@ public final class PlanPage extends AbstractChannelsWebPage {
         form.addOrReplace( allFeedbackPanel );
     }
 
-    private void addDataCollectionPanel( RFISurvey rfiSurvey ) {
+    private void addDataCollectionPanel( RFISurvey rfiSurvey, Change change ) {
         if ( !expansions.contains( RFISurvey.UNKNOWN.getId() ) ) {
             dataCollectionPanel = new Label( "dataCollection", "" );
             dataCollectionPanel.setOutputMarkupId( true );
             makeVisible( dataCollectionPanel, false );
         } else {
+            if ( change == null || !change.hasQualifier( "tab" ) )
             dataCollectionPanel = new DataCollectionPanel(
                     "dataCollection",
                     new Model<RFISurvey>( rfiSurvey ) );
+            else
+                dataCollectionPanel = new DataCollectionPanel(
+                        "dataCollection",
+                        new Model<RFISurvey>( rfiSurvey ),
+                        (String)change.getQualifier( "tab" ) );
         }
         form.addOrReplace( dataCollectionPanel );
     }
@@ -2282,7 +2288,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             RFISurvey viewedRFISurvey = ( rfiSurvey == null || rfiSurvey.isUnknown() )
                     ? RFISurvey.UNKNOWN
                     : rfiSurvey;
-            addDataCollectionPanel( viewedRFISurvey );
+            addDataCollectionPanel( viewedRFISurvey, change );
             target.add( dataCollectionPanel );
         } else if ( dataCollectionPanel instanceof DataCollectionPanel ) {
             ( (DataCollectionPanel) dataCollectionPanel ).refresh( target,
