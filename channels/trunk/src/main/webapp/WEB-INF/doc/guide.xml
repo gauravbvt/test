@@ -12,7 +12,7 @@
         <activity id="channels">
             <name>About Channels</name>
             <step>
-                <description>Planners use Channels to capture how organizations do or ought to share information to jointly and successfully prevent, respond to, or recover from events that test their missions.
+                <description>Planners use Channels to capture how organizations share or ought to share information to jointly and successfully prevent, respond to, or recover from events that test their missions.
 
 Channels continuously examines these ''information sharing plans'' for gaps and brittleness, and suggests options for remediation.
 
@@ -374,7 +374,6 @@ Note that as little and as much as wanted can be put into a task's definition.
                     <change>
                         <subjectPath>guide.anyFlow</subjectPath>
                         <type>Expanded</type>
-                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -548,18 +547,7 @@ Note that all profile attributes are optional.]]>
                     </change>
                 </script>
             </step>
-            <step>
-                <description>All role are listed in the plan's '''details'''. </description>
-                <script>
-                    <action>Open plan details</action>
-                    <change>
-                        <subjectPath>plan</subjectPath>
-                        <type>Expanded</type>
-                        <property>details</property>
-                    </change>
-                </script>
-            </step>
-            <step>
+             <step>
                 <description>Roles can be found by name in the plan's index.</description>
                 <script>
                     <action>Open the index</action>
@@ -573,8 +561,6 @@ Note that all profile attributes are optional.]]>
             <step>
                 <description>For more information, see [${helpUrl}/ch01.html this]</description>
             </step>
-            <next group="profiling" activity="profiling-phase"/>
-            <next group="scoping" activity="events"/>
         </activity>
         <activity id="profiling-agent">
             <name>Profile an agent</name>
@@ -633,12 +619,12 @@ Note that all profile attributes are optional.]]>
 * renaming it &ndash; it was created when first named &ndash; 
 * categorizing it with place types (such as 'city', 'building' etc.)
 * if an actual place, by
-** naming what place it is whithin
+** naming what place it is within
 ** giving a street address and postal code
-** and a geographical area
+** identifying its geographical area
 * if a type of place, by
 ** setting the place (type or actual) it must be in
-** and the place it must contain
+** the place it must contain
 * and more
 Note that all profile attributes are optional.]]>
                 </description>
@@ -673,9 +659,9 @@ Note that all profile attributes are optional.]]>
 * renaming it &ndash; it was created when first named &ndash; 
 * categorizing it
 * stating whether it is unicast, multicast or broadcast
-* naming the media this one can delegate to
-* its level of security
-* pattern for its valid ''addresses''
+* naming the other media this one can delegate to
+* naming its level of security
+* giving the pattern the media's ''addresses'' must conform to
 * and more
 Note that all profile attributes are optional.]]>
                 </description>
@@ -688,18 +674,7 @@ Note that all profile attributes are optional.]]>
                     </change>
                 </script>
             </step>
-            <step>
-                <description>All transmission media are listed in the plan's '''details'''. </description>
-                <script>
-                    <action>Open plan details</action>
-                    <change>
-                        <subjectPath>plan</subjectPath>
-                        <type>Expanded</type>
-                        <property>details</property>
-                    </change>
-                </script>
-            </step>
-            <step>
+             <step>
                 <description>Transmission media can be found by name in the plan's index.</description>
                 <script>
                     <action>Open the index</action>
@@ -713,14 +688,12 @@ Note that all profile attributes are optional.]]>
             <step>
                 <description>For more information, see [${helpUrl}/ch01.html this]</description>
             </step>
-            <next group="profiling" activity="profiling-phase"/>
-            <next group="scoping" activity="events"/>
         </activity>
     </group>
     <group id="improving">
         <name>Improving the plan</name>
         <activity id="all-issues">
-            <name>Resolving issues</name>
+            <name>Resolve issues</name>
             <step>
                 <description>An obvious way of improving a plan is to resolve issues detected by Channels or by planners. The 'All issues" table aggregates all individual issues found in a plan.</description>
                 <script>
@@ -752,7 +725,7 @@ Note that all profile attributes are optional.]]>
             <next group="data-collection" activity="launch-remediation-survey"/>
         </activity>
         <activity id="moving-tasks">
-            <name>Moving tasks across segments</name>
+            <name>Move tasks across segments</name>
             <step>
                 <description>When too many tasks are added to a segment, the segment becomes difficult to manage. To shrink a bloated segment, a new segment is usually created and tasks are moved to it.</description>
                 <script>
@@ -772,36 +745,36 @@ Note that all profile attributes are optional.]]>
         <activity id="tune-task-flow-definition">
             <name>Adjust assignments and commitments</name>
             <step>
-                <description>Information sharing protocols (aka procedures or guidelines) are computed by assigning agents to tasks and deriving information sharing commitments from the flows connecting assigned tasks.
+                <description>Information sharing protocols (aka procedures or guidelines) are computed by assigning agents to tasks and by deriving information sharing commitments from the flows connecting assigned tasks.
                     
-A key concern is making sure that the right agents get assigned to tasks, and that only the right pairs of agents assigned to tasks on both side of a flow become parties to sharing commitments.
+A key concern is making sure that the right agents get assigned to the right tasks, and that only the right agents that are assigned to the tasks on each side of a flow become parties to sharing commitments.
                 
-What agents get assigned to a task is determined by
+Which agents are assigned to a task is determined by
 * how a task specifies the agents assignable to it
 * what agents are in the plan's environments and how they are profiled
 * how the agents are employed (role, jurisdiction, organization)
-* the definitions and categorizations of the types of role, agent, organization etc. used in the above
+* how the taxonomies of role, agent, organization etc. are defined
 </description>
                 <script>
                     <action>See a task's assignments</action>
                     <change>
                         <subjectPath>planPage.part</subjectPath>
-                        <type>Expanded</type>
-                        <property>overrides</property>
+                        <type>AspectViewed</type>
+                        <property>assignments</property>
                     </change>
                 </script>
             </step>
             <step>
-                <description>What sharing commitments are generated for a flow is determined by
-* what agents are assigned to the producing and consuming tasks connected by the flow
-* what restrictions are put on the pairing of agents in a commitment
+                <description>Exactly what sharing commitments are generated for a flow depends on
+* what agents are assigned to the producing task and consuming task connected by the flow
+* what restrictions are put on pairing agents into commitments (the committer and beneficiary must be in the same organization etc.)
 * whether an overriding flow prohibits a pairing of agents
 </description>
                 <script>
                     <action>See a flow's sharing commitments</action>
                     <change>
                         <subjectPath>guide.anySharingFlow</subjectPath>
-                        <type>Expanded</type>
+                        <type>AspectViewed</type>
                         <property>commitments</property>
                     </change>
                 </script>
@@ -814,13 +787,15 @@ What agents get assigned to a task is determined by
         <activity id="verify-taxonomy">
             <name>Verify an entity taxonomy</name>
             <step>
-                <description> Roles, agents, organizations, places, events etc. (entities) are defined in part in terms of how they are categorized. Agents are categorized by agent types, organization by organization types, events by other events (events are always types) etc.
-How entities are categorized largely determine the meaning of the tasks, flows, employments etc. that compose a plan.
+                <description> Roles, agents, organizations, places, events etc. (entities) can be categorized.
+Agents are categorized by agent types, organization by organization types, events by other events (events are always types) etc.
+
+How entities are categorized largely determine the meaning of the tasks, flows, employments etc. that are defined in terms of these entities.
 
 The meaning of a plan boils down to the task assignments and consequent sharing commitments (protocols) that are implied by the plan. 
-Even a small change to the taxonomy (a.k.a. typology) or roles, for example, can cause widespread changes to the protocols computed from a plan.
+Even a small change to the taxonomy (a.k.a. typology) or roles, for example, can cause widespread changes to the protocols computed from a plan and thus its meaning.
                 
-Taxonomies are defined implictly by how each entity is categorized. Taxonomies can be visualized to verify that they are as intended.
+Taxonomies are defined implictly by categorizing individual entities. Taxonomies can be visualized to verify that they are correct.
                 </description>
                 <script>
                     <action>View taxonomies</action>
@@ -839,10 +814,12 @@ Taxonomies are defined implictly by how each entity is categorized. Taxonomies c
         <activity id="verify-procedures">
             <name>Verify assignments and commitments</name>
             <step>
-                <description>The ''flow map'' central to the plan editor shows tasks connected by flows where each can imply a possibly large number of sharing commitments.
-The ''assignments and commitments map'' makes it easy to see if the protocols generated from the plan are the intended ones.
+                <description>The ''flow map'', which is central to the plan editor, shows tasks connected by flows where each flow can imply a potentially large number of sharing commitments.
+
+The ''assignments and commitments map'' makes it easy to see if the sharing commitments generated from the plan are the intended ones.
                 
 The map is focused on one agent or one organization (as an aggregate of agents). It shows the commitments that involved that egent or organizations.
+
 The other parties to the commitments can be aggregated by role, organization type or not at all.
                 </description>
                 <script>
@@ -864,15 +841,15 @@ The other parties to the commitments can be aggregated by role, organization typ
     <group id="data-collection">
         <name>Surveying and feedback</name>
         <activity id="compose-questionnaire">
-            <name>Composing a questionnaire</name>
+            <name>Compose a questionnaire</name>
             <step>
-                <description>Planners building a plan can enlist the help of the plan's stakeholders via surveys.
-A survey is a questionnaire applied to one element of the plan or to the plan as a whole.
+                <description>Planners can enlist the help of stakeholders via surveys. A survey is a questionnaire about elements of the plan or the plan as a whole.
 
-Planners compose questionnaires, each for a specific kind of plan element or for the plan itself, by adding, ordering, editing etc. statements and questions.
-Questions can be marked as required or optional.
+Planners compose questionnaires by adding, ordering, editing etc. statements and questions. Questions can be marked as required or optional.
 
-Questionnaires can be activated and deactivated. They can be extended even while they are being used in surveys. 
+A questionnaire applies to the plan as a whole or to one kind of plan element (plan questionnaire, task questionnaires, event questionnaires etc.)
+
+Questionnaires can be activated and deactivated. They can be extended while they are being used in surveys. 
 </description>
                 <script>
                     <action>See the questionnaires</action>
@@ -892,53 +869,25 @@ Questionnaires can be activated and deactivated. They can be extended even while
             <next group="data-collection" activity="launch-survey"/>
         </activity>
         <activity id="launch-survey">
-            <name>Launching a survey</name>
+            <name>Launch a survey</name>
             <step>
-                <description>A survey is launched on the plan or on a plan element by selecting one of the applicable questionnaires (if any such has been composed).
+                <description>A survey is launched on the plan or on a plan element by applying a questionnaire to it.
                     </description>
                 <script>
                     <action>View launched and launch-able surveys on a task</action>
                     <change>
-                        <subjectPath>guide.unknownRFISurvey</subjectPath>
-                        <type>Expanded</type>
-                        <qualifier>
-                            <name>tab</name>
-                            <value>Surveys</value>
-                        </qualifier>
+                        <subjectPath>planPage.part</subjectPath>
+                        <type>AspectViewed</type>
+                        <property>surveys</property>
                     </change>
                 </script>
             </step>
             <step>
                 <description>Once a survey is launched, it can be managed by
 * inviting users to participate
-* looking at the results so far
+* looking at the answers from survey participants
 * deactivating or reactivating the survey
-* editing the questionnaire used
-                </description>
-                <script>
-                    <action>See all launched surveys</action>
-                    <change>
-                        <subjectPath>guide.unknownRFISurvey</subjectPath>
-                        <type>Expanded</type>
-                        <qualifier>
-                            <name>tab</name>
-                            <value>Surveys</value>
-                        </qualifier>
-                    </change>
-                </script>
-            </step>
-            <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
-            </step>
-            <next group="data-collection" activity="add-survey-participants"/>
-        </activity>
-        <activity id="launch-remediation-survey">
-            <name>Launch issue remediation survey</name>
-            <step>
-                <description>Surveys can be launched on an issue that was detected. The questionnaire is automatically generated based on the remediation options associated with the issue. 
-The questionnaire can be modified and extended. An issue remediation survey is automatically deactivated when the issue disappears.
-
-Note that the issue remediation surveys are not shown by default in the list of all launched surveys; a checkbox must first be checked.
+* editing the survey's questionnaire
                 </description>
                 <script>
                     <action>See all launched surveys</action>
@@ -958,15 +907,47 @@ Note that the issue remediation surveys are not shown by default in the list of 
             <next group="data-collection" activity="add-survey-participants"/>
             <next group="data-collection" activity="compose-questionnaire"/>
         </activity>
+        <activity id="launch-remediation-survey">
+            <name>Launch an issue remediation survey</name>
+            <step>
+                <description>Surveys can be launched on an issue that was detected. The questionnaire is automatically generated based on the remediation options. 
+
+The questionnaire can be modified and extended while the survey is ongoing. 
+
+An issue remediation survey is automatically deactivated when the issue disappears.
+
+Note that the issue remediation questionnaires are  by default not shown in the list of all questionnaires; a checkbox must be checked to see them.
+                </description>
+                <script>
+                    <action>See all remediation questionnaires</action>
+                     <change>
+                        <subjectPath>guide.unknownRFISurvey</subjectPath>
+                        <type>Expanded</type>
+                        <qualifier>
+                            <name>tab</name>
+                            <value>Questionnaires</value>
+                        </qualifier>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+            </step>
+            <next group="data-collection" activity="add-survey-participants"/>
+            <next group="data-collection" activity="compose-questionnaire"/>
+        </activity>
         <activity id="add-survey-participants">
             <name>Invite participation to a survey</name>
             <step>
                 <description>Once a survey is launched, users can be invited to a survey. Users can be given a deadline to answer the required questions in the survey.
 After the deadline has passed, the survey is considered late. Late participants can be ''nagged'' (nags are sent by email).
 
-A participant can accept the invitation by answering question, decline the invitation or forward it to others by providing emails addresses (if the surveys was marked as forwardable).
+A participant can
+*accept the invitation by answering questions, 
+*decline the invitation
+*forward the survey to others (if planners marked the survey as forwardable).
 
-Note that someone who is forwarded a survey and who is not yet a user of Channels is automatically given a login, password and limited access to the plan as a participant.
+Note that anyone who is forwarded a survey and who is not yet a user of Channels is automatically given a login, password and limited access to the plan as a participant.
                 </description>
                 <script>
                     <action>See all launched surveys</action>
@@ -989,7 +970,8 @@ Note that someone who is forwarded a survey and who is not yet a user of Channel
             <name>Lookup the results of a survey</name>
             <step>
                 <description>As participants in a survey answer the questionnaire, results are compiled and made available to the planners.
-They can be viewed by opening the survey and selecting the ''results'' tabs.</description>
+
+Results can be viewed by opening the survey and selecting the ''results'' tabs.</description>
                 <script>
                     <action>See all launched surveys</action>
                       <change>
@@ -1012,7 +994,7 @@ They can be viewed by opening the survey and selecting the ''results'' tabs.</de
             <step>
                 <description>Users can ask questions, report problems and make suggestions via a feedback widget that appears in their home page, their protocols etc.
 
-Planners can see this feedback and reply to it. The user can then reply or mark the question, problem or suggestion as resolved.              
+Planners can see this feedback and reply to it. The user can then reply back etc. or mark the question, problem or suggestion as resolved.              
                 </description>
                 <script>
                     <action>Open feedback manager</action>
@@ -1030,9 +1012,11 @@ Planners can see this feedback and reply to it. The user can then reply or mark 
     <group id="searching">
         <name>Searching in the plan</name>
         <activity id="search-by-name">
-            <name>Searching anything by name</name>
+            <name>Search anything by name</name>
             <step>
-                <description>Every element of a plan that has a name can be found from the index. The index can be filtered by kind of element (role, agent, event etc.), by tags, by partial name.</description>
+                <description>Every element of a plan that has a name can be found from the index.
+                    
+The index can be filtered by kind of element (role, agent, event etc.), by tags, and by partial name.</description>
                 <script>
                     <action>Open the index</action>
                     <change>
@@ -1043,24 +1027,15 @@ Planners can see this feedback and reply to it. The user can then reply or mark 
                 </script>
             </step>
             <step>
-                <description>Setting organizations in scope</description>
-                <script>
-                    <action>See all participating organizations</action>
-                    <change>
-                        <subjectPath>plan</subjectPath>
-                        <type>Expanded</type>
-                        <property>All organizations</property>
-                    </change>
-                </script>
-            </step>
-            <step>
                 <description>For more information, see [${helpUrl}/ch01.html this]</description>
             </step>
         </activity>
         <activity id="whos-who">
-            <name>Searching for agents</name>
+            <name>Search for agents</name>
             <step>
-                <description>Every employement of every agent is aggregated in the ''who's who'' table. The table can be indexed by the name of the agent or by attributes of employment (organization, role...).</description>
+                <description>Every employement of every agent is aggregated in the ''who's who'' table.
+
+The table can be indexed by the name of the agent or by attributes of employment (organization, role, location of employer).</description>
                 <script>
                     <action>Open the plan's who's who</action>
                     <change>
@@ -1075,9 +1050,11 @@ Planners can see this feedback and reply to it. The user can then reply or mark 
             </step>
         </activity>
         <activity id="documents">
-            <name>Searching for documents</name>
+            <name>Search for documents</name>
             <step>
-                <description>Documents of various types (policy, reference, picture etc.) can be attached to the plan and any element in it. A table with all attached documents in the plan can be found in the plan's ''bibliography''.</description>
+                <description>Documents of various types (policy, reference, picture etc.) can be attached to the plan and any element in it. 
+                    
+A table with all documents attached in the plan can be found in the plan's ''bibliography''.</description>
                 <script>
                     <action>Open the plan's bibliography</action>
                     <change>
@@ -1092,9 +1069,11 @@ Planners can see this feedback and reply to it. The user can then reply or mark 
             </step>
         </activity>
         <activity id="tags">
-            <name>Searching by tags</name>
+            <name>Search by tags</name>
             <step>
-                <description>The plan and every element in it can be tagged. The list of all tags used in the plan can be looked up to see what has been marked by any given tag.</description>
+                <description>The plan and every element in it can be tagged. 
+                    
+The list of all tags used in the plan can be looked up to see what has been marked by any given tag.</description>
                 <script>
                     <action>Open the tag index</action>
                     <change>
@@ -1109,11 +1088,11 @@ Planners can see this feedback and reply to it. The user can then reply or mark 
             </step>
         </activity>
         <activity id="references">
-            <name>Cross-referencing</name>
+            <name>Cross-reference plan elements</name>
             <step>
-                <description>Whenever a plan element is referenced by name in the definition of another, there will be a link to get to the referenced element's definition.
+                <description>Whenever a plan element is referenced by name in the definition of another, there will also be a link to get to the referenced element's definition.
                     
-Furthermore, in most forms used to define an element of the plan, there is a table listing all and linking to all other elements that reference it in their definitions.
+Also, most forms used to define an element of the plan contain a table listing all and linking to all other elements that reference it in their definitions.
 
 For example, at the bottom of in the profile of a role is an index of all other elements that reference the role or that match the role.</description>
                 <script>

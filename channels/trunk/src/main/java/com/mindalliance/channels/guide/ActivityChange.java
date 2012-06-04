@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,7 +66,7 @@ public class ActivityChange implements Serializable {
     }
 
     public List<ChangeQualifier> getQualifiers() {
-        return qualifiers;
+        return qualifiers == null ? new ArrayList<ChangeQualifier>() : qualifiers;
     }
 
     public void setQualifiers( List<ChangeQualifier> qualifiers ) {

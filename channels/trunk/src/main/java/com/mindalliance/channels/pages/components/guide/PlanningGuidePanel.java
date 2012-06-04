@@ -20,6 +20,7 @@ import com.mindalliance.channels.guide.ActivityGroup;
 import com.mindalliance.channels.guide.ActivityRef;
 import com.mindalliance.channels.guide.ActivityScript;
 import com.mindalliance.channels.guide.ActivityStep;
+import com.mindalliance.channels.guide.ChangeQualifier;
 import com.mindalliance.channels.guide.Guide;
 import com.mindalliance.channels.guide.GuideReader;
 import com.mindalliance.channels.pages.Channels;
@@ -272,6 +273,9 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
                 change = new Change( type, identifiable );
         }
         change.setProperty( activityChange.getProperty() );
+        for ( ChangeQualifier qualifier : activityChange.getQualifiers() ) {
+            change.addQualifier( qualifier.getName(), qualifier.getValue() );
+        }
         return change;
     }
 
