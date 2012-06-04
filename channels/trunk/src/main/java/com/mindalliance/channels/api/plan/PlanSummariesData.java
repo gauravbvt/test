@@ -15,7 +15,7 @@ import java.util.List;
  * Date: 12/1/11
  * Time: 11:20 AM
  */
-@XmlRootElement( name = "planSummary", namespace = "http://mind-alliance.com/api/isp/v1/" )
+@XmlRootElement( name = "plans", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"date", "planSummaries"} )
 public class PlanSummariesData {
 

@@ -184,7 +184,7 @@
         </listitem>
 
         <listitem>
-          <para>actionable, personalized information sharing guidelines (IS
+          <para>actionable, personalized information sharing guidelines ( a.k.a  protocols - IS
           practices applied to profiled agents)</para>
         </listitem>
 
@@ -198,9 +198,11 @@
         </listitem>
       </itemizedlist>
 
-      <para>A model of information sharing practices is visualized primarily
-      as information flow maps. Information flow maps depict (specifications
-      of) tasks connected by information flows.</para>
+      <para>A model of information sharing practices is visualized primarily as information flow
+        maps where tasks are connected by information sharing flows. Each information flow specifies
+          <emphasis role="italic">information sharing commitments</emphasis> agents executing the
+        information-producing task need to make with agents executing the information-consuming
+        task.</para>
 
       <figure>
         <title>Snippet of a flow map</title>
@@ -212,7 +214,7 @@
         </mediaobject>
       </figure>
 
-      <para>Channels automatically detects issues in an IS plan (upwards of 90 different types of
+      <para>Channels automatically detects issues in an IS plan (upwards of 100 different types of
         issues). Issues are communicated to planners visually (tasks and flows drawn in red) and in
         other ways as well (issues panels throughout, all-issues table, issues summary report). The
         entire set of outstanding issues is recalculated with every change planners make to the
@@ -334,7 +336,7 @@
         required of people and systems (<firstterm linkend="agent">agents</firstterm>) in <firstterm
           linkend="role">roles</firstterm> of responsibility to fulfill the missions of their
           <firstterm linkend="organization">organizations</firstterm>, before, during, and/or after
-          <firstterm linkend="event">events</firstterm> of significance.</para>
+          <firstterm linkend="event">events</firstterm> that test their missions.</para>
       <para>Agents achieve goals that fulfill their organizations' missions by executing,
         individually or as teams, <firstterm>tasks</firstterm> that are assigned to them. By
         executing their assigned tasks, agents directly manage <firstterm linkend="risk"
@@ -351,8 +353,8 @@
         can be bound by information sharing commitments whenever they are assigned to tasks that are
         connected by flows to other tasks. Agents commit to share <firstterm linkend="information"
           >information</firstterm> they acquire when doing a task with some or all agents who
-        execute flow-connected tasks. Recipient agents commit not to use the information for other
-        purposes.</para>
+        execute flow-connected tasks. Recipient agents implicitly agree not to use the information
+        for other purposes.</para>
       <figure>
         <title>ISP concepts</title>
         <mediaobject>
@@ -366,8 +368,8 @@
         Information Sharing Planning (ISP) is not to optimize, script, or automate activities. The
         overarching objective of building an IS plan is to ensure that information does flow as
         required in order to successfully manage risks and capture opportunities.</para>
-      <para>Task sequencing is however not entirely absent from an IS plan. A task triggered by
-        information requires the prior execution of another task producing it. Such sequencing
+      <para>Task precedence is however not entirely absent from an IS plan. A task triggered by
+        information requires the prior execution of another task producing it. Such precedence
         constraints do not typically apply to all tasks in an IS plan, and thus an IS plan will most
         often not dictate a unique sequence for all tasks.</para>
       <para>This is a good thing. Attempting to define a precisely orchestrated action plan for
@@ -375,16 +377,16 @@
         while an IS plan certainly captures what needs to be done, the focus is squarely on how
         information needs to flow to ensure that mission-accomplishing tasks are successful.
           <emphasis role="italic">The details of exactly how these tasks are to be executed is
-          outside the scope of ISP.</emphasis></para>
+          currently outside the scope of an ISP model.</emphasis></para>
     </section>
     <section>
       <title>IS plan = IS practices + environment</title>
-      <para>An IS plan can be understood as <firstterm>information sharing practices</firstterm>
-        applied to an <firstterm>environment</firstterm>. Information sharing practices are
-        definitions of tasks and of the information flows connecting them. An environment is
-        composed of agents (people and systems) in roles of responsibility within organizations.
-        These agents are assigned to flow-connected tasks and, as a consequence, have information
-        sharing commitments.</para>
+      <para>An IS plan can be understood as applying <firstterm>information sharing
+          practices</firstterm> to an <firstterm>environment</firstterm>. Information sharing
+        practices are definitions of information-producing and consuming tasks connected by
+        information flows. An environment enumerates agents (people and systems) in roles of
+        responsibility within organizations. These agents are assigned to flow-connected tasks and,
+        as a consequence, have information sharing commitments.</para>
       <figure>
         <title>Flow-connected tasks in the IS practices model of an IS plan</title>
         <mediaobject>
@@ -395,7 +397,7 @@
       </figure>
       <para>In order to separate (decouple) IS practices and environment, it is recommended to model
         IS practices without mentioning actual organizations, people, or systems when characterizing
-        task assignees. It is best to specify tasks as being executed by "disembodied" roles from
+        task assignees. It is best to define tasks as being executed by "disembodied" roles from
           <emphasis>types</emphasis> of organizations (e.g. a "forensic autopsy" is to be carried by
         a "coroner" from a "county health office"). IS practices models that are not attached to a
         particular environment can be applied, possibly with some local adaptations, to more than
@@ -416,8 +418,8 @@
         different environment with its own organizations and role-assigned agents.</para>
       <para>Note that there is not yet explicit support in the current release of Channels for
         separately managing the IS model and environment of an IS plan, or for explicitly composing
-        IS plans by applying one reusable IS model to different environments. A forthcoming release
-        of Channels will provide such support. In the meanwhile, planners are strongly encouraged to
+        IS plans by applying one reusable IS model to different environments. A future release of
+        Channels will provide such support. In the meanwhile, planners are strongly encouraged to
         follow the above best practice of keeping the IS model as decoupled as possible from the IS
         plan's environment.</para>
     </section>
@@ -428,11 +430,12 @@
         the plan, and 3- specifying via <firstterm>information sharing requirements</firstterm> the
         information sharing commitments expected between participating organizations (see "Scoping a
         Plan" in the "Activities" section of the "ISP Method" chapter) . </para>
-      <db:para>When Planners define IS requirements on a plan, Channels determines which requirements
-        apply to each pair of participating organizations. The outcome is the IS commitments
-        "network" that the IS plan is expected to produce. Channels also compares the IS commitments
-        computed from the plan against the expected network to evaluate how well each organization
-        satisfies the requirements that apply to it.</db:para>
+      <db:para>When Planners define IS requirements on a plan, Channels determines which
+        requirements apply to each pair of participating organizations. The outcome is the IS
+        commitments "network" that the IS plan is <emphasis role="italic">expected</emphasis> to
+        produce. Channels also compares the IS commitments computed from the plan against the
+        expected network to evaluate how well each organization satisfies the requirements that
+        apply to it.</db:para>
       <figure>
         <title>Requirement definitions</title>
         <mediaobject>
@@ -452,17 +455,19 @@
         </mediaobject>
       </figure>
       <para>An IS plan of manageable scope normally addresses only a limited number of anticipated
-        events. An event of significance (or event, for short) is something that is true somewhere
-        for some time and that challenges, in and of itself, the mission of one or more
-        organizations by introducing risks or by creating opportunities for gains. Organizations
-        assign their agents to tasks that mitigate these risks or make these gains. An event can
-        bring different risks or opportunities to different organizations. For example, an explosion
-        at a refinery, clearly an event of significance, endangers the lives of workers, would
-        likely cause financial losses to insurers, and might profit commodity traders.</para>
+        events. An event of significance (or event, for short) is something that changes the state
+        of the world for some time in ways that challenge the mission of one or more organizations
+        by introducing risks or by creating opportunities for gains. Organizations assign their
+        agents to tasks that mitigate these risks or make these gains. An event can bring different
+        risks or opportunities to different organizations. For example, an explosion at a refinery,
+        clearly an event of significance, would endanger the lives of workers, would likely cause
+        financial losses to insurers, but could also create an opportunity for commodity traders to
+        profit financially.</para>
       <para>The events in an IS plan are not actual events that did or could occur at specific times
-        and locations. They are implicitly <emphasis>types</emphasis> of events that might happen in
-        some indeterminate future in some location that can be identified (e.g., in New York City)
-        or specified (e.g., in a large urban area).</para>
+        and locations. Channels is, after all, strictly meant for planning, not for managing ongoing
+        responses. Events in Channels are implicitly <emphasis>types</emphasis> of events that might
+        happen in some indeterminate future, in some location that can be either identified (e.g.,
+        in New York City) or specified (e.g., in a large urban area).</para>
       <figure>
         <title>An event's definition</title>
         <mediaobject>
@@ -471,18 +476,18 @@
           </imageobject>
         </mediaobject>
       </figure>
-      <para>Risks and opportunities can exist in the before, during, or after
+      <para>Risks and opportunities can be addressed in the time before, during, or after
           <firstterm>phases</firstterm> of an event (<firstterm>event phases</firstterm>). Typically
-        the purpose of tasks in a "before" phase of an event will be to cause or prevent the event.
-        Tasks in a "during" phase of an event will normally be about responding to the event as it
-        is unfolding in order to minimize its negative consequences or maximize positive outcomes.
-        Tasks in an "after" phase will often deal with recovering from the aftermath of an event, or
-        reaping its rewards.</para>
+        the purpose of tasks and information sharing in a "before" phase of an event will be to
+        cause or prevent events. Tasks and information sharing planned for a "during" phase of an
+        event will normally be about responding to the event as it is unfolding in order to minimize
+        its negative consequences or maximize positive outcomes. In an "after" phase, it will often
+        be about recovering from the aftermath of an event, or reaping its rewards.</para>
       <para>An IS plan will typically focus on at least one, and at most a few, events of
-        significance, and cover one or more phases for each of these events. Events within the scope
-        of a plan are a combination of events that happen outside the control of the participants of
-        the plan (so-called <emphasis>incidents</emphasis>) and of events caused by planned tasks
-        (and thus under the control of participants).</para>
+        significance, and concern itself with one or more phases for each of these events. Events
+        within the scope of a plan are a combination of events that happen outside the control of
+        the participants of the plan (so-called <emphasis>incidents</emphasis>) and of events caused
+        by planned tasks (and thus under the control of participants).</para>
       <figure>
         <title>Events in the scope of an IS plan</title>
         <mediaobject>
@@ -509,15 +514,15 @@
           </imageobject>
         </mediaobject>
       </figure>
-      <para>An IS plan <glossterm>segment</glossterm> covers only one phase of one event, possibly
-        in the context of some other past or currents events. For example, a segment might focus on
-        responding to a "stock price rally" (event phase focus) during "a volatile market" and after
-        a prior "hostile takeover attempt" (context events).</para>
-      <para>A segment might address all or only some of the organizational goals associated with an
-        event phase. In other words, more than one segment may be dedicated to a given event phase,
-        with each segment addressing a different list of organizational goals. Two segments should
-        not address the same goal for the same event phase (if this happens, Channels will raise an
-        issue).</para>
+      <para>Each IS plan <glossterm>segment</glossterm> covers one <emphasis role="italic"
+          >scenario</emphasis>, namely, one phase of one event, possibly in the context of some
+        other past or currents events. For example, a segment might address responding to a "stock
+        price rally" during "a volatile market" and after a prior "hostile takeover attempt".</para>
+      <para>A segment might put in scope only some of the organizational risks and gain
+        opportunities associated with the scenario it covers. In other words, more than one segment
+        may cover to the same scenario butwith each segment addressing a different list of
+        organizational goals. Two segments should not address the same goal for the same
+        scenario.</para>
       <figure>
         <title>Organizational goals addressed in a segment</title>
         <mediaobject>
@@ -526,18 +531,18 @@
           </imageobject>
         </mediaobject>
       </figure>
-      <para>A segment lists one or more organization goals (a segment without goals is another issue
-        detected by Channels). A <emphasis>goal</emphasis> is either a risk to an organization (or
-        type of organization) to be mitigated, or a gain to be realized by an organization (or type
-        of organization). Each risk is categorized from a list of types of risks derived from
+      <para>A segment is expected to address one or more organizational goals stemming from the
+        scenario. A <emphasis>goal</emphasis> is either a risk to an organization (or type of
+        organization) to be mitigated, or a gain to be realized by an organization (or type of
+        organization). Each risk is categorized from a list of types of risks derived from combining
         actuarial risk management taxonomies. Each gain is also categorized from a list that is the
         "mirror image" of the risk types. Risks are rated as minor, major, severe, or extreme. Gains
         are rated as low, medium, high, or highest. Planners can indicate if a risk is implicitly
-        mitigated or a gain implicitly realized once the event phase covered by the segment is
-        terminated.</para>
-      <para>Every task and flow in an IS plan belongs to one and only one segment. A segment should
-        contain all the flow-enabled tasks that directly achieve the segment's goals, plus
-        flow-enabled tasks on which goal-achieving tasks depend to start, terminate, or
+        mitigated or a gain implicitly realized when the scenario covered by the segment
+        concludes.</para>
+      <para>A task or flow in an IS plan belongs to one and only one segment. A segment should
+        contain all the flow-enabled tasks that directly achieve the segment's goals, plus flows and
+        tasks the goal-achieving tasks depend on, directly or indirectly to start, terminate, or
         succeed.</para>
       <figure>
         <title>Goal-achieving tasks and supporting tasks</title>
@@ -548,11 +553,11 @@
         </mediaobject>
       </figure>
       <para>Segments are normally not disconnected; flows usually connect one or more tasks in one
-        segment to tasks in another. Furthermore a task in one segment might initiate the event
-        phase addressed by the other segment either by causing an event or terminating it.
-        Initiation of an event starts the "during" phase of that event and terminates its "before"
-        phase. Termination of an event starts the "after" phase of that event (for example,
-        terminating a fire event starts the fire recovery phase).</para>
+        segment to tasks in another. Furthermore a task in one segment might initiate the scenario
+        addressed by the other segment either by causing an event or by terminating it. Initiation
+        of an event marks the beginning of the "during" phase of that event and marks the end of its
+        "before" phase. Termination of an event marks the start of the "after" phase of that event
+        (for example, terminating a fire event starts the fire recovery phase).</para>
       <figure>
         <title>The inter-connected segments in an IS plan</title>
         <mediaobject>
@@ -564,11 +569,12 @@
     </section>
     <section>
       <title>Flows and tasks</title>
-      <para>Flows and the tasks they connect are the building blocks of the IS practices model in an
-        IS plan. A task describes an action carried out at some location and for some purpose by one
-        or more agents. Agents act to fulfill the responsibilities of the roles bestowed upon them
-        by organizations. The agents expected to carry out a task can be identified or characterized
-        by any combination of name, role, jurisdiction, and organization. Ideally, the executor of a
+      <para>Flows (short for information sharing flows)  and the tasks they connect are the building
+        blocks of the IS practices model of an IS plan. </para>
+      <para>A task describes an action carried out at some location and for some purpose by one or
+        more agents. Agents act to fulfill the responsibilities of the roles bestowed upon them by
+        organizations. The agents expected to carry out a task can be identified or characterized by
+        any combination of name, role, jurisdiction, and organization. Ideally, the executor of a
         task will not be identified and only characterized (for example, by role and organization
         only) so that more than one person or system will match the characterization and get
         assigned to the task. According to a task's definition, those assigned to the task are

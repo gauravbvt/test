@@ -83,7 +83,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         addGuideName();
         addHideImage();
         addGuideAccordion();
-        addGuideDoc();
+ //       addGuideDoc();
     }
 
     private void addGuideName() {

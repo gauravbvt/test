@@ -59,6 +59,7 @@ public class ChannelsServiceImpl implements ChannelsService {
      * Get summaries of all versions of all plans visible to the user.
      * @return plan summaries
      */
+
     public PlanSummariesData getPlans() {
         LOG.info( "Getting summaries for all visible plans" );
         ChannelsUser user = ChannelsUser.current( userDao );
