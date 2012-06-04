@@ -1,4 +1,6 @@
 @import url('modal.css');
+@import url('guide.css');
+
 
 body {
     font-size: 9pt;
@@ -2288,28 +2290,20 @@ div.section-content > div.flow > div > img {
 /* ---- Guide ----- */
 
 #guide {
+    background: none repeat scroll 0 0 #F6F6F6;
+    border-bottom: 1px solid #7794C7;
+    border-right: 1px solid #7794C7;
+    border-top: 1px solid #7794C7;
+    bottom: 0;
+    float: left;
+    left: 0;
+    margin-bottom: 10px;
+    overflow: hidden;
     position: absolute;
     top: 5.8em;
-    bottom: 0;
-    left: 0;
     width: 20%;
-    margin-bottom: 10px;
-    background: #c3d9ff;
-    border-left: 1px solid #7794C7;
-    float: left;
-    overflow: auto;
 }
 
-#guide .closer {
-    float: right;
-}
-
-#guide .title {
-    font-size: 12px;
-    text-transform: uppercase;
-    padding-left: 10px;
-    font-weight: bold;
-}
 
 /* ---- Social ----- */
 
