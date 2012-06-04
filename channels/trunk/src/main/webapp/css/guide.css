@@ -1,0 +1,122 @@
+div.guide-title-cont {
+    background: none repeat scroll 0 0 #E4EEFE;
+    border-bottom: 1px solid #7794C7;
+    color: #333333;
+    float: left;
+    height: 38px;
+    width: 100%;
+}
+
+#guide .title {
+    float: left;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    line-height: 100%;
+    margin: 0;
+    padding: 12px 0 0 10px;
+    text-transform: uppercase;
+}
+
+#guide .closer {
+    float: right;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    line-height: 100%;
+    margin: 0;
+    padding: 12px 0 10px;
+    text-transform: uppercase;
+}
+
+#guide h3 {
+    background: none repeat scroll 0 0 #CCCCCC;
+    border: 1px solid #999999;
+    border-radius: 0 0 0 0;
+    font-size: 10px;
+    line-height: 100%;
+    margin: 10px 10px 0;
+}
+
+#guide .activityName {
+    line-height: 2;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+#guide .activities {
+    overflow: hidden;
+}
+
+#guide > div.doc {
+	display: none;
+}
+
+#guide div ul li div.doc {
+    background-color: PapayaWhip;
+    border: 1px solid orange;
+    font-size: 10px;
+    margin: 5px 0 10px;
+    padding: 10px 10px 5px;
+}
+
+#guide div ul li div.doc p {
+	padding: 0;
+	margin: 0 0 5px 0;
+	line-height: 150%;
+}
+
+#guide div ul li div.doc p i {
+	font-style: italic;
+	border-bottom: 1px dotted #666666;
+}
+
+#guide div ul li div.doc ol,
+#guide div ul li div.doc ul {
+    margin: 0;
+    padding: 5px 5px 0 30px;
+    list-style: disc outside none;
+}
+
+#guide div ul li div.doc ol li,
+#guide div ul li div.doc ul li {
+	padding: 0 0 10px;
+}
+
+#guide div ul li a,
+#guide .doc a {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+#guide .nextActivities {
+    border-top: 1px solid orange;
+    font-weight: bold;
+    padding: 5px 0 0;
+}
+
+#guide .ui-accordion.ui-widget.ui-helper-reset.ui-accordion-icons {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    top: 3em;
+    width: 100%;
+}
+
+#guide .ui-accordion .ui-accordion-content {
+    padding: 1em 1em;
+    border-top: 0;
+    margin: 0 10px;
+    position: relative;
+    top: 0;
+    display: none;
+    zoom: 1;
+    border-radius: 0 0 0 0;
+    background: #e8e8e8;
+}
+
+#guide div ul li .ui-widget-content a {
+    text-decoration: underline;
+}
+
+
