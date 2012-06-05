@@ -59,7 +59,7 @@ public interface QueryService {
      * @param assumeFails whether alternate flows are assumed
      * @return a boolean
      */
-    boolean isEssential( Flow flow, boolean assumeFails );
+    Boolean isEssential( Flow flow, boolean assumeFails );
 
     /**
      * Get the persistence store accessor.
@@ -1231,9 +1231,10 @@ public interface QueryService {
      * Find the participation by a user.
      *
      * @param username a user name
+     * @param plan     a plan
      * @return a list of plan participations
      */
-    List<PlanParticipation> findParticipations( String username );
+    List<PlanParticipation> findParticipations( String username, Plan plan );
 
     /**
      * Find the participation by a user.
@@ -1604,4 +1605,22 @@ public interface QueryService {
             Phase.Timing timing,
             Event event,
             Analyst analyst );
+
+    /**
+     * Get the actors a user could participate and is not already.
+     *
+     * @param user a user
+     * @param plan a plan
+     * @return a list of actors
+     */
+    List<Actor> findOpenActors( ChannelsUser user, Plan plan );
+
+    /**
+     * Whether a user can participate as an actor.
+     * @param actor an actor
+     * @param user a user
+     * @param plan a plan
+     * @return
+     */
+    Boolean isParticipationAvailable( Actor actor, ChannelsUser user, Plan plan );
 }

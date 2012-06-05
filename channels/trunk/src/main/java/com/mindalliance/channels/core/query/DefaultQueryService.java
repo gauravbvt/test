@@ -2483,11 +2483,11 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public List<PlanParticipation> findParticipations( final String username ) {
+    public List<PlanParticipation> findParticipations( String username, Plan plan ) {
         ChannelsUser user = userDao.getUserNamed( username );
         if ( user != null )
             return planParticipationService.getParticipations(
-                    getPlan(),
+                    plan,
                     user.getUserInfo(),
                     this );
         else
@@ -2495,7 +2495,7 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public List<PlanParticipation> findParticipations( final Actor actor ) {
+    public List<PlanParticipation> findParticipations( Actor actor ) {
         return planParticipationService.getParticipations(
                 getPlan(),
                 actor,
@@ -3158,7 +3158,7 @@ public abstract class DefaultQueryService implements QueryService {
      * @return a boolean
      */
     @Override
-    public boolean isEssential( Flow flow, boolean assumeFails ) {
+    public Boolean isEssential( Flow flow, boolean assumeFails ) {
         return flow.isImportant()
                 && ( assumeFails || getAlternates( flow ).isEmpty() )
                 && !isSharingWithSelf( flow );
@@ -3553,6 +3553,84 @@ public abstract class DefaultQueryService implements QueryService {
             }
         } );
     }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Actor> findOpenActors( final ChannelsUser user, final Plan plan ) {
+        return (List<Actor>) CollectionUtils.select(
+                listActualEntities( Actor.class ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final Actor actor = (Actor) object;
+                        return isParticipationAvailable( actor, user, plan );
+                    }
+                }
+        );
+    }
+
+    @Override
+    public Boolean isParticipationAvailable( Actor actor, ChannelsUser user, Plan plan ) {
+        List<PlanParticipation> currentParticipations = planParticipationService.getParticipations(
+                plan,
+                user.getUserInfo(),
+                this );
+        return !actor.isUnknown()
+                && actor.isOpenParticipation()
+                && !alreadyParticipatingAs( actor, currentParticipations )
+                && !isSingularAndTaken( actor, plan )
+                && meetsPreEmploymentConstraint( actor, currentParticipations );
+    }
+
+    private boolean meetsPreEmploymentConstraint( Actor actor,
+                                                  List<PlanParticipation> currentParticipations ) {
+        if ( !actor.isParticipationRestrictedToEmployed() ) return true;
+        List<Organization> actorEmployers = findDirectAndIndirectEmployers(
+                findAllEmploymentsForActor( actor ) );
+        List<Organization> myPlannedEmployers = new ArrayList<Organization>();
+        for ( PlanParticipation participation : currentParticipations ) {
+            Actor participationActor = participation.getActor( this );
+            if ( participationActor != null && !participationActor.isOpenParticipation() )
+                myPlannedEmployers.addAll( findDirectAndIndirectEmployers(
+                        findAllEmploymentsForActor( participationActor ) ) );
+        }
+        return !Collections.disjoint( myPlannedEmployers, actorEmployers );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Organization> findDirectAndIndirectEmployers( List<Employment> employments ) {
+        Set<Organization> allEmployers = new HashSet<Organization>();
+        List<Organization> directEmployers = (List<Organization>) CollectionUtils.collect(
+                employments,
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ( (Employment) input ).getOrganization();
+                    }
+                }
+        );
+        for ( Organization org : directEmployers ) {
+            allEmployers.addAll( org.selfAndAncestors() );
+        }
+        return new ArrayList<Organization>( allEmployers );
+    }
+
+    private boolean alreadyParticipatingAs( final Actor actor, List<PlanParticipation> currentParticipations ) {
+        return CollectionUtils.exists(
+                currentParticipations,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (PlanParticipation) object ).getActorId() == actor.getId();
+                    }
+                } );
+    }
+
+    private boolean isSingularAndTaken( Actor actor, Plan plan ) {
+        return actor.isSingularParticipation()
+                && !planParticipationService.getParticipations( plan, actor, this ).isEmpty();
+    }
+
 
     @Override
     public void update( ModelObject object ) {

@@ -33,6 +33,15 @@ public interface ChannelsService {
     PlanSummariesData getPlans();
 
     @GET
+    @Path( "myplans" )
+    @Produces( MediaType.APPLICATION_XML )
+    /**
+     * Get summaries of all production plan versions the authenticated user participates or can participate in.
+     * @return plan summaries
+     */
+    PlanSummariesData getProductionPlans();
+
+    @GET
     @Path( "plan/{uri}/version/{version}/scope" )
     @Produces( MediaType.APPLICATION_XML )
     /**

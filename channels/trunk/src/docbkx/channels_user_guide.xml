@@ -569,18 +569,20 @@
     </section>
     <section>
       <title>Flows and tasks</title>
-      <para>Flows (short for information sharing flows)  and the tasks they connect are the building
-        blocks of the IS practices model of an IS plan. </para>
-      <para>A task describes an action carried out at some location and for some purpose by one or
-        more agents. Agents act to fulfill the responsibilities of the roles bestowed upon them by
-        organizations. The agents expected to carry out a task can be identified or characterized by
-        any combination of name, role, jurisdiction, and organization. Ideally, the executor of a
-        task will not be identified and only characterized (for example, by role and organization
-        only) so that more than one person or system will match the characterization and get
-        assigned to the task. According to a task's definition, those assigned to the task are
-        expected to carry it out either as a team or on their own. The timing aspects of a task
-        execution can be given, namely, how long the task takes to complete and how soon it repeats,
-        if at all. A task might cause or prevent an event.</para>
+      <para>Flows (short for information sharing flows) and the tasks they connect are the building
+        blocks of the IS practices model in an IS plan. </para>
+      <para>A task describes an action to be carried out at some location and for some purpose by
+        one or more agents. Agents assigned to tasks fulfill the responsibilities of the roles
+        bestowed upon them by organizations that employ them. </para>
+      <para>The agents that ought to be assigned to a task are described by any combination of name,
+        role, jurisdiction, and organization. Ideally, the agents of a task will not be identified
+        but profiled (for example, by role and type of organization only) in the definition of the
+        task so that more than one person or system, but only the intended ones, will match the
+        profile and get assigned to the task. </para>
+      <para>According to a task's definition, those assigned to the task are expected to carry it
+        out either as a team or on their own. The timing aspects of a task execution can be given,
+        namely, how long the task takes to complete and how soon it repeats, if at all. A task might
+        cause or prevent an event.</para>
       <para>Tasks are considered useful if they:</para>
       <itemizedlist>
         <listitem>
@@ -680,10 +682,10 @@
       <para>A task can have <firstterm>information needs</firstterm> (information agents require to
         execute the task), <firstterm>information capabilities</firstterm> (information acquired by
         the execution of the task that can then be shared), or both. An information flow implicitly
-        specifies an information need of the receiving task and an implied information capability of
-        the sending task. Unless one or more matching information needs are defined on the receiving
-        task, a flow always satisfies the information need it implies. Planners can explicitly
-        define the information needs and capabilities of a task.</para>
+        specifies an information need of the receiving task and implicitly specifies an information
+        capability of the sending task. Unless one or more matching information needs are defined on
+        the receiving task, a flow always satisfies the information need it implies. Planners can
+        explicitly define the information needs and capabilities of a task.</para>
       <para>Explicitly specifying an information need of a task allows Channels to automatically
         verify if the need is satisfied (Are all elements supplied in a timely manner by incoming
         flows?) and to find information-capable tasks that could be connected by flows to satisfy an
@@ -732,9 +734,9 @@
       <para>An IS plan references by name various agents, places, roles, organizations, events,
         transmission media and phases of events. These are referred to in ISP as entities. An ISP
         entity is anything that can be named in an IS plan but is neither a task nor information (or
-        an  element thereof). An ISP entity is always unambiguously referenced by name in a plan,
-        its segments, tasks, and flows, or in the profiles of other entities. There can only be one
-        agent named "John Doe", only one event named "lawsuit filed," etc.</para>
+        an element thereof). An ISP entity is always unambiguously referenced by name in a plan, its
+        segments, tasks, and flows, or in the profiles of other entities. There can only be one
+        agent named "John Doe", only one event named "Lawsuit filed," etc. in a given plan.</para>
       <db:section>
         <title>Actual vs type</title>
         <para>There are <emphasis role="italic">actual</emphasis> entities and there are <emphasis
@@ -762,18 +764,26 @@
           agent's clearance is a list of secrecy classifications (e.g., NATO Top Secret and US Gov.
           Secret). An agent can communicate in one or languages (if none are given, the agent can
           communicate in the IS plan's default language).</para>
-      <para>An agent type can be thought of as a qualification that can be shared by different
-        agents (e.g., "Adult" or "Registered driver"). An agent type is not to be confused with a
-        role. A role implies responsibilities, whereas an agent type denotes qualifications or
-        status.</para>
+      <para>An agent <emphasis role="italic">type</emphasis> can be thought of as a qualification
+          that can be shared by different agents (e.g., "Adult" or "Registered driver"). An agent
+          type is not to be confused with a role. A role implies responsibilities, whereas an agent
+          type denotes qualifications or status.</para>
       <para>An agent can be flagged as a system (non-human).</para>
-      <para>When a group of agents are indistinguishable from a planning perspective (for example,
-        call center operators), they can be profiled as a single <glossterm>archetype</glossterm>
-        agent (for example, "a call center operator").</para>
-      <para>When the identity of an agent is to be resolved by associating the agent with one or
-        more users of Channels, the agent is marked as a <firstterm>placeholder</firstterm> (more on
-        this later). Agents are references in the definitions of tasks and organizations (their
-        members and their supervisors).</para>
+        <db:para>Users participate in a plan when they are associated with one or more agents in that
+          plan. The profile of an agent sets the modalities for associating users to the agent. </db:para>
+        <db:para>If  participation as the agent is open to all users of the plan, then any user can
+          effect the association. If not, only planners can do so. The ability of a user to
+          participate as an "open" agent can be restricted to users already associated to another
+          agent with a common employer. For example, the " An ACME floor warden" agent should only
+          be open to users participating as another agent employed by ACME.</db:para>
+        <db:para>An agent can be restricted to having only one user associated with it. Otherwise,
+          any number of users can participate as that agent. For example, any number of users should
+          be able to participate as the "A citizen of New York City" agent.</db:para>
+      <para>The agent's profile can indicate that the users participating as the agent are
+          indistinguishable from each other (for example, call center operators), that is, they
+          participate anonymously. Anonymous participation means that the identities and the
+          personal contact information of the users are not added to the plan's environment and thus
+          do not appear in information sharing guidelines.</para>
         <db:para>
           <figure>
             <title>Agent profile (actual)</title>
@@ -789,13 +799,16 @@
       <section>
         <title>Organizations</title>     
       <para>An <glossterm>organization</glossterm> is a group of agents organized to accomplish a
-        mission. An organization assigns roles of responsibility to the persons and systems that act
-        on its behalf. An organization has contact information and may contain other organizations.
-        An organization may have information sharing agreements with other organizations to
-        formalize the sharing commitments its members have with members of other organizations.
-        Organizations are referenced in the definitions of a plan itself (organizations that are
-        expected to participate), in segments (organizational risks), tasks, and as parents of other
-        organizations.</para>
+          common mission. An organization assigns roles of responsibility to the persons and systems
+          that act on its behalf. An organization has contact information and may contain other
+          organizations. </para>
+        <para>An organization may have information sharing agreements with other organizations to
+          formalize the sharing commitments its members have with members of other organizations.
+          Organizations are referenced in the definitions of a plan itself (organizations that are
+          expected to participate), in segments (organizational risks), tasks, and as parents of
+          other organizations. </para>
+        <para>Unless indicated otherwise, a organization supports all the transmission media defined
+          in the plan. </para>
         <db:para>
           <figure>
             <title>Organization profile (actual)</title>

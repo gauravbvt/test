@@ -77,6 +77,28 @@ public class ChannelsServiceImpl implements ChannelsService {
 
     @Override
     /**
+     * Get summaries of all versions of all plans visible to the user.
+     * @return plan summaries
+     */
+
+    public PlanSummariesData getProductionPlans() {
+        LOG.info( "Getting summaries for all user-visible production plans" );
+        ChannelsUser user = ChannelsUser.current( userDao );
+        List<PlanSummaryData> result = new ArrayList<PlanSummaryData>();
+        for ( Plan plan : planManager.getPlans() ) {
+            String uri = plan.getUri();
+            if ( !user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED )
+                    && plan.isProduction() ) {
+                user.setPlan( plan );
+                result.add( new PlanSummaryData( getPlanService( plan ), userDao ) );
+            }
+        }
+        return new PlanSummariesData( result );
+    }
+
+
+    @Override
+    /**
      * Get scope of production plan.
      * Available only to its planners.
      * @param uri the plan's URN
@@ -144,7 +166,7 @@ public class ChannelsServiceImpl implements ChannelsService {
                 throw new Exception( user.getUsername() + " is not authorized to access production plan " + uri );
             }
             PlanService planService = getPlanService( plan );
-            List<PlanParticipation> participations = planService.findParticipations( user.getUsername() );
+            List<PlanParticipation> participations = planService.findParticipations( user.getUsername(), plan );
             if ( participations.isEmpty() ) {
                 throw new Exception( user.getUsername() + " does not participate in production plan " + uri );
             }
@@ -196,7 +218,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         if ( plan.isTemplate() || user.isPlanner( plan.getUri() ) )
             return true;
         // Participating user can see own procedures. Supervisor can procedures of supervised.
-        List<PlanParticipation> participations = planService.findParticipations( user.getUsername() );
+        List<PlanParticipation> participations = planService.findParticipations( user.getUsername(), plan );
         for ( PlanParticipation participation : participations ) {
             Actor participant = participation.getActor( planService );
             if ( participant != null

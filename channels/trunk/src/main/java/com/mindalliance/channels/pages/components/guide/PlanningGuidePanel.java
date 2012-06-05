@@ -42,7 +42,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
@@ -106,7 +105,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         groupDivs = new HashMap<Activity, Component>();
         AccordionOptions options = new AccordionOptions();
         options.active( false );
-        options.addCssResourceReferences( new CssResourceReference( getClass(), "res/guide.css" ) );
+        // options.addCssResourceReferences( new CssResourceReference( getClass(), "res/guide.css" ) );
         accordion = new AccordionWebMarkupContainer( "accordion", options );
         accordion.setOutputMarkupId( true );
         accordion.add( new ListView<ActivityGroup>(

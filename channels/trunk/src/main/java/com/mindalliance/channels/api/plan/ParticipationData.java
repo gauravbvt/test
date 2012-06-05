@@ -3,6 +3,7 @@ package com.mindalliance.channels.api.plan;
 import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -15,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  * User: jf
  * Date: 12/14/11
  * Time: 6:37 PM
- */@XmlType( propOrder = {"user", "agent"} )
+ */@XmlType( propOrder = {"user", "agent", "open", "restrictedToEmployed"} )
 public class ParticipationData {
 
     private PlanParticipation participation;
@@ -41,4 +42,17 @@ public class ParticipationData {
     public AgentData getAgent() {
         return new AgentData( participation.getActor( planService), planService.getPlan() );
     }
+
+    @XmlElement
+    public boolean getOpen() {
+        Actor actor = participation.getActor( planService );
+        return actor != null && actor.isOpenParticipation();
+    }
+
+    @XmlElement
+    public boolean getRestrictedToEmployed() {
+        Actor actor = participation.getActor( planService );
+        return actor != null && actor.isParticipationRestrictedToEmployed();
+    }
+
 }

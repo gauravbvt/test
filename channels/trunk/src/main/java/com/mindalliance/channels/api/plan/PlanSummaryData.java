@@ -25,7 +25,7 @@ import java.util.Set;
  * Date: 12/12/11
  * Time: 1:36 PM
  */
-@XmlType( propOrder = {"planIdentifier", "dateVersioned", "description", "planners", "participations", "supervised", "documentation"} )
+@XmlType( propOrder = {"planIdentifier", "dateVersioned", "description", "planners", "participations", "openActors", "supervised", "documentation"} )
 
 public class PlanSummaryData {
 
@@ -68,11 +68,22 @@ public class PlanSummaryData {
     public List<ParticipationData> getParticipations() {
         List<ParticipationData> participationDataList = new ArrayList<ParticipationData>();
         ChannelsUser user = ChannelsUser.current( userDao );
-        List<PlanParticipation> participations = planService.findParticipations( user.getUsername() );
+        List<PlanParticipation> participations = planService.findParticipations( user.getUsername(), getPlan() );
         for ( PlanParticipation participation : participations ) {
             participationDataList.add( new ParticipationData( participation, user, planService ) );
         }
         return participationDataList;
+    }
+
+    @XmlElement( name = "openAgent" )
+    public List<AgentData> getOpenActors() {
+        List<AgentData> openActorList = new ArrayList<AgentData>(  );
+        ChannelsUser user = ChannelsUser.current( userDao );
+        List<Actor> openActors = planService.findOpenActors( user, getPlan() );
+        for ( Actor openActor : openActors ) {
+            openActorList.add( new AgentData( openActor, getPlan() ) );
+        }
+        return openActorList;
     }
 
     @XmlElement( name = "supervised" )
@@ -91,7 +102,8 @@ public class PlanSummaryData {
 
     private List<Actor> getParticipantActors() {
         List<Actor> actors = new ArrayList<Actor>();
-        List<PlanParticipation> participations = planService.findParticipations( ChannelsUser.current( userDao ).getUsername() );
+        List<PlanParticipation> participations = planService.findParticipations(
+                ChannelsUser.current( userDao ).getUsername(), getPlan() );
         for ( PlanParticipation participation : participations ) {
             Actor actor = participation.getActor( planService );
             if ( actor != null ) actors.add( actor );
