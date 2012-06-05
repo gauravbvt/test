@@ -89,6 +89,13 @@ div.guide-title-cont {
     font-weight: bold;
 }
 
+#guide .doc a.window {
+    background-color: PapayaWhip;
+    background-position: right center;
+    border: medium none;
+    padding: 0 14px 0 0;
+}
+
 #guide .nextActivities {
     border-top: 1px solid orange;
     font-weight: bold;
