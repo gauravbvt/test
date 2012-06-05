@@ -684,9 +684,20 @@ public final class ChannelsUtils {
     }
 
     public static String convertTemplate( String template, Object bean ) {
+       return convertTemplate( template, bean, null );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public static String convertTemplate( String template, Object bean, Map<String, Object> extraContext ) {
         StringWriter writer = new StringWriter(  );
         try {
-            Velocity.evaluate( new VelocityContext( BeanUtils.describe( bean ) ), writer, "",  template );
+            Map context = BeanUtils.describe( bean );
+            if ( extraContext != null ) {
+                for ( String key : extraContext.keySet() ) {
+                    context.put( key, extraContext.get(  key ) );
+                }
+            }
+            Velocity.evaluate( new VelocityContext( context ), writer, "",  template );
         } catch ( Exception e ) {
             LOG.warn( "Invalid templating ", e );
             return template;

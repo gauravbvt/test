@@ -24,6 +24,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -130,7 +131,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     }
 
     private void addOtherAnswersLink() {
-        final String answerersLabel = getOtherAnswersLabel( );
+        final String answerersLabel = getOtherAnswersLabel();
         AjaxLink<String> otherAnswersLink = new AjaxLink<String>(
                 "others",
                 new Model<String>( answerersLabel )
@@ -156,11 +157,11 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
         questionAndAnswerContainer.addOrReplace( otherAnswersLink );
     }
 
-    private String getOtherAnswersLabel( ) {
+    private String getOtherAnswersLabel() {
         if ( !getRFI().isPersisted() || results.isEmpty() )
             return "";
         else {
-            Set<String> answerers = new HashSet<String>(  );
+            Set<String> answerers = new HashSet<String>();
             for ( String text : results.keySet() ) {
                 answerers.addAll( results.get( text ) );
             }
@@ -233,9 +234,13 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     }
 
     protected String getQuestionText() {
+        Map<String, Object> extraContext = new HashMap<String, Object>();
+        extraContext.put( "user", getUserFullName( getUsername() ) );
+        extraContext.put( "planner", getUserFullName( getRFI().getRfiSurvey().getUsername() ) );
         return ChannelsUtils.convertTemplate(
                 getQuestion().getText(),
-                getRFI().getRfiSurvey().getAbout( getQueryService() ) );
+                getRFI().getRfiSurvey().getAbout( getQueryService() ),
+                extraContext );
     }
 
     protected AnswerSet getAnswerSet() {

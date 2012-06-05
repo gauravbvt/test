@@ -562,8 +562,12 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     protected String getUserFullName( String userName ) {
-        ChannelsUser aUser = userDao.getUserNamed( userName );
-        return aUser == null ? userName : aUser.getFullName();
+        if ( userName == null ) {
+            return "?";
+        } else {
+            ChannelsUser aUser = userDao.getUserNamed( userName );
+            return aUser == null ? userName : aUser.getFullName();
+        }
     }
 
 }

@@ -181,7 +181,7 @@ The list is part of the plan's ''details''.]]></description>
             <step>
                 <description><![CDATA[Name all the (actual) '''organizations''' in scope and indicate which ones are expected to participate &ndash; <small>that is, those who are expected to have agents assigned to tasks</small>. &ndash; .]]></description>
                 <script>
-                    <action>Edit the list participating organizations</action>
+                    <action>Edit the list of participating organizations</action>
                     <change>
                         <subjectPath>plan</subjectPath>
                         <type>Expanded</type>
@@ -275,6 +275,7 @@ Naming the goal is optional.]]></description>
             <name>Set user participation</name>
             <step>
                 <description><![CDATA[Associate a user with one or more agents and add contact information specific to the user's participation as that agent.
+
 Note that users that self-associate with agents that have been defined as "open participation".]]></description>
                 <script>
                     <action>Set participation</action>
