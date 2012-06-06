@@ -282,13 +282,19 @@ div.plan-references {
 	margin:0 15px;
 }
 
-div.plan-references h2 {
+div.plan-references h2,
+h3.resolved, h3.not-resolved {
     border-bottom: 1px solid #CCCCCC;
     border-top: 1px solid #CCCCCC;
     font-size: 12px;
     margin: 0 0 10px;
     padding: 5px 9px;
     text-transform: uppercase;
+}
+
+h3.resolved, h3.not-resolved {
+    background: none repeat scroll 0 0 #E8E8E8;
+    margin: 20px 0 10px;
 }
 
 div.plan-references ul {
@@ -361,6 +367,10 @@ div.right-accordion {
 	font-size:11px;
 }
 
+
+div.title-desc {
+	padding: 0 0 10px 0;
+}
 
 /* ---- Social ----- */
 
@@ -849,7 +859,8 @@ div.right-accordion {
 /* ----- Dropdown Menu - Default ----- */
 
 #social ul.menu,
-#social span.menubar {
+#social span.menubar,
+td.name-title-icon-menu span.menubar {
     font-weight: normal;
     list-style: none;
     margin: 0 0 0 5px;
@@ -861,11 +872,18 @@ div.right-accordion {
     right: 0;
 }
 
-#social ul.menu li {
+td.name-title-icon-menu span.menubar {
+    float: right;
+    position: relative;
+}
+
+#social ul.menu li,
+td.name-title-icon-menu ul.menu li {
     display: inline;
 }
 
-#social .menubar .dropmenu {
+#social .menubar .dropmenu,
+td.name-title-icon-menu .menubar .dropmenu {
     width: auto;
     cursor: pointer;
     padding: 1px 16px 1px 5px;
@@ -878,13 +896,15 @@ div.right-accordion {
     line-height: 1.5em;
 }
 
-#social .menubar .dropmenu:hover {
+#social .menubar .dropmenu:hover,
+td.name-title-icon-menu .menubar .dropmenu:hover {
     background: url( '../images/bullet-arrow-bottom-high.png' ) no-repeat scroll 90% 56% #e6e6e6;
 	border:1px solid #C7C8CA;
 	color:#000000;
 }
 
-#social .menubar .dropmenu ul {
+#social .menubar .dropmenu ul,
+td.name-title-icon-menu .menubar .dropmenu ul {
     display: none;
     position: absolute;
     right: 0;
@@ -898,27 +918,32 @@ div.right-accordion {
 	top:1.5em;
 }
 
-#social .menubar .dropmenu ul li {
+#social .menubar .dropmenu ul li,
+td.name-title-icon-menu .menubar .dropmenu ul li {
     display: block;
     padding: 2px 4px;
     z-index: 100000;
 	border-bottom:1px solid #D1D3D4;
 }
 
-#social .menubar .dropmenu li span.disabled {
+#social .menubar .dropmenu li span.disabled,
+td.name-title-icon-menu .menubar .dropmenu li span.disabled {
     font-style: oblique;
     color: #808080;
 }
 
-#social .menubar .dropmenu:hover ul {
+#social .menubar .dropmenu:hover ul,
+td.name-title-icon-menu .menubar .dropmenu:hover ul {
     display: block;
 }
 
-#social .menubar .dropmenu ul li:hover {
+#social .menubar .dropmenu ul li:hover,
+td.name-title-icon-menu .menubar .dropmenu ul li:hover {
     background-color: #ccccff;
 }
 
-#social .menubar .dropmenu ul li a:hover {
+#social .menubar .dropmenu ul li a:hover,
+td.name-title-icon-menu .menubar .dropmenu ul li a:hover {
 	border:none;
 }
 
@@ -929,6 +954,7 @@ table.data-table {
     font-size:11px;
     margin:0 0 5px 0;
     border-top:1px solid #999999;
+    width: 100%; 
 }
 
 table.data-table td {
@@ -1027,6 +1053,17 @@ td, th {
     vertical-align: middle;
 }
 
+td.feedback-new-message-cont,
+td.feedback-messages-cont {
+	vertical-align: top;
+	padding: 0;
+}
+
+td.feedback-messages-cont {
+    border-left: 1px solid #CCCCCC;
+    padding: 0 0 0 15px;
+}
+
 tbody th {
     padding:0 5px 0 10px;
 }
@@ -1054,6 +1091,34 @@ a.more {
 a.more:hover {
 	border:1px solid #999999;
 	color:#333333;
+}
+
+
+/* ----- Data Tables - Controls ----- */
+
+div.filters {
+    background: #E8E8E8;
+    border-top: 1px solid #999999;
+    color: #333333;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 5px;
+    line-height: 2.5em;
+}
+
+div.filters select {
+    background: #FFFFFF;
+    border: 1px solid #999999;
+    font-size: 10px;
+    margin: 0 5px;
+    padding: 0;
+    color: #333333;
+}
+
+div.filters input[type="checkbox"] {
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
 }
 
 
@@ -1122,3 +1187,74 @@ a.more:hover {
     color: red;
 }
 
+
+div.feedback-new-message {
+    float: left;
+    margin: 0 0 10px;
+    padding: 0 15px 0 0;
+}
+
+
+div.feedback-new-message textarea {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #999999;
+    font-size: 11px;
+    margin: 0 0 10px;
+    padding: 3px;
+    width: 98%;
+}
+
+td.resolved {
+	padding: 0 15px 0 0;
+}
+
+div.feedback-new-message input[type="button"],
+td.resolved input[type="button"] {
+    background: none repeat scroll 0 0 #e8e8e8;
+    border: 1px solid #999999;
+    color: #666666;
+    cursor: pointer;
+    float: right;
+    font-family: arial;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 100%;
+    margin: 0 0 0 5px;
+    padding: 5px 10px;
+    text-transform: uppercase;
+}
+
+div.feedback-new-message input[type="button"]:hover,
+td.resolved input[type="button"]:hover {
+    border: 1px solid #000000;
+    color: #000000;
+}
+
+td.photo-cont {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #CCCCCC;
+    float: left;
+    padding: 10px;
+    margin: 0 10px 0 0;
+}
+
+td.name-title-icon-menu {
+    border-bottom: 1px solid #CCCCCC;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 0;
+    text-transform: uppercase;
+}
+
+td.info-container {
+    font-size: 12px;
+    line-height: 1.5em;
+    padding: 7px 0 12px;
+}
+
+span.time {
+    color: #666666;
+    display: block;
+    float: none;
+    font-size: 11px;
+}

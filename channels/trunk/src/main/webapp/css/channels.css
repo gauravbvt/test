@@ -2970,6 +2970,7 @@ div.req-section-headers ul {
 /* ----- Feedback - Messages ----- */
 
 div.feedback-messages {
+    border-left: 1px solid #999999;
     width: 100%;
 }
 
@@ -2979,7 +2980,6 @@ div.feedback-messages > span > div {
 }
 
 div.feedback-messages div.odd {
-    background: #e8e8e8;
     padding: 5px 10px 10px;
     border-top: 1px solid #999999;
 }
@@ -3097,12 +3097,12 @@ div.feedback-messages span.time {
 /* ----- Feedback - New Message ----- */
 
 div.feedback-new-message {
-    background: #E8E8E8;
-    border-top: 1px solid #999999;
+    background: none repeat scroll 0 0 #E8E8E8;
     border-bottom: 1px solid #999999;
+    border-top: 1px solid #999999;
+    float: left;
     font-size: 11px;
-    padding: 10px;
-    margin-top: 10px;
+    padding: 10px 10px 11px;
 }
 
 div.feedback-new-message > div {

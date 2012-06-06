@@ -9,7 +9,7 @@
 <wicket:panel>
     <table>
         <tr>
-            <td>
+            <td class="feedback-new-message-cont">
                 <div class="feedback-new-message">
                     <textarea wicket:id="reply" rows="3" cols ="60">text</textarea>
                     <input wicket:id="replyButton" type="button" value="Send reply"/>
@@ -17,7 +17,7 @@
                     <input wicket:id="resetButton" type="button" value="Reset"/>
                 </div>
             </td>
-            <td rowspan="2">
+            <td class="feedback-messages-cont" rowspan="2">
                 <div class="feedback-messages">
                     <div wicket:id="replies">
                         <div wicket:id="reply">
@@ -30,7 +30,7 @@
             </td>
         </tr>
         <tr wicket:id="resolvedContainer">
-            <td>
+            <td class="resolved">
                 <input wicket:id="resolvedButton" type="button" value="Resolved"/>
             </td>
         </tr>
