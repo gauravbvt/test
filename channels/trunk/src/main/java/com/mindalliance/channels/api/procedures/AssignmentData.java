@@ -4,7 +4,9 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.jws.WebMethod;
@@ -161,6 +163,9 @@ public class AssignmentData extends AbstractProcedureElementData {
         for ( RequestData requestData : getInRequests() ) {
             ids.add( requestData.getConsumingTask().getEventId() );
         }
+        Event initiatedEvent = getAssignment().getPart().getInitiatedEvent();
+        if ( initiatedEvent != null )
+            ids.add(  initiatedEvent.getId() );
         return ids;
     }
 
@@ -212,6 +217,18 @@ public class AssignmentData extends AbstractProcedureElementData {
         for ( AbstractFlowData flowData : getCommunications() ) {
             ids.addAll( flowData.allPlaceIds() );
         }
+        Event initiatedEvent = getAssignment().getPart().getInitiatedEvent();
+        if ( initiatedEvent != null ) {
+            Place scope = initiatedEvent.getScope();
+            if ( scope != null ) {
+                ids.add( scope.getId() );
+            }
+            Place placeBasis = initiatedEvent.getPlaceBasis();
+            if ( placeBasis != null ) {
+                ids.add( placeBasis.getId() );
+            }
+        }
+
         return ids;
     }
 

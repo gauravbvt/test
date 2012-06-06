@@ -165,12 +165,12 @@ public class ChannelsServiceImpl implements ChannelsService {
             if ( plan == null || user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED ) ) {
                 throw new Exception( user.getUsername() + " is not authorized to access production plan " + uri );
             }
+            user.setPlan( plan );
             PlanService planService = getPlanService( plan );
             List<PlanParticipation> participations = planService.findParticipations( user.getUsername(), plan );
             if ( participations.isEmpty() ) {
                 throw new Exception( user.getUsername() + " does not participate in production plan " + uri );
             }
-            user.setPlan( plan );
             return new ProceduresData(
                     plan,
                     participations,

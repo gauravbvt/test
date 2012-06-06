@@ -202,6 +202,9 @@ public class TriggerData extends AbstractProcedureElementData {
 
     public Set<Long> allPlaceIds() {
         Set<Long> ids = new HashSet<Long>();
+        if ( getOnObservation() != null ) {
+            ids.addAll( getOnObservation().allPlaceIds() );
+        }
         if ( getOnNotification() != null ) {
             ids.addAll( getOnNotification().allPlaceIds() );
         }
