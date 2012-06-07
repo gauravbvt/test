@@ -76,7 +76,7 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
             SurveysDAO surveysDAO ) {
         StringBuilder sb = new StringBuilder();
         int n = messageables.size();
-        String kind = messageables.get( 0 ).getTypeName() + " " + topic;
+        String kind = messageables.get( 0 ).getLabel() + " " + topic;
         sb.append( kind )
                 .append( " report" )
                 .append( " (" )

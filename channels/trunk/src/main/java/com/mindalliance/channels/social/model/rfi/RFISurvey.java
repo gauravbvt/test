@@ -273,4 +273,9 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
             SurveysDAO surveysDAO ) {
         return null;
     }
+
+    @Override
+    public String getLabel() {
+        return "Survey";
+    }
 }

@@ -78,6 +78,11 @@ abstract public class UserStatement extends AbstractModelObjectReferencingPPO im
         else throw new RuntimeException( "invalid content" );
     }
 
+    @Override
+    public String getLabel() {
+        return "Message";
+    }
+
 
     abstract protected String getTextContent( Format format, PlanService planService );
 

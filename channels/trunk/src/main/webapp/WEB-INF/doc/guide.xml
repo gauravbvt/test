@@ -18,7 +18,9 @@ Channels continuously examines these ''information sharing plans'' for gaps and 
 
 Channels produces visualizations, analytics and reports that help planners and stakeholders understand and improve complex plans. 
 
-Channels computes the personalized information sharing protocols implied in a plan and serves them to its participants.                    
+Channels computes personalized information sharing protocols and serves them to plan participants.
+
+Channels is a ''planning'' tool. It is used to understand and improve the information sharing ''practices'' of organizations, not for managing the ''actual'' sharing of information.
                 </description>
             </step>
         </activity>
@@ -28,18 +30,18 @@ Channels computes the personalized information sharing protocols implied in a pl
                 <description>A plan is the combination of
 # a model of how information is to be acquired and shared so that tasks that achieve organizational goals can be successfully carried out
 # an environment that identifies the plan's participants, namely, people and systems in roles of responsibility within organizations
-A model is applied to an environment to produce visualizations, analytics, diagnostics, reports and information sharing protocols.
+Applying an environment to a model produces visualizations, analytics, diagnostics, reports and information sharing protocols.
                 </description>
             </step>
         </activity>
         <activity id="event">
             <name>Event</name>
             <step>
-                <description>An event is a transient change in the world that introduces risks and/or opportunities. 
+                <description>An event is a transient change in the world that introduces risks and/or opportunities for organizations. 
 
-Risks and events should not be confused; an event can introduce risks to one organization while creating opportunities for another. 
+Risks and events should not be confused. An event can introduce risks to one organization while creating opportunities for another. 
 
-From the point of view of the plan, an event is an ''incident'' if its occurrence is not caused by the execution of a task in the plan (an 'outside' event).</description>
+From the point of view of the plan, an event is considered an ''incident'' if its occurrence is not planned (an 'outside' event).</description>
             </step>
         </activity>
         <activity id="phase">
@@ -47,7 +49,7 @@ From the point of view of the plan, an event is an ''incident'' if its occurrenc
             <step>
                 <description>A phase is a named time period relative to the occurrence of events. A phase is either the time before, during or after events.
 
-A plan can elect to address only the before, during or after of events, or a combination thereof.
+A plan can elect to address what happens before, during or after of events, or a combination thereof.
                 </description>
             </step>
         </activity>
@@ -61,7 +63,9 @@ A plan can elect to address only the before, during or after of events, or a com
         <activity id="goal">
             <name>Goal</name>
             <step>
-                <description>A goal is either a risk to, or an opportunity for, an organization that is introduced by the onset or conclusion of an event. Goals are achieved by carrying out tasks, or when an event terminates.                
+                <description>A goal is either a risk to, or an opportunity for, an organization that is introduced by the onset or conclusion of an event.
+                    
+Goals are achieved by carrying out tasks, or when an event terminates.                
                 </description>
             </step>
         </activity>
@@ -77,16 +81,18 @@ No two segments should address identical goals in identical scenarios.
         <activity id="information">
             <name>Information</name>
             <step>
-                <description>Information is what is to be shared by agents (people or systems) via communication channels. Information is named named and is possibly described by a list of essential elements.
+                <description>Information is what is shared by agents (people or systems) via communication channels.
+                    
+Information is named and can be described by a list of essential elements.
 
-An element of information also has a name and may be accompanied by handling instructions and with a secrecy classification.
+An element of information also has a name and can be accompanied by handling instructions and given a secrecy classification.
                 </description>
             </step>
         </activity>
         <activity id="task">
             <name>Task</name>
             <step>
-                <description>A task is an action or decision to be taken, individually or as a team, by assigned agents (people or systems) in order to achieve goals and/or acquire information to share.</description>
+                <description>A task is an action or decision taken, individually or as a team, by assigned agents (people or systems) in order to achieve goals and/or acquire information to share.</description>
             </step>
         </activity>
         <activity id="need">

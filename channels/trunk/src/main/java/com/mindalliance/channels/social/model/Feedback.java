@@ -237,4 +237,8 @@ public class Feedback extends UserStatement {
         return sb.toString();
     }
 
+    @Override
+    public String getLabel() {
+        return "Feedback";
+    }
 }

@@ -1876,6 +1876,10 @@ td.late span {
     padding: 20px 0 5px 0;
 }
 
+.survey-results {
+    margin-top: 10px;
+}
+
 .aspect span.can-forward {
     background: #E8E8E8;
     border: 1px solid #A7A9AC;

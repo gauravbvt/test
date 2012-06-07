@@ -48,5 +48,7 @@ public interface Messageable {
 
     String getTypeName();
 
+    String getLabel();
+
 
 }

@@ -378,6 +378,11 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
             throw new RuntimeException( "Unknown topic " + topic );
     }
 
+    @Override
+    public String getLabel() {
+        return "Survey";
+    }
+
     private String getNagSubject( Format format, PlanService planService ) {
         // ignore format
         return getLabel( planService )

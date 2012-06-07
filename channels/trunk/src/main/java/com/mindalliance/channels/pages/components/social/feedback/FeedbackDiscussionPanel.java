@@ -185,7 +185,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
         Collections.sort( replies , new Comparator<UserMessage>() {
             @Override
             public int compare( UserMessage m1, UserMessage m2 ) {
-                return m1.getCreated().compareTo( m2.getCreated() ) ;
+                return m2.getCreated().compareTo( m1.getCreated() ) ;
             }
         });
         ListView<UserMessage> userMessagesListView = new ListView<UserMessage>(
