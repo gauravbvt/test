@@ -180,6 +180,10 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
                 target.add( questionnaireContainer );
             }
         };
+        deleteButton.setVisible( selectedQuestionnaire != null
+                && !selectedQuestionnaire.isActive()
+                && rfiSurveyService.findSurveys( getPlan(), selectedQuestionnaire ).isEmpty()
+        );
         questionnaireContainer.add( deleteButton );
         // activate
         ConfirmedAjaxFallbackLink<String> activateButton = new ConfirmedAjaxFallbackLink<String>(
@@ -224,9 +228,10 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
     }
 
     private void deleteQuestionnaire() {
-        if ( selectedQuestionnaire != null )
-            questionnaireService.delete( selectedQuestionnaire );
-        selectedQuestionnaire = null;
+        if ( selectedQuestionnaire != null ) {
+            questionnaireService.deleteIfNotUsed( getPlan(), selectedQuestionnaire );
+            selectedQuestionnaire = null;
+        }
     }
 
     private void activateQuestionnaire() {

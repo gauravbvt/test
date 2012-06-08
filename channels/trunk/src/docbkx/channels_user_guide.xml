@@ -5098,6 +5098,8 @@
                 <para>${planner} - the full name of the planner who launched the survey</para>
               </db:listitem>
             </db:itemizedlist></db:para>
+          <para>Planners can delete a questionnaire but only if it is inactive and has not yet been
+            used for any survey.</para>
         </section>
       </section>
       <section>

@@ -48,5 +48,5 @@ public interface QuestionnaireService extends GenericSqlService<Questionnaire, L
      */
     Questionnaire findRemediationQuestionnaire( Plan plan, Issue issue );
 
-
+    void deleteIfNotUsed( Plan plan, Questionnaire questionnaire );
 }

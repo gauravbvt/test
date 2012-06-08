@@ -9,6 +9,7 @@ import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.services.QuestionService;
 import com.mindalliance.channels.social.services.QuestionnaireService;
+import com.mindalliance.channels.social.services.RFISurveyService;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -31,6 +32,9 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private RFISurveyService rfiSurveyService;
 
     @Override
     @SuppressWarnings( "unchecked" )
@@ -87,6 +91,14 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
         criteria.add( Restrictions.eq( "status", Questionnaire.Status.ACTIVE ) );
         List<Questionnaire> result = (List<Questionnaire>) criteria.list();
         return result.isEmpty() ? null : result.get( 0 );
+    }
+
+    @Override
+    @Transactional
+    public void deleteIfNotUsed( Plan plan, Questionnaire questionnaire ) {
+        if ( rfiSurveyService.findSurveys( plan, questionnaire ).isEmpty() ) {
+            delete(  questionnaire );
+        }
     }
 
     @Transactional
