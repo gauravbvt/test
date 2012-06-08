@@ -68,7 +68,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -744,11 +743,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void addHelp() {
         BookmarkablePageLink<HelpPage> helpLink = new BookmarkablePageLink<HelpPage>( "help-link", HelpPage.class );
         helpLink.add( new AttributeModifier( "target", new Model<String>( "help" ) ) );
-        helpLink.setPopupSettings( new PopupSettings(
+       /* helpLink.setPopupSettings( new PopupSettings(
                 PopupSettings.RESIZABLE |
                         PopupSettings.SCROLLBARS |
                         PopupSettings.MENU_BAR |
-                        PopupSettings.TOOL_BAR ) );
+                        PopupSettings.TOOL_BAR ) );*/
 
         form.add( helpLink );
     }

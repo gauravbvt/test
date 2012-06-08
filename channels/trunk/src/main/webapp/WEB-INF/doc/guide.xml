@@ -23,6 +23,9 @@ Channels computes personalized information sharing protocols and serves them to 
 Channels is a ''planning'' tool. It is used to understand and improve the information sharing ''practices'' of organizations, not for managing the ''actual'' sharing of information.
                 </description>
             </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02.html this]</description>
+            </step>
         </activity>
         <activity id="plan">
             <name>Information sharing plan</name>
@@ -32,6 +35,9 @@ Channels is a ''planning'' tool. It is used to understand and improve the inform
 # an environment that identifies the plan's participants, namely, people and systems in roles of responsibility within organizations
 Applying an environment to a model produces visualizations, analytics, diagnostics, reports and information sharing protocols.
                 </description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s12.html#d0e329 this]</description>
             </step>
         </activity>
         <activity id="event">
@@ -43,6 +49,9 @@ Risks and events should not be confused. An event can introduce risks to one org
 
 From the point of view of the plan, an event is considered an ''incident'' if its occurrence is not planned (an 'outside' event).</description>
             </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s14s06.html this]</description>
+            </step>
         </activity>
         <activity id="phase">
             <name>Phase</name>
@@ -52,12 +61,21 @@ From the point of view of the plan, an event is considered an ''incident'' if it
 A plan can elect to address what happens before, during or after of events, or a combination thereof.
                 </description>
             </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s14s07.html this]</description>
+            </step>
         </activity>
         <activity id="scenario">
             <name>Scenario</name>
             <step>
                 <description>The term ''scenario'' is used in information sharing planning to mean one phase of one event, possibly in the context of other past or current events.                
                 </description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s12s06.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s12.html this]</description>
             </step>
         </activity>
         <activity id="goal">
@@ -68,6 +86,12 @@ A plan can elect to address what happens before, during or after of events, or a
 Goals are achieved by carrying out tasks, or when an event terminates.                
                 </description>
             </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s12s04.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch01s12s06.html this]</description>
+            </step>
         </activity>
         <activity id="segment">
             <name>Segment</name>
@@ -76,6 +100,9 @@ Goals are achieved by carrying out tasks, or when an event terminates.
 
 No two segments should address identical goals in identical scenarios.
                 </description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s12s06.html this]</description>
             </step>
         </activity>
         <activity id="information">
@@ -88,11 +115,17 @@ Information is named and can be described by a list of essential elements.
 An element of information also has a name and can be accompanied by handling instructions and given a secrecy classification.
                 </description>
             </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s16.html this]</description>
+            </step>
         </activity>
         <activity id="task">
             <name>Task</name>
             <step>
                 <description>A task is an action or decision taken, individually or as a team, by assigned agents (people or systems) in order to achieve goals and/or acquire information to share.</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s13.html#d0e454 this]</description>
             </step>
         </activity>
         <activity id="need">
@@ -100,11 +133,17 @@ An element of information also has a name and can be accompanied by handling ins
             <step>
                 <description>Specification of information needed to execute a task, plus requirements on its delivery.</description>
             </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s13s03.html this]</description>
+            </step>
         </activity>
         <activity id="capability">
             <name>Information capability</name>
             <step>
                 <description>Specification of information acquired by or for the execution of a task, plus how it could be (further) shared.</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s13s04.html this]</description>
             </step>
         </activity>
         <activity id="flow">
@@ -113,17 +152,26 @@ An element of information also has a name and can be accompanied by handling ins
                 <description>Or flow, for short. How agents carrying out a task that ''produces'' information would commit to share that information with agents carrying out a task that ''consumes'' it.
                 </description>
             </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s13s02.html this]</description>
+            </step>
         </activity>
         <activity id="assignment">
             <name>Task assignment</name>
             <step>
                 <description>The list of agents assigned to a task because their profiles match the definition of the task.</description>
             </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s17s02.html this]</description>
+            </step>
         </activity>
         <activity id="commitment">
             <name>Information sharing commitment</name>
             <step>
                 <description>The commitment by one agent to share information acquired doing a task with another agent who needs it to successfully do some other task.</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s17s03.html this]</description>
             </step>
         </activity>
         <activity id="issue">
@@ -133,6 +181,9 @@ An element of information also has a name and can be accompanied by handling ins
 * validity (something is inherently wrong in the plan)
 * completeness (something is obviously missing from the plan)
 * robustness (something is making the plan likely to fail)</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s04.html this]</description>
             </step>
         </activity>
     </group>
@@ -156,7 +207,13 @@ An element of information also has a name and can be accompanied by handling ins
                 <description>Note that events can also be named anywhere they are used to define another plan element. When they are, they are automatically added to the scope of the plan.</description>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch01s12s03.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s11s03.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s05s04.html this]</description>
             </step>
             <next group="scoping" activity="phases"/>
             <next group="profiling" activity="profiling-event"/>
@@ -176,7 +233,7 @@ The list is part of the plan's ''details''.]]></description>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s11s02.html this]</description>
             </step>
             <next group="scoping" activity="add-define-segment"/>
             <next group="scoping" activity="organizations"/>
@@ -196,7 +253,7 @@ The list is part of the plan's ''details''.]]></description>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s11s06.html this]</description>
             </step>
             <next group="scoping" activity="requirements"/>
             <next group="profiling" activity="profiling-organization"/>
@@ -215,7 +272,7 @@ The list is part of the plan's ''details''.]]></description>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s11s03.html this]</description>
             </step>
         </activity>
         <activity id="add-define-segment">
@@ -232,7 +289,10 @@ The list is part of the plan's ''details''.]]></description>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch03s05s08.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s12.html this]</description>
             </step>
             <next group="scoping" activity="segment-goals"/>
         </activity>
@@ -254,7 +314,7 @@ Naming the goal is optional.]]></description>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s12.html this]</description>
             </step>
         </activity>
         <activity id="classifications">
@@ -274,7 +334,7 @@ Naming the goal is optional.]]></description>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s11s05.html this]</description>
             </step>
         </activity>
         <activity id="participation">
@@ -293,7 +353,10 @@ Note that users that self-associate with agents that have been defined as "open 
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s11s16.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s04s04s02.html this]</description>
             </step>
         </activity>
     </group>
@@ -306,7 +369,7 @@ Note that users that self-associate with agents that have been defined as "open 
 The newly created task is intially empty and presented as ''someone doing something''.</description>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch03s06s02.html this]</description>
             </step>
             <next group="info-sharing" activity="define-task"/>
         </activity>
@@ -330,7 +393,7 @@ Note that as little and as much as wanted can be put into a task's definition.
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s10.html#d0e2225 this]</description>
             </step>
             <next group="info-sharing" activity="add-need"/>
             <next group="info-sharing" activity="add-capability"/>
@@ -347,7 +410,7 @@ Note that as little and as much as wanted can be put into a task's definition.
                 </description>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch03s06s03.html this]</description>
             </step>
             <next group="info-sharing" activity="add-capability"/>
             <next group="info-sharing" activity="define-flow"/>
@@ -359,7 +422,7 @@ Note that as little and as much as wanted can be put into a task's definition.
                 <description>Add an ''informatio capability'' to a task by clicking on the ''ADD'' button in the Sends panel. An info capability specifies info agents assigned to a task expect to acquire and be able to share with others.</description>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch03s06s04.html this]</description>
             </step>
             <next group="info-sharing" activity="add-need"/>
             <next group="info-sharing" activity="define-flow"/>
@@ -385,7 +448,7 @@ Note that as little and as much as wanted can be put into a task's definition.
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s10s02.html this]</description>
             </step>
             <next group="info-sharing" activity="connect-with-flow"/>
             <next group="profiling" activity="profiling-medium"/>
@@ -406,7 +469,7 @@ A sharing flow is created by connecting an info need or a capability to a task. 
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch03s06s05.html this]</description>
             </step>
             <next group="info-sharing" activity="add-task"/>
         </activity>
@@ -456,7 +519,10 @@ Note that all profile attributes are optional.]]>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s13s06.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s07s02.html this]</description>
             </step>
             <next group="profiling" activity="profiling-phase"/>
             <next group="profiling" activity="profiling-place"/>
@@ -503,7 +569,10 @@ Note that all profile attributes are optional.]]>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch03s07s03.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s13s07.html this]</description>
             </step>
             <next group="profiling" activity="profiling-phase"/>
             <next group="scoping" activity="events"/>
@@ -531,7 +600,10 @@ Note that all profile attributes are optional.]]>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch03s07s05.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s13s02.html this]</description>
             </step>
             <next group="profiling" activity="profiling-agent"/>
             <next group="scoping" activity="requirements"/>
@@ -566,7 +638,10 @@ Note that all profile attributes are optional.]]>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch03s07s06.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s13.html#d0e3198 this]</description>
             </step>
         </activity>
         <activity id="profiling-agent">
@@ -614,7 +689,10 @@ Note that all profile attributes are optional.]]>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch03s07s07.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s13s03.html this]</description>
             </step>
             <next group="profiling" activity="profiling-organization"/>
             <next group="scoping" activity="participation"/>
@@ -656,7 +734,10 @@ Note that all profile attributes are optional.]]>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch03s07s04.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s13s04.html this]</description>
             </step>
         </activity>
         <activity id="profiling-medium">
@@ -693,7 +774,10 @@ Note that all profile attributes are optional.]]>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch03s07s08.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s13s05.html this]</description>
             </step>
         </activity>
     </group>
@@ -727,7 +811,16 @@ Note that all profile attributes are optional.]]>
                 <description>If the resolution of an issue is not self-evident and requires input from stakeholders, a survey (with questionnaire) can be created about resolving the issue.</description>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s07.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s21.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s11s15.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s03s03s05.html this]</description>
             </step>
             <next group="data-collection" activity="launch-remediation-survey"/>
         </activity>
@@ -745,7 +838,7 @@ Note that all profile attributes are optional.]]>
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch03s08s02.html this]</description>
             </step>
             <next group="scoping" activity="add-define-segment"/>
         </activity>
@@ -787,7 +880,10 @@ Which agents are assigned to a task is determined by
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s15.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s11s08.html this]</description>
             </step>
             <next group="improving" activity="verify-procedures"/>
         </activity>
@@ -814,7 +910,13 @@ Taxonomies are defined implictly by categorizing individual entities. Taxonomies
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s11s13.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s08s04.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s08s03.html this]</description>
             </step>
             <next group="improving" activity="verify-procedures"/>
         </activity>
@@ -839,7 +941,7 @@ The other parties to the commitments can be aggregated by role, organization typ
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s11s08.html this]</description>
             </step>
             <next group="improving" activity="tune-task-flow-definition"/>
             <next group="improving" activity="verify-taxonomy"/>
@@ -871,7 +973,7 @@ Questionnaires can be activated and deactivated. They can be extended while they
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s19s02.html this]</description>
             </step>
             <next group="data-collection" activity="launch-survey"/>
         </activity>
@@ -909,7 +1011,10 @@ Questionnaires can be activated and deactivated. They can be extended while they
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s14.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </step>
             <next group="data-collection" activity="add-survey-participants"/>
             <next group="data-collection" activity="compose-questionnaire"/>
@@ -969,7 +1074,7 @@ Note that anyone who is forwarded a survey and who is not yet a user of Channels
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </step>
             <next group="data-collection" activity="survey-results"/>
         </activity>
@@ -992,7 +1097,7 @@ Results can be viewed by opening the survey and selecting the ''results'' tabs.<
               </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </step>
             <next group="data-collection" activity="add-survey-participants"/>
         </activity>
@@ -1012,7 +1117,7 @@ Planners can see this feedback and reply to it. The user can then reply back etc
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s20.html this]</description>
             </step>
         </activity>
     </group>
@@ -1034,7 +1139,7 @@ The index can be filtered by kind of element (role, agent, event etc.), by tags,
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s11s12.html this]</description>
             </step>
         </activity>
         <activity id="whos-who">
@@ -1053,7 +1158,7 @@ The table can be indexed by the name of the agent or by attributes of employment
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s11s09.html this]</description>
             </step>
         </activity>
         <activity id="documents">
@@ -1072,7 +1177,7 @@ A table with all documents attached in the plan can be found in the plan's ''bib
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s11s11.html this]</description>
             </step>
         </activity>
         <activity id="tags">
@@ -1091,7 +1196,7 @@ The list of all tags used in the plan can be looked up to see what has been mark
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s11s14.html this]</description>
             </step>
         </activity>
         <activity id="references">
@@ -1112,7 +1217,7 @@ For example, at the bottom of in the profile of a role is an index of all other 
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s13.html this]</description>
             </step>
         </activity>
     </group>

@@ -692,14 +692,17 @@
                 </dependencies>
                 <configuration>
                     <chunkedOutput>true</chunkedOutput>
-                    <chunkSectionDepth>5</chunkSectionDepth>
+                    <chunkSectionDepth>10</chunkSectionDepth>
+                    <tocMaxDepth>20</tocMaxDepth>
+                    <tocSectionDepth>10</tocSectionDepth>
                     <targetDirectory>${project.build.directory}/${project.build.finalName}/doc</targetDirectory>
                     <ignoreImageScaling>true</ignoreImageScaling>
                     <htmlStylesheet>../../css/doc.css</htmlStylesheet>
                 </configuration>
             </plugin>
 
-      <!--      <plugin>
+<!--
+            <plugin>
                 <groupId>org.zeroturnaround</groupId>
                 <artifactId>jrebel-maven-plugin</artifactId>
                 <version>1.1.1</version>
@@ -712,7 +715,8 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
+-->
 
         </plugins>
     </build>

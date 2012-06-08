@@ -35,7 +35,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
@@ -183,11 +182,13 @@ public class UserPage extends AbstractChannelsWebPage {
         } else {
             BookmarkablePageLink<HelpPage> helpLink = new BookmarkablePageLink<HelpPage>( "help-link", HelpPage.class );
             helpLink.add( new AttributeModifier( "target", new Model<String>( "help" ) ) );
+/*
             helpLink.setPopupSettings( new PopupSettings(
                     PopupSettings.RESIZABLE |
                             PopupSettings.SCROLLBARS |
                             PopupSettings.MENU_BAR |
                             PopupSettings.TOOL_BAR ) );
+*/
 
             form.add( helpLink );
         }
