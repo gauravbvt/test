@@ -37,7 +37,7 @@ Applying an environment to a model produces visualizations, analytics, diagnosti
                 </description>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01s12.html#d0e329 this]</description>
+                <description>For more information, see [${helpUrl}/ch01s11.html this]</description>
             </step>
         </activity>
         <activity id="event">
@@ -208,9 +208,6 @@ An element of information also has a name and can be accompanied by handling ins
             </step>
             <step>
                 <description>For more information, see [${helpUrl}/ch01s12s03.html this]</description>
-            </step>
-            <step>
-                <description>See also [${helpUrl}/ch02s06s11s03.html this]</description>
             </step>
             <step>
                 <description>See also [${helpUrl}/ch03s05s04.html this]</description>
@@ -669,7 +666,7 @@ Note that all profile attributes are optional.]]>
             <step>
                 <description>Agents can be found in the plan's ''who's who''.</description>
                 <script>
-                    <action>Open the index</action>
+                    <action>Open plan's who's who</action>
                     <change>
                         <subjectPath>plan</subjectPath>
                         <type>Expanded</type>
@@ -1043,7 +1040,10 @@ Note that the issue remediation questionnaires are  by default not shown in the 
                 </script>
             </step>
             <step>
-                <description>For more information, see [${helpUrl}/ch01.html this]</description>
+                <description>For more information, see [${helpUrl}/ch02s06s14.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </step>
             <next group="data-collection" activity="add-survey-participants"/>
             <next group="data-collection" activity="compose-questionnaire"/>

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.surveys;
 
+import com.google.code.jqwicket.ui.notifier.NotifierWebMarkupContainer;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.Modalable;
@@ -31,6 +32,10 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
 
     private RFI selectedRFI;
     private Component rfiPanel;
+    /**
+     * Notifier.
+     */
+    private NotifierWebMarkupContainer notifier;
     /**
      * Modal dialog window.
      */
@@ -66,6 +71,7 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
         addModalDialog( "dialog", null, this );
         addUserRFIsPanel();
         addRFIPanel();
+        addNotifier();
     }
 
     private void addHeading() {
@@ -95,6 +101,11 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
         addOrReplace( rfiPanel );
     }
 
+    private void addNotifier() {
+        notifier = new NotifierWebMarkupContainer( "notifier" );
+        add( notifier );
+    }
+
     @Override
     public void changed( Change change ) {
         if ( change.isForInstanceOf( RFI.class ) ) {
@@ -117,6 +128,12 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
 
 
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updatables ) {
+        String message = change.getMessage();
+        if ( message != null ) {
+            notifier.create( target,
+                    "Notification",
+                    message );
+        }
         if ( change.isRefreshNeeded() ) {
             addRFIPanel();
             target.add( rfiPanel );
@@ -136,6 +153,8 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
                     addRFIPanel();
                     target.add( rfiPanel );
                 }
+            } else {
+                super.updateWith( target, change, updatables );
             }
         } else {
             super.updateWith( target, change, updatables );

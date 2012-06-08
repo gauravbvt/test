@@ -107,7 +107,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
             @Override
             protected void populateItem( ListItem<String> item ) {
                 String namePart = item.getModelObject();
-                item.add( new Label("namePart", namePart ) );
+                item.add( new Label( "namePart", namePart ) );
             }
         };
         nameContainer.add( namePartListView );
@@ -137,7 +137,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
         } else {
             long delta = deadline.getTime() - new Date().getTime();
             String interval = ChannelsUtils.getShortTimeIntervalString( delta );
-            return (delta < 0 ? "Overdue by " : "Due in ") + interval;
+            return ( delta < 0 ? "Overdue by " : "Due in " ) + interval;
         }
     }
 
@@ -255,13 +255,20 @@ public class RFIPanel extends AbstractUpdatablePanel {
             } else if ( change.isForProperty( "forwarded" ) ) {
                 String emails = (String) change.getQualifier( "emails" );
                 String message = (String) change.getQualifier( "message" );
-                List<String> forwardedTo = forwardRFI( emails, message, getQueryService() );
-                if ( !forwardedTo.isEmpty() ) {
-                    addHeader();
-                    target.add( headerContainer );
-                    target.appendJavaScript( "alert(' Survey forwarded to " + StringUtils.join( forwardedTo, ", " ) + "');" );
+                if ( emails != null ) {
+                    List<String> forwardedTo = forwardRFI( emails, message, getQueryService() );
+                    if ( !forwardedTo.isEmpty() ) {
+                        addHeader();
+                        target.add( headerContainer );
+                        change.setMessage( "Survey forwarded to " + StringUtils.join( forwardedTo, ", " ) );
+                        //    target.appendJavaScript( "alert(' Survey forwarded to " + StringUtils.join( forwardedTo, ", " ) + "');" );
+                    }
+                    getModalableParent().hideDialog( target );
+                } else {
+                    // do nothing
+                    change.setType( Change.Type.None );
+                    change.setMessage( "You need to enter at least one email address to forward the survey to." );
                 }
-                getModalableParent().hideDialog( target );
             }
         }
         super.updateWith( target, change, updatables );
