@@ -58,7 +58,7 @@ public class QuestionResultsPanel extends AbstractUpdatablePanel {
             @Override
             protected void populateItem( ListItem<SurveyAnswer> item ) {
                 SurveyAnswer answer = item.getModelObject();
-                item.add( new Label( "count", answer.getFullNames().size() + " answered" ) );
+                item.add( new Label( "count", answer.getFullNames().size() + "" ) );
                 item.add( new Label( "text", answer.getText() ) );
                 WebMarkupContainer participantsContainer = new WebMarkupContainer( "participantsContainer" );
                 item.add( participantsContainer );

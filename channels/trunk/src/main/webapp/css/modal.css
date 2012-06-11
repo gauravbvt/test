@@ -150,7 +150,7 @@ div.wicket-modal div.w_content {
 
 div.wicket-modal div.w_content_container {
     position: relative;
-    padding: 15px 20px 20px;
+    padding: 20px;
 }
 
 div.rfi-container {
@@ -245,7 +245,8 @@ div.wicket-modal div.dialog textarea {
 
 div.wicket-modal div.dialog input[type="button"],
 div.rfi-container div.answers input[type="button"],
-div.rfi-container div.decline-forward-container input[type="button"] {
+div.rfi-container div.decline-forward-container input[type="button"],
+a.others {
     background: none repeat scroll 0 0 #f6f6f6;
     border: 1px solid #A7A9AC;
     color: #666666;
@@ -262,7 +263,8 @@ div.rfi-container div.decline-forward-container input[type="button"] {
 
 div.wicket-modal div.dialog input[type="button"]:hover,
 div.rfi-container div.answers input[type="button"]:hover,
-div.rfi-container div.decline-forward-container input[type="button"]:hover {
+div.rfi-container div.decline-forward-container input[type="button"]:hover,
+a.others:hover {
     border: 1px solid #000000;
     color: #000000;
 }
@@ -305,6 +307,53 @@ div.wicket-modal div.w_bottomLeft {
     overflow: hidden;
     width: 14px;
 }
+
+/* ----- Floating Panels - Data Tables ----- */
+
+table.question-answers {
+    border-collapse: collapse;
+    border-top: 1px solid #999999;
+    font-size: 11px;
+    text-align: left;
+    width: 100%;
+}
+
+table.question-answers tr.headers {
+    background: #DCDDDE;
+    font-weight: bold;
+}
+
+table.question-answers tr.headers th {
+    padding: 2px 5px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+table.question-answers tr.headers th.count-header {
+	text-align: center;
+}
+
+table.question-answers tr {
+    background: none repeat scroll 0 0 #F3F3F3;
+    border-bottom: 1px solid #999999;
+}
+
+table.question-answers td {
+    color: #333333;
+    padding: 10px 5px;
+}
+
+table.question-answers td.count {
+	text-align: center;
+}
+
+
+table.question-answers ul {
+    list-style: square outside none;
+    margin: 0;
+    padding: 0 0 0 15px;
+}
+
 
 /*
 

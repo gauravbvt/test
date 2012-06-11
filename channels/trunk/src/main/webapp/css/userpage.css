@@ -1258,14 +1258,3 @@ span.time {
     float: none;
     font-size: 11px;
 }
-
-/* Surveys */
-
-.question-answers .answer {
-    padding-left: 10px;
-}
-
-.question-answers ul {
-    list-style: none;
-    padding-left: 10px;
-}

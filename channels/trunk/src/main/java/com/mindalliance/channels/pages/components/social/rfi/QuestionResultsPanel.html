@@ -8,8 +8,13 @@
 <body>
 <wicket:panel>
     <table wicket:id="resultsContainer" class="question-answers">
+        <tr class="headers">
+            <th class="count-header">Count</th>
+            <th>Answer</th>
+            <th>Participants</th>
+        </tr>
         <tr wicket:id="results">
-            <td wicket:id="count">2 answered</td>
+            <td wicket:id="count" class="count">2 answered</td>
             <td wicket:id="text" class="answer">42</td>
             <td>
                 <ul wicket:id="participantsContainer">
