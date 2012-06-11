@@ -574,6 +574,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     protected AutoCompleteSettings getAutoCompleteSettings() {
         AutoCompleteSettings settings = new AutoCompleteSettings();
         settings.setUseSmartPositioning( true );
+        settings.setAdjustInputWidth( true );
         return settings;
     }
 
