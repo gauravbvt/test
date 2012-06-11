@@ -2,7 +2,7 @@
 <elements>
 <xPathLogoutAdminPage>/html/body/div/div/a[2]</xPathLogoutAdminPage>
 <xPathSamePlanErrorMessage>/html/body/div/div[2]/div/form/div[2]/ul/li/span</xPathSamePlanErrorMessage>
-<xPathInputUserID>/html/body/div/div[2]/div/form/table[2]/tbody/tr/td[2]/input</xPathInputUserID>
+<xPathInputUserID>/html/body/div/div[2]/div/form/table[5]/tbody/tr/td[2]/input</xPathInputUserID>
 <xPathUserID>/html/body/div/div[2]/div/form/table[6]/tbody</xPathUserID>
 <xPathDeleteUser>/html/body/div/div[2]/div/form/table[6]/tbody/tr/td[12]/input</xPathDeleteUser>
 <xPathAccessPrivilegeAdmin>/html/body/div/div[2]/div/form/table/tbody/tr/td[5]/input</xPathAccessPrivilegeAdmin>

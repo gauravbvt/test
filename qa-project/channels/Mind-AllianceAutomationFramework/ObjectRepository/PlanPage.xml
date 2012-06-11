@@ -211,7 +211,7 @@
 <xPathAssertionCopyNeed>//div[17]/span/span</xPathAssertionCopyNeed>
 <xPathTaskURLAssertion>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/span/li/a</xPathTaskURLAssertion>
 <xPathEmailNameInvalidErrorMessageAssertion>//div[2]/div[2]/div[3]/span/div/div/div[2]/div/div/ul/li/span</xPathEmailNameInvalidErrorMessageAssertion>
-<xPathErrorMessageSocialPanelAssertion>//div[2]/div/div/div[2]/div/span/span</xPathErrorMessageSocialPanelAssertion>
+<xPathErrorMessageSocialPanelAssertion>/html/body/div/div/p</xPathErrorMessageSocialPanelAssertion>
 <xPathEventAssertion>//div[4]/div/span/div/div[2]/span/div/table/tbody/tr/td/span/a/span</xPathEventAssertion>
 <xPathDeletePlaceAttachmentAssertion>//div[3]/div/div[2]/div/table/tbody/tr[6]/td</xPathDeletePlaceAttachmentAssertion>
 <xPathAgentURLAssertion>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li[2]/a/img</xPathAgentURLAssertion>
