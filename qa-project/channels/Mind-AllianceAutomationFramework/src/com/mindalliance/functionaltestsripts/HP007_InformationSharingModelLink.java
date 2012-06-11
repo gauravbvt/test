@@ -24,7 +24,7 @@ public class HP007_InformationSharingModelLink
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Information Sharing Model Link is Present";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel")));
-				if(GlobalVariables.oElement.getText().equals("Information sharing model")){
+				if(GlobalVariables.oElement.getText().equals(GlobalVariables.viewElements.get("informationSharingModel"))){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

@@ -50,7 +50,7 @@ public class HP026_SendBlankMessage
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathSendMessageSocialPanel"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				// Asertion: 1. Verify that error message should be displayed as 'Message is empty. Not sent'
 				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathErrorMessageSocialPanelAssertion")));
 			    if(GlobalVariables.oElement.getText().equalsIgnoreCase("Message is empty. Not sent")){

@@ -36,7 +36,7 @@ public class CCE007_DoUndoRedoCopyPasteTask
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(10000);
+					Thread.sleep(3000);
 					
 					// Click 'Add new Segment' option under 'Actions' pop up menu and enter the details
 					GlobalVariables.iStepNo++ ;
@@ -87,7 +87,7 @@ public class CCE007_DoUndoRedoCopyPasteTask
 					Thread.currentThread();
 					Thread.sleep(3000);
 					// ASSERTION: When clicked on 'Copy task' option, the task should be copied and  a message ' Task copied' should be displayed at the top of the window
-					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//div[@class='change-message']/span/span"));
+					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("/html/body/div[2]/div/p"));
 					if (GlobalVariables.oElement.getText().equals("Task copied")) {
 						// Write Results
 						LogFunctions.writeLogs(GlobalVariables.sDescription);
@@ -101,10 +101,6 @@ public class CCE007_DoUndoRedoCopyPasteTask
 						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				    }
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(3000);
-					GlobalVariables.oDriver.findElement(By.className("close")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(3000);
