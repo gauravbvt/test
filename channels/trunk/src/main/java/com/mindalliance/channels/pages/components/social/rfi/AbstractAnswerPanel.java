@@ -63,6 +63,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     private WebMarkupContainer questionAndAnswerContainer;
     private WebMarkupContainer anonymousContainer;
     private Map<String, Set<String>> results;
+    private WebMarkupContainer questionContainer;
 
 
     public AbstractAnswerPanel( String id, IModel<Question> questionModel, IModel<RFI> rfiModel ) {
@@ -76,7 +77,6 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
         processOtherResults();
         addQuestion();
         addComment();
-        addOtherAnswersLink();
         addPrivacy();
         moreInit();
     }
@@ -98,10 +98,11 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
             questionAndAnswerContainer.add( new AttributeModifier( "class", "required" ) );
         }
         add( questionAndAnswerContainer );
-        WebMarkupContainer questionContainer = new WebMarkupContainer( "question" );
+        questionContainer = new WebMarkupContainer( "question" );
         questionContainer.add( new Label( "index", Integer.toString( getQuestionIndex() + 1 ) ) );
         questionContainer.add( new Label( "text", getQuestionText() ) );
         questionAndAnswerContainer.add( questionContainer );
+        addOtherAnswersLink();
 
     }
 
@@ -130,7 +131,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
         return comment == null ? "" : comment;
     }
 
-    private void addOtherAnswersLink() {
+    private void addOtherAnswersLink( ) {
         final String answerersLabel = getOtherAnswersLabel();
         AjaxLink<String> otherAnswersLink = new AjaxLink<String>(
                 "others",
@@ -154,7 +155,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
         };
         otherAnswersLink.setOutputMarkupId( true );
         makeVisible( otherAnswersLink, !answerersLabel.isEmpty() );
-        questionAndAnswerContainer.addOrReplace( otherAnswersLink );
+        questionContainer.addOrReplace( otherAnswersLink );
     }
 
     private String getOtherAnswersLabel() {
