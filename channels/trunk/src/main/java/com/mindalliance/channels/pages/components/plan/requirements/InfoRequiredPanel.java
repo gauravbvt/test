@@ -116,7 +116,8 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
         final List<String> choices = getQueryService().findAllEoiNames();
         TextField<String> newEoiField = new AutoCompleteTextField<String>(
                 "addEoi",
-                new PropertyModel<String>( this, "newEoiName"  ) ) {
+                new PropertyModel<String>( this, "newEoiName"  ),
+                getAutoCompleteSettings() ) {
             @Override
             protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();

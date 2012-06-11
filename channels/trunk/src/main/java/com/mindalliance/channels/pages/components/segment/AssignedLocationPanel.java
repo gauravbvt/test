@@ -126,7 +126,8 @@ public class AssignedLocationPanel extends AbstractCommandablePanel {
         final List<String> infoChoices = findInfoChoices();
         AutoCompleteTextField<String> infoField = new AutoCompleteTextField<String>(
                 "info",
-                new PropertyModel<String>( this, "subjectInfo" )
+                new PropertyModel<String>( this, "subjectInfo" ),
+                getAutoCompleteSettings()
         ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
@@ -160,7 +161,8 @@ public class AssignedLocationPanel extends AbstractCommandablePanel {
         final List<String> eoiChoices = findEoiChoices();
         AutoCompleteTextField<String> eoiField = new AutoCompleteTextField<String>(
                 "eoi",
-                new PropertyModel<String>( this, "subjectContent" )
+                new PropertyModel<String>( this, "subjectContent" ),
+                getAutoCompleteSettings()
         ) {
             @Override
             protected Iterator<String> getChoices( String s ) {

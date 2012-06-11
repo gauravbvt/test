@@ -198,7 +198,8 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
         final List<String> choices = getQueryService().findAllEntityNames( Event.class );
         TextField<String> eventField = new AutoCompleteTextField<String>(
                 "event",
-                new PropertyModel<String>( this, "eventName" ) ) {
+                new PropertyModel<String>( this, "eventName" ),
+                getAutoCompleteSettings() ) {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {

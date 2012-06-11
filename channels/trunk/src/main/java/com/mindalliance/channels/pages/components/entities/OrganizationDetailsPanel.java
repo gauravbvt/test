@@ -155,8 +155,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     private void addParentField() {
         Organization organization = getOrganization();
         // If organization is actual, parent must be actual
-        actualParentField = new AutoCompleteTextField<String>( "actualParent",
-                new PropertyModel<String>( this, "parentOrganization" ) ) {
+        actualParentField = new AutoCompleteTextField<String>(
+                "actualParent",
+                new PropertyModel<String>( this, "parentOrganization" ),
+                getAutoCompleteSettings() ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
                 final List<String> parentChoices = findCandidateParentsForActual();
@@ -194,8 +196,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         locationContainer.setVisible( getOrganization().isActual() );
         moDetailsDiv.add( locationContainer );
         final List<String> locationChoices = getQueryService().findAllEntityNames( Place.class );
-        locationField = new AutoCompleteTextField<String>( "location",
-                new PropertyModel<String>( this, "locationName" ) ) {
+        locationField = new AutoCompleteTextField<String>(
+                "location",
+                new PropertyModel<String>( this, "locationName" ),
+                getAutoCompleteSettings() ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();

@@ -149,7 +149,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         final List<String> choices = findWithinCandidates();
         withinField = new AutoCompleteTextField<String>(
                 "within",
-                new PropertyModel<String>( this, "withinName" ) ) {
+                new PropertyModel<String>( this, "withinName" ),
+                getAutoCompleteSettings() ) {
             @Override
             protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();
@@ -272,7 +273,8 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements NameRangeab
         final List<String> choices = getQueryService().findAllGeonames();
         geonameField = new AutoCompleteTextField<String>(
                 "geoname",
-                new PropertyModel<String>( this, "geoname" ) ) {
+                new PropertyModel<String>( this, "geoname" ),
+                getAutoCompleteSettings() ) {
             @Override
             protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();

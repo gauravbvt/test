@@ -214,8 +214,10 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     }
 
     private void addQualificationField() {
-        qualificationField = new AutoCompleteTextField<String>( "qualification",
-                new PropertyModel<String>( this, "qualificationName" ) ) {
+        qualificationField = new AutoCompleteTextField<String>(
+                "qualification",
+                new PropertyModel<String>( this, "qualificationName" ),
+                getAutoCompleteSettings() ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
                 final List<String> qualificationChoices = findCandidateQualifications();

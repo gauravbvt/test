@@ -116,7 +116,10 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
 
     private void addNameField() {
         final List<String> choices = getUniqueNameChoices( getEntity() );
-        nameField = new AutoCompleteTextField<String>( "name", new PropertyModel<String>( this, "name" ) ) {
+        nameField = new AutoCompleteTextField<String>(
+                "name",
+                new PropertyModel<String>( this, "name" ),
+                getAutoCompleteSettings() ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();

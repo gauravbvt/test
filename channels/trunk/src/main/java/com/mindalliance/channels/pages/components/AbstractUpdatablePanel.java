@@ -35,6 +35,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteSettings;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -568,6 +569,12 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
             ChannelsUser aUser = userDao.getUserNamed( userName );
             return aUser == null ? userName : aUser.getFullName();
         }
+    }
+
+    protected AutoCompleteSettings getAutoCompleteSettings() {
+        AutoCompleteSettings settings = new AutoCompleteSettings();
+        settings.setUseSmartPositioning( true );
+        return settings;
     }
 
 }

@@ -410,7 +410,8 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         final List<String> choices = getQueryService().findAllJobTitles();
         TextField<String> titleField = new AutoCompleteTextField<String>(
                 "title",
-                new PropertyModel<String>( jobWrapper, "title" ) ) {
+                new PropertyModel<String>( jobWrapper, "title" ),
+                getAutoCompleteSettings() ) {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {
@@ -838,7 +839,8 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             // text field
             TextField<String> entityField = new AutoCompleteTextField<String>(
                     "entity-field",
-                    new PropertyModel<String>( jobWrapper, property + "Name" ) ) {
+                    new PropertyModel<String>( jobWrapper, property + "Name" ),
+                    getAutoCompleteSettings() ) {
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
                     for ( String choice : choices ) {

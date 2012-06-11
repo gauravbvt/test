@@ -240,7 +240,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         item.add( nameLabel );
         TextField<String> newLanguageField = new AutoCompleteTextField<String>(
                 "newLanguage",
-                new PropertyModel<String>( this, "language" ) ) {
+                new PropertyModel<String>( this, "language" ),
+                getAutoCompleteSettings() ) {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {

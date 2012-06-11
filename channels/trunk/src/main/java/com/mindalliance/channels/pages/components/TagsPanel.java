@@ -51,7 +51,8 @@ public class TagsPanel extends AbstractCommandablePanel {
     private void init() {
         tagsField = new AutoCompleteTextField<String>(
                 "tags",
-                new PropertyModel<String>( this, "tagsString" ) ) {
+                new PropertyModel<String>( this, "tagsString" ),
+                getAutoCompleteSettings() ) {
             @Override
             protected Iterator<String> getChoices( String input ) {
                 return computeTagStringChoices( input );

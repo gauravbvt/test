@@ -76,7 +76,8 @@ public class PhaseListPanel extends AbstractCommandablePanel {
         // text field
         TextField<String> nameField = new AutoCompleteTextField<String>(
                 "name-input",
-                new PropertyModel<String>( wrapper, "name" ) ) {
+                new PropertyModel<String>( wrapper, "name" ),
+                getAutoCompleteSettings() ) {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {

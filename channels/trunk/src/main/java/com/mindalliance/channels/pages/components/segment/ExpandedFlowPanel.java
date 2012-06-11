@@ -524,7 +524,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addNameField() {
         nameField = new AutoCompleteTextField<String>(
                 "name",
-                new PropertyModel<String>( this, "name" ) ) {
+                new PropertyModel<String>( this, "name" ),
+                getAutoCompleteSettings() ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
                 return getFlowNameChoices( s );

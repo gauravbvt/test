@@ -116,7 +116,8 @@ public class TypesPanel extends AbstractCommandablePanel {
         // text field
         TextField<String> nameField = new AutoCompleteTextField<String>(
                 "newType",
-                new PropertyModel<String>( wrapper, "typeName" ) ) {
+                new PropertyModel<String>( wrapper, "typeName" ),
+                getAutoCompleteSettings() ) {
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {

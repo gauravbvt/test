@@ -1227,6 +1227,8 @@ div.wicket-aa ul li:hover {
     background: #c3d9ff;
 }
 
+div.wicket-aa ul li.selected { background-color: #e6e6e6; padding: 2px; margin:0; }
+
 div.import-dialog {
     background: #c3d9ff;
     border: 1px outset #c3dede;

@@ -208,7 +208,10 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
     private void addEventField() {
         final List<String> choices = getQueryService().findAllEntityNames( Event.class );
         TextField<String> eventField =
-                new AutoCompleteTextField<String>( "event", new PropertyModel<String>( this, "eventName" ) ) {
+                new AutoCompleteTextField<String>(
+                        "event",
+                        new PropertyModel<String>( this, "eventName" ),
+                        getAutoCompleteSettings() ) {
                     @Override
                     protected Iterator<String> getChoices( String s ) {
                         List<String> candidates = new ArrayList<String>();

@@ -154,7 +154,8 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
         } else {
             nameField = new AutoCompleteTextField<String>(
                     "name",
-                    new PropertyModel<String>( this, "entityName" ) ) {
+                    new PropertyModel<String>( this, "entityName" ),
+                    getAutoCompleteSettings() ) {
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
                     for ( String choice : choices ) {

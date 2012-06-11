@@ -53,6 +53,7 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
      * @return
      */
     List<Feedback> selectInitialFeedbacks(
+            Plan plan,
             Boolean urgentOnly,
             Boolean unresolvedOnly,
             Boolean notRepliedToOnly,

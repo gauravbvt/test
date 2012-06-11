@@ -197,7 +197,8 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
         );
         AutoCompleteTextField<String> secondChoiceInput = new AutoCompleteTextField<String>(
                 "secondChoice-input",
-                new PropertyModel<String>( this, "selectedOtherNodeName" ) ) {
+                new PropertyModel<String>( this, "selectedOtherNodeName" ),
+                getAutoCompleteSettings() ) {
             protected Iterator<String> getChoices( String nodeString ) {
                 List<String> candidates = new ArrayList<String>();
                 for ( String choice : choices ) {

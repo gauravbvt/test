@@ -1029,7 +1029,8 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             kind = actual ? ModelEntity.Kind.Actual : ModelEntity.Kind.Type;
             AutoCompleteTextField<String> nameField = new AutoCompleteTextField<String>(
                     "entityName",
-                    new PropertyModel<String>( this, "entityName" ) ) {
+                    new PropertyModel<String>( this, "entityName" ),
+                    getAutoCompleteSettings() ) {
                 protected Iterator<String> getChoices( String s ) {
                     List<String> candidates = new ArrayList<String>();
                     if ( choices != null ) {

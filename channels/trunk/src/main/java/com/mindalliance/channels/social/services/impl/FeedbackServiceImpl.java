@@ -102,6 +102,7 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     @Transactional( readOnly = true)
     @SuppressWarnings( "unchecked" )
     public List<Feedback> selectInitialFeedbacks(
+            Plan plan,
             Boolean urgentOnly,
             Boolean notResolvedOnly,
             Boolean notRepliedToOnly,
@@ -110,6 +111,7 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
             String username ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria(  getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
         if ( urgentOnly ) {
             criteria.add( Restrictions.eq( "urgent", true ) );
         }

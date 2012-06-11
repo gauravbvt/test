@@ -66,7 +66,10 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
     private void addTaskField() {
         final PropertyModel<List<String>> choices = new PropertyModel<List<String>>( this, "allTasks" );
         taskNameField =
-                new AutoCompleteTextField<String>( "taskName", new PropertyModel<String>( this, "taskName" ) ) {
+                new AutoCompleteTextField<String>(
+                        "taskName",
+                        new PropertyModel<String>( this, "taskName" ),
+                        getAutoCompleteSettings() ) {
                     @Override
                     protected Iterator<String> getChoices( String s ) {
                         List<String> candidates = new ArrayList<String>();
@@ -132,9 +135,10 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
 
     private void addEventField() {
         final PropertyModel<List<String>> choices = new PropertyModel<List<String>>( this, "allEventNames" );
-        eventField = new AutoCompleteTextField<String>( "event",
-                new PropertyModel<String>( this,
-                        "eventName" ) ) {
+        eventField = new AutoCompleteTextField<String>(
+                "event",
+                new PropertyModel<String>( this, "eventName" ),
+                getAutoCompleteSettings() ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();

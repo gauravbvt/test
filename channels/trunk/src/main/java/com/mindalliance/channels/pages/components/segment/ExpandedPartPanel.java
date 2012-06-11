@@ -543,7 +543,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private void addTaskField() {
         final PropertyModel<List<String>> choices = new PropertyModel<List<String>>( this, "allTasks" );
         taskField =
-                new AutoCompleteTextField<String>( TASK_PROPERTY, new PropertyModel<String>( this, TASK_PROPERTY ) ) {
+                new AutoCompleteTextField<String>(
+                        TASK_PROPERTY,
+                        new PropertyModel<String>( this, TASK_PROPERTY ),
+                        getAutoCompleteSettings() ) {
                     @Override
                     protected Iterator<String> getChoices( String s ) {
                         List<String> candidates = new ArrayList<String>();
@@ -565,9 +568,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     private void addEventInitiation() {
         final PropertyModel<List<String>> choices = new PropertyModel<List<String>>( this, "allEventNames" );
-        initiatedEventField = new AutoCompleteTextField<String>( "initiatedEvent",
-                new PropertyModel<String>( this,
-                        "initiatedEventName" ) ) {
+        initiatedEventField = new AutoCompleteTextField<String>(
+                "initiatedEvent",
+                new PropertyModel<String>( this, "initiatedEventName" ),
+                getAutoCompleteSettings() ) {
             @Override
             protected Iterator<String> getChoices( String s ) {
                 List<String> candidates = new ArrayList<String>();

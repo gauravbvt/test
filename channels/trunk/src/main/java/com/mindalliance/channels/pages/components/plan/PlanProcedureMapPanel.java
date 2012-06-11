@@ -195,7 +195,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         final List<String> choices = getFocusChoices();
         focusField = new AutoCompleteTextField<String>(
                 "focus",
-                new PropertyModel<String>( this, "focusName" ) ) {
+                new PropertyModel<String>( this, "focusName" ),
+                getAutoCompleteSettings() ) {
             @Override
             protected Iterator<String> getChoices( String input ) {
                 List<String> candidates = new ArrayList<String>();

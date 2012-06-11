@@ -125,8 +125,10 @@ public class PlanScopePanel extends AbstractCommandablePanel {
     private void addToScope() {
         WebMarkupContainer newInvolvedContainer = new WebMarkupContainer( "newInvolvedContainer" );
         add( newInvolvedContainer );
-        addInvolvedField = new AutoCompleteTextField<String>( "newInvolved",
-                                                              new PropertyModel<String>( this, "newInvolvedName" ) ) {
+        addInvolvedField = new AutoCompleteTextField<String>(
+                "newInvolved",
+                new PropertyModel<String>( this, "newInvolvedName" ),
+                getAutoCompleteSettings() ) {
             List<String> choices = getCandidateOrganizationNames();
 
             protected Iterator<String> getChoices( String s ) {
