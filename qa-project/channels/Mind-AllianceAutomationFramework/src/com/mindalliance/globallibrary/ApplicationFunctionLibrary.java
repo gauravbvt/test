@@ -82,7 +82,7 @@ public class ApplicationFunctionLibrary {
 					GlobalVariables.sBlank, GlobalVariables.sBlank);
 			// WebElement Synchronization
 			Thread.currentThread();
-			Thread.sleep(3000);
+			Thread.sleep(5000);
 			// Returns TRUE
 			return Boolean.TRUE;
 		} catch (Exception e) {
