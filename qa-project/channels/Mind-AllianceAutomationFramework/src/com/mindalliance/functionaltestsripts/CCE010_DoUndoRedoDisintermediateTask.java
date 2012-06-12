@@ -71,11 +71,11 @@ public class CCE010_DoUndoRedoDisintermediateTask
 					// Update the Information of the default task
 					GlobalVariables.iStepNo++ ;
 					GlobalVariables.sDescription = "Task updated";
-					// Click on legend for maximize the graph
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-					// WebElement Synchronization
-					Thread.currentThread();
-					Thread.sleep(5000);
+//					// Click on legend for maximize the graph
+//					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+//					// WebElement Synchronization
+//					Thread.currentThread();
+//					Thread.sleep(5000);
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
