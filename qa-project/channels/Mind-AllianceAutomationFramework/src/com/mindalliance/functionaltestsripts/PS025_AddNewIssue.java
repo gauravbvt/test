@@ -29,7 +29,7 @@ public class PS025_AddNewIssue
 						GlobalVariables.sBlank, GlobalVariables.sBlank);
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				
 				// Click on 'Add new issue' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
@@ -46,10 +46,6 @@ public class PS025_AddNewIssue
 				// Click on 'Add New Issue' option under 'Actions' pop up menu
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "New Issue added";
-				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewIssue"));
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
 				// Assertion 1.1: Verify that When clicked on 'Add new Issue' option, a issue should be added in the segment
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddNewIssuseSegmentMenu")));
 				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Menu")){

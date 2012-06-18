@@ -47,7 +47,7 @@ public class PS020_OpenSurvey
 							GlobalVariables.sBlank, GlobalVariables.sBlank);					
 				}
 				else{
-					GlobalVariables.sVerifyError="Verification Failed. Expected '"+GlobalVariables.viewElements.get("surveys")+"' Actual '"+GlobalVariables.oElement.getText()+"'";
+					GlobalVariables.sVerifyError="Verification Failed. Expected 'Surveys' Actual '"+GlobalVariables.oElement.getText()+"'";
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
