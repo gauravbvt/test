@@ -7,7 +7,7 @@
 <xPathActivateQuestionnaireButton>//div[@class='floating']/span/div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/a[2]</xPathActivateQuestionnaireButton>
 <xPathDeleteQuestionnaire>//div[15]/div/span/div/div[2]/div/div[2]/div[3]/a</xPathDeleteQuestionnaire>
 <xPathQuestionnaireTab>/html/body/form/div[15]/div/span/div/div[2]/div/div/ul/li[2]/a/span</xPathQuestionnaireTab>
-<xPathAddNewIssuseSegmentMenu>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[5]/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathAddNewIssuseSegmentMenu>
+<xPathAddNewIssuseSegmentMenu>/html/body/form/div[5]/div/span/div/div[2]/span/div/span/ol/li[3]/span/span/span/span/span</xPathAddNewIssuseSegmentMenu>
 <xPathEditRequirement>//div[4]/div/span/div/div[2]/div/div[2]/div/span/table/tbody/tr/td[8]/span/a/span</xPathEditRequirement>
 <xPathRequirementNetwork>//div[4]/div/span/div/div[2]/div/div/ul/li[2]/a/span</xPathRequirementNetwork>
 <xPathNewRequirement>//div[4]/div/span/div/div[2]/div/div[@class='tab-panel']/div[@class='req-defs']/a[@class='button']</xPathNewRequirement>
@@ -255,8 +255,8 @@
 <xPathAssertionCloseDissemination>//div[10]/div/div/div[3]/a/img</xPathAssertionCloseDissemination>
 <xPathAssertionCloseAboutPlanSegment>//div[5]/div/div/div[3]/a/img</xPathAssertionCloseAboutPlanSegment>
 <xPathAssertionDissemination>//div[10]/div/div/div/span</xPathAssertionDissemination>
-<xPathGoBack>//div[18]/img[@class='navigation']</xPathGoBack>
-<xPathGoForward>//div[18]/img[2]</xPathGoForward>
+<xPathGoBack>//div[17]/img[@class='navigation']</xPathGoBack>
+<xPathGoForward>//div[17]/img[2]</xPathGoForward>
 <xPathElementsOfInformation>//span/div/div[3]/div[3]/div[2]/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/table/tbody/tr[4]/th[@class='area']/a[@class='model-object-link']</xPathElementsOfInformation>
 <xPathIssueReport>/html/body/div/div/h1</xPathIssueReport>
 <xPathIssueReportHome>/html/body/div/div/a/img</xPathIssueReportHome>
