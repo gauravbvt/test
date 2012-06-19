@@ -47,10 +47,10 @@ public class TFP093_AddInfoReceiveSentCreateSurvey
 				Thread.sleep(3000);
 				
 				// Stretch Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
+//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(3000);
 				// Click 'Add Info Sent' Link. 
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "'Add Info Sent' Link Clicked";

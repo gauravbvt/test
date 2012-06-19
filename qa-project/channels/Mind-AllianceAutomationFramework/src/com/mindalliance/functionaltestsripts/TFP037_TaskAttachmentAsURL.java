@@ -47,10 +47,10 @@ public class TFP037_TaskAttachmentAsURL
 				Thread.sleep(3000);
 				
 				// Stretch Up Task Details
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
+//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(3000);
 				// Click on default task
 				GlobalVariables.iStepNo++;
 				GlobalVariables.sDescription="Task Added";
@@ -84,10 +84,10 @@ public class TFP037_TaskAttachmentAsURL
 				Thread.currentThread();
 				Thread.sleep(3000);
 				// Stretch Up Task Details
-//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
+				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+				// WebElement Synchronization
+				Thread.currentThread();
+				Thread.sleep(3000);
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
 				// WebElement Synchronization
 				Thread.currentThread();

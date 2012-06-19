@@ -24,7 +24,7 @@ public class CCE003_DoUndoRedoAddGoal
 					
 					// Click on 'Information Sharing Model' link
 					GlobalVariables.iStepNo++ ;
-					GlobalVariables.sDescription = "Navigated to Information Sharing Model";
+					GlobalVariables.sDescription = "Navigated to Information Sharing Plan";
 					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);

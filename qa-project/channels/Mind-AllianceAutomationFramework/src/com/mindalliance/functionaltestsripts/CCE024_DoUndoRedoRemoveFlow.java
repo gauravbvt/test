@@ -29,7 +29,7 @@ public class CCE024_DoUndoRedoRemoveFlow
 				// Click on 'Information Sharing Model' link
 				GlobalVariables.iStepNo++ ;
 				GlobalVariables.sDescription = "Navigated to Information Sharing Model";
-				GlobalVariables.oDriver.findElement(By.linkText("Information sharing model")).click();
+				GlobalVariables.oDriver.findElement(By.linkText("Information sharing plan")).click();
 				// Write Results
 				LogFunctions.writeLogs(GlobalVariables.sDescription);
 				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
