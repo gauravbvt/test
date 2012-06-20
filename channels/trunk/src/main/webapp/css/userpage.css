@@ -38,6 +38,7 @@ body {
     margin: 0;
     padding: 0;
     text-align: center;
+    background: url('../images/global-bg.png');
 }
 
 div#container {
@@ -47,14 +48,143 @@ div#container {
     padding: 0;
 }
 
-div#header {
+div.header {
     width: 800px;
-    height: 54px;
-    background: #c3d9ff;
+    height: 51px;
+    background: url('../images/global-header-bg.png') #c3d9ff;
     border-left: 1px solid #999999;
-	border-right:1px solid #999999;
-	font-size:12px;
-	float:left;
+    border-right:1px solid #999999;
+    border-bottom:px solid #999999;
+    font-size:12px;
+    float:left;
+}
+
+div.pathway-cont {
+    width: 800px;
+    height: 27px;
+    background: url('../images/headerbar-bg.png') repeat-x;
+    border-left: 1px solid #999999;
+    border-right:1px solid #999999;
+    border-top: 1px solid #999999;
+    font-size:11px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    float:left;
+}
+
+div.pathway {
+	color: #727272;
+	float: left;
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	padding: 0 10px;
+	width: 753px;
+	height: 27px;
+}
+
+div.pathway a {
+	color: #727272;
+	font-size: 11px;
+	font-weight: bold;
+	border: none;
+	text-decoration: none;
+	height: 27px;
+	line-height: 27px;
+}
+
+div.pathway a:hover,
+div.pathway ul li:hover a {
+	color: #333333;
+}
+
+div.pathway ul li:hover ul li a {
+	color: #727272;
+}
+
+div.pathway ul li:hover ul li a:hover {
+	color: #333333;
+}
+
+div.pathway ul {
+	display: inline;
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+}
+
+div.pathway ul li {
+	background: url("../images/pathway-arrow.png") no-repeat scroll right center transparent;
+	float: left;
+	list-style: none outside none;
+	margin: 0 5px 0 0;
+	padding: 0 12px 0 0;
+}
+
+div.pathway ul li.plan:hover {
+	background: url("../images/pathway-arrow-down.png") no-repeat scroll right center transparent;
+}
+
+div.pathway ul li.last {
+	margin: 0;
+	padding: 0;
+	background: none;
+}
+
+div.pathway ul li ul {
+	background: none repeat scroll 0 0 #E8E8E8;
+	border-bottom: 1px solid #999999;
+	border-left: 1px solid #999999;
+	border-right: 1px solid #999999;
+	display: none;
+	list-style: none outside none;
+	margin: 0 0 0 -9px;
+	padding: 0;
+	position: absolute;
+	text-align: left;
+	z-index: 10000;
+}
+
+div.pathway ul li:hover ul {
+	display: block;
+}
+
+div.pathway ul li ul li {
+	background: none repeat scroll 0 0 transparent;
+	display: block;
+	float: none;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+
+div.pathway ul li ul li a {
+	color: #727272;
+	display: block;
+	font-size: 11px;
+	font-weight: bold;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 8px;
+	text-decoration: none;
+	border-top: 1px solid #cccccc;
+}
+
+/*
+div.pathway ul li ul li:last-child a {
+	border-bottom: none;
+}
+*/
+
+div.icon-menu {
+	float: right;
+}
+
+div.icon-menu div.group {
+	float: right;
+	height: 22px;
+	padding: 5px 0 0 5px;
+	width: 22px;
 }
 
 div#buttonspinner-cont {
@@ -69,10 +199,22 @@ div#spinner-cont {
 	width:400px;
 }
 
-div#buttons-cont {
+div.menu {
 	float:right;
-	width:400px;
-	height:25px;
+	width:500px;
+	padding:0;
+}
+
+div.menu div.group {
+    border-left: 1px solid #B1B7C1;
+    float: right;
+    margin: 10px 0 0;
+    padding: 5px 10px;
+    width: 186px;
+}
+
+div.menu div.group.first {
+    width: 186px;
 }
 
 div#contents {
@@ -86,13 +228,13 @@ div#contents {
 
 /* ----- Header ----- */
 
-div#header img {
-    float: left;
+div.header img {
+	float: left;
 	border: 0;
-	padding: 4px 0 0 5px;
+	padding: 0;
 }
 
-div#header h1 {
+div.header h1 {
     color: #333333;
     display: block;
     float: left;
@@ -101,9 +243,9 @@ div#header h1 {
     padding: 16px 0 0 7px;
 }
 
-div#header a.logout,
-div#header a.help,
-div#header a.feedback-button {
+div.header a.logout,
+div.header a.help,
+div.header a.feedback-button {
     background: url('../images/signout-bg.png') repeat-x;
     border: 1px solid #a7a9ac;
     color: #727272;
@@ -116,26 +258,26 @@ div#header a.feedback-button {
 	float:right;
 }
 
-div#header a.help,
-div#header a.feedback-button {
+div.header a.help,
+div.header a.feedback-button {
 	margin:0 8px 0 0;
 }
 
-div#header a.logout:hover,
-div#header a.help:hover,
-div#header a.feedback-button:hover {
+div.header a.logout:hover,
+div.header a.help:hover,
+div.header a.feedback-button:hover {
     color: #000000;
 	border:1px solid #000000;
 }
 
 /* ----- Header - Feedback ----- */
 
-div#header span.feedback-container {
+div.header span.feedback-container {
 	float:right;
 	padding:0;
 }
 
-div#header div.feedback {
+div.header div.feedback {
 	float:right;
 }
 
@@ -181,23 +323,19 @@ div.cancelSend input:hover {
 
 /* ----- Header - Spinner ----- */
 
-div#header span.spinner {
+div.header span.spinner {
     background: none repeat scroll 0 0 #FFF1A8;
-    border-bottom: 1px solid #999999;
-    border-left: 1px solid #999999;
-    border-right: 1px solid #999999;
     float: left;
-    font-weight: bold;
-    margin: 0 173px 0 0;
-    padding: 2px 4px;
+    padding: 3px 3px 0;
+    border-radius: 10px 10px 10px 10px;
 }
 
-div#header span.spinner img {
+div.header span.spinner img {
 	float:left;
 	padding:0;
 }
 
-div#header span.spinner span {
+div.header span.spinner span {
     float: left;
     font-size: 11px;
     padding: 1px 0 0 3px;
@@ -210,8 +348,8 @@ div.title-switchplan {
     margin: 5px 0 15px;
     padding: 0 0 5px;
     width: 766px;
+    display: none;
 }
-
 
 h1.title {
     display: block;
@@ -241,13 +379,15 @@ div.switch-plan select option {
 
 div.aboutplan-quickicons {
 	float:left;
-	width:445px;
+	width:465px;
 }
 
 div.about-plan {
-	float:left;
-	width:445px;
-	padding:0 0 14px 0;
+    border-bottom: 1px solid #CCCCCC;
+    float: left;
+    margin: 0 53px 0 35px;
+    padding: 14px 0 26px;
+    width: 377px;
 }
 
 img.plan-image {
@@ -256,24 +396,25 @@ img.plan-image {
 	border:1px solid #999999;
 	background:#e8e8e8;
 	margin:0 5px 0 15px;
+	display: none;
 }
 
 span.plan-name {
-	display:block;
-	font-size:16px;
-	font-weight:bold;
-	float:left;
-	padding:8px 0 0 10px;
-	width:355px;
-	text-transform:capitalize;
+    display: block;
+    float: left;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0;
+    text-transform: capitalize;
+    width: 377px;
 }
 
 span.plan-client {
 	display:block;
 	float:left;
 	font-size:14px;
-	padding:3px 0 0 10px;
-	width:355px;
+	padding:3px 0 0 0;
+	width: 377px;
 }
 
 div.plan-references {
@@ -311,10 +452,9 @@ div.plan-references ul li {
 }
 
 div.quick-icons {
-    border-top: 1px solid #999999;
     float: left;
-    padding: 15px 0 0 15px;
-    width: 429px;
+    padding: 31px 0 0 35px;
+    width: 430px;
 }
 
 div.goto {
@@ -326,11 +466,11 @@ div.goto a {
     border: 1px solid #CCCCCC;
     color: #333333;
     float: left;
-    height: 95px;
-    margin: 0 18px 15px 0;
-    padding: 15px 10px 10px 10px;
+    height: 79px;
+    margin: 0 34px 31px 0;
+    padding: 15px 7px 10px;
     text-align: center;
-    width: 103px;
+    width: 87px;
 }
 
 div.goto a:hover {
@@ -341,17 +481,19 @@ div.goto a:hover {
 }
 
 div.goto img.icon {
-	padding:0 0 10px 0;
+	padding:0 0 5px 0;
 	border:0;
 }
 
 div.goto span {
     color: #333333;
+    display: block;
     float: left;
-    font-size: 12px;
-    font-weight: normal;
+    font-size: 10px;
+    font-weight: bold;
     text-align: center;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    width: 87px;
 }
 
 div.goto a:hover span {
@@ -362,8 +504,8 @@ div.goto a:hover span {
 div.right-accordion {
 	float:right;
 	width:300px;
-	height:450px;
-	border-left:1px solid #999999;
+	height:522px;
+	border-left:1px solid #cccccc;
 	font-size:11px;
 }
 
@@ -408,17 +550,17 @@ div.title-desc {
 }
 
 #social div.tab-row a {
-    display: block;
-    background: #e7f0ff;
-	height:20px;
-    padding: 4px 10px 0 10px;
-    text-decoration: none;
-    font-weight: bold;
+    background: none repeat scroll 0 0 #E7F0FF;
+    border-bottom: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    border-top: 1px solid #CCCCCC;
     color: #666666;
+    display: block;
+    font-weight: bold;
+    height: 20px;
+    padding: 4px 10px 0;
+    text-decoration: none;
     white-space: nowrap;
-	border-top:1px solid #999999;
-	border-right:1px solid #999999;
-	border-bottom:1px solid #999999;
 }
 
 #social div.tab-row a:hover {
@@ -430,28 +572,28 @@ div.title-desc {
 }
 
 #social div.tab-row li.selected a {
-    display: block;
-    background: #f6f6f6;
-	height: 20px;
-    padding: 4px 10px 0 10px;
-    text-decoration: none;
-    font-weight: bold;
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-bottom: 1px solid #E8E8E8;
     color: #000000;
+    display: block;
+    font-weight: bold;
+    height: 20px;
+    padding: 4px 10px 0;
+    text-decoration: none;
     white-space: nowrap;
-	border-bottom:1px solid #f6f6f6;
 }
 
 
 /* ----- Social - Global ----- */
 
 #social div.tab-panel {
-	background:#F6F6F6;
-	float:right;
-	width:100%;
-	border-right:1px solid #999999;
-	border-bottom:1px solid #999999;
-	height:424px;
-	overflow:auto;
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-bottom: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    float: right;
+    height: 495px;
+    overflow: auto;
+    width: 100%;
 }
 
 #social div.social-controls {
@@ -776,15 +918,21 @@ div.title-desc {
 	margin:10px;
 }
 
+#social div.tabcontent-group {
+    background: #f6f6f6;
+    border: 1px solid #CCCCCC;
+    margin: 0 0 10px;
+    padding: 0 0 1px 0;
+}
+
 #social div.userInfo h3 {
-	background: #E8E8E8;
-	border-bottom: 1px solid #CCCCCC;
-	border-top: 1px solid #CCCCCC;
-	color: #666666;
-	font-size: 11px;
-	margin:10px 0;
-	padding: 5px 7px;
-	text-transform: uppercase;
+    background: url("../images/headerbar-bg.png") repeat-x scroll 0 0 transparent;
+    border-bottom: 1px solid #CCCCCC;
+    color: #333333;
+    font-size: 11px;
+    margin: 0 0 5px;
+    padding: 5px 7px;
+    text-transform: uppercase;
 }
 
 #social div.userInfo h4 {
@@ -804,6 +952,11 @@ div.title-desc {
 	padding:2px 0 5px 5px;
 }
 
+#social div.userInfo table tr td span {
+	margin: 5px 0;
+	display: block;
+}
+
 #social div.userInfo table input {
 	font-size:11px;
 }
@@ -817,11 +970,36 @@ div.title-desc {
 }
 
 #social div.userInfo ol {
-    padding: 0 0 0 29px;
+	margin:15px 0 5px 30px;
+	padding: 0;
 }
 
 #social div.userInfo ol li {
-    padding: 0 0 10px;
+	font-weight: bold;
+	margin: 0;
+	padding: 0 0 10px;
+}
+
+#social div.userInfo ol li input[type="checkbox"] {
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+}
+
+#social div.userInfo select,
+#social div.userInfo input[type="text"],
+#social div.userInfo input[type="password"] {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #999999;
+    font-size: 11px;
+    margin: 0;
+    padding: 3px;
+    width: 90%;
+    margin: 2px 0;
+}
+
+#social div.userInfo select {
+	width: 93%;
 }
 
 #social div.userInfo ol li input.address {
@@ -834,19 +1012,20 @@ div.title-desc {
 }
 
 #social div.userInfo div.buttons {
-	padding:5px 2px;
+    padding: 5px 6px 10px 5px;
+    text-align: right;
 }
 
 #social div.userInfo div.buttons input {
     background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
-    border: 1px solid #999999;
+    border: 1px solid #A7A9AC;
     color: #727272;
+    font-family: Arial,Helvetica,sans-serif;
     font-size: 10px;
     font-weight: bold;
-    letter-spacing: 1px;
-    margin:0 3px 0 0;
-    outline: none;
-    padding: 2px;
+    margin: 0 3px 0 0;
+    outline: medium none;
+    padding: 1px 4px;
     text-transform: capitalize;
 }
 
@@ -854,6 +1033,12 @@ div.title-desc {
     color: #000000;
 	border:1px solid #000000;
 }
+
+#social div.userInfo table {
+	width: 100%;
+}
+
+
 
 
 /* ----- Dropdown Menu - Default ----- */

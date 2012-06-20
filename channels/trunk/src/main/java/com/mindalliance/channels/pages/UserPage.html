@@ -4,7 +4,7 @@
 <head>
     <title wicket:id="sg-title">Title</title>
     <script type="text/javascript" src="jquery-1.7.1.js"></script>
-	<link rel="stylesheet" href="css/userpage.css" type="text/css">
+    <link rel="stylesheet" href="css/userpage.css" type="text/css">
     <script type="text/javascript">
         function channels_keypress( kc, t, target ) {
             if ( kc == 13 ) {
@@ -46,121 +46,141 @@
 <body>
 
 <form wicket:id="big-form" class="stretch" action="#">
-	<div id="container">
-	    <div id="header">
-			<a href="home">
-				<img class="logo" src="images/logo_home.png" width="48" height="48" alt="Channels Logo" />
-			</a>
-    	  	<h1>Channels &ndash; Home</h1>
-			<div id="buttonspinner-cont">
-				<div id="spinner-cont">
-			        <span wicket:id="spinner" id="spinner" class="spinner">
-						<img src="images/ajax-loader-yellow.gif">
-						<span>Loading</span>
+    <div id="container">
+        <div class="header">
+            <a href="home">
+                <img class="logo" src="images/global-logo.png" width="140" height="51" alt="Channels" />
+            </a>
+            <div class="menu">
+                <div class="group first">
+                    <a class="logout" href="logout">Sign out</a>
+                    <a class="help" wicket:id="help-link" href="#">Help</a>
+                    <span wicket:id="feedback" class="feedback-container">[feedback panel]</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="pathway-cont">
+            <div wicket:id="planPath" class="pathway">
+                <ul>
+                    <li>
+                        <a wicket:id="homeLink" href="home">
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="plan">
+                        <a href="#">
+                            <span wicket:id="selectedPlan">Rail Security</span>
+                        </a>
+                        <ul>
+                            <li wicket:id="otherPlans">
+                                <a href="#" wicket:id="otherPlanLink">
+                                    <span wicket:id="otherPlanName">ACME Emergency Communications Plan</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="plan-description last">
+                        <a href="#">
+                            <span wicket:id="planDescription">IED attack on a public transit system</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="icon-menu">
+                <div class="group">
+					<span wicket:id="spinner" id="spinner" class="spinner">
+						<img src="images/loading.gif">
 					</span>
-				</div>
-				<div id="buttons-cont">
-					<a class="logout" href="logout">Sign out</a>
-		            <a class="help" wicket:id="help-link" href="#">Help</a>
-			        <span wicket:id="feedback" class="feedback-container">[feedback panel]</span>
-				</div>
-			</div>
-	    </div>
-		
-		<div id="contents">
-			<div class="title-switchplan">
-				<h1 class="title">Welcome <span wicket:id="userName">user name</span>!</h1>
-				<div wicket:id="switch-plan" class="switch-plan">
-                    Select a plan:
-					<select wicket:id="plan-sel" name="plan">
-						<option>Some plan</option>
-					</select>
-				</div>
-			</div>
+                </div>
+            </div>
+        </div>
 
-			<div class="aboutplan-quickicons">
+        <div id="contents">
 
-				<div class="about-plan">
-					<img wicket:id="planImage" class="plan-image" src="#" width="48" height="48"/>
-					<span wicket:id="planName" class="plan-name">Plan name</span>
-					<span wicket:id="planClient" class="plan-client">Plan client</span>
-					<!--
-						<span wicket:id="metrics">[metrics panel]</span>
-					-->
-				</div>
+            <div class="aboutplan-quickicons">
 
-				<div wicket:id="referencesContainer" class="plan-references">
-					<h2>Plan documents</h2>
-					<ul>
-						<li wicket:id="references">
-							<a wicket:id="attachment" href="#">reference</a>
-						</li>
-			        </ul>
-			    </div>
+                <div class="about-plan">
+                    <!--<img wicket:id="planImage" class="plan-image" src="#" width="48" height="48"/>-->
+                    <span wicket:id="planName" class="plan-name">Plan name</span>
+                    <span wicket:id="planClient" class="plan-client">Plan client</span>
+                    <!--
+                             <span wicket:id="metrics">[metrics panel]</span>
+                         -->
+                </div>
 
-				<div class="quick-icons">
+                <div wicket:id="referencesContainer" class="plan-references">
+                    <h2>Plan documents</h2>
+                    <ul>
+                        <li wicket:id="references">
+                            <a wicket:id="attachment" href="#">reference</a>
+                        </li>
+                    </ul>
+                </div>
 
-			    	<div wicket:id="model" class="goto model">
-						<a wicket:id="gotoModel" href="#" title="View the information sharing plan from which protocols are generated. You can modify the plan if you are a planner. Requires a standards-compliant browser such as Internet Explorer 8+ and Firefox 3+">
-							<img class="icon" src="images/modeling.png" width="48" height="48" alt="Please fill up" />
-					    	<span>Information sharing plan</span>
-						</a>
-	    		    </div>
+                <div class="quick-icons">
 
-	                <div wicket:id="issues" class="goto">
-						<a wicket:id="gotoIssues" href="#" title="View a summary of all issues automatically found by Channels or reported by planners">
-							<img class="icon" src="images/issues.png" width="48" height="48" alt="Please fill up" />
-	                    	<span>Issues summary report</span>
-						</a>
-	                </div>
+                    <div wicket:id="model" class="goto model">
+                        <a wicket:id="gotoModel" href="#" title="View the information sharing plan from which protocols are generated. You can modify the plan if you are a planner. Requires a standards-compliant browser such as Internet Explorer 8+ and Firefox 3+">
+                            <img class="icon" src="images/qi.things_digital.png" width="32" height="32" alt="Please fill up" />
+                            <span>Info Sharing Plan</span>
+                        </a>
+                    </div>
 
-	    		    <div wicket:id="guidelines" class="goto">
-	    		        <a wicket:id="gotoGuidelines" href="#" title="View my assigned tasks and related communications">
-							<img class="icon" src="images/my_procedures.png" width="48" height="48" alt="Please fill up" />
-							<span wicket:id="guidelinesLabel"> My information sharing guidelines</span>
-						</a>
-	    		    </div>
+                    <div wicket:id="issues" class="goto">
+                        <a wicket:id="gotoIssues" href="#" title="View a summary of all issues automatically found by Channels or reported by planners">
+                            <img class="icon" src="images/qi.error.png" width="32" height="32" alt="Please fill up" />
+                            <span>Issues<br />report</span>
+                        </a>
+                    </div>
+
+                    <div wicket:id="guidelines" class="goto">
+                        <a wicket:id="gotoGuidelines" href="#" title="View my assigned tasks and related communications">
+                            <img class="icon" src="images/qi.report.png" width="32" height="32" alt="Please fill up" />
+                            <span wicket:id="guidelinesLabel"> Info sharing guidelines</span>
+                        </a>
+                    </div>
 
                     <div wicket:id="infoNeeds" class="goto">
-                         <a wicket:id="gotoInfoNeeds" href="#" title="View my information needs">
-                             <img class="icon" src="images/my_info_needs.png" width="48" height="48" alt="Information needs" />
-                             <span wicket:id="infoNeedsLabel"> My information needs</span>
-                         </a>
-                     </div>
+                        <a wicket:id="gotoInfoNeeds" href="#" title="View my information needs">
+                            <img class="icon" src="images/qi.server_components.png" width="32" height="32" alt="Information needs" />
+                            <span wicket:id="infoNeedsLabel"> Info needs</span>
+                        </a>
+                    </div>
 
                     <div wicket:id="rfis" class="goto">
                         <a wicket:id="gotoRFIs" href="#" title="View my surveys">
-                            <img class="icon" src="images/rfis.png" width="48" height="48" alt="RFIs" />
+                            <img class="icon" src="images/qi.document_todo.png" width="32" height="32" alt="RFIs" />
                             <span wicket:id="rfisLabel">Planning surveys</span>
                         </a>
                     </div>
 
                     <div wicket:id="allFeedback" class="goto">
                         <a wicket:id="gotoFeedback" href="#" title="View feedback">
-                            <img class="icon" src="images/my_feedback.png" width="48" height="48" alt="Feedback" />
+                            <img class="icon" src="images/qi.comments.png" width="32" height="32" alt="Feedback" />
                             <span wicket:id="feedbackLabel">Feedback</span>
                         </a>
                     </div>
 
 
                     <div wicket:id="admin" class="goto">
-						<a wicket:id="gotoAdmin" href="#" title="Configure Channels, add users, change access privileges, and create, configure, release, or delete plans">
-							<img class="icon" src="images/admin.png" width="48" height="48" alt="Please fill up" />
-				        	<span>Channels administration</span>
-						</a>
-		    	    </div>
+                        <a wicket:id="gotoAdmin" href="#" title="Configure Channels, add users, change access privileges, and create, configure, release, or delete plans">
+                            <img class="icon" src="images/qi.setting_tools.png" width="32" height="32" alt="Please fill up" />
+                            <span>Channels Settings</span>
+                        </a>
+                    </div>
 
-	    		</div>
-			
-			</div>
-		
-			<div class="right-accordion">
+                </div>
 
-	    		<span wicket:id="social">[social panel]</span>
-	
-			</div>
-		</div>
-	</div>
+            </div>
+
+            <div class="right-accordion">
+
+                <span wicket:id="social">[social panel]</span>
+
+            </div>
+        </div>
+    </div>
 </form>
 <div id="notifier" wicket:id="notifier">
     <div id="basic-template">

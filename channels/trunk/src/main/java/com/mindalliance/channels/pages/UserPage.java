@@ -25,10 +25,12 @@ import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -46,6 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailSender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -92,6 +95,8 @@ public class UserPage extends AbstractChannelsWebPage {
     private NotifierWebMarkupContainer notifier;
     private String message;
     private Label welcomeLabel;
+    private WebMarkupContainer planPath;
+    private static final int MAX_PLAN_DESCRIPTION_LENGTH = 25;
 
 
     public UserPage() {
@@ -109,15 +114,15 @@ public class UserPage extends AbstractChannelsWebPage {
         addForm();
         addSpinner();
         addNotifier();
-        addWelcome();
+        // addWelcome();
         addLoggedIn();
         addHelp();
         addFeedback();
-        addPlanSelector();
-        addPlanImage();
+        // addPlanSelector();
+        addPlanPath();
+        // addPlanImage();
         addPlanName();
         addPlanClient();
-        // addPlanMetrics();
         addReferences();
         addGotoLinks( getPlan(), getUser() );
         addSocial();
@@ -220,12 +225,12 @@ public class UserPage extends AbstractChannelsWebPage {
     }
 
 
-    private void addWelcome() {
-        welcomeLabel = new Label( "userName", getUser().getFullName() );
-        welcomeLabel.setOutputMarkupId( true );
-        form.addOrReplace( welcomeLabel );
-    }
-
+    /*   private void addWelcome() {
+            welcomeLabel = new Label( "userName", getUser().getFullName() );
+            welcomeLabel.setOutputMarkupId( true );
+            form.addOrReplace( welcomeLabel );
+        }
+    */
     private void addLoggedIn() {
         form.add( new Label( "user",
                 getUser().getUsername() ) );
@@ -235,6 +240,71 @@ public class UserPage extends AbstractChannelsWebPage {
         form.add( new UserFeedbackPanel( "feedback", Feedback.PARTICIPATING ) );
     }
 
+    private void addPlanPath() {
+        planPath = new WebMarkupContainer( "planPath" );
+        planPath.setOutputMarkupId( true );
+        form.addOrReplace( planPath );
+        addHomeInPath();
+        addSelectedPlanInPath();
+        addOtherPlansInPath();
+        addSelectedPlanDescription();
+    }
+
+    private void addHomeInPath() {
+        AjaxLink<String> homeLink = new AjaxLink<String>( "homeLink" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                redirectHere();
+            }
+        };
+        planPath.add( homeLink );
+    }
+
+    private void addSelectedPlanInPath() {
+        Label selectedPlanName = new Label(
+                "selectedPlan",
+                getPlan().toString() );
+        planPath.add( selectedPlanName );
+    }
+
+    private void addOtherPlansInPath() {
+        ListView<Plan> otherPlansListView = new ListView<Plan>(
+                "otherPlans",
+                getOtherPlans()
+        ) {
+            @Override
+            protected void populateItem( final ListItem<Plan> item ) {
+                AjaxLink<String> otherPlanLink = new AjaxLink<String>( "otherPlanLink" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        setPlan( item.getModelObject() );
+                        redirectHere();
+                    }
+                };
+                otherPlanLink.add( new Label( "otherPlanName", item.getModelObject().toString() ) );
+                item.add( otherPlanLink );
+            }
+        };
+        planPath.add(  otherPlansListView );
+    }
+
+    private void addSelectedPlanDescription() {
+        Label selectedPlanDescription = new Label(
+                "planDescription",
+                StringUtils.abbreviate( getPlan().getDescription(), MAX_PLAN_DESCRIPTION_LENGTH ) );
+        planPath.add( selectedPlanDescription );
+        selectedPlanDescription.add( new AttributeModifier( "title", getPlan().getDescription() ) );
+    }
+
+    private List<Plan> getOtherPlans() {
+        List<Plan> otherPlans = new ArrayList<Plan>( getPlans() );
+        otherPlans.remove( getPlan() );
+        return otherPlans;
+    }
+
+
+
+/*
     private void addPlanSelector() {
         WebMarkupContainer planSelectorDiv = new WebMarkupContainer( "switch-plan" );
         form.add( planSelectorDiv );
@@ -250,17 +320,20 @@ public class UserPage extends AbstractChannelsWebPage {
                 } ) );
         planSelectorDiv.setVisible( getPlans().size() > 1 );
     }
+*/
 
     public void setPlan( Plan plan ) {
         getCommander().userLeftPlan( getUser().getUsername() );
         super.setPlan( plan );
     }
 
+/*
     private void addPlanImage() {
         WebMarkupContainer image = new WebMarkupContainer( "planImage" );
         image.add( new AttributeModifier( "src", new Model<String>( getPlanImagePath() ) ) );
         form.add( image );
     }
+*/
 
     private void addPlanName() {
         form.add( new Label( "planName", getPlan().getName() ) );
@@ -376,12 +449,6 @@ public class UserPage extends AbstractChannelsWebPage {
                         .add( gotoModelLink )
                         .setVisible( planner || plan.isTemplate() )
                         .setOutputMarkupId( true ),
-
-                /*               // Goto mapped procedures
-                                new WebMarkupContainer( "procedures" )
-                                        .add( newTargetedLink( "gotoProcedures", "", ProcedureMapPage.class, null, plan ) ).
-                                                setVisible( planner || plan.isTemplate() ),
-                */
                 // Goto guidelines
                 new WebMarkupContainer( "guidelines" )
                         .add( gotoGuidelinesLink )
@@ -420,8 +487,8 @@ public class UserPage extends AbstractChannelsWebPage {
 
     private String getGuidelinesReportLabel( ChannelsUser user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
-                ? "IS guidelines for all participants"
-                : "My information sharing guidelines";
+                ? "Info Sharing Guidelines"
+                : "Info Sharing Guidelines";
     }
 
     private String getGotoGuidelinesDescription( ChannelsUser user, Plan plan ) {
@@ -432,8 +499,8 @@ public class UserPage extends AbstractChannelsWebPage {
 
     private String getInfoNeedsReportLabel( ChannelsUser user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
-                ? "Information needs of all participants"
-                : "My information needs";
+                ? "Info\nNeeds"
+                : "Info\nNeeds";
     }
 
     private String getRFIsLabel( ChannelsUser user, Plan plan ) {
@@ -563,7 +630,7 @@ public class UserPage extends AbstractChannelsWebPage {
         if ( change.isUpdated()
                 && change.isForInstanceOf( Plan.class ) ) {
             if ( change.isForProperty( "user" ) ) {
-                addWelcome();
+                // addWelcome();
                 target.add( welcomeLabel );
             } else if ( change.isForProperty( "participation" ) ) {
                 addGotoLinks( getPlan(), getUser() );
@@ -625,3 +692,4 @@ public class UserPage extends AbstractChannelsWebPage {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }
+
