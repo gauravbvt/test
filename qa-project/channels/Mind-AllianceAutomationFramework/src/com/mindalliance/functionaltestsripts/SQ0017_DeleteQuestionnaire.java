@@ -77,7 +77,7 @@ public class SQ0017_DeleteQuestionnaire {
 				Thread.sleep(2000);
 				// Assertion: Verify that Questionnaire is Activated
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.assertion.get("sXpathAssertionNewQuestionnaire")));
-				if(GlobalVariables.oElement.getText().equalsIgnoreCase("No records found")){
+				if(GlobalVariables.oElement.getText().equalsIgnoreCase("Unnamed")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

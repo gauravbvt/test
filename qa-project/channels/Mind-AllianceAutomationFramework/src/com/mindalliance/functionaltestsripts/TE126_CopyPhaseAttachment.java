@@ -133,8 +133,8 @@ public class TE126_CopyPhaseAttachment
 				    // WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
-					// Click on Cross of 'Attachment copied' option
-					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCrossOnAttachmentCopiedMessage"))).click();
+//					// Click on Cross of 'Attachment copied' option
+//					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathCrossOnAttachmentCopiedMessage"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);					

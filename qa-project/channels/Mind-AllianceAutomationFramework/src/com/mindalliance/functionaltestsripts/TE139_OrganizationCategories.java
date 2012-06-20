@@ -114,8 +114,8 @@ public class TE139_OrganizationCategories
 					Thread.currentThread();
 					Thread.sleep(2000);
 					// Clear details
-					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
-					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+//					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
+//					GlobalVariables.oDriver.findElement(By.linkText(sOrgName)).click();
 					// WebElement Synchronization
 					Thread.currentThread();
 					Thread.sleep(2000);
@@ -123,7 +123,7 @@ public class TE139_OrganizationCategories
 					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDeleteOrganizationCategories"))).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					Alert alert = GlobalVariables.oDriver.switchTo().alert();
 					// And acknowledge the alert (equivalent to clicking "OK")
 					alert.accept();

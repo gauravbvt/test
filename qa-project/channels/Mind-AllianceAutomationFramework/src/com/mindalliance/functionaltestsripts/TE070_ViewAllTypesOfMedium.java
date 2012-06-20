@@ -38,10 +38,10 @@ public class TE070_ViewAllTypesOfMedium
 				Thread.currentThread();
 				Thread.sleep(3000);				
 				//Stretch Up Forms
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-				// WebElement Synchronization
-				Thread.currentThread();
-				Thread.sleep(3000);
+//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
+//				// WebElement Synchronization
+//				Thread.currentThread();
+//				Thread.sleep(3000);
 				
 				// Click on 'add info send' Link
 				GlobalVariables.iStepNo++;
@@ -113,6 +113,7 @@ public class TE070_ViewAllTypesOfMedium
 				// WebElement Synchronization
 				Thread.currentThread();
 				Thread.sleep(5000);
+				
 				// Close New Medium Window
 				GlobalVariables.oDriver.findElement(By.className("close")).click();
 			    // WebElement Synchronization
