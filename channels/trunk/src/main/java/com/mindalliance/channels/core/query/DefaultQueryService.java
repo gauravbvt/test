@@ -3594,7 +3594,8 @@ public abstract class DefaultQueryService implements QueryService {
                 plan,
                 user.getUserInfo(),
                 this );
-        return !actor.isUnknown()
+        return actor != null
+                && !actor.isUnknown()
                 && actor.isOpenParticipation()
                 && !alreadyParticipatingAs( actor, currentParticipations )
                 && !isSingularAndTaken( actor, plan )

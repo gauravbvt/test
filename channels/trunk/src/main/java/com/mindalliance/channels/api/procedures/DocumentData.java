@@ -39,6 +39,6 @@ public class DocumentData {
 
     @XmlElement
     public String getUrl() {
-        return attachment.getUrl();
+        return StringEscapeUtils.escapeXml( attachment.getUrl() );
     }
 }
