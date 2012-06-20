@@ -2,6 +2,7 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -31,7 +32,7 @@ public class InformationData {
 
     @XmlElement
     public String getName() {
-        return sharing.getName();
+        return StringEscapeUtils.escapeXml( sharing.getName() );
     }
 
     @XmlElement( name = "eoi" )

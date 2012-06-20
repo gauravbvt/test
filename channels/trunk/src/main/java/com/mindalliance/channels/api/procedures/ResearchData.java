@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -72,7 +73,7 @@ public class ResearchData extends AbstractProcedureElementData {
         String instructions = getSharing().getDescription();
         return instructions == null
                 ? null
-                : instructions;
+                : StringEscapeUtils.escapeXml( instructions );
     }
 
     @XmlElement

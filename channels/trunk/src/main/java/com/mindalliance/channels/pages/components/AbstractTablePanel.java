@@ -1071,8 +1071,8 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             ModelEntity entity = null;
             if ( name != null && !name.isEmpty() ) {
                 entity = ( kind == ModelEntity.Kind.Actual )
-                        ? getQueryService().findOrCreate( entityClass, name )
-                        : getQueryService().findOrCreateType( entityClass, name );
+                        ? getQueryService().safeFindOrCreate( entityClass, name )
+                        : getQueryService().safeFindOrCreateType( entityClass, name );
             }
             try {
                 PropertyUtils.setProperty( bean, entityProperty, entity );

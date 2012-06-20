@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -28,12 +29,12 @@ public class UserData {
 
     @XmlElement
     public String getUsername() {
-        return user.getUsername();
+        return StringEscapeUtils.escapeXml( user.getUsername() );
     }
 
     @XmlElement
     public String getFullName() {
-        return user.getFullName();
+        return StringEscapeUtils.escapeXml( user.getFullName() );
     }
 
     @XmlElement

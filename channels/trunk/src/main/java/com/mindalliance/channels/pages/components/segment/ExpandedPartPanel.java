@@ -806,7 +806,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             newActor = null;
         else {
             if ( oldActor == null || !isSame( name, oldName ) )
-                newActor = getQueryService().findOrCreate( Actor.class, name );
+                newActor = getQueryService().safeFindOrCreate( Actor.class, name );
         }
         doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "actor", newActor ) );
         getCommander().cleanup( Actor.class, oldName );
@@ -825,7 +825,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             newPlace = null;
         else {
             if ( oldPlace == null || !isSame( name, oldName ) )
-                newPlace = getQueryService().findOrCreate( Place.class, name );
+                newPlace = getQueryService().safeFindOrCreate( Place.class, name );
         }
         doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "jurisdiction", newPlace ) );
         getCommander().cleanup( Place.class, oldName );
@@ -844,7 +844,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             newOrg = null;
         else {
             if ( oldOrg == null || !isSame( name, oldName ) )
-                newOrg = getQueryService().findOrCreate( Organization.class, name );
+                newOrg = getQueryService().safeFindOrCreate( Organization.class, name );
         }
         doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "organization", newOrg ) );
         getCommander().cleanup( Organization.class, oldName );
@@ -863,7 +863,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             newRole = null;
         else {
             if ( oldRole == null || !isSame( name, oldName ) )
-                newRole = getQueryService().findOrCreate( Role.class, name );
+                newRole = getQueryService().safeFindOrCreate( Role.class, name );
         }
         doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(), "role", newRole ) );
         getCommander().cleanup( Role.class, oldName );
@@ -1044,7 +1044,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             newEvent = null;
         else {
             if ( oldEvent == null || !isSame( name, oldName ) )
-                newEvent = getQueryService().findOrCreateType( Event.class, name );
+                newEvent = getQueryService().safeFindOrCreateType( Event.class, name );
         }
         doCommand( new UpdateSegmentObject( getUsername(), getPart(), "initiatedEvent", newEvent ) );
         getCommander().cleanup( Event.class, oldName );

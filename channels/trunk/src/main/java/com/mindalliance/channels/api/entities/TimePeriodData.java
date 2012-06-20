@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.core.model.TimePeriod;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -35,7 +36,7 @@ public class TimePeriodData {
 
     @XmlElement
     public String getValue() {
-        return timePeriod.toString();
+        return StringEscapeUtils.escapeXml( timePeriod.toString() );
     }
 
     @XmlElement

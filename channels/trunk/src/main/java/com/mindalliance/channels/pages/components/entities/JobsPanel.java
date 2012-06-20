@@ -640,7 +640,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         }
 
         private String getNormalizedActorName() {
-            return getQueryService().findOrCreate( Actor.class, getActorName() ).getNormalizedName();
+            return getQueryService().safeFindOrCreate( Actor.class, getActorName() ).getNormalizedName();
         }
 
         public String getActorName() {
@@ -651,7 +651,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             String oldName = getActorName();
             if ( name != null && !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setActor( getQueryService().findOrCreate( Actor.class, name ) );
+                    job.setActor( getQueryService().safeFindOrCreate( Actor.class, name ) );
                 }
                 getCommander().cleanup( Actor.class, oldName );
             }
@@ -666,7 +666,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             String oldName = getRoleName();
             if ( name != null && !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
-                    job.setRole( getQueryService().findOrCreateType( Role.class, name ) );
+                    job.setRole( getQueryService().safeFindOrCreateType( Role.class, name ) );
                 }
                 getCommander().cleanup( Role.class, oldName );
             }
@@ -681,7 +681,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             if ( !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
                     if ( name != null )
-                        job.setJurisdiction( getQueryService().findOrCreate( Place.class, name ) );
+                        job.setJurisdiction( getQueryService().safeFindOrCreate( Place.class, name ) );
                     else
                         job.setJurisdiction( null );
                 }
@@ -698,7 +698,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             if ( !isSame( name, oldName ) ) {
                 if ( markedForCreation ) {
                     if ( name != null )
-                        job.setSupervisor( getQueryService().findOrCreate( Actor.class, name ) );
+                        job.setSupervisor( getQueryService().safeFindOrCreate( Actor.class, name ) );
                     else
                         job.setSupervisor( null );
                 }
@@ -735,7 +735,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
          */
         public Actor getActor() {
             if ( !getActorName().isEmpty() )
-                return getQueryService().findOrCreate( Actor.class, getActorName() );
+                return getQueryService().safeFindOrCreate( Actor.class, getActorName() );
             else
                 return null;
         }
@@ -748,7 +748,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
          */
         public Role getRole() {
             if ( !getRoleName().isEmpty() )
-                return getQueryService().findOrCreate( Role.class, getRoleName() );
+                return getQueryService().safeFindOrCreate( Role.class, getRoleName() );
             else
                 return null;
         }
@@ -761,7 +761,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
          */
         public Place getJurisdiction() {
             if ( !getJurisdictionName().isEmpty() )
-                return getQueryService().findOrCreate( Place.class, getJurisdictionName() );
+                return getQueryService().safeFindOrCreate( Place.class, getJurisdictionName() );
             else
                 return null;
         }
@@ -774,7 +774,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
          */
         public Actor getSupervisor() {
             if ( !getSupervisorName().isEmpty() )
-                return getQueryService().findOrCreate( Actor.class, getSupervisorName() );
+                return getQueryService().safeFindOrCreate( Actor.class, getSupervisorName() );
             else
                 return null;
         }

@@ -233,7 +233,7 @@ public class RequiredWhenPanel extends AbstractCommandablePanel {
             newEvent = null;
         else {
             if ( oldEvent == null || !isSame( name, oldName ) )
-                newEvent = getQueryService().findOrCreateType( Event.class, name );
+                newEvent = getQueryService().safeFindOrCreateType( Event.class, name );
         }
         doCommand( new UpdatePlanObject( getUsername(), getRequirement(), propertyPath( "event" ), newEvent ) );
         getCommander().cleanup( Event.class, oldName );

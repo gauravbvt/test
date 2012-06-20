@@ -193,7 +193,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
         public void setName( String name ) {
             Plan plan = getPlan();
             if ( name != null && !name.trim().isEmpty() ) {
-                Phase phase = getQueryService().findOrCreate( Phase.class, name.trim() );
+                Phase phase = getQueryService().safeFindOrCreate( Phase.class, name.trim() );
                 if ( !plan.getPhases().contains( phase ) ) {
                     doCommand( new UpdatePlanObject( getUser().getUsername(), plan,
                             "phases",

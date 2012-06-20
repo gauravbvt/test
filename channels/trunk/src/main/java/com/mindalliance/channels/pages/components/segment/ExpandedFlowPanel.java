@@ -1318,9 +1318,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             change = doCommand( new RedirectFlow( getUser().getUsername(), getFlow(), other, isSend() ) );
         }
         Flow newFlow = (Flow) change.getSubject( getQueryService() );
-        assert newFlow != null; // TODO Find out why this has happened...
+        if ( newFlow != null ) { // TODO Find out why this has happened...
         // requestLockOn( newFlow );
-        setFlow( newFlow );
+            setFlow( newFlow );
+        }
     }
 
     /**
@@ -1332,7 +1333,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         Node other = getOther();
         if ( other.isConnector() ) {
             return ( (Connector) other ).getInnerFlow().getLocalPart();
-        } else {
+         } else {
             return (Part) other;
         }
     }

@@ -307,7 +307,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
     public void setEventName( String name ) {
         if ( name != null && !name.isEmpty() ) {
             String oldName = getEventName();
-            Event event = getQueryService().findOrCreateType( Event.class, name );
+            Event event = getQueryService().safeFindOrCreateType( Event.class, name );
             newEventTiming.setEvent( event );
             addIfComplete();
             getCommander().cleanup( Event.class, oldName );

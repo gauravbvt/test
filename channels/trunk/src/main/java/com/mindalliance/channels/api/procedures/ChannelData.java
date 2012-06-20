@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.PlanService;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -56,6 +57,6 @@ public class ChannelData {
 
     @XmlElement
     public String getAddress() {
-        return address;
+        return StringEscapeUtils.escapeXml( address );
     }
 }

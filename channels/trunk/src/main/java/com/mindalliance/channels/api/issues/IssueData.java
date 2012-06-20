@@ -2,6 +2,7 @@ package com.mindalliance.channels.api.issues;
 
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -57,12 +58,12 @@ public class IssueData {
 
     @XmlElement
     public String getDescription() {
-        return issue.getDescription();
+        return StringEscapeUtils.escapeXml( issue.getDescription() );
     }
 
     @XmlElement
     public String getRemediation() {
-        return issue.getRemediation();
+        return StringEscapeUtils.escapeXml( issue.getRemediation() );
     }
 
     @XmlElement
@@ -72,6 +73,6 @@ public class IssueData {
 
     @XmlElement
     public String getReportedBy() {
-        return issue.getReportedBy();
+        return StringEscapeUtils.escapeXml( issue.getReportedBy() );
     }
 }

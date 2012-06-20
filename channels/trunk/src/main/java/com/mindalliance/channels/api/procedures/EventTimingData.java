@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.model.EventTiming;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -34,6 +35,6 @@ public class EventTimingData {
 
     @XmlElement
     public String getTiming() {
-        return eventTiming.getTiming().getLabel();
+        return StringEscapeUtils.escapeXml( eventTiming.getTiming().getLabel() );
     }
 }

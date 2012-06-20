@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Web Service data element for an element of a procedure of an actor according to a plan.
@@ -65,6 +66,6 @@ abstract public class AbstractProcedureElementData {
     }
 
     protected String getUsername() {
-        return user == null ? null : user.getUsername();
+        return user == null ? null : StringEscapeUtils.escapeXml( user.getUsername() );
     }
 }

@@ -2,7 +2,7 @@
 <book version="5.0" xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:db="http://docbook.org/ns/docbook">
   <info>
-    <title>Channels User Guide</title>
+    <title>Channels User Guide - Confidential</title>
     <copyright>
       <year>2012</year>
       <holder>Mind-Alliance Systems LLC</holder>
@@ -14,8 +14,10 @@
         Channels to systematically build and analyze information sharing plans. A lexicon of ISP
         terms and the complete list of detectable ISP issues can be found in the Appendix.</para>
     </abstract>
+    <legalnotice>
+      <para>Proprietary and Confidential</para>
+    </legalnotice>
   </info>
-
   <chapter>
     <title>Information Sharing Planning</title>
 

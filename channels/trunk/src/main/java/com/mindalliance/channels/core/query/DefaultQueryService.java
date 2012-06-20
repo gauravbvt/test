@@ -3480,16 +3480,16 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name ) {
-        return findOrCreate( clazz, name, null );
+        return safeFindOrCreate( clazz, name, null );
     }
 
     @Override
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
-        if ( name != null && !name.trim().isEmpty() ) {
-            String root = name.trim().replaceAll( "\\s+", " " );
+        String root = sanitizeEntityName( name );
+        if ( root != null && !root.isEmpty() ) {
             if ( !name.equals( root ) ) {
                 LOG.warn( "\"" + name + "\""
-                        + " of " + clazz.getSimpleName()
+                        + " of actual " + clazz.getSimpleName()
                         + "[" + id + "]"
                         + " stripped to \"" + root + "\"" );
             }
@@ -3509,11 +3509,30 @@ public abstract class DefaultQueryService implements QueryService {
         return null;
     }
 
+    private String sanitizeEntityName( String name ) {
+        return StringUtils.abbreviate( name.replaceAll( "[^\\w-]", " " )
+                .replaceAll( "\\n", " " )
+                .replaceAll( "\\s+", " " ).trim()
+                , ModelEntity.MAX_NAME_SIZE );
+    }
+
+    @Override
+    public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name ) {
+        return safeFindOrCreateType( clazz, name, null );
+    }
+
     @Override
     public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name, Long id ) {
+        String root = sanitizeEntityName( name );
         T entityType = null;
-        if ( name != null && !name.trim().isEmpty() ) {
-            String candidateName = name.trim();
+        if ( root != null && !root.isEmpty() ) {
+            if ( !name.equals( root ) ) {
+                LOG.warn( "\"" + name + "\""
+                        + " of type " + clazz.getSimpleName()
+                        + "[" + id + "]"
+                        + " stripped to \"" + root + "\"" );
+            }
+            String candidateName = root;
             boolean success = false;
             int i = 0;
             while ( !success ) {
@@ -3522,7 +3541,7 @@ public abstract class DefaultQueryService implements QueryService {
                     success = true;
                 } catch ( InvalidEntityKindException ignored ) {
                     LOG.warn( "Entity name conflict creating type {}", candidateName );
-                    candidateName = name.trim() + " type";
+                    candidateName = root.trim() + " type";
                     if ( i > 0 ) candidateName = candidateName + " (" + i + ")";
                     i++;
                 }

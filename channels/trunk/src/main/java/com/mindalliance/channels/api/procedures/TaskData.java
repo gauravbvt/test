@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.query.PlanService;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
@@ -54,7 +55,7 @@ public class TaskData extends AbstractProcedureElementData {
 
     @XmlElement
     public String getName() {
-        return getPart().getTask();
+        return StringEscapeUtils.escapeXml( getPart().getTask() );
     }
 
     @XmlElement
@@ -91,7 +92,7 @@ public class TaskData extends AbstractProcedureElementData {
         String instructions = getPart().getDescription();
         return instructions == null
                 ? null
-                : instructions;
+                : StringEscapeUtils.escapeXml( instructions );
     }
 
     @XmlElement( name = "teamMate" )
@@ -118,7 +119,7 @@ public class TaskData extends AbstractProcedureElementData {
 
     @XmlElement
     public String getFailureImpact() {
-        return getPlanService().computePartPriority( getPart() ).getNegativeLabel();
+        return StringEscapeUtils.escapeXml( getPlanService().computePartPriority( getPart() ).getNegativeLabel() );
     }
 
     @XmlElement

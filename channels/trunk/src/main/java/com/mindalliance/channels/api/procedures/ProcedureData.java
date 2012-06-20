@@ -138,7 +138,10 @@ public class ProcedureData {
     private List<Flow> triggeringNotificationsToSelf() {
         Set<Flow> triggerNotificationsToSelf = new HashSet<Flow>();
         for ( Commitment commitment : benefitingCommitments.toSelf() ) {
-            triggerNotificationsToSelf.add( commitment.getSharing() );
+            Flow flow = commitment.getSharing();
+            if ( flow.isNotification() && flow.isTriggeringToTarget() && commitment.isToSelf() ) {
+                triggerNotificationsToSelf.add( commitment.getSharing() );
+            }
         }
         return new ArrayList<Flow>( triggerNotificationsToSelf );
     }

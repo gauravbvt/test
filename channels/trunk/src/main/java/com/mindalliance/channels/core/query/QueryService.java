@@ -206,6 +206,18 @@ public interface QueryService {
      *
      * @param clazz the kind of model object
      * @param name  the name
+     * @param <T>   a subclass of model object
+     * @return the object or null if name is null or empty
+     */
+    <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name );
+
+    /**
+     * Find an actual entity type by given name. If none, create it for given domain,
+     * renaming it to avoid conflicts if needed.
+     * If id is not null, assign the entity the given id if created.
+     *
+     * @param clazz the kind of model object
+     * @param name  the name
      * @param id    an id
      * @param <T>   a subclass of model object
      * @return the object or null if name is null or empty

@@ -93,6 +93,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
     private void addResolve() {
         String resolvedValue = getFeedback().isResolved() ? "Unresolve" : "Resolve";
         resolvedContainer = new WebMarkupContainer( "resolvedContainer" );
+        resolvedContainer.setOutputMarkupId( true );
         AjaxLink<String> resolvedButton = new AjaxLink<String>( "resolvedButton") {
             @Override
             public void onClick( AjaxRequestTarget target ) {

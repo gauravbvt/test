@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.Attachment;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -33,7 +34,7 @@ public class DocumentData {
 
     @XmlElement
     public String getName() {
-        return attachment.getName();
+        return StringEscapeUtils.escapeXml( attachment.getName() );
     }
 
     @XmlElement

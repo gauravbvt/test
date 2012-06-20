@@ -4,6 +4,7 @@ import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -55,7 +56,7 @@ public class PlaceData extends ModelEntityData {
     @XmlElement
     public String getStreetAddress() {
         return getPlace().getStreetAddress() != null
-                ? getPlace().getStreetAddress()
+                ? StringEscapeUtils.escapeXml(  getPlace().getStreetAddress() )
                 : null;
     }
 

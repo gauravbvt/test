@@ -3,6 +3,7 @@ package com.mindalliance.channels.api;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Web Service data element for a model object.
@@ -32,7 +33,11 @@ abstract public class ModelObjectData {
     }
 
     public String getName() {
-        return modelObject.getName();
+        return StringEscapeUtils.escapeXml( modelObject.getName() );
+    }
+
+    public String getDescription() {
+        return StringEscapeUtils.escapeXml( modelObject.getDescription() );
     }
 
     public DocumentationData getDocumentation() {

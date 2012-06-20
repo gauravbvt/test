@@ -2,6 +2,7 @@ package com.mindalliance.channels.api.issues;
 
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -39,13 +40,14 @@ public class AboutData {
 
     @XmlElement
     public String getName() {
-        return modelObject instanceof Part
+        String name =  modelObject instanceof Part
                 ? ((Part)modelObject).getTask()
                 : modelObject.getName();
+        return StringEscapeUtils.escapeXml( name );
     }
 
     @XmlElement
     public String getDescription() {
-        return modelObject.getDescription();
+        return StringEscapeUtils.escapeXml( modelObject.getDescription() );
     }
 }

@@ -16,6 +16,9 @@ import java.util.Set;
  * Time: 1:05:30 PM
  */
 public abstract class ModelEntity extends ModelObject implements Hierarchical {
+
+    public static final int MAX_NAME_SIZE = 100;
+
     /**
      * Actual or Type.
      */

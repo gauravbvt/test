@@ -2,6 +2,7 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.ElementOfInformation;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -36,7 +37,7 @@ public class AgreementData {
 
     @XmlElement
     public String getInformation() {
-        return agreement.getInformation();
+        return StringEscapeUtils.escapeXml(agreement.getInformation() );
     }
 
     @XmlElement( name= "eoi" )
@@ -50,7 +51,7 @@ public class AgreementData {
 
     @XmlElement
     public String getUsage() {
-        return agreement.getUsage();
+        return StringEscapeUtils.escapeXml( agreement.getUsage() );
     }
 
     @XmlElement

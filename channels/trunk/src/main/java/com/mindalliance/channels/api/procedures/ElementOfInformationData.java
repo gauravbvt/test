@@ -3,6 +3,7 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.api.SecurityClassificationData;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.ElementOfInformation;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -32,7 +33,7 @@ public class ElementOfInformationData {
 
     @XmlElement
     public String getName() {
-        return eoi.getContent();
+        return StringEscapeUtils.escapeXml( eoi.getContent() );
     }
 
     @XmlElement( name = "classification" )
@@ -48,13 +49,13 @@ public class ElementOfInformationData {
     public String getSpecialHandling() {
         return eoi.getSpecialHandling().isEmpty()
                 ? null
-                : eoi.getSpecialHandling();
+                : StringEscapeUtils.escapeXml( eoi.getSpecialHandling() );
     }
 
     @XmlElement
     public String getDescription() {
         return eoi.getDescription().isEmpty()
                 ? null
-                : eoi.getDescription();
+                : StringEscapeUtils.escapeXml( eoi.getDescription() );
     }
 }

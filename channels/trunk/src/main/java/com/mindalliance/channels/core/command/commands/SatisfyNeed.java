@@ -20,8 +20,8 @@ import com.mindalliance.channels.core.model.Flow.Restriction;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 
 /**
  * Satisfy a need by connecting with a capability.
@@ -142,7 +142,7 @@ public class SatisfyNeed extends AbstractCommand {
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         try {
             MultiCommand multi = new MultiCommand( getUserName(), "unsatisfy need" );
-            MultiCommand subCommands = (MultiCommand) get( "subCommands" );
+            MultiCommand subCommands = (MultiCommand) get( "subCommands" );  // can be null
             subCommands.setMemorable( false );
             multi.addCommand( subCommands.getUndoCommand( commander ) );
             // Disconnect need satisfying flow

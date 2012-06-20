@@ -149,7 +149,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-    @Scheduled( fixedDelay = 86400000 )   // each day
+//    @Scheduled( fixedDelay = 86400000 )   // each day
     @Transactional
     public void reportOnNewFeedback() {
         LOG.debug( "Sending out reports of new feedback" );
@@ -235,7 +235,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
 
     @Override
-    @Scheduled( fixedDelay = 86400000 )   // each day
+//    @Scheduled( fixedDelay = 86400000 )   // each day
     @Transactional
     public void reportOnSurveys() {
         LOG.debug( "Sending out reports of new feedback" );

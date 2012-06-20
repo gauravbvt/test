@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.model.Goal;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -30,7 +31,7 @@ public class GoalData {
     public String getName() {
         return goal.getName().isEmpty()
                 ? null
-                : goal.getName();
+                : StringEscapeUtils.escapeXml( goal.getName() );
     }
 
     @XmlElement
@@ -42,17 +43,17 @@ public class GoalData {
 
     @XmlElement
     public String getDescription() {
-        return goal.getDescription();
+        return StringEscapeUtils.escapeXml( goal.getDescription() );
     }
 
     @XmlElement
     public String getCategory() {
-        return goal.getCategoryLabel();
+        return StringEscapeUtils.escapeXml( goal.getCategoryLabel() );
     }
 
     @XmlElement
     public String getLevel() {
-        return goal.getLevelLabel();
+        return StringEscapeUtils.escapeXml( goal.getLevelLabel() );
     }
 
     @XmlElement

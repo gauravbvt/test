@@ -258,7 +258,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         String name = item.getModelObject();
         TransmissionMedium medium = name.isEmpty()
                 ? TransmissionMedium.getUNKNOWN()
-                : getQueryService().findOrCreateType( TransmissionMedium.class, name );
+                : getQueryService().safeFindOrCreateType( TransmissionMedium.class, name );
         Component mediumLink = medium.isUnknown()
                 ? new Label( "notDeployedMediumLink", "" )
                 : new ModelObjectLink(

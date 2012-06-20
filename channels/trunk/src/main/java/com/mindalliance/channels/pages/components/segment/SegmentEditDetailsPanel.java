@@ -325,7 +325,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
             newEvent = ChannelsUser.plan().getDefaultEvent();
         else {
             if ( oldEvent == null || !isSame( name, oldName ) )
-                newEvent = getQueryService().findOrCreateType( Event.class, name );
+                newEvent = getQueryService().safeFindOrCreateType( Event.class, name );
         }
         doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(), "event", newEvent ) );
         getCommander().cleanup( Event.class, oldName );

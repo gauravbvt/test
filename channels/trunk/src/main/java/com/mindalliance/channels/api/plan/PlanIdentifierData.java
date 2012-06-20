@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.core.model.Plan;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -29,12 +30,12 @@ public class PlanIdentifierData {
 
     @XmlElement
     public String getUri() {
-        return plan.getUri();
+        return StringEscapeUtils.escapeXml( plan.getUri() );
     }
 
     @XmlElement
     public String getName() {
-        return plan.getName();
+        return StringEscapeUtils.escapeXml( plan.getName() );
     }
 
     @XmlElement

@@ -102,7 +102,7 @@ public class TypesPanel extends AbstractCommandablePanel {
                     getQueryService().findAllEntityNames( getEntity().getClass(), ModelEntity.Kind.Type ),
                     new Predicate() {
                         public boolean evaluate( Object obj ) {
-                            ModelEntity type = getQueryService().findOrCreateType(
+                            ModelEntity type = getQueryService().safeFindOrCreateType(
                                     getEntity().getClass(),
                                     ( (String) obj ) );
                             return !type.equals( getEntity() ) &&

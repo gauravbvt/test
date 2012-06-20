@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -79,7 +80,7 @@ public class RequestData extends AbstractFlowData {
     @Override
     @XmlElement
     public String getInstructions() {
-        return super.getInstructions();
+        return StringEscapeUtils.escapeXml( super.getInstructions() );
     }
 
     @Override

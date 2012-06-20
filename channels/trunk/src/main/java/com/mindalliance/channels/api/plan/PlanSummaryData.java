@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -52,7 +53,7 @@ public class PlanSummaryData {
     }
     @XmlElement
     public String getDescription() {
-        return getPlan().getDescription();
+        return StringEscapeUtils.escapeXml( getPlan().getDescription() );
     }
 
     @XmlElement( name = "planner" )

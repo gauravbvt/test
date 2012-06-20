@@ -108,6 +108,8 @@ public class PlanRename extends AbstractCommand {
      */
     public static class PlanDefinitionRename extends AbstractCommand {
 
+        public PlanDefinitionRename() {}
+
         public PlanDefinitionRename( String userName, Plan plan, String name ) {
             super( userName );
             set( "uri", plan.getUri() );

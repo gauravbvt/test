@@ -767,7 +767,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 
     @Override
     public Boolean isEffectivelyConceptual( QueryService queryService, Flow flow ) {
-        return !findConceptualCauses( queryService, flow ).isEmpty();
+        return !flow.isToSelf() && !findConceptualCauses( queryService, flow ).isEmpty();
     }
 
     @Override
