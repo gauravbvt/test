@@ -218,7 +218,6 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         addHomeInPath();
         addSelectedPlanInPath();
         addOtherPlansInPath();
-        addSelectedPlanDescription();
         addPagePathItem();
     }
 
@@ -258,14 +257,6 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
             }
         };
         planPath.add( otherPlansListView );
-    }
-
-    private void addSelectedPlanDescription() {
-        Label selectedPlanDescription = new Label(
-                "planDescription",
-                getAbbreviatedSelectedPlanDescription() );
-        planPath.add( selectedPlanDescription );
-        selectedPlanDescription.add( new AttributeModifier( "title", getPlan().getDescription() ) );
     }
 
     private void addPagePathItem() {

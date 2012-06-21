@@ -38,7 +38,26 @@ public class Feedback extends UserStatement {
     public enum Type {
         QUESTION,
         PROBLEM,
-        SUGGESTION
+        SUGGESTION;
+        private static final String QUESTION_LABEL = "question";
+        private static final String PROBLEM_LABEL = "problem";
+        private static final String SUGGESTION_LABEL = "suggestion";
+
+        public String getLabel() {
+            switch( this ) {
+                case QUESTION: return QUESTION_LABEL;
+                case PROBLEM: return PROBLEM_LABEL;
+                case SUGGESTION: return SUGGESTION_LABEL;
+                default: return "???";
+            }
+        }
+
+        public static Type fromLabel( String label ) {
+            if ( label.equalsIgnoreCase( QUESTION.getLabel() )) return QUESTION;
+            else if (label.equalsIgnoreCase( PROBLEM.getLabel() )) return PROBLEM;
+            else if (label.equalsIgnoreCase( SUGGESTION.getLabel() )) return SUGGESTION;
+            else return null;
+        }
     }
 
     private String fromEmail;

@@ -33,7 +33,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     /**
      * Default task name.
      */
-    static public String DEFAULT_TASK = "doing something";
+    static public String DEFAULT_TASK = "doing unnamed task";
 
     /**
      * The task label of this part (never null or empty).

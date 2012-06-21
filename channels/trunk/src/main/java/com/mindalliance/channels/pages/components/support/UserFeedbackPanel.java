@@ -146,7 +146,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
     public String getSelectedFeedbackOptionName() {
-        return selectedFeedbackOption.name();
+        return selectedFeedbackOption.getLabel();
     }
 
     private void addOtherOptions() {
@@ -172,14 +172,14 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
     private void setSelectedFeedbackOption( String otherOption ) {
-        selectedFeedbackOption = Feedback.Type.valueOf( otherOption );
+        selectedFeedbackOption = Feedback.Type.fromLabel( otherOption );
     }
 
     private List<String> getOtherFeedbackOptionNames() {
         List<String> others = new ArrayList<String>(  );
         for ( Feedback.Type value : Feedback.Type.values() ) {
             if ( value != selectedFeedbackOption ) {
-                others.add( value.name() );
+                others.add( value.getLabel() );
             }
         }
         return others;
