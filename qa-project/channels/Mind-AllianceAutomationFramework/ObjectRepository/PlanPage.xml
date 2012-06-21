@@ -51,14 +51,14 @@
 <xPathDeleteTaskAttachment>//span/div/div[3]/div[@class='part-header']/div[@class='section-content']/table[@class='part-description']/tbody/tr[14]/td[@class='grouped']/span/ul[@class='attach list']/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a</xPathDeleteTaskAttachment>
 <xPathCutAttachment>//span/div[@class='segment']/div[@class='aspect']/table[@class='segment-edit-details']/tbody/tr[6]/td[@class='grouped']/span/ul[@class='attach list']/li/ul[@class='menu']/li/a</xPathCutAttachment>
 <xPathDeleteEventAttachment>//div[@class='entity']/div[@class='aspect']/div/table[@class='entity-details']/tbody/tr[6]/td[@class='grouped']/span/ul[@class='attach list']/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a</xPathDeleteEventAttachment>
-<xPathDeletePlacesAttachment>//div[3]/div/span/div/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li/ul[@class='menu']/li[2]/a/img</xPathDeletePlacesAttachment>
+<xPathDeletePlacesAttachment>/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/span/ul/li/ul</xPathDeletePlacesAttachment>
 <xPathCopyEventAttachment>//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyEventAttachment>
 <xPathRemoveIssue>//div[@class='floating']/span/div[@class='segment']/div[@class='aspect']/span/div[@class='issues']/span/ol/li[3]/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathRemoveIssue>
 <xPathPresenceTabs>//span/span/div/div/div/ul/li/a/span</xPathPresenceTabs>
 <xPathShowAllUsers>//span/span/div/div/div[2]/div/div/a/span</xPathShowAllUsers>
 <xPathMessages>//span/span/div/div/div/ul/li[3]/a/span</xPathMessages>
 <xPathActivities>//span/span/div/div/div/ul/li[2]/a/span</xPathActivities>
-<xPathDoingSomeThingLink>//div[@id='part']/div[1]/div[2]/table/tbody/tr/td/span/span</xPathDoingSomeThingLink>
+<xPathDoingSomeThingLink>//span/div/div[3]/div/div[2]/table/tbody/tr/td/span/span</xPathDoingSomeThingLink>
 <xPathLegend>//span/div/div/span[7]/img</xPathLegend>
 <xPathAgentsURLRadioButton>//*[@value="URL"]</xPathAgentsURLRadioButton>
 <xPathStretchUpShrinkBack>//span/div/div[@class='zoom']/span[6]/img</xPathStretchUpShrinkBack>
@@ -138,9 +138,9 @@
 <xPathAgentViewAllTypes>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[5]/td/span/div/a</xPathAgentViewAllTypes>
 <xPathLocaleViewAllTypes>//div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/a</xPathLocaleViewAllTypes>
 <xPathURL>//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/li/span/span/input[2]</xPathURL>
-<xPathDeleteAgentURL>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li/ul[@class='menu']/li[2]/a/img</xPathDeleteAgentURL>
+<xPathDeleteAgentURL>/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/span/ul/li/ul/li[2]/a</xPathDeleteAgentURL>
 <xPathAgentMore>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[13]/td/a/span</xPathAgentMore>
-<xPathLocale>//div/div[2]/table/tbody/tr[6]/th/label/a[2]/span</xPathLocale>
+<xPathLocale>/html/body/form/div[4]/div/span/div/div[2]/table/tbody/tr[6]/th/label/span/a/span</xPathLocale>
 <xPathPlanHomeIcon>//img</xPathPlanHomeIcon>
 <xPathAgentDetails>//div[4]/div/div[2]/span/span/table/tbody/tr[5]/td[5]/span/a</xPathAgentDetails>
 <xPathAgentName>//div[@class='aspect']/span/span[2]/h3/span[2]/span/a[@class='entity-link']/span</xPathAgentName>
@@ -157,10 +157,10 @@
 <xPathTaskEventUnnamed>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[4]/span</xPathTaskEventUnnamed>
 <xPathTaskPhaseResponding>//span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/a[2]/span</xPathTaskPhaseResponding>
 <xPathDeletePhaseCategories>//div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a</xPathDeletePhaseCategories>
-<xPathDeletePhaseAttachment>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[6]/td[@class='grouped']/ul[@class='attach']/span/li[@class='doc_Reference']/ul[@class='menu']/li[2]/a/img</xPathDeletePhaseAttachment>
-<xPathCopyPhaseAttachment>//div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/ul/span/li/ul/li/a/img</xPathCopyPhaseAttachment>
+<xPathDeletePhaseAttachment>/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/span/ul/li/ul/li[2]/a</xPathDeletePhaseAttachment>
+<xPathCopyPhaseAttachment>/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[6]/td/span/ul/li/ul/li/a</xPathCopyPhaseAttachment>
 <xPathCopyTaskAttachment>//span/div/div[3]/div[@class='part-header']/div[@class='section-content']/table[@class='part-description']/tbody/tr[14]/td[@class='grouped']/span/ul[@class='attach list']/li[@class='doc_Reference']/ul[@class='menu']/li/a</xPathCopyTaskAttachment>
-<xPathDeleteOrganizationCategories>//div[@class='floating']/span/div[@class='entity']/div[@class='aspect']/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a/img</xPathDeleteOrganizationCategories>
+<xPathDeleteOrganizationCategories>/html/body/form/div[3]/div/span/div/div[2]/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span[2]/a</xPathDeleteOrganizationCategories>
 <xPathSendFeedBackOfIssueSummaryReport>/html/body/div/div/span/div/a/span</xPathSendFeedBackOfIssueSummaryReport>
 <xPathTaskAttachmentURL>//span/div/div[3]/div[@class='part-header']/div[@class='section-content']/table/tbody/tr[14]/td[@class='grouped']/ul[@class='attach']/li[@class='controls']/span/span/input[2]</xPathTaskAttachmentURL>
 <xPathTaskIssueMenu>//span/div/div[3]/div/div[2]/span/div/span/ol/li/span/span/span/span/span</xPathTaskIssueMenu>
@@ -226,7 +226,7 @@
 <xPathPhaseCreatedAssertion>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/table/tbody/tr[5]/td/span/div[@class='phases']/ul/li/span/span/a/span</xPathPhaseCreatedAssertion>
 <xPathMediumDeleteAttachmentAssertion>//div[3]/div/div2/div[2]/div/table/tbody/tr[6]/td</xPathMediumDeleteAttachmentAssertion>
 <xPathDeleteEventAttachmentAssertion>//div[3]/div/div[2]/div[2]/div/table/tbody/tr[6]/td</xPathDeleteEventAttachmentAssertion>
-<xPathCopyAttachmentAssertion>//div[@class='change-message']/span/span</xPathCopyAttachmentAssertion>
+<xPathCopyAttachmentAssertion>/html/body/div[2]/div[3]</xPathCopyAttachmentAssertion>
 <xPathAssertionPhaseDetails>//div[@class='floating']/span/div[@class='plan']/div[@class='aspect']/table/tbody/tr[5]/td/span/div[@class='phases']/ul/li/span/span/a/span</xPathAssertionPhaseDetails>
 <xPathAssertionDetails>//div[@class='floating']/span/div[@class='plan']/div/div[@class='float-header']/h1</xPathAssertionDetails>
 <xPathPhaseAssertionDetails>//div[3]/div/span/div/div/div/h1</xPathPhaseAssertionDetails>
