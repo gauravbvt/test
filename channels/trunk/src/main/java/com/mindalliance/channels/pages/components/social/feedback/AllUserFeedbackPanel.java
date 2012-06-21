@@ -93,6 +93,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
     private boolean showProfile;
     private boolean personalOnly;
     private boolean canResolve;
+    private Label resolvedLabel;
 
     public AllUserFeedbackPanel( String id, Model<Plan> planModel, boolean showProfile ) {
         this( id, planModel, showProfile, false, false );
@@ -257,19 +258,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
         selectedFeedbackContainer.setOutputMarkupId( true );
         Feedback feedback = getSelectedFeedback();
         makeVisible( selectedFeedbackContainer, feedback != null );
-        Label resolvedLabel = new Label(
-                "resolved",
-                feedback == null
-                        ? ""
-                        : feedback.isResolved()
-                        ? "Resolved"
-                        : "Not resolved" );
-        resolvedLabel.add( new AttributeModifier(
-                "class",
-                feedback == null || !feedback.isResolved()
-                        ? "not-resolved"
-                        : "resolved" ) );
-        selectedFeedbackContainer.add( resolvedLabel );
+        addResolutionStatus();
         selectedFeedbackContainer.add( feedback == null
                 ? new Label( "discussion", "" )
                 : new FeedbackDiscussionPanel(
@@ -280,6 +269,24 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
                 personalOnly
         ) );
         addOrReplace( selectedFeedbackContainer );
+    }
+
+    private void addResolutionStatus() {
+        Feedback feedback = getSelectedFeedback();
+        resolvedLabel = new Label(
+                "resolved",
+                feedback == null
+                        ? ""
+                        : feedback.isResolved()
+                        ? "Resolved"
+                        : "Not resolved" );
+        resolvedLabel.setOutputMarkupId( true );
+        resolvedLabel.add( new AttributeModifier(
+                "class",
+                feedback == null || !feedback.isResolved()
+                        ? "not-resolved"
+                        : "resolved" ) );
+        selectedFeedbackContainer.addOrReplace( resolvedLabel );
     }
 
     @Override
@@ -378,8 +385,14 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
         if ( change.isForInstanceOf( FeedbackWrapper.class ) && change.isExpanded() ) {
             addSelectedFeedback();
             target.add( selectedFeedbackContainer );
-        } else
+        } else if ( change.isForInstanceOf( Feedback.class ) && change.isUpdated() ) {
+            addFeedbackTable();
+            target.add( feedbacksTable );
+           addResolutionStatus();
+           target.add( resolvedLabel );
+        } else {
             super.updateWith( target, change, updated );
+        }
     }
 
     public class FeedbackWrapper implements Identifiable {

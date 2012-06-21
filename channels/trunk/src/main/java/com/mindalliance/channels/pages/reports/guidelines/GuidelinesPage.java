@@ -90,6 +90,16 @@ public class GuidelinesPage extends AbstractParticipantPage {
         super( parameters );
     }
 
+    @Override
+    protected String getContentsCssClass() {
+        return "guidelines-contents";
+    }
+
+    @Override
+    protected String getPageName() {
+        return "Info Sharing Guidelines";
+    }
+
     private static List<ElementOfInformation> sortedEOIs( List<ElementOfInformation> result ) {
 
         Collections.sort( result, new Comparator<ElementOfInformation>() {

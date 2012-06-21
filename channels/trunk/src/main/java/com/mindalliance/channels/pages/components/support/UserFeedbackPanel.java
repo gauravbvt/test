@@ -8,6 +8,7 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.AjaxIndicatorAwareContainer;
 import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.services.FeedbackService;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -15,12 +16,17 @@ import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailSender;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Feedback panel.
@@ -38,6 +44,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     private final Logger LOG = LoggerFactory.getLogger( UserFeedbackPanel.class );
     private final static String LABEL = "Send feedback";
 
+
     @SpringBean
     private MailSender mailSender;
 
@@ -46,18 +53,15 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
 
     private Identifiable about;
     private WebMarkupContainer feedbackContainer;
-    private boolean question = true;
-    private boolean problem;
-    private boolean suggestion;
+    private Feedback.Type selectedFeedbackOption = Feedback.Type.PROBLEM;
     private boolean asap;
     private String content = "";
     private TextArea<String> contentText;
     private AjaxLink sendButton;
-    private AjaxCheckBox suggestionCheckBox;
-    private AjaxCheckBox problemCheckBox;
-    private AjaxCheckBox questionCheckBox;
     private String feedbackLabel;
     private String topic;
+    private WebMarkupContainer feedbackOptionsContainer;
+    private AjaxLink<String> newFeedback;
 
 
     public UserFeedbackPanel( String id ) {
@@ -97,9 +101,11 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
     private void addNewFeedbackLink() {
-        AjaxLink<String> newFeedback = new AjaxLink<String>( "newFeedback" ) {
+        newFeedback = new AjaxLink<String>( "newFeedback" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
+                newFeedback.add(  new AttributeModifier( "class", "feedback-button feedback-button-active" ) );
+                target.add( newFeedback );
                 makeVisible( feedbackContainer, true );
                 target.add( feedbackContainer );
             }
@@ -113,46 +119,73 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
     private void addFeedbackFields() {
-        questionCheckBox = new AjaxCheckBox(
-                "question",
-                new PropertyModel<Boolean>( this, "question" )
-        ) {
+        feedbackOptionsContainer = new WebMarkupContainer( "feedbackOptions" );
+        feedbackOptionsContainer.setOutputMarkupId( true );
+        addFeedbackOptions();
+        addFeedbackPriority();
+        addFeedbackText();
+        feedbackContainer.add( feedbackOptionsContainer );
+    }
+
+    private void addFeedbackOptions() {
+        addSelectedOption();
+        addOtherOptions();
+    }
+
+     private void addSelectedOption() {
+        AjaxLink<String> selectedOptionLink = new AjaxLink<String>( "selectedOptionLink" ) {
             @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                updateFields( target );
+            public void onClick( AjaxRequestTarget target ) {
+                //Do nothing
             }
         };
-        feedbackContainer.add( questionCheckBox );
-        problemCheckBox = new AjaxCheckBox(
-                "problem",
-                new PropertyModel<Boolean>( this, "problem" )
+        selectedOptionLink.add( new Label(
+                "selectedOptionName",
+                new PropertyModel<String>( this, "selectedFeedbackOptionName" ) ) );
+        feedbackOptionsContainer.addOrReplace( selectedOptionLink );
+    }
+
+    public String getSelectedFeedbackOptionName() {
+        return selectedFeedbackOption.name();
+    }
+
+    private void addOtherOptions() {
+        ListView<String> otherOptionsListView = new ListView<String>(
+                "otherOptions",
+                getOtherFeedbackOptionNames()
         ) {
             @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                updateFields( target );
+            protected void populateItem( ListItem<String> item ) {
+                final String otherOption = item.getModelObject();
+                AjaxLink<String> selectedOptionLink = new AjaxLink<String>( "otherOptionLink" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        setSelectedFeedbackOption( otherOption );
+                        updateFields( target );
+                    }
+                };
+                item.add( selectedOptionLink );
+                selectedOptionLink.add( new Label( "otherOptionName", otherOption ) );
             }
         };
-        feedbackContainer.add( problemCheckBox );
-        suggestionCheckBox = new AjaxCheckBox(
-                "suggestion",
-                new PropertyModel<Boolean>( this, "suggestion" )
-        ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                updateFields( target );
+        feedbackOptionsContainer.addOrReplace( otherOptionsListView );
+    }
+
+    private void setSelectedFeedbackOption( String otherOption ) {
+        selectedFeedbackOption = Feedback.Type.valueOf( otherOption );
+    }
+
+    private List<String> getOtherFeedbackOptionNames() {
+        List<String> others = new ArrayList<String>(  );
+        for ( Feedback.Type value : Feedback.Type.values() ) {
+            if ( value != selectedFeedbackOption ) {
+                others.add( value.name() );
             }
-        };
-        feedbackContainer.add( suggestionCheckBox );
-        AjaxCheckBox priorityCheckBox = new AjaxCheckBox(
-                "priority",
-                new PropertyModel<Boolean>( this, "asap" )
-        ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                //Nothing
-            }
-        };
-        feedbackContainer.add( priorityCheckBox );
+        }
+        return others;
+    }
+
+    private void addFeedbackText() {
         contentText = new TextArea<String>(
                 "content",
                 new PropertyModel<String>( this, "content" ) );
@@ -166,10 +199,22 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
         feedbackContainer.add( contentText );
     }
 
+    private void addFeedbackPriority() {
+        AjaxCheckBox priorityCheckBox = new AjaxCheckBox(
+                "priority",
+                new PropertyModel<Boolean>( this, "asap" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                //Nothing
+            }
+        };
+        feedbackContainer.add( priorityCheckBox );
+    }
+
     private void updateFields( AjaxRequestTarget target ) {
-        target.add( questionCheckBox );
-        target.add( problemCheckBox );
-        target.add( suggestionCheckBox );
+        addFeedbackOptions();
+        target.add( feedbackOptionsContainer );
     }
 
     private void addFeedbackButtons() {
@@ -200,6 +245,8 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 resetFeedback();
                 updateFields( target );
+                newFeedback.add(  new AttributeModifier( "class", "feedback-button" ) );
+                target.add( newFeedback );
                 makeVisible( feedbackContainer, false );
                 target.add( feedbackContainer );
             }
@@ -230,11 +277,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
     private Feedback.Type feedbackType() {
-        return isProblem()
-                ? Feedback.Type.PROBLEM
-                : isQuestion()
-                    ? Feedback.Type.QUESTION
-                    : Feedback.Type.SUGGESTION;
+        return selectedFeedbackOption;
     }
 
 
@@ -249,54 +292,11 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
     }
 
     private void resetFeedback() {
-        question = true;
-        problem = false;
-        suggestion = false;
+        selectedFeedbackOption = Feedback.Type.PROBLEM;
         asap = false;
         content = "";
     }
 
-    public boolean isQuestion() {
-        return question;
-    }
-
-    public void setQuestion( boolean val ) {
-        if ( !question ) {
-            this.question = val;
-            if ( question ) {
-                problem = false;
-                suggestion = false;
-            }
-        }
-    }
-
-    public boolean isProblem() {
-        return problem;
-    }
-
-    public void setProblem( boolean val ) {
-        if ( !problem ) {
-            this.problem = val;
-            if ( problem ) {
-                question = false;
-                suggestion = false;
-            }
-        }
-    }
-
-    public boolean isSuggestion() {
-        return suggestion;
-    }
-
-    public void setSuggestion( boolean val ) {
-        if ( !suggestion ) {
-            this.suggestion = val;
-            if ( suggestion ) {
-                problem = false;
-                question = false;
-            }
-        }
-    }
 
     public boolean isAsap() {
         return asap;

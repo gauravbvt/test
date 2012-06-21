@@ -19,23 +19,19 @@
             	    <textarea wicket:id="content" rows="4" cols="40">Your message here</textarea>
         	      </div>
 					<div class="feedback-urgency">
-	                <input wicket:id="priority" type="checkbox"> Urgent
-					</div>
-					<div class="feedback-options">
-            	    <input wicket:id="question" type="checkbox"> question
-            	    <input wicket:id="problem" type="checkbox"> problem
-            	    <input wicket:id="suggestion" type="checkbox"> suggestion
+	                    <input wicket:id="priority" type="checkbox"> Urgent
 					</div>
 					<div class="feedback-options2">
-						<ul>
+						<ul wicket:id="feedbackOptions">
 							<li>
-								<a href="#">Question</a>
+								<a wicket:id="selectedOptionLink" href="#">
+                                    <span wicket:id="selectedOptionName">Question</span>
+                                </a>
 								<ul>
-									<li>
-										<a href="#">Problem</a>
-									</li>
-									<li>
-										<a href="#">Suggestion</a>
+									<li wicket:id="otherOptions">
+										<a wicket:id="otherOptionLink" href="#">
+                                            <span wicket:id="otherOptionName">Problem</span>
+                                        </a>
 									</li>
 								</ul>
 							</li>

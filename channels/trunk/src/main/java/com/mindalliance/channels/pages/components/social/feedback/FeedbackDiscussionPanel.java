@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.social.feedback;
 
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -91,7 +92,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
     }
 
     private void addResolve() {
-        String resolvedValue = getFeedback().isResolved() ? "Unresolve" : "Resolve";
+        String resolvedValue = getFeedback().isResolved() ? "Mark as not resolved" : "Mark as resolved";
         resolvedContainer = new WebMarkupContainer( "resolvedContainer" );
         resolvedContainer.setOutputMarkupId( true );
         AjaxLink<String> resolvedButton = new AjaxLink<String>( "resolvedButton") {
@@ -100,6 +101,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
                 feedbackService.toggleResolved( getFeedback() );
                 addResolve();
                 target.add( resolvedContainer );
+                update( target, new Change( Change.Type.Updated, feedback ) );
             }
         };
         resolvedButton.add( new AttributeModifier( "value", new Model<String>( resolvedValue) ) );

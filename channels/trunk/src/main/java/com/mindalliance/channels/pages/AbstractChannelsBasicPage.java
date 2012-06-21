@@ -110,8 +110,13 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         contentsContainer = new WebMarkupContainer( "contentsContainer" );
         contentsContainer.setOutputMarkupId( true );
         form.addOrReplace( contentsContainer );
+        contentsContainer.add( new AttributeModifier( "class", getContentsCssClass() ));
         addContent();
     }
+
+    protected abstract String getContentsCssClass();
+
+    protected abstract String getPageName();
 
     protected WebMarkupContainer getContainer() {
         return contentsContainer;
@@ -214,6 +219,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         addSelectedPlanInPath();
         addOtherPlansInPath();
         addSelectedPlanDescription();
+        addPagePathItem();
     }
 
     private void addHomeInPath() {
@@ -261,6 +267,14 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         planPath.add( selectedPlanDescription );
         selectedPlanDescription.add( new AttributeModifier( "title", getPlan().getDescription() ) );
     }
+
+    private void addPagePathItem() {
+        WebMarkupContainer pagePathItem = new WebMarkupContainer( "pagePathItem" );
+        pagePathItem.setVisible( this.getClass() != UserPage.class );
+        planPath.add( pagePathItem );
+        pagePathItem.add( new Label( "pageName", getPageName() )  );
+    }
+
 
     private String getAbbreviatedSelectedPlanDescription() {
         String oneLiner = getPlan().getDescription().replaceAll( "\\s+", " " );

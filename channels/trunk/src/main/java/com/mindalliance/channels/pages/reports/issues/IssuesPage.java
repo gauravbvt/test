@@ -36,6 +36,16 @@ public class IssuesPage extends AbstractChannelsBasicPage {
         addIssueMetrics();
     }
 
+    @Override
+    protected String getContentsCssClass() {
+        return "issues-contents";
+    }
+
+    @Override
+    protected String getPageName() {
+        return "Issues";
+    }
+
     private void addIssuesSummary() {
         getContainer().add( new IssuesSummaryTable( "issuesSummary" ) );
     }

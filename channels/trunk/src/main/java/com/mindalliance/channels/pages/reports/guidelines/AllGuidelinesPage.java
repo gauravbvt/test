@@ -32,6 +32,12 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
         super( parameters );
     }
 
+    @Override
+    protected String getPageName() {
+        return "All Info Sharing Guidelines";
+    }
+
+
     protected void initComponents( QueryService service, final Plan plan ) {
         boolean isPlanner = getUser().isPlanner( plan.getUri() );
         getContainer().add(

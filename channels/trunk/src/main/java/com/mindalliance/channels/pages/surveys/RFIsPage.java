@@ -68,6 +68,21 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
         addRFIPanel();
     }
 
+    @Override
+    protected String getContentsCssClass() {
+        return "surveys-contents";
+    }
+
+    @Override
+    protected String getPageName() {
+        return "Surveys";
+    }
+
+    @Override
+    protected void updateContent( AjaxRequestTarget target ) {
+        target.add( userRFIsPanel );
+    }
+
 
     private void addUserRFIsPanel() {
         userRFIsPanel = new UserRFIsPanel( "rfis", new PropertyModel<RFI>( this, "selectedRFI" ) );

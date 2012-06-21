@@ -367,6 +367,16 @@ public class UserPage extends AbstractChannelsBasicPage {
     }
 
     @Override
+    protected String getContentsCssClass() {
+        return "home-contents";
+    }
+
+    @Override
+    protected String getPageName() {
+        return "Home";
+    }
+
+    @Override
     public void update( AjaxRequestTarget target, Object object, String action ) {
         // do nothing
     }

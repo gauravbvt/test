@@ -57,6 +57,12 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
         super( parameters );
     }
 
+    @Override
+    protected String getContentsCssClass() {
+        return "allParticipants-contents";
+    }
+
+
     protected String getUri() {
         return uri;
     }

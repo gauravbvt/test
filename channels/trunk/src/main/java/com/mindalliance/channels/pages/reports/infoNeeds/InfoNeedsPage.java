@@ -70,6 +70,16 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         super( parameters );
     }
 
+    @Override
+    protected String getContentsCssClass() {
+        return "infoNeeds-contents";
+    }
+
+    @Override
+    protected String getPageName() {
+        return "Info Needs";
+    }
+
     private static Commitments realizable(
             Commitments allCommitments,
             Analyst analyst,
