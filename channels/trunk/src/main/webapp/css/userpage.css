@@ -133,6 +133,11 @@ div.pathway ul li.last {
 	margin: 0;
 	padding: 0;
 	background: none;
+	display: none;
+}
+
+div.pathway ul li:last-child {
+	background: none;
 }
 
 div.pathway ul li ul {
@@ -261,10 +266,14 @@ div.header a.feedback-button {
 	margin:0 8px 0 0;
 }
 
+div.header a.feedback-button.feedback-button-active {
+	background: #F6F6F6;
+}
+
 div.header a.logout:hover,
 div.header a.help:hover,
 div.header a.feedback-button:hover {
-    color: #000000;
+	color: #000000;
 	border:1px solid #000000;
 }
 
@@ -289,11 +298,6 @@ background: none repeat scroll 0 0 #F6F6F6;
     position: absolute;
 }
 
-div.feedback-options {
-	padding:0 0 5px 0;
-	display: none;
-}
-
 div.feedback-urgency {
 	padding:5px 0 5px 0;
 	display: none;
@@ -308,57 +312,80 @@ div.feedback-form-cont textarea {
 	width: 280px;
 }
 
-/*
-
-div.feedback-options2 {
+div.feedback-options {
 	float: left;
+	padding: 7px 0 0;
 	width: 100px;
-	padding:5px 0 10px 0; 
 }
 
-div.feedback-options2 ul {
-	display: inline;
-	list-style: none outside none;
-	margin: 0;
-	padding: 0;	
-}
-
-div.feedback-options2 ul li {
-	float: left;
-	list-style: none outside none;
-	margin: 0 0 0 0;
-	padding: 0 0 0 0;
-}
-
-div.feedback-options2 ul li a {
-	background: url('../images/signout-bg.png') repeat-x;
-	border: 1px solid #a7a9ac;
+div.feedback-options a {
+	background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
+	border: 1px solid #A7A9AC;
 	color: #727272;
 	font-size: 10px;
 	font-weight: bold;
+	height: 16px;
+	line-height: 16px;
+	margin: 0;
+	outline: medium none;
 	padding: 2px 4px;
-	margin:0;
+	text-decoration: none;
 	text-transform: capitalize;
-	outline: none;
-	float: left;
 }
 
-div.feedback-options2 ul li ul {
+div.feedback-options a span {
+	background: url("../images/pathway-arrow-down.png") no-repeat right;
+	padding-right: 15px;
+}
+
+div.feedback-options ul li ul li a span {
+	background: none;
+	padding-right: 0;
+}
+
+div.feedback-options a:hover,
+div.feedback-options ul li:hover a {
+	color: #333333;
+}
+
+div.feedback-options ul li:hover ul li a {
+	color: #727272;
+}
+
+div.feedback-options ul li:hover ul li a:hover {
+	color: #333333;
+}
+
+div.feedback-options ul {
+	display: inline;
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+}
+
+div.feedback-options ul li {
+	float: left;
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+}
+
+div.feedback-options ul li ul {
 	background: none repeat scroll 0 0 #E8E8E8;
 	display: none;
 	list-style: none outside none;
-	margin: 0 0 0 0;
+	margin: 0;
 	padding: 0;
 	position: absolute;
 	text-align: left;
 	z-index: 10000;
 }
 
-div.feedback-options2 ul li:hover ul {
+div.feedback-options ul li:hover ul {
 	display: block;
 }
 
-div.feedback-options2 ul li ul li {
+div.feedback-options ul li ul li {
 	background: none repeat scroll 0 0 transparent;
 	display: block;
 	float: none;
@@ -367,19 +394,21 @@ div.feedback-options2 ul li ul li {
 	position: relative;
 }
 
-div.feedback-options2 ul li ul li a {
+div.feedback-options ul li ul li a {
 	color: #727272;
 	display: block;
 	font-size: 10px;
 	font-weight: bold;
-	height: 20px;
-	line-height: 20px;
-	padding: 0 5px;
+	height: 16px;
+	line-height: 17px;
+	padding: 2px 4px;
 	text-decoration: none;
-	border-top: 1px solid #cccccc;
+	width: 69px;
 }
 
-*/
+div.feedback-options ul li ul li:last-child a {
+	border-top: none;
+}
 
 div.cancelSend {
 	float: right;
