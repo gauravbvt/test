@@ -93,6 +93,10 @@ div.pathway a {
 	line-height: 27px;
 }
 
+div.pathway li.plan-description a {
+	color: #999999;
+}
+
 div.pathway a:hover,
 div.pathway ul li:hover a {
 	color: #333333;
@@ -169,12 +173,6 @@ div.pathway ul li ul li a {
 	text-decoration: none;
 	border-top: 1px solid #cccccc;
 }
-
-/*
-div.pathway ul li ul li:last-child a {
-	border-bottom: none;
-}
-*/
 
 div.icon-menu {
 	float: right;
@@ -282,28 +280,134 @@ div.header div.feedback {
 }
 
 div.feedback-form-cont {
-    background: none repeat scroll 0 0 #DDDDDD;
+background: none repeat scroll 0 0 #F6F6F6;
     border: 1px solid #A7A9AC;
     display: block;
     font-size: 11px;
-    margin: 19px 8px 0 5px;
-    padding: 5px;
-    position: relative;
+    margin: 19px 0 0;
+    padding: 10px;
+    position: absolute;
 }
 
 div.feedback-options {
 	padding:0 0 5px 0;
+	display: none;
 }
 
 div.feedback-urgency {
 	padding:5px 0 5px 0;
+	display: none;
 }
 
 div.feedback-form-cont textarea {
-	font-family:Arial, Helvetica, sans-serif;
-	font-size:12px;
-	padding:5px;
+	background: none repeat scroll 0 0 #E8E8E8;
+	border: 1px solid #999999;
+	font-size: 11px;
+	height: 60px;
+	padding: 3px;
+	width: 280px;
 }
+
+/*
+
+div.feedback-options2 {
+	float: left;
+	width: 100px;
+	padding:5px 0 10px 0; 
+}
+
+div.feedback-options2 ul {
+	display: inline;
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;	
+}
+
+div.feedback-options2 ul li {
+	float: left;
+	list-style: none outside none;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+}
+
+div.feedback-options2 ul li a {
+	background: url('../images/signout-bg.png') repeat-x;
+	border: 1px solid #a7a9ac;
+	color: #727272;
+	font-size: 10px;
+	font-weight: bold;
+	padding: 2px 4px;
+	margin:0;
+	text-transform: capitalize;
+	outline: none;
+	float: left;
+}
+
+div.feedback-options2 ul li ul {
+	background: none repeat scroll 0 0 #E8E8E8;
+	display: none;
+	list-style: none outside none;
+	margin: 0 0 0 0;
+	padding: 0;
+	position: absolute;
+	text-align: left;
+	z-index: 10000;
+}
+
+div.feedback-options2 ul li:hover ul {
+	display: block;
+}
+
+div.feedback-options2 ul li ul li {
+	background: none repeat scroll 0 0 transparent;
+	display: block;
+	float: none;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+
+div.feedback-options2 ul li ul li a {
+	color: #727272;
+	display: block;
+	font-size: 10px;
+	font-weight: bold;
+	height: 20px;
+	line-height: 20px;
+	padding: 0 5px;
+	text-decoration: none;
+	border-top: 1px solid #cccccc;
+}
+
+*/
+
+div.cancelSend {
+	float: right;
+	padding: 5px 0 0;
+	text-align: right;
+	width: 100px;
+}
+
+div.cancelSend input {
+	background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
+	border: 1px solid #A7A9AC;
+	color: #727272;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	margin: 0 0 0 3px;
+	outline: medium none;
+	padding: 1px 4px;
+	text-transform: capitalize;
+}
+
+div.cancelSend input:hover {
+	color: #000000;
+	border:1px solid #000000;
+}
+
+
+/*
 
 div.cancelSend input {
 	font-size:10px;
@@ -320,6 +424,7 @@ div.cancelSend input:hover {
 	color:#333333;
 }
 
+*/
 
 /* ----- Header - Spinner ----- */
 

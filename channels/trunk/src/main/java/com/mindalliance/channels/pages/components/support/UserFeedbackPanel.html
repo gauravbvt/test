@@ -15,22 +15,36 @@
 
             <div class="feedback-form" wicket:id="feedback">
 				<div class="feedback-form-cont">
-					<div class="feedback-options">
-            	    	I have a
-            	    	<input wicket:id="question" type="checkbox"> question
-            	    	<input wicket:id="problem" type="checkbox"> problem
-            	    	<input wicket:id="suggestion" type="checkbox"> suggestion
-					</div>
-            	    <div>
-            	        <textarea wicket:id="content" rows="4" cols="40">Your message here</textarea>
-            	    </div>
+          	   <div>
+            	    <textarea wicket:id="content" rows="4" cols="40">Your message here</textarea>
+        	      </div>
 					<div class="feedback-urgency">
-	            	    <input wicket:id="priority" type="checkbox"> Urgent
+	                <input wicket:id="priority" type="checkbox"> Urgent
 					</div>
-            	    <div class="cancelSend">
-            	        <input wicket:id="cancel" value="Cancel" type="button"/>
-            	        <input wicket:id="send" value="Send" type="button"/>
-            	    </div>
+					<div class="feedback-options">
+            	    <input wicket:id="question" type="checkbox"> question
+            	    <input wicket:id="problem" type="checkbox"> problem
+            	    <input wicket:id="suggestion" type="checkbox"> suggestion
+					</div>
+					<div class="feedback-options2">
+						<ul>
+							<li>
+								<a href="#">Question</a>
+								<ul>
+									<li>
+										<a href="#">Problem</a>
+									</li>
+									<li>
+										<a href="#">Suggestion</a>
+									</li>
+								</ul>
+							</li>
+						</ul>					
+					</div>
+               <div class="cancelSend">
+                   <input wicket:id="cancel" value="Cancel" type="button"/>
+            	    <input wicket:id="send" value="Send" type="button"/>
+               </div>
 				</div>
             </div>
         </div>
