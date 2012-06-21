@@ -107,7 +107,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
     protected void initReportBody( Plan plan, QueryService queryService, ResourceSpec profile, String override,
                                    AggregatedContact contact ) {
         List<InfoNeedsReportSegment> reportSegments = getReportSegments( queryService, profile );
-        add( new ListView<ReportSegment>( "segmentLinks", reportSegments ) {
+        getContainer().add( new ListView<ReportSegment>( "segmentLinks", reportSegments ) {
             @Override
             protected void populateItem( ListItem<ReportSegment> item ) {
                 item.getModelObject().addLinkTo( item );
@@ -117,14 +117,13 @@ public class InfoNeedsPage extends AbstractParticipantPage {
     }
 
     private void addSegments( List<InfoNeedsReportSegment> segments ) {
-        add( new ListView<InfoNeedsReportSegment>( "segments", segments ) {
+        getContainer().add( new ListView<InfoNeedsReportSegment>( "segments", segments ) {
             @Override
             protected void populateItem( ListItem<InfoNeedsReportSegment> item ) {
                 InfoNeedsReportSegment reportSegment = item.getModelObject();
                 item.add( new WebMarkupContainer( "segmentAnchor" ).add( new Label( "segmentText",
                         reportSegment.getName() ) ).add( new AttributeModifier(
                         "name",
-                        true,
                         reportSegment.getAnchor() ) ),
                         new UserFeedbackPanel( "segmentFeedback",
                                 reportSegment.getSegment(),

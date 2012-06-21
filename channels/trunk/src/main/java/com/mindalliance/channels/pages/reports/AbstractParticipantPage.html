@@ -9,22 +9,11 @@
 	<link rel="stylesheet" href="css/reports/responder/responder-page-print.css" type="text/css" media="print" />
 </head>
 <body>
-<div id="container">
-    <div id="header">
-		<a href="home">
-			<img class="logo" src="images/logo_home.png" width="48" height="48" alt="Channels Logo" />
-		</a>
-        <h1>Channels &ndash; <span wicket:id="planName2">Plan name</span> <span wicket:id="planVersion">v1</span> &ndash; <span wicket:id="reportName"> Participant Information Needs Report</span></h1>
-        <span wicket:id="planFeedback" class="feedback-container">[feedback panel]</span>
-
-    </div>
-
-    <div id="contents">
+<wicket:extend>
         <div class="title-desc">
             <h1 class="subtitle">
                 <span wicket:id="reportType">Report type</span> <br />for <span wicket:id="personName">person's name</span>
             </h1>
-            <h2 wicket:id="planDescription" class="description">Plan description</h2>
         </div>
         <div id="about">
             <span wicket:id="contact">
@@ -60,8 +49,6 @@
 	    <div id="disclaimer">This report was produced automatically, based on input from
 participating agencies.<br />Mind-Alliance Systems makes no warranty as to its completeness or accuracy.
         <br />Design &copy; Mind-Alliance Systems LLC </div>
-    </div>
-</div>
-
+</wicket:extend>
 </body>
 </html>

@@ -125,14 +125,14 @@ public class GuidelinesPage extends AbstractParticipantPage {
     //-----------------------------------
     protected void initReportBody(
             Plan plan,
-            QueryService service,
+            QueryService queryService,
             ResourceSpec profile,
             String override,
             AggregatedContact contact ) {
 
 
-        List<GuidelinesReportSegment> reportSegments = getSegments( service, profile );
-        add(
+        List<GuidelinesReportSegment> reportSegments = getSegments( queryService, profile );
+        getContainer().add(
                 new ListView<GuidelinesReportSegment>( "segmentLinks", reportSegments ) {
                     @Override
                     protected void populateItem( ListItem<GuidelinesReportSegment> item ) {
@@ -154,7 +154,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
                 item.add(
                         new WebMarkupContainer( "phaseAnchor" )
                                 .add( new Label( "phaseText", segment.getName() ) )
-                                .add( new AttributeModifier( "name", true,segment.getAnchor() ) ),
+                                .add( new AttributeModifier( "name",segment.getAnchor() ) ),
                         new UserFeedbackPanel( "segmentFeedback", segment.getSegment(), "Send feedback", "Guidelines" ),
 
                         new Label( "context", segment.getContext() ),
@@ -420,7 +420,6 @@ public class GuidelinesPage extends AbstractParticipantPage {
                                     Component component = supervisor.getActor() == null ?
                                             contactComp : superComp;
                                     component.add( new AttributeAppender( "class",
-                                            true,
                                             new Model<String>( "last" ),
                                             " " ) );
                                 }

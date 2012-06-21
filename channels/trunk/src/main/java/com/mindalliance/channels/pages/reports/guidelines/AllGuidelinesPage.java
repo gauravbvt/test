@@ -34,8 +34,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
 
     protected void initComponents( QueryService service, final Plan plan ) {
         boolean isPlanner = getUser().isPlanner( plan.getUri() );
-        add(
-                new Label( "userName", getUser().getUsername() ),
+        getContainer().add(
                 new Label( "planName", plan.toString() ),
                 new WebMarkupContainer( "note" ).setVisible( isPlanner ),
                 new WebMarkupContainer( "activeDiv" ).add(

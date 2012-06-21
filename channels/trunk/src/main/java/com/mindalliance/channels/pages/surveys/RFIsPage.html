@@ -5,36 +5,22 @@
       lang="en">
 <head>
     <title>Channels - Planning Surveys</title>
-    <link rel="stylesheet" href="css/userpage.css" type="text/css" />
+    <link rel="stylesheet" href="css/userpage.css" type="text/css"/>
 </head>
 <body>
-<div id="container">
-    <div id="header">
-        <a href="home"><img class="logo" src="images/logo_home.png" width="48" height="48" alt="Channels Logo" /></a>
-        <h1>Channels &ndash; <span wicket:id="planName">Plan name</span> <span wicket:id="planVersion">v1</span> &ndash; Planning Surveys</h1>
-        <span wicket:id="feedback" class="feedback-container">[feedback panel]</span>
-    </div>
+<wicket:extend>
     <div wicket:id="dialog"/>
     <div id="contents">
         <div class="title-desc">
             <h1 class="subtitle">
                 Planning surveys for
             </h1>
-            <h2 wicket:id="planDescription" class="description">Plan name</h2>
         </div>
         <div id="surveys">
             <div wicket:id="rfis">[RFIs panel]</div>
             <div wicket:id="rfi">[RFI panel]</div>
         </div>
     </div>
-</div>
-<div id="notifier" wicket:id="notifier">
-    <div id="basic-template">
-        <!--<a class="ui-notify-cross ui-notify-close" href="#">x</a>-->
-        <h1>#{title}</h1>
-        <p>#{text}</p>
-    </div>
-</div>
-
+</wicket:extend>
 </body>
 </html>

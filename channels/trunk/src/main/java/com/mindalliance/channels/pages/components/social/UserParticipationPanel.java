@@ -138,19 +138,6 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         return wrappers;
     }
 
-/*
-    private boolean currentlyParticipatingAs( final Actor actor, List<PlanParticipation> currentParticipations ) {
-        return CollectionUtils.exists(
-                currentParticipations,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (PlanParticipation) object ).getActorId() == actor.getId();
-                    }
-                } );
-    }
-*/
-
     private List<PlanParticipation> currentParticipations() {
         return planParticipationService.getParticipations(
                 getPlan(),
@@ -158,78 +145,6 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 getQueryService() );
     }
 
-    /*   @SuppressWarnings( "unchecked" )
-        private List<Actor> getOpenActors( final List<PlanParticipation> currentParticipations ) {
-            return (List<Actor>) CollectionUtils.select(
-                    getQueryService().listActualEntities( Actor.class ),
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            final Actor actor = (Actor) object;
-                            return isParticipationAvailable( actor, currentParticipations );
-                        }
-                    }
-            );
-        }
-
-        private boolean isParticipationAvailable( Actor actor, List<PlanParticipation> currentParticipations ) {
-            return !actor.isUnknown()
-                    && actor.isOpenParticipation()
-                    && !alreadyParticipatingAs( actor, currentParticipations )
-                    && !isSingularAndTaken( actor )
-                    && meetsPreEmploymentConstraint( actor, currentParticipations );
-        }
-
-        private boolean meetsPreEmploymentConstraint( Actor actor,
-                                                      List<PlanParticipation> currentParticipations ) {
-            if ( !actor.isParticipationRestrictedToEmployed() ) return true;
-            QueryService queryService = getQueryService();
-            List<Organization> actorEmployers = findDirectAndIndirectEmployers(
-                    getQueryService().findAllEmploymentsForActor( actor ) );
-            List<Organization> myPlannedEmployers = new ArrayList<Organization>();
-            for ( PlanParticipation participation : currentParticipations ) {
-                Actor partipationActor = participation.getActor( queryService );
-                if ( partipationActor != null && !partipationActor.isOpenParticipation() )
-                    myPlannedEmployers.addAll( findDirectAndIndirectEmployers(
-                            queryService.findAllEmploymentsForActor( partipationActor ) ) );
-            }
-            return !Collections.disjoint( myPlannedEmployers, actorEmployers );
-        }
-
-        @SuppressWarnings( "unchecked" )
-        private List<Organization> findDirectAndIndirectEmployers( List<Employment> employments ) {
-            Set<Organization> allEmployers = new HashSet<Organization>();
-            List<Organization> directEmployers = (List<Organization>) CollectionUtils.collect(
-                    employments,
-                    new Transformer() {
-                        @Override
-                        public Object transform( Object input ) {
-                            return ( (Employment) input ).getOrganization();
-                        }
-                    }
-            );
-            for ( Organization org : directEmployers ) {
-                allEmployers.addAll( org.selfAndAncestors() );
-            }
-            return new ArrayList<Organization>( allEmployers );
-        }
-
-        private boolean alreadyParticipatingAs( final Actor actor, List<PlanParticipation> currentParticipations ) {
-            return CollectionUtils.exists(
-                    currentParticipations,
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            return ( (PlanParticipation) object ).getActorId() == actor.getId();
-                        }
-                    } );
-        }
-
-        private boolean isSingularAndTaken( Actor actor ) {
-            return actor.isSingularParticipation()
-                    && !planParticipationService.getParticipations( getPlan(), actor, getQueryService() ).isEmpty();
-        }
-    */
     private String getUserRole() {
         String userRole = user.isAdmin()
                 ? "administrator"

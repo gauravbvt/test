@@ -2,11 +2,9 @@ package com.mindalliance.channels.pages.surveys;
 
 import com.google.code.jqwicket.ui.notifier.NotifierWebMarkupContainer;
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.pages.AbstractChannelsWebPage;
+import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.Modalable;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
-import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.services.RFIService;
 import org.apache.wicket.Component;
@@ -28,7 +26,7 @@ import java.util.List;
  * Date: 4/23/12
  * Time: 1:31 PM
  */
-public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
+public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
 
     private RFI selectedRFI;
     private Component rfiPanel;
@@ -51,8 +49,6 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
 
     public RFIsPage( PageParameters parameters ) {
         super( parameters );
-        processParameters( parameters );
-        init();
     }
 
     private void processParameters( PageParameters parameters ) {
@@ -65,29 +61,17 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
         }
     }
 
-    private void init() {
-
-        addHeading();
-        addModalDialog( "dialog", null, this );
+    protected void addContent() {
+        processParameters( getParameters() );
+        addModalDialog( "dialog", null, getContainer() );
         addUserRFIsPanel();
         addRFIPanel();
-        addNotifier();
     }
 
-    private void addHeading() {
-        add( new Label( "planName", getPlan().getName() ) );
-        add( new Label( "planVersion", "v" + getPlan().getVersion() ) );
-        add( new UserFeedbackPanel(
-                "feedback",
-                getPlan(),
-                "Send feedback",
-                Feedback.ISSUES ) );
-        add( new Label( "planDescription", getPlan().getName() ) );
-    }
 
     private void addUserRFIsPanel() {
         userRFIsPanel = new UserRFIsPanel( "rfis", new PropertyModel<RFI>( this, "selectedRFI" ) );
-        addOrReplace( userRFIsPanel );
+        getContainer().addOrReplace( userRFIsPanel );
     }
 
     private void addRFIPanel() {
@@ -98,12 +82,7 @@ public class RFIsPage extends AbstractChannelsWebPage implements Modalable {
         }
         rfiPanel.setOutputMarkupId( true );
         makeVisible( rfiPanel, selectedRFI != null );
-        addOrReplace( rfiPanel );
-    }
-
-    private void addNotifier() {
-        notifier = new NotifierWebMarkupContainer( "notifier" );
-        add( notifier );
+        getContainer().addOrReplace( rfiPanel );
     }
 
     @Override

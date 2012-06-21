@@ -8,15 +8,7 @@
     <link rel="stylesheet" href="css/reports/responder/all-responders.css" type="text/css" title="Playbook">
 </head>
 <body>
-<div id="container">
-    <div id="header">
-		<a href="home">
-			<img class="logo" src="images/logo_home.png" width="48" height="48" alt="Channels Logo" />
-		</a>
-      	<h1>Channels &ndash; <span wicket:id="planName">plan</span> &ndash; Information Needs</h1>
-		<a class="logout" href="logout">Sign out <span wicket:id="userName">user</span></a>
-    </div>
-    <div id="contents">
+<wicket:extend>
         <div id="note" wicket:id="note">
             <span>As a planner, you can access the information need reports of all participants.</span>
         </div>
@@ -52,8 +44,6 @@
 				</tr>
 			</table>
         </div>
-
-    </div>
-</div>
+</wicket:extend>
 </body>
 </html>

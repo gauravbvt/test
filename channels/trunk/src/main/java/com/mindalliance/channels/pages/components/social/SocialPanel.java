@@ -7,7 +7,7 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.model.UserMessage;
 import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
@@ -84,7 +84,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
             // Override newLink to supply an IndicatingAjaxLink (wait cursor)
             @Override
             protected WebMarkupContainer newLink( String linkId, final int index ) {
-                return new IndicatingAjaxLink( linkId ) {
+                return new AjaxLink( linkId ) {
 
                     public void onClick( AjaxRequestTarget target ) {
                         setSelectedTab( index );

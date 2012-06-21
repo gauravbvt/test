@@ -19,7 +19,7 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.pages.AbstractChannelsWebPage;
+import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
@@ -45,14 +45,13 @@ import java.util.Set;
 /**
  * Abstract participant report page.
  */
-public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
+public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage {
 
     private static final Logger LOG = LoggerFactory.getLogger( AbstractParticipantPage.class );
 
     //-------------------------------
     public AbstractParticipantPage( PageParameters parameters ) {
         super( parameters );
-        init( parameters );
     }
 
     //-------------------------------
@@ -67,8 +66,9 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
 
     protected abstract String getReportType();
 
-    protected void init( PageParameters parameters ) {
+    protected void addContent(  ) {
         try {
+            PageParameters parameters = getPageParameters();
             QueryService service = getQueryService();
             ResourceSpec profile =  getProfile( service, parameters );
             Plan plan = service.getPlan();
@@ -77,7 +77,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsWebPage {
             ? new AggregatedContact( service, profile.getActor(), override )
             : new AggregatedContact( service, profile.getActor(), getUser().getUsername() );
             contact.resolveChannels( service );
-            add(
+            getContainer().add(
                     new Label( "reportTitle", getReportTitle() + " for " + contact.getActorName() ),
                     new Label( "reportName", getReportName() ),
                     new UserFeedbackPanel( "planFeedback", plan, "Send overall feedback", getFeedbackTopic() ),

@@ -6,7 +6,6 @@
 
 package com.mindalliance.channels.pages;
 
-import com.google.code.jqwicket.ui.notifier.NotifierWebMarkupContainer;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -14,47 +13,36 @@ import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
-import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.issues.IssuesPage;
-import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.services.FeedbackService;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailSender;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Channels' home page.
  */
-public class UserPage extends AbstractChannelsWebPage {
+public class UserPage extends AbstractChannelsBasicPage {
 
 
     /**
@@ -80,24 +68,7 @@ public class UserPage extends AbstractChannelsWebPage {
     @SpringBean
     private FeedbackService feedbackService;
 
-    /**
-     * The big form -- used for attachments and segment imports only.
-     */
-    private IndicatorAwareForm form;
-    /**
-     * Ajax activity spinner.
-     */
-    private WebMarkupContainer spinner;
     private SocialPanel socialPanel;
-    /**
-     * Notifier.
-     */
-    private NotifierWebMarkupContainer notifier;
-    private String message;
-    private Label welcomeLabel;
-    private WebMarkupContainer planPath;
-    private static final int MAX_PLAN_DESCRIPTION_LENGTH = 25;
-
 
     public UserPage() {
         this( new PageParameters() );
@@ -105,22 +76,10 @@ public class UserPage extends AbstractChannelsWebPage {
 
     public UserPage( PageParameters parameters ) {
         super( parameters );
-        init();
     }
 
-    private void init() {
-        getCommander().keepAlive( getUser().getUsername(), REFRESH_DELAY );
-        addPageTitle();
-        addForm();
-        addSpinner();
-        addNotifier();
-        // addWelcome();
-        addLoggedIn();
-        addHelp();
-        addFeedback();
-        // addPlanSelector();
-        addPlanPath();
-        // addPlanImage();
+    @Override
+    protected void addContent() {
         addPlanName();
         addPlanClient();
         addReferences();
@@ -128,90 +87,10 @@ public class UserPage extends AbstractChannelsWebPage {
         addSocial();
     }
 
-    private void addPageTitle() {
-        add( new Label( "sg-title",
-                new Model<String>( "Channels - Information Sharing Planning" ) ) );
-
-    }
-
-
-    private void addForm() {
-        form = new IndicatorAwareForm( "big-form" ) {
-            @Override
-            protected void onSubmit() {
-                // Do nothing - everything is done via Ajax, even file uploads
-                // System.out.println( "Form submitted" );
-            }
-        };
-        form.add( new AbstractAjaxTimerBehavior( Duration.seconds( REFRESH_DELAY ) ) {
-            @Override
-            protected void onTimer( AjaxRequestTarget target ) {
-                try {
-                    doTimedUpdate( target );
-                    addSpinner();
-                    target.add( spinner );
-                } catch ( Exception e ) {
-                    LOG.error( "Failed to do timed update", e );
-                    ErrorPage.emailException(
-                            new Exception( "Timed update failed", e ),
-                            mailSender,
-                            getSupportCommunity(),
-                            getUser()
-                    );
-                    redirectHere();
-                }
-            }
-        } );
-        form.setMultiPart( true );
-        add( form );
-    }
-
-    private void redirectHere() {
-        setResponsePage( UserPage.class, planParameters( getPlan() ) );
-    }
-
-    private void addSpinner() {
-        spinner = new WebMarkupContainer( "spinner" );
-        spinner.setOutputMarkupId( true );
-        spinner.add( new AttributeModifier( "id", new Model<String>( "spinner" ) ) );
-        form.addOrReplace( spinner );
-    }
-
-    private void addHelp() {
-        Attachment help = getHelp();
-
-        if ( help != null ) {
-            ExternalLink helpLink = new ExternalLink( "help-link", help.getUrl() );
-            form.add( helpLink );
-
-        } else {
-            BookmarkablePageLink<HelpPage> helpLink = new BookmarkablePageLink<HelpPage>( "help-link", HelpPage.class );
-            helpLink.add( new AttributeModifier( "target", new Model<String>( "help" ) ) );
-/*
-            helpLink.setPopupSettings( new PopupSettings(
-                    PopupSettings.RESIZABLE |
-                            PopupSettings.SCROLLBARS |
-                            PopupSettings.MENU_BAR |
-                            PopupSettings.TOOL_BAR ) );
-*/
-
-            form.add( helpLink );
-        }
-    }
-
-
-    private void addNotifier() {
-        notifier = new NotifierWebMarkupContainer( "notifier" );
-        add( notifier );
-    }
-
-    private String getMessage() {
-        return message == null ? "" : message;
-    }
-
-
-    private void doTimedUpdate( AjaxRequestTarget target ) {
-        getCommander().keepAlive( getUser().getUsername(), REFRESH_DELAY );
+    @Override
+    protected void updateContent( AjaxRequestTarget target ) {
+        addGotoLinks( getPlan(), getUser() );
+        target.add( getContainer() );
         updateSocialPanel( target );
     }
 
@@ -225,128 +104,19 @@ public class UserPage extends AbstractChannelsWebPage {
     }
 
 
-    /*   private void addWelcome() {
-            welcomeLabel = new Label( "userName", getUser().getFullName() );
-            welcomeLabel.setOutputMarkupId( true );
-            form.addOrReplace( welcomeLabel );
-        }
-    */
-    private void addLoggedIn() {
-        form.add( new Label( "user",
-                getUser().getUsername() ) );
-    }
-
-    private void addFeedback() {
-        form.add( new UserFeedbackPanel( "feedback", Feedback.PARTICIPATING ) );
-    }
-
-    private void addPlanPath() {
-        planPath = new WebMarkupContainer( "planPath" );
-        planPath.setOutputMarkupId( true );
-        form.addOrReplace( planPath );
-        addHomeInPath();
-        addSelectedPlanInPath();
-        addOtherPlansInPath();
-        addSelectedPlanDescription();
-    }
-
-    private void addHomeInPath() {
-        AjaxLink<String> homeLink = new AjaxLink<String>( "homeLink" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                redirectHere();
-            }
-        };
-        planPath.add( homeLink );
-    }
-
-    private void addSelectedPlanInPath() {
-        Label selectedPlanName = new Label(
-                "selectedPlan",
-                getPlan().toString() );
-        planPath.add( selectedPlanName );
-    }
-
-    private void addOtherPlansInPath() {
-        ListView<Plan> otherPlansListView = new ListView<Plan>(
-                "otherPlans",
-                getOtherPlans()
-        ) {
-            @Override
-            protected void populateItem( final ListItem<Plan> item ) {
-                AjaxLink<String> otherPlanLink = new AjaxLink<String>( "otherPlanLink" ) {
-                    @Override
-                    public void onClick( AjaxRequestTarget target ) {
-                        setPlan( item.getModelObject() );
-                        redirectHere();
-                    }
-                };
-                otherPlanLink.add( new Label( "otherPlanName", item.getModelObject().toString() ) );
-                item.add( otherPlanLink );
-            }
-        };
-        planPath.add(  otherPlansListView );
-    }
-
-    private void addSelectedPlanDescription() {
-        Label selectedPlanDescription = new Label(
-                "planDescription",
-                StringUtils.abbreviate( getPlan().getDescription(), MAX_PLAN_DESCRIPTION_LENGTH ) );
-        planPath.add( selectedPlanDescription );
-        selectedPlanDescription.add( new AttributeModifier( "title", getPlan().getDescription() ) );
-    }
-
-    private List<Plan> getOtherPlans() {
-        List<Plan> otherPlans = new ArrayList<Plan>( getPlans() );
-        otherPlans.remove( getPlan() );
-        return otherPlans;
-    }
-
-
-
-/*
-    private void addPlanSelector() {
-        WebMarkupContainer planSelectorDiv = new WebMarkupContainer( "switch-plan" );
-        form.add( planSelectorDiv );
-        planSelectorDiv.add( new DropDownChoice<Plan>(
-                "plan-sel",
-                new PropertyModel<Plan>( this, "plan" ),
-                new PropertyModel<List<? extends Plan>>( this, "plans" ) )
-                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                    @Override
-                    protected void onUpdate( AjaxRequestTarget target ) {
-                        redirectHere();
-                    }
-                } ) );
-        planSelectorDiv.setVisible( getPlans().size() > 1 );
-    }
-*/
-
-    public void setPlan( Plan plan ) {
-        getCommander().userLeftPlan( getUser().getUsername() );
-        super.setPlan( plan );
-    }
-
-/*
-    private void addPlanImage() {
-        WebMarkupContainer image = new WebMarkupContainer( "planImage" );
-        image.add( new AttributeModifier( "src", new Model<String>( getPlanImagePath() ) ) );
-        form.add( image );
-    }
-*/
 
     private void addPlanName() {
-        form.add( new Label( "planName", getPlan().getName() ) );
+        getContainer().add( new Label( "planName", getPlan().getName() ) );
     }
 
     private void addPlanClient() {
-        form.add( new Label( "planClient", getPlan().getClient() ) );
+        getContainer().add( new Label( "planClient", getPlan().getClient() ) );
     }
 
     private void addReferences() {
         List<Attachment> references = getReferences();
         WebMarkupContainer referencesContainer = new WebMarkupContainer( "referencesContainer" );
-        form.add( referencesContainer );
+        getContainer().add( referencesContainer );
         ListView<Attachment> attachmentList = new ListView<Attachment>(
                 "references",
                 references ) {
@@ -367,18 +137,6 @@ public class UserPage extends AbstractChannelsWebPage {
         };
         referencesContainer.add( attachmentList );
         referencesContainer.setVisible( !references.isEmpty() );
-    }
-
-    private Attachment getHelp() {
-        return (Attachment) CollectionUtils.find(
-                getPlan().getAttachments(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Attachment) object ).isHelp();
-                    }
-                }
-        );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -402,16 +160,13 @@ public class UserPage extends AbstractChannelsWebPage {
         // guidelines link
         BookmarkablePageLink<? extends WebPage> gotoGuidelinesLink =
                 getGuidelinesLink( "gotoGuidelines", getQueryService(), getPlan(), user, true );
-        Label gotoGuidelinesLabel = new Label( "guidelinesLabel", getGuidelinesReportLabel( user, plan ) );
-        gotoGuidelinesLink.add( gotoGuidelinesLabel )
-                .add( new AttributeModifier(
-                        "title",
-                        new Model<String>( getGotoGuidelinesDescription( user, plan ) ) ) );
+        gotoGuidelinesLink.add( new AttributeModifier(
+                "title",
+                new Model<String>( getGotoGuidelinesDescription( user, plan ) ) ) );
         // info needs link
         BookmarkablePageLink<? extends WebPage> gotoInfoNeedsLink =
                 getInfoNeedsLink( "gotoInfoNeeds", getQueryService(), getPlan(), user, true );
-        Label gotoInfoNeedsLabel = new Label( "infoNeedsLabel", getInfoNeedsReportLabel( user, plan ) );
-        gotoInfoNeedsLink.add( gotoInfoNeedsLabel )
+        gotoInfoNeedsLink
                 .add( new AttributeModifier(
                         "title",
                         new Model<String>( getGotoInfoNeedsDescription( user, plan ) ) ) );
@@ -437,7 +192,7 @@ public class UserPage extends AbstractChannelsWebPage {
                 "title",
                 new Model<String>( getGotoModelDescription( user, plan ) ) ) );
         // gotos
-        form.addOrReplace(
+        getContainer().addOrReplace(
                 // Goto admin
                 new WebMarkupContainer( "admin" )
                         .add( newTargetedLink( "gotoAdmin", "", AdminPage.class, null, plan ) )
@@ -485,22 +240,10 @@ public class UserPage extends AbstractChannelsWebPage {
 
     }
 
-    private String getGuidelinesReportLabel( ChannelsUser user, Plan plan ) {
-        return user.isPlanner( plan.getUri() )
-                ? "Info Sharing Guidelines"
-                : "Info Sharing Guidelines";
-    }
-
     private String getGotoGuidelinesDescription( ChannelsUser user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
                 ? "Set how users participate in the plan and view their information sharing guidelines."
                 : "View all tasks and related communications assigned to me according to my participation in this plan.";
-    }
-
-    private String getInfoNeedsReportLabel( ChannelsUser user, Plan plan ) {
-        return user.isPlanner( plan.getUri() )
-                ? "Info\nNeeds"
-                : "Info\nNeeds";
     }
 
     private String getRFIsLabel( ChannelsUser user, Plan plan ) {
@@ -604,7 +347,7 @@ public class UserPage extends AbstractChannelsWebPage {
     private void addSocial() {
         String[] tabsShown = {SocialPanel.CALENDAR, /*SocialPanel.SURVEYS, */SocialPanel.MESSAGES, SocialPanel.USER, SocialPanel.PARTICIPATION};
         socialPanel = new SocialPanel( "social", false, tabsShown, false );
-        form.add( socialPanel );
+        getContainer().add( socialPanel );
     }
 
     private String getPlanImagePath() {
@@ -613,64 +356,15 @@ public class UserPage extends AbstractChannelsWebPage {
         return path == null ? "images/plan.png" : path;
     }
 
-    @Override
-    public void changed( Change change ) {
-        getCommander().clearTimeOut( getUser().getUsername() );
-        if ( change.getMessage() != null ) {
-            message = change.getMessage();
-        }
-        if ( change.isNone() ) {
-        } else if ( change.isCommunicated() ) {
-            // do something?
-        }
-    }
-
-    @Override
-    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isUpdated()
-                && change.isForInstanceOf( Plan.class ) ) {
-            if ( change.isForProperty( "user" ) ) {
-                // addWelcome();
-                target.add( welcomeLabel );
-            } else if ( change.isForProperty( "participation" ) ) {
-                addGotoLinks( getPlan(), getUser() );
-                target.add( form );
-            }
-        }
-        String message = change.getMessage();
-        if ( message != null ) {
-            notifier.create( target,
-                    "Notification",
-                    message );
-        } else if ( change.isCommunicated() ) {
-            newMessage( target, change );
-            refreshSocialPanel( target, change );
-        }
-        if ( change.getScript() != null ) {
-            target.appendJavaScript( change.getScript() );
-        }
-    }
-
     /**
      * Have social panel create a new message.
      *
      * @param target an ajax request target
      * @param change a change referencing what the communication is about
      */
-    private void newMessage( AjaxRequestTarget target, Change change ) {
+    protected void newMessage( AjaxRequestTarget target, Change change ) {
         socialPanel.newMessage( target, change );
     }
-
-    /**
-     * Refresh social panel.
-     *
-     * @param target an ajax request target
-     * @param change a change referencing what the communication is about
-     */
-    public void refreshSocialPanel( AjaxRequestTarget target, Change change ) {
-        updateSocialPanel( target );
-    }
-
 
     @Override
     public void update( AjaxRequestTarget target, Object object, String action ) {
