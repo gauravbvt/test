@@ -7,74 +7,12 @@
  * Time: 11:06:39 AM
  */
 
-/*
 
-* {
-    margin: 0;
-    padding: 0;
-}
-
-a {
-    color: #0143b4;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-a:hover {
-    color: #013081;
-    border-bottom: 1px dotted #013081;
-}
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
-    color: #333333;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-}
-
-a.back {
-    font-size: 13px;
-    float: right;
-    margin-right: 10px;
-}
-
-*/
-
-/* ----- Structure ----- */
-
-/*
-
-div#container {
-    width: 1000px;
-    margin: 0 auto;
-    text-align: left;
-    padding: 0;
-    border: 1px solid #999999;
-	background:#f6f6f6;
-}
-
-div#header {
-    width: 1000px;
-    height: 54px;
-    background: #c3d9ff;
-    border-bottom: 1px solid #999999;
-	font-size:12px;
-}
-
-div#contents {
-	padding:30px;
-	width:940px;
-}
-
-*/
-
-div.infoNeeds-contents div.eoiCont {
+div.guidelines-infoNeeds-contents div.eoiCont {
 	padding:10px 0 0 0;
 }
 
-div.infoNeeds-contents div#disclaimer {
+div.guidelines-infoNeeds-contents div#disclaimer {
     border-top: 1px solid #CCCCCC;
     color: #666666;
     font-size: 11px;
@@ -84,88 +22,45 @@ div.infoNeeds-contents div#disclaimer {
 }
 
 
-/* ----- Header ----- */
-
-/*
-
-div#header img {
-    float: left;
-	border: 0;
-	padding: 4px 0 0 5px;
-}
-
-div#header h1 {
-    color: #333333;
-    display: block;
-    float: left;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 16px 0 0 7px;
-}
-
-*/
-
-/*
-
-div#header a.logout {
-    background: url('../../images/signout-bg.png') repeat-x;
-    border: 1px solid #a7a9ac;
-    color: #727272;
-    font-size: 10px;
-    font-weight: bold;
-    padding: 2px 4px;
-    margin: 5px 5px 0 0;
-    text-transform: capitalize;
-    outline: none;
-	float:right;
-}
-
-div#header a.logout:hover {
-    color: #333333;
-}
-
-*/
-
-
 /* ----- Typography ----- */
 
-div.infoNeeds-contents p {
+div.guidelines-infoNeeds-contents p {
 	padding:5px 0 5px 10px;
 }
 
-div.infoNeeds-contents ul {
+div.guidelines-infoNeeds-contents ul {
 	padding:5px 0 5px 35px;
 }
 
-div.infoNeeds-contents table ul {
+div.guidelines-infoNeeds-contents table ul {
 	padding:5px 0 5px 15px;
 }
 
-div.infoNeeds-contents ul.toc {
+div.guidelines-infoNeeds-contents ul.toc {
 }
 
-div.infoNeeds-contents ul.toc li {
+div.guidelines-infoNeeds-contents ul.toc li {
     position: relative;
 }
 
-div.infoNeeds-contents ul.toc span.tocHead {
+div.guidelines-infoNeeds-contents ul.toc span.tocHead {
     display: block;
     width: 75%;
 }
 
-div.infoNeeds-contents ul.toc a.tocLink {
+div.guidelines-infoNeeds-contents ul.toc a.tocLink {
     position: absolute;
     left: 75%;
     top: 0;
     padding-left: 5px;
 }
 
-div.infoNeeds-contents li {
+div.guidelines-infoNeeds-contents li {
     line-height: 150%;
     padding: 0 0 4px;
 }
 
-div.infoNeeds-contents h1.subtitle {
+div.guidelines-infoNeeds-contents h1.subtitle {
 	font-size: 28px;
 	padding: 30px 0 10px;
 	text-align: center;
@@ -173,7 +68,7 @@ div.infoNeeds-contents h1.subtitle {
 	line-height: 150%;
 }
 
-div.infoNeeds-contents h2.description {
+div.guidelines-infoNeeds-contents h2.description {
 	font-size: 20px;
 	font-weight: normal;
 	line-height: 150%;
@@ -182,9 +77,9 @@ div.infoNeeds-contents h2.description {
 	font-family:Georgia, "Times New Roman", Times, serif;
 }
 
-div.infoNeeds-contents div#about h2,
-div.infoNeeds-contents div.phase h2,
-div.infoNeeds-contents div.task h2 {
+div.guidelines-infoNeeds-contents div#about h2,
+div.guidelines-infoNeeds-contents div.phase h2,
+div.guidelines-infoNeeds-contents div.task h2 {
     background: #CCCCCC;
     border-bottom: 2px solid #999999;
     border-top: 2px solid #999999;
@@ -195,48 +90,17 @@ div.infoNeeds-contents div.task h2 {
 	font-family:Georgia, "Times New Roman", Times, serif;
 }
 
-div.infoNeeds-contents div.phase h2 a,
-div.infoNeeds-contents div.task h2 a {
+div.guidelines-infoNeeds-contents div.phase h2 a.anchor,
+div.guidelines-infoNeeds-contents div.task h2 a.anchor {
 	border:none;
 	color:#333333;
 	font-family:Georgia, "Times New Roman", Times, serif;
 }
 
-div.infoNeeds-contents div.phase h2 a.feedback-button,
-div.infoNeeds-contents div.task h2 a.feedback-button,
-div.infoNeeds-contents div.phase h2 a.back,
-div.infoNeeds-contents div.task h2 a.back,
-div.infoNeeds-contents div.about h2 div.feedback-options ul li a,
-div.infoNeeds-contents div.phase h2 div.feedback-options ul li a,
-div.infoNeeds-contents div.task h2 div.feedback-options ul li a,
-div.infoNeeds-contents div.about h2 div.feedback-options ul li ul li a,
-div.infoNeeds-contents div.phase h2 div.feedback-options ul li ul li a,
-div.infoNeeds-contents div.task h2 div.feedback-options ul li ul li a {
-	border: 1px solid #A7A9AC;
-	color: #727272;
-	font-family: Arial,Helvetica,sans-serif;
-}
-
-/*
-
-div.infoNeeds-contents div.task h2 a.back {
-    background: url('../../../images/signout-bg.png') repeat-x;
-    border: 1px solid #a7a9ac;
-    color: #727272;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size: 8px;
-    font-weight: bold;
-    padding: 3px 4px;
-    text-transform: capitalize;
-    outline: none;
-}
-
-*/
-
-div.infoNeeds-contents div#about h3,
-div.infoNeeds-contents div.toc h3,
-div.infoNeeds-contents div.phase h3,
-div.infoNeeds-contents div.task h3 {
+div.guidelines-infoNeeds-contents div#about h3,
+div.guidelines-infoNeeds-contents div.toc h3,
+div.guidelines-infoNeeds-contents div.phase h3,
+div.guidelines-infoNeeds-contents div.task h3 {
     border-bottom: 1px solid #999999;
     font-size: 13px;
     margin: 15px 5px 7px 5px;
@@ -244,122 +108,122 @@ div.infoNeeds-contents div.task h3 {
     text-transform: uppercase;
 }
 
-div.infoNeeds-contents span.flowName {
+div.guidelines-infoNeeds-contents span.flowName {
 	font-style: italic;
 }
 
-div.infoNeeds-contents span.plan-name,
-div.infoNeeds-contents span.source,
-div.infoNeeds-contents span.title,
-div.infoNeeds-contents span.duration,
-div.infoNeeds-contents span.type,
-div.infoNeeds-contents span.reqFlow {
+div.guidelines-infoNeeds-contents span.plan-name,
+div.guidelines-infoNeeds-contents span.source,
+div.guidelines-infoNeeds-contents span.title,
+div.guidelines-infoNeeds-contents span.duration,
+div.guidelines-infoNeeds-contents span.type,
+div.guidelines-infoNeeds-contents span.reqFlow {
 	font-weight:bold;
 }
 
-div.infoNeeds-contents span.flowHead {
+div.guidelines-infoNeeds-contents span.flowHead {
     display: block;
     margin-right: 80px;
 }
 
 /* ----- Tables ----- */
 
-div.infoNeeds-contents table {
+div.guidelines-infoNeeds-contents table {
 	border-collapse:collapse;
     margin: 10px 0;
     width: 100%;
 	border-bottom:1px solid #999999;
 }
 
-div.infoNeeds-contents table td,
-div.infoNeeds-contents table th {
+div.guidelines-infoNeeds-contents table td,
+div.guidelines-infoNeeds-contents table th {
 	padding: 5px 4px 5px 8px;
 }
 
-div.infoNeeds-contents table th {
+div.guidelines-infoNeeds-contents table th {
     white-space: nowrap;
 }
 
-div.infoNeeds-contents table tbody tr {
+div.guidelines-infoNeeds-contents table tbody tr {
 	border: 1px solid #999999;
 	background:#e8e8e8;
 }
 
-div.infoNeeds-contents table tr.contactHeads,
-div.infoNeeds-contents table tr.contact,
-div.infoNeeds-contents table tr.eoiHeads,
-div.infoNeeds-contents table tr.eoi {
+div.guidelines-infoNeeds-contents table tr.contactHeads,
+div.guidelines-infoNeeds-contents table tr.contact,
+div.guidelines-infoNeeds-contents table tr.eoiHeads,
+div.guidelines-infoNeeds-contents table tr.eoi {
 	font-size:11px;
     background: #f6f6f6;
 	border-top: none;
 }
 
-div.infoNeeds-contents table tr.contactHeads {
+div.guidelines-infoNeeds-contents table tr.contactHeads {
 	background: none repeat scroll 0 0 #E8E8E8;
 }
 
-div.infoNeeds-contents table tr.contactHeads th,
-div.infoNeeds-contents table tr.contact td,
-div.infoNeeds-contents table tr.eoiHeads th,
-div.infoNeeds-contents table tr.eoi td {
+div.guidelines-infoNeeds-contents table tr.contactHeads th,
+div.guidelines-infoNeeds-contents table tr.contact td,
+div.guidelines-infoNeeds-contents table tr.eoiHeads th,
+div.guidelines-infoNeeds-contents table tr.eoi td {
 	padding:5px 10px;
     border: 1px solid #999999;
 }
 
-div.infoNeeds-contents table tr.eoi td {
+div.guidelines-infoNeeds-contents table tr.eoi td {
 	line-height:150%;
 }
 
-div.infoNeeds-contents table tr.contactHeads th.first,
-div.infoNeeds-contents table tr.contact td.first,
-div.infoNeeds-contents table tr.eoiHeads th.first,
-div.infoNeeds-contents table tr.eoi td.first {
+div.guidelines-infoNeeds-contents table tr.contactHeads th.first,
+div.guidelines-infoNeeds-contents table tr.contact td.first,
+div.guidelines-infoNeeds-contents table tr.eoiHeads th.first,
+div.guidelines-infoNeeds-contents table tr.eoi td.first {
 	padding:5px 10px;
 }
 
-div.infoNeeds-contents table.eois {
+div.guidelines-infoNeeds-contents table.eois {
 	background:#e8e8e8;
 	border:1px solid #999999;
 }
 
-div.infoNeeds-contents table.eois tbody tr td {
+div.guidelines-infoNeeds-contents table.eois tbody tr td {
 	background:#f6f6f6;
 	padding:5px 10px;
 	font-size:11px;
 }
 
-div.infoNeeds-contents table.eois tbody tr td:first-child {
+div.guidelines-infoNeeds-contents table.eois tbody tr td:first-child {
 	padding:5px 10px 5px 25px;
 }
 
-div.infoNeeds-contents table.eois th,
-div.infoNeeds-contents table.eois td {
+div.guidelines-infoNeeds-contents table.eois th,
+div.guidelines-infoNeeds-contents table.eois td {
 	border: 1px solid #999999;
 }
 
-div.infoNeeds-contents table.eois.nested {
+div.guidelines-infoNeeds-contents table.eois.nested {
 	width:100%;
     font-size: 11px;
 	margin:10px 0 10px 0;
 }
 
-div.infoNeeds-contents table.eois.nested thead tr {
+div.guidelines-infoNeeds-contents table.eois.nested thead tr {
 	background:#E8E8E8;
 }
 
-div.infoNeeds-contents table.eois.nested th {
+div.guidelines-infoNeeds-contents table.eois.nested th {
 	padding: 5px 10px;
 }
 
-div.infoNeeds-contents table.eois.nested tbody tr td:first-child {
+div.guidelines-infoNeeds-contents table.eois.nested tbody tr td:first-child {
 	padding:5px 10px 5px 10px;
 }
 
-div.infoNeeds-contents table.taskHeader {
+div.guidelines-infoNeeds-contents table.taskHeader {
 	border:none;
 }
 
-div.infoNeeds-contents table.taskHeader tr {
+div.guidelines-infoNeeds-contents table.taskHeader tr {
     background: #F6F6F6;
     border-left: none;
     border-right: none;
@@ -367,136 +231,34 @@ div.infoNeeds-contents table.taskHeader tr {
 	border-bottom:none;
 }
 
-div.infoNeeds-contents table.taskHeader p {
+div.guidelines-infoNeeds-contents table.taskHeader p {
 	line-height: 150%;
 	padding: 0 5px 0 0;
 }
 
-div.infoNeeds-contents table.taskHeader div.eoiCont {
+div.guidelines-infoNeeds-contents table.taskHeader div.eoiCont {
     border-top: none;
     margin: 4px 0 0;
     padding: 7px 0 0;
 }
 
-div.infoNeeds-contents table.taskHeader div.eoiCont p {
+div.guidelines-infoNeeds-contents table.taskHeader div.eoiCont p {
 	padding:0 5px 0 0;
 }
 
-div.infoNeeds-contents table tr.note {
+div.guidelines-infoNeeds-contents table tr.note {
 	background: #FAF0A8;
 	font-size: 11px;
 	font-style: italic;
 }
 
-div.infoNeeds-contents table tr.note td {
+div.guidelines-infoNeeds-contents table tr.note td {
 	color: #000000;
 	padding: 7px 10px 7px 20px;
 }
 
-div.infoNeeds-contents table tr.contact ul {
+div.guidelines-infoNeeds-contents table tr.contact ul {
 	list-style: none outside none;
 	margin: 0;
 	padding: 0;
 }
-
-/* Feedback */
-
-/*
-
-span.feedback-container a:hover {
-    color: #333333;
-}
-
-span.feedback-container {
-	float:right;
-}
-
-#header span.feedback-container {
-	padding:21px 5px 0 0;
-}
-
-h2 span.feedback-container {
-	padding:3px 5px 0 0;
-}
-
-td span.feedback-container {
-	padding:0;
-}
-
-span.feedback-container a {
-    background: url('../../../images/signout-bg.png') repeat-x;
-    border: 1px solid #a7a9ac;
-    color: #727272;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size: 10px;
-    font-weight: bold;
-    padding: 4px;
-    margin-left: 5px;
-    text-transform: capitalize;
-    outline: none;
-}
-
-div.phase h2 span.feedback-container a, div.task h2 span.feedback-container a {
-    color: #727272;
-}
-
-td span.feedback-container a , h2 span.feedback-container a{
-    font-family:Arial, Helvetica, sans-serif;
-    font-size: 8px;
-}
-
-td span.feedback-container a{
-    padding: 2px;
-}
-
-h2 span.feedback-container a{
-    padding: 4px;
-    border: 1px solid #a7a9ac;
-}
-
-td span.feedback-container a {
-    margin-left: 5px;
-}
-
-div.feedback-form-cont {
-	display:block;
-	background: #dddddd;
-	font-size:11px;
-    border: 1px solid #a7a9ac;
-	padding:5px;
-	position:relative;
-	margin:3px 0 0 5px;
-	font-family:Arial, Helvetica, sans-serif;
-	font-weight:normal;
-}
-
-div.feedback-options {
-	padding:0 0 5px 0;
-}
-
-div.feedback-urgency {
-	padding:5px 0 5px 0;
-}
-
-div.feedback-form-cont textarea {
-	font-family:Arial, Helvetica, sans-serif;
-	font-size:12px;
-	padding:5px;
-}
-
-div.cancelSend input {
-	font-size:10px;
-	padding:2px;
-	background:#cccccc;
-	border:1px solid #666666;
-}
-
-div.cancelSend input:hover {
-	font-size:10px;
-	padding:2px;
-	background:#f6f6f6;
-	border:1px solid #999999;
-	color:#333333;
-}
-
-*/

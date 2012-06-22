@@ -12,34 +12,6 @@
   .page-break  { display:block; page-break-before:always; }
 }
 
-* {
-    margin: 0;
-    padding: 0;
-}
-
-a {
-    color: #0143b4;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-a:hover {
-    color: #013081;
-    border-bottom: 1px dotted #013081;
-}
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
-    color: #333333;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-}
-
-*/
-
-
 /* ----- Typography ----- */
 
 div.issues-contents p {

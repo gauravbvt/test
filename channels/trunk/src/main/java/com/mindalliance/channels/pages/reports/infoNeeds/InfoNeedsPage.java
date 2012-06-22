@@ -72,7 +72,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
 
     @Override
     protected String getContentsCssClass() {
-        return "infoNeeds-contents";
+        return "guidelines-infoNeeds-contents";
     }
 
     @Override
