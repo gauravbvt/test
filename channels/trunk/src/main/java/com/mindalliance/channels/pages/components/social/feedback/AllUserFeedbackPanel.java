@@ -63,12 +63,14 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
 
     static private final String[] TOPIC_CHOICES = {
             ANY,
+            Feedback.CHANNELS,
+            Feedback.FEEDBACK,
             Feedback.GUIDELINES,
             Feedback.INFO_NEEDS,
             Feedback.ISSUES,
             Feedback.PARTICIPATING,
             Feedback.PLANNING,
-            Feedback.RFI
+            Feedback.SURVEYS
     };
 
     @SpringBean

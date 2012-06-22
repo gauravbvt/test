@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.reports.issues;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.components.plan.IssuesSummaryTable;
+import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
@@ -44,6 +45,11 @@ public class IssuesPage extends AbstractChannelsBasicPage {
     @Override
     protected String getPageName() {
         return "Issues";
+    }
+
+    @Override
+    protected String getFeedbackType() {
+        return Feedback.ISSUES;
     }
 
     private void addIssuesSummary() {

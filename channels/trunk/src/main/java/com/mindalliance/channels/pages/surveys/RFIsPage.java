@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.Modalable;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.services.RFIService;
 import org.apache.wicket.Component;
@@ -76,6 +77,11 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
     @Override
     protected String getPageName() {
         return "Surveys";
+    }
+
+    @Override
+    protected String getFeedbackType() {
+        return Feedback.SURVEYS;
     }
 
     @Override

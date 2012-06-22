@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
+import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -36,6 +37,11 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
     @Override
     protected String getPageName() {
         return "All Info Needs";
+    }
+
+    @Override
+    protected String getFeedbackType() {
+        return Feedback.PARTICIPATING;
     }
 
 

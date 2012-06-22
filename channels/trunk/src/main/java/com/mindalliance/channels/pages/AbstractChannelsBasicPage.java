@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
-import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.services.FeedbackService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -118,6 +117,8 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
 
     protected abstract String getPageName();
 
+    protected abstract String getFeedbackType();
+
     protected WebMarkupContainer getContainer() {
         return contentsContainer;
     }
@@ -208,8 +209,9 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     }
 
     private void addFeedback() {
-        form.add( new UserFeedbackPanel( "feedback", Feedback.PARTICIPATING ) );
+        form.add( new UserFeedbackPanel( "feedback", getFeedbackType() ) );
     }
+
 
     private void addPlanPath() {
         planPath = new WebMarkupContainer( "planPath" );

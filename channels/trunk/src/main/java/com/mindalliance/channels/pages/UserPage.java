@@ -15,6 +15,7 @@ import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.reports.issues.IssuesPage;
+import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.services.FeedbackService;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.SurveysDAO;
@@ -374,6 +375,11 @@ public class UserPage extends AbstractChannelsBasicPage {
     @Override
     protected String getPageName() {
         return "Home";
+    }
+
+    @Override
+    protected String getFeedbackType() {
+        return Feedback.CHANNELS;
     }
 
     @Override

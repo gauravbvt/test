@@ -80,6 +80,11 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         return "Info Needs";
     }
 
+    @Override
+    protected String getFeedbackType() {
+        return Feedback.INFO_NEEDS;
+    }
+
     private static Commitments realizable(
             Commitments allCommitments,
             Analyst analyst,

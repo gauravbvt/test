@@ -100,6 +100,11 @@ public class GuidelinesPage extends AbstractParticipantPage {
         return "Info Sharing Guidelines";
     }
 
+    @Override
+    protected String getFeedbackType() {
+        return Feedback.GUIDELINES;
+    }
+
     private static List<ElementOfInformation> sortedEOIs( List<ElementOfInformation> result ) {
 
         Collections.sort( result, new Comparator<ElementOfInformation>() {

@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.social.feedback.AllUserFeedbackPanel;
+import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -43,6 +44,11 @@ public class FeedbackPage  extends AbstractChannelsBasicPage {
     @Override
     protected String getPageName() {
         return "Feedback";
+    }
+
+    @Override
+    protected String getFeedbackType() {
+        return Feedback.FEEDBACK;
     }
 
     private void addUserFeedbackPanel() {
