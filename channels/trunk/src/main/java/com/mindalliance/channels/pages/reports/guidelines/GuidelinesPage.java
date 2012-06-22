@@ -105,6 +105,16 @@ public class GuidelinesPage extends AbstractParticipantPage {
         return Feedback.GUIDELINES;
     }
 
+    @Override
+    protected List<PagePathItem> getIntermediatePagesPathItems() {
+        List<PagePathItem> intermediates = new ArrayList<PagePathItem>();
+        intermediates.add( new PagePathItem(
+                AllGuidelinesPage.class,
+                getParameters(),
+                "All info sharing guidelines") );
+        return intermediates;
+    }
+
     private static List<ElementOfInformation> sortedEOIs( List<ElementOfInformation> result ) {
 
         Collections.sort( result, new Comparator<ElementOfInformation>() {

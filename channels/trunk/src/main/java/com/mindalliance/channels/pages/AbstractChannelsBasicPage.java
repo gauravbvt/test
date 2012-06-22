@@ -12,6 +12,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -28,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailSender;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +70,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
      */
     private NotifierWebMarkupContainer notifier;
     private String message;
-    private WebMarkupContainer planPath;
+    private WebMarkupContainer pagePath;
     private static final int MAX_PLAN_DESCRIPTION_LENGTH = 50;
     private WebMarkupContainer contentsContainer;
 
@@ -83,6 +85,12 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
 
     protected abstract void addContent(  );
 
+    // DEFAULT
+    protected List<PagePathItem> getIntermediatePagesPathItems() {
+        return new ArrayList<PagePathItem>();
+    }
+
+    // DEFAULT
     protected void updateContent( AjaxRequestTarget target ) {
         addContentsContainer();
         target.add( getContainer() );
@@ -101,9 +109,9 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         addLoggedIn();
         addHelp();
         addFeedback();
-        addPlanPath();
+        addPagePath();
         addContentsContainer();
-     }
+    }
 
     private void addContentsContainer() {
         contentsContainer = new WebMarkupContainer( "contentsContainer" );
@@ -213,31 +221,27 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     }
 
 
-    private void addPlanPath() {
-        planPath = new WebMarkupContainer( "planPath" );
-        planPath.setOutputMarkupId( true );
-        form.addOrReplace( planPath );
-        addHomeInPath();
+    private void addPagePath() {
+        pagePath = new WebMarkupContainer( "planPath" );
+        pagePath.setOutputMarkupId( true );
+        form.addOrReplace( pagePath );
         addSelectedPlanInPath();
         addOtherPlansInPath();
-        addPagePathItem();
+        addPathPageItems();
     }
 
-    private void addHomeInPath() {
-        AjaxLink<String> homeLink = new AjaxLink<String>( "homeLink" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                setResponsePage( UserPage.class, planParameters( getPlan() ) );
-            }
-        };
-        planPath.add( homeLink );
-    }
 
     private void addSelectedPlanInPath() {
         Label selectedPlanName = new Label(
                 "selectedPlan",
                 getPlan().toString() );
-        planPath.add( selectedPlanName );
+        pagePath.add( selectedPlanName );
+        selectedPlanName.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                setResponsePage( UserPage.class );
+            }
+        } );
     }
 
     private void addOtherPlansInPath() {
@@ -251,23 +255,37 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         setPlan( item.getModelObject() );
-                        redirectHere();
+                        setResponsePage( UserPage.class );
                     }
                 };
                 otherPlanLink.add( new Label( "otherPlanName", item.getModelObject().toString() ) );
                 item.add( otherPlanLink );
             }
         };
-        planPath.add( otherPlansListView );
+        pagePath.add( otherPlansListView );
     }
 
-    private void addPagePathItem() {
-        WebMarkupContainer pagePathItem = new WebMarkupContainer( "pagePathItem" );
-        pagePathItem.setVisible( this.getClass() != UserPage.class );
-        planPath.add( pagePathItem );
-        pagePathItem.add( new Label( "pageName", getPageName() )  );
+    private void addPathPageItems() {
+        ListView<PagePathItem> pagePathItems = new ListView<PagePathItem>(
+                "pageItems",
+                getPagePathItems()
+                ) {
+            @Override
+            protected void populateItem( ListItem<PagePathItem> item ) {
+                PagePathItem pagePathItem = item.getModelObject();
+                item.add( pagePathItem.getLink( "pageItemLink" ) );
+            }
+        };
+        pagePathItems.setVisible( this.getClass() != UserPage.class );
+        pagePath.add( pagePathItems );
     }
 
+    private List<PagePathItem> getPagePathItems() {
+        List<PagePathItem> pagePathItems = new ArrayList<PagePathItem>();
+        pagePathItems.addAll( getIntermediatePagesPathItems() );
+        pagePathItems.add( new PagePathItem( getClass(), getPageParameters(), getPageName() ) );
+        return pagePathItems;
+    }
 
     private String getAbbreviatedSelectedPlanDescription() {
         String oneLiner = getPlan().getDescription().replaceAll( "\\s+", " " );
@@ -330,6 +348,28 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         }
         if ( change.getScript() != null ) {
             target.appendJavaScript( change.getScript() );
+        }
+    }
+
+    protected class PagePathItem implements Serializable {
+
+        private Class<? extends AbstractChannelsWebPage> pageClass;
+        private PageParameters pageParameters;
+        private String name;
+
+        public PagePathItem(
+                Class<? extends AbstractChannelsWebPage> pageClass,
+                PageParameters pageParameters,
+                String name ) {
+            this.pageClass = pageClass;
+            this.pageParameters = pageParameters;
+            this.name = name;
+        }
+
+        protected BookmarkablePageLink<String> getLink( String id ) {
+            BookmarkablePageLink<String>  link = new BookmarkablePageLink<String>( id, pageClass, pageParameters );
+            link.add(  new Label( "pageName", name ) );
+            return link;
         }
     }
 

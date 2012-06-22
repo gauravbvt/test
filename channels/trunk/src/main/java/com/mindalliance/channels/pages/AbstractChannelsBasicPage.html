@@ -63,11 +63,6 @@
         <div class="pathway-cont">
             <div wicket:id="planPath" class="pathway">
                 <ul>
-                    <li>
-                        <a wicket:id="homeLink" href="home">
-                            <span>Home</span>
-                        </a>
-                    </li>
                     <li class="plan">
                         <a href="#">
                             <span wicket:id="selectedPlan">Rail Security</span>
@@ -80,8 +75,8 @@
                             </li>
                         </ul>
                     </li>
-                     <li wicket:id="pagePathItem">
-                        <a href="#">
+                    <li wicket:id="pageItems">
+                        <a wicket:id="pageItemLink" href="#">
                             <span wicket:id="pageName">Surveys</span>
                         </a>
                     </li>
@@ -100,8 +95,8 @@
             <div wicket:id="contentsContainer">
                 <wicket:child/>
             </div>
-       </div>
-     </div>
+        </div>
+    </div>
 </form>
 <div id="notifier" wicket:id="notifier">
     <div id="basic-template">

@@ -86,7 +86,7 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
 
     @Override
     protected void updateContent( AjaxRequestTarget target ) {
-        target.add( userRFIsPanel );
+        userRFIsPanel.updateContent( target );
     }
 
 

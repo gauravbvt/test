@@ -367,6 +367,12 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
         target.add( feedbacksTable );
     }
 
+    public void updateContent( AjaxRequestTarget target ) {
+        addFeedbackTable();
+        target.add( feedbacksTable );
+    }
+
+
 
     @Override
     public void changed( Change change ) {
@@ -396,6 +402,8 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
             super.updateWith( target, change, updated );
         }
     }
+
+
 
     public class FeedbackWrapper implements Identifiable {
 

@@ -119,6 +119,17 @@ public class InfoNeedsPage extends AbstractParticipantPage {
     }
 
     @Override
+    protected List<PagePathItem> getIntermediatePagesPathItems() {
+        List<PagePathItem> intermediates = new ArrayList<PagePathItem>();
+        intermediates.add( new PagePathItem(
+                AllInfoNeedsPage.class,
+                getParameters(),
+                "All info needs") );
+        return intermediates;
+    }
+
+
+    @Override
     protected void initReportBody( Plan plan, QueryService queryService, ResourceSpec profile, String override,
                                    AggregatedContact contact ) {
         List<InfoNeedsReportSegment> reportSegments = getReportSegments( queryService, profile );

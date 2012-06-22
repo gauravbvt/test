@@ -148,6 +148,12 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
         target.add( tabbedPanel );
     }
 
+    public void updateContent( AjaxRequestTarget target ) {
+        refresh(  target, null );
+    }
+
+
+
     @Override
     public void changed( Change change ) {
         if ( change.isForInstanceOf( RFIWrapper.class ) && change.isExpanded() ) {

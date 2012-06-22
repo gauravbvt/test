@@ -33,7 +33,7 @@ public class FeedbackPage  extends AbstractChannelsBasicPage {
 
     @Override
     protected void updateContent( AjaxRequestTarget target ) {
-        target.add( allUserFeedbackPanel );
+       allUserFeedbackPanel.updateContent( target );
     }
 
     @Override
