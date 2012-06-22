@@ -8,12 +8,14 @@
  */
 
 @import url('modal.css');
+@import url('reports/issues/issues-report.css');
+@import url('reports/responder/all-responders.css');
+@import url('reports/responder/responder-page.css');
 
 /* Display - None */
 div.about {
 	display:none;
 }
-
 
 * {
     margin: 0;
@@ -248,7 +250,8 @@ div.header h1 {
 
 div.header a.logout,
 div.header a.help,
-div.header a.feedback-button {
+a.feedback-button,
+a.back {
     background: url('../images/signout-bg.png') repeat-x;
     border: 1px solid #a7a9ac;
     color: #727272;
@@ -259,6 +262,11 @@ div.header a.feedback-button {
     text-transform: capitalize;
     outline: none;
 	float:right;
+	font-family: Arial,Helvetica,sans-serif;
+}
+
+a.back {
+	margin-left: 5px;
 }
 
 div.header a.help,
@@ -266,25 +274,30 @@ div.header a.feedback-button {
 	margin:0 8px 0 0;
 }
 
-div.header a.feedback-button.feedback-button-active {
+a.feedback-button {
+	margin:0 0 0 0;
+}
+
+a.feedback-button.feedback-button-active {
 	background: #F6F6F6;
 }
 
 div.header a.logout:hover,
 div.header a.help:hover,
-div.header a.feedback-button:hover {
+a.feedback-button:hover,
+a.back:hover {
 	color: #000000;
 	border:1px solid #000000;
 }
 
 /* ----- Header - Feedback ----- */
 
-div.header span.feedback-container {
+span.feedback-container {
 	float:right;
 	padding:0;
 }
 
-div.header div.feedback {
+div.feedback {
 	float:right;
 }
 

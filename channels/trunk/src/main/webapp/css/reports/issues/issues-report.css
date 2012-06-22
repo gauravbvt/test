@@ -1,5 +1,7 @@
 /* Issues report */
 
+/*
+
 @media all
 {
   .page-break  { display:none; }
@@ -35,98 +37,25 @@ body {
     text-align: center;
 }
 
-a.back {
-    font-size: 13px;
-    float: right;
-    margin-right: 10px;
-}
-
-
-/* ----- Structure ----- */
-
-div#container {
-    width: 800px;
-    margin: 0 auto;
-    text-align: left;
-    padding: 0;
-    border: 1px solid #999999;
-	background:#f6f6f6;
-}
-
-div#header {
-    width: 800px;
-    height: 54px;
-    background: #c3d9ff;
-    border-bottom: 1px solid #999999;
-	font-size:12px;
-}
-
-div#contents {
-	padding:30px;
-	width:740px;
-}
-
-div#disclaimer {
-    border-top: 1px solid #CCCCCC;
-    color: #666666;
-    font-size: 11px;
-    margin: 20px 0 0 0;
-    padding: 20px 0 0 0;
-    text-align: center;
-}
-
-
-/* ----- Header ----- */
-
-div#header img {
-    float: left;
-	border: 0;
-	padding: 4px 0 0 5px;
-}
-
-div#header h1 {
-    color: #333333;
-    display: block;
-    float: left;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 16px 0 0 7px;
-}
-
-/*div#header a.logout {
-    background: url('../../images/signout-bg.png') repeat-x;
-    border: 1px solid #a7a9ac;
-    color: #727272;
-    font-size: 10px;
-    font-weight: bold;
-    padding: 2px 4px;
-    margin: 5px 5px 0 0;
-    text-transform: capitalize;
-    outline: none;
-	float:right;
-}
-
-div#header a.logout:hover {
-    color: #333333;
-}*/
+*/
 
 
 /* ----- Typography ----- */
 
-p {
+div.issues-contents p {
 	padding:5px 0 5px 10px;
 }
 
-ul {
+div.issues-contents ul {
 	padding:5px 0 5px 35px;
 }
 
-li {
-    line-height: 150%;
-    padding: 0 0 4px;
+div.issues-contents li {
+	line-height: 150%;
+	padding: 0 0 4px;
 }
 
-h1.subtitle {
+div.issues-contents h1.subtitle {
 	font-size: 28px;
 	padding: 30px 0 10px;
 	text-align: center;
@@ -134,7 +63,7 @@ h1.subtitle {
 	line-height: 150%;
 }
 
-h2.description {
+div.issues-contents h2.description {
 	font-size: 20px;
 	font-weight: normal;
 	line-height: 150%;
@@ -143,15 +72,15 @@ h2.description {
 	font-family:Georgia, "Times New Roman", Times, serif;
 }
 
-div#summary h2,
-div#issuesMetrics h2 {
-    background: #CCCCCC;
-    border-bottom: 2px solid #999999;
-    border-top: 2px solid #999999;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 40px 0 10px;
-    padding: 5px 0 5px 10px;
+div.issues-contents div#summary h2,
+div.issues-contents div#issuesMetrics h2 {
+	background: #CCCCCC;
+	border-bottom: 2px solid #999999;
+	border-top: 2px solid #999999;
+	font-size: 18px;
+	font-weight: bold;
+	margin: 40px 0 10px;
+	padding: 5px 0 5px 10px;
 	font-family:Georgia, "Times New Roman", Times, serif;
 	text-transform:capitalize;
 }
@@ -159,159 +88,74 @@ div#issuesMetrics h2 {
 
 /* ----- Tables ----- */
 
-table {
+div.issues-contents table {
 	border-collapse:collapse;
-    margin: 10px;
-    width: 920px;
 	border-bottom:1px solid #999999;
 }
 
-table td,
-table th {
+div.issues-contents table td,
+div.issues-contents table th {
 	padding: 5px 5px 5px 10px;
 }
-table th {
-    white-space: nowrap;
+
+div.issues-contents table th {
+	white-space: nowrap;
 }
 
-table tbody tr {
+div.issues-contents table tbody tr {
 	border: 1px solid #999999;
 }
 
-/* ----- Feedback ----- */
-
-span.feedback-container a:hover {
-    color: #333333;
+div.issues-contents table.issues-metrics,
+div.issues-contents table.data-table {
+	width: 100%;
 }
 
-span.feedback-container {
-	float:right;
+div.issues-contents table.issues-metrics thead tr,
+div.issues-contents table.data-table thead tr {
+	background: none repeat scroll 0 0 #E8E8E8;
+	border: 1px solid #999999;
 }
 
-#header span.feedback-container {
-	padding:21px 5px 0 0;
-}
-
-h2 span.feedback-container {
-	padding:6px 5px 0 0;
-}
-
-td span.feedback-container {
-	padding:2px 0 0 0;
-}
-
-span.feedback-container a {
-    background: url('../../../images/signout-bg.png') repeat-x;
-    border: 1px solid #a7a9ac;
-    color: #727272;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size: 10px;
-    font-weight: bold;
-    padding: 4px;
-    margin-left: 5px;
-    text-transform: capitalize;
-    outline: none;
-}
-
-div.phase h2 span.feedback-container a, div.task h2 span.feedback-container a {
-    color: #727272;
-}
-
-td span.feedback-container a , h2 span.feedback-container a{
-    font-family:Arial, Helvetica, sans-serif;
-    font-size: 8px;
-}
-
-td span.feedback-container a{
-    padding: 2px;
-}
-
-h2 span.feedback-container a{
-    padding: 4px;
-    border: 1px solid #a7a9ac;
-}
-
-td span.feedback-container a {
-    margin-left: 5px;
-}
-
-div.feedback-form-cont {
-	display:block;
-	background: #dddddd;
-	font-size:11px;
-    border: 1px solid #a7a9ac;
-	padding:5px;
-	position:relative;
-	margin:3px 0 0 5px;
-}
-
-div.feedback-options {
-	padding:0 0 5px 0;
-}
-
-div.feedback-urgency {
-	padding:5px 0 5px 0;
-}
-
-div.feedback-form-cont textarea {
-	font-family:Arial, Helvetica, sans-serif;
-	font-size:12px;
-	padding:5px;
-}
-
-div.cancelSend input {
-	font-size:10px;
-	padding:2px;
-	background:#cccccc;
-	border:1px solid #666666;
-}
-
-div.cancelSend input:hover {
-	font-size:10px;
-	padding:2px;
-	background:#f6f6f6;
-	border:1px solid #999999;
-	color:#333333;
-}
-
-table.issues-metrics,
-table.data-table {
-    width: 720px;
-}
-
-table.issues-metrics thead tr,
-table.data-table thead tr {
-    background: none repeat scroll 0 0 #E8E8E8;
-    border: 1px solid #999999;
-}
-
-table.issues-metrics tr.parent,
-table.data-table tr.parent {
+div.issues-contents table.issues-metrics tr.parent,
+div.issues-contents table.data-table tr.parent {
 	font-weight: bold;
 	background: #e8e8e8;
 	font-size:11px;
 }
 
-table.issues-metrics tr.child,
-table.data-table tr.child {
-    background: #F3F3F3;
+div.issues-contents table.issues-metrics tr.child,
+div.issues-contents table.data-table tr.child {
+	background: #F3F3F3;
 	font-weight:normal;
 	font-size:11px;
 }
 
-table.issues-severity {
-    width: 97%;
+div.issues-contents table.issues-severity {
+	width: 97%;
 	font-size:11px;
 	margin:10px 0;
 }
 
-table.issues-severity td,
-table.issues-severity th {
-    text-align: center;
+div.issues-contents table.issues-severity td,
+div.issues-contents table.issues-severity th {
+	text-align: center;
 	border:1px solid #CCCCCC;
 }
 
-.no-issues {
-    margin-left: 20px;
-    font-style: italic;
+
+/* ----- Other - Structural ----- */
+
+div.issues-contents div.no-issues {
+	margin-left: 20px;
+	font-style: italic;
+}
+
+div.issues-contents div#disclaimer {
+	border-top: 1px solid #CCCCCC;
+	color: #666666;
+	font-size: 11px;
+	margin: 20px 0 0 0;
+	padding: 20px 0 0 0;
+	text-align: center;
 }

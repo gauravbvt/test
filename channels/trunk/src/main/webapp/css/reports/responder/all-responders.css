@@ -7,6 +7,8 @@
  * Time: 11:06:39 AM
  */
 
+/*
+
 * {
     margin: 0;
     padding: 0;
@@ -54,7 +56,6 @@ div#contents {
 	width:740px;
 }
 
-
 div#disclaimer {
     border-top: 1px solid #CCCCCC;
     color: #666666;
@@ -64,8 +65,12 @@ div#disclaimer {
     text-align: center;
 }
 
+*/
+
 
 /* ----- Header ----- */
+
+/*
 
 div#header img {
     float: left;
@@ -99,6 +104,8 @@ div#header a.logout:hover {
     color: #000000;
 	border:1px solid #000000;
 }
+
+*/
 
 /*
 
@@ -137,7 +144,7 @@ div#header > ul li a:hover {
 
 /* ----- Content - Note ----- */
 
-div#contents div#note {
+div.allParticipants-contents div#note {
     background: url("../../../images/gains.png") no-repeat 5px 4px #FEF2B0;
     border:1px solid #C5B351;
     color: #000000;
@@ -149,7 +156,7 @@ div#contents div#note {
 
 /* ----- Content - Table ----- */
 
-h3 {
+div.allParticipants-contents h3 {
     background: none repeat scroll 0 0 #E8E8E8;
     border-bottom: 1px solid #999999;
     border-top: 1px solid #999999;
@@ -159,32 +166,32 @@ h3 {
     text-transform: uppercase;
 }
 
-div#contents table {
+div.allParticipants-contents table {
 	border-collapse:collapse;
 	margin:0 0 20px 0;
 }
 
-div#contents table tr th {
+div.allParticipants-contents table tr th {
 	padding:0 15px;
 }
 
-div#contents table tr td {
+div.allParticipants-contents table tr td {
 	padding:7px 7px 7px 10px;
     border-bottom: 1px solid #CCCCCC;
     border-top: 1px solid #CCCCCC;
 }
 
-div#contents table tr td.users,
-div#contents table tr td.agents {
+div.allParticipants-contents table tr td.users,
+div.allParticipants-contents table tr td.agents {
 	border-right:none;
 }
 
-div#contents table tr td.remove,
-div#contents table tr td.assign {
+div.allParticipants-contents table tr td.remove,
+div.allParticipants-contents table tr td.assign {
 	border-left:none;
 }
 
-div#contents table tr td.remove a {
+div.allParticipants-contents table tr td.remove a {
     background: url('../../../images/signout-bg.png') repeat-x;
     border: 1px solid #a7a9ac;
     color: #727272;
@@ -198,32 +205,32 @@ div#contents table tr td.remove a {
     display: block;
 }
 
-div#contents table tr td.remove a:hover {
+div.allParticipants-contents table tr td.remove a:hover {
     color: #000000;
 	border:1px solid #000000;
 }
 
-a.responder,
-a.planner,
-a.responderList {
+div.allParticipants-contents a.responder,
+div.allParticipants-contents a.planner,
+div.allParticipants-contents a.responderList {
 	font-weight:bold;
 	border:none;
 }
 
-a.responder:hover,
-a.planner:hover,
-a.responderList:hover {
+div.allParticipants-contents a.responder:hover,
+div.allParticipants-contents a.planner:hover,
+div.allParticipants-contents a.responderList:hover {
 	font-weight:bold;
 	border-bottom:1px dotted #666666;
 	color:#000000;
 }
 
-span.profile,
-span.many {
+div.allParticipants-contents span.profile,
+div.allParticipants-contents span.many {
 	border-bottom:1px dotted #666666;
 }
 
-span.desc {
+div.allParticipants-contents span.desc {
 	color: #666666;
 	font-size: 11px;
 	text-transform: none;
@@ -233,7 +240,7 @@ span.desc {
 /* ----- Assign - Dropdown ----- */
 
 
-td.assign {
+div.allParticipants-contents td.assign {
     clear: both;
     margin: 0;
     padding: 0;
@@ -241,7 +248,7 @@ td.assign {
 	width:49px;
 }
 
-td.assign ul {
+div.allParticipants-contents td.assign ul {
     float: right;
     list-style: none outside none;
     margin: 0;
@@ -250,7 +257,7 @@ td.assign ul {
     right: 50%;
 }
 
-td.assign ul li {
+div.allParticipants-contents td.assign ul li {
     float: left;
     left: 50%;
     margin: 0;
@@ -259,7 +266,7 @@ td.assign ul li {
     top: 1px;
 }
 
-td.assign ul li a {
+div.allParticipants-contents td.assign ul li a {
     text-decoration: none;
     background: url('../../../images/signout-bg.png') repeat-x scroll 0 0 transparent;
     border: 1px solid #A7A9AC;
@@ -273,19 +280,19 @@ td.assign ul li a {
     text-transform: uppercase;
 }
 
-td.assign ul li a:hover {
+div.allParticipants-contents td.assign ul li a:hover {
     color: #000000;
 	border:1px solid #000000;
 	background:#eeeeee;
 }
 
-td.assign ul li:hover a {
+div.allParticipants-contents td.assign ul li:hover a {
     color: #000000;
 	border:1px solid #000000;
 	background:#eeeeee;
 }
 
-td.assign ul ul {
+div.allParticipants-contents td.assign ul ul {
     display: none;
     float: left;
     position: absolute;
@@ -297,7 +304,7 @@ td.assign ul ul {
 	z-index:1000;
 }
 
-td.assign ul ul li {
+div.allParticipants-contents td.assign ul ul li {
     clear: left;
     left: auto;
     margin: 0;
@@ -307,8 +314,8 @@ td.assign ul ul li {
     right: 0.8em;
 }
 
-td.assign ul ul li a,
-td.assign ul li:hover ul li a {
+div.allParticipants-contents td.assign ul ul li a,
+div.allParticipants-contents td.assign ul li:hover ul li a {
     background: none repeat scroll 0 0 #EEEEEE;
     border-bottom: none;
     color: #444444;
@@ -319,18 +326,18 @@ td.assign ul li:hover ul li a {
     width: 100%;
 }
 
-td.assign ul ul li:last-child a,
-td.assign ul li:hover ul li:last-child a {
+div.allParticipants-contents td.assign ul ul li:last-child a,
+div.allParticipants-contents td.assign ul li:hover ul li:last-child a {
     border-bottom: 1px solid #000000;
 }
 
-td.assign ul ul li a:hover,
-td.assign ul li:hover ul li a:hover {
+div.allParticipants-contents td.assign ul ul li a:hover,
+div.allParticipants-contents td.assign ul li:hover ul li a:hover {
     background: #999999;
     color: #ffffff;
     float: left;
 }
 
-td.assign ul li:hover ul {
+div.allParticipants-contents td.assign ul li:hover ul {
     display: block;
 }
