@@ -65,44 +65,105 @@
     <div wicket:id="flow-legend">[flow legend panel]</div>
     <div wicket:id="feedbacks">[all feedback panel]</div>
     <div wicket:id="dataCollection">[data collection panel]</div>
-    <!--   <span wicket:id="surveys">[surveys panel] </span> -->
-    <img class="logo" wicket:id="channelsHome" src="images/logo_home.png" alt="Home" title="Home" style="border:0"/>
 
     <div class="header">
-        <h1><span wicket:id="header">Title</span></h1>
-        <span class="menubar">
-            <span wicket:id="geomapLink">[geomap link panel]</span>
+        <a href="home">
+            <img class="logo" src="images/global-logo.png" width="140" height="51" alt="Channels"/>
+        </a>
 
-            <span class="menuitem" wicket:id="planShowMenu">[show menu]</span><span class="menuitem"
-                                                                                    wicket:id="planActionsMenu">[action menu]</span>
-            <input wicket:id="refresh-needed" type="button" value="Please refresh now"/>
-            <a wicket:id="help-link" href="#"><img class="help-icon" src="images/help_blue_small.png" alt="Help"
-                                                   title="Channels help and feedback"/></a>
-            <span wicket:id="spinner" id="spinner" class="spinner"><img src="images/ajax-loader.gif"></span>
-        </span>
+        <div class="menu">
+            <div class="group first">
+                <a class="logout" href="logout">Sign out</a>
+                <a class="help" wicket:id="help-link" href="#">Help</a>
+                <span wicket:id="feedback" class="feedback-container">[feedback panel]</span>
+            </div>
+            <div class="group">
+                <span class="menuitem" wicket:id="planShowMenu">[show menu]</span>
+                <span class="menuitem" wicket:id="planActionsMenu">[action menu]</span>
+            </div>
+            <div class="group">
+                <input wicket:id="refresh-needed" type="button" value="Please refresh now"/>
+                <a wicket:id="goBack" class="back" title="Go back" alt="Go back">Back</a>
+                <a wicket:id="goForward" class="forward" title="Go forward">Forward</a>
+            </div>
+        </div>
+    </div>
 
-        <p class="caption" wicket:id="sg-desc">A description.</p>
+    <div class="pathway-cont">
+        <div wicket:id="planPath" class="pathway">
+            <ul>
+                <li>
+                    <a wicket:id="homeLink" href="home">
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="plan">
+                    <a wicket:id="selectedPlanLink" href="#">
+                        <span wicket:id="selectedPlan">Rail Security</span>
+                    </a>
+                </li>
+                <li class="plan">
+                    <a wicket:id="selectedSegmentLink" href="#">
+                        <span wicket:id="selectedSegment">Train stopped</span>
+                    </a>
+                    <ul>
+                        <li wicket:id="otherSegments">
+                            <a href="#" wicket:id="otherSegmentLink">
+                                <span wicket:id="otherSegmentName">Station evacuation</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="icon-menu">
+            <div class="group">
+                <a wicket:id="segmentIssuesLink" class="button-icon">
+                    <img src="images/warning.png" alt="issues"/>
+                </a>
+                <a wicket:id="geomapLink" class="button-icon">
+                    <img src="images/location.png" alt="map"/>
+                </a>
+                <span wicket:id="spinner" id="spinner" class="spinner">
+                    <img src="images/loading.gif">
+                </span>
+            </div>
+        </div>
     </div>
-    <div id="history">
-        <img wicket:id="goBack" class="navigation" src="images/go_back.png" title="Go back" alt="Go back">
-        <img wicket:id="goForward" class="navigation" src="images/go_forward.png" title="Go forward" alt="Go forward">
-    </div>
-    <div id="controls">
-        <ul id="sg-sel">
-            <li><strong><span wicket:id="planName" class="pointer">Plan name</span></strong></li>
-            <li wicket:id="select-segment"><label>Select plan segment:
-                <select wicket:id="sg-sel" name="segment">
-                    <option>Some segment</option>
-                </select></label>
-            </li>
-        </ul>
-    </div>
+
     <!--
-        <span wicket:id="segment-import">[segment import dialog]</span>
+            <h1><span wicket:id="header">Title</span></h1>
+            <span class="menubar">
+                <span wicket:id="geomapLink">[geomap link panel]</span>
+
+                <span class="menuitem" wicket:id="planShowMenu">[show menu]</span><span class="menuitem"
+                                                                                        wicket:id="planActionsMenu">[action menu]</span>
+                <input wicket:id="refresh-needed" type="button" value="Please refresh now"/>
+                <a wicket:id="help-link" href="#"><img class="help-icon" src="images/help_blue_small.png" alt="Help"
+                                                       title="Channels help and feedback"/></a>
+                <span wicket:id="spinner" id="spinner" class="spinner"><img src="images/ajax-loader.gif"></span>
+            </span>
+
+            <p class="caption" wicket:id="sg-desc">A description.</p>
+        </div>
+        <div id="history">
+            <img wicket:id="goBack" class="navigation" src="images/go_back.png" title="Go back" alt="Go back">
+            <img wicket:id="goForward" class="navigation" src="images/go_forward.png" title="Go forward" alt="Go forward">
+        </div>
+        <div id="controls">
+            <ul id="sg-sel">
+                <li><strong><span wicket:id="planName" class="pointer">Plan name</span></strong></li>
+                <li wicket:id="select-segment"><label>Select plan segment:
+                    <select wicket:id="sg-sel" name="segment">
+                        <option>Some segment</option>
+                    </select></label>
+                </li>
+            </ul>
+        </div>
     -->
     <span wicket:id="segment">[segment panel] </span>
 
- <div id="footer">
+    <div id="footer">
         <hr>
         <p id="logout">Logged in as <span wicket:id="user">User</span> &mdash; <a href="logout">Sign out</a><br>
             &copy; Copyright 2011 Mind-Alliance Inc. All Rights Reserved.</p>
@@ -112,8 +173,10 @@
     <div id="basic-template">
         <!--<a class="ui-notify-cross ui-notify-close" href="#">x</a>-->
         <h1>#{title}</h1>
+
         <p>#{text}</p>
     </div>
 </div>
 </body>
 </html>
+

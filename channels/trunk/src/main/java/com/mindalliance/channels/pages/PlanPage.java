@@ -48,6 +48,7 @@ import com.mindalliance.channels.pages.components.segment.SegmentPanel;
 import com.mindalliance.channels.pages.components.segment.SharingCommitmentsPanel;
 import com.mindalliance.channels.pages.components.social.rfi.DataCollectionPanel;
 import com.mindalliance.channels.pages.components.support.FlowLegendPanel;
+import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import org.apache.commons.collections.CollectionUtils;
@@ -56,19 +57,16 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -159,33 +157,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private int historyCursor = -1;
 
     /**
-     * Label with name of plan.
-     */
-    private Label planNameLabel;
-    /**
-     * Label with name of segment.
-     */
-    private Label segmentNameLabel;
-
-    /**
      * Link to mapping of parts.
      */
     private GeomapLinkPanel partsMapLink;
-
-    /**
-     * Label with description of segment.
-     */
-    private Label segmentDescriptionLabel;
-
-    /**
-     * Container of segment selector.
-     */
-    private WebMarkupContainer selectSegmentContainer;
-
-    /**
-     * Choice of segments.
-     */
-    private DropDownChoice<Segment> segmentDropDownChoice;
 
     /**
      * Segments action menu.
@@ -278,24 +252,29 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private Component overridesPanel;
 
     /**
-     * The aspect for entity panel.
-     */
-    // private String entityAspect = EntityPanel.DETAILS;
-
-    /**
      * Refresh button.
      */
     private Component refreshNeededComponent;
-
     /**
-     * Go back button container.
+     * Go back link.
      */
-    private WebMarkupContainer goBackContainer;
-
+    private AjaxLink<String> goBackLink;
     /**
-     * Go forward button container.
+     * Go forward link.
      */
-    private WebMarkupContainer goForwardContainer;
+    private AjaxLink<String> goForwardLink;
+    /**
+     * Geomap link panel.
+     */
+    private GeomapLinkPanel geomapLinkPanel;
+    /**
+     * Segment issues link.
+     */
+    private AjaxLink<String> segmentIssuesLink;
+    /**
+     * Plan path.
+     */
+    private WebMarkupContainer planPath;
     /**
      * Notifier.
      */
@@ -471,19 +450,15 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addHeader() {
-        addSegmentNameLabel();
-        // Add link to map of parts
-        form.addOrReplace( createPartsMapLink() );
-        addSegmentDescriptionLabel();
-        addPlanName();
-        addChannelsLogo();
-        addSpinner();
         addRefreshNow();
-        addHelp();
         addGoBackAndForward();
         addPlanMenubar();
-        addSegmentSelector();
-        updateSelectorsVisibility();
+        addFeedback();
+        addHelp();
+        addPlanPath();
+        addSpinner();
+        addPartsMapLink();
+        addSegmentIssuesLink();
         updateNavigation();
     }
 
@@ -503,30 +478,144 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addDataCollectionPanel();
     }
 
-    private void addPlanName() {
-        String planName = StringUtils.abbreviate( "Plan: " + getPlan().getVersionedName(), PLAN_NAME_MAX_LENGTH );
-        planNameLabel = new Label( "planName",
-                new Model<String>( planName ) );
-        planNameLabel.setOutputMarkupId( true );
-        planNameLabel.add( new AjaxEventBehavior( "onclick" ) {
+    private void addRefreshNow() {
+        refreshNeededComponent = new AjaxFallbackLink( "refresh-needed" ) {
+            public void onClick( AjaxRequestTarget target ) {
+                getCommander().clearTimeOut( getUser().getUsername() );
+                reacquireLocks();
+                lastRefreshed = System.currentTimeMillis();
+                refreshAll( target );
+            }
+        };
+        refreshNeededComponent.setOutputMarkupId( true );
+        // Put timer on form since it is never updated or replaced
+        form.add( new AbstractAjaxTimerBehavior( Duration.seconds( REFRESH_DELAY ) ) {
             @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getPlan() ) );
+            protected void onTimer( AjaxRequestTarget target ) {
+                try {
+                    doTimedUpdate( target );
+                    makeVisible( spinner, false );
+/*
+                    addSpinner();
+                    target.add( spinner );
+*/
+                } catch ( Exception e ) {
+                    LOG.error( "Failed to do timed update", e );
+                    ErrorPage.emailException(
+                            new Exception( "Timed update failed", e ),
+                            mailSender,
+                            getSupportCommunity(),
+                            getUser()
+                    );
+                    redirectToPlan();
+                }
             }
         } );
-        form.addOrReplace( planNameLabel );
+        form.add( refreshNeededComponent );
+        updateRefreshNowNotice();
     }
 
-    private void addChannelsLogo() {
-        WebMarkupContainer channels_logo = new WebMarkupContainer( "channelsHome" );
-        channels_logo.add( new AjaxEventBehavior( "onclick" ) {
+    private void addGoBackAndForward() {
+        goBackLink = new AjaxLink<String>( "goBack" ) {
             @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                setResponsePage( UserPage.class, planParameters( getPlan() ) );
+            public void onClick( AjaxRequestTarget target ) {
+                goBack( target );
             }
-        } );
-        form.add( channels_logo );
+        };
+        form.add( goBackLink );
+
+        goForwardLink = new AjaxLink<String>( "goForward" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                goForward( target );
+            }
+        };
+        form.add( goForwardLink );
     }
+
+    private void updateNavigation() {
+        goBackLink.add( new AttributeModifier(
+                "class",
+                isCanGoBack() ? "back" : "back disabled" ) );
+        goForwardLink.add( new AttributeModifier(
+                "class",
+                isCanGoForward() ? "forward" : "forward disabled" ) );
+        String issuesSummary = getSegmentIssuesSummary();
+        makeVisible( segmentIssuesLink, !issuesSummary.isEmpty() );
+        segmentIssuesLink.add( new AttributeModifier( "title", issuesSummary ) );
+        addPartsMapLink();
+    }
+
+    private String getSegmentIssuesSummary() {
+        Analyst analyst = getApp().getAnalyst();
+        return analyst.getIssuesSummary( getQueryService(), segment, Analyst.INCLUDE_PROPERTY_SPECIFIC );
+    }
+
+
+    private void updateNavigation( AjaxRequestTarget target ) {
+        updateNavigation();
+        target.add( goBackLink );
+        target.add( goForwardLink );
+        target.add( segmentIssuesLink );
+        target.add( geomapLinkPanel );
+        addPlanPath();
+        target.add( planPath );
+    }
+
+    private void addPlanMenubar() {
+        addPlanActionsMenu();
+        addPlanShowMenu();
+    }
+
+    private void addPlanShowMenu() {
+        planShowMenu = new PlanShowMenuPanel(
+                "planShowMenu",
+                new PropertyModel<Segment>( this, "segment" ),
+                getReadOnlyExpansions() );
+        planShowMenu.setOutputMarkupId( true );
+        form.addOrReplace( planShowMenu );
+    }
+
+    private void addPlanActionsMenu() {
+        planActionsMenu = new PlanActionsMenuPanel( "planActionsMenu",
+                new PropertyModel<Segment>( this, "segment" ),
+                getReadOnlyExpansions() );
+        planActionsMenu.setOutputMarkupId( true );
+        form.addOrReplace( planActionsMenu );
+    }
+
+    private void addPartsMapLink() {
+        List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
+        for ( Iterator<Part> parts = segment.parts(); parts.hasNext(); )
+            geoLocatables.add( parts.next() );
+        geomapLinkPanel = new GeomapLinkPanel( "geomapLink",
+                new Model<String>(
+                        "Tasks with known locations in plan segment "
+                                + segment.getName() ),
+                geoLocatables,
+                new Model<String>( "Show tasks in map" ) );
+        geomapLinkPanel.setOutputMarkupId( true );
+        partsMapLink = geomapLinkPanel;
+        makeVisible( geomapLinkPanel, !geoLocatables.isEmpty() );
+        form.addOrReplace( geomapLinkPanel );
+    }
+
+    private void addFeedback() {
+        form.add( new UserFeedbackPanel( "feedback", Feedback.PLANNING ) );
+    }
+
+
+    private void addSegmentIssuesLink() {
+        segmentIssuesLink = new AjaxLink<String>( "segmentIssuesLink" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getSegment() ) );
+            }
+        };
+        segmentIssuesLink.setOutputMarkupId( true );
+        form.addOrReplace( segmentIssuesLink );
+    }
+
 
     private void addSpinner() {
         spinner = new WebMarkupContainer( "spinner" );
@@ -534,6 +623,93 @@ public final class PlanPage extends AbstractChannelsWebPage {
         spinner.add( new AttributeModifier( "id", new Model<String>( "spinner" ) ) );
         form.addOrReplace( spinner );
     }
+
+    private void addPlanPath() {
+        planPath = new WebMarkupContainer( "planPath" );
+        planPath.setOutputMarkupId( true );
+        form.addOrReplace( planPath );
+        addHomeInPath();
+        addSelectedPlanInPath();
+        addSelectedSegmentInPath();
+        addOtherSegmentsInPath();
+    }
+
+    private void addHomeInPath() {
+        AjaxLink<String> homeLink = new AjaxLink<String>( "homeLink" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                setResponsePage( UserPage.class, planParameters( getPlan() ) );
+            }
+        };
+        planPath.add( homeLink );
+    }
+
+    private void addSelectedPlanInPath() {
+        AjaxLink<String> selectedPlanLink = new AjaxLink<String>( "selectedPlanLink" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getPlan() ) );
+            }
+        };
+        planPath.add( selectedPlanLink );
+        String planName = getPlan().getName();
+        Label selectedPlanNameLabel = new Label(
+                "selectedPlan",
+                StringUtils.abbreviate( planName, PLAN_NAME_MAX_LENGTH )
+        );
+        if ( planName.length() > PLAN_NAME_MAX_LENGTH ) {
+            selectedPlanNameLabel.add( new AttributeModifier( "title", planName ) );
+        }
+        selectedPlanLink.add( selectedPlanNameLabel );
+    }
+
+    private void addSelectedSegmentInPath() {
+        AjaxLink<String> selectedSegmentLink = new AjaxLink<String>( "selectedSegmentLink" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getSegment() ) );
+            }
+        };
+        planPath.add( selectedSegmentLink );
+        String segmentName = getSegment().getName();
+        Label selectedSegmentNameLabel = new Label(
+                "selectedSegment",
+                StringUtils.abbreviate( segmentName, SEGMENT_NAME_MAX_LENGTH )
+        );
+        if ( segmentName.length() > SEGMENT_NAME_MAX_LENGTH ) {
+            selectedSegmentNameLabel.add( new AttributeModifier( "title", segmentName ) );
+        }
+        selectedSegmentLink.add( selectedSegmentNameLabel );
+    }
+
+
+    private void addOtherSegmentsInPath() {
+        ListView<Segment> otherSegmentsListView = new ListView<Segment>(
+                "otherSegments",
+                getOtherSegments()
+        ) {
+            @Override
+            protected void populateItem( final ListItem<Segment> item ) {
+                AjaxLink<String> otherPlanLink = new AjaxLink<String>( "otherSegmentLink" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        setSegment( item.getModelObject() );
+                        update( target, new Change( Change.Type.Selected, getSegment() ) );
+                    }
+                };
+                otherPlanLink.add( new Label( "otherSegmentName", item.getModelObject().toString() ) );
+                item.add( otherPlanLink );
+            }
+        };
+        planPath.add( otherSegmentsListView );
+    }
+
+    private List<Segment> getOtherSegments() {
+        List<Segment> otherSegments = new ArrayList<Segment>( getAllSegments() );
+        otherSegments.remove( getSegment() );
+        return otherSegments;
+    }
+
 
     private void addMaximizedFlowPanel( Change change ) {
         if ( flowMaximized ) {
@@ -604,14 +780,14 @@ public final class PlanPage extends AbstractChannelsWebPage {
             makeVisible( dataCollectionPanel, false );
         } else {
             if ( change == null || !change.hasQualifier( "tab" ) )
-            dataCollectionPanel = new DataCollectionPanel(
-                    "dataCollection",
-                    new Model<RFISurvey>( rfiSurvey ) );
+                dataCollectionPanel = new DataCollectionPanel(
+                        "dataCollection",
+                        new Model<RFISurvey>( rfiSurvey ) );
             else
                 dataCollectionPanel = new DataCollectionPanel(
                         "dataCollection",
                         new Model<RFISurvey>( rfiSurvey ),
-                        (String)change.getQualifier( "tab" ) );
+                        (String) change.getQualifier( "tab" ) );
         }
         form.addOrReplace( dataCollectionPanel );
     }
@@ -626,52 +802,33 @@ public final class PlanPage extends AbstractChannelsWebPage {
         return getAspectShown( getSegment() );
     }
 
-    private void addSegmentDescriptionLabel() {
-        segmentDescriptionLabel = new Label( "sg-desc",                                  // NON-NLS
-                new AbstractReadOnlyModel<String>() {
-                    @Override
-                    public String getObject() {
-                        return StringUtils.abbreviate( StringUtils.capitalize(
-                                segment.getPhaseEventTitle() ),
-                                SEGMENT_DESCRIPTION_MAX_LENGTH );
-                    }
-                } );
-        segmentDescriptionLabel.setOutputMarkupId( true );
-        segmentDescriptionLabel.add(
-                new AttributeModifier(
-                        "title",
-                        new AbstractReadOnlyModel<String>() {
-                            @Override
-                            public String getObject() {
-                                return segment.getPhaseEventTitle();
-                            }
-                        } ) );
-        form.addOrReplace( segmentDescriptionLabel );
-    }
-
-    private void addSegmentNameLabel() {
-        segmentNameLabel = new Label( "header",
-                new AbstractReadOnlyModel() {
-                    @Override
-                    public Object getObject() {
-                        return StringUtils.abbreviate( segment.getName(),
-                                SEGMENT_NAME_MAX_LENGTH );
-                    }
-                } );
-        segmentNameLabel.setOutputMarkupId( true );
-        segmentNameLabel.add( new AjaxEventBehavior( "onclick" ) {
-            protected void onEvent( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getSegment() ) );
-            }
-        } );
-        // Add style mods from analyst.
-        annotateSegmentName();
-        form.addOrReplace( segmentNameLabel );
-    }
+    /*   private void addSegmentDescriptionLabel() {
+            segmentDescriptionLabel = new Label( "sg-desc",
+                    new AbstractReadOnlyModel<String>() {
+                        @Override
+                        public String getObject() {
+                            return StringUtils.abbreviate( StringUtils.capitalize(
+                                    segment.getPhaseEventTitle() ),
+                                    SEGMENT_DESCRIPTION_MAX_LENGTH );
+                        }
+                    } );
+            segmentDescriptionLabel.setOutputMarkupId( true );
+            segmentDescriptionLabel.add(
+                    new AttributeModifier(
+                            "title",
+                            new AbstractReadOnlyModel<String>() {
+                                @Override
+                                public String getObject() {
+                                    return segment.getPhaseEventTitle();
+                                }
+                            } ) );
+            form.addOrReplace( segmentDescriptionLabel );
+        }
+    */
 
     private void addFooter() {
         form.add( new Label( "user",
-                getUser().getUsername() ) );                              // NON-NLS
+                getUser().getUsername() ) );
     }
 
     /*   private void addSegmentImportDialog() {
@@ -688,66 +845,15 @@ public final class PlanPage extends AbstractChannelsWebPage {
         form.add( segmentPanel );
     }
 
-    private GeomapLinkPanel createPartsMapLink() {
-        List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
-        for ( Iterator<Part> parts = segment.parts(); parts.hasNext(); )
-            geoLocatables.add( parts.next() );
-        GeomapLinkPanel panel = new GeomapLinkPanel( "geomapLink",
-                new Model<String>(
-                        "Tasks with known locations in plan segment "
-                                + segment.getName() ),
-                geoLocatables,
-                new Model<String>( "Show tasks in map" ) );
-        panel.setOutputMarkupId( true );
-        partsMapLink = panel;
-        return panel;
-    }
-
-    private void addRefreshNow() {
-        refreshNeededComponent = new AjaxFallbackLink( "refresh-needed" ) {
-            public void onClick( AjaxRequestTarget target ) {
-                getCommander().clearTimeOut( getUser().getUsername() );
-                reacquireLocks();
-                lastRefreshed = System.currentTimeMillis();
-                refreshAll( target );
-            }
-        };
-        refreshNeededComponent.setOutputMarkupId( true );
-        // Put timer on form since it is never updated or replaced
-        form.add( new AbstractAjaxTimerBehavior( Duration.seconds( REFRESH_DELAY ) ) {
-            @Override
-            protected void onTimer( AjaxRequestTarget target ) {
-                try {
-                    doTimedUpdate( target );
-                    makeVisible( spinner, false );
-/*
-                    addSpinner();
-                    target.add( spinner );
-*/
-                } catch ( Exception e ) {
-                    LOG.error( "Failed to do timed update", e );
-                    ErrorPage.emailException(
-                            new Exception( "Timed update failed", e ),
-                            mailSender,
-                            getSupportCommunity(),
-                            getUser()
-                    );
-                    redirectToPlan();
-                }
-            }
-        } );
-        form.add( refreshNeededComponent );
-        updateRefreshNowNotice();
-    }
 
     private void addHelp() {
         BookmarkablePageLink<HelpPage> helpLink = new BookmarkablePageLink<HelpPage>( "help-link", HelpPage.class );
         helpLink.add( new AttributeModifier( "target", new Model<String>( "help" ) ) );
-       /* helpLink.setPopupSettings( new PopupSettings(
-                PopupSettings.RESIZABLE |
-                        PopupSettings.SCROLLBARS |
-                        PopupSettings.MENU_BAR |
-                        PopupSettings.TOOL_BAR ) );*/
+        /* helpLink.setPopupSettings( new PopupSettings(
+PopupSettings.RESIZABLE |
+      PopupSettings.SCROLLBARS |
+      PopupSettings.MENU_BAR |
+      PopupSettings.TOOL_BAR ) );*/
 
         form.add( helpLink );
     }
@@ -761,26 +867,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
         return message == null ? "" : message;
     }
 
-    private void addGoBackAndForward() {
-        goBackContainer = new WebMarkupContainer( "goBack" );
-        goBackContainer.setOutputMarkupId( true );
-        goBackContainer.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                goBack( target );
-            }
-        } );
-        form.add( goBackContainer );
-        goForwardContainer = new WebMarkupContainer( "goForward" );
-        goForwardContainer.setOutputMarkupId( true );
-        goForwardContainer.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                goForward( target );
-            }
-        } );
-        form.add( goForwardContainer );
-    }
 
     private void doTimedUpdate( AjaxRequestTarget target ) {
         if ( getCommander().isOutOfSync( getUser().getUsername() ) ) {
@@ -857,74 +943,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         }
         return editables;
-    }
-
-    private void annotateSegmentName() {
-        Analyst analyst = getApp().getAnalyst();
-        String issue = analyst.getIssuesSummary( getQueryService(), segment, Analyst.INCLUDE_PROPERTY_SPECIFIC );
-        segmentNameLabel.add( new AttributeModifier( "class",// NON-NLS
-                new Model<String>( issue.isEmpty() ? "no-error pointer"
-                        : "error pointer" ) ) );  // NON-NLS
-        segmentNameLabel.add( new AttributeModifier( "title",// NON-NLS
-                new Model<String>( issue.isEmpty()
-                        ? "No known issue"
-                        : issue ) ) );
-    }
-
-    private void addPlanMenubar() {
-        addPlanActionsMenu();
-        addPlanShowMenu();
-    }
-
-    private void addPlanShowMenu() {
-        planShowMenu = new PlanShowMenuPanel(
-                "planShowMenu",
-                new PropertyModel<Segment>( this, "segment" ),
-                getReadOnlyExpansions() );
-        planShowMenu.setOutputMarkupId( true );
-        form.addOrReplace( planShowMenu );
-    }
-
-    private void addPlanActionsMenu() {
-        planActionsMenu = new PlanActionsMenuPanel( "planActionsMenu",
-                new PropertyModel<Segment>( this, "segment" ),
-                getReadOnlyExpansions() );
-        planActionsMenu.setOutputMarkupId( true );
-        form.addOrReplace( planActionsMenu );
-    }
-
-    private void addSegmentSelector() {
-        selectSegmentContainer = new WebMarkupContainer( "select-segment" );
-        selectSegmentContainer.setOutputMarkupId( true );
-        form.add( selectSegmentContainer );
-        segmentDropDownChoice = new DropDownChoice<Segment>( "sg-sel",
-                // NON-NLS
-                new PropertyModel<Segment>( this,
-                        "segment" ),
-                // NON-NLS
-                new PropertyModel<List<? extends Segment>>(
-                        this,
-                        "allSegments" ),
-                new IChoiceRenderer<Segment>() {
-                    @Override
-                    public Object getDisplayValue( Segment seg ) {
-                        return StringUtils.abbreviate( seg.getName(), SEGMENT_NAME_MAX_LENGTH );
-                    }
-
-                    @Override
-                    public String getIdValue( Segment object, int index ) {
-                        return Integer.toString( index );
-                    }
-                } );    // NON-NLS
-        segmentDropDownChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) { // NON-NLS
-
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Selected, getSegment() ) );
-            }
-        } );
-        segmentDropDownChoice.setOutputMarkupId( true );
-        selectSegmentContainer.add( segmentDropDownChoice );
     }
 
     private void addEntityPanel() {
@@ -1093,21 +1111,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
         form.addOrReplace( planEditPanel );
     }
-
-/*
-    private void addSurveysPanel( Survey survey ) {
-        boolean showSurveys = survey != null && expansions.contains( survey.getId() )
-                || expansions.contains( Survey.UNKNOWN.getId() );
-        if ( showSurveys ) {
-            surveysPanel = new SurveysPanel( "surveys", survey, getReadOnlyExpansions() );
-        } else {
-            surveysPanel = new Label( "surveys", "" );
-            surveysPanel.setOutputMarkupId( true );
-            makeVisible( surveysPanel, false );
-        }
-        form.addOrReplace( surveysPanel );
-    }
-*/
 
     private ModelEntity findExpandedEntity() {
         for ( long id : expansions ) {
@@ -1953,7 +1956,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         updateMaximizedFlow( target, change );
         updateFlowLegend( target );
         updateRefresh( target );
-        updateSelectors( target, change );
+        updateNavigation( target );
         refreshChildren( target, change, updated );
         refreshHeadersMenusAndNavigation( target, change, updated );
         changes = new HashMap<Long, Change>();
@@ -2006,12 +2009,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void updateHeaders( AjaxRequestTarget target ) {
-        addPlanName();
-        target.add( planNameLabel );
-        annotateSegmentName();
-        target.add( segmentNameLabel );
-        target.add( segmentDescriptionLabel );
-        form.addOrReplace( createPartsMapLink() );
+        addPlanPath();
+        target.add( planPath );
+        updateNavigation( target );
+        addPartsMapLink();
         target.add( partsMapLink );
     }
 
@@ -2022,20 +2023,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
         target.add( planShowMenu );
     }
 
-    private void updateSelectorsVisibility() {
-        makeVisible( selectSegmentContainer, getAllSegments().size() > 1 );
-    }
-
-    private void updateSelectors( AjaxRequestTarget target, Change change ) {
-        if ( change.isForInstanceOf( Part.class ) && change.isSelected() ) {
-            // In case selecting the part switched segments
-            target.add( segmentDropDownChoice );
-        }
-        updateSelectorsVisibility();
-        target.add( selectSegmentContainer );
-        addPlanName();
-        target.add( planNameLabel );
-    }
 
     private void refreshChildren(
             AjaxRequestTarget target,
@@ -2104,7 +2091,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 identifiable != null && change.isSelected() && identifiable instanceof Part ) {
             addSegmentEditPanel();
             target.add( segmentEditPanel );
-            target.add( segmentDropDownChoice );
+            addPlanPath();
+            target.add( planPath );
         } else if ( segmentEditPanel instanceof SegmentEditPanel ) {
             ( (SegmentEditPanel) segmentEditPanel ).refresh( target,
                     change,
@@ -2297,24 +2285,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
     }
 
-
-    private void updateNavigation() {
-        goBackContainer.add( new AttributeModifier( "src", new Model<String>( isCanGoBack()
-                ? "images/go_back.png"
-                : "images/go_back_disabled.png" ) ) );
-        goBackContainer.add( new AttributeModifier( "title", new Model<String>(
-                isCanGoBack() ? "Go back" : "" ) ) );
-        goForwardContainer.add( new AttributeModifier( "src", new Model<String>(
-                isCanGoForward() ? "images/go_forward.png" : "images/go_forward_disabled.png" ) ) );
-        goForwardContainer.add( new AttributeModifier( "title", new Model<String>(
-                isCanGoForward() ? "Go forward" : "" ) ) );
-    }
-
-    private void updateNavigation( AjaxRequestTarget target ) {
-        updateNavigation();
-        target.add( goBackContainer );
-        target.add( goForwardContainer );
-    }
 
     /**
      * Get all plans that the current can modify.
@@ -2565,4 +2535,5 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
     }
 }
+
 

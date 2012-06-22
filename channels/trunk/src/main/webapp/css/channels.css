@@ -46,14 +46,18 @@ div.header .help-icon {
     height: 100%;
 }
 
+/*
+
 .logo {
     padding: 10px 0 0 5px;
     cursor: pointer;
 }
 
+*/
+
 #contents {
     position: absolute;
-    top: 5em;
+    top: 6.6em;
     bottom: 10px;
     left: 20%;
     width: 60%;
@@ -216,12 +220,419 @@ div.section-title {
     width: 32%;
 }
 
+/*
 div.header {
     height: 5em;
     padding: 14px 0 0 0;
     display: inline;
     position: absolute;
 }
+*/
+
+div.header {
+    width: 100%;
+    height: 51px;
+    background: url('../images/global-header-bg.png') #c3d9ff;
+    border-bottom:px solid #999999;
+    font-size:12px;
+    float:left;
+}
+
+div.pathway-cont {
+    width: 100%;
+    height: 27px;
+    background: url('../images/headerbar-bg.png') repeat-x;
+    border-top: 1px solid #999999;
+    border-bottom: 1px solid #999999;
+    font-size:11px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    float:left;
+}
+
+div.pathway {
+	color: #727272;
+	float: left;
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	padding: 0 10px;
+	width: 753px;
+	height: 27px;
+}
+
+div.pathway a {
+	color: #727272;
+	font-size: 11px;
+	font-weight: bold;
+	border: none;
+	text-decoration: none;
+	height: 27px;
+	line-height: 27px;
+}
+
+div.pathway li.plan-description a {
+	color: #999999;
+}
+
+div.pathway a:hover,
+div.pathway ul li:hover a {
+	color: #333333;
+}
+
+div.pathway ul li:hover ul li a {
+	color: #727272;
+}
+
+div.pathway ul li:hover ul li a:hover {
+	color: #333333;
+}
+
+div.pathway ul {
+	display: inline;
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+}
+
+div.pathway ul li {
+	background: url("../images/pathway-arrow.png") no-repeat scroll right center transparent;
+	float: left;
+	list-style: none outside none;
+	margin: 0 5px 0 0;
+	padding: 0 12px 0 0;
+}
+
+div.pathway ul li.plan:hover {
+	background: url("../images/pathway-arrow-down.png") no-repeat scroll right center transparent;
+}
+
+div.pathway ul li.last {
+	margin: 0;
+	padding: 0;
+	background: none;
+	display: none;
+}
+
+div.pathway ul li:last-child {
+	background: none;
+}
+
+div.pathway ul li ul {
+	background: none repeat scroll 0 0 #E8E8E8;
+	border-bottom: 1px solid #999999;
+	border-left: 1px solid #999999;
+	border-right: 1px solid #999999;
+	display: none;
+	list-style: none outside none;
+	margin: 0 0 0 -9px;
+	padding: 0;
+	position: absolute;
+	text-align: left;
+	z-index: 10000;
+}
+
+div.pathway ul li:hover ul {
+	display: block;
+}
+
+div.pathway ul li ul li {
+	background: none repeat scroll 0 0 transparent;
+	display: block;
+	float: none;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+
+div.pathway ul li ul li a {
+	color: #727272;
+	display: block;
+	font-size: 11px;
+	font-weight: bold;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 8px;
+	text-decoration: none;
+	border-top: 1px solid #cccccc;
+}
+
+div.icon-menu {
+	float: right;
+	height: 27px;
+	width: 200px;
+}
+
+div.icon-menu div.group {
+	float: right;
+	height: 27px;
+	width: 200px;
+}
+
+div.icon-menu span.spinner,
+div.icon-menu a.button-icon {
+	border-left: 1px solid #a7a9ac;
+	display: block;
+	height: 22px;
+	padding: 5px 0 0 5px;
+	width: 22px;
+	float: right;
+}
+
+div.icon-menu span.spinner {
+	border-left:none;
+}
+
+div.menu {
+	float:right;
+	width:800px;
+	padding:0;
+}
+
+div.menu div.group {
+    border-left: 1px solid #B1B7C1;
+    float: right;
+    margin: 10px 0 0;
+    padding: 5px 10px;
+}
+
+div.menu div.group.first {
+}
+
+
+/* ----- Header ----- */
+
+div.header img {
+	float: left;
+	border: 0;
+	padding: 0;
+}
+
+div.header a.logout,
+div.header a.help,
+a.feedback-button,
+a.back,
+a.forward {
+	background: url('../images/signout-bg.png') repeat-x;
+	border: 1px solid #a7a9ac;
+	color: #727272;
+	font-size: 10px;
+	font-weight: bold;
+	padding: 2px 4px;
+	margin:0;
+	text-transform: capitalize;
+	outline: none;
+	float:right;
+	font-family: Arial,Helvetica,sans-serif;
+	line-height: 14px;
+}
+
+div.header a.help,
+div.header a.feedback-button,
+a.forward {
+	margin:0 8px 0 0;
+}
+
+a.feedback-button {
+	margin:0 0 0 0;
+}
+
+a.feedback-button.feedback-button-active {
+	background: #F6F6F6;
+}
+
+div.header a.logout:hover,
+div.header a.help:hover,
+a.feedback-button:hover,
+a.back:hover,
+a.forward:hover {
+	color: #000000;
+	border:1px solid #000000;
+}
+
+/* ----- Header - Feedback ----- */
+
+span.feedback-container {
+	float:right;
+	padding:0;
+}
+
+div.feedback {
+	float:right;
+}
+
+div.feedback-form-cont {
+background: none repeat scroll 0 0 #F6F6F6;
+    border: 1px solid #A7A9AC;
+    display: block;
+    font-size: 11px;
+    margin: 19px 0 0;
+    padding: 10px;
+    position: absolute;
+    z-index: 1000;
+}
+
+div.feedback-urgency {
+	padding:5px 0 5px 0;
+	display: none;
+}
+
+div.feedback-form-cont textarea {
+	background: none repeat scroll 0 0 #E8E8E8;
+	border: 1px solid #999999;
+	font-size: 11px;
+	height: 60px;
+	padding: 3px;
+	width: 280px;
+}
+
+div.feedback-options {
+	float: left;
+	padding: 7px 0 0;
+	width: 100px;
+}
+
+div.group span.menuitem {
+	display: block;
+	float: left;
+	margin-right: 8px;
+}
+
+div.feedback-options a,
+div.group span.menuitem a {
+	background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
+	border: 1px solid #A7A9AC;
+	color: #727272;
+	font-size: 10px;
+	font-weight: bold;
+	height: 16px;
+	line-height: 16px;
+	margin: 0;
+	outline: medium none;
+	padding: 2px 4px;
+	text-decoration: none;
+	text-transform: capitalize;
+	font-family: Arial,Helvetica,sans-serif;
+}
+
+div.feedback-options a span,
+div.group span.menuitem a span {
+	background: url("../images/pathway-arrow-down.png") no-repeat right;
+	padding-right: 15px;
+}
+
+div.feedback-options ul li ul li a span,
+div.group span.menuitem ul li ul li a span {
+	background: none;
+	padding-right: 0;
+}
+
+div.feedback-options a:hover,
+div.feedback-options ul li:hover a,
+div.group span.menuitem a:hover,
+div.group span.menuitem ul li:hover a {
+	color: #333333;
+}
+
+div.feedback-options ul li:hover ul li a,
+div.group span.menuitem ul li:hover ul li a {
+	color: #727272;
+}
+
+div.feedback-options ul li:hover ul li a:hover,
+div.group span.menuitem ul li:hover ul li a:hover {
+	color: #333333;
+}
+
+div.feedback-options ul,
+div.group span.menuitem ul {
+	display: inline;
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+}
+
+div.feedback-options ul li,
+div.group span.menuitem ul li {
+	float: left;
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+}
+
+div.feedback-options ul li ul,
+div.group span.menuitem ul li ul {
+	background: none repeat scroll 0 0 #E8E8E8;
+	display: none;
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	text-align: left;
+	z-index: 10000;
+}
+
+div.feedback-options ul li:hover ul,
+div.group span.menuitem ul li:hover ul {
+	display: block;
+}
+
+div.feedback-options ul li ul li,
+div.group span.menuitem ul li ul li {
+	background: none repeat scroll 0 0 transparent;
+	display: block;
+	float: none;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+
+div.feedback-options ul li ul li a,
+div.group span.menuitem ul li ul li a {
+	color: #727272;
+	display: block;
+	font-size: 10px;
+	font-weight: bold;
+	height: 16px;
+	line-height: 17px;
+	padding: 2px 4px;
+	text-decoration: none;
+	border-bottom: none;
+}
+
+div.feedback-options ul li ul li:last-child a,
+div.group span.menuitem ul li ul li:last-child a {
+	border-bottom: 1px solid #A7A9AC;
+}
+
+div.cancelSend {
+	float: right;
+	padding: 5px 0 0;
+	text-align: right;
+	width: 100px;
+}
+
+div.cancelSend input {
+	background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
+	border: 1px solid #A7A9AC;
+	color: #727272;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	margin: 0 0 0 3px;
+	outline: medium none;
+	padding: 1px 4px;
+	text-transform: capitalize;
+}
+
+div.cancelSend input:hover {
+	color: #000000;
+	border:1px solid #000000;
+}
+
+
+
+
 
 div.section, div.form {
     margin: 5px auto;
@@ -2001,6 +2412,8 @@ ul.ranges li a.selected {
     float: left;
 }
 
+/*
+
 span.spinner {
     padding-left: 15px;
 }
@@ -2009,6 +2422,8 @@ span.spinner img {
     position: relative;
     top: 5px;
 }
+
+*/
 
 img.filter {
     cursor: pointer;
@@ -2302,7 +2717,7 @@ div.section-content > div.flow > div > img {
     margin-bottom: 10px;
     overflow: hidden;
     position: absolute;
-    top: 5.8em;
+    top: 7.4em;
     width: 20%;
 }
 
@@ -2311,7 +2726,7 @@ div.section-content > div.flow > div > img {
 
 #social {
     position: absolute;
-    top: 5.8em;
+    top: 7.4em;
     bottom: 0;
     right: 0;
     width: 20%;

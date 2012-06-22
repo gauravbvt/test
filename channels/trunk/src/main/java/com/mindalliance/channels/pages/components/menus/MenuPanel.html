@@ -7,6 +7,19 @@
         lang="en">
 <body>
 <wicket:panel>
+    <ul class="dropmenu">
+        <li>
+            <a href="#">
+                <span wicket:id="menu-title">Show or Actions</span>
+            </a>
+            <ul>
+                <li wicket:id="items">
+                    <span wicket:id="menuItem">[menu item]</span>
+                </li>
+            </ul>
+        </li>
+    </ul>
+<!--
     <span class="dropmenu"><span wicket:id="menu-title">Show or Actions</span>
         <ul>
             <li wicket:id="items">
@@ -14,6 +27,7 @@
             </li>
         </ul>
     </span>
+-->
     <wicket:child/>
 </wicket:panel>
 </body>
