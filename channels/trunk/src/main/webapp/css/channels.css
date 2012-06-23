@@ -393,7 +393,7 @@ div.menu div.group {
     border-left: 1px solid #B1B7C1;
     float: right;
     margin: 10px 0 0;
-    padding: 5px 10px;
+    padding: 5px 2px 5px 10px;
 }
 
 div.menu div.group.first {
@@ -419,22 +419,22 @@ a.forward {
 	font-size: 10px;
 	font-weight: bold;
 	padding: 2px 4px;
-	margin:0;
+	margin:0 8px 0 0;
 	text-transform: capitalize;
 	outline: none;
 	float:right;
 	font-family: Arial,Helvetica,sans-serif;
-	line-height: 14px;
+	line-height: 13px;
 }
 
 div.header a.help,
 div.header a.feedback-button,
 a.forward {
-	margin:0 8px 0 0;
+
 }
 
 a.feedback-button {
-	margin:0 0 0 0;
+
 }
 
 a.feedback-button.feedback-button-active {
@@ -466,7 +466,7 @@ background: none repeat scroll 0 0 #F6F6F6;
     border: 1px solid #A7A9AC;
     display: block;
     font-size: 11px;
-    margin: 19px 0 0;
+    margin: 17px 0 0;
     padding: 10px;
     position: absolute;
     z-index: 1000;
@@ -492,14 +492,13 @@ div.feedback-options {
 	width: 100px;
 }
 
-div.group span.menuitem {
+span.menuitem {
 	display: block;
 	float: left;
-	margin-right: 8px;
 }
 
 div.feedback-options a,
-div.group span.menuitem a {
+span.menuitem a {
 	background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
 	border: 1px solid #A7A9AC;
 	color: #727272;
@@ -507,7 +506,7 @@ div.group span.menuitem a {
 	font-weight: bold;
 	height: 16px;
 	line-height: 16px;
-	margin: 0;
+	margin: 0 8px 0 0;
 	outline: medium none;
 	padding: 2px 4px;
 	text-decoration: none;
@@ -516,36 +515,36 @@ div.group span.menuitem a {
 }
 
 div.feedback-options a span,
-div.group span.menuitem a span {
+span.menuitem a span {
 	background: url("../images/pathway-arrow-down.png") no-repeat right;
 	padding-right: 15px;
 }
 
 div.feedback-options ul li ul li a span,
-div.group span.menuitem ul li ul li a span {
+span.menuitem ul li ul li a span {
 	background: none;
 	padding-right: 0;
 }
 
 div.feedback-options a:hover,
 div.feedback-options ul li:hover a,
-div.group span.menuitem a:hover,
-div.group span.menuitem ul li:hover a {
+span.menuitem a:hover,
+span.menuitem ul li:hover a {
 	color: #333333;
 }
 
 div.feedback-options ul li:hover ul li a,
-div.group span.menuitem ul li:hover ul li a {
+span.menuitem ul li:hover ul li a {
 	color: #727272;
 }
 
 div.feedback-options ul li:hover ul li a:hover,
-div.group span.menuitem ul li:hover ul li a:hover {
+span.menuitem ul li:hover ul li a:hover {
 	color: #333333;
 }
 
 div.feedback-options ul,
-div.group span.menuitem ul {
+span.menuitem ul {
 	display: inline;
 	list-style: none outside none;
 	margin: 0;
@@ -553,7 +552,7 @@ div.group span.menuitem ul {
 }
 
 div.feedback-options ul li,
-div.group span.menuitem ul li {
+span.menuitem ul li {
 	float: left;
 	list-style: none outside none;
 	margin: 0;
@@ -561,7 +560,7 @@ div.group span.menuitem ul li {
 }
 
 div.feedback-options ul li ul,
-div.group span.menuitem ul li ul {
+span.menuitem ul li ul {
 	background: none repeat scroll 0 0 #E8E8E8;
 	display: none;
 	list-style: none outside none;
@@ -573,12 +572,12 @@ div.group span.menuitem ul li ul {
 }
 
 div.feedback-options ul li:hover ul,
-div.group span.menuitem ul li:hover ul {
+span.menuitem ul li:hover ul {
 	display: block;
 }
 
 div.feedback-options ul li ul li,
-div.group span.menuitem ul li ul li {
+span.menuitem ul li ul li {
 	background: none repeat scroll 0 0 transparent;
 	display: block;
 	float: none;
@@ -588,20 +587,26 @@ div.group span.menuitem ul li ul li {
 }
 
 div.feedback-options ul li ul li a,
-div.group span.menuitem ul li ul li a {
+span.menuitem ul li ul li a {
 	color: #727272;
 	display: block;
 	font-size: 10px;
 	font-weight: bold;
 	height: 16px;
-	line-height: 17px;
+	line-height: 18px;
 	padding: 2px 4px;
 	text-decoration: none;
 	border-bottom: none;
+	margin: 0;
+}
+
+span.menuitem ul li ul li span.disabled a,
+span.menuitem ul li ul li span.disabled a:hover {
+	color: #999999;
 }
 
 div.feedback-options ul li ul li:last-child a,
-div.group span.menuitem ul li ul li:last-child a {
+span.menuitem ul li ul li:last-child a {
 	border-bottom: 1px solid #A7A9AC;
 }
 
@@ -1662,6 +1667,8 @@ div.import-dialog {
 
 /* ----- Dropdown Menu - Default ----- */
 
+/*
+
 .menubar .dropmenu {
     width: auto;
     cursor: pointer;
@@ -1719,6 +1726,8 @@ div.import-dialog {
 .menubar .dropmenu ul li:hover {
     background-color: #ccccff;
 }
+
+*/
 
 /* ----- Floating Panels ----- */
 
@@ -1779,19 +1788,23 @@ div.float-header > span.menubar {
     /*text-transform:lowercase;*/
 }
 
+/*
+
 div.float-header > span.menubar span.dropmenu {
-    /*background: url('../images/bullet-arrow-bottom.png') no-repeat scroll 90% 56% #D1D3D4;
+   background: url('../images/bullet-arrow-bottom.png') no-repeat scroll 90% 56% #D1D3D4;
    border:1px solid #BCBEC0;
    padding-right: 13px;
-   padding-left: 2px;*/
-    margin-right: 5px;
+   padding-left: 2px;
+   margin-right: 5px;
 }
 
 div.float-header > span.menubar span.dropmenu:hover {
-    /*background: url( '../images/bullet-arrow-bottom-high.png' ) no-repeat scroll 90% 56% #e6e6e6;
+   background: url( '../images/bullet-arrow-bottom-high.png' ) no-repeat scroll 90% 56% #e6e6e6;
 	border:1px solid #C7C8CA;
-	color:#000000; */
+	color:#000000;
 }
+
+*/
 
 div.float-header .close,
 div.header .close {
