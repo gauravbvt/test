@@ -28,8 +28,9 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 12:49 PM
  */
-@XmlType( propOrder = {"information", "intent", "taskFailed", "receiptConfirmationRequested", "instructions", "contactAll",
-        "maxDelay", "contacts", "bypassContacts", "mediumIds", "failureImpact","consumingTask", /*"agreements",*/ "documentation"} )
+@XmlType( propOrder = {"information", "intent", "communicatedContext", "taskFailed", "receiptConfirmationRequested",
+        "instructions", "contactAll", "maxDelay", "contacts", "bypassContacts", "mediumIds", "failureImpact",
+        "consumingTask", /*"agreements",*/ "documentation"} )
 public class RequestData extends AbstractFlowData {
 
     /**
@@ -62,6 +63,12 @@ public class RequestData extends AbstractFlowData {
     @XmlElement
     public String getIntent() {
         return super.getIntent();
+    }
+
+    @Override
+    @XmlElement
+    public String getCommunicatedContext() {
+        return super.getCommunicatedContext();
     }
 
     @Override

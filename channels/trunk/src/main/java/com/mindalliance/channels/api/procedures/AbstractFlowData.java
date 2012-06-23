@@ -62,6 +62,12 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
                 : getSharing().getIntent().getLabel();
     }
 
+    public String getCommunicatedContext() {
+        return sharing.isReferencesEventPhase()
+                ? sharing.getSegment().getPhaseEventTitle()
+                : null;
+    }
+
     public List<ContactData> getContacts() {
         if ( contacts == null ) {
             contacts = new ArrayList<ContactData>();

@@ -26,8 +26,9 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 12:49 PM
  */
-@XmlType( propOrder = {"information", "intent", "taskFailed", "receiptConfirmationRequested", "instructions", "contactAll",
-        "maxDelay", "contacts", "bypassContacts", "mediumIds", "failureImpact", "consumingTask", "documentation"/*, "agreements"*/} )
+@XmlType( propOrder = {"information", "intent", "communicatedContext", "taskFailed", "receiptConfirmationRequested",
+        "instructions", "contactAll", "maxDelay", "contacts", "bypassContacts", "mediumIds", "failureImpact",
+        "consumingTask", "documentation"/*, "agreements"*/} )
 public class NotificationData extends AbstractFlowData {
 
     private boolean consuming;
@@ -58,6 +59,12 @@ public class NotificationData extends AbstractFlowData {
     @XmlElement
     public String getIntent() {
         return super.getIntent();
+    }
+
+    @Override
+    @XmlElement
+    public String getCommunicatedContext() {
+        return super.getCommunicatedContext();
     }
 
     @Override
