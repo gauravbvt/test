@@ -3,18 +3,17 @@ package com.mindalliance.channels.pages.components.entities.menus;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.GeoLocatable;
-import com.mindalliance.channels.core.model.GeoLocation;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -44,27 +43,6 @@ public class EntityShowMenuPanel extends MenuPanel {
         super( id, "Show", model, null );
     }
 
-    /**
-     * Find all implied geolocations for a geolocatable.
-     *
-     * @param queryService a query service
-     * @param geoLocatable a geolocatable
-     * @return a list of geolocations
-     */
-    private static List<GeoLocation> getImpliedGeoLocations( QueryService queryService, GeoLocatable geoLocatable ) {
-
-        List<GeoLocation> geoLocations = new ArrayList<GeoLocation>();
-
-        for ( GeoLocatable geo : GeoMapPage.getImpliedGeoLocatables( geoLocatable, queryService ) ) {
-            Place placeBasis = geo.getPlaceBasis();
-            if ( placeBasis != null ) {
-                GeoLocation geoLocation = placeBasis.getGeoLocation();
-                if ( geoLocation != null )
-                    geoLocations.add( geoLocation );
-            }
-        }
-        return geoLocations;
-    }
 
     @Override
     public List<LinkMenuItem> getMenuItems() {
@@ -82,20 +60,19 @@ public class EntityShowMenuPanel extends MenuPanel {
             // Map
             if ( entity instanceof GeoLocatable ) {
                 GeoLocatable geo = (GeoLocatable) getEntity();
+                boolean enabled = !GeoMapPage.getImpliedGeoLocations( getQueryService(), geo ).isEmpty();
                 BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
-                    "link",
-                    new Model<String>(
-                        entity.isActual() ? "Location of " + entity.getName() :
-                            "Locations of organizations of type \"" + entity.getName() + "\"" ),
-                    geo,
-                    getQueryService() );
+                        "link",
+                        new Model<String>(
+                                entity.isActual() ? "Location of " + entity.getName() :
+                                        "Locations of organizations of type \"" + entity.getName() + "\"" ),
+                        geo,
+                        getQueryService() );
 
-                geomapLink.setEnabled(
-                    !getImpliedGeoLocations( getQueryService(), geo ).isEmpty() );
-
-                menuItems.add(
-                    new LinkMenuItem(
-                        "menuItem", new Model<String>( "Map" ), geomapLink ) );
+                LinkMenuItem linkMenuItem = new LinkMenuItem(
+                        "menuItem", new Model<String>( "Map" ), geomapLink );
+                if ( !enabled ) linkMenuItem.add( new AttributeModifier( "class", "disabled" ) );
+                menuItems.add( linkMenuItem );
             }
             // Surveys
             AjaxFallbackLink surveysLink = new AjaxFallbackLink( "link" ) {
@@ -111,21 +88,21 @@ public class EntityShowMenuPanel extends MenuPanel {
                     surveysLink ) );
 
 
-
             menuItems.add( link( "Issues", "issues" ) );
 
             return menuItems;
-        }    }
+        }
+    }
 
     private LinkMenuItem link( String title, final String field ) {
         return new LinkMenuItem(
                 "menuItem",
                 new Model<String>( title ), new AjaxFallbackLink( "link" ) {
-                    @Override
-                    public void onClick( AjaxRequestTarget target ) {
-                        entityPanel.setAspectShown( target, field );
-                    }
-                } );
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                entityPanel.setAspectShown( target, field );
+            }
+        } );
     }
 
     public void setEntityPanel( EntityPanel entityPanel ) {

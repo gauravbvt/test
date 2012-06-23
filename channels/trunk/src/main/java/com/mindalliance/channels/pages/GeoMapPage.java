@@ -70,6 +70,29 @@ public class GeoMapPage extends AbstractChannelsWebPage {
                 hideMap ? new Label( "map", "" ).setVisible( false ) : createGmap() );
     }
 
+    /**
+     * Find all implied geolocations for a geolocatable.
+     *
+     * @param queryService a query service
+     * @param geoLocatable a geolocatable
+     * @return a list of geolocations
+     */
+    public static List<GeoLocation> getImpliedGeoLocations( QueryService queryService, GeoLocatable geoLocatable ) {
+
+        List<GeoLocation> geoLocations = new ArrayList<GeoLocation>();
+
+        for ( GeoLocatable geo : getImpliedGeoLocatables( geoLocatable, queryService ) ) {
+            Place placeBasis = geo.getPlaceBasis();
+            if ( placeBasis != null ) {
+                GeoLocation geoLocation = placeBasis.getGeoLocation();
+                if ( geoLocation != null )
+                    geoLocations.add( geoLocation );
+            }
+        }
+        return geoLocations;
+    }
+
+
     private static List<GeoMarker> getGeoMarkers( PageParameters params ) {
         List<GeoMarker> markers = new ArrayList<GeoMarker>();
         List<StringValue> values = params.getValues( MARKER_PARAM );
@@ -128,7 +151,10 @@ public class GeoMapPage extends AbstractChannelsWebPage {
     }
 
     public static BookmarkablePageLink<GeoMapPage> makeLink(
-            String id, IModel<String> titleModel, GeoLocatable geo, QueryService queryService ) {
+            String id,
+            IModel<String> titleModel,
+            GeoLocatable geo,
+            QueryService queryService ) {
 
         List<GeoLocatable> geos = new ArrayList<GeoLocatable>();
         geos.addAll( getImpliedGeoLocatables( geo, queryService ) );
@@ -161,7 +187,10 @@ public class GeoMapPage extends AbstractChannelsWebPage {
 
 
     public static BookmarkablePageLink<GeoMapPage> makeLink(
-            String id, IModel<String> titleModel, List<? extends GeoLocatable> geos, QueryService queryService ) {
+            String id,
+            IModel<String> titleModel,
+            List<? extends GeoLocatable> geos,
+            QueryService queryService ) {
 
         PageParameters params = makeGeoMapParameters( titleModel, geos, queryService );
         BookmarkablePageLink<GeoMapPage> link = makeLink( id, params );
