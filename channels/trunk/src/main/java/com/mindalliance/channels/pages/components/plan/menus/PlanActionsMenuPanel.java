@@ -14,7 +14,6 @@ import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.IModel;
@@ -42,9 +41,9 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public List<Component> getMenuItems() {
+    public List<LinkMenuItem> getMenuItems() {
         synchronized ( getCommander() ) {
-            List<Component> menuItems = super.getMenuItems();
+            List<LinkMenuItem> menuItems = super.getMenuItems();
 
             // Move parts across segments
             if ( getPlan().isDevelopment()

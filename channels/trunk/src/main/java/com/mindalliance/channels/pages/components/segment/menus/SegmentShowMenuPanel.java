@@ -9,7 +9,6 @@ import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -41,8 +40,8 @@ public class SegmentShowMenuPanel extends MenuPanel {
     /**
      * {@inheritDoc}
      */
-    public List<Component> getMenuItems() {
-        List<Component> menuItems = new ArrayList<Component>();
+    public List<LinkMenuItem> getMenuItems() {
+        List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
         // Details
         Link detailsLink = new AjaxFallbackLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {

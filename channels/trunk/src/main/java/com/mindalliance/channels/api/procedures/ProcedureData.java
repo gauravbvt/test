@@ -75,7 +75,9 @@ public class ProcedureData {
             triggers = new ArrayList<TriggerData>();
             // anytime
             if ( assignment.isOngoing() ) {
-                triggers.add( new TriggerData( assignment, planService, planParticipationService, user ) );
+                TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
+                triggerData.setOngoing( true );
+                triggers.add( triggerData );
             } else {
                 // event phase is trigger
                 if ( assignment.isInitiatedByEventPhase() ) {

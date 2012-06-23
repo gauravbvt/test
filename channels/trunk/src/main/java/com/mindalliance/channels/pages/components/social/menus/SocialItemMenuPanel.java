@@ -11,7 +11,6 @@ import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.social.model.UserMessage;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -61,8 +60,8 @@ public class SocialItemMenuPanel extends MenuPanel {
         super.init();
     }
 
-    public List<Component> getMenuItems() throws CommandException {
-        List<Component> menuItems = new ArrayList<Component>();
+    public List<LinkMenuItem> getMenuItems() throws CommandException {
+        List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
         ChannelsUserInfo userInfo = getUserInfo();
         final String currentUsername = getUser().getUsername();
         if ( userInfo != null ) {

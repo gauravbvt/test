@@ -13,7 +13,6 @@ import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebPage;
@@ -54,10 +53,10 @@ public class PlanShowMenuPanel extends MenuPanel {
      * {@inheritDoc}
      */
     @Override
-    public List<Component> getMenuItems() {
+    public List<LinkMenuItem> getMenuItems() {
         synchronized ( getCommander() ) {
             Plan plan = getPlan();
-            List<Component> menuItems = new ArrayList<Component>();
+            List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
 
             menuItems.addAll(
                     Arrays.asList(

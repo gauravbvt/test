@@ -13,11 +13,8 @@ import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.command.commands.RemoveIssue;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.UserIssue;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -55,10 +52,10 @@ public class IssueActionsMenuPanel extends MenuPanel {
     }
 
     @Override
-    public List<Component> getMenuItems() throws CommandException {
+    public List<LinkMenuItem> getMenuItems() throws CommandException {
         Commander commander = getCommander();
         synchronized ( commander ) {
-            List<Component> menuItems = new ArrayList<Component>();
+            List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
 
             // Undo and redo
             menuItems.add( getUndoMenuItem( "menuItem" ) );
@@ -77,59 +74,25 @@ public class IssueActionsMenuPanel extends MenuPanel {
                                                  }
                                              } ) );
 
-            // Create/view survey
- /*           if ( getPlan().isDevelopment() ) {
-                String itemLabel = surveyService.isSurveyed( Survey.Type.Remediation, getIssue() ) ?
-                                   "View survey" :
-                                   "Create survey";
-
-                menuItems.add( getIssue().getDescription().isEmpty() || getIssue().getRemediation().isEmpty() ?
-
-                               newStyledLabel( itemLabel, "disabled" )
-                                                                                                            :
-                               new LinkMenuItem( "menuItem",
-                                                 new Model<String>( itemLabel ),
-                                                 new AjaxFallbackLink( "link" ) {
-                                                     @Override
-                                                     public void onClick( AjaxRequestTarget target ) {
-                                                         try {
-                                                             update( target,
-                                                                     new Change( Change.Type.Expanded,
-                                                                                 surveyService.getOrCreateSurvey(
-                                                                                         getQueryService(),
-                                                                                         Survey.Type.Remediation,
-                                                                                                                  getIssue(),
-                                                                                                                  getPlan(),
-                                                                                         getUser() ) ) );
-                                                         } catch ( SurveyException e ) {
-                                                             LoggerFactory.getLogger( getClass() ).warn(
-                                                                     "Error clicking on survey link",
-                                                                     e );
-                                                             target.add( IssueActionsMenuPanel.this );
-                                                             target.prependJavaScript(
-                                                                     "alert('Oops -- " + e.getMessage() + "');" );
-                                                         }
-                                                     }
-                                                 } ) );
-            }
-*/
             // Commands
             if ( commander.isTimedOut( getUser().getUsername() ) )
-                menuItems.add( newStyledLabel( "Timed out", "disabled locked" ) );
+                menuItems.add( timeOutLinkMenuItem( "menuItem" ) );
 
             else if ( isLockedByUser( getIssue() ) || getLockOwner( getIssue() ) == null )
                 menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
 
             else
-                menuItems.add( editedByLabel( "menuItem", getIssue(), getLockOwner( getIssue() ) ) );
+                menuItems.add( editedByLinkMenuItem( "menuItem", getIssue(), getLockOwner( getIssue() ) ) );
 
             return menuItems;
         }
     }
 
+/*
     private static Component newStyledLabel( String label, String style ) {
-        return new Label( "menuItem", label ).add( new AttributeModifier( "class", true, new Model<String>( style ) ) );
+        return new Label( "menuItem", label ).add( new AttributeModifier( "class", new Model<String>( style ) ) );
     }
+*/
 
     private Issue getIssue() {
         return (Issue) getModel().getObject();

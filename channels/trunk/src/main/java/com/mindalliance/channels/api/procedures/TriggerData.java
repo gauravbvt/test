@@ -21,7 +21,7 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:16 AM
  */
-@XmlType( propOrder = {"situation", "anytime", "onObservation", "onDiscovery", "onResearch", "onNotification", "onRequest"} )
+@XmlType( propOrder = {"situation", "anytime", "onObservation", "onDiscovery", "onResearch", "onNotification", "onRequest", "ongoing"} )
 public class TriggerData extends AbstractProcedureElementData {
 
     private Flow notificationFromOther;
@@ -31,6 +31,7 @@ public class TriggerData extends AbstractProcedureElementData {
     private NotificationData onNotification;
     private RequestData onRequest;
     private Flow requestToSelf;
+    private boolean ongoing = false;
 
     public TriggerData() {
         // required
@@ -44,24 +45,37 @@ public class TriggerData extends AbstractProcedureElementData {
         super( assignment, planService, planParticipationService, user );
     }
 
+    public boolean getOngoing() {
+        return ongoing;
+    }
+
+    public void setOngoing( boolean ongoing ) {
+        this.ongoing = ongoing;
+    }
+
     public void setNotificationFromOther( Flow notificationFromOther ) {
         this.notificationFromOther = notificationFromOther;
+        ongoing = false;
     }
 
     public void setRequestFromOther( Flow requestFromOther ) {
         this.requestFromOther = requestFromOther;
+        ongoing = false;
     }
 
     public void setEventPhase( EventPhase eventPhase ) {
         this.eventPhase = eventPhase;
+        ongoing = false;
     }
 
     public void setNotificationToSelf( Flow notificationToSelf ) {
         this.notificationToSelf = notificationToSelf;
+        ongoing = false;
     }
 
     public void setRequestToSelf( Flow requestToSelf ) {
         this.requestToSelf = requestToSelf;
+        ongoing = false;
     }
 
     @XmlElement

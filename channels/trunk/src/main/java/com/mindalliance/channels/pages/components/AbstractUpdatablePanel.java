@@ -28,6 +28,7 @@ import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Modalable;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.wicket.AttributeModifier;
@@ -35,6 +36,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteSettings;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -464,6 +466,21 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return label;
     }
 
+    protected LinkMenuItem editedByLinkMenuItem( String id, final Identifiable identifiable, final String username ) {
+        LinkMenuItem linkMenuItem = new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "(Edited by " + getQueryService().findUserFullName( username ) + ")" ),
+                new AjaxLink<String>( "link" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        update( target, new Change( Change.Type.Communicated, identifiable, username ) );
+                    }
+                }
+        );
+        linkMenuItem.add( new AttributeModifier( "title", new Model<String>( "Click to send a message" ) ) );
+        return linkMenuItem;
+    }
+
     /**
      * Return a label indicating a time out.
      *
@@ -475,6 +492,22 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         label.add( new AttributeModifier( "class", new Model<String>( "disabled timed-out" ) ) );
         return label;
     }
+
+    protected LinkMenuItem timeOutLinkMenuItem( String id ) {
+        LinkMenuItem linkMenuItem = new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Timed out" ),
+                new AjaxLink<String>( "link" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        //Do nothing
+                    }
+                }
+        );
+        linkMenuItem.add(  new AttributeModifier( "class", "disabled" ) );
+        return linkMenuItem;
+    }
+
 
     public void redisplay( AjaxRequestTarget target ) {
         target.add( this );

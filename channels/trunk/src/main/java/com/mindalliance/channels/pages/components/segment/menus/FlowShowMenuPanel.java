@@ -10,7 +10,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.IModel;
@@ -54,11 +53,11 @@ public class FlowShowMenuPanel extends MenuPanel {
      * {@inheritDoc}
      */
     @Override
-    public List<Component> getMenuItems() {
+    public List<LinkMenuItem> getMenuItems() {
 
         synchronized ( getCommander() ) {
             final Flow flow = getFlow();
-            List<Component> menuItems = new ArrayList<Component>();
+            List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
 
             // Show/hide details
             menuItems.add(
@@ -150,9 +149,9 @@ public class FlowShowMenuPanel extends MenuPanel {
                     surveysLink ) );
 
             if ( getCommander().isTimedOut( getUser().getUsername() ) )
-                menuItems.add( timeOutLabel( "menuItem" ) );
+                menuItems.add( timeOutLinkMenuItem( "menuItem" ) );
             else if ( !( isLockedByUser( getFlow() ) || getLockOwner( flow ) == null ) )
-                menuItems.add( editedByLabel( "menuItem", flow, getLockOwner( flow ) ) );
+                menuItems.add( editedByLinkMenuItem( "menuItem", flow, getLockOwner( flow ) ) );
             return menuItems;
         }
     }

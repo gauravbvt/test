@@ -26,6 +26,7 @@ import java.util.List;
 public class Feedback extends UserStatement {
 
     public static final Feedback UNKNOWN = new Feedback( Channels.UNKNOWN_FEEDBACK_ID );
+    public static final String PROTOCOLS = "Protocols";
     public static final String GUIDELINES = "Guidelines";
     public static final String INFO_NEEDS = "Info needs";
     public static final String SURVEYS = "Surveys";
@@ -34,6 +35,7 @@ public class Feedback extends UserStatement {
     public static final String ISSUES = "Issues";
     public static final String FEEDBACK = "Feedback";
     public static final String CHANNELS = "Channels";
+
 
 
     public enum Type {

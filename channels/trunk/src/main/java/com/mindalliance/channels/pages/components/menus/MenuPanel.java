@@ -9,7 +9,6 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -47,7 +46,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
     /**
      * Cached menu items.
      */
-    private List<Component> menuItems;
+    private List<LinkMenuItem> menuItems;
 
     protected MenuPanel( String s, String title, IModel<? extends Identifiable> model ) {
         this( s, title, model, null );
@@ -68,57 +67,57 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         setOutputMarkupId( true );
         add(
                 new Label( "menu-title", new Model<String>( title ) ),
-                new ListView<Component>(
+                new ListView<LinkMenuItem>(
                         "items", allMenuItems() ) {
                     @Override
-                    protected void populateItem( ListItem<Component> item ) {
+                    protected void populateItem( ListItem<LinkMenuItem> item ) {
                         item.add( item.getModelObject() );
                     }
                 } );
     }
 
-/*
-    @Override
-    protected void onBeforeRender() {
-        super.onBeforeRender();
-        adjustMenuItems();
-    }
+    /*
+       @Override
+       protected void onBeforeRender() {
+           super.onBeforeRender();
+           adjustMenuItems();
+       }
 
 
-    private void adjustMenuItems() {
-        try {
-            int maxItemLength = maxItemLength();
-            for ( Component menuItem : allMenuItems() ) {
-                if ( menuItem instanceof LinkMenuItem ) {
-                    ( (LinkMenuItem) menuItem ).padName( maxItemLength );
-                }
-            }
-        } catch ( CommandException e ) {
-            LOG.warn( "Fail to adjust menu items", e );
-        }
+       private void adjustMenuItems() {
+           try {
+               int maxItemLength = maxItemLength();
+               for ( Component menuItem : allMenuItems() ) {
+                   if ( menuItem instanceof LinkMenuItem ) {
+                       ( (LinkMenuItem) menuItem ).padName( maxItemLength );
+                   }
+               }
+           } catch ( CommandException e ) {
+               LOG.warn( "Fail to adjust menu items", e );
+           }
 
-    }
+       }
 
 
-    private int maxItemLength() throws CommandException {
-        int maxLength = 0;
-        for ( Component menuItem : allMenuItems() ) {
-            if ( menuItem instanceof LinkMenuItem ) {
-                LinkMenuItem linkMenuItem = (LinkMenuItem) menuItem;
-                String name = linkMenuItem.getName();
-                maxLength = Math.max( maxLength, name.length() );
-            }
-        }
-        return maxLength;
-    }
- */
-    protected List<Component> allMenuItems() {
+       private int maxItemLength() throws CommandException {
+           int maxLength = 0;
+           for ( Component menuItem : allMenuItems() ) {
+               if ( menuItem instanceof LinkMenuItem ) {
+                   LinkMenuItem linkMenuItem = (LinkMenuItem) menuItem;
+                   String name = linkMenuItem.getName();
+                   maxLength = Math.max( maxLength, name.length() );
+               }
+           }
+           return maxLength;
+       }
+    */
+    protected List<LinkMenuItem> allMenuItems() {
         if ( menuItems == null ) {
             try {
                 menuItems = getMenuItems();
             } catch ( CommandException e ) {
                 LoggerFactory.getLogger( getClass() ).warn( "Failed to get menu items", e );
-                return new ArrayList<Component>(  );
+                return new ArrayList<LinkMenuItem>();
             }
         }
         return menuItems;
@@ -130,7 +129,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @return a list of components
      * @throws CommandException if fails to get menu items
      */
-    public abstract List<Component> getMenuItems() throws CommandException;
+    public abstract List<LinkMenuItem> getMenuItems() throws CommandException;
 
     /**
      * Whether the menu is empty.
@@ -138,7 +137,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @return a boolean
      */
     public boolean isEmpty() {
-        List<Component> items = null;
+        List<LinkMenuItem> items = null;
         items = allMenuItems();
         return items != null && items.isEmpty();
     }
@@ -150,9 +149,9 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @param moWrappers model object wrappers (model object + link text)
      * @return a list of components
      */
-    protected List<Component> getModelObjectMenuItems( String id,
-                                                       List<ModelObjectWrapper> moWrappers ) {
-        List<Component> menuItems = new ArrayList<Component>();
+    protected List<LinkMenuItem> getModelObjectMenuItems( String id,
+                                                          List<ModelObjectWrapper> moWrappers ) {
+        List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
         for ( final ModelObjectWrapper moWrapper : moWrappers )
             menuItems.add(
                     new LinkMenuItem(
@@ -176,19 +175,20 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @param id the id of the menu item.
      * @return a menu item component
      */
-    protected Component getUndoMenuItem( String id ) {
+    protected LinkMenuItem getUndoMenuItem( String id ) {
+        final boolean enabled = getCommander().canUndo( getUser().getUsername() );
         LinkMenuItem linkMenuItem = new LinkMenuItem(
                 id,
                 new Model<String>( getCommander().getUndoTitle( getUser().getUsername() ) ),
                 new AjaxFallbackLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
-                        update( target, getCommander().undo( getUser().getUsername() ) );
+                        if ( enabled )
+                            update( target, getCommander().undo( getUser().getUsername() ) );
                     }
                 } );
-        if ( !getCommander().canUndo( getUser().getUsername() ) ) {
+        if ( !enabled ) {
             linkMenuItem.add( new AttributeModifier( "class", new Model<String>( "disabled" ) ) );
-            linkMenuItem.setEnabled( false );
         }
         return linkMenuItem;
     }
@@ -199,19 +199,19 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @param id the id of the menu item.
      * @return a menu item component
      */
-    protected Component getRedoMenuItem( String id ) {
+    protected LinkMenuItem getRedoMenuItem( String id ) {
+        final boolean enabled = getCommander().canRedo( getUser().getUsername() );
         LinkMenuItem linkMenuItem = new LinkMenuItem(
                 id,
                 new Model<String>( getCommander().getRedoTitle( getUser().getUsername() ) ),
                 new AjaxFallbackLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
-                        update( target, getCommander().redo( getUser().getUsername() ) );
+                        if ( enabled ) update( target, getCommander().redo( getUser().getUsername() ) );
                     }
                 } );
-        if ( !getCommander().canRedo( getUser().getUsername() ) ) {
+        if ( !enabled ) {
             linkMenuItem.add( new AttributeModifier( "class", new Model<String>( "disabled" ) ) );
-            linkMenuItem.setEnabled( false );
         }
         return linkMenuItem;
     }
@@ -222,22 +222,22 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
      * @param id the id
      * @return the component
      */
-    protected Component getSendMessageMenuItem( String id ) {
+    protected LinkMenuItem getSendMessageMenuItem( String id ) {
         final Identifiable identifiable = getModel().getObject();
+        final boolean enabled = identifiable != null && identifiable instanceof ModelObject;
         LinkMenuItem linkMenuItem = new LinkMenuItem(
                 id,
                 new Model<String>( "Send message" ),
                 new AjaxFallbackLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
-                        update( target,
+                        if ( enabled ) update( target,
                                 new Change( Change.Type.Communicated, identifiable ) );
                     }
                 } );
 
-        if ( identifiable == null || !(identifiable instanceof ModelObject)) {
+        if ( !enabled ) {
             linkMenuItem.add( new AttributeModifier( "class", new Model<String>( "disabled" ) ) );
-            linkMenuItem.setEnabled( false );
         }
         return linkMenuItem;
     }
@@ -245,13 +245,13 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
     /**
      * Make menu items from commands.
      *
-     * @param id       id of the menu item
+     * @param id              id of the menu item
      * @param commandWrappers a list of wrapped commands
      * @return a list of menu item components
      */
-    protected List<Component> getCommandMenuItems( String id, List<CommandWrapper> commandWrappers ) {
+    protected List<LinkMenuItem> getCommandMenuItems( String id, List<CommandWrapper> commandWrappers ) {
 
-        List<Component> menuItems = new ArrayList<Component>();
+        List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
 
         Commander commander = getCommander();
 
@@ -259,23 +259,33 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
             try {
                 final Command command = commandWrapper.getCommand();
                 String label = command.getLabel( commander );
+                final boolean enabled = commander.canDo( command );
                 LinkMenuItem linkMenuItem = new LinkMenuItem(
                         id,
                         new Model<String>( label ),
-                        new ConfirmedAjaxFallbackLink(
+                        enabled
+                                ?
+                                new ConfirmedAjaxFallbackLink(
                                 "link", commandWrapper.isConfirm() ? "Are you sure?" : null ) {
                             @Override
                             public void onClick( AjaxRequestTarget target ) {
                                 commandWrapper.onExecuted(
                                         target, getCommander().doCommand( command ) );
                             }
-                        } );
-                if ( !commander.canDo( command ) ) {
+                        }
+                                :
+                                new AjaxFallbackLink( "link" ) {
+                            @Override
+                            public void onClick( AjaxRequestTarget target ) {
+                                // do nothing
+                            }
+                        }
+                );
+                if ( !enabled ) {
                     linkMenuItem.add( new AttributeModifier( "class", new Model<String>( "disabled" ) ) );
-                    linkMenuItem.setEnabled( false );
                 }
                 menuItems.add( linkMenuItem );
-             } catch ( CommandException e ) {
+            } catch ( CommandException e ) {
                 LoggerFactory.getLogger( getClass() ).warn( "Unable to get command label", e );
             }
 

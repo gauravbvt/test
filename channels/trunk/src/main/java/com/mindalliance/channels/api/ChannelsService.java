@@ -49,7 +49,7 @@ public interface ChannelsService {
      * @param uri a plan's URI
      * @return a plan's scope
      */
-    PlanScopeData getPlanScope( @PathParam( "uri" ) String uri, @PathParam( "version") String version );
+    PlanScopeData getPlanScope( @PathParam( "uri" ) String uri, @PathParam( "version" ) String version );
 
 
     @GET
@@ -83,5 +83,19 @@ public interface ChannelsService {
      */
     IssuesData getIssues( @PathParam( "uri" ) String uri, @PathParam( "version" ) String version );
 
+    @GET
+    @Path( "plan/{uri}/version/{version}/user/{user}/procedures" )
+    @Produces( MediaType.APPLICATION_XML )
+    ProceduresData getUserProcedures(
+            @PathParam("uri") String uri,
+            @PathParam( "version" ) String version,
+            @PathParam("user") String username );
 
+
+    @GET
+    @Path( "plan/{uri}/version/{version}/agent/{agentId}/procedures" )
+    @Produces( MediaType.APPLICATION_XML )
+    ProceduresData getAgentProcedures( @PathParam("uri") String uri,
+                                       @PathParam( "version" ) String version,
+                                       @PathParam("agentId") String agentId );
 }

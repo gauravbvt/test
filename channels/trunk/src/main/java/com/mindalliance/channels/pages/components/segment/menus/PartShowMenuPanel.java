@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.IModel;
@@ -47,8 +46,8 @@ public class PartShowMenuPanel extends MenuPanel {
      *
      * @return a list of menu items
      */
-    public List<Component> getMenuItems() {
-        List<Component> menuItems = new ArrayList<Component>();
+    public List<LinkMenuItem> getMenuItems() {
+        List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
         // Show/hide details
         if ( isCollapsed( getPart() ) ) {
             AjaxFallbackLink showLink = new AjaxFallbackLink( "link" ) {

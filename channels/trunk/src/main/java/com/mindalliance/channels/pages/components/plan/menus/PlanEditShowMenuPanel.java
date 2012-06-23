@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.IModel;
@@ -30,9 +29,9 @@ public class PlanEditShowMenuPanel extends MenuPanel {
     }
 
     @Override
-    public List<Component> getMenuItems() {
+    public List<LinkMenuItem> getMenuItems() {
         synchronized ( getCommander() ) {
-            List<Component> menuItems = new ArrayList<Component>( Arrays.asList(
+            List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>( Arrays.asList(
                     newItem( "Details", PlanEditPanel.DETAILS ),
                     newItem( "Requirements", PlanEditPanel.REQUIREMENTS ),
                     newItem( "All events", PlanEditPanel.EVENTS ),
@@ -67,7 +66,7 @@ public class PlanEditShowMenuPanel extends MenuPanel {
         }
     }
 
-    private Component newItem( String title, final String link ) {
+    private LinkMenuItem newItem( String title, final String link ) {
         return new LinkMenuItem(
                 "menuItem",
                 new Model<String>( title ),

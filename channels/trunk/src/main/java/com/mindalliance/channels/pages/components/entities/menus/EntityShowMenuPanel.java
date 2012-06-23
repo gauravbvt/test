@@ -15,7 +15,6 @@ import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -68,9 +67,9 @@ public class EntityShowMenuPanel extends MenuPanel {
     }
 
     @Override
-    public List<Component> getMenuItems() {
+    public List<LinkMenuItem> getMenuItems() {
         synchronized ( getCommander() ) {
-            List<Component> menuItems = new ArrayList<Component>();
+            List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
 
             menuItems.add( link( "Details", "details" ) );
 

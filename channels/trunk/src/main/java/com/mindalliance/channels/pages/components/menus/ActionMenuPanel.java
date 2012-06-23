@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components.menus;
 
 import com.mindalliance.channels.core.model.Identifiable;
-import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;
@@ -25,9 +24,9 @@ public abstract class ActionMenuPanel extends MenuPanel {
      * {@inheritDoc}
      */
     @Override
-    public List<Component> getMenuItems() {
+    public List<LinkMenuItem> getMenuItems() {
         synchronized ( getCommander() ) {
-            List<Component> menuItems = new ArrayList<Component>( );
+            List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>( );
             menuItems.add(  getSendMessageMenuItem( "menuItem" ) );
             if ( getPlan().isDevelopment() ) {
                 menuItems.add( getUndoMenuItem( "menuItem" ) );

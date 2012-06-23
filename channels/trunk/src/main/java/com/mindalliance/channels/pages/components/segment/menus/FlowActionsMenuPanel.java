@@ -12,8 +12,8 @@ import com.mindalliance.channels.core.command.commands.RemoveNeed;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
+import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;
@@ -48,22 +48,24 @@ public class FlowActionsMenuPanel extends MenuPanel {
 
     /** {@inheritDoc} */
     @Override
-    public List<Component> getMenuItems() {
+    public List<LinkMenuItem> getMenuItems() {
 
         synchronized ( getCommander() ) {
             final Flow flow = getFlow();
-            List<Component> menuItems = new ArrayList<Component>();
+            List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
 
             // Undo and redo
             menuItems.add( getUndoMenuItem( "menuItem" ) );
             menuItems.add( getRedoMenuItem( "menuItem" ) );
 
-            if ( getCommander().isTimedOut( getUser().getUsername() ) )
-                menuItems.add( timeOutLabel( "menuItem" ) );
+            if ( getCommander().isTimedOut( getUser().getUsername() ) ) {
+                menuItems.add( timeOutLinkMenuItem( "menuItem" ) );
+            }
             else if ( isLockedByUser( getFlow() ) || getLockOwner( flow ) == null )
                 menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers( flow ) ) );
-            else
-                menuItems.add( editedByLabel( "menuItem", flow, getLockOwner( flow ) ) );
+            else  {
+               menuItems.add( editedByLinkMenuItem( "menuItem", flow, getLockOwner( flow ) ) );
+            }
 
             return menuItems;
         }    }
