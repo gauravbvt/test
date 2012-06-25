@@ -30,12 +30,39 @@ div.guide-title-cont {
 }
 
 #guide h3 {
-    background: none repeat scroll 0 0 #e8e8e8;
-    border: 1px solid #999999;
+    background: none repeat scroll 0 0 #f6f6f6;
+    border-top: none;
+    border-right: none;
+    border-bottom: 1px solid #999999;
+    border-left: none;
     border-radius: 0 0 0 0;
     font-size: 10px;
     line-height: 100%;
-    margin: 10px 10px 0;
+    margin: 0;
+}
+
+#guide span.ui-icon {
+	float: right;
+	left: 0;
+	margin: 7px 7px 0 0;
+	position: relative;
+	top: 0;
+}
+
+#guide h3 a {
+	background: #e8e8e8;
+	padding: 10px;
+	font-size: 11px;
+	letter-spacing: 0;
+}
+
+#guide h3 a:hover {
+	background: #e8e8e8;
+	color: #000000;
+}
+
+#guide h3.ui-state-active a {
+	background: #dddddd;
 }
 
 #guide .activityName {
@@ -54,15 +81,18 @@ div.guide-title-cont {
 
 #guide div ul li div.doc {
     background-color: PapayaWhip;
-    border: 1px solid orange;
     font-size: 10px;
-    margin: 5px 0 10px;
-    padding: 10px 10px 5px;
+    padding: 5px 10px 10px;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+#guide div ul li div.doc a:hover {
+	background: none;
 }
 
 #guide div ul li div.doc p {
 	padding: 0;
-	margin: 15px 0 5px 0;
+	margin: 5px 0 10px;
 	line-height: 150%;
 }
 
@@ -85,21 +115,37 @@ div.guide-title-cont {
 
 #guide div ul li a,
 #guide .doc a {
-    text-decoration: underline;
-    font-weight: bold;
+	border: medium none;
+	display: inline;
+	font-weight: bold;
+	padding: 0;
+	text-decoration: underline;
 }
 
-#guide .doc a.window {
+#guide div ul li a {
+	border-bottom: 1px solid #BCBEC0;
+	display: block;
+	padding: 5px 10px;
+	text-decoration: none;
+}
+
+#guide div ul li a:hover {
+	background: #e8e8e8;
+}
+
+#guide .doc a.window,
+#guide .doc a.window:hover {
     background-color: PapayaWhip;
     background-position: right center;
     border: medium none;
     padding: 0 14px 0 0;
+    background: url("../images/link.window.png") no-repeat right;
 }
 
 #guide .nextActivities {
     border-top: 1px solid orange;
     font-weight: bold;
-    padding: 5px 0 0;
+    padding: 10px 0 0;
 }
 
 #guide .ui-accordion.ui-widget.ui-helper-reset.ui-accordion-icons {
@@ -111,9 +157,11 @@ div.guide-title-cont {
 }
 
 #guide .ui-accordion .ui-accordion-content {
-    padding: 1em 1em;
+    padding: 0;
     border-top: 0;
-    margin: 0 10px;
+    border-left: 0;
+    border-right: 0;
+    margin: 0;
     position: relative;
     top: 0;
     display: none;
@@ -121,6 +169,12 @@ div.guide-title-cont {
     border-radius: 0 0 0 0;
     background: #F6F6F6;
 }
+
+/*
+#guide .ui-accordion .ui-accordion-content-active {
+	background: #e8e8e8;
+}
+*/
 
 #guide div ul li .ui-widget-content a {
     text-decoration: underline;
