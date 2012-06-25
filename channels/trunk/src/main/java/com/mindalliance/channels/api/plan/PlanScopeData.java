@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.plan;
 
+import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.entities.EventData;
@@ -10,6 +11,7 @@ import com.mindalliance.channels.api.entities.RoleData;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
@@ -23,7 +25,9 @@ import javax.xml.bind.annotation.XmlType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Web Service data element for the scope of a plan.
@@ -39,6 +43,7 @@ public class PlanScopeData {
 
     private Plan plan;
     private PlanService planService;
+    private Map<Long, ModelObjectData> cache;
 
     public PlanScopeData() {
         // required for JAXB
@@ -47,6 +52,7 @@ public class PlanScopeData {
     public PlanScopeData( Plan plan, PlanService planService ) {
         this.plan = plan;
         this.planService = planService;
+        cache = new HashMap<Long, ModelObjectData> ();
     }
 
     public void setPlan( Plan plan ) {
@@ -68,9 +74,14 @@ public class PlanScopeData {
         List<PhaseData> phases = new ArrayList<PhaseData>();
         for ( Phase phase : planService.list( Phase.class ) ) {
             if ( !phase.isUnknown() && !phase.isUniversal() )
-                phases.add( new PhaseData( phase, plan ) );
+                phases.add( cache( phase, new PhaseData( phase, plan ) ) );
         }
         return phases;
+    }
+
+    private <T extends ModelObjectData> T cache( ModelObject mo, T moData ) {
+        cache.put( mo.getId(), moData );
+        return moData;
     }
 
     @XmlElement( name = "place" )
@@ -78,7 +89,7 @@ public class PlanScopeData {
         List<PlaceData> places = new ArrayList<PlaceData>();
         for ( Place place : planService.list( Place.class ) ) {
             if ( !place.isUnknown() && !place.isUniversal() )
-                places.add( new PlaceData( place, plan ) );
+                places.add( cache ( place, new PlaceData( place, plan ) ) );
         }
         return places;
     }
@@ -88,7 +99,7 @@ public class PlanScopeData {
         List<EventData> events = new ArrayList<EventData>();
         for ( Event event : planService.list( Event.class ) ) {
             if ( !event.isUnknown() && !event.isUniversal() )
-                events.add( new EventData( event, plan ) );
+                events.add( cache( event, new EventData( event, plan ) ) );
         }
         return events;
     }
@@ -98,7 +109,7 @@ public class PlanScopeData {
         List<RoleData> roles = new ArrayList<RoleData>();
         for ( Role role : planService.list( Role.class ) ) {
             if ( !role.isUnknown() && !role.isUniversal() )
-                roles.add( new RoleData( role, plan ) );
+                roles.add( cache( role, new RoleData( role, plan ) ) );
         }
         return roles;
     }
@@ -108,7 +119,7 @@ public class PlanScopeData {
         List<OrganizationData> orgs = new ArrayList<OrganizationData>();
         for ( Organization org : planService.list( Organization.class ) ) {
             if ( !org.isUnknown() && !org.isUniversal() )
-                orgs.add( new OrganizationData( org, planService ) );
+                orgs.add( cache( org, new OrganizationData( org, planService ) ) );
         }
         return orgs;
     }
@@ -118,7 +129,7 @@ public class PlanScopeData {
         List<AgentData> actors = new ArrayList<AgentData>();
         for ( Actor actor : planService.list( Actor.class ) ) {
             if ( !actor.isUnknown() && !actor.isUniversal() )
-                actors.add( new AgentData( actor, plan ) );
+                actors.add( cache( actor, new AgentData( actor, plan ) ) );
         }
         return actors;
     }
@@ -136,4 +147,7 @@ public class PlanScopeData {
     }
 
 
+    public <T extends ModelObjectData> T findInScope( Class<T> moDataClass, long moId ) {
+        return (T)cache.get( moId );
+    }
 }

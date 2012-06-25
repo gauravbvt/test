@@ -110,6 +110,7 @@ public class ProceduresData {
     }
 
     @XmlElement( name = "employment" )
+    // Get given actor's or user's employments
     public List<EmploymentData> getEmployments() {
         if ( employments == null ) {
             employments = new ArrayList<EmploymentData>();
@@ -157,4 +158,27 @@ public class ProceduresData {
         return assignments;
     }
 
+    public List<Employment> getContactEmployments() {
+        List<Employment> contactEmployments = new ArrayList<Employment>(  );
+        for ( ProcedureData procedureData : procedures ) {
+            contactEmployments.addAll( procedureData.getContactEmployments() );
+        }
+        return contactEmployments;
+    }
+
+    public Plan getPlan() {
+        return plan;
+    }
+
+    public PlanService getPlanService() {
+        return planService;
+    }
+
+    public PlanParticipationService getPlanParticipationService() {
+        return planParticipationService;
+    }
+
+    public ChannelsUser getUser() {
+        return user;
+    }
 }

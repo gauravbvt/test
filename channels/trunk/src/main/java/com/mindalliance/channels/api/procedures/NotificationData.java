@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
@@ -148,7 +149,7 @@ public class NotificationData extends AbstractFlowData {
     */
 
     @Override
-    protected List<Employment> findContactEmployments() {
+    public List<Employment> findContactEmployments() {
         if ( contactEmployments == null ) {
             Set<Employment> contacts = new HashSet<Employment>();
             Actor assignedActor = getAssignment().getActor();
@@ -174,7 +175,7 @@ public class NotificationData extends AbstractFlowData {
     @Override
     @SuppressWarnings( "unchecked" )
     // Don't repeat any (direct) contact employment
-    protected List<Employment> findBypassContactEmployments() {
+    public List<Employment> findBypassContactEmployments() {
         Set<Employment> contacts = new HashSet<Employment>();
         if ( !consuming ) {
             List<Commitment> bypassCommitments = getPlanService()

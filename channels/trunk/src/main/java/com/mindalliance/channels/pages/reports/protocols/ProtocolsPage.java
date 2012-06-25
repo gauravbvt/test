@@ -76,7 +76,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             actorId = parameters.get( "agent" ).toLong( -1 );
             username = parameters.get( "user" ).toString( getUser().getUsername() );
             initData();
-            addProtocols();
+            doAddContent();
         } catch ( Exception e ) {
             LOG.warn( "Failed to retrieve protocols", e );
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
@@ -114,14 +114,21 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         directoryData = new DirectoryData( proceduresData );
     }
 
-    private void addProtocols() {
+    private void doAddContent() {
         addAboutProtocols();
         addParticipation();
+        addProtocolsFinder();
+        addProtocols();
+        addDirectory();
+    }
+
+     private void addProtocols() {
         addOngoing();
         addObservationTriggered();
         addCommunicationTriggered();
-        addDirectory();
     }
+
+    // ABOUT
 
     private void addAboutProtocols() {
         PlanIdentifierData planIdentifierData = proceduresData.getPlanIdentifier();
@@ -141,6 +148,8 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             return "???";
     }
 
+    // PARTICIPATION
+
     private void addParticipation() {
         getContainer().add( new Label( "participant", getParticipantName() ) );
         ListView<EmploymentData> employmentsList = new ListView<EmploymentData>(
@@ -157,6 +166,14 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         };
         getContainer().add( employmentsList );
     }
+
+    // FINDER
+
+    private void addProtocolsFinder() {
+        // todo
+    }
+
+    // PROTOCOLS
 
     private void addOngoing() {
         ListView<ProcedureData> proceduresListView = new ListView<ProcedureData>(

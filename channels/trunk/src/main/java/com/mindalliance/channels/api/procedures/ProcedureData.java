@@ -4,9 +4,12 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.PlanService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
@@ -27,6 +30,13 @@ import java.util.Set;
 @XmlType( propOrder = {"actorId", "triggers", "assignment"} )
 public class ProcedureData {
 
+    private PlanService planService;
+    private PlanParticipationService planParticipationService;
+    private ChannelsUser user;
+    /**
+     * All triggers.
+     */
+    private List<TriggerData> triggers;
     /**
      * An assignment of the actor for which this procedure is being marshalled.
      */
@@ -39,10 +49,6 @@ public class ProcedureData {
      * All commitments
      */
     private Commitments committingCommitments;
-    private PlanService planService;
-    private PlanParticipationService planParticipationService;
-    private ChannelsUser user;
-    private List<TriggerData> triggers;
 
     public ProcedureData() {
         // required
@@ -92,19 +98,19 @@ public class ProcedureData {
                     triggers.add( trigger );
                 }
                 // triggering notifications (from others)
-                for ( Flow triggerNotification : triggeringNotificationsFromOthers() ) {    
+                for ( Flow triggerNotification : triggeringNotificationsFromOthers() ) {
                     TriggerData trigger = new TriggerData( assignment, planService, planParticipationService, user );
                     trigger.setNotificationFromOther( triggerNotification );
                     triggers.add( trigger );
                 }
                 // triggering requests
-                for ( Flow triggerRequest : triggeringRequestsFromOthers() ) {   
+                for ( Flow triggerRequest : triggeringRequestsFromOthers() ) {
                     TriggerData trigger = new TriggerData( assignment, planService, planParticipationService, user );
                     trigger.setRequestFromOther( triggerRequest );
                     triggers.add( trigger );
                 }
                 // triggering requests to self
-                for ( Flow triggerRequest : triggeringRequestsToSelf() ) {   
+                for ( Flow triggerRequest : triggeringRequestsToSelf() ) {
                     TriggerData trigger = new TriggerData( assignment, planService, planParticipationService, user );
                     trigger.setRequestToSelf( triggerRequest );
                     triggers.add( trigger );
@@ -243,5 +249,62 @@ public class ProcedureData {
         return ids;
     }
 
+
+    public List<Employment> getContactEmployments() {
+        List<Employment> contactEmployments = new ArrayList<Employment>();
+        // from trigger(s)
+        for ( TriggerData triggerData : triggers ) {
+            if ( triggerData.isOnNotificationFromOther() ) {
+                NotificationData notificationData = triggerData.getOnNotification();
+                contactEmployments.addAll( notificationData.findContactEmployments() );
+                contactEmployments.addAll( notificationData.findBypassContactEmployments() );
+            } else if ( triggerData.isOnRequestFromOther() ) {
+                RequestData requestData = triggerData.getOnRequest();
+                contactEmployments.addAll( requestData.findContactEmployments() );
+                contactEmployments.addAll( requestData.findBypassContactEmployments() );
+            }
+        }
+        // from assignment requests and notifications
+        AssignmentData assignmentData = getAssignment();
+        for ( AbstractFlowData flowWithOther : assignmentData.getCommunications() ) {
+            contactEmployments.addAll( flowWithOther.findContactEmployments() );
+            contactEmployments.addAll( flowWithOther.findBypassContactEmployments() );
+        }
+        return contactEmployments;
+    }
+
+    public boolean isOngoing() {
+        return CollectionUtils.exists(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (TriggerData) object ).getOngoing();
+                    }
+                } );
+    }
+
+    public boolean isTriggeredByObservation() {
+        return CollectionUtils.exists(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (TriggerData) object ).getOnObservation() != null;
+                    }
+                } );
+    }
+
+    public boolean isTriggeredByCommunication() {
+        return CollectionUtils.exists(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (TriggerData) object ).getOnNotification() != null
+                                || ( (TriggerData) object ).getOnRequest() != null;
+                    }
+                } );
+    }
 
 }

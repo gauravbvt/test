@@ -1,9 +1,8 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
-import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
@@ -90,6 +89,13 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
     
     private List<ContactData> findContactsFromEmployment( Employment employment ) {
+        return ContactData.findContactsFromEmployment(
+                employment,
+                getPlanService(),
+                getPlanParticipationService(),
+                getUser()
+        );
+/*
         List<ContactData> contactList = new ArrayList<ContactData>(  );
         Actor actor = employment.getActor();
         if ( actor.isAnonymousParticipation() ) {
@@ -119,9 +125,10 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
             }
         }
         return contactList;
+*/
     }
 
-    private List<PlanParticipation> getOtherParticipations( Actor actor ) {
+ /*   private List<PlanParticipation> getOtherParticipations( Actor actor ) {
         List<PlanParticipation> otherParticipations = new ArrayList<PlanParticipation>();
         List<PlanParticipation> participations = getPlanParticipationService().getParticipations(
                 getPlan(),
@@ -134,7 +141,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         }
         return otherParticipations;
     }
-
+*/
     public List<Long> getMediumIds() {
         List<Long> media = new ArrayList<Long>();
         for ( TransmissionMedium medium : getSharing().transmissionMedia() ) {
@@ -240,9 +247,9 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return allEmployments;
     }
 
-    protected abstract List<Employment> findContactEmployments();
+    public abstract List<Employment> findContactEmployments();
 
-    protected abstract List<Employment> findBypassContactEmployments();
+    public abstract List<Employment> findBypassContactEmployments();
 
 
 }

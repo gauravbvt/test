@@ -28,8 +28,9 @@
             <span wicket:id="employment">[employment panel]</span>
         </div>
     </div>
+    <div><a href="#directory">"Your contacts directory</a></div>
     <div id="toc">
-        <div>Table of contents</div>
+        <div>Protocols locator</div>
         <div id="ongoing-toc">
             <div>Your ongoing tasks</div>
             <div wicket:id="ongoingTaskLinks"> <!-- repeated -->
@@ -76,20 +77,17 @@
                 </div>
             </div>
         </div>
-        <div id="directory-toc">
-            <div><a href="#directory">"Contacts directory</a></div>
-        </div>
     </div>
-    <div>Protocols</div>
+    <div>Your protocols</div>
     <div id="ongoing">
         <div>Your ongoing tasks</div>
-        <div wicket:id="ongoingTasks"> <!-- repeated -->
+        <div wicket:id="ongoingProcedures"> <!-- repeated -->
             <span wicket:id="procedure"> [procedure panel] </span>
         </div>
     </div>
     <div id="triggeredByEvents">
         <div>What to do when witnessing events</div>
-        <div wicket:id="onObservations">  <!-- repeated -->
+        <div wicket:id="onObservationProcedures">  <!-- repeated -->
             <a wicket:id="onObservationAnchor" name="tbd"></a>
             <span wicket:id="trigger">[trigger panel]</span>
             <span wicket:id="procedure"> [procedure panel] </span>
@@ -97,13 +95,13 @@
     </div>
     <div id="triggeredByComms">
         <div>What to do when receiving an information request</div>
-        <div wicket:id="onRequests"> <!-- repeated -->
+        <div wicket:id="onRequestProcedures"> <!-- repeated -->
             <a wicket:id="onRequestAnchor" name="tbd"></a>
             <span wicket:id="trigger">[trigger panel]</span>
             <span wicket:id="procedure"> [procedure panel] </span>
         </div>
         <div>What to do when notified</div>
-        <div wicket:id="onNotifications"> <!-- repeated -->
+        <div wicket:id="onNotificationProcedures"> <!-- repeated -->
             <a wicket:id="onNotificationAnchor" name="tbd"></a>
             <span wicket:id="trigger">[trigger panel]</span>
             <span wicket:id="procedure"> [procedure panel] </span>
@@ -127,7 +125,7 @@
     </div>
     <div id="directory">
         <a name="directory"></a>
-        <div>Contacts directory</div>
+        <div>Your contacts</div>
         <div wicket:id="organizations"> <!-- repeated -->
             <h4 wicket:id="orgName">Org name</h4>
 

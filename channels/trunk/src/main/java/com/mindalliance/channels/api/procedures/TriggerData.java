@@ -239,4 +239,12 @@ public class TriggerData extends AbstractProcedureElementData {
         }
         return ids;
     }
+
+    public boolean isOnRequestFromOther() {
+        return requestFromOther != null;
+    }
+
+    public boolean isOnNotificationFromOther() {
+        return notificationFromOther != null;
+    }
 }

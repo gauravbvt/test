@@ -240,7 +240,7 @@ public class AssignmentData extends AbstractProcedureElementData {
         return ids;
     }
 
-    private List<AbstractFlowData> getCommunications() {
+    public List<AbstractFlowData> getCommunications() {
         List<AbstractFlowData> communications = new ArrayList<AbstractFlowData>();
         communications.addAll( getInNotifications() );
         communications.addAll( getInRequests() );
@@ -319,6 +319,7 @@ public class AssignmentData extends AbstractProcedureElementData {
         }
         return new ArrayList<Flow>( flows );
     }
+
 
 
 }

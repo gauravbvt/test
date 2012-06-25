@@ -1,7 +1,7 @@
 // Copyright (C) 2010 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.pages.procedures;
+package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.core.model.Identifiable;
 import org.apache.wicket.Page;

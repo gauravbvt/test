@@ -1,6 +1,8 @@
-package com.mindalliance.channels.api.procedures;
+package com.mindalliance.channels.api.directory;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
+import com.mindalliance.channels.api.procedures.ChannelData;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
@@ -24,7 +26,7 @@ import java.util.List;
  * Date: 3/20/12
  * Time: 9:13 PM
  */
-@XmlType( propOrder = {"employment", "workChannels", "personalChannels", "supervisorContact", "organizationChannels"} )
+@XmlType( propOrder = {"id", "employment", "workChannels", "personalChannels", "supervisorContact", "organizationChannels"} )
 public class ContactData {
 
     private Employment employment;
@@ -48,6 +50,87 @@ public class ContactData {
         this.includeSupervisor = includeSupervisor;
         this.planService = planService;
         this.planParticipationservice = planParticipationservice;
+    }
+
+    /**
+     * Find a user's contacts from san employment.
+     * @param employment an employment
+     * @param planService a plan service
+     * @param planParticipationService a plan participation service
+     * @param user a user
+     * @return a list of contact data
+     */
+    static public List<ContactData> findContactsFromEmployment(
+            Employment employment,
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
+        List<ContactData> contactList = new ArrayList<ContactData>(  );
+        Actor actor = employment.getActor();
+        if ( actor.isAnonymousParticipation() ) {
+            contactList.add( new ContactData(
+                    employment,
+                    null,
+                    true,
+                    planService,
+                    planParticipationService ) );
+        } else {
+            List<PlanParticipation> otherParticipations = getOtherParticipations(
+                    actor,
+                    planService,
+                    planParticipationService,
+                    user );
+            if ( otherParticipations.isEmpty() || !actor.isSingularParticipation() ) {
+                contactList.add( new ContactData(
+                        employment,
+                        null,
+                        true,
+                        planService,
+                        planParticipationService ) );
+            }
+            for ( PlanParticipation otherParticipation : otherParticipations ) {
+                contactList.add( new ContactData(
+                        employment,
+                        otherParticipation.getParticipant(),
+                        true,
+                        planService,
+                        planParticipationService ) );
+            }
+        }
+        return contactList;
+    }
+
+    // Find list of participation as actor other than by the user.
+    static private List<PlanParticipation> getOtherParticipations(
+            Actor actor,
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
+        String username = user == null ? null : user.getUsername();
+        List<PlanParticipation> otherParticipations = new ArrayList<PlanParticipation>();
+        List<PlanParticipation> participations = planParticipationService.getParticipations(
+                planService.getPlan(),
+                actor,
+                planService );
+        for ( PlanParticipation participation : participations ) {
+            if ( username == null || !username.equals( participation.getParticipantUsername() ) ) {
+                otherParticipations.add( participation );
+            }
+        }
+        return otherParticipations;
+    }
+
+    @XmlElement
+    public String getId() {
+        StringBuilder sb = new StringBuilder(  );
+        sb.append( userInfo == null ? "" : userInfo.getId() );
+        sb.append( "_" );
+        sb.append( employment.getActor().getId() );
+        sb.append( "_" );
+        sb.append( employment.getRole().getId() );
+        sb.append( "_" );
+        sb.append( employment.getOrganization().getId() );
+        return sb.toString();
     }
 
     @XmlElement( name = "identity" )
@@ -149,5 +232,19 @@ public class ContactData {
 
     private Actor getSupervisor() {
         return employment.getSupervisor();
+    }
+
+    public String toLabel() {
+        StringBuilder sb = new StringBuilder(  );
+        sb.append( userInfo != null ? userInfo.getFullName() : getActor().getName() );
+        sb.append( ", " );
+        sb.append( employment.getTitle() );
+        sb.append( ", " );
+        if ( employment.getJurisdiction() != null ) {
+            sb.append( employment.getJurisdiction().getName() );
+            sb.append( ", " );
+        }
+        sb.append( employment.getOrganization().getName() );
+        return sb.toString();
     }
 }

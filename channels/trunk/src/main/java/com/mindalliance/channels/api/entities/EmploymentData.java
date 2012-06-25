@@ -82,4 +82,8 @@ public class EmploymentData {
             ids.add( getSupervisorId() );
         return ids;
     }
+
+    public Employment getEmployment() {
+        return employment;
+    }
 }
