@@ -37,7 +37,7 @@ public class GeomapLinkPanel extends AbstractUpdatablePanel {
 
     private void init() {
         add( GeoMapPage.makeLink( "mapLink", titleModel, geoLocatables, getQueryService() )
-                .add( new AttributeModifier( "title", true, hintModel ) )
+                .add( new AttributeModifier( "title", hintModel ) )
                 .setVisible( CollectionUtils.exists( geoLocatables, new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
