@@ -4,13 +4,17 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.EventPhase;
+import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,6 +36,7 @@ public class TriggerData extends AbstractProcedureElementData {
     private RequestData onRequest;
     private Flow requestToSelf;
     private boolean ongoing = false;
+    private List<EventTiming> eventPhaseContext;
 
     public TriggerData() {
         // required
@@ -66,6 +71,10 @@ public class TriggerData extends AbstractProcedureElementData {
     public void setEventPhase( EventPhase eventPhase ) {
         this.eventPhase = eventPhase;
         ongoing = false;
+    }
+
+    public void setEventPhaseContext( List<EventTiming> eventPhaseContext ) {
+        this.eventPhaseContext = eventPhaseContext;
     }
 
     public void setNotificationToSelf( Flow notificationToSelf ) {
@@ -124,7 +133,7 @@ public class TriggerData extends AbstractProcedureElementData {
                         getAssignment(),
                         getPlanService(),
                         getPlanParticipationService(),
-                        getUser());
+                        getUser() );
             else
                 onNotification = null;
         }
@@ -141,7 +150,7 @@ public class TriggerData extends AbstractProcedureElementData {
                         getAssignment(),
                         getPlanService(),
                         getPlanParticipationService(),
-                        getUser());
+                        getUser() );
             else
                 onRequest = null;
         }
@@ -247,4 +256,50 @@ public class TriggerData extends AbstractProcedureElementData {
     public boolean isOnNotificationFromOther() {
         return notificationFromOther != null;
     }
+
+    public boolean isOnObserving() {
+        return eventPhase != null;
+    }
+
+    public String getLabel() {
+        if ( eventPhase != null ) {
+            return evenPhaseAndContextLabel();
+        } else if ( requestFromOther != null ) {
+            return requestFromOther.getName();
+        } else if ( notificationFromOther != null ) {
+            return notificationFromOther.getName();
+        } else {
+            return "???";
+        }
+    }
+
+    /**
+     * Get text about phase and event and context, if any.
+     *
+     * @return a string
+     */
+    private String evenPhaseAndContextLabel() {
+        StringBuilder sb = new StringBuilder();
+        Phase phase = eventPhase.getPhase();
+        sb.append( phase.isPreEvent()
+                ? "The possibility of "
+                : phase.isConcurrent()
+                ? "The beginning of "
+                : "The ending of "
+        ) ;
+        sb.append( eventPhase.getEvent().getName() );
+        if ( eventPhaseContext != null && !eventPhaseContext.isEmpty() ) {
+            sb.append( ", " );
+            Iterator<EventTiming> eventTimings = eventPhaseContext.iterator();
+            while ( eventTimings.hasNext() ) {
+                sb.append( eventTimings.next() );
+                if ( eventTimings.hasNext() ) {
+                    sb.append( " and " );
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+
 }

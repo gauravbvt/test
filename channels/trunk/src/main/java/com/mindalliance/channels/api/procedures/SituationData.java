@@ -3,12 +3,15 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.EventTiming;
+import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -19,7 +22,7 @@ import java.util.List;
  * Date: 12/6/11
  * Time: 10:26 AM
  */
-@XmlType( propOrder = { "eventId", "phaseId", "context"} )
+@XmlType( propOrder = { "label", "eventId", "phaseId", "context"} )
 public class SituationData  extends AbstractProcedureElementData {
 
     public SituationData() {
@@ -52,6 +55,33 @@ public class SituationData  extends AbstractProcedureElementData {
         }
         return context;
     }
+
+    @XmlElement
+    public String getLabel() {
+        StringBuilder sb = new StringBuilder();
+        EventPhase eventPhase = getAssignment().getEventPhase();
+        Phase phase = eventPhase.getPhase();
+        sb.append( phase.isPreEvent()
+                ? "Anticipating "
+                : phase.isConcurrent()
+                ? "Start of "
+                : "End of "
+        ) ;
+        sb.append( eventPhase.getEvent().getName() );
+        List<EventTimingData> eventTimingDataList = getContext();
+        if ( getContext() != null && !getContext().isEmpty() ) {
+            sb.append( ", " );
+            Iterator<EventTimingData> eventTimings = eventTimingDataList.iterator();
+            while ( eventTimings.hasNext() ) {
+                sb.append( eventTimings.next().getLabel() );
+                if ( eventTimings.hasNext() ) {
+                    sb.append( " and " );
+                }
+            }
+        }
+        return sb.toString();
+    }
+
 
 
 }

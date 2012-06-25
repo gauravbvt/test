@@ -207,6 +207,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         urlField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
+                addAttachmentList();
                 refresh( target );
                 update( target, new Change(
                         Change.Type.Updated,
@@ -278,7 +279,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void addAttachmentList() {
         attachmentsContainer = new WebMarkupContainer( "attachments-container" );
         attachmentsContainer.setOutputMarkupId( true );
-        container.add( attachmentsContainer );
+        container.addOrReplace( attachmentsContainer );
         ListView<Attachment> attachmentList = new ListView<Attachment>( "attachments",
                 new PropertyModel<List<Attachment>>( this, "attachments" ) ) {
 

@@ -289,6 +289,10 @@ public class Assignment implements GeoLocatable, Specable, Identifiable {
         return getPart().getSegment().getEventPhase();
     }
 
+    public List<EventTiming> getEventPhaseContext() {
+        return getPart().getSegment().getContext();
+    }
+
     public boolean isOngoing() {
         return getPart().isOngoing();
     }

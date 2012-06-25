@@ -37,4 +37,8 @@ public class EventTimingData {
     public String getTiming() {
         return StringEscapeUtils.escapeXml( eventTiming.getTiming().getLabel() );
     }
+
+    public String getLabel() {
+        return eventTiming.toString();
+    }
 }

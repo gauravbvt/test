@@ -321,5 +321,7 @@ public class AssignmentData extends AbstractProcedureElementData {
     }
 
 
-
+    public String getLabel() {
+        return getAssignment().getPart().getName();
+    }
 }

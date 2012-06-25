@@ -10,131 +10,136 @@
 </head>
 <body>
 <wicket:extend>
+
     <div id="aboutProtocols">
         <div>Protocols
             for <span wicket:id="userOrAgentName">John Doe</span>
-            from plan
-            <span wicket:id="planName">Plan name</span>
-
+            from plan <span wicket:id="planName">Plan name</span>
         </div>
         <div>Version: <span wicket:id="planVersion">12</span></div>
         <div>Released on: <span wicket:id="planDate">December 25, 2012</span></div>
     </div>
     <div id="participation">
-        <h3><span wicket:id="participant">John Doe</span> participates as</h3>
+        <div><span wicket:id="participant">John Doe</span> participates as</div>
 
-        <div wicket:id="participationList">
+        <div wicket:id="participationList"> <!-- repeated -->
             <span wicket:id="agent">[agent panel]</span>
             <span wicket:id="employment">[employment panel]</span>
         </div>
     </div>
     <div><a href="#directory">"Your contacts directory</a></div>
+
     <div id="toc">
-        <div>Protocols locator</div>
-        <div id="ongoing-toc">
+        <div>Protocols finder</div>
+        <!-- Table of content -->
+        <div wicket:id="ongoing-toc">
             <div>Your ongoing tasks</div>
-            <div wicket:id="ongoingTaskLinks"> <!-- repeated -->
-                <span wicket:id="ongoingTaskLink">a task name</span>
+            <div wicket:id="ongoingLinks"> <!-- repeated -->
+                <span wicket:id="procLink">[a data link panel]</span>
             </div>
         </div>
-        <div id="observations-toc">
+        <div wicket:id="observations-toc">
             <div>What did you observe?</div>
             <div wicket:id="observations">  <!-- repeated -->
-                <span wicket:id="onObservationLink">an event phase in context</span>
+                <div wicket:id="observation">an event phase in context</div>
+                <div wicket:id="procLinks"> <!-- repeated -->
+                    <span wicket:id="procLink">[a data link panel]</span>
+                </div>
             </div>
-
         </div>
-        <div id="communications-toc">
+        <div wicket:id="communications-toc">
             <div>Who contacted you?</div>
-            <div wicket:id="interlocutorSections">  <!-- repeated -->
+            <div wicket:id="commSections">  <!-- repeated -->
                 <div wicket:id="letter">A</div>
                 <div wicket:id="interlocutors">  <!-- repeated -->
-                    <a wicket:id="interlocutorLink" href="#tbd">
+                    <span wicket:id="contact">[contact link panel]</span>
+                    <div wicket:id="askedYou">
                         <div>
-                            <div wicket:id="name">a name</div>
-                            <div wicket:id="employment">some employment</div>
+                            Asked you...
                         </div>
-                    </a>
-
-                    <div>
-                        Asked you...
-                    </div>
-                    <div wicket:id="tocRequests"> <!-- repeated -->
-                        <a wicket:id="onRequestLink" href="#tbd">
+                        <div wicket:id="tocRequests"> <!-- repeated -->
                             <div wicket:id="request">a request</div>
                             <div wicket:id="communicatedContext">context</div>
-                        </a>
+                            <div wicket:id="procLinks"> <!-- repeated -->
+                                <span wicket:id="procLink">a task name</span>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        Notified you...
-                    </div>
-                    <div wicket:id="notifications">  <!-- repeated -->
-                        <a wicket:id="onNotificationLink" href="#tbd">
+                    <div wicket:id="notifiedYou">
+                        <div>
+                            Notified you...
+                        </div>
+                        <div wicket:id="notifications">  <!-- repeated -->
                             <div wicket:id="notification">a notification</div>
                             <div wicket:id="communicatedContext">context</div>
-                        </a>
+                            <div wicket:id="procLinks"> <!-- repeated -->
+                                <span wicket:id="procName">a task name</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div>Your protocols</div>
     <div id="ongoing">
         <div>Your ongoing tasks</div>
         <div wicket:id="ongoingProcedures"> <!-- repeated -->
-            <span wicket:id="procedure"> [procedure panel] </span>
+            <a wicket:id="ongoingAnchor" name="#tbd"></a>
+            <div wicket:id="procedure"> [procedure panel] </div>
         </div>
     </div>
     <div id="triggeredByEvents">
         <div>What to do when witnessing events</div>
         <div wicket:id="onObservationProcedures">  <!-- repeated -->
             <a wicket:id="onObservationAnchor" name="tbd"></a>
-            <span wicket:id="trigger">[trigger panel]</span>
-            <span wicket:id="procedure"> [procedure panel] </span>
+            <div wicket:id="observation">[observation panel]</div>
+            <div wicket:id="procedure"> [procedure panel] </div>
         </div>
     </div>
     <div id="triggeredByComms">
         <div>What to do when receiving an information request</div>
         <div wicket:id="onRequestProcedures"> <!-- repeated -->
             <a wicket:id="onRequestAnchor" name="tbd"></a>
-            <span wicket:id="trigger">[trigger panel]</span>
-            <span wicket:id="procedure"> [procedure panel] </span>
+            <div wicket:id="request">[request panel]</div>
+            <div wicket:id="procedure"> [procedure panel] </div>
         </div>
         <div>What to do when notified</div>
         <div wicket:id="onNotificationProcedures"> <!-- repeated -->
             <a wicket:id="onNotificationAnchor" name="tbd"></a>
-            <span wicket:id="trigger">[trigger panel]</span>
-            <span wicket:id="procedure"> [procedure panel] </span>
+            <div wicket:id="notification">[notification panel]</div>
+            <div wicket:id="procedure"> [procedure panel] </div>
         </div>
     </div>
     <div id="subtasks">
         <div>Tasks initiated by doing other tasks</div>
         <div wicket:id="subtasks"> <!-- repeated -->
             <a wicket:id="subtaskAnchor" name="tbd"></a>
+
             <div wicket:id="taskName">sub-task name</div>
             <div>What you do that initiates this task</div>
-            <ul>
-                <li wicket:id="initiatorTasks">  <!-- repeated -->
-                    <a wicket:id="initiatorLink" href="#tbd">
-                        <span wicket:id="taskName">task name</span>
-                    </a>
-                </li>
-            </ul>
-            <span wicket:id="procedure"> [procedure panel] </span>
+            <div wicket:id="initiatorTasks">  <!-- repeated -->
+                <a wicket:id="initiatorLink" href="#tbd">
+                    <span wicket:id="taskName">task name</span>
+                </a>
+            </div>
+            <div wicket:id="procedure"> [procedure panel] </div>
         </div>
     </div>
+
     <div id="directory">
         <a name="directory"></a>
         <div>Your contacts</div>
         <div wicket:id="organizations"> <!-- repeated -->
-            <h4 wicket:id="orgName">Org name</h4>
-
+            <div wicket:id="orgName">Org name</div>
             <div wicket:id="orgContact">[org contact panel]</div>
             <div wicket:id="employeesContacts">  <!-- repeated -->
-                [employees contact panel]
+                [employees contact panel with contact link anchors]
             </div>
         </div>
     </div>
+
 </wicket:extend>
 </body>
 </html>

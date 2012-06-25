@@ -70,6 +70,7 @@ public class UserPage extends AbstractChannelsBasicPage {
     private FeedbackService feedbackService;
 
     private SocialPanel socialPanel;
+    private WebMarkupContainer gotoIconsContainer;
 
     public UserPage() {
         this( new PageParameters() );
@@ -91,7 +92,7 @@ public class UserPage extends AbstractChannelsBasicPage {
     @Override
     protected void updateContent( AjaxRequestTarget target ) {
         addGotoLinks( getPlan(), getUser() );
-        target.add( getContainer() );
+        target.add( gotoIconsContainer );
         updateSocialPanel( target );
     }
 
@@ -158,6 +159,9 @@ public class UserPage extends AbstractChannelsBasicPage {
         List<PlanParticipation> participations = getPlanParticipations( plan, user );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
+        gotoIconsContainer = new WebMarkupContainer( "goto-icons" );
+        gotoIconsContainer.setOutputMarkupId( true );
+        getContainer().addOrReplace( gotoIconsContainer );
         // guidelines link
         BookmarkablePageLink<? extends WebPage> gotoGuidelinesLink =
                 getGuidelinesLink( "gotoGuidelines", getQueryService(), getPlan(), user, true );
@@ -193,7 +197,7 @@ public class UserPage extends AbstractChannelsBasicPage {
                 "title",
                 new Model<String>( getGotoModelDescription( user, plan ) ) ) );
         // gotos
-        getContainer().addOrReplace(
+        gotoIconsContainer.add(
                 // Goto admin
                 new WebMarkupContainer( "admin" )
                         .add( newTargetedLink( "gotoAdmin", "", AdminPage.class, null, plan ) )

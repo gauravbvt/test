@@ -236,7 +236,7 @@ public class ContactData {
 
     public String toLabel() {
         StringBuilder sb = new StringBuilder(  );
-        sb.append( userInfo != null ? userInfo.getFullName() : getActor().getName() );
+        sb.append( getContactName() );
         sb.append( ", " );
         sb.append( employment.getTitle() );
         sb.append( ", " );
@@ -246,5 +246,13 @@ public class ContactData {
         }
         sb.append( employment.getOrganization().getName() );
         return sb.toString();
+    }
+
+    public String getContactName() {
+       return  userInfo != null ? userInfo.getFullName() : getActor().getName();
+    }
+
+    public String firstLetterOfName() {
+        return getContactName().substring( 0, 1 );
     }
 }

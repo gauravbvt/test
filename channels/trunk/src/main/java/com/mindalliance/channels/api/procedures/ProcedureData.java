@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Web Service data element for a procedure of an actor according to a plan.
@@ -50,6 +51,8 @@ public class ProcedureData {
      */
     private Commitments committingCommitments;
 
+    private String id;
+
     public ProcedureData() {
         // required
     }
@@ -67,6 +70,7 @@ public class ProcedureData {
         this.planService = planService;
         this.planParticipationService = planParticipationService;
         this.user = user;
+        id = UUID.randomUUID().toString();
     }
 
     @XmlElement( name = "agentId" )
@@ -89,6 +93,7 @@ public class ProcedureData {
                 if ( assignment.isInitiatedByEventPhase() ) {
                     TriggerData trigger = new TriggerData( assignment, planService, planParticipationService, user );
                     trigger.setEventPhase( assignment.getEventPhase() );
+                    trigger.setEventPhaseContext( assignment.getEventPhaseContext() );
                     triggers.add( trigger );
                 }
                 // information discovery (notifications to self)
@@ -307,4 +312,51 @@ public class ProcedureData {
                 } );
     }
 
+    @SuppressWarnings( "unchecked" )
+    public List<TriggerData> getObservationTriggers() {
+        return (List<TriggerData>)CollectionUtils.select(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((TriggerData)object).isOnObserving();
+                    }
+                }
+        );
+
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public List<TriggerData> getRequestTriggers() {
+        return (List<TriggerData>)CollectionUtils.select(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((TriggerData)object).isOnRequestFromOther();
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public List<TriggerData> getNotificationTriggers() {
+        return (List<TriggerData>)CollectionUtils.select(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((TriggerData)object).isOnNotificationFromOther();
+                    }
+                }
+        );
+    }
+
+    public String getAnchor() {
+        return "#" + id;
+    }
+
+    public String getLabel() {
+        return getAssignment().getLabel();
+    }
 }

@@ -10,6 +10,8 @@ import com.mindalliance.channels.api.plan.PlanIdentifierData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
+import com.mindalliance.channels.api.procedures.SituationData;
+import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
@@ -17,6 +19,7 @@ import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -27,7 +30,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A page with a user's (or agent's) protocols.
@@ -42,6 +49,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private static final Logger LOG = LoggerFactory.getLogger( ProtocolsPage.class );
     private PlanScopeData planScopeData;
     private ProceduresData proceduresData;
+    private ProtocolsFinder finder;
     private DirectoryData directoryData;
     private String username;
     private long actorId;
@@ -111,6 +119,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 }
             }
         }
+        finder = new ProtocolsFinder( proceduresData );
         directoryData = new DirectoryData( proceduresData );
     }
 
@@ -170,7 +179,172 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     // FINDER
 
     private void addProtocolsFinder() {
-        // todo
+        addOngoingFinder();
+        addOnObservationFinder();
+        addOnCommunicationFinder();
+    }
+
+    private void addOngoingFinder() {
+        List<ProcedureData> procedures = finder.getOngoingProcedures();
+        WebMarkupContainer ongoingToc = new WebMarkupContainer( "ongoing-toc" );
+        add( ongoingToc );
+        ongoingToc.setVisible( !procedures.isEmpty() );
+        ongoingToc.add( makeProcedureLinks( "ongoingLinks", procedures ) );
+    }
+
+    private ListView<ProcedureData> makeProcedureLinks( String id, List<ProcedureData> procedureDataList ) {
+       List<ProcedureData> sortedProcedureDataList = new ArrayList<ProcedureData>( procedureDataList );
+        Collections.sort( sortedProcedureDataList, new Comparator<ProcedureData>() {
+            @Override
+            public int compare( ProcedureData pd1, ProcedureData pd2 ) {
+                return pd1.getLabel().compareTo( pd2.getLabel() );
+            }
+        } );
+       return new ListView<ProcedureData>(
+               id,
+               sortedProcedureDataList
+       ) {
+           @Override
+           protected void populateItem( ListItem<ProcedureData> item ) {
+               item.add( new DataLinkPanel( "procLink", item.getModelObject() ) );
+           }
+       };
+    }
+
+    private void addOnObservationFinder() {
+        final Map<TriggerData, List<ProcedureData>> onObservations = finder.getOnObservations();
+        WebMarkupContainer observationsToc = new WebMarkupContainer( "observations-toc" );
+        add(  observationsToc );
+        observationsToc.setVisible( !onObservations.isEmpty() );
+        List<TriggerData> sortedTriggers = new ArrayList<TriggerData>( onObservations.keySet() );
+        Collections.sort( sortedTriggers, new Comparator<TriggerData>() {
+            @Override
+            public int compare( TriggerData t1, TriggerData t2 ) {
+                return t1.getLabel().compareTo( t2.getLabel() );
+            }
+        } );
+        ListView<TriggerData> observationList = new ListView<TriggerData>(
+                "observations",
+                sortedTriggers
+        ) {
+            @Override
+            protected void populateItem( ListItem<TriggerData> item ) {
+                TriggerData triggerData = item.getModelObject();
+                Label observationLabel = new Label( "observation", triggerData.getLabel() );
+                item.add( observationLabel );
+                item.add( makeProcedureLinks( "procLinks", onObservations.get( triggerData ) ) );
+            }
+        };
+        observationsToc.add( observationList );
+    }
+
+    private void addOnCommunicationFinder() {
+        final Map<String,List<ContactData>> triggerRolodex = finder.getTriggerRolodex();
+        WebMarkupContainer communicationsToc = new WebMarkupContainer( "communications-toc" );
+        add( communicationsToc );
+        communicationsToc.setVisible( !triggerRolodex.isEmpty() );
+        ListView<String> commSectionListView = new ListView<String>(
+                "commSections",
+                finder.getSortedRolodexTabs()
+        ) {
+            @Override
+            protected void populateItem( ListItem<String> item ) {
+                String letter = item.getModelObject();
+                item.add( new Label( "letter", letter ) );
+                item.add( makeInterlocutorListView( triggerRolodex.get( letter ) ) );
+            }
+        };
+        communicationsToc.add( commSectionListView );
+    }
+
+    private ListView<ContactData> makeInterlocutorListView( List<ContactData> contactDataList ) {
+        ListView<ContactData> interlocutorsListView = new ListView<ContactData>(
+                "interlocutors",
+                contactDataList
+        ) {
+            @Override
+            protected void populateItem( ListItem<ContactData> item ) {
+                ContactData contactData = item.getModelObject();
+                item.add( new ContactLinkPanel( "contact", contactData ) );
+                // requests
+                Map<TriggerData, List<ProcedureData>> triggeringRequests =
+                        finder.getTriggeringRequestsFrom( contactData );
+                WebMarkupContainer requestsFromInterlocutor = new WebMarkupContainer( "askedYou" );
+                item.add( requestsFromInterlocutor );
+                requestsFromInterlocutor.setVisible( !triggeringRequests.isEmpty() );
+                requestsFromInterlocutor.add( makeInterlocutorRequestsListView( triggeringRequests ));
+                // notifications
+                Map<TriggerData, List<ProcedureData>> triggeringNotifications =
+                        finder.getTriggeringRequestsFrom( contactData );
+                WebMarkupContainer notificationsFromInterlocutor = new WebMarkupContainer( "notifiedYou" );
+                item.add( notificationsFromInterlocutor );
+                notificationsFromInterlocutor.setVisible( !triggeringNotifications.isEmpty() );
+                notificationsFromInterlocutor.add( makeInterlocutorNotificationsListView( triggeringNotifications ));
+            }
+        };
+        return interlocutorsListView;
+    }
+
+    private ListView<TriggerData> makeInterlocutorRequestsListView(
+            final Map<TriggerData,List<ProcedureData>> triggeringRequests ) {
+        List<TriggerData> sortedTriggers = new ArrayList<TriggerData>( triggeringRequests.keySet() );
+        Collections.sort(
+                sortedTriggers,
+                new Comparator<TriggerData>() {
+            @Override
+            public int compare( TriggerData td1, TriggerData td2 ) {
+                return td1.getLabel().compareTo(  td2.getLabel() );
+            }
+        } );
+        ListView<TriggerData> interlocutorRequestsListView = new ListView<TriggerData>(
+                "tocRequests",
+                sortedTriggers
+        ) {
+            @Override
+            protected void populateItem( ListItem<TriggerData> item ) {
+                TriggerData triggerData = item.getModelObject();
+                item.add(  new Label( "request", triggerData.getLabel() ) );
+                SituationData communicatedContext = triggerData.getSituation();
+                Label commContextLabel = new Label(
+                        "communicatedContext",
+                        communicatedContext == null ? "" : communicatedContext.getLabel() );
+                commContextLabel.setVisible( communicatedContext != null );
+                item.add( commContextLabel );
+                item.add( makeProcedureLinks( "procLinks", triggeringRequests.get( triggerData ) ) );
+            }
+        };
+        return interlocutorRequestsListView;
+    }
+
+    private ListView<TriggerData> makeInterlocutorNotificationsListView(
+            final Map<TriggerData, List<ProcedureData>> triggeringNotifications ) {
+        List<TriggerData> sortedTriggers = new ArrayList<TriggerData>( triggeringNotifications.keySet() );
+        Collections.sort(
+                sortedTriggers,
+                new Comparator<TriggerData>() {
+                    @Override
+                    public int compare( TriggerData td1, TriggerData td2 ) {
+                        return td1.getLabel().compareTo(  td2.getLabel() );
+                    }
+                } );
+        ListView<TriggerData> interlocutorNotificationsListView = new ListView<TriggerData>(
+                "tocNotifications",
+                sortedTriggers
+        ) {
+            @Override
+            protected void populateItem( ListItem<TriggerData> item ) {
+                TriggerData triggerData = item.getModelObject();
+                item.add(  new Label( "notification", triggerData.getLabel() ) );
+                SituationData communicatedContext = triggerData.getSituation();
+                Label commContextLabel = new Label(
+                        "communicatedContext",
+                        communicatedContext == null ? "" : communicatedContext.getLabel() );
+                commContextLabel.setVisible( communicatedContext != null );
+                item.add( commContextLabel );
+                item.add( makeProcedureLinks( "procLinks", triggeringNotifications.get( triggerData ) ) );
+            }
+        };
+        return interlocutorNotificationsListView;
     }
 
     // PROTOCOLS
