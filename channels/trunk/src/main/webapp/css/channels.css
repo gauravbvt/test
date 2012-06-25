@@ -188,9 +188,23 @@ div.maximized > div.zoom {
 }
 
 div.section-title {
-    background: #E4EEFE;
-    border-bottom: 1px solid #7794C7;
-    color: #333333;
+	background: none repeat scroll 0 0 #E4EEFE;
+	border-bottom: 1px solid #7794C7;
+	color: #333333;
+	float: left;
+	height: 29px;
+	line-height: 100%;
+	padding: 9px 0 0;
+	width: 100%;
+}
+
+div.section-title h3 {
+	float: left;
+	padding: 5px 0 0 10px;
+}
+
+div.section-title span.menubar {
+	float: right;
 }
 
 .receives, .sends, .part-header {
@@ -412,7 +426,10 @@ div.header a.logout,
 div.header a.help,
 a.feedback-button,
 a.back,
-a.forward {
+a.forward,
+a.add-flow,
+a.add-task,
+span.timed-out {
 	background: url('../images/signout-bg.png') repeat-x;
 	border: 1px solid #a7a9ac;
 	color: #727272;
@@ -425,6 +442,11 @@ a.forward {
 	float:right;
 	font-family: Arial,Helvetica,sans-serif;
 	line-height: 13px;
+}
+
+span.timed-out {
+	background: #e8e8e8;
+	cursor: pointer;
 }
 
 div.header a.help,
@@ -445,7 +467,9 @@ div.header a.logout:hover,
 div.header a.help:hover,
 a.feedback-button:hover,
 a.back:hover,
-a.forward:hover {
+a.forward:hover,
+a.add-flow:hover,
+a.add-task:hover {
 	color: #000000;
 	border:1px solid #000000;
 }
@@ -1185,7 +1209,7 @@ div.section td, div.section th {
     padding-right: 2em;
 }
 
-ul.menu, div.caption, span.menubar, ul.ranges {
+ul.menu, div.caption, ul.ranges {
     font-size: 8pt;
 }
 
@@ -1303,8 +1327,8 @@ ol.channels li {
     margin: 0 4px 0 4px;
 }
 
-ul.menu,
-span.menubar {
+
+ul.menu {
     font-weight: normal;
     list-style: none;
     margin: 0 0 0 5px;
@@ -2576,6 +2600,8 @@ input[disabled] {
 
 /* ----- Add New Task, Info Received-Sent Link ----- */
 
+/*
+
 a.add-flow,
 a.add-task {
     border: 1px solid #999999;
@@ -2601,10 +2627,13 @@ a.add-task:hover {
     background: url("../images/button-bg-small.high.png") repeat-x scroll 0 0;
 }
 
+*/
+
 div.part-header > div.section-title > span.menubar {
-    margin-top: 10px;
-    right: 6em;
+	float: right;
 }
+
+/*
 
 div.receives span.menubar.top,
 div.sends span.menubar.top {
@@ -2615,6 +2644,8 @@ div.receives span.menubar.top,
 div.sends span.menubar.top {
     right: 6em;
 }
+
+*/
 
 img.inline {
     vertical-align: middle;
