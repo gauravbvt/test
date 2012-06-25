@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      lang="en">
+<head>
+    <title>Channels - Protocols Report</title>
+    <link rel="stylesheet" href="css/reports/responder/responder-page.css" type="text/css" media="screen, print"/>
+    <link rel="stylesheet" href="css/reports/responder/responder-page-print.css" type="text/css" media="print"/>
+</head>
+<body>
+    <div>HEADER HERE</div>
+    <div id="aboutProtocols">
+        <div>Protocols
+            for <span widget:id="userOrAgentName">John Doe</span>
+            from plan
+            <span widget:id="planName">Plan name</span>
+
+        </div>
+        <div>Version: <span widget:id="planVersion">12</span></div>
+        <div>Released on: <span widget:id="planDate">December 25, 2012</span></div>
+    </div>
+    <div id="participation">
+        <h3><span widget:id="participant">John Doe</span> participates as</h3>
+
+        <div widget:id="participationList">
+            <span widget:id="agent">[agent panel]</span>
+            <span widget:id="employment">[employment panel]</span>
+        </div>
+    </div>
+    <div id="toc">
+        <div>Table of contents</div>
+        <div id="ongoing-toc">
+            <div>Your ongoing tasks</div>
+            <div widget:id="ongoingTaskLinks"> <!-- repeated -->
+                <span widget:id="ongoingTaskLink">a task name</span>
+            </div>
+        </div>
+        <div id="observations-toc">
+            <div>What did you observe?</div>
+            <div widget:id="observations">  <!-- repeated -->
+                <span widget:id="onObservationLink">an event phase in context</span>
+            </div>
+
+        </div>
+        <div id="communications-toc">
+            <div>Who contacted you?</div>
+            <div widget:id="interlocutorSections">  <!-- repeated -->
+                <div widget:id="letter">A</div>
+                <div widget:id="interlocutors">  <!-- repeated -->
+                    <a widget:id="interlocutorLink" href="#tbd">
+                        <div>
+                            <div widget:id="name">a name</div>
+                            <div widget:id="employment">some employment</div>
+                        </div>
+                    </a>
+
+                    <div>
+                        Asked you...
+                    </div>
+                    <div widget:id="tocRequests"> <!-- repeated -->
+                        <a widget:id="onRequestLink" href="#tbd">
+                            <div widget:id="request">a request</div>
+                            <div widget:id="communicatedContext">context</div>
+                        </a>
+                    </div>
+                    <div>
+                        Notified you...
+                    </div>
+                    <div widget:id="notifications">  <!-- repeated -->
+                        <a widget:id="onNotificationLink" href="#tbd">
+                            <div widget:id="notification">a notification</div>
+                            <div widget:id="communicatedContext">context</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="directory-toc">
+            <div><a href="#directory">"Contacts directory</a></div>
+        </div>
+    </div>
+    <div>Protocols</div>
+    <div id="ongoing">
+        <div>Your ongoing tasks</div>
+        <div widget:id="ongoingTasks"> <!-- repeated -->
+            <span widget:id="procedure"> [procedure panel] </span>
+        </div>
+    </div>
+    <div id="triggeredByEvents">
+        <div>What to do when witnessing events</div>
+        <div widget:id="onObservations">  <!-- repeated -->
+            <a widget:id="onObservationAnchor" name="tbd"></a>
+            <span widget:id="trigger">[trigger panel]</span>
+            <span widget:id="procedure"> [procedure panel] </span>
+        </div>
+    </div>
+    <div id="triggeredByComms">
+        <div>What to do when receiving an information request</div>
+        <div widget:id="onRequests"> <!-- repeated -->
+            <a widget:id="onRequestAnchor" name="tbd"></a>
+            <span widget:id="trigger">[trigger panel]</span>
+            <span widget:id="procedure"> [procedure panel] </span>
+        </div>
+        <div>What to do when notified</div>
+        <div widget:id="onNotifications"> <!-- repeated -->
+            <a widget:id="onNotificationAnchor" name="tbd"></a>
+            <span widget:id="trigger">[trigger panel]</span>
+            <span widget:id="procedure"> [procedure panel] </span>
+        </div>
+    </div>
+    <div id="subtasks">
+        <div>Tasks initiated by doing other tasks</div>
+        <div widget:id="subtasks"> <!-- repeated -->
+            <a widget:id="subtaskAnchor" name="tbd"></a>
+            <div widget:id="taskName">sub-task name</div>
+            <div>What you do that initiates this task</div>
+            <ul>
+                <li widget:id="initiatorTasks">  <!-- repeated -->
+                    <a widget:id="initiatorLink" href="#tbd">
+                        <span widget:id="taskName">task name</span>
+                    </a>
+                </li>
+            </ul>
+            <span widget:id="procedure"> [procedure panel] </span>
+        </div>
+    </div>
+    <div id="directory">
+        <a name="directory"></a>
+        <div>Contacts directory</div>
+        <div widget:id="organizations"> <!-- repeated -->
+            <h4 widget:id="orgName">Org name</h4>
+
+            <div widget:id="orgContact">[org contact panel]</div>
+            <div widget:id="employeesContacts">  <!-- repeated -->
+                [employees contact panel]
+            </div>
+        </div>
+    </div>
+</body>
+</html>

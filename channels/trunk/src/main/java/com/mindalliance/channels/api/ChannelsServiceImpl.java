@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api;
 
+import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.issues.IssuesData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.plan.PlanSummariesData;
@@ -242,6 +243,24 @@ public class ChannelsServiceImpl implements ChannelsService {
                             .entity( "No procedures available for plan " + uri )
                             .build() );
         }
+    }
+
+    @Override
+    public DirectoryData getUserDirectory(
+            String uri,
+            String version,
+            String username ) {
+        ProceduresData proceduresData = getUserProcedures( uri, version, username );
+        return new DirectoryData( proceduresData );
+    }
+
+    @Override
+    public DirectoryData getAgentDirectory(
+            String uri,
+            String version,
+            String agentId ) {
+        ProceduresData proceduresData = getAgentProcedures( uri, version, agentId );
+        return new DirectoryData( proceduresData );
     }
 
     @Override

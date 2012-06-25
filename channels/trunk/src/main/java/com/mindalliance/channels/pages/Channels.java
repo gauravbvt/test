@@ -36,6 +36,7 @@ import com.mindalliance.channels.pages.reports.guidelines.AllGuidelinesPage;
 import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
+import com.mindalliance.channels.pages.reports.protocols.StaticProtocols;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.PageExpiredException;
@@ -222,6 +223,7 @@ public class Channels extends WebApplication
         mountPage( "surveys", RFIsPage.class );
         mountPage( "feedback", FeedbackPage.class );
         mountPage( "help", HelpPage.class );
+        mountPage( "staticProtocols", StaticProtocols.class );
 
         mountResource( "uploads/${name}", new PngReference( UploadedImage.class ) );
         mountResource( "icons/${name}", new PngReference( IconPng.class ) );

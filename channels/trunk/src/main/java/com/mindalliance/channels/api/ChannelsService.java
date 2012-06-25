@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api;
 
+import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.issues.IssuesData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.plan.PlanSummariesData;
@@ -67,7 +68,7 @@ public interface ChannelsService {
     @Path( "plan/{uri}/procedures" )
     @Produces( MediaType.APPLICATION_XML )
     /**
-     * Get the procedures of the user if he/she participates in the identified plan as an agent.
+     * Get the procedures of the user if he/she participates in the identified plan as one or more agents.
      * @param uri a plan's URI
      * @return the procedures of the agent representing the user in the plan
      */
@@ -98,4 +99,33 @@ public interface ChannelsService {
     ProceduresData getAgentProcedures( @PathParam("uri") String uri,
                                        @PathParam( "version" ) String version,
                                        @PathParam("agentId") String agentId );
+
+    @GET
+    @Path( "plan/{uri}/version/{version}/user/{user}/directory" )
+    @Produces( MediaType.APPLICATION_XML )
+    /**
+     * Get the contacts directory of a user in a plan.
+     * @param uri a plan uri
+     * @param version a plan version
+     * @param username a username
+     * @return directory data
+     */
+    DirectoryData getUserDirectory( @PathParam("uri") String uri,
+                                @PathParam( "version" ) String version,
+                                @PathParam("user") String username );
+
+    @GET
+    @Path( "plan/{uri}/version/{version}/agent/{agentId}/directory" )
+    @Produces( MediaType.APPLICATION_XML )
+    /**
+     * Get the contacts directory of a user in a plan.
+     * @param uri a plan uri
+     * @param version a plan version
+     * @param agentId an agent id
+     * @return directory data
+     */
+    DirectoryData getAgentDirectory( @PathParam("uri") String uri,
+                                    @PathParam( "version" ) String version,
+                                    @PathParam("agentId") String agentId );
+
 }

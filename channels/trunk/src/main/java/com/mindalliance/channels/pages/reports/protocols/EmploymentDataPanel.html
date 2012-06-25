@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
+      lang="en">
+<head>
+    <title>Channels - Protocols Report</title>
+    <link rel="stylesheet" href="css/reports/responder/responder-page.css" type="text/css" media="screen, print" />
+    <link rel="stylesheet" href="css/reports/responder/responder-page-print.css" type="text/css" media="print" />
+</head>
+<body>
+<wicket:panel>
+    <div>Title: <span wicket:id="jobTitle">job title</span></div>
+    <div wicket:id=jobJurisdictionContainer>Jurisdication: <span wicket:id="jobJurisdiction">job title</span></div>
+    <div>Organization: <span wicket:id="jobOrg">org</span></div>
+    <div wicket:id="supervisorsContainer">
+        Supervisors:
+        <div wicket:id="supervisors">
+            <span wicket:id="contact">[contact link panel]</span>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

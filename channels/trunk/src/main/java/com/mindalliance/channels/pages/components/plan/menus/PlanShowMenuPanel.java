@@ -11,6 +11,7 @@ import com.mindalliance.channels.pages.HelpPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
+import com.mindalliance.channels.pages.reports.protocols.StaticProtocols;
 import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -42,9 +43,9 @@ public class PlanShowMenuPanel extends MenuPanel {
     /**
      * Survey service.
      */
- /*   @SpringBean
-    private SurveyService surveyService;
-*/
+    /*   @SpringBean
+        private SurveyService surveyService;
+    */
     public PlanShowMenuPanel( String s, IModel<? extends Segment> model, Set<Long> expansions ) {
         super( s, "Show", model, expansions );
     }
@@ -84,8 +85,14 @@ public class PlanShowMenuPanel extends MenuPanel {
                             newLink(
                                     "Help", newTargetedLink(
                                     "help", HelpPage.class, new PopupSettings(
-                                            PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS | PopupSettings.MENU_BAR
-                                                    | PopupSettings.TOOL_BAR ) ) ) ) );
+                                    PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS | PopupSettings.MENU_BAR
+                                            | PopupSettings.TOOL_BAR ) ) ),
+                            newLink(
+                                    "Protocols", newTargetedLink(
+                                    "protocols", StaticProtocols.class, new PopupSettings(
+                                    PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS | PopupSettings.MENU_BAR
+                                            | PopupSettings.TOOL_BAR ) ) ) ) )
+            ;
 
             return menuItems;
         }
