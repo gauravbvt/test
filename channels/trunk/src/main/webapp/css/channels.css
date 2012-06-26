@@ -410,7 +410,8 @@ div.menu div.group {
     padding: 5px 2px 5px 10px;
 }
 
-div.menu div.group.first {
+div.menu div.group.last {
+	border-left: none;
 }
 
 
@@ -422,8 +423,8 @@ div.header img {
 	padding: 0;
 }
 
-div.header a.logout,
-div.header a.help,
+a.logout,
+a.help,
 a.feedback-button,
 a.back,
 a.forward,
@@ -444,27 +445,8 @@ span.timed-out {
 	line-height: 13px;
 }
 
-span.timed-out {
-	background: #e8e8e8;
-	cursor: pointer;
-}
-
-div.header a.help,
-div.header a.feedback-button,
-a.forward {
-
-}
-
-a.feedback-button {
-
-}
-
-a.feedback-button.feedback-button-active {
-	background: #F6F6F6;
-}
-
-div.header a.logout:hover,
-div.header a.help:hover,
+a.logout:hover,
+a.help:hover,
 a.feedback-button:hover,
 a.back:hover,
 a.forward:hover,
@@ -473,6 +455,16 @@ a.add-task:hover {
 	color: #000000;
 	border:1px solid #000000;
 }
+
+span.timed-out {
+	background: #e8e8e8;
+	cursor: pointer;
+}
+
+a.feedback-button.feedback-button-active {
+	background: #F6F6F6;
+}
+
 
 /* ----- Header - Feedback ----- */
 
@@ -608,6 +600,7 @@ span.menuitem ul li ul li {
 	margin: 0;
 	padding: 0;
 	position: relative;
+	border-bottom: none;
 }
 
 div.feedback-options ul li ul li a,
@@ -641,7 +634,8 @@ div.cancelSend {
 	width: 100px;
 }
 
-div.cancelSend input {
+div.cancelSend input,
+div.group.last input.refresh {
 	background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
 	border: 1px solid #A7A9AC;
 	color: #727272;
@@ -654,11 +648,15 @@ div.cancelSend input {
 	text-transform: capitalize;
 }
 
-div.cancelSend input:hover {
+div.cancelSend input:hover,
+div.group.last input.refresh:hover {
 	color: #000000;
 	border:1px solid #000000;
 }
 
+div.group.last input.refresh {
+	margin-right: 8px;
+}
 
 
 
@@ -810,8 +808,11 @@ div.issues {
 }
 
 div.issues div.section-title {
-    background: #C9252C;
-    border-bottom: 1px solid #C25036;
+	background: none repeat scroll 0 0 #C9252C;
+	border-bottom: 1px solid #C25036;
+	float: none;
+	height: 25px;
+	padding: 0;
 }
 
 /*
@@ -821,17 +822,18 @@ div.issues div.section-title {
 */
 
 div.issues h4 {
-    background: url("../images/warning.png") no-repeat scroll 8px 5px transparent;
-    color: #FFFFFF;
-    margin: 0;
-    padding: 3px 0 4px 30px;
-    text-transform: uppercase;
-    border: none;
+	background: url("../images/warning.png") no-repeat scroll 8px 5px transparent;
+	border: medium none;
+	color: #FFFFFF;
+	float: left;
+	margin: 0;
+	padding: 6px 0 4px 30px;
+	text-transform: uppercase;
 }
 
 div.issues ol {
     margin: 0;
-    padding: 10px 30px 0 40px;
+    padding: 10px 20px 0 33px;
     font-weight: bold;
 }
 
@@ -1377,12 +1379,16 @@ ul.attach ul.menu {
     padding-right: 8px;
 }
 
+/*
+
 .header ul.menu, .header span.menubar {
     margin: 0;
     position: static;
     display: inline-block;
     vertical-align: baseline;
 }
+
+*/
 
 .issues span.menubar {
     float: right;
@@ -3237,6 +3243,8 @@ body.support iframe {
 
 /* ----- Header - Feedback ----- */
 
+/*
+
 body.support a.feedback-button {
     background: url('../images/signout-bg.png') repeat-x;
     border: 1px solid #a7a9ac;
@@ -3296,6 +3304,8 @@ body.support div.cancelSend input:hover {
     border: 1px solid #999999;
     color: #333333;
 }
+
+*/
 
 /* ----- ALPHA - Links ----- */
 
