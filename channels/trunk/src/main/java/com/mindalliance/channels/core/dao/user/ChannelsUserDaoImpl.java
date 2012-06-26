@@ -87,6 +87,7 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
     @Override
     @Transactional
     public ChannelsUser getUserNamed( String identifier ) {
+        if ( identifier == null ) return null;
         List<ChannelsUserInfo> userInfos = findByCriteria(
                 Restrictions.disjunction()
                         .add( Restrictions.eq( "username", identifier ) )

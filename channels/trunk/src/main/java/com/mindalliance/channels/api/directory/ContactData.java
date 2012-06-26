@@ -11,7 +11,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.QueryService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -32,7 +32,7 @@ public class ContactData {
     private Employment employment;
     private ChannelsUserInfo userInfo;
     private boolean includeSupervisor;
-    private PlanService planService;
+    private QueryService queryService;
     private PlanParticipationService planParticipationservice;
 
     public ContactData() {
@@ -43,26 +43,26 @@ public class ContactData {
             Employment employment,
             ChannelsUserInfo userInfo,
             boolean includeSupervisor,
-            PlanService planService,
+            QueryService queryService,
             PlanParticipationService planParticipationservice ) {
         this.employment = employment;
         this.userInfo = userInfo;
         this.includeSupervisor = includeSupervisor;
-        this.planService = planService;
+        this.queryService = queryService;
         this.planParticipationservice = planParticipationservice;
     }
 
     /**
      * Find a user's contacts from san employment.
      * @param employment an employment
-     * @param planService a plan service
+     * @param queryService a plan service
      * @param planParticipationService a plan participation service
      * @param user a user
      * @return a list of contact data
      */
     static public List<ContactData> findContactsFromEmployment(
             Employment employment,
-            PlanService planService,
+            QueryService queryService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         List<ContactData> contactList = new ArrayList<ContactData>(  );
@@ -72,12 +72,12 @@ public class ContactData {
                     employment,
                     null,
                     true,
-                    planService,
+                    queryService,
                     planParticipationService ) );
         } else {
             List<PlanParticipation> otherParticipations = getOtherParticipations(
                     actor,
-                    planService,
+                    queryService,
                     planParticipationService,
                     user );
             if ( otherParticipations.isEmpty() || !actor.isSingularParticipation() ) {
@@ -85,7 +85,7 @@ public class ContactData {
                         employment,
                         null,
                         true,
-                        planService,
+                        queryService,
                         planParticipationService ) );
             }
             for ( PlanParticipation otherParticipation : otherParticipations ) {
@@ -93,7 +93,7 @@ public class ContactData {
                         employment,
                         otherParticipation.getParticipant(),
                         true,
-                        planService,
+                        queryService,
                         planParticipationService ) );
             }
         }
@@ -103,15 +103,15 @@ public class ContactData {
     // Find list of participation as actor other than by the user.
     static private List<PlanParticipation> getOtherParticipations(
             Actor actor,
-            PlanService planService,
+            QueryService queryService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         String username = user == null ? null : user.getUsername();
         List<PlanParticipation> otherParticipations = new ArrayList<PlanParticipation>();
         List<PlanParticipation> participations = planParticipationService.getParticipations(
-                planService.getPlan(),
+                queryService.getPlan(),
                 actor,
-                planService );
+                queryService );
         for ( PlanParticipation participation : participations ) {
             if ( username == null || !username.equals( participation.getParticipantUsername() ) ) {
                 otherParticipations.add( participation );
@@ -144,7 +144,7 @@ public class ContactData {
     public List<ChannelData> getWorkChannels() {
         List<ChannelData> channelDataList = new ArrayList<ChannelData>();
         for ( Channel channel : getActor().getEffectiveChannels() ) {
-            channelDataList.add( new ChannelData( channel, planService ) );
+            channelDataList.add( new ChannelData( channel, queryService ) );
         }
         return channelDataList;
     }
@@ -156,7 +156,7 @@ public class ContactData {
             Actor supervisor = getSupervisor();
             Employment sameOrgEmployment = null;
             Employment parentOrgEmployment = null;
-            Iterator<Employment> iter = planService.findAllEmploymentsForActor( supervisor ).iterator();
+            Iterator<Employment> iter = queryService.findAllEmploymentsForActor( supervisor ).iterator();
             List<Organization> ancestors = getOrganization().ancestors();
             while ( sameOrgEmployment == null && iter.hasNext() ) {
                 Employment supervisorEmployment = iter.next();
@@ -176,19 +176,19 @@ public class ContactData {
                             supervisorEmployment,
                             null,
                             false,
-                            planService,
+                            queryService,
                             planParticipationservice ) );
                 } else {
                     List<PlanParticipation> participations = planParticipationservice.getParticipations(
-                            planService.getPlan(),
+                            queryService.getPlan(),
                             supervisor,
-                            planService );
+                            queryService );
                     for ( PlanParticipation participation : participations ) {
                         supervisorContacts.add( new ContactData(
                                 supervisorEmployment,
                                 participation.getParticipant(),
                                 false,
-                                planService,
+                                queryService,
                                 planParticipationservice ) );
                     }
                 }
@@ -202,7 +202,7 @@ public class ContactData {
     public List<ChannelData> getOrganizationChannels() {
         List<ChannelData> channels = new ArrayList<ChannelData>();
         for ( Channel channel : getOrganization().getEffectiveChannels() ) {
-            channels.add( new ChannelData( channel, planService ) );
+            channels.add( new ChannelData( channel, queryService ) );
         }
         return channels;
     }
@@ -215,7 +215,7 @@ public class ContactData {
                 channels.add( new ChannelData(
                         userContactInfo.getTransmissionMediumId(),
                         userContactInfo.getAddress(),
-                        planService ) );
+                        queryService ) );
             }
         }
         return channels;
@@ -254,5 +254,23 @@ public class ContactData {
 
     public String firstLetterOfName() {
         return getContactName().substring( 0, 1 );
+    }
+
+    @Override
+    public boolean equals ( Object other ) {
+        return other instanceof ChannelData
+                && employment.equals( other );
+    }
+
+    @Override
+    public int hashCode() {
+        return employment.hashCode();
+    }
+
+    public String getNormalizedContactName() {
+        if ( userInfo == null )
+            return getActor().getName();
+        else
+            return ChannelsUser.normalizeFullName( userInfo.getFullName() );
     }
 }

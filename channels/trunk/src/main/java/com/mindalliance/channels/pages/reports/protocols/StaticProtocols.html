@@ -9,133 +9,148 @@
     <link rel="stylesheet" href="css/reports/responder/responder-page-print.css" type="text/css" media="print"/>
 </head>
 <body>
-    <div>HEADER HERE</div>
-    <div id="aboutProtocols">
+    <div>HEADER STUFF HERE</div>
+     <!-- wicket:id attributes were replaced by title attributes -->
+    <div title="about">
         <div>Protocols
-            for <span widget:id="userOrAgentName">John Doe</span>
-            from plan
-            <span widget:id="planName">Plan name</span>
-
+            for <span title="userOrAgentName">John Doe</span>
+            from plan <span title="planName">Plan name</span>
         </div>
-        <div>Version: <span widget:id="planVersion">12</span></div>
-        <div>Released on: <span widget:id="planDate">December 25, 2012</span></div>
+        <div>Version: <span title="planVersion">12</span></div>
+        <div>Released on: <span title="planDate">December 25, 2012</span></div>
     </div>
     <div id="participation">
-        <h3><span widget:id="participant">John Doe</span> participates as</h3>
+        <div><span title="participant">John Doe</span> participates as</div>
 
-        <div widget:id="participationList">
-            <span widget:id="agent">[agent panel]</span>
-            <span widget:id="employment">[employment panel]</span>
+        <div title="participationList"> <!-- repeated -->
+            <span title="employment">Employment</span>
         </div>
     </div>
-    <div id="toc">
-        <div>Table of contents</div>
-        <div id="ongoing-toc">
+    <div><a href="#directory">"Your contacts directory</a></div>
+
+    <div title="finder">
+        <div>Protocols finder</div>
+        <!-- Table of content -->
+        <div title="ongoing-toc">
             <div>Your ongoing tasks</div>
-            <div widget:id="ongoingTaskLinks"> <!-- repeated -->
-                <span widget:id="ongoingTaskLink">a task name</span>
+            <div title="ongoingLinks"> <!-- repeated -->
+                <span title="procLink">[a data link panel]</span>
             </div>
         </div>
-        <div id="observations-toc">
+        <div title="observations-toc">
             <div>What did you observe?</div>
-            <div widget:id="observations">  <!-- repeated -->
-                <span widget:id="onObservationLink">an event phase in context</span>
+            <div title="observations">  <!-- repeated -->
+                <div title="observation">an event phase in context</div>
+                <div title="procLinks"> <!-- repeated -->
+                    <span title="procLink">[a data link panel]</span>
+                </div>
             </div>
-
         </div>
-        <div id="communications-toc">
+        <div title="communications-toc">
             <div>Who contacted you?</div>
-            <div widget:id="interlocutorSections">  <!-- repeated -->
-                <div widget:id="letter">A</div>
-                <div widget:id="interlocutors">  <!-- repeated -->
-                    <a widget:id="interlocutorLink" href="#tbd">
-                        <div>
-                            <div widget:id="name">a name</div>
-                            <div widget:id="employment">some employment</div>
-                        </div>
-                    </a>
+            <div title="commSections">  <!-- repeated -->
+                <div title="letter">A</div>
+                <div title="interlocutors">  <!-- repeated -->
+                    <span title="contact">[contact link panel]</span>
 
-                    <div>
-                        Asked you...
+                    <div title="askedYou">
+                        <div>
+                            Asked you...
+                        </div>
+                        <div title="tocRequests"> <!-- repeated -->
+                            <div title="request">a request</div>
+                            <div title="communicatedContext">context</div>
+                            <div title="procLinks"> <!-- repeated -->
+                                <span title="procLink">a task name</span>
+                            </div>
+                        </div>
                     </div>
-                    <div widget:id="tocRequests"> <!-- repeated -->
-                        <a widget:id="onRequestLink" href="#tbd">
-                            <div widget:id="request">a request</div>
-                            <div widget:id="communicatedContext">context</div>
-                        </a>
-                    </div>
-                    <div>
-                        Notified you...
-                    </div>
-                    <div widget:id="notifications">  <!-- repeated -->
-                        <a widget:id="onNotificationLink" href="#tbd">
-                            <div widget:id="notification">a notification</div>
-                            <div widget:id="communicatedContext">context</div>
-                        </a>
+                    <div title="notifiedYou">
+                        <div>
+                            Notified you...
+                        </div>
+                        <div title="notifications">  <!-- repeated -->
+                            <div title="notification">a notification</div>
+                            <div title="communicatedContext">context</div>
+                            <div title="procLinks"> <!-- repeated -->
+                                <span title="procName">a task name</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="directory-toc">
-            <div><a href="#directory">"Contacts directory</a></div>
-        </div>
     </div>
-    <div>Protocols</div>
-    <div id="ongoing">
+
+    <div title="protocols">Your protocols</div>
+    <div title="ongoing">
         <div>Your ongoing tasks</div>
-        <div widget:id="ongoingTasks"> <!-- repeated -->
-            <span widget:id="procedure"> [procedure panel] </span>
+        <div title="ongoingProcedures"> <!-- repeated -->
+            <a title="anchor" name="#tbd"></a>
+            <div title="procedure"> [procedure panel]</div>
         </div>
     </div>
-    <div id="triggeredByEvents">
-        <div>What to do when witnessing events</div>
-        <div widget:id="onObservations">  <!-- repeated -->
-            <a widget:id="onObservationAnchor" name="tbd"></a>
-            <span widget:id="trigger">[trigger panel]</span>
-            <span widget:id="procedure"> [procedure panel] </span>
+    <div title="onObservations">
+        <div>Your tasks when witnessing events</div>
+        <div title="procedures">  <!-- repeated -->
+            <div title="trigger">[trigger panel]</div>
+            <div title="procedures"> <!-- repeated -->
+                <a title="anchor" name="#tbd"></a>
+                <div title="procedure"> [procedure panel]</div>
+            </div>
         </div>
     </div>
-    <div id="triggeredByComms">
-        <div>What to do when receiving an information request</div>
-        <div widget:id="onRequests"> <!-- repeated -->
-            <a widget:id="onRequestAnchor" name="tbd"></a>
-            <span widget:id="trigger">[trigger panel]</span>
-            <span widget:id="procedure"> [procedure panel] </span>
-        </div>
-        <div>What to do when notified</div>
-        <div widget:id="onNotifications"> <!-- repeated -->
-            <a widget:id="onNotificationAnchor" name="tbd"></a>
-            <span widget:id="trigger">[trigger panel]</span>
-            <span widget:id="procedure"> [procedure panel] </span>
+    <div title="onRequests">
+        <div>Your tasks when receiving information requests</div>
+        <div title="procedures"> <!-- repeated -->
+            <div title="trigger">[trigger panel]</div>
+            <div title="procedures"> <!-- repeated -->
+                <a title="anchor" name="#tbd"></a>
+                <div title="procedure"> [procedure panel]</div>
+            </div>
         </div>
     </div>
-    <div id="subtasks">
-        <div>Tasks initiated by doing other tasks</div>
-        <div widget:id="subtasks"> <!-- repeated -->
-            <a widget:id="subtaskAnchor" name="tbd"></a>
-            <div widget:id="taskName">sub-task name</div>
-            <div>What you do that initiates this task</div>
-            <ul>
-                <li widget:id="initiatorTasks">  <!-- repeated -->
-                    <a widget:id="initiatorLink" href="#tbd">
-                        <span widget:id="taskName">task name</span>
-                    </a>
-                </li>
-            </ul>
-            <span widget:id="procedure"> [procedure panel] </span>
+    <div title="onNotifications">
+        <div>Your tasks when receiving notifications</div>
+        <div title="procedures"> <!-- repeated -->
+            <div title="trigger">[trigger panel]</div>
+            <div title="procedures"> <!-- repeated -->
+                <a title="anchor" name="#tbd"></a>
+                <div title="procedure"> [procedure panel]</div>
+            </div>
+        </div>
+    </div>
+    <div title="onDiscoveries">
+        <div>Your tasks when uncovering new information on your own</div>
+        <div title="procedures"> <!-- repeated -->
+            <div title="trigger">[trigger panel]</div>
+            <div title="procedures"> <!-- repeated -->
+                <a title="anchor" name="#tbd"></a>
+                <div title="procedure"> [procedure panel]</div>
+            </div>
+        </div>
+    </div>
+    <div title="onResearches">
+        <div>Your tasks when researching information for yourself</div>
+        <div title="procedures"> <!-- repeated -->
+            <div title="trigger">[trigger panel]</div>
+            <div title="procedures"> <!-- repeated -->
+                <a title="anchor" name="#tbd"></a>
+                <div title="procedure"> [procedure panel]</div>
+            </div>
         </div>
     </div>
     <div id="directory">
         <a name="directory"></a>
-        <div>Contacts directory</div>
-        <div widget:id="organizations"> <!-- repeated -->
-            <h4 widget:id="orgName">Org name</h4>
-
-            <div widget:id="orgContact">[org contact panel]</div>
-            <div widget:id="employeesContacts">  <!-- repeated -->
-                [employees contact panel]
+        <div>All contacts in your protocols</div>
+        <div title="orgContacts"> <!-- repeated -->
+            <div title="orgName">Org name</div>
+            <div title="orgContact">[org contact panel]</div>
+            <div title="employeesContacts">  <!-- repeated -->
+                <div title="employeeContact"> [employees contact panel with contact link anchors] </div>
             </div>
         </div>
     </div>
+
 </body>
 </html>

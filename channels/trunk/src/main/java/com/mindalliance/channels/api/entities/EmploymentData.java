@@ -86,4 +86,12 @@ public class EmploymentData {
     public Employment getEmployment() {
         return employment;
     }
+
+    public String getLabel() {
+        return employment.getLabel();
+    }
+
+    public String getOrganizationName() {
+        return getEmployment().getOrganization().getName();
+    }
 }

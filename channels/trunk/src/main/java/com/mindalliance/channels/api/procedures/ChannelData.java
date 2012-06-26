@@ -3,7 +3,7 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -22,20 +22,20 @@ public class ChannelData {
     private Channel channel;
     private long transmissionMediumId;
     private String address;
-    private PlanService planService;
+    private QueryService queryService;
 
     public ChannelData() {
         // required
     }
 
-    public ChannelData( Channel channel, PlanService planService ) {
-        this.planService = planService;
+    public ChannelData( Channel channel, QueryService queryService ) {
+        this.queryService = queryService;
         transmissionMediumId = channel.getMedium().getId();
         address = channel.getAddress();
     }
 
-    public ChannelData( long transmissionMediumId, String address, PlanService planService ) {
-        this.planService = planService;
+    public ChannelData( long transmissionMediumId, String address, QueryService queryService ) {
+        this.queryService = queryService;
         this.transmissionMediumId = transmissionMediumId;
         this.address = address;
     }
@@ -48,7 +48,7 @@ public class ChannelData {
     @XmlElement
     public String getMedium() {
         try {
-            TransmissionMedium medium = planService.find( TransmissionMedium.class, transmissionMediumId );
+            TransmissionMedium medium = queryService.find( TransmissionMedium.class, transmissionMediumId );
             return medium.getName();
         } catch ( NotFoundException e ) {
             return null;

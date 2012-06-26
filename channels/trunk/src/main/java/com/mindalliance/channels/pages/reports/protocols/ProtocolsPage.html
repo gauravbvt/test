@@ -11,7 +11,7 @@
 <body>
 <wicket:extend>
 
-    <div id="aboutProtocols">
+    <div wicket:id="about">
         <div>Protocols
             for <span wicket:id="userOrAgentName">John Doe</span>
             from plan <span wicket:id="planName">Plan name</span>
@@ -23,13 +23,12 @@
         <div><span wicket:id="participant">John Doe</span> participates as</div>
 
         <div wicket:id="participationList"> <!-- repeated -->
-            <span wicket:id="agent">[agent panel]</span>
-            <span wicket:id="employment">[employment panel]</span>
+            <span wicket:id="employment">Employment</span>
         </div>
     </div>
     <div><a href="#directory">"Your contacts directory</a></div>
 
-    <div id="toc">
+    <div wicket:id="finder">
         <div>Protocols finder</div>
         <!-- Table of content -->
         <div wicket:id="ongoing-toc">
@@ -53,6 +52,7 @@
                 <div wicket:id="letter">A</div>
                 <div wicket:id="interlocutors">  <!-- repeated -->
                     <span wicket:id="contact">[contact link panel]</span>
+
                     <div wicket:id="askedYou">
                         <div>
                             Asked you...
@@ -82,60 +82,72 @@
         </div>
     </div>
 
-    <div>Your protocols</div>
-    <div id="ongoing">
+    <div wicket:id="protocols">Your protocols</div>
+    <div wicket:id="ongoing">
         <div>Your ongoing tasks</div>
         <div wicket:id="ongoingProcedures"> <!-- repeated -->
-            <a wicket:id="ongoingAnchor" name="#tbd"></a>
-            <div wicket:id="procedure"> [procedure panel] </div>
+            <a wicket:id="anchor" name="#tbd"></a>
+            <div wicket:id="procedure"> [procedure panel]</div>
         </div>
     </div>
-    <div id="triggeredByEvents">
-        <div>What to do when witnessing events</div>
-        <div wicket:id="onObservationProcedures">  <!-- repeated -->
-            <a wicket:id="onObservationAnchor" name="tbd"></a>
-            <div wicket:id="observation">[observation panel]</div>
-            <div wicket:id="procedure"> [procedure panel] </div>
-        </div>
-    </div>
-    <div id="triggeredByComms">
-        <div>What to do when receiving an information request</div>
-        <div wicket:id="onRequestProcedures"> <!-- repeated -->
-            <a wicket:id="onRequestAnchor" name="tbd"></a>
-            <div wicket:id="request">[request panel]</div>
-            <div wicket:id="procedure"> [procedure panel] </div>
-        </div>
-        <div>What to do when notified</div>
-        <div wicket:id="onNotificationProcedures"> <!-- repeated -->
-            <a wicket:id="onNotificationAnchor" name="tbd"></a>
-            <div wicket:id="notification">[notification panel]</div>
-            <div wicket:id="procedure"> [procedure panel] </div>
-        </div>
-    </div>
-    <div id="subtasks">
-        <div>Tasks initiated by doing other tasks</div>
-        <div wicket:id="subtasks"> <!-- repeated -->
-            <a wicket:id="subtaskAnchor" name="tbd"></a>
-
-            <div wicket:id="taskName">sub-task name</div>
-            <div>What you do that initiates this task</div>
-            <div wicket:id="initiatorTasks">  <!-- repeated -->
-                <a wicket:id="initiatorLink" href="#tbd">
-                    <span wicket:id="taskName">task name</span>
-                </a>
+    <div wicket:id="onObservations">
+        <div>Your tasks when witnessing events</div>
+        <div wicket:id="procedures">  <!-- repeated -->
+            <div wicket:id="trigger">[trigger panel]</div>
+            <div wicket:id="procedures"> <!-- repeated -->
+                <a wicket:id="anchor" name="#tbd"></a>
+                <div wicket:id="procedure"> [procedure panel]</div>
             </div>
-            <div wicket:id="procedure"> [procedure panel] </div>
         </div>
     </div>
-
+    <div wicket:id="onRequests">
+        <div>Your tasks when receiving information requests</div>
+        <div wicket:id="procedures"> <!-- repeated -->
+            <div wicket:id="trigger">[trigger panel]</div>
+            <div wicket:id="procedures"> <!-- repeated -->
+                <a wicket:id="anchor" name="#tbd"></a>
+                <div wicket:id="procedure"> [procedure panel]</div>
+            </div>
+        </div>
+    </div>
+    <div wicket:id="onNotifications">
+        <div>Your tasks when receiving notifications</div>
+        <div wicket:id="procedures"> <!-- repeated -->
+            <div wicket:id="trigger">[trigger panel]</div>
+            <div wicket:id="procedures"> <!-- repeated -->
+                <a wicket:id="anchor" name="#tbd"></a>
+                <div wicket:id="procedure"> [procedure panel]</div>
+            </div>
+        </div>
+    </div>
+    <div wicket:id="onDiscoveries">
+        <div>Your tasks when uncovering new information on your own</div>
+        <div wicket:id="procedures"> <!-- repeated -->
+            <div wicket:id="trigger">[trigger panel]</div>
+            <div wicket:id="procedures"> <!-- repeated -->
+                <a wicket:id="anchor" name="#tbd"></a>
+                <div wicket:id="procedure"> [procedure panel]</div>
+            </div>
+        </div>
+    </div>
+    <div wicket:id="onResearches">
+        <div>Your tasks when researching information for yourself</div>
+        <div wicket:id="procedures"> <!-- repeated -->
+            <div wicket:id="trigger">[trigger panel]</div>
+            <div wicket:id="procedures"> <!-- repeated -->
+                <a wicket:id="anchor" name="#tbd"></a>
+                <div wicket:id="procedure"> [procedure panel]</div>
+            </div>
+        </div>
+    </div>
     <div id="directory">
         <a name="directory"></a>
-        <div>Your contacts</div>
-        <div wicket:id="organizations"> <!-- repeated -->
+        <div>All contacts in your protocols</div>
+        <div wicket:id="orgContacts"> <!-- repeated -->
             <div wicket:id="orgName">Org name</div>
             <div wicket:id="orgContact">[org contact panel]</div>
             <div wicket:id="employeesContacts">  <!-- repeated -->
-                [employees contact panel with contact link anchors]
+                <div wicket:id="employeeContact"> [employees contact panel with contact link anchors] </div>
             </div>
         </div>
     </div>

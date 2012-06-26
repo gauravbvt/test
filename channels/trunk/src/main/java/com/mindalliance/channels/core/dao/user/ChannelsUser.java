@@ -277,8 +277,16 @@ public class ChannelsUser implements UserDetails {
      * @return a string
      */
     public String getNormalizedFullName( boolean withUsername ) {
+        String normalized = normalizeFullName( getFullName() );
+        if ( withUsername )
+            return normalized + " (" + getUsername() + ')';
+        else
+            return normalized;
+    }
+
+    static public String normalizeFullName( String fullName ) {
         String normalized;
-        String name = getFullName().trim();
+        String name = fullName.trim();
         int index = name.lastIndexOf( ' ' );
         if ( index >= 0 ) {
             String s = name.substring( 0, index );
@@ -286,10 +294,7 @@ public class ChannelsUser implements UserDetails {
         } else {
             normalized = name;
         }
-        if ( withUsername )
-            return normalized + " (" + getUsername() + ')';
-        else
-            return normalized;
+        return normalized;
     }
 
 

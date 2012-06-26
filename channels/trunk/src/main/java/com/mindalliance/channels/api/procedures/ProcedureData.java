@@ -270,11 +270,7 @@ public class ProcedureData {
             }
         }
         // from assignment requests and notifications
-        AssignmentData assignmentData = getAssignment();
-        for ( AbstractFlowData flowWithOther : assignmentData.getCommunications() ) {
-            contactEmployments.addAll( flowWithOther.findContactEmployments() );
-            contactEmployments.addAll( flowWithOther.findBypassContactEmployments() );
-        }
+        contactEmployments.addAll( getNonTriggerContactEmployments() );
         return contactEmployments;
     }
 
@@ -352,11 +348,48 @@ public class ProcedureData {
         );
     }
 
+    @SuppressWarnings( "unchecked" )
+    public List<TriggerData> getDiscoveryTriggers() {
+        return (List<TriggerData>)CollectionUtils.select(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((TriggerData)object).isOnDiscovering();
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public List<TriggerData> getResearchTriggers() {
+        return (List<TriggerData>)CollectionUtils.select(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((TriggerData)object).isOnResearching();
+                    }
+                }
+        );
+    }
+
+
     public String getAnchor() {
         return "#" + id;
     }
 
     public String getLabel() {
         return getAssignment().getLabel();
+    }
+
+    public List<Employment> getNonTriggerContactEmployments() {
+        AssignmentData assignmentData = getAssignment();
+        Set<Employment> contactEmployments = new HashSet<Employment>();
+        for ( AbstractFlowData flowWithOther : assignmentData.getCommunications() ) {
+            contactEmployments.addAll( flowWithOther.findContactEmployments() );
+            contactEmployments.addAll( flowWithOther.findBypassContactEmployments() );
+        }
+        return new ArrayList<Employment>( contactEmployments  );
     }
 }

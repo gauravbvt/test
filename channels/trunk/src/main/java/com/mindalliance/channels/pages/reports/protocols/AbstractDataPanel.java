@@ -2,6 +2,8 @@ package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.api.directory.ContactData;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 
 import java.util.List;
@@ -30,6 +32,13 @@ public abstract class AbstractDataPanel extends Panel {
     protected List<ContactData> findContacts( long actorId ) {
         return getProtocolsPage().findContacts( actorId );
     }
+
+    protected WebMarkupContainer makeAnchor( String id, String anchor ) {
+        WebMarkupContainer anchorContainer = new WebMarkupContainer( id );
+        anchorContainer.add( new AttributeModifier( "name", anchor ) );
+        return anchorContainer;
+    }
+
 
     ProtocolsPage getProtocolsPage() {
         return (ProtocolsPage) getPage();

@@ -261,6 +261,16 @@ public class TriggerData extends AbstractProcedureElementData {
         return eventPhase != null;
     }
 
+    public boolean isOnDiscovering() {
+        return notificationToSelf != null;
+    }
+
+    public boolean isOnResearching() {
+        return requestToSelf != null;
+    }
+
+
+
     public String getLabel() {
         if ( eventPhase != null ) {
             return evenPhaseAndContextLabel();
