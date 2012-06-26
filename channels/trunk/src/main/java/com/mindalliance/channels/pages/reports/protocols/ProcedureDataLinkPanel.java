@@ -12,10 +12,10 @@ import org.apache.wicket.markup.html.basic.Label;
  * Date: 6/25/12
  * Time: 1:22 PM
  */
-public class DataLinkPanel extends AbstractDataPanel {
+public class ProcedureDataLinkPanel extends AbstractDataPanel {
     private ProcedureData procedureData;
 
-    public DataLinkPanel( String id, ProcedureData procedureData ) {
+    public ProcedureDataLinkPanel( String id, ProcedureData procedureData ) {
         super( id );
         this.procedureData = procedureData;
         init();

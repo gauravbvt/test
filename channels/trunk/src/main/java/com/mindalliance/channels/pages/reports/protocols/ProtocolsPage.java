@@ -215,7 +215,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         ) {
             @Override
             protected void populateItem( ListItem<ProcedureData> item ) {
-                item.add( new DataLinkPanel( "procLink", item.getModelObject() ) );
+                item.add( new ProcedureDataLinkPanel( "procLink", item.getModelObject() ) );
             }
         };
     }
@@ -261,7 +261,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     private ListView<ContactData> makeInterlocutorListView( List<ContactData> contactDataList ) {
-        ListView<ContactData> interlocutorsListView = new ListView<ContactData>(
+        return new ListView<ContactData>(
                 "interlocutors",
                 contactDataList
         ) {
@@ -285,7 +285,6 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 notificationsFromInterlocutor.add( makeInterlocutorNotificationsListView( triggeringNotifications ) );
             }
         };
-        return interlocutorsListView;
     }
 
     private ListView<TriggerData> makeInterlocutorRequestsListView(
