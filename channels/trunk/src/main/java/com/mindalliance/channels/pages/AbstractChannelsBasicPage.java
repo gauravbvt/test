@@ -225,9 +225,20 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         pagePath = new WebMarkupContainer( "planPath" );
         pagePath.setOutputMarkupId( true );
         form.addOrReplace( pagePath );
+        addHomeInPath();
         addSelectedPlanInPath();
         addOtherPlansInPath();
         addPathPageItems();
+    }
+
+    private void addHomeInPath() {
+        AjaxLink<String> homeLink = new AjaxLink<String>( "homeLink" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                setResponsePage( UserPage.class, planParameters( getPlan() ) );
+            }
+        };
+        pagePath.add( homeLink );
     }
 
 
