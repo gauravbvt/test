@@ -66,11 +66,11 @@ div.header img {
 
 /* ----- Protocols Styling ----- */
 
-div.p-about {
+div.about {
 	padding: 20px 0;
 }
 
-h1.p-name-plan {
+h1 {
 	color: #333333;
 	font-family: Georgia;
 	font-size: 34px;
@@ -80,7 +80,7 @@ h1.p-name-plan {
 	font-weight: normal;
 }
 
-h1.p-name-plan span {
+h1 span {
 	text-decoration: underline;
 }
 
@@ -118,7 +118,7 @@ h4 span.participationList span {
 	border-bottom: 2px solid #333333;
 }
 
-div.p-directory {
+div.directory-link {
 	float: right;
 	height: 37px;
 	width: 37px;
