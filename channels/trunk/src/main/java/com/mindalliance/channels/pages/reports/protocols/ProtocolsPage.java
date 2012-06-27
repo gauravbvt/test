@@ -16,7 +16,6 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.commons.collections.CollectionUtils;
@@ -59,6 +58,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private String username;
     private long actorId;
     private Actor actor;
+    private ChannelsUser protocolsUser;
 
     @Autowired
     private ChannelsService channelsService;
@@ -112,7 +112,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                     Integer.toString( plan.getVersion() ),
                     Long.toString( actorId ) );
         } else {
-            ChannelsUser protocolsUser = getUserDao().getUserNamed( username );
+            protocolsUser = getUserDao().getUserNamed( username );
             if ( protocolsUser == null )
                 throw new Exception( "Failed to retrieve protocols" );
             else {
@@ -132,7 +132,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 proceduresData,
                 getQueryService(),
                 getPlanParticipationService(),
-                this.getUserDao().getUserNamed( username ) );
+                protocolsUser );
         directoryData = new DirectoryData( proceduresData );
     }
 
@@ -436,10 +436,24 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<TriggerData> item ) {
                 TriggerData trigger = item.getModelObject();
-                item.add( new TriggerDataPanel( "trigger", trigger ) );
+                item.add( makeTriggerDataPanel( "trigger", trigger ) );
                 item.add( makeProcedurePanels( "procedures", procedureDataMap.get( trigger ) ) );
             }
         };
+    }
+
+    private AbstractDataPanel makeTriggerDataPanel( String id, TriggerData triggerData ) {
+        if ( triggerData.isOnObserving() )
+            return new ObservationTriggerDataPanel( id, triggerData );
+        else if ( triggerData.isOnNotificationFromOther() )
+            return new CommTriggerDataPanel( id, triggerData );
+        else if ( triggerData.isOnRequestFromOther() )
+            return new CommTriggerDataPanel( id, triggerData );
+        else if ( triggerData.isOnDiscovering() )
+            return new SelfTriggerDataPanel( id, triggerData );
+        else if ( triggerData.isOnResearching() )
+            return new SelfTriggerDataPanel( id, triggerData );
+        else throw new RuntimeException( "Unknown trigger " + triggerData.getLabel() );
     }
 
 
@@ -472,10 +486,10 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 final String orgName = item.getModelObject();
                 Organization org = getQueryService().findActualEntity( Organization.class, orgName );
                 if ( org == null ) {
-                    item.add(  new Label( "orgContact",  "")  );
-                    item.add(  new Label( "employeeContacts", "" ) );
+                    item.add( new Label( "orgContact", "" ) );
+                    item.add( new Label( "employeeContacts", "" ) );
                 } else {
-                    item.add(  new OrganizationContactPanel( "orgContact", org ) );
+                    item.add( new OrganizationContactPanel( "orgContact", org ) );
                     ListView<ContactData> employeeContactsListView = new ListView<ContactData>(
                             "employeeContacts",
                             finder.getContactsInOrganization( orgName )
@@ -513,16 +527,10 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     public List<ContactData> findContactsFromEmployments(
-            PlanService planService,
             List<Employment> employments ) {
         Set<ContactData> contacts = new HashSet<ContactData>();
         for ( Employment employment : employments ) {
-            contacts.addAll( ContactData.findContactsFromEmployment(
-                    employment,
-                    planService,
-                    getPlanParticipationService(),
-                    getUser()
-            ) );
+            contacts.addAll( findContacts( employment ) );
         }
         return new ArrayList<ContactData>( contacts );
     }
@@ -534,4 +542,11 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
 
+    public List<ContactData> findContacts( Employment employment ) {
+        return ContactData.findContactsFromEmployment(
+                employment,
+                getQueryService(),
+                getPlanParticipationService(),
+                protocolsUser );
+    }
 }

@@ -324,4 +324,13 @@ public class AssignmentData extends AbstractProcedureElementData {
     public String getLabel() {
         return getAssignment().getPart().getName();
     }
+
+    public boolean hasReceives() {
+        return !inNotifications().isEmpty() || !inRequests().isEmpty();
+    }
+
+    public boolean hasSends() {
+        return !outNotifications().isEmpty() || !outRequests().isEmpty();
+    }
+
 }

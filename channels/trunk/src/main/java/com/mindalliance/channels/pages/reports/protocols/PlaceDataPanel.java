@@ -1,18 +1,22 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
-import com.mindalliance.channels.api.procedures.TriggerData;
+import com.mindalliance.channels.api.entities.PlaceData;
 
 /**
- * Trigger data panel.
+ * Place data panel.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 6/26/12
- * Time: 10:01 AM
+ * Time: 3:56 PM
  */
-public class TriggerDataPanel extends AbstractDataPanel {
-    public TriggerDataPanel( String id, TriggerData triggerData ) {
+public class PlaceDataPanel extends AbstractDataPanel {
+
+    private PlaceData placeData;
+
+    public PlaceDataPanel( String id, PlaceData placeData ) {
         super( id );
+        this.placeData = placeData;
         init();
     }
 

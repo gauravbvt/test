@@ -58,7 +58,7 @@ public class DirectoryData {
         return proceduresData.getEmployments();
     }
 
-        @XmlElement( name = "contact" )
+    @XmlElement( name = "contact" )
     public List<ContactData> getContacts() {
         List<ContactData> directoryContacts = new ArrayList<ContactData>();
         for ( Employment employment : findDirectoryEmployments() ) {

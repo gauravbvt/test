@@ -141,6 +141,11 @@ public class NotificationData extends AbstractFlowData {
         return super.getDocumentation();
     }
 
+    @Override
+    public boolean isNotification() {
+        return true;
+    }
+
     /*   @Override
         @XmlElement( name = "agreement" )
         public List<AgreementData> getAgreements() {

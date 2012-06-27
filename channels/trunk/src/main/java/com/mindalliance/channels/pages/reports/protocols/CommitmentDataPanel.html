@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
+      lang="en">
+<head>
+    <title>Channels - Protocols Report</title>
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print"/>
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print"/>
+</head>
+<body>
+<wicket:panel>
+    <div>
+        <span wicket:id="mode">Notify of</span>
+        <span wicket:id="information">information</span>
+    </div>
+    <div>
+        <div wicket:id="contacts">  <!-- repeated -->
+            <div wicket:id="contact">[contact link panel with channels]</div>
+        </div>
+    </div>
+    <div wicket:id="maxDelay">within 10 minutes</div>
+    <div wicket:id="onFailure">BUT ONLY IF you failed to execute the task</div>
+    <div wicket:id="eoisContainer">
+        <label>Include elements...</label>
+        <div wicket:id="eois">[eoi panel]</div>
+    </div>
+    <div wicket:id="allInstructions">
+        <label>Instructions</label>
+        <div wicket:id="communicatedContext">DO NOT mention the beginning of IED attack</div>
+        <div wicket:id="receiptConfirmation">Request confirmation of receipt</div>
+        <div wicket:id="instructions">instructions</div>
+    </div>
+    <div wicket:id="bypassContactsContainer">
+        <label wicket:id="anyAll">If the above contacts are unreachable, contact instead...</label>
+        <div wicket:id="contacts">  <!-- repeated -->
+            <div wicket:id="contact">[contact link panel with channels]</div>
+        </div>
+    </div>
+    <div wicket:id="failureImpact">Failing to share this information could have
+        <span wicket:id="severity">extreme</span>
+        consequences
+    </div>
+</wicket:panel>
+</body>
+</html>

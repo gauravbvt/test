@@ -154,6 +154,11 @@ public class RequestData extends AbstractFlowData {
     }
 
     @Override
+    public boolean isNotification() {
+        return false;
+    }
+
+    @Override
     public List<Employment> findContactEmployments() {
         Set<Employment> contacts = new HashSet<Employment>(  );
         Actor assignedActor = getAssignment().getActor();

@@ -233,6 +233,8 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return employments;
     }
 
+    public abstract boolean isNotification();
+
     protected List<Employment> bypassContactEmployments() {
         if ( bypassEmployments == null ) {
             bypassEmployments = findBypassContactEmployments();
@@ -250,6 +252,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     public abstract List<Employment> findContactEmployments();
 
     public abstract List<Employment> findBypassContactEmployments();
+
 
 
 }

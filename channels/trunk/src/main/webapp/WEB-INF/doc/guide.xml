@@ -273,7 +273,7 @@ The list is part of the plan's ''details''.]]></description>
             </step>
         </activity>
         <activity id="add-define-segment">
-            <name>Adding and defining a segment</name>
+            <name>Add and define a segment</name>
             <step>
                 <description><![CDATA[From the top action menu, add new segment, then name it and identify the ''scenario' it addresses &ndash;<small>the phase of one event, possibly in the context of past or current events</small>.&ndash;]]></description>
                 <script>

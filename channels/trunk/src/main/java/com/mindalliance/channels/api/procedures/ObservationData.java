@@ -1,10 +1,13 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.model.EventPhase;
+import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Place;
 
 import javax.xml.bind.annotation.XmlElement;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,12 +20,14 @@ import java.util.Set;
 public class ObservationData {
 
     private EventPhase eventPhase;
+    private List<EventTiming> eventTimings;
 
     public ObservationData() {
     }
 
-    public ObservationData( EventPhase eventPhase  ) {
+    public ObservationData( EventPhase eventPhase, List<EventTiming> eventTimings  ) {
         this.eventPhase = eventPhase;
+        this.eventTimings = eventTimings;
     }
 
     @XmlElement
@@ -41,6 +46,19 @@ public class ObservationData {
             return null;
     }
 
+    @XmlElement( name = "eventTiming")
+    public List<EventTimingData> getEventTimings() {
+        if ( eventTimings == null || eventTimings.isEmpty() ) {
+            return null;
+        } else {
+            List<EventTimingData> eventTimingDataList = new ArrayList<EventTimingData>(  );
+            for ( EventTiming eventTiming : eventTimings ) {
+                eventTimingDataList.add( new EventTimingData( eventTiming ) );
+            }
+            return eventTimingDataList;
+        }
+    }
+
 
     public Set<Long> allPlaceIds() {
         Set<Long> ids = new HashSet<Long>();
@@ -52,4 +70,5 @@ public class ObservationData {
         }
         return ids;
     }
+
 }

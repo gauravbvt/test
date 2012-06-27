@@ -1,11 +1,12 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.pages.reports.AnchoredLink;
-import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.panel.Panel;
+
+import java.util.List;
 
 /**
  * Contact link panel.
@@ -18,6 +19,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 public class ContactLinkPanel extends AbstractDataPanel {
 
     private ContactData contactData;
+    private List<ChannelData> workAddresses;
+    private List<ChannelData> personalAddresses;
+
 
     public ContactLinkPanel( String id, ContactData contactData ) {
         super( id );
@@ -25,11 +29,24 @@ public class ContactLinkPanel extends AbstractDataPanel {
         init();
     }
 
-    private void init() {
-        addContactLink();
+    public ContactLinkPanel(
+            String id,
+            ContactData contactData,
+            List<ChannelData> workAddresses,
+            List<ChannelData> personalAddresses ) {
+        super( id );
+        this.contactData = contactData;
+        this.workAddresses = workAddresses;
+        this.personalAddresses = personalAddresses;
     }
 
-    private void addContactLink() {
+    private void init() {
+        addContactLink();
+        addWorkAddresses();
+        addPersonalAddresses();
+    }
+
+     private void addContactLink() {
         AnchoredLink<ProtocolsPage> link = new AnchoredLink<ProtocolsPage>(
                 "contactLink",
                 ProtocolsPage.class,
@@ -38,4 +55,37 @@ public class ContactLinkPanel extends AbstractDataPanel {
         add(  link );
         link.add( new Label( "contact", contactData.toLabel() ) );
     }
+
+    private void addWorkAddresses() {
+        WebMarkupContainer addressContainer = new WebMarkupContainer( "work" );
+        addressContainer.setVisible( hasWorkAddresses() );
+        add( addressContainer );
+        addressContainer.add(
+                hasWorkAddresses()
+                    ? new ContactAddressesPanel( "addresses", workAddresses )
+                    : new Label( "addresses", "" )
+        );
+    }
+
+    private void addPersonalAddresses() {
+        WebMarkupContainer addressContainer = new WebMarkupContainer( "personal" );
+        addressContainer.setVisible( hasPersonalAddresses() );
+        add( addressContainer );
+        addressContainer.add(
+                hasPersonalAddresses()
+                        ? new ContactAddressesPanel( "addresses", personalAddresses )
+                        : new Label( "addresses", "" )
+        );
+    }
+
+
+    private boolean hasWorkAddresses() {
+        return workAddresses != null && !workAddresses.isEmpty();
+    }
+
+    private boolean hasPersonalAddresses() {
+        return personalAddresses != null && !personalAddresses.isEmpty();
+    }
+
+
 }

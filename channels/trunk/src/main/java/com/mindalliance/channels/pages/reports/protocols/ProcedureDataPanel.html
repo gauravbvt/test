@@ -5,12 +5,73 @@
       lang="en">
 <head>
     <title>Channels - Protocols Report</title>
-    <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print" />
-    <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print" />
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print"/>
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print"/>
 </head>
 <body>
 <wicket:panel>
-    <h4>Triggers</h4>
+    <a wicket:id="anchor" name="tbd"></a>
+
+    <div wicket:id="taskName">Task name</div>
+
+    <div wicket:id="task">
+        <div wicket:id="instructions">
+            <label>Instructions:</label>
+
+            <div wicket:id="value">some instructions</div>
+        </div>
+        <div wicket:id="category">
+            <label>Category:</label>
+
+            <div wicket:id="value">a task category</div>
+        </div>
+        <div wicket:id="location">
+            <label>Location:</label>
+
+            <div wicket:id="place">a place</div>
+        </div>
+        <div wicket:id="goals">
+            <label>Goals:</label>
+
+            <div wicket:id="goalLabels">
+                <div wicket:id="goalLabel">a goal</div>
+            </div>
+            <!--repeated -->
+        </div>
+        <div wicket:id="teammates">
+            <label>Teammates:</label>
+
+            <div wicket:id="teammateContacts">  <!--repeated -->
+                <div wicket:id="teammateContact">[contact data panel]</div>
+            </div>
+            <!--repeated -->
+        </div>
+        <div wicket:id="failureImpact">
+            <label>possible consequences of failure:</label>
+
+            <div wicket:id="value">a failure impact</div>
+        </div>
+    </div>
+
+    <div wicket:id="receives">
+        <div>Sources of information</div>
+        <div wicket:id="inNotifications"> <!--repeated -->
+            <div wicket:id="inNotification"> [commitment panel]</div>
+        </div>
+        <div wicket:id="inRequests"> <!--repeated -->
+            <div wicket:id="inRequest"> [commitment panel]</div>
+        </div>
+    </div>
+
+    <div wicket:id="sends">
+        <div>Information to be shared with others</div>
+        <div wicket:id="outNotifications"> <!--repeated -->
+            <div wicket:id="outNotification"> [commitment panel]</div>
+        </div>
+        <div wicket:id="outRequests"> <!--repeated -->
+            <div wicket:id="outRequest"> [commitment panel]</div>
+        </div>
+    </div>
 </wicket:panel>
 </body>
 </html>

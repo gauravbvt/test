@@ -60,4 +60,8 @@ public class GoalData {
     public Long getOrganizationId() {
         return goal.getOrganization().getId();
     }
+
+    public String getLabel() {
+        return goal.getLabel();
+    }
 }

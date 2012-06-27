@@ -105,7 +105,7 @@ public class TriggerData extends AbstractProcedureElementData {
     @XmlElement
     public ObservationData getOnObservation() {
         if ( eventPhase != null )
-            return new ObservationData( eventPhase );
+            return new ObservationData( eventPhase, eventPhaseContext );
         else
             return null;
     }
@@ -288,7 +288,7 @@ public class TriggerData extends AbstractProcedureElementData {
      *
      * @return a string
      */
-    private String evenPhaseAndContextLabel() {
+    public String evenPhaseAndContextLabel() {
         StringBuilder sb = new StringBuilder();
         Phase phase = eventPhase.getPhase();
         sb.append( phase.isPreEvent()
@@ -297,7 +297,7 @@ public class TriggerData extends AbstractProcedureElementData {
                 ? "The beginning of "
                 : "The ending of "
         ) ;
-        sb.append( eventPhase.getEvent().getName() );
+        sb.append( eventPhase.getEvent().getLabel() );
         if ( eventPhaseContext != null && !eventPhaseContext.isEmpty() ) {
             sb.append( ", " );
             Iterator<EventTiming> eventTimings = eventPhaseContext.iterator();

@@ -121,4 +121,15 @@ public class Event extends ModelEntity implements GeoLocatable {
         this.selfTerminating = selfTerminating;
     }
 
+    @Override
+    public String getLabel() {
+        StringBuilder sb = new StringBuilder(  );
+        sb.append( getName() );
+        if ( scope != null ) {
+            sb.append( " in " );
+            sb.append( scope.getName() );
+        }
+        return sb.toString();
+    }
+
 }

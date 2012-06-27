@@ -1,7 +1,23 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
+import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.api.entities.PlaceData;
+import com.mindalliance.channels.api.procedures.AssignmentData;
+import com.mindalliance.channels.api.procedures.GoalData;
+import com.mindalliance.channels.api.procedures.NotificationData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
-import org.apache.wicket.Component;
+import com.mindalliance.channels.api.procedures.RequestData;
+import com.mindalliance.channels.api.procedures.TaskData;
+import com.mindalliance.channels.core.model.Employment;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Procedure data panel.
@@ -12,12 +28,178 @@ import org.apache.wicket.Component;
  * Time: 12:37 PM
  */
 public class ProcedureDataPanel extends AbstractDataPanel {
+
+    private ProcedureData procedureData;
+    private WebMarkupContainer taskDetailsContainer;
+    private WebMarkupContainer receivesContainer;
+    private WebMarkupContainer sendsContainer;
+
     public ProcedureDataPanel( String id, ProcedureData procedureData ) {
         super( id );
+        this.procedureData = procedureData;
         init();
     }
 
     private void init() {
-        // todo
+        add( makeAnchor( "anchor", procedureData.getAnchor() ) );
+        addTaskName();
+        addTaskDetails();
+        addReceives();
+        addSends();
     }
+
+    private void addTaskName() {
+        Label label = new Label( "taskName", procedureData.getLabel() );
+        add( label );
+    }
+
+    // TASK DETAILS
+
+    private void addTaskDetails() {
+        taskDetailsContainer = new WebMarkupContainer( "task" );
+        add( taskDetailsContainer );
+        taskDetailsContainer.add( makeAttributeContainer( "instruction", getTask().getInstructions() ) );
+        taskDetailsContainer.add( makeAttributeContainer( "category", getTask().getCategory() ) );
+        addLocation();
+        addGoals();
+        addTeammates();
+        taskDetailsContainer.add( makeAttributeContainer( "failureImpact", getTask().getFailureImpact() ) );
+    }
+
+    private void addLocation() {
+        PlaceData placeData = getTask().getLocation();
+        WebMarkupContainer locationContainer = new WebMarkupContainer( "location" );
+        locationContainer.setVisible( placeData != null );
+        taskDetailsContainer.add( locationContainer );
+        locationContainer.add(
+                placeData == null
+                        ? new Label( "place", "" )
+                        : new PlaceDataPanel( "place", placeData )
+        );
+    }
+
+    private void addGoals() {
+        List<GoalData> goalDataList = getTask().getGoals();
+        WebMarkupContainer goalsContainer = new WebMarkupContainer( "goals" );
+        goalsContainer.setVisible( !goalDataList.isEmpty() );
+        taskDetailsContainer.add( goalsContainer );
+        ListView<GoalData> goalsListView = new ListView<GoalData>(
+                "goalLabels",
+                goalDataList
+        ) {
+            @Override
+            protected void populateItem( ListItem<GoalData> item ) {
+                GoalData goalData = item.getModelObject();
+                item.add( new Label( "goalLabel", goalData.getLabel() ) );
+            }
+        };
+        goalsContainer.add( goalsListView );
+    }
+
+    private void addTeammates() {
+        Set<ContactData> contacts = new HashSet<ContactData>(  );
+        for ( Employment employment : getTask().getTeamEmployments() ) {
+            contacts.addAll( findContacts( employment ) );
+        }
+        WebMarkupContainer teamContainer = new WebMarkupContainer( "teammates" );
+        teamContainer.setVisible( !contacts.isEmpty() );
+        taskDetailsContainer.add(  teamContainer );
+        ListView<ContactData> contactsListView = new ListView<ContactData>(
+                "teammateContacts",
+                new ArrayList<ContactData>( contacts )
+        ) {
+            @Override
+            protected void populateItem( ListItem<ContactData> item ) {
+                item.add( new ContactLinkPanel( "teammateContact", item.getModelObject() ) );
+            }
+        };
+        teamContainer.add( contactsListView );
+    }
+
+    private TaskData getTask() {
+        return procedureData.getAssignment().getTask();
+    }
+
+
+    // RECEIVES
+
+    private void addReceives() {
+        receivesContainer = new WebMarkupContainer( "receives" );
+        receivesContainer.setVisible( procedureData.hasReceives() );
+        add( receivesContainer );
+        addInNotifications();
+        addInRequests();
+    }
+
+    private void addInNotifications() {
+        ListView<NotificationData> flowListView = new ListView<NotificationData>(
+                "inNotifications",
+                getAssignment().getInNotifications()
+        ) {
+            @Override
+            protected void populateItem( ListItem<NotificationData> item ) {
+                NotificationData notificationData = item.getModelObject();
+                item.add( new CommitmentDataPanel( "inNotification", notificationData, true ) );
+            }
+        };
+        receivesContainer.add( flowListView );
+    }
+
+   private void addInRequests() {
+       ListView<RequestData> flowListView = new ListView<RequestData>(
+               "inRequests",
+               getAssignment().getInRequests()
+       ) {
+           @Override
+           protected void populateItem( ListItem<RequestData> item ) {
+               RequestData requestData = item.getModelObject();
+               item.add( new CommitmentDataPanel( "inRequest", requestData, true ) );
+           }
+       };
+       receivesContainer.add( flowListView );
+   }
+
+    // SENDS
+
+    private void addSends() {
+        sendsContainer = new WebMarkupContainer( "sends" );
+        sendsContainer.setVisible( procedureData.hasSends() );
+        add( sendsContainer );
+        addOutNotifications();
+        addOutRequests();
+    }
+
+    private void addOutNotifications() {
+        ListView<NotificationData> flowListView = new ListView<NotificationData>(
+                "outNotifications",
+                getAssignment().getOutNotifications()
+        ) {
+            @Override
+            protected void populateItem( ListItem<NotificationData> item ) {
+                NotificationData notificationData = item.getModelObject();
+                item.add( new CommitmentDataPanel( "outNotification", notificationData, false ) );
+            }
+        };
+        sendsContainer.add( flowListView );
+    }
+
+    private void addOutRequests() {
+        ListView<RequestData> flowListView = new ListView<RequestData>(
+                "outRequests",
+                getAssignment().getOutRequests()
+        ) {
+            @Override
+            protected void populateItem( ListItem<RequestData> item ) {
+                RequestData requestData = item.getModelObject();
+                item.add( new CommitmentDataPanel( "outRequest", requestData, false ) );
+            }
+        };
+        sendsContainer.add( flowListView );
+    }
+
+    private AssignmentData getAssignment() {
+        return procedureData.getAssignment();
+    }
+
+
 }

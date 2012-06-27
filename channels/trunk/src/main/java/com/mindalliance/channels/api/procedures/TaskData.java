@@ -5,6 +5,7 @@ import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
@@ -144,6 +145,15 @@ public class TaskData extends AbstractProcedureElementData {
         return part == null
                 ? getAssignment().getPart()
                 : part;
+    }
+
+    @WebMethod( exclude=true )
+    public List<Employment> getTeamEmployments() {
+       List<Employment> employments = new ArrayList<Employment>();
+        for ( Assignment assignment : otherTeamAssignments() ) {
+            employments.add( assignment.getEmployment() );
+        }
+       return employments;
     }
 
     @WebMethod( exclude = true )

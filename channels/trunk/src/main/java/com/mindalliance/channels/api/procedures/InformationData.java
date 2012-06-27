@@ -21,6 +21,7 @@ import java.util.List;
 public class InformationData {
 
     private Flow sharing;
+    private List<ElementOfInformationData> eois;
 
     public InformationData() {
         // required
@@ -37,9 +38,11 @@ public class InformationData {
 
     @XmlElement( name = "eoi" )
     public List<ElementOfInformationData> getEOIs() {
-        List<ElementOfInformationData> eois = new ArrayList<ElementOfInformationData>();
-        for ( ElementOfInformation eoi : sharing.getEois() ) {
-            eois.add( new ElementOfInformationData( eoi ) );
+        if ( eois == null ) {
+            eois = new ArrayList<ElementOfInformationData>();
+            for ( ElementOfInformation eoi : sharing.getEois() ) {
+                eois.add( new ElementOfInformationData( eoi ) );
+            }
         }
         return eois;
     }

@@ -271,6 +271,8 @@ public class ProcedureData {
         }
         // from assignment requests and notifications
         contactEmployments.addAll( getNonTriggerContactEmployments() );
+        // from teammates
+        contactEmployments.addAll( getAssignment().getTask().getTeamEmployments() );
         return contactEmployments;
     }
 
@@ -392,4 +394,13 @@ public class ProcedureData {
         }
         return new ArrayList<Employment>( contactEmployments  );
     }
+
+    public boolean hasReceives() {
+        return getAssignment().hasReceives();
+    }
+
+    public boolean hasSends() {
+        return getAssignment().hasSends();
+    }
+
 }
