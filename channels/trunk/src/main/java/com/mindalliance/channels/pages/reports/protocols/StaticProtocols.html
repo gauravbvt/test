@@ -4,153 +4,168 @@
       xml:lang="en"
       lang="en">
 <head>
-    <title>Channels - Protocols Report</title>
-    <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print" />
-    <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print" />
+	<title>Channels - Protocols Report</title>
+	<link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print" />
+	<link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print" />
 </head>
 <body>
-    <div>HEADER STUFF HERE</div>
-     <!-- wicket:id attributes were replaced by title attributes -->
-    <div title="about">
-        <div>Protocols
-            for <span title="userOrAgentName">John Doe</span>
-            from plan <span title="planName">Plan name</span>
-        </div>
-        <div>Version: <span title="planVersion">12</span></div>
-        <div>Released on: <span title="planDate">December 25, 2012</span></div>
-    </div>
-    <div id="participation">
-        <div><span title="participant">John Doe</span> participates as</div>
-
-        <div title="participationList"> <!-- repeated -->
-            <span title="employment">Employment</span>
-        </div>
-    </div>
-    <div><a href="#directory">"Your contacts directory</a></div>
-
-    <div title="finder">
-        <div>Protocols finder</div>
-        <!-- Table of content -->
-        <div title="ongoing-toc">
-            <div>Your ongoing tasks</div>
-            <div title="ongoingLinks"> <!-- repeated -->
-                <span title="procLink">[a data link panel]</span>
-            </div>
-        </div>
-        <div title="observations-toc">
-            <div>What did you observe?</div>
-            <div title="observations">  <!-- repeated -->
-                <div title="observation">an event phase in context</div>
-                <div title="procLinks"> <!-- repeated -->
-                    <span title="procLink">[a data link panel]</span>
-                </div>
-            </div>
-        </div>
-        <div title="communications-toc">
-            <div>Who contacted you?</div>
-            <div title="commSections">  <!-- repeated -->
-                <div title="letter">A</div>
-                <div title="interlocutors">  <!-- repeated -->
-                    <span title="contact">[contact link panel]</span>
-
-                    <div title="askedYou">
-                        <div>
-                            Asked you...
-                        </div>
-                        <div title="tocRequests"> <!-- repeated -->
-                            <div title="request">a request</div>
-                            <div title="communicatedContext">context</div>
-                            <div title="procLinks"> <!-- repeated -->
-                                <span title="procLink">a task name</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div title="notifiedYou">
-                        <div>
-                            Notified you...
-                        </div>
-                        <div title="notifications">  <!-- repeated -->
-                            <div title="notification">a notification</div>
-                            <div title="communicatedContext">context</div>
-                            <div title="procLinks"> <!-- repeated -->
-                                <span title="procName">a task name</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div title="protocols">Your protocols</div>
-    <div title="ongoing">
-        <div>Your ongoing tasks</div>
-        <div title="ongoingProcedures"> <!-- repeated -->
-            <a title="anchor" name="#tbd"></a>
-            <div title="procedure"> [procedure panel]</div>
-        </div>
-    </div>
-    <div title="onObservations">
-        <div>Your tasks when witnessing events</div>
-        <div title="procedures">  <!-- repeated -->
-            <div title="trigger">[trigger panel]</div>
-            <div title="procedures"> <!-- repeated -->
-                <a title="anchor" name="#tbd"></a>
-                <div title="procedure"> [procedure panel]</div>
-            </div>
-        </div>
-    </div>
-    <div title="onRequests">
-        <div>Your tasks when receiving information requests</div>
-        <div title="procedures"> <!-- repeated -->
-            <div title="trigger">[trigger panel]</div>
-            <div title="procedures"> <!-- repeated -->
-                <a title="anchor" name="#tbd"></a>
-                <div title="procedure"> [procedure panel]</div>
-            </div>
-        </div>
-    </div>
-    <div title="onNotifications">
-        <div>Your tasks when receiving notifications</div>
-        <div title="procedures"> <!-- repeated -->
-            <div title="trigger">[trigger panel]</div>
-            <div title="procedures"> <!-- repeated -->
-                <a title="anchor" name="#tbd"></a>
-                <div title="procedure"> [procedure panel]</div>
-            </div>
-        </div>
-    </div>
-    <div title="onDiscoveries">
-        <div>Your tasks when uncovering new information on your own</div>
-        <div title="procedures"> <!-- repeated -->
-            <div title="trigger">[trigger panel]</div>
-            <div title="procedures"> <!-- repeated -->
-                <a title="anchor" name="#tbd"></a>
-                <div title="procedure"> [procedure panel]</div>
-            </div>
-        </div>
-    </div>
-    <div title="onResearches">
-        <div>Your tasks when researching information for yourself</div>
-        <div title="procedures"> <!-- repeated -->
-            <div title="trigger">[trigger panel]</div>
-            <div title="procedures"> <!-- repeated -->
-                <a title="anchor" name="#tbd"></a>
-                <div title="procedure"> [procedure panel]</div>
-            </div>
-        </div>
-    </div>
-    <div id="directory">
-        <a name="directory"></a>
-        <div>All contacts in your protocols</div>
-        <div title="orgContacts"> <!-- repeated -->
-            <div title="orgName">Org name</div>
-            <div title="orgContact">[org contact panel]</div>
-            <div title="employeesContacts">  <!-- repeated -->
-                <div title="employeeContact"> [employees contact panel with contact link anchors] </div>
-            </div>
-        </div>
-    </div>
-
+	<div id="container">
+		<div class="header">
+			<a href="home">
+				<img width="140" height="51" alt="Channels" src="images/global-logo.png" class="logo">
+			</a>
+			<div class="menu">
+			&nbsp;
+			</div>
+		</div>
+		<!-- wicket:id attributes were replaced by title attributes -->
+		<div id="contents">
+			<div class="p-directory">
+				<a href="#directory">"Your contacts directory</a>
+			</div>
+			<div class="p-about" title="about">
+				<h1 class="p-name-plan">Protocols
+					for <span title="userOrAgentName">John Doe</span>
+					<br /> 
+					from <!-- plan --><span title="planName">Rail Security</span>
+				</h1>
+				<h4 class="p-version">Version: <span title="planVersion">12</span></h4>
+				<h4 class="p-date"><!-- Released on: --><span title="planDate">December 25, 2012</span></h4>
+			</div>
+			<div class="participation">
+			<!--<div>
+					<span title="participant">John Doe</span> participates as
+				</div>-->
+				<h4>
+					Participating in this plan as
+					<span class="participationList" title="participationList"> <!-- repeated -->
+						<span title="employment">An MTO train engineer </span>
+					</span>
+				</h4>
+			</div>
+			<div title="finder">
+				<h2>Protocols finder</h2>
+				<!-- Table of content -->
+				<div title="ongoing-toc">
+			   	 <h3>Your ongoing tasks</h3>
+			   	 <div title="ongoingLinks"> <!-- repeated -->
+			   		 <span title="procLink">[a data link panel]</span>
+			   	 </div>
+				</div>
+				<div title="observations-toc">
+   				<h3>What did you observe?</h3>
+					<div title="observations">  <!-- repeated -->
+						<div title="observation">an event phase in context</div>
+   	  	 			<div title="procLinks"> <!-- repeated -->
+   		   			<span title="procLink">[a data link panel]</span>
+   		   		</div>
+   				</div>
+   			</div>
+   			<div title="communications-toc">
+   				<h3>Who contacted you?</h3>
+   				<div title="commSections">  <!-- repeated -->
+   			   	<div title="letter">A</div>
+   			   	<div title="interlocutors">  <!-- repeated -->
+   			   		<span title="contact">[contact link panel]</span>
+							<div title="askedYou">
+								<div>
+									Asked you...
+								</div>
+								<div title="tocRequests"> <!-- repeated -->
+									<div title="request">a request</div>
+									<div title="communicatedContext">context</div>
+										<div title="procLinks"> <!-- repeated -->
+										<span title="procLink">a task name</span>
+									</div>
+								</div>
+							</div>
+							<div title="notifiedYou">
+								<div>
+									Notified you...
+								</div>
+								<div title="notifications">  <!-- repeated -->
+									<div title="notification">a notification</div>
+									<div title="communicatedContext">context</div>
+									<div title="procLinks"> <!-- repeated -->
+										<span title="procName">a task name</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	
+			<h2 title="protocols">Your protocols</h2>
+			<div title="ongoing">
+			    <h3>Your ongoing tasks</h3>
+			    <div title="ongoingProcedures"> <!-- repeated -->
+			   	 <a title="anchor" name="#tbd"></a>
+			   	 <div title="procedure"> [procedure panel]</div>
+			    </div>
+			</div>
+			<div title="onObservations">
+			    <h3>Your tasks when witnessing events</h3>
+			    <div title="procedures">  <!-- repeated -->
+			   	 <div title="trigger">[trigger panel]</div>
+			   	 <div title="procedures"> <!-- repeated -->
+			   	     <a title="anchor" name="#tbd"></a>
+			   	     <div title="procedure"> [procedure panel]</div>
+			   	 </div>
+		   	 </div>
+			</div>
+			<div title="onRequests">
+			    <h3>Your tasks when receiving information requests</h3>
+			    <div title="procedures"> <!-- repeated -->
+			   	 <div title="trigger">[trigger panel]</div>
+			   	 <div title="procedures"> <!-- repeated -->
+			   	     <a title="anchor" name="#tbd"></a>
+			   	     <div title="procedure"> [procedure panel]</div>
+			   	 </div>
+			    </div>
+			</div>
+			<div title="onNotifications">
+				<h3>Your tasks when receiving notifications</h3>
+				<div title="procedures"> <!-- repeated -->
+					<div title="trigger">[trigger panel]</div>
+					<div title="procedures"> <!-- repeated -->
+						<a title="anchor" name="#tbd"></a>
+						<div title="procedure"> [procedure panel]</div>
+		   	 	</div>
+				</div>
+			</div>
+			<div title="onDiscoveries">
+				<h3>Your tasks when uncovering new information on your own</h3>
+				<div title="procedures"> <!-- repeated -->
+					<div title="trigger">[trigger panel]</div>
+					<div title="procedures"> <!-- repeated -->
+						<a title="anchor" name="#tbd"></a>
+						<div title="procedure"> [procedure panel]</div>
+					</div>
+				</div>
+			</div>
+			<div title="onResearches">
+				<h3>Your tasks when researching information for yourself</h3>
+				<div title="procedures"> <!-- repeated -->
+					<div title="trigger">[trigger panel]</div>
+					<div title="procedures"> <!-- repeated -->
+						<a title="anchor" name="#tbd"></a>
+						<div title="procedure"> [procedure panel]</div>
+					</div>
+				</div>
+			</div>
+			<div id="directory">
+				<a name="directory"></a>
+				<h2>All contacts in your protocols</h2>
+				<div title="orgContacts"> <!-- repeated -->
+					<h3 title="orgName">Metropolis Transit Operations</h3>
+					<div title="orgContact">[org contact panel]</div>
+					<div title="employeesContacts">  <!-- repeated -->
+						<div title="employeeContact"> [employees contact panel with contact link anchors] </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
