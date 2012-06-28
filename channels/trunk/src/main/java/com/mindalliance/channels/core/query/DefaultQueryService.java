@@ -1751,13 +1751,6 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    public List<PlanParticipation> findAllParticipationsFor( Actor actor ) {
-        return planParticipationService.getParticipations( getPlan(), actor, this );
-
-    }
-
-    @Override
     public List<Part> findAllParts() {
         List<Part> list = new ArrayList<Part>();
         for ( Segment segment : list( Segment.class ) ) {
@@ -2327,6 +2320,7 @@ public abstract class DefaultQueryService implements QueryService {
     private boolean doFindIfPartStarted( Part part, Set<ModelObject> visited ) {
         if ( visited.contains( part ) ) return false;
         visited.add( part );
+        if ( part.isOngoing() ) return true;
         if ( part.isStartsWithSegment() ) {
             return doFindIfSegmentStarted( part.getSegment(), visited );
         } else {
@@ -2480,31 +2474,6 @@ public abstract class DefaultQueryService implements QueryService {
             }
         }
         return overriddenSends;
-    }
-
-    @Override
-    public List<PlanParticipation> findParticipations( String username, Plan plan ) {
-        ChannelsUser user = userDao.getUserNamed( username );
-        if ( user != null )
-            return planParticipationService.getParticipations(
-                    plan,
-                    user.getUserInfo(),
-                    this );
-        else
-            return new ArrayList<PlanParticipation>();
-    }
-
-    @Override
-    public List<PlanParticipation> findParticipations( Actor actor ) {
-        return planParticipationService.getParticipations(
-                getPlan(),
-                actor,
-                this );
-    }
-
-    @Override
-    public PlanParticipation findParticipation( ChannelsUser user, Actor actor ) {
-        return planParticipationService.getParticipation( getPlan(), user.getUserInfo(), actor, this );
     }
 
 
@@ -3600,6 +3569,11 @@ public abstract class DefaultQueryService implements QueryService {
                 && !alreadyParticipatingAs( actor, currentParticipations )
                 && !isSingularAndTaken( actor, plan )
                 && meetsPreEmploymentConstraint( actor, currentParticipations );
+    }
+
+    @Override
+    public PlanParticipationService getPlanParticipationService() {
+        return planParticipationService;
     }
 
     private boolean meetsPreEmploymentConstraint( Actor actor,

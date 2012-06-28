@@ -3,7 +3,9 @@ package com.mindalliance.channels.pages.reports.protocols;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.procedures.ElementOfInformationData;
 import com.mindalliance.channels.api.procedures.InformationData;
+import com.mindalliance.channels.api.procedures.SituationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -29,12 +31,24 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
         add( new Label(
                 "header",
                 getTriggerData().isOnNotificationFromOther()
-                        ? "When notified of..."
-                        : "When asked for..."
+                        ? "When notified of"
+                        : "When asked for"
         ) );
         addInformation();
+        addCommunicatedContext();
         addEois();
         addContacts();
+    }
+
+    private void addCommunicatedContext() {
+        SituationData communicatedContext = getTriggerData().getSituation();
+        Label commContextLabel = new Label(
+                "communicatedContext",
+                communicatedContext == null
+                        ? ""
+                        : ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() )  );
+        commContextLabel.setVisible( communicatedContext != null );
+        add( commContextLabel );
     }
 
     private void addInformation() {

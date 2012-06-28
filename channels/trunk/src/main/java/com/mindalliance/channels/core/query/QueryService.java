@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
@@ -1239,31 +1240,6 @@ public interface QueryService {
      */
     ChannelsUserDao getUserDao();
 
-    /**
-     * Find the participation by a user.
-     *
-     * @param username a user name
-     * @param plan     a plan
-     * @return a list of plan participations
-     */
-    List<PlanParticipation> findParticipations( String username, Plan plan );
-
-    /**
-     * Find the participation by a user.
-     *
-     * @param actor aan actor
-     * @return a list of plan participations
-     */
-    List<PlanParticipation> findParticipations( Actor actor );
-
-    /**
-     * Find a user's participation as an actor.
-     *
-     * @param user  a user
-     * @param actor an actor
-     * @return a plan participation or null
-     */
-    PlanParticipation findParticipation( ChannelsUser user, Actor actor );
 
     /**
      * Whether a commitment is covered by an agreement.
@@ -1539,14 +1515,6 @@ public interface QueryService {
     List<ChannelsUser> findUsersParticipatingAs( Actor actor );
 
     /**
-     * Find all participations where users are identified as a given actor.
-     *
-     * @param actor an actor
-     * @return a list of participations
-     */
-    List<PlanParticipation> findAllParticipationsFor( Actor actor );
-
-    /**
      * Whether this is a sharing flow where source actor is target actor.
      *
      * @param flow@return a boolean
@@ -1566,7 +1534,7 @@ public interface QueryService {
      * Get extended title for the part.
      *
      * @param sep  separator string
-     * @param part
+     * @param part a part
      * @return a string
      */
     String getFullTitle( String sep, Part part );
@@ -1629,10 +1597,18 @@ public interface QueryService {
 
     /**
      * Whether a user can participate as an actor.
+     *
      * @param actor an actor
-     * @param user a user
-     * @param plan a plan
+     * @param user  a user
+     * @param plan  a plan
      * @return
      */
     Boolean isParticipationAvailable( Actor actor, ChannelsUser user, Plan plan );
+
+    /**
+     * Get a plan participation service.
+     *
+     * @return a plan participation service
+     */
+    PlanParticipationService getPlanParticipationService();
 }

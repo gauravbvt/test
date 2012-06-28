@@ -2,6 +2,7 @@ package com.mindalliance.channels.api.issues;
 
 import com.mindalliance.channels.api.plan.PlanSummaryData;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.PlanService;
@@ -34,12 +35,20 @@ public class IssuesData  implements Serializable {
     public IssuesData() {
     }
 
-    public IssuesData( PlanService planService, Analyst analyst, ChannelsUserDao userDao ) {
-        init( planService, analyst, userDao );
+    public IssuesData(
+            PlanService planService,
+            Analyst analyst,
+            ChannelsUserDao userDao,
+            PlanParticipationService planParticipationService ) {
+        init( planService, analyst, userDao, planParticipationService );
     }
 
-    private void init( PlanService planService, Analyst analyst, ChannelsUserDao userDao ) {
-        planSummaryData = new PlanSummaryData( planService, userDao );
+    private void init(
+            PlanService planService,
+            Analyst analyst,
+            ChannelsUserDao userDao,
+            PlanParticipationService planParticipationService ) {
+        planSummaryData = new PlanSummaryData( planService, userDao, planParticipationService );
         planMetricsData = new PlanMetricsData( planService );
         initIssues( planService, analyst );
     }

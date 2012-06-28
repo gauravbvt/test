@@ -26,10 +26,14 @@ public class ActorWithTooManyParticipations extends AbstractIssueDetector {
 
     @Override
     public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
-        List<Issue> issues = new ArrayList<Issue>(  );
-        Actor actor = (Actor)modelObject;
+        List<Issue> issues = new ArrayList<Issue>();
+        Actor actor = (Actor) modelObject;
         if ( actor.isSingular() ) {
-            List<PlanParticipation> participations = queryService.findAllParticipationsFor( actor );
+            List<PlanParticipation> participations = queryService
+                    .getPlanParticipationService().getParticipations(
+                            queryService.getPlan(),
+                            actor,
+                            queryService );
             int count = participations.size();
             if ( count > 1 ) {
                 Issue issue = makeIssue( queryService, Issue.VALIDITY, actor );

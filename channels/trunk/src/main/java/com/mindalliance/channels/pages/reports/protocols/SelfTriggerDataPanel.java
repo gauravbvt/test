@@ -27,8 +27,8 @@ public class SelfTriggerDataPanel extends AbstractTriggerDataPanel {
         add( new Label(
                 "header",
                 getTriggerData().isOnDiscovering()
-                        ? "When  discovering by yourself..."
-                        : "When asked for..."
+                        ? "When discovering"
+                        : "When researching"
         ) );
         addInformation();
         addEois();

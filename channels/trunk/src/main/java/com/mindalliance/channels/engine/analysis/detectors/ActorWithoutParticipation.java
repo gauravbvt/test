@@ -30,7 +30,8 @@ public class ActorWithoutParticipation extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         final Actor actor = (Actor) modelObject;
         if ( actor.isActual() ) {
-            List<PlanParticipation> participations = queryService.findParticipations( actor );
+            List<PlanParticipation> participations = queryService.getPlanParticipationService()
+                    .getParticipations( queryService.getPlan(), actor, queryService );
             boolean hasParticipation = !participations.isEmpty();
             if ( !hasParticipation ) {
                 Issue issue = makeIssue( queryService, Issue.COMPLETENESS, actor );

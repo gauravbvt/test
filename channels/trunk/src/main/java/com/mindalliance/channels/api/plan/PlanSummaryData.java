@@ -5,6 +5,7 @@ import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
@@ -42,16 +43,22 @@ public class PlanSummaryData  implements Serializable {
         // required
     }
 
-    public PlanSummaryData( PlanService planService, ChannelsUserDao userDao ) {
-        init( planService, userDao );
+    public PlanSummaryData(
+            PlanService planService,
+            ChannelsUserDao userDao,
+            PlanParticipationService planParticipationService ) {
+        init( planService, userDao, planParticipationService );
     }
 
-    private void init( PlanService planService, ChannelsUserDao userDao ) {
+    private void init(
+            PlanService planService,
+            ChannelsUserDao userDao,
+            PlanParticipationService planParticipationService ) {
         plan = planService.getPlan();
         initPlanners( planService );
-        initParticipations( planService, userDao );
+        initParticipations( planService, userDao, planParticipationService );
         initOpenActors( planService, userDao );
-        initParticipantActors( planService, userDao );
+        initParticipantActors( planService, userDao, planParticipationService );
         initSupervised( planService, userDao );
     }
 
@@ -63,10 +70,15 @@ public class PlanSummaryData  implements Serializable {
         supervisedActors = new ArrayList<Actor>( supervisedSet );
     }
 
-    private void initParticipantActors( PlanService planService, ChannelsUserDao userDao ) {
+    private void initParticipantActors(
+            PlanService planService,
+            ChannelsUserDao userDao,
+            PlanParticipationService planParticipationService ) {
         actors = new ArrayList<Actor>();
-        List<PlanParticipation> participations = planService.findParticipations(
-                ChannelsUser.current( userDao ).getUsername(), getPlan() );
+        List<PlanParticipation> participations = planParticipationService.getParticipations(
+                getPlan(),
+                ChannelsUser.current( userDao ).getUserInfo(),
+                planService );
         for ( PlanParticipation participation : participations ) {
             Actor actor = participation.getActor( planService );
             if ( actor != null ) actors.add( actor );
@@ -84,10 +96,15 @@ public class PlanSummaryData  implements Serializable {
 
     }
 
-    private void initParticipations( PlanService planService, ChannelsUserDao userDao ) {
+    private void initParticipations(
+            PlanService planService,
+            ChannelsUserDao userDao,
+            PlanParticipationService planParticipationService ) {
         participationDataList = new ArrayList<ParticipationData>();
         ChannelsUser user = ChannelsUser.current( userDao );
-        List<PlanParticipation> participations = planService.findParticipations( user.getUsername(), getPlan() );
+        List<PlanParticipation> participations = planParticipationService.getParticipations(
+                getPlan(),
+                user.getUserInfo(), planService );
         for ( PlanParticipation participation : participations ) {
             participationDataList.add( new ParticipationData( participation, user, planService ) );
         }

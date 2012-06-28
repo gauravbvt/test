@@ -70,7 +70,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             if ( !user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED )
                     && ( user.isPlanner( uri ) || plan.isProduction() ) ) {
                 user.setPlan( plan );
-                result.add( new PlanSummaryData( getPlanService( plan ), userDao ) );
+                result.add( new PlanSummaryData( getPlanService( plan ), userDao, planParticipationService ) );
             }
         }
         return new PlanSummariesData( result );
@@ -91,7 +91,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             if ( !user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED )
                     && plan.isProduction() ) {
                 user.setPlan( plan );
-                result.add( new PlanSummaryData( getPlanService( plan ), userDao ) );
+                result.add( new PlanSummaryData( getPlanService( plan ), userDao, planParticipationService ) );
             }
         }
         return new PlanSummariesData( result );
@@ -168,7 +168,10 @@ public class ChannelsServiceImpl implements ChannelsService {
             }
             user.setPlan( plan );
             PlanService planService = getPlanService( plan );
-            List<PlanParticipation> participations = planService.findParticipations( user.getUsername(), plan );
+            List<PlanParticipation> participations = planParticipationService.getParticipations(
+                    plan,
+                    user.getUserInfo(),
+                    planService);
             if ( participations.isEmpty() ) {
                 throw new Exception( user.getUsername() + " does not participate in production plan " + uri );
             }
@@ -318,7 +321,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         } else {
             user.setPlan( plan );
             PlanService planService = getPlanService( plan );
-            return new IssuesData( planService, analyst, userDao );
+            return new IssuesData( planService, analyst, userDao, planParticipationService );
         }
     }
 
@@ -328,7 +331,10 @@ public class ChannelsServiceImpl implements ChannelsService {
         if ( plan.isTemplate() || user.isPlanner( plan.getUri() ) )
             return true;
         // Participating user can see own procedures. Supervisor can procedures of supervised.
-        List<PlanParticipation> participations = planService.findParticipations( user.getUsername(), plan );
+        List<PlanParticipation> participations = planParticipationService.getParticipations(
+                plan,
+                user.getUserInfo(),
+                planService );
         for ( PlanParticipation participation : participations ) {
             Actor participant = participation.getActor( planService );
             if ( participant != null
