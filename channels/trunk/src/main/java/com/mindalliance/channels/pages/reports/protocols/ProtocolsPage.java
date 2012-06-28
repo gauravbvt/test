@@ -6,6 +6,7 @@ import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
+import com.mindalliance.channels.api.procedures.ObservationData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.api.procedures.SituationData;
@@ -18,6 +19,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
+import com.mindalliance.channels.pages.reports.guidelines.AllGuidelinesPage;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -104,6 +106,17 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     protected void updateContent( AjaxRequestTarget target ) {
         // do nothing
     }
+
+    @Override
+    protected List<PagePathItem> getIntermediatePagesPathItems() {
+        List<PagePathItem> intermediates = new ArrayList<PagePathItem>();
+        intermediates.add( new PagePathItem(
+                AllGuidelinesPage.class,
+                getParameters(),
+                "All info sharing protocols") );
+        return intermediates;
+    }
+
 
     private void initData() throws Exception {
         Plan plan = getPlan();
@@ -225,21 +238,22 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     private void addOnObservationFinder() {
-        final Map<TriggerData, List<ProcedureData>> onObservations = finder.getOnObservationProcedures();
+        final Map<ObservationData, List<ProcedureData>> onObservations = finder.getOnObservationProcedures();
         WebMarkupContainer observationsToc = new WebMarkupContainer( "observations-toc" );
         finderContainer.add( observationsToc );
         observationsToc.setVisible( !onObservations.isEmpty() );
-        List<TriggerData> sortedTriggers = finder.sortTriggerData( onObservations.keySet() );
-        ListView<TriggerData> observationList = new ListView<TriggerData>(
+        List<ObservationData> sortedObservations = new ArrayList<ObservationData>( onObservations.keySet() );
+        finder.sortObservations( sortedObservations );
+         ListView<ObservationData> observationList = new ListView<ObservationData>(
                 "observations",
-                sortedTriggers
+                sortedObservations
         ) {
             @Override
-            protected void populateItem( ListItem<TriggerData> item ) {
-                TriggerData triggerData = item.getModelObject();
-                Label observationLabel = new Label( "observation", ChannelsUtils.lcFirst( triggerData.getLabel() ) );
+            protected void populateItem( ListItem<ObservationData> item ) {
+                ObservationData observationData = item.getModelObject();
+                Label observationLabel = new Label( "observation", ChannelsUtils.lcFirst( observationData.getLabel() ) );
                 item.add( observationLabel );
-                item.add( makeProcedureLinks( "procLinks", onObservations.get( triggerData ) ) );
+                item.add( makeProcedureLinks( "procLinks", onObservations.get( observationData ) ) );
             }
         };
         observationsToc.add( observationList );
@@ -348,7 +362,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                         "communicatedContext",
                         communicatedContext == null
                                 ? ""
-                                : (", " + ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() ) ) );
+                                : ( ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() ) ) );
                 commContextLabel.setVisible( communicatedContext != null );
                 item.add( commContextLabel );
                 item.add( makeProcedureLinks( "procLinks", triggeringNotifications.get( triggerData ) ) );
@@ -398,10 +412,11 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     private void addOnObservationProcedures() {
-        protocolsContainer.add( makeTriggeredProceduresContainer(
+        protocolsContainer.add( makeEventTriggeredProceduresContainer(
                 "onObservations",
                 finder.getOnObservationProcedures() ) );
     }
+
 
     private void addOnRequestProcedures() {
         protocolsContainer.add( makeTriggeredProceduresContainer(
@@ -451,9 +466,10 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     private AbstractDataPanel makeTriggerDataPanel( String id, TriggerData triggerData ) {
-        if ( triggerData.isOnObserving() )
+        /*if ( triggerData.isOnObserving() )
             return new ObservationTriggerDataPanel( id, triggerData, finder );
-        else if ( triggerData.isOnNotificationFromOther() )
+        else */
+        if ( triggerData.isOnNotificationFromOther() )
             return new CommTriggerDataPanel( id, triggerData, finder );
         else if ( triggerData.isOnRequestFromOther() )
             return new CommTriggerDataPanel( id, triggerData, finder );
@@ -464,6 +480,29 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         else throw new RuntimeException( "Unknown trigger " + triggerData.getLabel() );
     }
 
+    private WebMarkupContainer makeEventTriggeredProceduresContainer(
+            String procsContainerId,
+            final Map<ObservationData,
+                    List<ProcedureData>> procedureDataMap ) {
+        WebMarkupContainer procsContainer = new WebMarkupContainer( procsContainerId );
+        procsContainer.setVisible( !procedureDataMap.isEmpty() );
+        protocolsContainer.add( procsContainer );
+        List<ObservationData> triggers = new ArrayList<ObservationData>( procedureDataMap.keySet() );
+        finder.sortObservations( triggers );
+        procsContainer.add(  new ListView<ObservationData>(
+                "triggered",
+                triggers
+        ) {
+            @Override
+            protected void populateItem( ListItem<ObservationData> item ) {
+                ObservationData observationData = item.getModelObject();
+                item.add( new ObservationTriggerDataPanel( "trigger", observationData, finder ) );
+                item.add( makeProcedurePanels( "procedures", procedureDataMap.get( observationData ) ) );
+            }
+        }
+        );
+        return procsContainer;
+    }
 
     private ListView<ProcedureData> makeProcedurePanels( String id, List<ProcedureData> procedureDataList ) {
         return new ListView<ProcedureData>(

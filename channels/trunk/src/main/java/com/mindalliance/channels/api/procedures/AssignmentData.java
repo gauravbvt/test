@@ -347,19 +347,14 @@ public class AssignmentData extends AbstractProcedureElementData {
         return new ArrayList<Flow>( flows );
     }
 
-
     public String getLabel() {
         StringBuilder sb = new StringBuilder(  );
-        if ( getAssignment().isOngoing() ) {
-            sb.append( "You are constantly doing task \"" );
-        } else {
-            sb.append( "Do task \"" );
-        }
         sb.append( getAssignment().getPart().getTask() );
         sb.append( "\" as " );
         sb.append( getAssignment().getEmployment().getLabel() );
         return sb.toString();
     }
+
 
     public boolean hasReceives() {
         return !inNotifications().isEmpty() || !inRequests().isEmpty();

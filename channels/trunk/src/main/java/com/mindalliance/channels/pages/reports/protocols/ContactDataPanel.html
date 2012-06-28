@@ -14,14 +14,20 @@
 	<div class="name-employment">
 	   <h4 wicket:id="name">John Doe</h4>
 	   <h5 wicket:id="employment">VP Sales ,Northeast, ACME Inc.</h5>
-	</div>
+        <div class="supervisors" wicket:id="supervisors">
+            <label>Supervisors</label>
+            <div wicket:id="contacts">  <!-- repeated -->
+                <div wicket:id="contact">[contact link panel]</div>
+            </div>
+        </div>
+    </div>
    <div class="work" wicket:id="work">
-        <label>Work addresses</label>
+        <label>Work contact info</label>
 
         <div wicket:id="addresses">contact addresses panel</div>
     </div>
     <div class="personal" wicket:id="personal">
-        <label>Personal addresses</label>
+        <label>Personal contact info</label>
 
         <div wicket:id="addresses">contact addresses panel</div>
     </div>
@@ -35,17 +41,11 @@
 
         <div wicket:id="speaks">English, Mandarin</div>
     </div>
-    <div class="clearences" wicket:id="clearances">
+    <div class="clearances" wicket:id="clearances">
         <label>Clearances</label>
 
         <div wicket:id="classifications">[security classifications panel]</div>
     </div>
-    <div class="supervisors" wicket:id="supervisors">
-        <label>Supervisors</label>
-        <div wicket:id="contacts">  <!-- repeated -->
-            <div wicket:id="contact">[contact link panel]</div>
-        </div>
-    </div>
-</wicket:panel>
+ </wicket:panel>
 </body>
 </html>

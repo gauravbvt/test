@@ -174,10 +174,7 @@ public class ProceduresData  implements Serializable {
     }
 
     private Assignments getActorAssignments( Actor actor, PlanService planService ) {
-        if ( assignments == null ) {
-            assignments = planService.getAssignments().with( new ResourceSpec( actor ) );
-        }
-        return assignments;
+        return planService.getAssignments().with( new ResourceSpec( actor ) );
     }
 
     public List<Employment> getContactEmployments() {

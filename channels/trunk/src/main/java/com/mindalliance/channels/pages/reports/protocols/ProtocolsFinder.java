@@ -5,6 +5,7 @@ import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
+import com.mindalliance.channels.api.procedures.ObservationData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.api.procedures.TriggerData;
@@ -43,7 +44,7 @@ public class ProtocolsFinder implements Serializable {
     private final Long actorId;
     //
     private List<ProcedureData> ongoingProcedures;
-    private Map<TriggerData, List<ProcedureData>> onObservations;
+    private Map<ObservationData, List<ProcedureData>> onObservations;
     Map<TriggerData, List<ProcedureData>> onRequests;
     Map<TriggerData, List<ProcedureData>> onNotifications;
     Map<TriggerData, List<ProcedureData>> onDiscoveries;
@@ -80,10 +81,10 @@ public class ProtocolsFinder implements Serializable {
                 ? channelsService.getAgentDirectory( plan.getUri(), Integer.toString( plan.getVersion() ), Long.toString( actorId ) )
                 : channelsService.getUserDirectory( plan.getUri(), Integer.toString( plan.getVersion() ), username );
         ongoingProcedures = new ArrayList<ProcedureData>();
-        onObservations = new HashMap<TriggerData, List<ProcedureData>>();
+        onObservations = new HashMap<ObservationData, List<ProcedureData>>();
         onNotificationsByContact = new HashMap<ContactData, Map<TriggerData, List<ProcedureData>>>();
         onRequestsByContact = new HashMap<ContactData, Map<TriggerData, List<ProcedureData>>>();
-        onRequests = new HashMap<TriggerData, List<ProcedureData>>();
+        onRequests = new HashMap<TriggerData, List<ProcedureData>>();    // using triggerData is wrong? Use NotificationData etc.
         onNotifications = new HashMap<TriggerData, List<ProcedureData>>();
         onDiscoveries = new HashMap<TriggerData, List<ProcedureData>>();
         onResearches = new HashMap<TriggerData, List<ProcedureData>>();
@@ -102,7 +103,7 @@ public class ProtocolsFinder implements Serializable {
             ongoingProcedures.add( procedureData );
         } else {
             for ( TriggerData triggerData : procedureData.getObservationTriggers() ) {
-                addTo( onObservations, triggerData, procedureData );
+                addTo( onObservations, triggerData.getOnObservation(), procedureData );
             }
             for ( TriggerData triggerData : procedureData.getRequestTriggers() ) {
                 addTo( onRequests, triggerData, procedureData );
@@ -138,6 +139,17 @@ public class ProtocolsFinder implements Serializable {
         }
     }
 
+    private void addTo( Map<ObservationData, List<ProcedureData>> map,
+                        ObservationData onObservation,
+                        ProcedureData procedureData ) {
+        List<ProcedureData> list = map.get( onObservation );
+        if ( list == null ) {
+            list = new ArrayList<ProcedureData>();
+            map.put( onObservation, list );
+        }
+        list.add( procedureData );
+    }
+
     private void addTo(
             Map<ContactData, Map<TriggerData, List<ProcedureData>>> map,
             ContactData contactData,
@@ -167,7 +179,7 @@ public class ProtocolsFinder implements Serializable {
         return ongoingProcedures;
     }
 
-    public Map<TriggerData, List<ProcedureData>> getOnObservationProcedures() {
+    public Map<ObservationData, List<ProcedureData>> getOnObservationProcedures() {
         return onObservations;
     }
 
@@ -328,4 +340,12 @@ public class ProtocolsFinder implements Serializable {
     }
 
 
+    public void sortObservations( List<ObservationData> sortedObservations ) {
+        Collections.sort( sortedObservations, new Comparator<ObservationData>() {
+            @Override
+            public int compare( ObservationData od1, ObservationData od2 ) {
+                return od1.getLabel().compareTo( od2.getLabel() );
+            }
+        });
+    }
 }

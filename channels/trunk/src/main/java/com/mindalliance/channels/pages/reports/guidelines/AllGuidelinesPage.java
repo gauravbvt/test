@@ -54,7 +54,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                         new Label( 
                                 "participationNote",
                                 isPlanner
-                                        ? "(Users who participate as agents in this plan and thus have protocols)"
+                                        ? "(Users who participate as agents in this plan and thus have their protocols)"
                                         : "(Your participation in this plan)"
                                 ),
                         new ListView<PlanParticipation>( "participatingUsers", getParticipations() ) {

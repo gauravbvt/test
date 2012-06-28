@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
-import com.mindalliance.channels.api.procedures.TriggerData;
+import com.mindalliance.channels.api.procedures.ObservationData;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.wicket.markup.html.basic.Label;
 
@@ -12,14 +12,18 @@ import org.apache.wicket.markup.html.basic.Label;
  * Date: 6/26/12
  * Time: 7:49 PM
  */
-public class ObservationTriggerDataPanel extends AbstractTriggerDataPanel {
+public class ObservationTriggerDataPanel extends AbstractDataPanel {
 
-    public ObservationTriggerDataPanel( String id, TriggerData triggerData, ProtocolsFinder finder ) {
-        super( id, triggerData, finder );
+    private ObservationData observationData;
+
+    public ObservationTriggerDataPanel( String id, ObservationData observationData, ProtocolsFinder finder ) {
+        super( id, finder );
+        this.observationData = observationData;
         init();
     }
 
     private void init() {
-        add( new Label( "situation", ChannelsUtils.lcFirst( getTriggerData().getLabel() ) ) );
+        add( new Label( "prefix", ChannelsUtils.lcFirst( observationData.getPrefix() ) ) );
+        add( new Label( "scenario", ChannelsUtils.lcFirst( observationData.getScenarioLabel() ) ) );
     }
 }

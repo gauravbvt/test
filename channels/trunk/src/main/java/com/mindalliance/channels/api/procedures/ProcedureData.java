@@ -30,7 +30,7 @@ import java.util.UUID;
  * Time: 3:05 PM
  */
 @XmlType( propOrder = {"actorId", "triggers", "assignment"} )
-public class ProcedureData  implements Serializable {
+public class ProcedureData implements Serializable {
 
     private ChannelsUser user;
     /**
@@ -73,57 +73,57 @@ public class ProcedureData  implements Serializable {
 
     private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
         id = UUID.randomUUID().toString();
-        assignmentData =  new AssignmentData( assignment, planService, planParticipationService, user, this );
+        assignmentData = new AssignmentData( assignment, planService, planParticipationService, user, this );
         initTriggers( planService, planParticipationService );
     }
 
 
     private void initTriggers( PlanService planService, PlanParticipationService planParticipationService ) {
-            triggers = new ArrayList<TriggerData>();
-            // anytime
-            if ( assignment.isOngoing() ) {
+        triggers = new ArrayList<TriggerData>();
+        // anytime
+        if ( assignment.isOngoing() ) {
+            TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
+            triggerData.setOngoing( true );
+            triggerData.initTrigger( planService, planParticipationService );
+            triggers.add( triggerData );
+        } else {
+            // event phase is trigger
+            if ( assignment.isInitiatedByEventPhase() ) {
                 TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
-                triggerData.setOngoing( true );
+                triggerData.setEventPhase( assignment.getEventPhase() );
+                triggerData.setEventPhaseContext( assignment.getEventPhaseContext() );
                 triggerData.initTrigger( planService, planParticipationService );
                 triggers.add( triggerData );
-            } else {
-                // event phase is trigger
-                if ( assignment.isInitiatedByEventPhase() ) {
-                    TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
-                    triggerData.setEventPhase( assignment.getEventPhase() );
-                    triggerData.setEventPhaseContext( assignment.getEventPhaseContext() );
-                    triggerData.initTrigger( planService, planParticipationService );
-                    triggers.add( triggerData );
-                }
-                // information discovery (notifications to self)
-                for ( Flow triggerSelfNotification : triggeringNotificationsToSelf() ) {
-                    TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
-                    triggerData.setNotificationToSelf( triggerSelfNotification );
-                    triggerData.initTrigger( planService, planParticipationService );
-                    triggers.add( triggerData );
-                }
-                // triggering notifications (from others)
-                for ( Flow triggerNotification : triggeringNotificationsFromOthers() ) {
-                    TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
-                    triggerData.setNotificationFromOther( triggerNotification );
-                    triggerData.initTrigger( planService, planParticipationService );
-                    triggers.add( triggerData );
-                }
-                // triggering requests
-                for ( Flow triggerRequest : triggeringRequestsFromOthers() ) {
-                    TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
-                    triggerData.setRequestFromOther( triggerRequest );
-                    triggerData.initTrigger( planService, planParticipationService );
-                    triggers.add( triggerData );
-                }
-                // triggering requests to self
-                for ( Flow triggerRequest : triggeringRequestsToSelf() ) {
-                    TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
-                    triggerData.setRequestToSelf( triggerRequest );
-                    triggerData.initTrigger( planService, planParticipationService );
-                    triggers.add( triggerData );
-                }
             }
+            // information discovery (notifications to self)
+            for ( Flow triggerSelfNotification : triggeringNotificationsToSelf() ) {
+                TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
+                triggerData.setNotificationToSelf( triggerSelfNotification );
+                triggerData.initTrigger( planService, planParticipationService );
+                triggers.add( triggerData );
+            }
+            // triggering notifications (from others)
+            for ( Flow triggerNotification : triggeringNotificationsFromOthers() ) {
+                TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
+                triggerData.setNotificationFromOther( triggerNotification );
+                triggerData.initTrigger( planService, planParticipationService );
+                triggers.add( triggerData );
+            }
+            // triggering requests
+            for ( Flow triggerRequest : triggeringRequestsFromOthers() ) {
+                TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
+                triggerData.setRequestFromOther( triggerRequest );
+                triggerData.initTrigger( planService, planParticipationService );
+                triggers.add( triggerData );
+            }
+            // triggering requests to self
+            for ( Flow triggerRequest : triggeringRequestsToSelf() ) {
+                TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
+                triggerData.setRequestToSelf( triggerRequest );
+                triggerData.initTrigger( planService, planParticipationService );
+                triggers.add( triggerData );
+            }
+        }
     }
 
     @XmlElement( name = "agentId" )
@@ -299,6 +299,28 @@ public class ProcedureData  implements Serializable {
                 } );
     }
 
+    public boolean isTriggeredByDiscovery() {
+        return CollectionUtils.exists(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (TriggerData) object ).getOnDiscovery() != null;
+                    }
+                } );
+    }
+
+    public boolean isTriggeredByResearch() {
+        return CollectionUtils.exists(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (TriggerData) object ).getOnResearch() != null;
+                    }
+                } );
+    }
+
     public boolean isTriggeredByObservation() {
         return CollectionUtils.exists(
                 getTriggers(),
@@ -309,6 +331,7 @@ public class ProcedureData  implements Serializable {
                     }
                 } );
     }
+
 
     public boolean isTriggeredByCommunication() {
         return CollectionUtils.exists(
@@ -324,12 +347,12 @@ public class ProcedureData  implements Serializable {
 
     @SuppressWarnings( "unchecked" )
     public List<TriggerData> getObservationTriggers() {
-        return (List<TriggerData>)CollectionUtils.select(
+        return (List<TriggerData>) CollectionUtils.select(
                 getTriggers(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((TriggerData)object).isOnObserving();
+                        return ( (TriggerData) object ).isOnObserving();
                     }
                 }
         );
@@ -338,12 +361,12 @@ public class ProcedureData  implements Serializable {
 
     @SuppressWarnings( "unchecked" )
     public List<TriggerData> getRequestTriggers() {
-        return (List<TriggerData>)CollectionUtils.select(
+        return (List<TriggerData>) CollectionUtils.select(
                 getTriggers(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((TriggerData)object).isOnRequestFromOther();
+                        return ( (TriggerData) object ).isOnRequestFromOther();
                     }
                 }
         );
@@ -351,12 +374,12 @@ public class ProcedureData  implements Serializable {
 
     @SuppressWarnings( "unchecked" )
     public List<TriggerData> getNotificationTriggers() {
-        return (List<TriggerData>)CollectionUtils.select(
+        return (List<TriggerData>) CollectionUtils.select(
                 getTriggers(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((TriggerData)object).isOnNotificationFromOther();
+                        return ( (TriggerData) object ).isOnNotificationFromOther();
                     }
                 }
         );
@@ -364,12 +387,12 @@ public class ProcedureData  implements Serializable {
 
     @SuppressWarnings( "unchecked" )
     public List<TriggerData> getDiscoveryTriggers() {
-        return (List<TriggerData>)CollectionUtils.select(
+        return (List<TriggerData>) CollectionUtils.select(
                 getTriggers(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((TriggerData)object).isOnDiscovering();
+                        return ( (TriggerData) object ).isOnDiscovering();
                     }
                 }
         );
@@ -377,12 +400,12 @@ public class ProcedureData  implements Serializable {
 
     @SuppressWarnings( "unchecked" )
     public List<TriggerData> getResearchTriggers() {
-        return (List<TriggerData>)CollectionUtils.select(
+        return (List<TriggerData>) CollectionUtils.select(
                 getTriggers(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((TriggerData)object).isOnResearching();
+                        return ( (TriggerData) object ).isOnResearching();
                     }
                 }
         );
@@ -394,7 +417,18 @@ public class ProcedureData  implements Serializable {
     }
 
     public String getLabel() {
-        return getAssignment().getLabel();
+        StringBuilder sb = new StringBuilder();
+        if ( isOngoing() ) {
+            sb.append( "You constantly do task \"" );
+        } else if ( isTriggeredByDiscovery() ) {
+            sb.append( "Follow up with task \"" );
+        } else if ( isTriggeredByResearch() ) {
+            sb.append( "To find what you need, do task \"" );
+        } else {
+            sb.append( "Do task \"" );
+        }
+        sb.append( getAssignment().getLabel() );
+        return sb.toString();
     }
 
     public List<Employment> getNonTriggerContactEmployments() {
@@ -404,7 +438,7 @@ public class ProcedureData  implements Serializable {
             contactEmployments.addAll( flowWithOther.findContactEmployments() );
             contactEmployments.addAll( flowWithOther.findBypassContactEmployments() );
         }
-        return new ArrayList<Employment>( contactEmployments  );
+        return new ArrayList<Employment>( contactEmployments );
     }
 
     public boolean hasReceives() {
@@ -415,4 +449,4 @@ public class ProcedureData  implements Serializable {
         return getAssignment().hasSends();
     }
 
- }
+}

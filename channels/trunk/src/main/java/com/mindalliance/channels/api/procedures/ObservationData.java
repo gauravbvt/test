@@ -2,12 +2,14 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.EventTiming;
+import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -70,6 +72,47 @@ public class ObservationData  implements Serializable {
             if ( placeBasis != null ) ids.add( placeBasis.getId() );
         }
         return ids;
+    }
+
+    public String getLabel() {
+        return getPrefix() + " " + getScenarioLabel();
+    }
+
+    public String getPrefix() {
+        Phase phase = eventPhase.getPhase();
+        return phase.isPreEvent()
+                ? "The possibility of"
+                : phase.isConcurrent()
+                ? "The beginning of"
+                : "The ending of event";
+    }
+
+    public String getScenarioLabel() {
+        List<EventTimingData> eventPhaseContext = getEventTimings();
+        StringBuilder sb = new StringBuilder();
+        sb.append( eventPhase.getEvent().getLabel() );
+        if ( eventPhaseContext != null && !eventPhaseContext.isEmpty() ) {
+            sb.append( ", " );
+            Iterator<EventTimingData> eventTimings = eventPhaseContext.iterator();
+            while ( eventTimings.hasNext() ) {
+                sb.append( eventTimings.next().getLabel() );
+                if ( eventTimings.hasNext() ) {
+                    sb.append( " and " );
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals( Object object ) {
+        return object instanceof ObservationData
+                && getLabel().equals( ((ObservationData)object).getLabel() );
+    }
+
+    @Override
+    public int hashCode() {
+        return getLabel().hashCode();
     }
 
 }

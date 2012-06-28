@@ -41,7 +41,7 @@ public class OrganizationContactPanel extends AbstractDataPanel {
         addName();
         addParent();
         addStreetAddress();
-        addMediaAddresses();
+        addContactInfo();
         addMission();
     }
 
@@ -56,10 +56,10 @@ public class OrganizationContactPanel extends AbstractDataPanel {
     private void addStreetAddress() {
         add( makeAttributeContainer(
                 "streetAddress",
-                organizationData == null ? "???" : organizationData.getStreetAddress() ) );
+                organizationData == null ? "???" : organizationData.getFullAddress() ) );
     }
 
-    private void addMediaAddresses() {
+    private void addContactInfo() {
         List<ChannelData> mediaAddresses = organizationData == null
                 ? new ArrayList<ChannelData>()
                 : organizationData.getChannels();

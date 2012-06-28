@@ -193,15 +193,19 @@ public class ChannelsServiceImpl implements ChannelsService {
         Plan plan = planManager.getPlan( uri, Integer.parseInt( version ) );
         LOG.info( "Getting " + username + "'s procedures for plan " + uri + " version " + version );
         try {
-            ChannelsUser user = userDao.getUserNamed( username );
-            if ( plan == null || !user.isPlanner( uri ) ) {
-                throw new Exception( user.getUsername()
+            ChannelsUser protocolsUser = userDao.getUserNamed( username );
+            if ( plan == null || !protocolsUser.isPlanner( uri ) ) {
+                throw new Exception( protocolsUser.getUsername()
                         + " is not authorized to access plan "
                         + uri + " version "
                         + version );
             }
             PlanService planService = getPlanService( plan );
-            List<PlanParticipation> participationList = planService.findParticipations( username, plan );
+            List<PlanParticipation> participationList = planParticipationService.getParticipations(
+                    plan,
+                    protocolsUser.getUserInfo(),
+                    planService
+            );
             if ( participationList.isEmpty() ) {
                 throw new Exception( username + " does not participate in plan " + uri + " version " + version );
             }
@@ -210,7 +214,7 @@ public class ChannelsServiceImpl implements ChannelsService {
                     participationList,
                     planService,
                     planParticipationService,
-                    user );
+                    protocolsUser );
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
             throw new WebApplicationException(
