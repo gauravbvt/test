@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.Attachable;
 import com.mindalliance.channels.core.Attachment;
 
 import javax.xml.bind.annotation.XmlElement;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
  * Date: 12/13/11
  * Time: 9:21 AM
  */
-public class DocumentationData {
+public class DocumentationData  implements Serializable {
 
     private Attachable attachable;
 

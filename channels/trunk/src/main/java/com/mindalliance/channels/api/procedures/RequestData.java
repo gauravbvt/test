@@ -38,6 +38,9 @@ public class RequestData extends AbstractFlowData {
      * Whether the assignment is issuing a request (false) or a reply (true).
      */
     private boolean replying;
+    private TaskData consumingTaskData;
+    private List<Employment> contactEmployments;
+    private List<Employment> bypassContactEmployments;
 
     public RequestData() {
         // required
@@ -52,6 +55,68 @@ public class RequestData extends AbstractFlowData {
             ChannelsUser user ) {
         super( request, assignment, planService, planParticipationService, user );
         this.replying = replying;
+        initData( planService, planParticipationService );
+    }
+
+    protected void initData( PlanService planService, PlanParticipationService planParticipationService ) {
+        initContactEmployments( planService );
+        initBypassContactEmployments( planService );
+        initConsumingTask( planService, planParticipationService );
+        super.initData( planService, planParticipationService );
+    }
+
+    private void initBypassContactEmployments( PlanService planService ) {
+        Set<Employment> contacts = new HashSet<Employment>();
+        if ( !replying ) {
+            List<Commitment> bypassCommitments = planService
+                    .findAllBypassCommitments( getRequest() );
+            if ( !bypassCommitments.isEmpty() ) {
+                Actor assignedActor = getAssignment().getActor();
+                List<Actor> directContacts = findDirectContacts();
+                for ( Commitment commitment : bypassCommitments ) {
+                    if ( directContacts.contains( commitment.getBeneficiary().getActor() )
+                            && !commitment.getCommitter().getActor().equals( assignedActor )
+                            && !directContacts.contains( commitment.getCommitter().getActor() ) ) {
+                        contacts.add( commitment.getCommitter().getEmployment() );
+                    }
+                }
+            }
+        }
+        bypassContactEmployments = new ArrayList<Employment>( contacts );
+
+    }
+
+    private void initContactEmployments( PlanService planService ) {
+        Set<Employment> contacts = new HashSet<Employment>();
+        Actor assignedActor = getAssignment().getActor();
+        List<Commitment> commitments = planService.findAllCommitments( getRequest() );
+        for ( Commitment commitment : commitments ) {
+            if ( replying ) {
+                if ( commitment.getCommitter().getActor().equals( assignedActor )
+                        && !commitment.getBeneficiary().getActor().equals( assignedActor ) ) {
+                    contacts.add( commitment.getBeneficiary().getEmployment() );
+                }
+            } else { // asking
+                if ( commitment.getBeneficiary().getActor().equals( assignedActor )
+                        && !commitment.getCommitter().getActor().equals( assignedActor ) ) {
+                    contacts.add( commitment.getCommitter().getEmployment() );
+                }
+            }
+        }
+        contactEmployments = new ArrayList<Employment>( contacts );
+
+    }
+
+    private void initConsumingTask( PlanService planService, PlanParticipationService planParticipationService ) {
+        if ( replying )
+            consumingTaskData = new TaskData(
+                    (Part) getRequest().getTarget(),
+                    planService,
+                    planParticipationService,
+                    getUser() );
+        else
+            consumingTaskData = null;
+
     }
 
     @Override
@@ -94,7 +159,7 @@ public class RequestData extends AbstractFlowData {
     @Override
     @XmlElement( name = "contact" )
     public List<ContactData> getContacts() {
-       return super.getContacts();
+        return super.getContacts();
     }
 
     @Override
@@ -129,14 +194,7 @@ public class RequestData extends AbstractFlowData {
 
     @XmlElement
     public TaskData getConsumingTask() {
-        if ( replying )
-            return new TaskData( 
-                    (Part)getRequest().getTarget(), 
-                    getPlanService(), 
-                    getPlanParticipationService(),
-                    getUser() );
-        else
-            return null;
+        return consumingTaskData;
     }
 
 /*
@@ -160,46 +218,14 @@ public class RequestData extends AbstractFlowData {
 
     @Override
     public List<Employment> findContactEmployments() {
-        Set<Employment> contacts = new HashSet<Employment>(  );
-        Actor assignedActor = getAssignment().getActor();
-        List<Commitment> commitments = getPlanService().findAllCommitments( getRequest() );
-        for ( Commitment commitment : commitments ) {
-            if ( replying ) {
-                if ( commitment.getCommitter().getActor().equals( assignedActor )
-                        && !commitment.getBeneficiary().getActor().equals( assignedActor ) ) {
-                    contacts.add( commitment.getBeneficiary().getEmployment() );
-                }
-            } else { // asking
-                if ( commitment.getBeneficiary().getActor().equals( assignedActor )
-                        && !commitment.getCommitter().getActor().equals( assignedActor ) ) {
-                    contacts.add( commitment.getCommitter().getEmployment() );
-                }
-            }
-        }
-        return new ArrayList<Employment>( contacts );
+        return contactEmployments;
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     // Don't repeat any (direct) contact employment
     public List<Employment> findBypassContactEmployments() {
-        Set<Employment> contacts = new HashSet<Employment>(  );
-        if ( !replying ) {
-            List<Commitment> bypassCommitments = getPlanService()
-                    .findAllBypassCommitments( getRequest() );
-            if ( !bypassCommitments.isEmpty() ) {
-                Actor assignedActor = getAssignment().getActor();
-                List<Actor> directContacts = findDirectContacts();
-                for ( Commitment commitment : bypassCommitments ) {
-                    if ( directContacts.contains( commitment.getBeneficiary().getActor() )
-                            && !commitment.getCommitter().getActor().equals( assignedActor )
-                            && !directContacts.contains( commitment.getCommitter().getActor() ) ) {
-                        contacts.add( commitment.getCommitter().getEmployment() );
-                    }
-                }
-            }
-        }
-        return new ArrayList<Employment>( contacts );
+        return bypassContactEmployments;
     }
 
     @SuppressWarnings( "unchecked" )

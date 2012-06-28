@@ -15,6 +15,7 @@ import com.mindalliance.channels.core.query.QueryService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,14 +27,16 @@ import java.util.List;
  * Date: 3/20/12
  * Time: 9:13 PM
  */
-@XmlType( propOrder = {"id", "employment", "workChannels", "personalChannels", "supervisorContact", "organizationChannels"} )
-public class ContactData {
+@XmlType( propOrder = {"employment", "workChannels", "personalChannels", "supervisorContact", "organizationChannels"} )
+public class ContactData implements Serializable {
 
     private Employment employment;
     private ChannelsUserInfo userInfo;
     private boolean includeSupervisor;
-    private QueryService queryService;
-    private PlanParticipationService planParticipationservice;
+    private List<ChannelData> workChannels;
+    private List<ContactData> supervisorContacts;
+    private List<ChannelData> organizationChannels;
+    private List<ChannelData> personalChannels;
 
     public ContactData() {
         // required
@@ -48,16 +51,99 @@ public class ContactData {
         this.employment = employment;
         this.userInfo = userInfo;
         this.includeSupervisor = includeSupervisor;
-        this.queryService = queryService;
-        this.planParticipationservice = planParticipationservice;
+        init( queryService, planParticipationservice );
+    }
+
+    private void init( QueryService queryService, PlanParticipationService planParticipationservice ) {
+        initWorkChannels( queryService );
+        initPersonalChannels( queryService );
+        initSupervisorContacts( queryService, planParticipationservice );
+        initOrganizationChannels( queryService );
+    }
+
+    private void initPersonalChannels( QueryService queryService ) {
+        personalChannels = new ArrayList<ChannelData>();
+        if ( userInfo != null ) {
+            for ( UserContactInfo userContactInfo : userInfo.getContactInfoList() ) {  // todo - will this work?
+                personalChannels.add( new ChannelData(
+                        userContactInfo.getTransmissionMediumId(),
+                        userContactInfo.getAddress(),
+                        queryService ) );
+            }
+        }
+
+    }
+
+    private void initWorkChannels( QueryService queryService ) {
+        workChannels = new ArrayList<ChannelData>();
+        for ( Channel channel : getActor().getEffectiveChannels() ) {
+            workChannels.add( new ChannelData( channel, queryService ) );
+        }
+    }
+
+
+    private void initOrganizationChannels( QueryService queryService ) {
+        organizationChannels = new ArrayList<ChannelData>();
+        for ( Channel channel : getOrganization().getEffectiveChannels() ) {
+            organizationChannels.add( new ChannelData( channel, queryService ) );
+        }
+
+    }
+
+    private void initSupervisorContacts( QueryService queryService, PlanParticipationService planParticipationservice ) {
+        supervisorContacts = new ArrayList<ContactData>();
+        if ( includeSupervisor && getSupervisor() != null ) {
+            Actor supervisor = getSupervisor();
+            Employment sameOrgEmployment = null;
+            Employment parentOrgEmployment = null;
+            Iterator<Employment> iter = queryService.findAllEmploymentsForActor( supervisor ).iterator();
+            List<Organization> ancestors = getOrganization().ancestors();
+            while ( sameOrgEmployment == null && iter.hasNext() ) {
+                Employment supervisorEmployment = iter.next();
+                if ( supervisorEmployment.getOrganization().equals( getOrganization() ) ) {
+                    sameOrgEmployment = supervisorEmployment;
+                } else if ( parentOrgEmployment == null
+                        && ancestors.contains( supervisorEmployment.getOrganization() ) ) {
+                    parentOrgEmployment = supervisorEmployment;
+                }
+            }
+            Employment supervisorEmployment = sameOrgEmployment != null
+                    ? sameOrgEmployment
+                    : parentOrgEmployment;
+            if ( supervisorEmployment != null ) {
+                if ( supervisor.isAnonymousParticipation() ) {
+                    supervisorContacts.add( new ContactData(
+                            supervisorEmployment,
+                            null,
+                            false,
+                            queryService,
+                            planParticipationservice ) );
+                } else {
+                    List<PlanParticipation> participations = planParticipationservice.getParticipations(
+                            queryService.getPlan(),
+                            supervisor,
+                            queryService );
+                    for ( PlanParticipation participation : participations ) {
+                        supervisorContacts.add( new ContactData(
+                                supervisorEmployment,
+                                participation.getParticipant(),
+                                false,
+                                queryService,
+                                planParticipationservice ) );
+                    }
+                }
+            }
+        }
+
     }
 
     /**
      * Find a user's contacts from san employment.
-     * @param employment an employment
-     * @param queryService a plan service
+     *
+     * @param employment               an employment
+     * @param queryService             a plan service
      * @param planParticipationService a plan participation service
-     * @param user a user
+     * @param user                     a user
      * @return a list of contact data
      */
     static public List<ContactData> findContactsFromEmployment(
@@ -65,7 +151,7 @@ public class ContactData {
             QueryService queryService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        List<ContactData> contactList = new ArrayList<ContactData>(  );
+        List<ContactData> contactList = new ArrayList<ContactData>();
         Actor actor = employment.getActor();
         if ( actor.isAnonymousParticipation() ) {
             contactList.add( new ContactData(
@@ -120,9 +206,8 @@ public class ContactData {
         return otherParticipations;
     }
 
-    @XmlElement
-    public String getId() {
-        StringBuilder sb = new StringBuilder(  );
+    public String getAnchor() {
+        StringBuilder sb = new StringBuilder();
         sb.append( userInfo == null ? "" : userInfo.getId() );
         sb.append( "_" );
         sb.append( employment.getActor().getId() );
@@ -142,83 +227,23 @@ public class ContactData {
 
     @XmlElement( name = "workChannel" )
     public List<ChannelData> getWorkChannels() {
-        List<ChannelData> channelDataList = new ArrayList<ChannelData>();
-        for ( Channel channel : getActor().getEffectiveChannels() ) {
-            channelDataList.add( new ChannelData( channel, queryService ) );
-        }
-        return channelDataList;
+        return workChannels;
     }
 
     @XmlElement( name = "supervisor" )
     public List<ContactData> getSupervisorContact() {
-        List<ContactData> supervisorContacts = new ArrayList<ContactData>();
-        if ( includeSupervisor && getSupervisor() != null ) {
-            Actor supervisor = getSupervisor();
-            Employment sameOrgEmployment = null;
-            Employment parentOrgEmployment = null;
-            Iterator<Employment> iter = queryService.findAllEmploymentsForActor( supervisor ).iterator();
-            List<Organization> ancestors = getOrganization().ancestors();
-            while ( sameOrgEmployment == null && iter.hasNext() ) {
-                Employment supervisorEmployment = iter.next();
-                if ( supervisorEmployment.getOrganization().equals( getOrganization() ) ) {
-                    sameOrgEmployment = supervisorEmployment;
-                } else if ( parentOrgEmployment == null
-                        && ancestors.contains( supervisorEmployment.getOrganization() ) ) {
-                    parentOrgEmployment = supervisorEmployment;
-                }
-            }
-            Employment supervisorEmployment = sameOrgEmployment != null
-                    ? sameOrgEmployment
-                    : parentOrgEmployment;
-            if ( supervisorEmployment != null ) {
-                if ( supervisor.isAnonymousParticipation() ) {
-                    supervisorContacts.add( new ContactData(
-                            supervisorEmployment,
-                            null,
-                            false,
-                            queryService,
-                            planParticipationservice ) );
-                } else {
-                    List<PlanParticipation> participations = planParticipationservice.getParticipations(
-                            queryService.getPlan(),
-                            supervisor,
-                            queryService );
-                    for ( PlanParticipation participation : participations ) {
-                        supervisorContacts.add( new ContactData(
-                                supervisorEmployment,
-                                participation.getParticipant(),
-                                false,
-                                queryService,
-                                planParticipationservice ) );
-                    }
-                }
-            }
-        }
         return supervisorContacts;
-   }
+    }
 
 
     @XmlElement( name = "organizationChannel" )
     public List<ChannelData> getOrganizationChannels() {
-        List<ChannelData> channels = new ArrayList<ChannelData>();
-        for ( Channel channel : getOrganization().getEffectiveChannels() ) {
-            channels.add( new ChannelData( channel, queryService ) );
-        }
-        return channels;
+        return organizationChannels;
     }
 
     @XmlElement( name = "personalChannel" )
     public List<ChannelData> getPersonalChannels() {
-        List<ChannelData> channels = new ArrayList<ChannelData>();
-        if ( userInfo != null ) {
-            for ( UserContactInfo userContactInfo : userInfo.getContactInfoList() ) {  // todo - will this work?
-                channels.add( new ChannelData(
-                        userContactInfo.getTransmissionMediumId(),
-                        userContactInfo.getAddress(),
-                        queryService ) );
-            }
-        }
-        return channels;
+        return personalChannels;
 
     }
 
@@ -235,10 +260,10 @@ public class ContactData {
     }
 
     public String toLabel() {
-        StringBuilder sb = new StringBuilder(  );
+        StringBuilder sb = new StringBuilder();
         sb.append( getContactName() );
         sb.append( ", " );
-        sb.append( employment.getTitle() );
+        sb.append( employment.getTitleOrRole() );
         sb.append( ", " );
         if ( employment.getJurisdiction() != null ) {
             sb.append( employment.getJurisdiction().getName() );
@@ -249,15 +274,15 @@ public class ContactData {
     }
 
     public String getContactName() {
-       return  userInfo != null ? userInfo.getFullName() : getActor().getName();
+        return userInfo != null ? userInfo.getFullName() : getActor().getName();
     }
 
     public String firstLetterOfName() {
-        return getContactName().substring( 0, 1 );
+        return getNormalizedContactName().substring( 0, 1 );
     }
 
     @Override
-    public boolean equals ( Object other ) {
+    public boolean equals( Object other ) {
         return other instanceof ChannelData
                 && employment.equals( other );
     }

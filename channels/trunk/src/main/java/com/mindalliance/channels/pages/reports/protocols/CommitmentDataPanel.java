@@ -3,8 +3,13 @@ package com.mindalliance.channels.pages.reports.protocols;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.procedures.AbstractFlowData;
 import com.mindalliance.channels.api.procedures.ChannelData;
+import com.mindalliance.channels.api.procedures.ElementOfInformationData;
+import com.mindalliance.channels.api.procedures.TimeDelayData;
+import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -24,8 +29,8 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     private final AbstractFlowData flowData;
     private final boolean received;
 
-    public CommitmentDataPanel( String id, AbstractFlowData flowData, boolean received ) {
-        super(id );
+    public CommitmentDataPanel( String id, AbstractFlowData flowData, boolean received, ProtocolsFinder finder ) {
+        super( id, finder );
         this.flowData = flowData;
         this.received = received;
         init();
@@ -43,57 +48,160 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     }
 
     private void addHeader() {
-        add(  new Label(
+        add( new Label(
                 "mode",
-                flowData.isNotification()
-                    ? "Notify of"
-                    : "When asked, provide") );
+                getModeText() ) );
         add( new Label( "information", flowData.getInformation().getName() ) );
     }
 
+    private String getModeText() {
+        if ( received ) {
+            return flowData.isNotification()
+                    ? "Expect to be notified of"
+                    : "You can ask for";
+        } else {
+            return flowData.isNotification()
+                    ? "Notify of"
+                    : "When asked, provide";
+        }
+    }
+
     private void addContacts() {
+        List<ContactData> contacts = flowData.getContacts();
+        WebMarkupContainer contactsContainer = new WebMarkupContainer( "contactsContainer" );
+        contactsContainer.setVisible( !contacts.isEmpty() );
+        add( contactsContainer );
+        Label anyAllLabel = new Label(
+                "anyAll",
+                getContactsText()
+        );
+        contactsContainer.add( anyAllLabel );
         ListView<ContactData> contactsListView = new ListView<ContactData>(
                 "contacts",
-                flowData.getContacts()
+                contacts
         ) {
             @Override
             protected void populateItem( ListItem<ContactData> item ) {
                 ContactData contactData = item.getModelObject();
-                item.add(  new ContactLinkPanel(
+                item.add( new ContactLinkPanel(
                         "contact",
                         contactData,
                         getWorkChannels( contactData ),
-                        getPersonalChannels( contactData ) ) );
+                        getPersonalChannels( contactData ),
+                        getFinder() )  );
             }
         };
-        add( contactsListView );
+        contactsContainer.add( contactsListView );
     }
 
-
+    private String getContactsText() {
+        if ( received ) {
+            return "Your sources are";
+        } else {
+            return flowData.getContactAll()
+                    ? "Contact all of..."
+                    : "Contact any of...";
+        }
+    }
 
     private void addMaxDelay() {
-        // todo
+        TimeDelayData timeDelay = flowData.getMaxDelay();
+        Label delayLabel = new Label(
+                "maxDelay",
+                timeDelay == null
+                        ? ""
+                        : timeDelay.getLabel() );
+        delayLabel.setVisible( timeDelay != null );
+        add( delayLabel );
     }
 
     private void addOnFailure() {
-        // todo
+        Label failureLabel = new Label(
+                "onFailure",
+                flowData.getTaskFailed()
+                        ? "BUT ONLY IF you failed to execute the task"
+                        : ""
+        );
+        failureLabel.setVisible( flowData.getTaskFailed() );
+        add( failureLabel );
     }
 
 
     private void addEois() {
-        // todo
+        List<ElementOfInformationData> eois = flowData.getInformation().getEOIs();
+        WebMarkupContainer eoisContainer = new WebMarkupContainer( "eoisContainer" );
+        add( eoisContainer );
+        eoisContainer.setVisible( !eois.isEmpty() );
+        eoisContainer.add( new EoisPanel( "eois", eois, getFinder() ) );
     }
 
     private void addInstructions() {
-        // todo
+        WebMarkupContainer instructionContainer = new WebMarkupContainer( "allInstructions" );
+        add( instructionContainer );
+        boolean contextCommunicated = flowData.isContextCommunicated();
+        String communicableContext = ChannelsUtils.lcFirst( flowData.getCommunicableContext() );
+        Label communicatedContextLabel = new Label(
+                "communicatedContext",
+                contextCommunicated
+                        ? ( "Mention " + communicableContext )
+                        : ( " Do NOT mention " + communicableContext )
+        );
+        instructionContainer.add( communicatedContextLabel );
+        boolean receiptConfirmation = flowData.getReceiptConfirmationRequested();
+        Label receiptLabel = new Label(
+                "receiptConfirmation",
+                receiptConfirmation
+                        ? "Request confirmation of receipt"
+                        : ""
+        );
+        receiptLabel.setVisible( receiptConfirmation );
+        instructionContainer.add( receiptLabel );
+        String instructionsText = flowData.getInstructions();
+        Label instructionsLabel = new Label(
+                "instructions",
+                instructionsText == null || instructionsText.isEmpty()
+                        ? ""
+                        : instructionsText );
+        instructionsLabel.setVisible( instructionsText != null && !instructionsText.isEmpty() );
+        instructionContainer.add( instructionsLabel );
     }
 
     private void addBypassContacts() {
-        // todo
+        List<ContactData> contacts = flowData.getBypassContacts();
+        WebMarkupContainer contactsContainer = new WebMarkupContainer( "bypassContactsContainer" );
+        contactsContainer.setVisible( !contacts.isEmpty() );
+        add( contactsContainer );
+        Label anyAllLabel = new Label(
+                "anyAll",
+                "If the above contacts are unreachable, try instead..."
+        );
+        contactsContainer.add( anyAllLabel );
+        ListView<ContactData> contactsListView = new ListView<ContactData>(
+                "contacts",
+                contacts
+        ) {
+            @Override
+            protected void populateItem( ListItem<ContactData> item ) {
+                ContactData contactData = item.getModelObject();
+                item.add( new ContactLinkPanel(
+                        "contact",
+                        contactData,
+                        getWorkChannels( contactData ),
+                        getPersonalChannels( contactData ),
+                        getFinder() ) );
+            }
+        };
+        contactsContainer.add( contactsListView );
     }
 
     private void addFailureImpact() {
-        // todo
+        Level severity = flowData.getFailureSeverity();
+        String severityText = flowData.getFailureImpact();
+        WebMarkupContainer impactContainer = new WebMarkupContainer( "failureImpact" );
+        add( impactContainer );
+        impactContainer.setVisible( severity.compareTo( Level.Low ) > 0 );
+        Label severityLabel = new Label( "severity", severityText );
+        impactContainer.add( severityLabel );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -104,7 +212,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return mediumIds.contains( ((ChannelData)object).getMediumId() );
+                        return mediumIds.contains( ( (ChannelData) object ).getMediumId() );
                     }
                 }
         );
@@ -118,7 +226,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return mediumIds.contains( ((ChannelData)object).getMediumId() );
+                        return mediumIds.contains( ( (ChannelData) object ).getMediumId() );
                     }
                 }
         );

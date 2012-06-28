@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
+import com.mindalliance.channels.pages.reports.protocols.ProtocolsPage;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -72,7 +73,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                                         new Label( "participantName", participatingUser.getFullName() )
                                                 .setRenderBodyOnly( true ),
                                         new BookmarkablePageLink<GuidelinesPage>(
-                                                "participation", GuidelinesPage.class, parameters )
+                                                "participation", ProtocolsPage.class, parameters )
                                                 .add( new Label( "participationName", actor.toString() )
                                                         .setRenderBodyOnly( true ) )
                                 );
@@ -91,11 +92,11 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                                     protected void populateItem( ListItem<Actor> item ) {
                                         final Actor actor = item.getModelObject();
                                         PageParameters parameters =
-                                                GuidelinesPage.createParameters( actor, getUri(), getVersion() );
+                                                ProtocolsPage.createParameters( actor, getUri(), getVersion() );
 
                                         item.add(
                                                 new BookmarkablePageLink<GuidelinesPage>(
-                                                        "agent", GuidelinesPage.class, parameters )
+                                                        "agent", ProtocolsPage.class, parameters )
                                                         .add( new Label( "agentName", actor.getNormalizedName() )
                                                                 .setRenderBodyOnly( true ) ),
 

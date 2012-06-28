@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Web service data element for a participation.
@@ -17,11 +18,12 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 12/14/11
  * Time: 6:37 PM
  */@XmlType( propOrder = {"user", "agent", "open", "restrictedToEmployed"} )
-public class ParticipationData {
+public class ParticipationData  implements Serializable {
 
     private PlanParticipation participation;
     private ChannelsUser user;
-    private PlanService planService;
+    private AgentData agentData;
+    private Actor actor;
 
     public ParticipationData() {
         // required
@@ -30,7 +32,12 @@ public class ParticipationData {
     public ParticipationData( PlanParticipation participation, ChannelsUser user, PlanService planService ) {
         this.participation = participation;
         this.user = user;
-        this.planService = planService;
+        init( planService );
+    }
+
+    private void init( PlanService planService ) {
+        agentData = new AgentData( participation.getActor( planService), planService.getPlan() );
+        actor = participation.getActor( planService );
     }
 
     @XmlElement
@@ -40,18 +47,16 @@ public class ParticipationData {
 
     @XmlElement
     public AgentData getAgent() {
-        return new AgentData( participation.getActor( planService), planService.getPlan() );
+        return agentData;
     }
 
     @XmlElement
     public boolean getOpen() {
-        Actor actor = participation.getActor( planService );
         return actor != null && actor.isOpenParticipation();
     }
 
     @XmlElement
     public boolean getRestrictedToEmployed() {
-        Actor actor = participation.getActor( planService );
         return actor != null && actor.isParticipationRestrictedToEmployed();
     }
 

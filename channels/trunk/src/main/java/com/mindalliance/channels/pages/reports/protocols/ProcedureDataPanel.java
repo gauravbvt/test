@@ -8,7 +8,6 @@ import com.mindalliance.channels.api.procedures.NotificationData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.RequestData;
 import com.mindalliance.channels.api.procedures.TaskData;
-import com.mindalliance.channels.core.model.Employment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -34,8 +33,8 @@ public class ProcedureDataPanel extends AbstractDataPanel {
     private WebMarkupContainer receivesContainer;
     private WebMarkupContainer sendsContainer;
 
-    public ProcedureDataPanel( String id, ProcedureData procedureData ) {
-        super( id );
+    public ProcedureDataPanel( String id, ProcedureData procedureData, ProtocolsFinder finder ) {
+        super( id, finder );
         this.procedureData = procedureData;
         init();
     }
@@ -58,7 +57,7 @@ public class ProcedureDataPanel extends AbstractDataPanel {
     private void addTaskDetails() {
         taskDetailsContainer = new WebMarkupContainer( "task" );
         add( taskDetailsContainer );
-        taskDetailsContainer.add( makeAttributeContainer( "instruction", getTask().getInstructions() ) );
+        taskDetailsContainer.add( makeAttributeContainer( "instructions", getTask().getInstructions() ) );
         taskDetailsContainer.add( makeAttributeContainer( "category", getTask().getCategory() ) );
         addLocation();
         addGoals();
@@ -74,7 +73,7 @@ public class ProcedureDataPanel extends AbstractDataPanel {
         locationContainer.add(
                 placeData == null
                         ? new Label( "place", "" )
-                        : new PlaceDataPanel( "place", placeData )
+                        : new Label( "place", placeData.getLabel() )
         );
     }
 
@@ -98,9 +97,7 @@ public class ProcedureDataPanel extends AbstractDataPanel {
 
     private void addTeammates() {
         Set<ContactData> contacts = new HashSet<ContactData>(  );
-        for ( Employment employment : getTask().getTeamEmployments() ) {
-            contacts.addAll( findContacts( employment ) );
-        }
+        contacts.addAll( procedureData.getAssignment().getTask().getTeamContacts() );
         WebMarkupContainer teamContainer = new WebMarkupContainer( "teammates" );
         teamContainer.setVisible( !contacts.isEmpty() );
         taskDetailsContainer.add(  teamContainer );
@@ -110,11 +107,12 @@ public class ProcedureDataPanel extends AbstractDataPanel {
         ) {
             @Override
             protected void populateItem( ListItem<ContactData> item ) {
-                item.add( new ContactLinkPanel( "teammateContact", item.getModelObject() ) );
+                item.add( new ContactLinkPanel( "teammateContact", item.getModelObject(), getFinder() ) );
             }
         };
         teamContainer.add( contactsListView );
     }
+
 
     private TaskData getTask() {
         return procedureData.getAssignment().getTask();
@@ -139,7 +137,7 @@ public class ProcedureDataPanel extends AbstractDataPanel {
             @Override
             protected void populateItem( ListItem<NotificationData> item ) {
                 NotificationData notificationData = item.getModelObject();
-                item.add( new CommitmentDataPanel( "inNotification", notificationData, true ) );
+                item.add( new CommitmentDataPanel( "inNotification", notificationData, true, getFinder() ) );
             }
         };
         receivesContainer.add( flowListView );
@@ -153,7 +151,7 @@ public class ProcedureDataPanel extends AbstractDataPanel {
            @Override
            protected void populateItem( ListItem<RequestData> item ) {
                RequestData requestData = item.getModelObject();
-               item.add( new CommitmentDataPanel( "inRequest", requestData, true ) );
+               item.add( new CommitmentDataPanel( "inRequest", requestData, true, getFinder() ) );
            }
        };
        receivesContainer.add( flowListView );
@@ -177,7 +175,7 @@ public class ProcedureDataPanel extends AbstractDataPanel {
             @Override
             protected void populateItem( ListItem<NotificationData> item ) {
                 NotificationData notificationData = item.getModelObject();
-                item.add( new CommitmentDataPanel( "outNotification", notificationData, false ) );
+                item.add( new CommitmentDataPanel( "outNotification", notificationData, false, getFinder() ) );
             }
         };
         sendsContainer.add( flowListView );
@@ -191,7 +189,7 @@ public class ProcedureDataPanel extends AbstractDataPanel {
             @Override
             protected void populateItem( ListItem<RequestData> item ) {
                 RequestData requestData = item.getModelObject();
-                item.add( new CommitmentDataPanel( "outRequest", requestData, false ) );
+                item.add( new CommitmentDataPanel( "outRequest", requestData, false, getFinder() ) );
             }
         };
         sendsContainer.add( flowListView );

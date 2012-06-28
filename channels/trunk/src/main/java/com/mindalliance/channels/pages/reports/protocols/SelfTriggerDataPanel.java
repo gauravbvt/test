@@ -18,8 +18,8 @@ import java.util.List;
  * Time: 7:54 PM
  */
 public class SelfTriggerDataPanel extends AbstractTriggerDataPanel {
-    public SelfTriggerDataPanel( String id, TriggerData triggerData ) {
-        super( id, triggerData );
+    public SelfTriggerDataPanel( String id, TriggerData triggerData, ProtocolsFinder finder ) {
+        super( id, triggerData, finder );
         init();
     }
 

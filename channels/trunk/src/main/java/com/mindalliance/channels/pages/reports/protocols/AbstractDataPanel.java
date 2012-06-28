@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.core.model.Employment;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -20,25 +19,28 @@ import java.util.List;
  */
 public abstract class AbstractDataPanel extends Panel {
 
-    protected AbstractDataPanel( String id ) {
+    private ProtocolsFinder finder;
+
+    protected AbstractDataPanel( String id, ProtocolsFinder finder ) {
         super( id );
+        this.finder = finder;
     }
 
     protected String entityName( Class<? extends ModelObjectData> moDataClass, Long moId ) {
-        ModelObjectData moData = getProtocolsPage().findInScope( moDataClass, moId );
+        ModelObjectData moData = findInScope( moDataClass, moId );
         return moData == null
                 ? "???"
                 : moData.getName();
     }
 
+    protected <T extends ModelObjectData> T findInScope( Class<T>moDataClass, long moId ) {
+        return finder.findInScope( moDataClass, moId );
+    }
+
+    @SuppressWarnings( "unchecked" )
     protected List<ContactData> findContacts( long actorId ) {
-        return getProtocolsPage().findContacts( actorId );
+        return finder.findContacts( actorId );
     }
-
-    protected List<ContactData> findContacts( Employment employment ) {
-        return getProtocolsPage().findContacts( employment );
-    }
-
 
     protected WebMarkupContainer makeAnchor( String id, String anchor ) {
         WebMarkupContainer anchorContainer = new WebMarkupContainer( id );
@@ -48,13 +50,12 @@ public abstract class AbstractDataPanel extends Panel {
 
     protected WebMarkupContainer makeAttributeContainer( String id, String value ) {
         WebMarkupContainer attributeContainer = new WebMarkupContainer( id );
-        attributeContainer.setVisible( value != null && !value.isEmpty() );
-        attributeContainer.add( new Label(  "value", value == null ? "" : value ) );
+        attributeContainer.setVisible( value != null && !value.trim().isEmpty() );
+        attributeContainer.add( new Label(  "value", value == null ? "" : value.trim() ) );
         return attributeContainer;
     }
 
-    ProtocolsPage getProtocolsPage() {
-        return (ProtocolsPage) getPage();
+    public ProtocolsFinder getFinder() {
+        return finder;
     }
-
 }

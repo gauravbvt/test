@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Web service data element for an event timing (composing a situational context).
@@ -16,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType( propOrder = { "event", "timing" } )
 
-public class EventTimingData {
+public class EventTimingData  implements Serializable {
 
     private EventTiming eventTiming;
 

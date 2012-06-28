@@ -14,8 +14,8 @@ public abstract class AbstractTriggerDataPanel extends AbstractDataPanel {
 
     private TriggerData triggerData;
 
-    public AbstractTriggerDataPanel( String id, TriggerData triggerData ) {
-        super( id );
+    public AbstractTriggerDataPanel( String id, TriggerData triggerData, ProtocolsFinder finder ) {
+        super( id, finder );
         this.triggerData = triggerData;
     }
 

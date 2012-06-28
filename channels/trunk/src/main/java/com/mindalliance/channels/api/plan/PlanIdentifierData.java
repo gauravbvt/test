@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
 /**
@@ -16,7 +17,7 @@ import java.text.SimpleDateFormat;
  * Time: 11:28 AM
  */
 @XmlType( propOrder = {"uri", "name", "version", "release", "dateVersioned"} )
-public class PlanIdentifierData {
+public class PlanIdentifierData  implements Serializable {
 
     private Plan plan;
 

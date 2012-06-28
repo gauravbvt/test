@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.TimePeriod;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
  * Time: 9:28 AM
  */
 @XmlType( propOrder = {"always", "timePeriods"} )
-public class AvailabilityData {
+public class AvailabilityData  implements Serializable {
 
     private Availability availability;
 
@@ -47,5 +48,9 @@ public class AvailabilityData {
             }
             return timePeriods;
         }
+    }
+
+    public String getLabel() {
+        return availability.toString();
     }
 }

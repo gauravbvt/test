@@ -83,6 +83,9 @@ public class PlaceData extends ModelEntityData {
     
     private Place getPlace() {
         return (Place)getModelObject();
-    }    
+    }
 
+    public String getLabel() {
+        return getPlace().getLabel();
+    }
 }

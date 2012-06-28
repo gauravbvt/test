@@ -218,4 +218,9 @@ public class Employment implements GeoLocatable, Specable {
     public boolean isConfirmed() {
         return getOrganization().isConfirmed( getJob() );
     }
+
+
+    public String getTitleOrRole() {
+        return getTitle().isEmpty() ? getRole().getName() : getTitle();
+    }
 }

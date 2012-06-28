@@ -5,12 +5,28 @@
       lang="en">
 <head>
     <title>Channels - Protocols Report</title>
-    <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print" />
-    <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print" />
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print"/>
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print"/>
 </head>
 <body>
 <wicket:panel>
-    <!-- todo -->
+    <div wicket:id="name">ACME Sales</div>
+    <div wicket:id="parent">
+        <label>Parent</label>
+        <div wicket:id="value">ACME Inc.</div>
+    </div>
+    <div wicket:id="streetAddress">
+        <label>Street address</label>
+        <div wicket:id="value">street address</div>
+    </div>
+    <div wicket:id="mediaAddresses">
+        <label>Work addresses</label>
+        <div wicket:id="addresses">contact addresses panel</div>
+    </div>
+    <div wicket:id="mission">
+        <label>Mission</label>
+        <div wicket:id="value">mission</div>
+    </div>
 </wicket:panel>
 </body>
 </html>

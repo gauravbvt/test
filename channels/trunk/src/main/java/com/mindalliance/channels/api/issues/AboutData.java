@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Web service data element for what an issue is about.
@@ -16,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 3:13 PM
  */
 @XmlType( propOrder = { "id", "type", "name", "description" } )
-public class AboutData {
+public class AboutData  implements Serializable {
 
     private ModelObject modelObject;
 

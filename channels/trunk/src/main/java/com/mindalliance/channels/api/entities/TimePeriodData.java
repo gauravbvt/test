@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Web service data element for a time period.
@@ -15,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 9:40 AM
  */
 @XmlType( propOrder={"dayOfWeek", "value", "fromTime", "toTime"} )
-public class TimePeriodData {
+public class TimePeriodData  implements Serializable {
 
     private TimePeriod timePeriod;
     private String dayOfWeek;

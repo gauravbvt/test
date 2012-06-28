@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Web service data element for an issue.
@@ -17,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType( propOrder={ "about", "detected", "type", "kind", "waived", "description",
         "remediation", "severity", "reportedBy"} )
-public class IssueData {
+public class IssueData  implements Serializable {
 
     private Issue issue;
     private ModelObject modelObject;

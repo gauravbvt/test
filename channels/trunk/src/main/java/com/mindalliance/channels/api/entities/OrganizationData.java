@@ -1,12 +1,16 @@
 package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
+import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,17 +21,26 @@ import java.util.List;
  * Date: 12/1/11
  * Time: 9:15 AM
  */
-@XmlType( propOrder = {"id", "name", "categories", "kind", "parentId", "participating", "documentation"} )
+@XmlType( propOrder = {"id", "name", "categories", "kind", "parentId", "streetAddress", "mission", "participating", "documentation"} )
 public class OrganizationData extends ModelEntityData {
 
-    private PlanService planService;
+    private boolean participating;
+    private List<ChannelData> channelsDataList;
 
     public OrganizationData() {
     }
 
     public OrganizationData( ModelObject modelObject, PlanService planService ) {
         super( modelObject, planService.getPlan() );
-        this.planService = planService;
+        init( planService );
+    }
+
+    private void init( PlanService planService ) {
+        participating = planService.getPlan().isInScope( getOrganization() );
+        channelsDataList = new ArrayList<ChannelData>(  );
+        for ( Channel channel : getOrganization().getEffectiveChannels() ) {
+            channelsDataList.add( new ChannelData( channel, planService ) );
+        }
     }
 
     @Override
@@ -56,7 +69,7 @@ public class OrganizationData extends ModelEntityData {
 
     @XmlElement
     public Boolean getParticipating() {
-        return planService.getPlan().isInScope( getOrganization() );
+        return participating;
     }
 
     @XmlElement
@@ -67,6 +80,17 @@ public class OrganizationData extends ModelEntityData {
     }
 
     @XmlElement
+    public String getStreetAddress() {
+        Place location = getOrganization().getLocation();
+        return location == null ? null : location.getStreetAddress();
+    }
+
+    @XmlElement
+    public String getMission() {
+        return getOrganization().getMission().isEmpty() ? null : getOrganization().getMission();
+    }
+
+    @XmlElement
     @Override
     public DocumentationData getDocumentation() {
         return super.getDocumentation();
@@ -74,5 +98,9 @@ public class OrganizationData extends ModelEntityData {
 
     private Organization getOrganization() {
         return (Organization)getModelObject();
+    }
+
+    public List<ChannelData> getChannels() {
+        return channelsDataList;
     }
 }

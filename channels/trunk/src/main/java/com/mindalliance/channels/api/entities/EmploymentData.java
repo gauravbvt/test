@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.Employment;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ import java.util.Set;
  * Time: 10:27 AM
  */
 @XmlType( propOrder = {"actorId", "organizationId", "title", "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
-public class EmploymentData {
+public class EmploymentData  implements Serializable {
 
     private Employment employment;
     private ChannelsUserInfo userInfo;

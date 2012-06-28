@@ -24,6 +24,9 @@ import javax.xml.bind.annotation.XmlType;
 public class ResearchData extends AbstractProcedureElementData {
 
     private Flow requestToSelf;
+    private TaskData researchTaskData;
+    private TaskData consumingTaskData;
+    private String failureImpact;
 
     public ResearchData() {
         super();
@@ -37,6 +40,30 @@ public class ResearchData extends AbstractProcedureElementData {
             ChannelsUser user ) {
         super( assignment, planService, planParticipationService, user );
         this.requestToSelf = requestToSelf;
+        initData( planService, planParticipationService );
+    }
+
+    private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
+        // todo
+        initReasearchTask( planService, planParticipationService );
+        initConsumingTaskData( planService, planParticipationService );
+        failureImpact = planService.computeSharingPriority( getSharing() ).getNegativeLabel();
+    }
+
+    private void initConsumingTaskData( PlanService planService, PlanParticipationService planParticipationService ) {
+        consumingTaskData = new TaskData(
+                (Part)requestToSelf.getTarget(),
+                planService,
+                planParticipationService,
+                getUser() );
+    }
+
+    private void initReasearchTask( PlanService planService, PlanParticipationService planParticipationService ) {
+        researchTaskData = new TaskData(
+                (Part)requestToSelf.getSource(),
+                planService,
+                planParticipationService,
+                getUser() );
     }
 
     @XmlElement
@@ -51,20 +78,12 @@ public class ResearchData extends AbstractProcedureElementData {
 
     @XmlElement
     public TaskData getResearchTask() {
-        return new TaskData(
-                (Part)requestToSelf.getSource(),
-                getPlanService(),
-                getPlanParticipationService(),
-                getUser() );
+        return researchTaskData;
     }
 
     @XmlElement
     public TaskData getConsumingTask() {
-        return new TaskData(
-                (Part)requestToSelf.getTarget(),
-                getPlanService(),
-                getPlanParticipationService(),
-                getUser() );
+        return  consumingTaskData;
     }
 
 
@@ -78,7 +97,7 @@ public class ResearchData extends AbstractProcedureElementData {
 
     @XmlElement
     public String getFailureImpact() {
-        return getPlanService().computeSharingPriority( getSharing() ).getNegativeLabel();
+        return failureImpact;
     }
 
     @XmlElement

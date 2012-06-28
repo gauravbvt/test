@@ -20,8 +20,8 @@ import java.util.List;
  * Time: 7:53 PM
  */
 public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
-    public CommTriggerDataPanel( String id, TriggerData triggerData ) {
-        super( id, triggerData );
+    public CommTriggerDataPanel( String id, TriggerData triggerData, ProtocolsFinder finder ) {
+        super( id, triggerData, finder );
         init();
     }
 
@@ -69,7 +69,7 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
         ) {
             @Override
             protected void populateItem( ListItem<ContactData> item ) {
-                item.add( new ContactLinkPanel( "contact", item.getModelObject() ) );
+                item.add( new ContactLinkPanel( "contact", item.getModelObject(), getFinder() ) );
             }
         };
         contactsContainer.add( contactsListView );

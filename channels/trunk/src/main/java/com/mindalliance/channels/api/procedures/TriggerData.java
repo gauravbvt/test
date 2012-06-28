@@ -37,6 +37,9 @@ public class TriggerData extends AbstractProcedureElementData {
     private Flow requestToSelf;
     private boolean ongoing = false;
     private List<EventTiming> eventPhaseContext;
+    private DiscoveryData discoveryData;
+    private ResearchData researchData;
+    private SituationData situationData;
 
     public TriggerData() {
         // required
@@ -50,9 +53,7 @@ public class TriggerData extends AbstractProcedureElementData {
         super( assignment, planService, planParticipationService, user );
     }
 
-    public boolean getOngoing() {
-        return ongoing;
-    }
+    // Initialization
 
     public void setOngoing( boolean ongoing ) {
         this.ongoing = ongoing;
@@ -87,6 +88,78 @@ public class TriggerData extends AbstractProcedureElementData {
         ongoing = false;
     }
 
+    // Called after nature of trigger is set.
+    public void initTrigger( PlanService planService, PlanParticipationService planParticipationService ) {
+        initDiscoveryData( planService, planParticipationService );
+        initResearchData( planService, planParticipationService );
+        initOnNotification( planService, planParticipationService );
+        initOnRequest( planService, planParticipationService );
+        initSituationData( planService, planParticipationService );
+    }
+
+    private void initSituationData( PlanService planService, PlanParticipationService planParticipationService ) {
+        if ( isSituationKnown() ) {
+            situationData = new SituationData( getAssignment(), planService, planParticipationService, getUser() );
+        } else {
+            situationData = null;
+        }
+    }
+
+    private void initOnRequest( PlanService planService, PlanParticipationService planParticipationService ) {
+            if ( requestFromOther != null )
+                onRequest = new RequestData(
+                        requestFromOther,
+                        true,
+                        getAssignment(),
+                        planService,
+                        planParticipationService,
+                        getUser() );
+            else
+                onRequest = null;
+
+    }
+
+    private void initOnNotification( PlanService planService, PlanParticipationService planParticipationService ) {
+
+            if ( notificationFromOther != null && !notificationFromOther.isToSelf() )
+                onNotification = new NotificationData(
+                        notificationFromOther,
+                        true,
+                        getAssignment(),
+                        planService,
+                        planParticipationService,
+                        getUser() );
+            else
+                onNotification = null;
+    }
+
+    private void initResearchData( PlanService planService, PlanParticipationService planParticipationService ) {
+        if ( requestToSelf != null )
+            researchData = new ResearchData(
+                    requestToSelf,
+                    getAssignment(),
+                    planService,
+                    planParticipationService,
+                    getUser() );
+        else
+            researchData = null;
+
+    }
+
+    private void initDiscoveryData( PlanService planService, PlanParticipationService planParticipationService ) {
+        if ( notificationToSelf != null )
+            discoveryData = new DiscoveryData( notificationToSelf, planService, planParticipationService, getUser() );
+        else
+            discoveryData = null;
+
+    }
+
+    ///// END INITIALIZATION
+
+    public boolean getOngoing() {
+        return ongoing;
+    }
+
     @XmlElement
     public String getAnytime() {
         return notificationFromOther == null && requestFromOther == null && eventPhase == null
@@ -96,10 +169,7 @@ public class TriggerData extends AbstractProcedureElementData {
 
     @XmlElement
     public DiscoveryData getOnDiscovery() {
-        if ( notificationToSelf != null )
-            return new DiscoveryData( notificationToSelf, getPlanService(), getPlanParticipationService(), getUser() );
-        else
-            return null;
+        return discoveryData;
     }
 
     @XmlElement
@@ -112,58 +182,22 @@ public class TriggerData extends AbstractProcedureElementData {
 
     @XmlElement
     public ResearchData getOnResearch() {
-        if ( requestToSelf != null )
-            return new ResearchData(
-                    requestToSelf,
-                    getAssignment(),
-                    getPlanService(),
-                    getPlanParticipationService(),
-                    getUser() );
-        else
-            return null;
+        return researchData;
     }
 
     @XmlElement
     public NotificationData getOnNotification() {
-        if ( onNotification == null ) {
-            if ( notificationFromOther != null && !notificationFromOther.isToSelf() )
-                onNotification = new NotificationData(
-                        notificationFromOther,
-                        true,
-                        getAssignment(),
-                        getPlanService(),
-                        getPlanParticipationService(),
-                        getUser() );
-            else
-                onNotification = null;
-        }
         return onNotification;
     }
 
     @XmlElement
     public RequestData getOnRequest() {
-        if ( onRequest == null ) {
-            if ( requestFromOther != null )
-                onRequest = new RequestData(
-                        requestFromOther,
-                        true,
-                        getAssignment(),
-                        getPlanService(),
-                        getPlanParticipationService(),
-                        getUser() );
-            else
-                onRequest = null;
-        }
         return onRequest;
     }
 
     @XmlElement
     public SituationData getSituation() {
-        if ( isSituationKnown() ) {
-            return new SituationData( getAssignment(), getPlanService(), getPlanParticipationService(), getUser() );
-        } else {
-            return null;
-        }
+        return situationData;
     }
 
     private boolean isSituationKnown() {

@@ -33,6 +33,9 @@ public class AssignmentData extends AbstractProcedureElementData {
     private List<RequestData> outReplies;
     private List<NotificationData> inNotifications;
     private List<RequestData> inReplies;
+    private TaskData taskData;
+    private List<DiscoveryData> discoveries;
+    private List<ResearchData> allResearch;
 
     public AssignmentData() {
         // required
@@ -46,70 +49,46 @@ public class AssignmentData extends AbstractProcedureElementData {
             ProcedureData procedureData ) {
         super( assignment, planService, planParticipationService, user );
         this.procedureData = procedureData;
+        initData( planService, planParticipationService );
     }
 
-    @XmlElement
-    public TaskData getTask() {
-        return new TaskData( getAssignment(), getPlanService(), getPlanParticipationService(), getUser() );
+    private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
+        // todo
+        taskData = new TaskData( getAssignment(), planService, planParticipationService, getUser() );
+        initInNotifications( planService, planParticipationService );
+        initOutNotifications( planService, planParticipationService );
+        initInReplies( planService, planParticipationService );
+        initOutReplies( planService, planParticipationService );
+        initDiscoveries( planService, planParticipationService );
+        initAllResearch( planService, planParticipationService );
     }
 
-    @XmlElement( name = "inNotification" )
-    public List<NotificationData> getInNotifications() {
-        if ( inNotifications == null ) {
-            inNotifications = new ArrayList<NotificationData>();
-            for ( Flow inNotification : inNotifications() ) {
-                boolean benefiting = true;
-                inNotifications.add( new NotificationData(
-                        inNotification,
-                        benefiting,
-                        getAssignment(),
-                        getPlanService(),
-                        getPlanParticipationService(),
-                        getUser() ) );
-            }
+    private void initAllResearch( PlanService planService, PlanParticipationService planParticipationService ) {
+        allResearch = new ArrayList<ResearchData>();
+        for ( Flow research : research() ) {
+            allResearch.add( new ResearchData(
+                    research,
+                    getAssignment(),
+                    planService,
+                    planParticipationService,
+                    getUser() ) );
         }
-        return inNotifications;
+
     }
 
-    @XmlElement( name = "outNotification" )
-    public List<NotificationData> getOutNotifications() {
-        if ( outNotifications == null ) {
-            outNotifications = new ArrayList<NotificationData>();
-            for ( Flow outNotification : outNotifications() ) {
-                boolean benefiting = false;
-                outNotifications.add( new NotificationData(
-                        outNotification,
-                        benefiting,
-                        getAssignment(),
-                        getPlanService(),
-                        getPlanParticipationService(),
-                        getUser() ) );
-            }
+    private void initDiscoveries( PlanService planService, PlanParticipationService planParticipationService ) {
+        discoveries = new ArrayList<DiscoveryData>();
+        for ( Flow discovery : discoveries() ) {
+            discoveries.add( new DiscoveryData(
+                    discovery,
+                    planService,
+                    planParticipationService,
+                    getUser() ) );
         }
-        return outNotifications;
+
     }
 
-    @XmlElement( name = "inRequest" )
-    public List<RequestData> getInRequests() {
-        if ( inReplies == null ) {
-            inReplies = new ArrayList<RequestData>();
-            for ( Flow flow : inRequests() ) {
-                boolean replying = true;
-                inReplies.add( new RequestData(
-                        flow,
-                        replying,
-                        getAssignment(),
-                        getPlanService(),
-                        getPlanParticipationService(),
-                        getUser() ) );
-            }
-        }
-        return inReplies;
-    }
-
-    @XmlElement( name = "outRequest" )
-    public List<RequestData> getOutRequests() {
-        if ( outReplies == null ) {
+    private void initOutReplies( PlanService planService, PlanParticipationService planParticipationService ) {
             outReplies = new ArrayList<RequestData>();
             for ( Flow flow : outRequests() ) {
                 boolean replying = false;
@@ -117,39 +96,87 @@ public class AssignmentData extends AbstractProcedureElementData {
                         flow,
                         replying,
                         getAssignment(),
-                        getPlanService(),
-                        getPlanParticipationService(),
+                        planService,
+                        planParticipationService,
                         getUser() ) );
             }
+    }
+
+    private void initInReplies( PlanService planService, PlanParticipationService planParticipationService ) {
+            inReplies = new ArrayList<RequestData>();
+            for ( Flow flow : inRequests() ) {
+                boolean replying = true;
+                inReplies.add( new RequestData(
+                        flow,
+                        replying,
+                        getAssignment(),
+                        planService,
+                        planParticipationService,
+                        getUser() ) );
+            }
+    }
+
+    private void initOutNotifications( PlanService planService, PlanParticipationService planParticipationService ) {
+            outNotifications = new ArrayList<NotificationData>();
+            for ( Flow outNotification : outNotifications() ) {
+                boolean benefiting = false;
+                outNotifications.add( new NotificationData(
+                        outNotification,
+                        benefiting,
+                        getAssignment(),
+                        planService,
+                        planParticipationService,
+                        getUser() ) );
+            }
+    }
+
+    private void initInNotifications( PlanService planService, PlanParticipationService planParticipationService ) {
+        inNotifications = new ArrayList<NotificationData>();
+        for ( Flow inNotification : inNotifications() ) {
+            boolean benefiting = true;
+            inNotifications.add( new NotificationData(
+                    inNotification,
+                    benefiting,
+                    getAssignment(),
+                    planService,
+                    planParticipationService,
+                    getUser() ) );
         }
+    }
+
+    @XmlElement
+    public TaskData getTask() {
+        return taskData;
+    }
+
+    @XmlElement( name = "inNotification" )
+    public List<NotificationData> getInNotifications() {
+        return inNotifications;
+    }
+
+    @XmlElement( name = "outNotification" )
+    public List<NotificationData> getOutNotifications() {
+        return outNotifications;
+    }
+
+    @XmlElement( name = "inRequest" )
+    public List<RequestData> getInRequests() {
+        return inReplies;
+    }
+
+    @XmlElement( name = "outRequest" )
+    public List<RequestData> getOutRequests() {
         return outReplies;
     }
 
 
     @XmlElement( name = "discovery" )
     public List<DiscoveryData> getDiscoveries() {
-        List<DiscoveryData> discoveries = new ArrayList<DiscoveryData>();
-        for ( Flow discovery : discoveries() ) {
-            discoveries.add( new DiscoveryData(
-                    discovery,
-                    getPlanService(),
-                    getPlanParticipationService(),
-                    getUser() ) );
-        }
         return discoveries;
     }
 
     @XmlElement( name = "research" )
     public List<ResearchData> getResearch() {
-        List<ResearchData> allResearch = new ArrayList<ResearchData>();
-        for ( Flow research : research() ) {
-            allResearch.add( new ResearchData(
-                    research,
-                    getAssignment(),
-                    getPlanService(),
-                    getPlanParticipationService(),
-                    getUser() ) );
-        }
         return allResearch;
     }
 
@@ -165,7 +192,7 @@ public class AssignmentData extends AbstractProcedureElementData {
         }
         Event initiatedEvent = getAssignment().getPart().getInitiatedEvent();
         if ( initiatedEvent != null )
-            ids.add(  initiatedEvent.getId() );
+            ids.add( initiatedEvent.getId() );
         return ids;
     }
 
@@ -288,7 +315,7 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private List<Flow> inRequests() {
         Set<Flow> flows = new HashSet<Flow>();
-        for ( Commitment commitment : procedureData .getCommittingCommitments()
+        for ( Commitment commitment : procedureData.getCommittingCommitments()
                 .requests()
                 .notTo( getAssignment()
                         .getActor() ) ) {
@@ -322,7 +349,7 @@ public class AssignmentData extends AbstractProcedureElementData {
 
 
     public String getLabel() {
-        return getAssignment().getPart().getName();
+        return getAssignment().getPart().getTitle();
     }
 
     public boolean hasReceives() {

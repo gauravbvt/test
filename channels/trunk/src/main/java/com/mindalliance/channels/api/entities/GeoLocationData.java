@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.model.GeoLocation;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Web Service data element for a geolocation.
@@ -14,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 3:18 PM
  */
 @XmlType( propOrder = {"city", "county", "state", "country"} )
-public class GeoLocationData {
+public class GeoLocationData  implements Serializable {
 
     private GeoLocation geoLocation;
 

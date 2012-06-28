@@ -7,6 +7,8 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.lang.StringEscapeUtils;
 
+import java.io.Serializable;
+
 /**
  * Web Service data element for an element of a procedure of an actor according to a plan.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -15,12 +17,11 @@ import org.apache.commons.lang.StringEscapeUtils;
  * Date: 12/6/11
  * Time: 10:30 AM
  */
-abstract public class AbstractProcedureElementData {
+abstract public class AbstractProcedureElementData  implements Serializable {
 
     private Assignment assignment;
-    private PlanService planService;
-    private PlanParticipationService planParticipationService;
     private ChannelsUser user;
+    private Plan plan;
 
     protected AbstractProcedureElementData() {
     }
@@ -29,9 +30,8 @@ abstract public class AbstractProcedureElementData {
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        this.planService = planService;
-        this.planParticipationService = planParticipationService;
         this.user = user;
+        initData( planService, planParticipationService );
     }
 
     protected AbstractProcedureElementData(
@@ -40,25 +40,20 @@ abstract public class AbstractProcedureElementData {
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         this.assignment = assignment;
-        this.planService = planService;
-        this.planParticipationService = planParticipationService;
         this.user = user;
+        initData( planService, planParticipationService );
+    }
+
+    private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
+        plan = planService.getPlan();
     }
 
     public Assignment getAssignment() {
         return assignment;
     }
 
-    public PlanService getPlanService() {
-        return planService;
-    }
-
-    public PlanParticipationService getPlanParticipationService() {
-        return planParticipationService;
-    }
-
     protected Plan getPlan() {
-        return planService.getPlan();
+        return plan;
     }
 
     protected ChannelsUser getUser() {

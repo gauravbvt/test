@@ -6,14 +6,14 @@ import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
-import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.api.procedures.SituationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Employment;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
@@ -21,24 +21,23 @@ import com.mindalliance.channels.social.model.Feedback;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A page with a user's (or agent's) protocols.
@@ -51,7 +50,6 @@ import java.util.Set;
 public class ProtocolsPage extends AbstractChannelsBasicPage {
 
     private static final Logger LOG = LoggerFactory.getLogger( ProtocolsPage.class );
-    private PlanScopeData planScopeData;
     private ProceduresData proceduresData;
     private ProtocolsFinder finder;
     private DirectoryData directoryData;
@@ -60,8 +58,9 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private Actor actor;
     private ChannelsUser protocolsUser;
 
-    @Autowired
+    @SpringBean( name="channelsService" )
     private ChannelsService channelsService;
+
     private WebMarkupContainer aboutContainer;
     private WebMarkupContainer finderContainer;
     private WebMarkupContainer protocolsContainer;
@@ -100,11 +99,13 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         }
     }
 
+    @Override
+    protected void updateContent( AjaxRequestTarget target ) {
+        // do nothing
+    }
+
     private void initData() throws Exception {
         Plan plan = getPlan();
-        planScopeData = channelsService.getPlanScope(
-                plan.getUri(),
-                Integer.toString( plan.getVersion() ) );
         if ( actorId >= 0 ) {
             actor = getQueryService().find( Actor.class, actorId );
             proceduresData = channelsService.getAgentProcedures(
@@ -132,8 +133,11 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 proceduresData,
                 getQueryService(),
                 getPlanParticipationService(),
-                protocolsUser );
-        directoryData = new DirectoryData( proceduresData );
+                protocolsUser,
+                channelsService,
+                username,
+                actorId );
+        directoryData = new DirectoryData( proceduresData, getQueryService(), getPlanParticipationService() );
     }
 
     private void doAddContent() {
@@ -169,7 +173,6 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     // PARTICIPATION
 
     private void addParticipation() {
-        getContainer().add( new Label( "participant", getParticipantName() ) );
         ListView<EmploymentData> employmentsList = new ListView<EmploymentData>(
                 "participationList",
                 proceduresData.getEmployments()
@@ -215,7 +218,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         ) {
             @Override
             protected void populateItem( ListItem<ProcedureData> item ) {
-                item.add( new ProcedureDataLinkPanel( "procLink", item.getModelObject() ) );
+                item.add( new ProcedureDataLinkPanel( "procLink", item.getModelObject(), finder ) );
             }
         };
     }
@@ -242,13 +245,13 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     private void addOnCommunicationFinder() {
-        final Map<String, List<ContactData>> triggerRolodex = finder.getAlphabetizedRolodex();
+        final Map<String, List<ContactData>> triggerRolodex = finder.getAlphabetizedTriggerRolodex();
         WebMarkupContainer communicationsToc = new WebMarkupContainer( "communications-toc" );
         finderContainer.add( communicationsToc );
         communicationsToc.setVisible( !triggerRolodex.isEmpty() );
         ListView<String> commSectionListView = new ListView<String>(
                 "commSections",
-                finder.getSortedRolodexTabs()
+                finder.getSortedTriggerRolodexTabs()
         ) {
             @Override
             protected void populateItem( ListItem<String> item ) {
@@ -268,7 +271,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<ContactData> item ) {
                 ContactData contactData = item.getModelObject();
-                item.add( new ContactLinkPanel( "contact", contactData ) );
+                item.add( new ContactLinkPanel( "contact", contactData, finder ) );
                 // requests
                 Map<TriggerData, List<ProcedureData>> triggeringRequests =
                         finder.getTriggeringRequestsFrom( contactData );
@@ -309,7 +312,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 SituationData communicatedContext = triggerData.getSituation();
                 Label commContextLabel = new Label(
                         "communicatedContext",
-                        communicatedContext == null ? "" : communicatedContext.getLabel() );
+                        communicatedContext == null ? "" : communicatedContext.getTriggerLabel() );
                 commContextLabel.setVisible( communicatedContext != null );
                 item.add( commContextLabel );
                 item.add( makeProcedureLinks( "procLinks", triggeringRequests.get( triggerData ) ) );
@@ -340,7 +343,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 SituationData communicatedContext = triggerData.getSituation();
                 Label commContextLabel = new Label(
                         "communicatedContext",
-                        communicatedContext == null ? "" : communicatedContext.getLabel() );
+                        communicatedContext == null ? "" : communicatedContext.getTriggerLabel() );
                 commContextLabel.setVisible( communicatedContext != null );
                 item.add( commContextLabel );
                 item.add( makeProcedureLinks( "procLinks", triggeringNotifications.get( triggerData ) ) );
@@ -375,7 +378,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 } );
         WebMarkupContainer ongoingContainer = new WebMarkupContainer( "ongoing" );
         protocolsContainer.add( ongoingContainer );
-        protocolsContainer.setVisible( !sortedProcedures.isEmpty() );
+        ongoingContainer.setVisible( !sortedProcedures.isEmpty() );
         ListView<ProcedureData> ongoingProcsListView = new ListView<ProcedureData>(
                 "ongoingProcedures",
                 sortedProcedures
@@ -383,8 +386,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<ProcedureData> item ) {
                 ProcedureData procedureData = item.getModelObject();
-                item.add( makeAnchor( "anchor", procedureData.getAnchor() ) );
-                item.add( new ProcedureDataPanel( "procedure", procedureData ) );
+                item.add( new ProcedureDataPanel( "procedure", procedureData, finder ) );
             }
         };
         ongoingContainer.add( ongoingProcsListView );
@@ -420,17 +422,16 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 finder.getOnResearchProcedures() ) );
     }
 
-    private ListView<TriggerData> makeTriggeredProceduresContainer(
+    private WebMarkupContainer makeTriggeredProceduresContainer(
             String procsContainerId,
             final Map<TriggerData, List<ProcedureData>> procedureDataMap
     ) {
-        // final Map<TriggerData, List<ProcedureData>> onNotificationProcs = finder.getOnNotificationProcedures();
         WebMarkupContainer procsContainer = new WebMarkupContainer( procsContainerId );
         procsContainer.setVisible( !procedureDataMap.isEmpty() );
         protocolsContainer.add( procsContainer );
         List<TriggerData> triggers = finder.sortTriggerData( procedureDataMap.keySet() );
-        return new ListView<TriggerData>(
-                "procedures",
+        procsContainer.add(  new ListView<TriggerData>(
+                "triggered",
                 triggers
         ) {
             @Override
@@ -439,20 +440,22 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 item.add( makeTriggerDataPanel( "trigger", trigger ) );
                 item.add( makeProcedurePanels( "procedures", procedureDataMap.get( trigger ) ) );
             }
-        };
+        }
+        );
+        return procsContainer;
     }
 
     private AbstractDataPanel makeTriggerDataPanel( String id, TriggerData triggerData ) {
         if ( triggerData.isOnObserving() )
-            return new ObservationTriggerDataPanel( id, triggerData );
+            return new ObservationTriggerDataPanel( id, triggerData, finder );
         else if ( triggerData.isOnNotificationFromOther() )
-            return new CommTriggerDataPanel( id, triggerData );
+            return new CommTriggerDataPanel( id, triggerData, finder );
         else if ( triggerData.isOnRequestFromOther() )
-            return new CommTriggerDataPanel( id, triggerData );
+            return new CommTriggerDataPanel( id, triggerData, finder );
         else if ( triggerData.isOnDiscovering() )
-            return new SelfTriggerDataPanel( id, triggerData );
+            return new SelfTriggerDataPanel( id, triggerData, finder );
         else if ( triggerData.isOnResearching() )
-            return new SelfTriggerDataPanel( id, triggerData );
+            return new SelfTriggerDataPanel( id, triggerData, finder );
         else throw new RuntimeException( "Unknown trigger " + triggerData.getLabel() );
     }
 
@@ -465,7 +468,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<ProcedureData> item ) {
                 ProcedureData procedureData = item.getModelObject();
-                item.add( new ProcedureDataPanel( "procedure", procedureData ) );
+                item.add( new ProcedureDataPanel( "procedure", procedureData, finder ) );
             }
         };
     }
@@ -489,7 +492,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                     item.add( new Label( "orgContact", "" ) );
                     item.add( new Label( "employeeContacts", "" ) );
                 } else {
-                    item.add( new OrganizationContactPanel( "orgContact", org ) );
+                    item.add( new OrganizationContactPanel( "orgContact", org, finder ) );
                     ListView<ContactData> employeeContactsListView = new ListView<ContactData>(
                             "employeeContacts",
                             finder.getContactsInOrganization( orgName )
@@ -497,20 +500,29 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                         @Override
                         protected void populateItem( ListItem<ContactData> subItem ) {
                             ContactData contact = subItem.getModelObject();
-                            subItem.add( new ContactDataPanel( "employeeContact", contact ) );
+                            subItem.add( new ContactDataPanel( "employeeContact", contact, finder ) );
                         }
                     };
                     item.add( employeeContactsListView );
                 }
             }
         };
+        directoryContainer.add( orgContactsListView );
     }
 
     //////////////
 
 
     public <T extends ModelObjectData> T findInScope( Class<T> moDataClass, long moId ) {
-        return planScopeData.findInScope( moDataClass, moId );
+        return finder.findInScope( moDataClass, moId );
+    }
+
+    public <T extends ModelObject> T find( Class<T> moClass, long moId ) {
+        try {
+            return getQueryService().find( moClass, moId );
+        } catch ( NotFoundException e ) {
+            return null;
+        }
     }
 
     @SuppressWarnings( "unchecked" )
@@ -526,15 +538,6 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         );
     }
 
-    public List<ContactData> findContactsFromEmployments(
-            List<Employment> employments ) {
-        Set<ContactData> contacts = new HashSet<ContactData>();
-        for ( Employment employment : employments ) {
-            contacts.addAll( findContacts( employment ) );
-        }
-        return new ArrayList<ContactData>( contacts );
-    }
-
     private WebMarkupContainer makeAnchor( String id, String anchor ) {
         WebMarkupContainer anchorContainer = new WebMarkupContainer( id );
         anchorContainer.add( new AttributeModifier( "name", anchor ) );
@@ -542,11 +545,5 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
 
-    public List<ContactData> findContacts( Employment employment ) {
-        return ContactData.findContactsFromEmployment(
-                employment,
-                getQueryService(),
-                getPlanParticipationService(),
-                protocolsUser );
-    }
+
 }

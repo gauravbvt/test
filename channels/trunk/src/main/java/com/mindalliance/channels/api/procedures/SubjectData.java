@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Web service data element for a subject.
@@ -15,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 12:22 PM
  */
 @XmlType( propOrder = {"information", "element"} )
-public class SubjectData {
+public class SubjectData  implements Serializable {
 
     private Subject subject;
 

@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * Time: 1:59 PM
  */
 @XmlType( propOrder = {"name", "EOIs"} )
-public class InformationData {
+public class InformationData  implements Serializable {
 
     private Flow sharing;
     private List<ElementOfInformationData> eois;

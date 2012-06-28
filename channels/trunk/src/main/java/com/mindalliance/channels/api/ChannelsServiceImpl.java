@@ -177,7 +177,7 @@ public class ChannelsServiceImpl implements ChannelsService {
                     participations,
                     planService,
                     planParticipationService,
-                    user);
+                    user );
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
             throw new WebApplicationException(
@@ -189,12 +189,12 @@ public class ChannelsServiceImpl implements ChannelsService {
     }
 
     @Override
-     public ProceduresData getUserProcedures( String uri, String version, String username ) {
+    public ProceduresData getUserProcedures( String uri, String version, String username ) {
         Plan plan = planManager.getPlan( uri, Integer.parseInt( version ) );
         LOG.info( "Getting " + username + "'s procedures for plan " + uri + " version " + version );
         try {
             ChannelsUser user = userDao.getUserNamed( username );
-            if ( plan == null ||  !user.isPlanner( uri ) ) {
+            if ( plan == null || !user.isPlanner( uri ) ) {
                 throw new Exception( user.getUsername()
                         + " is not authorized to access plan "
                         + uri + " version "
@@ -203,14 +203,14 @@ public class ChannelsServiceImpl implements ChannelsService {
             PlanService planService = getPlanService( plan );
             List<PlanParticipation> participationList = planService.findParticipations( username, plan );
             if ( participationList.isEmpty() ) {
-                throw new Exception( username + " does not participate in plan " + uri + " version " + version  );
+                throw new Exception( username + " does not participate in plan " + uri + " version " + version );
             }
             return new ProceduresData(
                     plan,
                     participationList,
                     planService,
                     planParticipationService,
-                    user);
+                    user );
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
             throw new WebApplicationException(
@@ -227,7 +227,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         Plan plan = planManager.getPlan( uri, Integer.parseInt( version ) );
         LOG.info( "Getting procedures of agent " + actorId + " for plan " + plan );
         try {
-            if ( plan == null || !user.isPlanner(uri ) ) throw new Exception( "Unauthorized" );
+            if ( plan == null || !user.isPlanner( uri ) ) throw new Exception( "Unauthorized" );
             PlanService planService = getPlanService( plan );
             Actor actor = planService.find( Actor.class, Long.parseLong( actorId ) );
             return new ProceduresData(
@@ -250,8 +250,23 @@ public class ChannelsServiceImpl implements ChannelsService {
             String uri,
             String version,
             String username ) {
-        ProceduresData proceduresData = getUserProcedures( uri, version, username );
-        return new DirectoryData( proceduresData );
+        ChannelsUser user = ChannelsUser.current( userDao );
+        Plan plan = planManager.getPlan( uri, Integer.parseInt( version ) );
+        try {
+            if ( plan == null
+                    || !( username.equals( user.getUsername() ) || user.isPlanner( uri ) ) )
+                throw new Exception( "Unauthorized" );
+            PlanService planService = getPlanService( plan );
+            ProceduresData proceduresData = getUserProcedures( uri, version, username );
+            return new DirectoryData( proceduresData, planService, planParticipationService );
+        } catch ( Exception e ) {
+            LOG.warn( "Failed to retrieve directory", e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No procedures available for plan " + uri )
+                            .build() );
+        }
     }
 
     @Override
@@ -259,8 +274,23 @@ public class ChannelsServiceImpl implements ChannelsService {
             String uri,
             String version,
             String agentId ) {
-        ProceduresData proceduresData = getAgentProcedures( uri, version, agentId );
-        return new DirectoryData( proceduresData );
+        ChannelsUser user = ChannelsUser.current( userDao );
+        Plan plan = planManager.getPlan( uri, Integer.parseInt( version ) );
+        try {
+            if ( plan == null
+                    || !user.isPlanner( uri )  )
+                throw new Exception( "Unauthorized" );
+            PlanService planService = getPlanService( plan );
+            ProceduresData proceduresData = getAgentProcedures( uri, version, agentId );
+        return new DirectoryData( proceduresData, planService, planParticipationService  );
+        } catch ( Exception e ) {
+            LOG.warn( "Failed to retrieve directory", e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No procedures available for plan " + uri )
+                            .build() );
+        }
     }
 
     @Override

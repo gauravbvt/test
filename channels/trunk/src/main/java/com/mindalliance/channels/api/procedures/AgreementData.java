@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * Time: 10:23 AM
  */
 @XmlType( propOrder = { "beneficiaryId", "information", "elementsOfInformation", "usage", "documentation"} )
-public class AgreementData {
+public class AgreementData  implements Serializable {
 
     private Agreement agreement;
 

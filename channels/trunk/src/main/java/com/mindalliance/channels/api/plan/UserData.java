@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Web service data element for a user.
@@ -15,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 6:27 PM
  */
 @XmlType( propOrder = {"username", "fullName", "email"} )
-public class UserData {
+public class UserData  implements Serializable {
 
     private ChannelsUser user;
 

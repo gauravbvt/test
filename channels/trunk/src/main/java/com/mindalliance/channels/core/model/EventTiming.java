@@ -122,7 +122,7 @@ public class EventTiming implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append( timing == Timing.Concurrent ? "during " : "after " );
+        sb.append( timing == Timing.Concurrent ? "while " : "after " );
         sb.append( event == null ? "?" : event.getName() );
         sb.append( eventLevelLabel() );
         return sb.toString();

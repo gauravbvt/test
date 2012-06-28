@@ -109,11 +109,10 @@ public interface ChannelsService {
      * @param version a plan version
      * @param username a username
      * @return directory data
-     */
+    */
     DirectoryData getUserDirectory( @PathParam("uri") String uri,
                                 @PathParam( "version" ) String version,
                                 @PathParam("user") String username );
-
     @GET
     @Path( "plan/{uri}/version/{version}/agent/{agentId}/directory" )
     @Produces( MediaType.APPLICATION_XML )
@@ -123,9 +122,8 @@ public interface ChannelsService {
      * @param version a plan version
      * @param agentId an agent id
      * @return directory data
-     */
+    */
     DirectoryData getAgentDirectory( @PathParam("uri") String uri,
                                     @PathParam( "version" ) String version,
                                     @PathParam("agentId") String agentId );
-
 }

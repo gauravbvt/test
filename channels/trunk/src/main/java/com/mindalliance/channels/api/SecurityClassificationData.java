@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.model.Classification;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Web Service data element for a security classification.
@@ -14,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 2:17 PM
  */
 @XmlType( propOrder = {"system", "level"} )
-public class SecurityClassificationData {
+public class SecurityClassificationData implements Serializable {
 
     private Classification classification;
 

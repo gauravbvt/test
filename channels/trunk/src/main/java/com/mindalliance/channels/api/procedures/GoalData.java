@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Web Service data element for a goal.
@@ -15,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 7:20 PM
  */
 @XmlType( propOrder = {"kind", "name", "description", "category", "level", "organizationId"} )
-public class GoalData {
+public class GoalData  implements Serializable {
 
     private Goal goal;
 

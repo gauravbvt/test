@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -31,27 +32,62 @@ import java.util.List;
 public class TaskData extends AbstractProcedureElementData {
 
     private Part part;
+    private String failureImpact;
+    private List<Assignment> otherAssignments;
+    private List<ContactData> teamContacts;
 
     public TaskData() {
         // required
     }
 
-    public TaskData( 
-            Assignment assignment, 
-            PlanService planService, 
+    public TaskData(
+            Assignment assignment,
+            PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         super( assignment, planService, planParticipationService, user );
+        initData( planService );
+        initOtherAssignments( planService );
+        initTeamContacts( planService, planParticipationService );
     }
 
     // For consuming tasks
-    public TaskData( 
+    public TaskData(
             Part part,
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         super( planService, planParticipationService, user );
         this.part = part;
+        initData( planService );
+    }
+
+    private void initData( PlanService planService ) {
+        failureImpact = StringEscapeUtils.escapeXml( planService.computePartPriority( getPart() ).getNegativeLabel() );
+    }
+
+    private void initTeamContacts( PlanService planService, PlanParticipationService planParticipationService ) {
+        teamContacts = new ArrayList<ContactData>();
+        for ( Employment employment : getTeamEmployments() ) {
+            teamContacts.addAll( ContactData.findContactsFromEmployment(
+                    employment,
+                    planService,
+                    planParticipationService,
+                    ChannelsUser.current() ) );
+        }
+    }
+
+    private void initOtherAssignments( PlanService planService ) {
+        otherAssignments = new ArrayList<Assignment>();
+        Part part = getAssignment().getPart();
+        if ( part.isAsTeam() ) {
+            for ( Assignment assign : planService.findAllAssignments( part, false ) ) {
+                if ( !assign.equals( getAssignment() ) ) {
+                    otherAssignments.add( assign );
+                }
+            }
+        }
+
     }
 
     @XmlElement
@@ -120,7 +156,7 @@ public class TaskData extends AbstractProcedureElementData {
 
     @XmlElement
     public String getFailureImpact() {
-        return StringEscapeUtils.escapeXml( getPlanService().computePartPriority( getPart() ).getNegativeLabel() );
+        return failureImpact;
     }
 
     @XmlElement
@@ -129,15 +165,6 @@ public class TaskData extends AbstractProcedureElementData {
     }
 
     private List<Assignment> otherTeamAssignments() {
-        List<Assignment> otherAssignments = new ArrayList<Assignment>();
-        Part part = getAssignment().getPart();
-        if ( part.isAsTeam() ) {
-            for ( Assignment assign : getPlanService().findAllAssignments( part, false ) ) {
-                if ( !assign.equals( getAssignment() ) ) {
-                    otherAssignments.add( assign );
-                }
-            }
-        }
         return otherAssignments;
     }
 
@@ -147,13 +174,13 @@ public class TaskData extends AbstractProcedureElementData {
                 : part;
     }
 
-    @WebMethod( exclude=true )
+    @WebMethod( exclude = true )
     public List<Employment> getTeamEmployments() {
-       List<Employment> employments = new ArrayList<Employment>();
+        List<Employment> employments = new ArrayList<Employment>();
         for ( Assignment assignment : otherTeamAssignments() ) {
             employments.add( assignment.getEmployment() );
         }
-       return employments;
+        return employments;
     }
 
     @WebMethod( exclude = true )
@@ -166,4 +193,7 @@ public class TaskData extends AbstractProcedureElementData {
         return getPart().getSegment().getPhase().getId();
     }
 
+    public List<ContactData> getTeamContacts() {
+        return teamContacts;
+    }
 }

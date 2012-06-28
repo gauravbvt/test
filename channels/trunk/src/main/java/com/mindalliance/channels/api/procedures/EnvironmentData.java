@@ -22,6 +22,7 @@ import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,10 +37,17 @@ import java.util.Set;
  * Time: 3:43 PM
  */
 @XmlType( propOrder = {"events", "phases", "organizations", "actors", "roles", "places", "media"} )
-public class EnvironmentData {
+public class EnvironmentData  implements Serializable {
 
     private ProceduresData procedures;
-    private PlanService planService;
+    private List<EventData> events;
+    private List<PhaseData> phases;
+    private List<OrganizationData> orgs;
+    private List<AgentData> actors;
+    private List<PlaceData> places;
+    private List<RoleData> roles;
+    private List<MediumData> media;
+    private Plan plan;
 
     public EnvironmentData() {
         // required
@@ -47,142 +55,184 @@ public class EnvironmentData {
 
     public EnvironmentData( ProceduresData procedures, PlanService planService ) {
         this.procedures = procedures;
-        this.planService = planService;
+        initData( planService );
+    }
+
+    private void initData( PlanService planService ) {
+        plan = planService.getPlan();
+        try {
+            initEvents( planService );
+            initPhases( planService );
+            initOrgs( planService );
+            initActors( planService );
+            initPlaces( planService );
+            initRoles( planService );
+            initMedia( planService );
+        } catch ( NotFoundException e ) {
+            throw new RuntimeException( e );
+        }
+    }
+
+    private void initMedia( PlanService planService ) throws NotFoundException {
+        media = new ArrayList<MediumData>();
+        Set<Long> added = new HashSet<Long>();
+        for ( Long id : allMediumIds() ) {
+            TransmissionMedium medium = planService.find( TransmissionMedium.class, id );
+            media.add( new MediumData( medium, getPlan() ) );
+            added.add( id );
+            for ( ModelEntity category : medium.getAllTypes() ) {
+                if ( !added.contains( category.getId() ) ) {
+                    media.add( new MediumData( (TransmissionMedium) category, getPlan() ) );
+                    added.add( category.getId() );
+                }
+            }
+            for ( TransmissionMedium delegate : medium.getEffectiveDelegatedToMedia() ) {
+                if ( !added.contains( delegate.getId() ) ) {
+                    media.add( new MediumData( delegate, getPlan() ) );
+                    added.add( delegate.getId() );
+                }
+            }
+
+        }
+
+    }
+
+    private void initRoles( PlanService planService ) throws NotFoundException {
+        roles = new ArrayList<RoleData>();
+        Set<Long> added = new HashSet<Long>();
+        for ( Long id : allRoleIds() ) {
+            Role role = planService.find( Role.class, id );
+            roles.add( new RoleData( role, getPlan() ) );
+            added.add( id );
+            for ( ModelEntity category : role.getAllTypes() ) {
+                if ( !added.contains( category.getId() ) ) {
+                    roles.add( new RoleData( (Role) category, getPlan() ) );
+                    added.add( category.getId() );
+                }
+            }
+        }
+
+    }
+
+    private void initPlaces( PlanService planService ) throws NotFoundException {
+        places = new ArrayList<PlaceData>();
+        Set<Long> added = new HashSet<Long>();
+        for ( Long id : allPlaceIds() ) {
+            Place place = planService.find( Place.class, id );
+            places.add( new PlaceData( place, getPlan() ) );
+            added.add( id );
+            for ( ModelEntity category : place.getAllTypes() ) {
+                if ( !added.contains( category.getId() ) ) {
+                    places.add( new PlaceData( (Place) category, getPlan() ) );
+                    added.add( category.getId() );
+                }
+            }
+        }
+
+    }
+
+    private void initActors( PlanService planService ) throws NotFoundException {
+        actors = new ArrayList<AgentData>();
+        Set<Long> added = new HashSet<Long>();
+        for ( Long id : allActorIds() ) {
+            Actor actor = planService.find( Actor.class, id );
+            actors.add( new AgentData( actor, getPlan() ) );
+            added.add( id );
+            for ( ModelEntity category : actor.getAllTypes() ) {
+                if ( !added.contains( category.getId() ) ) {
+                    actors.add( new AgentData( (Actor) category, getPlan() ) );
+                    added.add( category.getId() );
+                }
+            }
+        }
+
+    }
+
+    private void initOrgs( PlanService planService ) throws NotFoundException {
+        orgs = new ArrayList<OrganizationData>();
+        Set<Long> added = new HashSet<Long>();
+        for ( Long id : allOrganizationIds() ) {
+            Organization org = planService.find( Organization.class, id );
+            orgs.add( new OrganizationData( org, planService ) );
+            added.add( id );
+            for ( ModelEntity category : org.getAllTypes() ) {
+                if ( !added.contains( category.getId() ) ) {
+                    orgs.add( new OrganizationData( (Organization) category, planService ) );
+                    added.add( category.getId() );
+                }
+            }
+            for ( Organization parent : org.ancestors() ) {
+                if ( !added.contains( parent.getId() ) ) {
+                    orgs.add( new OrganizationData( parent, planService ) );
+                    added.add( parent.getId() );
+                }
+            }
+        }
+
+    }
+
+    private void initPhases( PlanService planService ) throws NotFoundException {
+        phases = new ArrayList<PhaseData>();
+        Set<Long> added = new HashSet<Long>();
+        for ( Long id : allPhaseIds() ) {
+            Phase phase = planService.find( Phase.class, id );
+            phases.add( new PhaseData( phase, getPlan() ) );
+            added.add( id );
+            for ( ModelEntity category : phase.getAllTypes() ) {
+                if ( !added.contains( category.getId() ) ) {
+                    phases.add( new PhaseData( (Phase) category, getPlan() ) );
+                    added.add( category.getId() );
+                }
+            }
+        }
+
+    }
+
+    private void initEvents( PlanService planService ) throws NotFoundException {
+        events = new ArrayList<EventData>();
+        for ( Long eventId : allEventIds() ) {
+            Event event = planService.find( Event.class, eventId );
+            events.add( new EventData( event, getPlan() ) );
+        }
     }
 
     @XmlElement( name = "event" )
-    public List<EventData> getEvents() throws NotFoundException {
-        List<EventData> events = new ArrayList<EventData>(  );
-         for ( Long eventId : allEventIds() ) {
-             Event event = planService.find(  Event.class, eventId );
-             events.add( new EventData( event, getPlan() ) );
-         }
+    public List<EventData> getEvents() {
         return events;
     }
 
     @XmlElement( name = "phase" )
-    public List<PhaseData> getPhases() throws NotFoundException {
-        List<PhaseData> phases = new ArrayList<PhaseData>(  );
-        Set<Long> added = new HashSet<Long>(  );
-         for ( Long id : allPhaseIds() ) {
-             Phase phase = planService.find(  Phase.class, id );
-             phases.add( new PhaseData( phase, getPlan() ) );
-             added.add( id );
-             for ( ModelEntity category : phase.getAllTypes() ) {
-                 if (!added.contains( category.getId() ) ) {
-                     phases.add( new PhaseData( (Phase)category, getPlan() ) );
-                     added.add( category.getId() );
-                 }
-             }
-         }
+    public List<PhaseData> getPhases() {
         return phases;
     }
 
     @XmlElement( name = "organization" )
-    public List<OrganizationData> getOrganizations() throws NotFoundException {
-        List<OrganizationData> orgs = new ArrayList<OrganizationData>(  );
-        Set<Long> added = new HashSet<Long>(  );
-         for ( Long id : allOrganizationIds() ) {
-             Organization org = planService.find(  Organization.class, id );
-             orgs.add( new OrganizationData( org, planService ) );
-             added.add( id );
-             for ( ModelEntity category : org.getAllTypes() ) {
-                 if (!added.contains( category.getId() ) ) {
-                     orgs.add( new OrganizationData( (Organization)category, planService ) );
-                     added.add( category.getId() );
-                 }
-             }
-             for ( Organization parent : org.ancestors() ) {
-                 if (!added.contains( parent.getId() ) ) {
-                     orgs.add( new OrganizationData( parent, planService ) );
-                     added.add( parent.getId() );
-                 }
-             }
-         }
+    public List<OrganizationData> getOrganizations() {
         return orgs;
     }
 
-     @XmlElement( name = "agent" )
-    public List<AgentData> getActors() throws NotFoundException {
-        List<AgentData> actors = new ArrayList<AgentData>(  );
-         Set<Long> added = new HashSet<Long>(  );
-         for ( Long id : allActorIds() ) {
-             Actor actor = planService.find( Actor.class, id );
-             actors.add( new AgentData( actor, getPlan() ) );
-             added.add( id );
-             for ( ModelEntity category : actor.getAllTypes() ) {
-                 if (!added.contains( category.getId() ) ) {
-                     actors.add( new AgentData( (Actor)category, getPlan() ) );
-                     added.add( category.getId() );
-                 }
-             }
-         }
+    @XmlElement( name = "agent" )
+    public List<AgentData> getActors() {
         return actors;
     }
 
     @XmlElement( name = "role" )
     public List<RoleData> getRoles() throws NotFoundException {
-        List<RoleData> roles = new ArrayList<RoleData>(  );
-        Set<Long> added = new HashSet<Long>(  );
-         for ( Long id : allRoleIds() ) {
-             Role role = planService.find( Role.class, id );
-             roles.add( new RoleData( role, getPlan() ) );
-             added.add( id );
-             for ( ModelEntity category : role.getAllTypes() ) {
-                 if (!added.contains( category.getId() ) ) {
-                     roles.add( new RoleData( (Role)category, getPlan() ) );
-                     added.add( category.getId() );
-                 }
-             }
-         }
         return roles;
     }
 
     @XmlElement( name = "place" )
-    public List<PlaceData> getPlaces() throws NotFoundException {
-        List<PlaceData> places = new ArrayList<PlaceData>(  );
-        Set<Long> added = new HashSet<Long>(  );
-         for ( Long id : allPlaceIds() ) {
-             Place place = planService.find( Place.class, id );
-             places.add( new PlaceData( place, getPlan() ) );
-             added.add( id );
-             for ( ModelEntity category : place.getAllTypes() ) {
-                 if (!added.contains( category.getId() ) ) {
-                     places.add( new PlaceData( (Place)category, getPlan() ) );
-                     added.add( category.getId() );
-                 }
-             }
-         }
+    public List<PlaceData> getPlaces() {
         return places;
     }
 
     @XmlElement( name = "transmissionMedium" )
     public List<MediumData> getMedia() throws NotFoundException {
-        List<MediumData> media = new ArrayList<MediumData>(  );
-        Set<Long> added = new HashSet<Long>(  );
-         for ( Long id : allMediumIds() ) {
-             TransmissionMedium medium = planService.find( TransmissionMedium.class, id );
-             media.add( new MediumData( medium, getPlan() ) );
-             added.add( id );
-             for ( ModelEntity category : medium.getAllTypes() ) {
-                 if (!added.contains( category.getId() ) ) {
-                     media.add( new MediumData( (TransmissionMedium)category, getPlan() ) );
-                     added.add( category.getId() );
-                 }
-             }
-             for ( TransmissionMedium delegate : medium.getEffectiveDelegatedToMedia() ) {
-                 if (!added.contains( delegate.getId() ) ) {
-                     media.add( new MediumData( delegate, getPlan() ) );
-                     added.add( delegate.getId() );
-                 }
-             }
-
-         }
         return media;
     }
 
     private Set<Long> allEventIds() {
-        Set<Long> allIds = new HashSet<Long>(  );
+        Set<Long> allIds = new HashSet<Long>();
         for ( ProcedureData procedure : procedures.getProcedures() ) {
             allIds.addAll( procedure.allEventIds() );
         }
@@ -190,7 +240,7 @@ public class EnvironmentData {
     }
 
     private Set<Long> allPhaseIds() {
-        Set<Long> allIds = new HashSet<Long>(  );
+        Set<Long> allIds = new HashSet<Long>();
         for ( ProcedureData procedure : procedures.getProcedures() ) {
             allIds.addAll( procedure.allPhaseIds() );
         }
@@ -198,7 +248,7 @@ public class EnvironmentData {
     }
 
     private Set<Long> allOrganizationIds() {
-        Set<Long> allIds = new HashSet<Long>(  );
+        Set<Long> allIds = new HashSet<Long>();
         for ( EmploymentData employment : procedures.getEmployments() ) {
             allIds.add( employment.getOrganizationId() );
         }
@@ -206,12 +256,12 @@ public class EnvironmentData {
             allIds.addAll( procedure.allOrganizationIds() );
         }
         return allIds;
-     }
+    }
 
     private Set<Long> allActorIds() {
-        Set<Long> allIds = new HashSet<Long>(  );
+        Set<Long> allIds = new HashSet<Long>();
         for ( EmploymentData employment : procedures.getEmployments() ) {
-            allIds.addAll(  employment.allActorIds());
+            allIds.addAll( employment.allActorIds() );
             if ( employment.getSupervisorId() != null )
                 allIds.add( employment.getSupervisorId() );
         }
@@ -219,10 +269,10 @@ public class EnvironmentData {
             allIds.addAll( procedure.allActorIds() );
         }
         return allIds;
-     }
+    }
 
     private Set<Long> allRoleIds() {
-        Set<Long> allIds = new HashSet<Long>(  );
+        Set<Long> allIds = new HashSet<Long>();
         for ( EmploymentData employment : procedures.getEmployments() ) {
             allIds.add( employment.getRoleId() );
         }
@@ -230,10 +280,10 @@ public class EnvironmentData {
             allIds.addAll( procedure.allRoleIds() );
         }
         return allIds;
-     }
+    }
 
     private Set<Long> allPlaceIds() {
-        Set<Long> allIds = new HashSet<Long>(  );
+        Set<Long> allIds = new HashSet<Long>();
         for ( EmploymentData employment : procedures.getEmployments() ) {
             if ( employment.getJurisdictionId() != null )
                 allIds.add( employment.getJurisdictionId() );
@@ -242,17 +292,17 @@ public class EnvironmentData {
             allIds.addAll( procedure.allPlaceIds() );
         }
         return allIds;
-     }
+    }
 
     private Set<Long> allMediumIds() {
-        Set<Long> allIds = new HashSet<Long>(  );
+        Set<Long> allIds = new HashSet<Long>();
         for ( ProcedureData procedure : procedures.getProcedures() ) {
             allIds.addAll( procedure.allMediumIds() );
         }
         return allIds;
-     }
+    }
 
     private Plan getPlan() {
-        return planService.getPlan();
+        return plan;
     }
 }

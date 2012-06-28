@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.procedures.ChannelData;
-import com.mindalliance.channels.pages.reports.AnchoredLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 
@@ -23,8 +22,8 @@ public class ContactLinkPanel extends AbstractDataPanel {
     private List<ChannelData> personalAddresses;
 
 
-    public ContactLinkPanel( String id, ContactData contactData ) {
-        super( id );
+    public ContactLinkPanel( String id, ContactData contactData, ProtocolsFinder finder ) {
+        super( id, finder );
         this.contactData = contactData;
         init();
     }
@@ -33,11 +32,13 @@ public class ContactLinkPanel extends AbstractDataPanel {
             String id,
             ContactData contactData,
             List<ChannelData> workAddresses,
-            List<ChannelData> personalAddresses ) {
-        super( id );
+            List<ChannelData> personalAddresses,
+            ProtocolsFinder finder ) {
+        super( id, finder );
         this.contactData = contactData;
         this.workAddresses = workAddresses;
         this.personalAddresses = personalAddresses;
+        init();
     }
 
     private void init() {
@@ -47,14 +48,10 @@ public class ContactLinkPanel extends AbstractDataPanel {
     }
 
      private void addContactLink() {
-        AnchoredLink<ProtocolsPage> link = new AnchoredLink<ProtocolsPage>(
-                "contactLink",
-                ProtocolsPage.class,
-                getProtocolsPage().getParameters(),
-                contactData.getId() );
-        add(  link );
-        link.add( new Label( "contact", contactData.toLabel() ) );
-    }
+         WebMarkupContainer contactLink = makeAnchor( "contactLink", "#" + contactData.getAnchor() );
+         contactLink.add( new Label( "contact", contactData.toLabel() ) );
+         add( contactLink );
+     }
 
     private void addWorkAddresses() {
         WebMarkupContainer addressContainer = new WebMarkupContainer( "work" );
@@ -62,7 +59,7 @@ public class ContactLinkPanel extends AbstractDataPanel {
         add( addressContainer );
         addressContainer.add(
                 hasWorkAddresses()
-                    ? new ContactAddressesPanel( "addresses", workAddresses )
+                    ? new ContactAddressesPanel( "addresses", workAddresses, getFinder() )
                     : new Label( "addresses", "" )
         );
     }
@@ -73,7 +70,7 @@ public class ContactLinkPanel extends AbstractDataPanel {
         add( addressContainer );
         addressContainer.add(
                 hasPersonalAddresses()
-                        ? new ContactAddressesPanel( "addresses", personalAddresses )
+                        ? new ContactAddressesPanel( "addresses", personalAddresses, getFinder() )
                         : new Label( "addresses", "" )
         );
     }

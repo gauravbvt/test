@@ -5,12 +5,46 @@
       lang="en">
 <head>
     <title>Channels - Protocols Report</title>
-    <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print" />
-    <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print" />
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print"/>
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print"/>
 </head>
 <body>
 <wicket:panel>
-    <!-- todo -->
+    <a wicket:id="anchor" name="tbd"></a>
+
+    <div wicket:id="name">John Doe</div>
+    <div wicket:id="employment">VP Sales ,Northeast, ACME Inc.</div>
+    <div wicket:id="work">
+        <label>Work addresses</label>
+
+        <div wicket:id="addresses">contact addresses panel</div>
+    </div>
+    <div wicket:id="personal">
+        <label>Personal addresses</label>
+
+        <div wicket:id="addresses">contact addresses panel</div>
+    </div>
+    <div wicket:id="availability">
+        <label>Availability</label>
+
+        <div wicket:id="available"> Always</div>
+    </div>
+    <div wicket:id="languages">
+        <label>Speaks</label>
+
+        <div wicket:id="speaks">English, Mandarin</div>
+    </div>
+    <div wicket:id="clearances">
+        <label>Clerances</label>
+
+        <div wicket:id="classifications">[security classifications panel]</div>
+    </div>
+    <div wicket:id="supervisors">
+        <label>Supervisors</label>
+        <div wicket:id="contacts">  <!-- repeated -->
+            <div wicket:id="contact">[contact link panel]</div>
+        </div>
+    </div>
 </wicket:panel>
 </body>
 </html>

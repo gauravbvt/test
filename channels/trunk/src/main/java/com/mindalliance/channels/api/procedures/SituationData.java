@@ -22,8 +22,8 @@ import java.util.List;
  * Date: 12/6/11
  * Time: 10:26 AM
  */
-@XmlType( propOrder = { "label", "eventId", "phaseId", "context"} )
-public class SituationData  extends AbstractProcedureElementData {
+@XmlType( propOrder = {"label", "eventId", "phaseId", "context"} )
+public class SituationData extends AbstractProcedureElementData {
 
     public SituationData() {
         // required
@@ -34,7 +34,7 @@ public class SituationData  extends AbstractProcedureElementData {
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        super( assignment,planService, planParticipationService, user );
+        super( assignment, planService, planParticipationService, user );
     }
 
     @XmlElement
@@ -49,7 +49,7 @@ public class SituationData  extends AbstractProcedureElementData {
 
     @XmlElement
     public List<EventTimingData> getContext() {
-        List<EventTimingData> context = new ArrayList<EventTimingData>(  );
+        List<EventTimingData> context = new ArrayList<EventTimingData>();
         for ( EventTiming eventTiming : getAssignment().getPart().getSegment().getContext() ) {
             context.add( new EventTimingData( eventTiming ) );
         }
@@ -58,16 +58,24 @@ public class SituationData  extends AbstractProcedureElementData {
 
     @XmlElement
     public String getLabel() {
-        StringBuilder sb = new StringBuilder();
         EventPhase eventPhase = getAssignment().getEventPhase();
         Phase phase = eventPhase.getPhase();
-        sb.append( phase.isPreEvent()
-                ? "Anticipating "
+        String suffix = phase.isPreEvent()
+                ? "anticipated"
                 : phase.isConcurrent()
-                ? "Start of "
-                : "End of "
-        ) ;
+                ? "occurring"
+                : "occurred";
+        return getLabel( "", suffix );
+    }
+
+    private String getLabel( String prefix, String suffix ) {
+        StringBuilder sb = new StringBuilder();
+        EventPhase eventPhase = getAssignment().getEventPhase();
+        sb.append( prefix );
+        if ( prefix != null && !prefix.isEmpty() ) sb.append( " " );
         sb.append( eventPhase.getEvent().getName() );
+        if ( suffix != null && !suffix.isEmpty() ) sb.append( " " );
+        sb.append( suffix );
         List<EventTimingData> eventTimingDataList = getContext();
         if ( getContext() != null && !getContext().isEmpty() ) {
             sb.append( ", " );
@@ -83,5 +91,14 @@ public class SituationData  extends AbstractProcedureElementData {
     }
 
 
-
+    public String getTriggerLabel() {
+        EventPhase eventPhase = getAssignment().getEventPhase();
+        Phase phase = eventPhase.getPhase();
+        String prefix = phase.isPreEvent()
+                ? "before"
+                : phase.isConcurrent()
+                ? "during"
+                : "after";
+        return getLabel( prefix, "" );
+    }
 }

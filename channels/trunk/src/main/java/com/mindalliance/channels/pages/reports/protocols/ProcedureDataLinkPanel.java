@@ -15,15 +15,15 @@ import org.apache.wicket.markup.html.basic.Label;
 public class ProcedureDataLinkPanel extends AbstractDataPanel {
     private ProcedureData procedureData;
 
-    public ProcedureDataLinkPanel( String id, ProcedureData procedureData ) {
-        super( id );
+    public ProcedureDataLinkPanel( String id, ProcedureData procedureData, ProtocolsFinder finder ) {
+        super( id, finder );
         this.procedureData = procedureData;
         init();
     }
 
     private void init() {
         WebMarkupContainer link = new WebMarkupContainer( "link" );
-        link.add(  new AttributeModifier( "href", procedureData.getAnchor() ) );
+        link.add(  new AttributeModifier( "href", "#" + procedureData.getAnchor() ) );
         add( link );
         link.add( new Label( "label", procedureData.getLabel() ) );
     }

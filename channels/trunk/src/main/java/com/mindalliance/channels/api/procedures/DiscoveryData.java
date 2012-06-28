@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
+import java.io.Serializable;
 
 /**
  * Web Service data element for a discovery made by an agent.
@@ -15,12 +16,11 @@ import javax.xml.bind.annotation.XmlElement;
  * Date: 12/6/11
  * Time: 12:49 PM
  */
-public class DiscoveryData {
+public class DiscoveryData  implements Serializable {
 
-    private PlanService planService;
-    private PlanParticipationService planParticipationService;
     private ChannelsUser user;
     private Flow notificationToSelf;
+    private InfoDiscoveredData infoDiscoveredData;
 
     public DiscoveryData() {
         // required
@@ -32,18 +32,21 @@ public class DiscoveryData {
                           PlanParticipationService planParticipationService,
                           ChannelsUser user ) {
         this.notificationToSelf = notificationToSelf;
-        this.planService = planService;
-        this.planParticipationService = planParticipationService;
         this.user = user;
+        initData( planService, planParticipationService );
+    }
+
+    private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
+        if ( notificationToSelf != null )
+            infoDiscoveredData = new InfoDiscoveredData( notificationToSelf, planService, planParticipationService, user );
+        else
+            infoDiscoveredData = null;
     }
 
 
     @XmlElement
     public InfoDiscoveredData getInformationDiscovered() {
-        if ( notificationToSelf != null )
-            return new InfoDiscoveredData( notificationToSelf, planService, planParticipationService, user );
-        else
-            return null;
+        return infoDiscoveredData;
     }
 
 }

@@ -1,9 +1,12 @@
 package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.api.SecurityClassificationData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
+import org.apache.commons.lang.StringUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -19,7 +22,7 @@ import java.util.List;
  * Time: 10:02 AM
  */
 @XmlType( propOrder = {"id", "name", "hasUniqueIdentity", "isAnonymous", "categories", "kind",
-        "availability", "languages", "documentation"} )
+        "availability", "languages", "classifications", "documentation"} )
 public class AgentData extends ModelEntityData {
 
     public AgentData() {
@@ -67,7 +70,7 @@ public class AgentData extends ModelEntityData {
     public List<String> getLanguages() {
         List<String> languages = new ArrayList<String>();
         for ( String language : getActor().getEffectiveLanguages( getPlan() ) ) {
-            languages.add( language );
+            languages.add( StringUtils.capitalize( language.toLowerCase() ) );
         }
         return languages;
     }
@@ -77,6 +80,16 @@ public class AgentData extends ModelEntityData {
         return new AvailabilityData( getActor().getAvailability() );
     }
 
+    @XmlElement( name = "clearance" )
+    public List<SecurityClassificationData> getClassifications() {
+        List<SecurityClassificationData> classifications = new ArrayList<SecurityClassificationData>();
+        for ( Classification classification : getActor().getClearances() ) {
+            classifications.add( new SecurityClassificationData( classification ) );
+        }
+        return classifications;
+    }
+
+
     @XmlElement
     @Override
     public DocumentationData getDocumentation() {
@@ -85,6 +98,10 @@ public class AgentData extends ModelEntityData {
 
     private Actor getActor() {
         return (Actor) getModelObject();
+    }
+
+    public String getLanguagesLabel() {
+        return StringUtils.join( getLanguages(), ", ");
     }
 
 }

@@ -3,6 +3,7 @@ package com.mindalliance.channels.api.plan;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 @XmlRootElement( name = "plans", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"date", "planSummaries"} )
-public class PlanSummariesData {
+public class PlanSummariesData  implements Serializable {
 
     private List<PlanSummaryData> planSummaries;
 

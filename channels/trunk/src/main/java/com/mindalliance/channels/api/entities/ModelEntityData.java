@@ -18,7 +18,7 @@ import java.util.List;
  */
 abstract public class ModelEntityData extends ModelObjectData {
 
-    public ModelEntityData() {
+    public ModelEntityData()  {
     }
 
     public ModelEntityData( ModelObject modelObject, Plan plan ) {

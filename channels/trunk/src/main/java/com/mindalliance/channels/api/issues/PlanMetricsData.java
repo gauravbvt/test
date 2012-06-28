@@ -16,6 +16,7 @@ import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,29 +28,32 @@ import java.util.List;
  * Date: 12/14/11
  * Time: 6:10 PM
  */
-public class PlanMetricsData {
+public class PlanMetricsData  implements Serializable {
 
-    private PlanService planService;
 
     private static Class[] ModelObjectClasses = {
             Event.class, Phase.class, Actor.class, Organization.class, Role.class, Place.class,
             TransmissionMedium.class, Segment.class, Part.class, Flow.class, Connector.class, Requirement.class
     };
+    private List<ModelObjectCountData> counts;
 
     public PlanMetricsData() {
         // required
     }
 
     public PlanMetricsData( PlanService planService ) {
-        this.planService = planService;
+        init( planService );
     }
 
-    @XmlElement( name = "count")
-    public List<ModelObjectCountData> getModelObjectCounts() {
-        List<ModelObjectCountData> counts = new ArrayList<ModelObjectCountData>(  );
+    private void init( PlanService planService ) {
+        counts = new ArrayList<ModelObjectCountData>();
         for ( Class moClass : ModelObjectClasses ) {
-            counts.add( new ModelObjectCountData( (Class<? extends ModelObject>)moClass, planService ) );
+            counts.add( new ModelObjectCountData( (Class<? extends ModelObject>) moClass, planService ) );
         }
+    }
+
+    @XmlElement( name = "count" )
+    public List<ModelObjectCountData> getModelObjectCounts() {
         return counts;
     }
 

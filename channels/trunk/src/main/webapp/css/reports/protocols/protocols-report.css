@@ -37,7 +37,7 @@ div.header {
     background: url('../../../images/global-header-bg.png') #c3d9ff;
     border-left: 1px solid #999999;
     border-right:1px solid #999999;
-    border-bottom:px solid #999999;
+    border-bottom:1px solid #999999;
     font-size:12px;
     float:left;
 }

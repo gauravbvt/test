@@ -10,10 +10,15 @@
 </head>
 <body>
 <wicket:panel>
-    <div wicket:id="addressesContainer">
-        <div wicket:id="addresses">  <!-- repeated -->
-            <div wicket:id="namedAddress">an address</div>
-            <a wicket:id="linkedAddress" href="#"><span wicket:id="address">john.doe@email.com</span> </a>
+    <div wicket:id="allEois">
+        <div wicket:id="eois"> <!-- repeated -->
+            <div wicket:id="name">content</div>
+            <div wicket:id="classificationContainer">
+                <label>Classified as</label>
+                <div wicket:id="classifications">[classifications data panel]</div>   <!-- repeated -->
+            </div>
+            <div wicket:id="description">description</div>
+            <div wicket:id="handling">handling instructions</div>
         </div>
     </div>
 </wicket:panel>

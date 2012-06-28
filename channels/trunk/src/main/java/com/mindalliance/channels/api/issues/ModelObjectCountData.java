@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Web service data element for model object count metric.
@@ -20,19 +21,58 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 12/15/11
  * Time: 10:18 AM
  */
-@XmlType( propOrder = { "type", "value" })
-public class ModelObjectCountData {
+@XmlType( propOrder = {"type", "value"} )
+public class ModelObjectCountData  implements Serializable {
+
+    private int value;
+    private int partCount;
+    private int flowCount;
+    private int connectorCount;
 
     public ModelObjectCountData() {
         // required
     }
 
     private Class<? extends ModelObject> modelObjectClass;
-    private PlanService planService;
 
     public ModelObjectCountData( Class<? extends ModelObject> modelObjectClass, PlanService planService ) {
         this.modelObjectClass = modelObjectClass;
-        this.planService = planService;
+        init( planService );
+    }
+
+    private void init( PlanService planService ) {
+        initValue( planService );
+        initCounts( planService );
+    }
+
+    private void initCounts( PlanService planService ) {
+        connectorCount = 0;
+        for ( Segment segment : planService.getPlan().getSegments() ) {
+            connectorCount += segment.listConnectors().size();
+        }
+        flowCount = 0;
+        for ( Segment segment : planService.getPlan().getSegments() ) {
+            flowCount += segment.getAllSharingFlows().size();
+        }
+        partCount = 0;
+        for ( Segment segment : planService.getPlan().getSegments() ) {
+            partCount += segment.listParts().size();
+        }
+    }
+
+    private void initValue( PlanService planService ) {
+        if ( Segment.class.isAssignableFrom( modelObjectClass ) ) {
+            value = planService.getPlan().getSegmentCount();
+        } else if ( Part.class.isAssignableFrom( modelObjectClass ) ) {
+            value = partCount();
+        } else if ( Flow.class.isAssignableFrom( modelObjectClass ) ) {
+            value = flowCount();
+        } else if ( Connector.class.isAssignableFrom( modelObjectClass ) ) {
+            value = connectorCount();
+        } else {
+            value = planService.list( modelObjectClass ).size();
+        }
+
     }
 
     @XmlElement
@@ -41,52 +81,30 @@ public class ModelObjectCountData {
             return "flow";
         } else if ( Part.class.isAssignableFrom( modelObjectClass ) ) {
             return "task";
-        }  else if ( Actor.class.isAssignableFrom( modelObjectClass ) ) {
+        } else if ( Actor.class.isAssignableFrom( modelObjectClass ) ) {
             return "agent";
-        }   else if ( TransmissionMedium.class.isAssignableFrom( modelObjectClass ) ) {
+        } else if ( TransmissionMedium.class.isAssignableFrom( modelObjectClass ) ) {
             return "medium";
-        }else {
+        } else {
             return modelObjectClass.getSimpleName().toLowerCase();
         }
     }
 
     @XmlElement
     public int getValue() {
-       if ( Segment.class.isAssignableFrom( modelObjectClass ) ) {
-            return planService.getPlan().getSegmentCount();
-        } else if ( Part.class.isAssignableFrom( modelObjectClass ) ) {
-            return partCount();
-        }  else if ( Flow.class.isAssignableFrom( modelObjectClass ) ) {
-            return flowCount();
-        }  else if ( Connector.class.isAssignableFrom( modelObjectClass ) ) {
-            return connectorCount();
-        } else {
-            return planService.list( modelObjectClass ).size();
-        }
+        return value;
     }
 
     private int partCount() {
-        int count = 0;
-        for ( Segment segment : planService.getPlan().getSegments() ) {
-            count += segment.listParts().size();
-        }
-        return count;
+        return partCount;
     }
 
     private int flowCount() {
-         int count = 0;
-         for ( Segment segment : planService.getPlan().getSegments() ) {
-             count += segment.getAllSharingFlows().size();
-         }
-         return count;
-     }
+        return flowCount;
+    }
 
     private int connectorCount() {
-        int count = 0;
-        for ( Segment segment : planService.getPlan().getSegments() ) {
-            count += segment.listConnectors().size();
-        }
-        return count;
+        return connectorCount;
     }
 
 }

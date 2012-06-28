@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,18 +29,77 @@ import java.util.Set;
  */
 @XmlType( propOrder = {"planIdentifier", "dateVersioned", "description", "planners", "participations", "openActors", "supervised", "documentation"} )
 
-public class PlanSummaryData {
+public class PlanSummaryData  implements Serializable {
 
-    private PlanService planService;
-    private ChannelsUserDao userDao;
+    private List<UserData> planners;
+    private List<ParticipationData> participationDataList;
+    private List<AgentData> openActorList;
+    private List<Actor> actors;
+    private List<Actor> supervisedActors;
+    private Plan plan;
 
     public PlanSummaryData() {
         // required
     }
 
     public PlanSummaryData( PlanService planService, ChannelsUserDao userDao ) {
-        this.planService = planService;
-        this.userDao = userDao;
+        init( planService, userDao );
+    }
+
+    private void init( PlanService planService, ChannelsUserDao userDao ) {
+        plan = planService.getPlan();
+        initPlanners( planService );
+        initParticipations( planService, userDao );
+        initOpenActors( planService, userDao );
+        initParticipantActors( planService, userDao );
+        initSupervised( planService, userDao );
+    }
+
+    private void initSupervised( PlanService planService, ChannelsUserDao userDao ) {
+        Set<Actor> supervisedSet = new HashSet<Actor>();
+        for ( Actor actor : getParticipantActors() ) {
+            supervisedSet.addAll( planService.findSupervised( actor ) );
+        }
+        supervisedActors = new ArrayList<Actor>( supervisedSet );
+    }
+
+    private void initParticipantActors( PlanService planService, ChannelsUserDao userDao ) {
+        actors = new ArrayList<Actor>();
+        List<PlanParticipation> participations = planService.findParticipations(
+                ChannelsUser.current( userDao ).getUsername(), getPlan() );
+        for ( PlanParticipation participation : participations ) {
+            Actor actor = participation.getActor( planService );
+            if ( actor != null ) actors.add( actor );
+        }
+
+    }
+
+    private void initOpenActors( PlanService planService, ChannelsUserDao userDao ) {
+        openActorList = new ArrayList<AgentData>(  );
+        ChannelsUser user = ChannelsUser.current( userDao );
+        List<Actor> openActors = planService.findOpenActors( user, getPlan() );
+        for ( Actor openActor : openActors ) {
+            openActorList.add( new AgentData( openActor, getPlan() ) );
+        }
+
+    }
+
+    private void initParticipations( PlanService planService, ChannelsUserDao userDao ) {
+        participationDataList = new ArrayList<ParticipationData>();
+        ChannelsUser user = ChannelsUser.current( userDao );
+        List<PlanParticipation> participations = planService.findParticipations( user.getUsername(), getPlan() );
+        for ( PlanParticipation participation : participations ) {
+            participationDataList.add( new ParticipationData( participation, user, planService ) );
+        }
+
+    }
+
+    private void initPlanners( PlanService planService ) {
+         planners = new ArrayList<UserData>();
+        for ( ChannelsUser planner : planService.getUserDao().getPlanners( getPlan().getUri() ) ) {
+            planners.add( new UserData( planner ) );
+        }
+
     }
 
     @XmlElement
@@ -58,32 +118,16 @@ public class PlanSummaryData {
 
     @XmlElement( name = "planner" )
     public List<UserData> getPlanners() {
-        List<UserData> planners = new ArrayList<UserData>();
-        for ( ChannelsUser planner : planService.getUserDao().getPlanners( getPlan().getUri() ) ) {
-            planners.add( new UserData( planner ) );
-        }
         return planners;
     }
 
     @XmlElement( name = "participatingAs" )
     public List<ParticipationData> getParticipations() {
-        List<ParticipationData> participationDataList = new ArrayList<ParticipationData>();
-        ChannelsUser user = ChannelsUser.current( userDao );
-        List<PlanParticipation> participations = planService.findParticipations( user.getUsername(), getPlan() );
-        for ( PlanParticipation participation : participations ) {
-            participationDataList.add( new ParticipationData( participation, user, planService ) );
-        }
-        return participationDataList;
+                return participationDataList;
     }
 
     @XmlElement( name = "openAgent" )
     public List<AgentData> getOpenActors() {
-        List<AgentData> openActorList = new ArrayList<AgentData>(  );
-        ChannelsUser user = ChannelsUser.current( userDao );
-        List<Actor> openActors = planService.findOpenActors( user, getPlan() );
-        for ( Actor openActor : openActors ) {
-            openActorList.add( new AgentData( openActor, getPlan() ) );
-        }
         return openActorList;
     }
 
@@ -102,25 +146,14 @@ public class PlanSummaryData {
     }
 
     private List<Actor> getParticipantActors() {
-        List<Actor> actors = new ArrayList<Actor>();
-        List<PlanParticipation> participations = planService.findParticipations(
-                ChannelsUser.current( userDao ).getUsername(), getPlan() );
-        for ( PlanParticipation participation : participations ) {
-            Actor actor = participation.getActor( planService );
-            if ( actor != null ) actors.add( actor );
-        }
         return actors;
     }
 
     private List<Actor> findSupervised() {
-        Set<Actor> supervisedSet = new HashSet<Actor>();
-        for ( Actor actor : getParticipantActors() ) {
-            supervisedSet.addAll( planService.findSupervised( actor ) );
-        }
-        return new ArrayList<Actor>( supervisedSet );
+        return supervisedActors;
     }
 
     private Plan getPlan() {
-        return planService.getPlan();
+        return plan;
     }
 }

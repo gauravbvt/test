@@ -13,8 +13,8 @@ import org.apache.wicket.markup.html.basic.Label;
  */
 public class ObservationTriggerDataPanel extends AbstractTriggerDataPanel {
 
-    public ObservationTriggerDataPanel( String id, TriggerData triggerData ) {
-        super( id, triggerData );
+    public ObservationTriggerDataPanel( String id, TriggerData triggerData, ProtocolsFinder finder ) {
+        super( id, triggerData, finder );
         init();
     }
 

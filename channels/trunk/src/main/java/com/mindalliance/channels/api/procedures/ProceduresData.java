@@ -17,6 +17,7 @@ import com.mindalliance.channels.core.query.PlanService;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,16 +35,16 @@ import java.util.Set;
  */
 @XmlRootElement( name = "procedures", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"date", "planIdentifier", "dateVersioned", "actorIds", "employments", "procedures", "environment"} )
-public class ProceduresData {
+public class ProceduresData  implements Serializable {
 
     private Plan plan;
     private List<Actor> actors;
-    private PlanService planService;
-    private PlanParticipationService planParticipationService;
     private ChannelsUser user;
     private Assignments assignments;
     private List<ProcedureData> procedures;
     private List<EmploymentData> employments;
+    private List<Actor> participatingActors;
+    private EnvironmentData environmentData;
 
 
     public ProceduresData() {
@@ -57,10 +58,17 @@ public class ProceduresData {
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         this.plan = plan;
-        this.planService = planService;
-        this.planParticipationService = planParticipationService;
         this.user = user;
+        initData( participations, planService, planParticipationService );
+    }
+
+    private void initData(
+            List<PlanParticipation> participations,
+            PlanService planService,
+            PlanParticipationService planParticipationService ) {
+        initParticipatingActors( participations, planService, planParticipationService );
         this.actors = getActors( participations );
+        initData( planService, planParticipationService );
     }
 
     public ProceduresData(
@@ -69,10 +77,55 @@ public class ProceduresData {
             PlanService planService,
             PlanParticipationService planParticipationService ) {
         this.plan = plan;
-        this.planService = planService;
-        this.planParticipationService = planParticipationService;
         this.actors = new ArrayList<Actor>();
         actors.add( actor );
+        initData( planService, planParticipationService );
+    }
+
+    private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
+        initProcedures( planService, planParticipationService );
+        initEmployments( planService, planParticipationService );
+        environmentData =  new EnvironmentData( this, planService );
+    }
+
+    private void initEmployments( PlanService planService, PlanParticipationService planParticipationService ) {
+        employments = new ArrayList<EmploymentData>();
+        for ( Actor actor : actors )
+            for ( Employment employment : planService.findAllEmploymentsForActor( actor ) ) {
+                employments.add( new EmploymentData( employment ) );
+            }
+    }
+
+    private void initProcedures( PlanService planService, PlanParticipationService planParticipationService ) {
+        procedures = new ArrayList<ProcedureData>();
+        Commitments allCommitments = planService.getAllCommitments( true, false );
+        Set<Assignment> assignments = new HashSet<Assignment>();
+        for ( Actor actor : actors ) {
+            for ( Assignment assignment : getActorAssignments( actor, planService ) ) {
+                assignments.add( assignment );
+            }
+        }
+        for ( Assignment assignment : assignments ) {
+            procedures.add( new ProcedureData(
+                    assignment,
+                    allCommitments.benefiting( assignment ),
+                    allCommitments.committing( assignment ),
+                    planService,
+                    planParticipationService,
+                    user ) );
+        }
+    }
+
+    private void initParticipatingActors(
+            List<PlanParticipation> participations,
+            PlanService planService,
+            PlanParticipationService planParticipationService ) {
+        participatingActors = new ArrayList<Actor>();
+        for ( PlanParticipation participation : participations ) {
+            Actor actor = participation.getActor( planService );
+            if ( actor != null ) participatingActors.add( actor );
+        }
+
     }
 
 
@@ -101,57 +154,26 @@ public class ProceduresData {
     }
 
     private List<Actor> getActors( List<PlanParticipation> participations ) {
-        List<Actor> participatingActors = new ArrayList<Actor>();
-        for ( PlanParticipation participation : participations ) {
-            Actor actor = participation.getActor( planService );
-            if ( actor != null ) participatingActors.add( actor );
-        }
         return participatingActors;
     }
 
     @XmlElement( name = "employment" )
     // Get given actor's or user's employments
     public List<EmploymentData> getEmployments() {
-        if ( employments == null ) {
-            employments = new ArrayList<EmploymentData>();
-            for ( Actor actor : actors )
-                for ( Employment employment : planService.findAllEmploymentsForActor( actor ) ) {
-                    employments.add( new EmploymentData( employment ) );
-                }
-        }
         return employments;
     }
 
     @XmlElement( name = "procedure" )
     public List<ProcedureData> getProcedures() {
-        if ( procedures == null ) {
-            procedures = new ArrayList<ProcedureData>();
-            Commitments allCommitments = planService.getAllCommitments( true, false );
-            Set<Assignment> assignments = new HashSet<Assignment>();
-            for ( Actor actor : actors ) {
-                for ( Assignment assignment : getActorAssignments( actor ) ) {
-                    assignments.add( assignment );
-                }
-            }
-            for ( Assignment assignment : assignments ) {
-                procedures.add( new ProcedureData(
-                        assignment,
-                        allCommitments.benefiting( assignment ),
-                        allCommitments.committing( assignment ),
-                        planService,
-                        planParticipationService,
-                        user ) );
-            }
-        }
         return procedures;
     }
 
     @XmlElement
     public EnvironmentData getEnvironment() {
-        return new EnvironmentData( this, planService );
+        return environmentData;
     }
 
-    private Assignments getActorAssignments( Actor actor ) {
+    private Assignments getActorAssignments( Actor actor, PlanService planService ) {
         if ( assignments == null ) {
             assignments = planService.getAssignments().with( new ResourceSpec( actor ) );
         }
@@ -159,7 +181,7 @@ public class ProceduresData {
     }
 
     public List<Employment> getContactEmployments() {
-        List<Employment> contactEmployments = new ArrayList<Employment>(  );
+        List<Employment> contactEmployments = new ArrayList<Employment>();
         for ( ProcedureData procedureData : procedures ) {
             contactEmployments.addAll( procedureData.getContactEmployments() );
         }
@@ -168,14 +190,6 @@ public class ProceduresData {
 
     public Plan getPlan() {
         return plan;
-    }
-
-    public PlanService getPlanService() {
-        return planService;
-    }
-
-    public PlanParticipationService getPlanParticipationService() {
-        return planParticipationService;
     }
 
     public ChannelsUser getUser() {

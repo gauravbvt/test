@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Place;
 
 import javax.xml.bind.annotation.XmlElement;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Set;
  * Date: 3/21/12
  * Time: 9:28 PM
  */
-public class ObservationData {
+public class ObservationData  implements Serializable {
 
     private EventPhase eventPhase;
     private List<EventTiming> eventTimings;

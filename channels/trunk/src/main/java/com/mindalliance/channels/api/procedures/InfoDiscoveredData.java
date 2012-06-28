@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -17,12 +18,12 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 1:18 PM
  */
 @XmlType( propOrder = {"information", "doingTask", "followUpTask", "documentation"} )
-public class InfoDiscoveredData {
+public class InfoDiscoveredData  implements Serializable {
 
     private Flow notificationToSelf;
-    private PlanService planService;
-    private PlanParticipationService planParticipationService;
     private ChannelsUser user;
+    private TaskData doingTaskData;
+    private TaskData followUpTaskData;
 
     public InfoDiscoveredData() {
         // required
@@ -33,9 +34,21 @@ public class InfoDiscoveredData {
                                PlanParticipationService planParticipationService,
                                ChannelsUser user ) {
         this.notificationToSelf = notificationToSelf;
-        this.planService = planService;
-        this.planParticipationService = planParticipationService;
         this.user = user;
+        initData( planService, planParticipationService );
+    }
+
+    private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
+        doingTaskData = new TaskData(
+                (Part)notificationToSelf.getSource(),
+                planService,
+                planParticipationService,
+                user );
+        followUpTaskData = new TaskData(
+                (Part)notificationToSelf.getTarget(),
+                planService,
+                planParticipationService,
+                user );
     }
 
     @XmlElement
@@ -45,12 +58,12 @@ public class InfoDiscoveredData {
 
     @XmlElement
     public TaskData getDoingTask() {
-        return new TaskData( (Part)notificationToSelf.getSource(), planService, planParticipationService, user );
+        return doingTaskData;
     }
 
     @XmlElement
     public TaskData getFollowUpTask() {
-        return new TaskData( (Part)notificationToSelf.getTarget(), planService, planParticipationService, user );
+        return followUpTaskData;
     }
 
     @XmlElement

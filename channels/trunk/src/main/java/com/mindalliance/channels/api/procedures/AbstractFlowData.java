@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.PlanService;
 
@@ -28,6 +29,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     private List<ContactData> bypassContacts;
     private List<Employment> employments;
     private List<Employment> bypassEmployments;
+    private Level failureSeverity;
 
     public AbstractFlowData() {
         // required
@@ -41,6 +43,30 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
             ChannelsUser user ) {
         super( assignment, planService, planParticipationService, user );
         this.sharing = sharing;
+    }
+
+    protected void initData( PlanService planService, PlanParticipationService planParticipationService ) {
+        initContacts( planService, planParticipationService );
+        initBypassContact( planService, planParticipationService );
+        initFailureSeverity( planService );
+    }
+
+    private void initFailureSeverity( PlanService planService ) {
+        failureSeverity = planService.computeSharingPriority( getSharing() );
+    }
+
+    private void initBypassContact( PlanService planService, PlanParticipationService planParticipationService ) {
+        bypassContacts = new ArrayList<ContactData>();
+        for ( Employment employment : ListBypassContactEmployments() ) {
+            bypassContacts.addAll( findContactsFromEmployment( employment, planService, planParticipationService ) );
+        }
+    }
+
+    private void initContacts( PlanService planService, PlanParticipationService planParticipationService ) {
+        contacts = new ArrayList<ContactData>();
+        for ( Employment employment : listContactEmployments() ) {
+            contacts.addAll( findContactsFromEmployment( employment, planService, planParticipationService ) );
+        }
     }
 
     protected Flow getSharing() {
@@ -61,6 +87,14 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
                 : getSharing().getIntent().getLabel();
     }
 
+    public boolean isContextCommunicated() {
+        return sharing.isReferencesEventPhase();
+    }
+
+    public String getCommunicableContext() {
+        return sharing.getSegment().getPhaseEventTitle();
+    }
+
     public String getCommunicatedContext() {
         return sharing.isReferencesEventPhase()
                 ? sharing.getSegment().getPhaseEventTitle()
@@ -68,80 +102,28 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     public List<ContactData> getContacts() {
-        if ( contacts == null ) {
-            contacts = new ArrayList<ContactData>();
-            for ( Employment employment : contactEmployments() ) {
-                contacts.addAll( findContactsFromEmployment( employment)  );
-            }
-        }
         return contacts;
     }
 
     public List<ContactData> getBypassContacts() {
-        if ( bypassContacts == null ) {
-            bypassContacts = new ArrayList<ContactData>();
-            for ( Employment employment : bypassContactEmployments() ) {
-                bypassContacts.addAll( findContactsFromEmployment( employment)  );
-            }
-        }
         return bypassContacts;
 
     }
-    
-    private List<ContactData> findContactsFromEmployment( Employment employment ) {
+
+    private List<ContactData> findContactsFromEmployment(
+            Employment employment,
+            PlanService planService,
+            PlanParticipationService planParticipationService ) {
         return ContactData.findContactsFromEmployment(
                 employment,
-                getPlanService(),
-                getPlanParticipationService(),
+                planService,
+                planParticipationService,
                 getUser()
         );
-/*
-        List<ContactData> contactList = new ArrayList<ContactData>(  );
-        Actor actor = employment.getActor();
-        if ( actor.isAnonymousParticipation() ) {
-            contactList.add( new ContactData(
-                    employment,
-                    null,
-                    true,
-                    getPlanService(),
-                    getPlanParticipationService() ) );
-        } else {
-            List<PlanParticipation> otherParticipations = getOtherParticipations( actor );
-            if ( otherParticipations.isEmpty() || !actor.isSingularParticipation() ) {
-                contactList.add( new ContactData(
-                        employment,
-                        null,
-                        true,
-                        getPlanService(),
-                        getPlanParticipationService() ) );
-            }
-            for ( PlanParticipation otherParticipation : otherParticipations ) {
-                contactList.add( new ContactData(
-                        employment,
-                        otherParticipation.getParticipant(),
-                        true,
-                        getPlanService(),
-                        getPlanParticipationService() ) );
-            }
-        }
-        return contactList;
-*/
+
     }
 
- /*   private List<PlanParticipation> getOtherParticipations( Actor actor ) {
-        List<PlanParticipation> otherParticipations = new ArrayList<PlanParticipation>();
-        List<PlanParticipation> participations = getPlanParticipationService().getParticipations(
-                getPlan(),
-                actor,
-                getPlanService() );
-        for ( PlanParticipation participation : participations ) {
-            if ( getUsername() == null || !getUsername().equals( participation.getParticipantUsername() ) ) {
-                otherParticipations.add( participation );
-            }
-        }
-        return otherParticipations;
-    }
-*/
+
     public List<Long> getMediumIds() {
         List<Long> media = new ArrayList<Long>();
         for ( TransmissionMedium medium : getSharing().transmissionMedia() ) {
@@ -170,7 +152,11 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     public String getFailureImpact() {
-        return getPlanService().computeSharingPriority( getSharing() ).getNegativeLabel();
+        return getFailureSeverity().getNegativeLabel();
+    }
+
+    public Level getFailureSeverity() {
+        return failureSeverity;
     }
 
     public Set<Long> allOrganizationIds() {
@@ -226,7 +212,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return new DocumentationData( getSharing() );
     }
 
-    protected List<Employment> contactEmployments() {
+    protected List<Employment> listContactEmployments() {
         if ( employments == null ) {
             employments = findContactEmployments();
         }
@@ -235,7 +221,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public abstract boolean isNotification();
 
-    protected List<Employment> bypassContactEmployments() {
+    protected List<Employment> ListBypassContactEmployments() {
         if ( bypassEmployments == null ) {
             bypassEmployments = findBypassContactEmployments();
         }
@@ -243,16 +229,15 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     private List<Employment> allEmployments() {
-        List<Employment> allEmployments = new ArrayList<Employment>(  );
-        allEmployments.addAll( contactEmployments() );
-        allEmployments.addAll( bypassContactEmployments() );
+        List<Employment> allEmployments = new ArrayList<Employment>();
+        allEmployments.addAll( listContactEmployments() );
+        allEmployments.addAll( ListBypassContactEmployments() );
         return allEmployments;
     }
 
     public abstract List<Employment> findContactEmployments();
 
     public abstract List<Employment> findBypassContactEmployments();
-
 
 
 }

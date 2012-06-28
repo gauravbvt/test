@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 /**
  * Web service data element for an attachment documenting a model object.
@@ -15,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  * Time: 9:30 AM
  */
 @XmlType( propOrder = {"type", "name", "url"} )
-public class DocumentData {
+public class DocumentData  implements Serializable {
 
     private Attachment attachment;
 

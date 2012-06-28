@@ -1,12 +1,17 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
+import com.mindalliance.channels.api.ChannelsService;
+import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.api.directory.DirectoryData;
+import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Employment;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -33,9 +38,9 @@ import java.util.Set;
 public class ProtocolsFinder implements Serializable {
 
     private ProceduresData proceduresData;
-    private final QueryService queryService;
-    private final PlanParticipationService planParticipationService;
     private final ChannelsUser user;
+    private final String username;
+    private final Long actorId;
     //
     private List<ProcedureData> ongoingProcedures;
     private Map<TriggerData, List<ProcedureData>> onObservations;
@@ -46,26 +51,43 @@ public class ProtocolsFinder implements Serializable {
     private Map<ContactData, Map<TriggerData, List<ProcedureData>>> onNotificationsByContact;
     private Map<ContactData, Map<TriggerData, List<ProcedureData>>> onRequestsByContact;
     Set<ContactData> rolodex;
-    private Map<String, List<ContactData>> alphabetizedRolodex;
+    private PlanScopeData planScopeData;
+    private DirectoryData directoryData;
+    private List<String> sortedTabs;
+    private Map<String, List<ContactData>> alphabetizedTriggerRolodex;
 
     public ProtocolsFinder( ProceduresData proceduresData,
                             QueryService queryService,
                             PlanParticipationService planParticipationService,
-                            ChannelsUser user ) {
+                            ChannelsUser user,
+                            ChannelsService channelsService,
+                            String username,
+                            Long actorId ) {
         this.proceduresData = proceduresData;
-        this.queryService = queryService;
-        this.planParticipationService = planParticipationService;
         this.user = user;
-        initFinder();
+        this.username = username;
+        this.actorId = actorId;
+        initFinder( queryService, planParticipationService, channelsService );
     }
 
-    private void initFinder() {
+    private void initFinder(
+            QueryService queryService,
+            PlanParticipationService planParticipationService,
+            ChannelsService channelsService ) {
+        Plan plan = queryService.getPlan();
+        planScopeData = channelsService.getPlanScope( plan.getUri(), Integer.toString( plan.getVersion() ) );
+        directoryData = actorId != null
+                ? channelsService.getAgentDirectory( plan.getUri(), Integer.toString( plan.getVersion() ), Long.toString( actorId ) )
+                : channelsService.getUserDirectory( plan.getUri(), Integer.toString( plan.getVersion() ), username );
         ongoingProcedures = new ArrayList<ProcedureData>();
         onObservations = new HashMap<TriggerData, List<ProcedureData>>();
         onNotificationsByContact = new HashMap<ContactData, Map<TriggerData, List<ProcedureData>>>();
         onRequestsByContact = new HashMap<ContactData, Map<TriggerData, List<ProcedureData>>>();
-        rolodex = new HashSet<ContactData>(  );
-        alphabetizedRolodex = new HashMap<String, List<ContactData>>();
+        onRequests = new HashMap<TriggerData, List<ProcedureData>>();
+        onNotifications = new HashMap<TriggerData, List<ProcedureData>>();
+        onDiscoveries = new HashMap<TriggerData, List<ProcedureData>>();
+        onResearches = new HashMap<TriggerData, List<ProcedureData>>();
+        rolodex = new HashSet<ContactData>();
         for ( ProcedureData procedureData : proceduresData.getProcedures() ) {
             processProcedureData( procedureData, queryService, planParticipationService, user );
         }
@@ -86,7 +108,6 @@ public class ProtocolsFinder implements Serializable {
                 addTo( onRequests, triggerData, procedureData );
                 for ( ContactData contactData : triggerData.getOnRequest().getContacts() ) {
                     addTo( onRequestsByContact, contactData, triggerData, procedureData );
-                    addTo( alphabetizedRolodex, contactData );
                     rolodex.add( contactData );
                 }
             }
@@ -94,7 +115,6 @@ public class ProtocolsFinder implements Serializable {
                 addTo( onNotifications, triggerData, procedureData );
                 for ( ContactData contactData : triggerData.getOnNotification().getContacts() ) {
                     addTo( onNotificationsByContact, contactData, triggerData, procedureData );
-                    addTo( alphabetizedRolodex, contactData );
                     rolodex.add( contactData );
                 }
             }
@@ -102,7 +122,7 @@ public class ProtocolsFinder implements Serializable {
                 addTo( onDiscoveries, triggerData, procedureData );
             }
             for ( TriggerData triggerData : procedureData.getResearchTriggers() ) {
-                addTo( onDiscoveries, triggerData, procedureData );
+                addTo( onResearches, triggerData, procedureData );
             }
         }
         for ( Employment employment : procedureData.getNonTriggerContactEmployments() ) {
@@ -113,12 +133,10 @@ public class ProtocolsFinder implements Serializable {
                     user
             );
             for ( ContactData contactData : contacts ) {
-                addTo( alphabetizedRolodex, contactData );
                 rolodex.add( contactData );
             }
         }
     }
-
 
     private void addTo(
             Map<ContactData, Map<TriggerData, List<ProcedureData>>> map,
@@ -134,7 +152,7 @@ public class ProtocolsFinder implements Serializable {
     }
 
     private void addTo( Map<String, List<ContactData>> map, ContactData contactData ) {
-        String firstLetter = contactData.firstLetterOfName();
+        String firstLetter = contactData.firstLetterOfName().toUpperCase();
         List<ContactData> list = map.get( firstLetter );
         if ( list == null ) {
             list = new ArrayList<ContactData>();
@@ -179,12 +197,51 @@ public class ProtocolsFinder implements Serializable {
         return onResearches;
     }
 
-    public Set<ContactData> getRolodex() {
-        return rolodex;
+    public List<ContactData> getSortedRolodex() {
+        List<ContactData> sortedRolodex = new ArrayList<ContactData>( rolodex );
+        sortContacts( sortedRolodex );
+        return sortedRolodex;
     }
 
-    public Map<String, List<ContactData>> getAlphabetizedRolodex() {
-        return alphabetizedRolodex;
+    @SuppressWarnings( "unchecked" )
+    public Map<String, List<ContactData>> getAlphabetizedTriggerRolodex() {
+        if ( alphabetizedTriggerRolodex == null ) {
+            alphabetizedTriggerRolodex = new HashMap<String, List<ContactData>>();
+            for ( final String letter : getSortedTriggerRolodexTabs() ) {
+                Set<ContactData> contacts = new HashSet<ContactData>();
+                contacts.addAll(
+                        CollectionUtils.select(
+                                onNotificationsByContact.keySet(),
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        return ( (ContactData) object ).getNormalizedContactName().substring( 0, 1 )
+                                                .equalsIgnoreCase( letter );
+                                    }
+                                }
+                        ) );
+                contacts.addAll(
+                        CollectionUtils.select(
+                                onRequestsByContact.keySet(),
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        return ( (ContactData) object ).getNormalizedContactName().substring( 0, 1 )
+                                                .equalsIgnoreCase( letter );
+                                    }
+                                }
+                        ) );
+                List<ContactData> sortedList = new ArrayList<ContactData>( contacts );
+                Collections.sort( sortedList, new Comparator<ContactData>() {
+                    @Override
+                    public int compare( ContactData cd1, ContactData cd2 ) {
+                        return cd1.getNormalizedContactName().compareTo( cd2.getNormalizedContactName() );
+                    }
+                } );
+                alphabetizedTriggerRolodex.put( letter, sortedList );
+            }
+        }
+        return alphabetizedTriggerRolodex;
     }
 
     public List<TriggerData> sortTriggerData( Collection<TriggerData> triggerDataList ) {
@@ -198,22 +255,38 @@ public class ProtocolsFinder implements Serializable {
         return sortedTriggers;
     }
 
-    public List<String> getSortedRolodexTabs() {
-        List<String> sortedTabs = new ArrayList<String>( alphabetizedRolodex.keySet() );
-        Collections.sort( sortedTabs );
+    public List<String> getSortedTriggerRolodexTabs() {
+        if ( sortedTabs == null ) {
+            Set<String> firstLetters = new HashSet<String>();
+            for ( ContactData contactData : onNotificationsByContact.keySet() ) {
+                firstLetters.add( contactData.getNormalizedContactName().substring( 0, 1 ).toUpperCase() );
+            }
+            for ( ContactData contactData : onRequestsByContact.keySet() ) {
+                firstLetters.add( contactData.getNormalizedContactName().substring( 0, 1 ).toUpperCase() );
+            }
+            sortedTabs = new ArrayList<String>( firstLetters );
+            Collections.sort( sortedTabs );
+        }
         return sortedTabs;
     }
 
     public Map<TriggerData, List<ProcedureData>> getTriggeringNotificationsFrom( ContactData contactData ) {
-        return onNotificationsByContact.get( contactData );
+        return retrieveTriggeredProcedures( onNotificationsByContact, contactData );
     }
 
     public Map<TriggerData, List<ProcedureData>> getTriggeringRequestsFrom( ContactData contactData ) {
-        return onRequestsByContact.get( contactData );
+        return retrieveTriggeredProcedures( onRequestsByContact, contactData );
+    }
+
+    private Map<TriggerData, List<ProcedureData>> retrieveTriggeredProcedures( Map<ContactData, Map<TriggerData, List<ProcedureData>>> map, ContactData contactData ) {
+        Map<TriggerData, List<ProcedureData>> results = map.get( contactData );
+        return results == null
+                ? new HashMap<TriggerData, List<ProcedureData>>()
+                : results;
     }
 
     public List<String> getSortedOrganizationNames() {
-        Set<String> names = new HashSet<String>(  );
+        Set<String> names = new HashSet<String>();
         for ( ContactData contactData : rolodex ) {
             names.add( contactData.getEmployment().getOrganizationName() );
         }
@@ -224,12 +297,12 @@ public class ProtocolsFinder implements Serializable {
 
     @SuppressWarnings( "unchecked" )
     public List<ContactData> getContactsInOrganization( final String orgName ) {
-        List<ContactData> contacts =( List<ContactData>) CollectionUtils.select(
-            rolodex,
+        List<ContactData> contacts = (List<ContactData>) CollectionUtils.select(
+                rolodex,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((ContactData)object).getEmployment().getOrganizationName().equals(  orgName );
+                        return ( (ContactData) object ).getEmployment().getOrganizationName().equals( orgName );
                     }
                 }
         );
@@ -245,7 +318,25 @@ public class ProtocolsFinder implements Serializable {
                     public int compare( ContactData c1, ContactData c2 ) {
                         return c1.getNormalizedContactName().compareTo( c2.getNormalizedContactName() );
                     }
-                });
+                } );
+    }
+
+
+    public <T extends ModelObjectData> T findInScope( Class<T> moDataClass, long moId ) {
+        return planScopeData.findInScope( moDataClass, moId );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public List<ContactData> findContacts( final long actorId ) {
+        return (List<ContactData>) CollectionUtils.select(
+                directoryData.getContacts(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (ContactData) object ).getEmployment().getActorId() == actorId;
+                    }
+                }
+        );
     }
 
 
