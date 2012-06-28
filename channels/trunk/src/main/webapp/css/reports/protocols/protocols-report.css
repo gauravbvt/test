@@ -2,6 +2,7 @@
 
 div.protocols-contents div.about {
 	padding: 20px 0;
+	display: block;
 }
 
 div.protocols-contents h1 {
@@ -34,7 +35,7 @@ div.protocols-contents h3 {
 	color: #000000;
 	font-family: arial;
 	font-size: 16px;
-	font-weight: normal;
+	font-weight: bold;
 	letter-spacing: 1px;
 	padding: 20px 0 5px;
 	text-decoration: underline;
@@ -49,13 +50,13 @@ div.protocols-contents h4 {
 
 div.protocols-contents div.about h4,
 div.protocols-contents div.participation h4 {
-	line-height: 150%;
-	padding: 20px 0 0;
-	font-size: 14px;
-	font-weight: bold;
-	text-align: center;
-	text-transform: uppercase;
-	border: none;
+border: medium none;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 150%;
+    padding: 5px 0 0;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 div.protocols-contents h5 {
@@ -83,8 +84,9 @@ div.protocols-contents h6 {
 label {
     display: block;
     font-weight: bold;
-    padding: 10px 0 0;
+    padding: 10px 0 5px 0;
     text-transform: capitalize;
+    text-decoration: underline;
 }
 
 div.protocols-contents h4 span.participationList span {
