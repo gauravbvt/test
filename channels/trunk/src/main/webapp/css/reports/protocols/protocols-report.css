@@ -37,7 +37,7 @@ div.protocols-contents h3 {
 	font-size: 16px;
 	font-weight: bold;
 	letter-spacing: 1px;
-	padding: 20px 0 5px;
+	padding: 40px 0 5px;
 	text-decoration: underline;
 	text-transform: uppercase;
 }
@@ -89,14 +89,26 @@ label {
     text-decoration: underline;
 }
 
+div.employeeContacts label {
+	padding: 0 0 5px;
+}
+
 div.protocols-contents h4 span.participationList span {
 	border-bottom: 2px solid #333333;
 }
 
 div.employeeContacts {
+background: none repeat scroll 0 0 #E8E8E8;
     border-left: 5px solid #CCCCCC;
-    margin: 20px 0 30px;
-    padding: 5px 0 10px 15px;
+    float: left;
+    margin: 20px 0 0;
+    padding: 12px 15px 15px;
+    width: 731px;
+}
+
+div.orgContact {
+	float: left;
+	width: 731px;
 }
 
 div.protocols-contents div.directory-link {
@@ -104,4 +116,22 @@ div.protocols-contents div.directory-link {
 	height: 37px;
 	width: 37px;
 	display: none;
+}
+
+div.work,
+div.personal,
+div.availability,
+div.languages,
+div.clearences,
+div.supervisors {
+border-right: 1px solid #CCCCCC;
+    float: left;
+    margin: 10px 20px 0 0;
+    min-height: 70px;
+    padding: 0 10px 0 0;
+    width: 141px;
+}
+
+div.employeeContacts div div:last-child {
+	border-right: none;
 }
