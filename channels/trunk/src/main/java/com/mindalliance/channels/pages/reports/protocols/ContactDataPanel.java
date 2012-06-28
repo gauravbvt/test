@@ -94,11 +94,13 @@ public class ContactDataPanel extends AbstractDataPanel {
     private void addAvailability() {
         WebMarkupContainer availability = new WebMarkupContainer( "availability" );
         add( availability );
-        availability.add( new Label(
-                "available",
+        availability.add(
                 agentData != null
-                        ? agentData.getAvailability().getLabel()
-                        : "???" ) );
+                        ? agentData.getAvailability().getAlways()
+                            ? new Label("available", "Always" )
+                            : new AvailabilityDataPanel( "available", agentData.getAvailability(), getFinder() )
+                        : new Label("available", "" ) );
+        availability.setVisible( agentData != null );
     }
 
     private void addLanguages() {

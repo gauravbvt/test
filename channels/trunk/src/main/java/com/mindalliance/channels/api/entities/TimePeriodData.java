@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.entities;
 
+import com.mindalliance.channels.core.model.Availability;
 import com.mindalliance.channels.core.model.TimePeriod;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -50,4 +51,7 @@ public class TimePeriodData  implements Serializable {
         return timePeriod.getToTime();
     }
 
+    public String getLabel( int dayOfWeek ) {
+        return Availability.dayOfWeek( dayOfWeek ) + ": " + timePeriod.toString();
+    }
 }

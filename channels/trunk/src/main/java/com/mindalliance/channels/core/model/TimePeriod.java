@@ -142,8 +142,7 @@ public class TimePeriod implements Serializable {
             return "Not available";
         }
         else {
-                return "From "
-                        + pad( getFromHour() )
+                return pad( getFromHour() )
                         + ":" + pad( getFromMinute() )
                         + " to "
                         + pad( getToHour() )

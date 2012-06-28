@@ -53,4 +53,5 @@ public class AvailabilityData  implements Serializable {
     public String getLabel() {
         return availability.toString();
     }
+
 }
