@@ -1,90 +1,24 @@
-* {
-    margin: 0;
-    padding: 0;
-}
-
-a {
-    color: #0143b4;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-a:hover {
-    color: #013081;
-    border-bottom: 1px dotted #013081;
-}
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
-    color: #333333;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    background: url('../../../images/global-bg.png');
-}
-
-div#container {
-    width: 800px;
-    margin: 0 auto;
-    text-align: left;
-    padding: 0;
-}
-
-div.header {
-    width: 800px;
-    height: 51px;
-    background: url('../../../images/global-header-bg.png') #c3d9ff;
-    border-left: 1px solid #999999;
-    border-right:1px solid #999999;
-    border-bottom:1px solid #999999;
-    font-size:12px;
-    float:left;
-}
-
-div.menu {
-	float:right;
-	width:500px;
-	padding:0;
-}
-
-div#contents {
-	padding: 17px;
-	width:766px;
-	border: 1px solid #999999;
-	background:#f6f6f6;
-	float:left;
-}
-
-/* ----- Header ----- */
-
-div.header img {
-	float: left;
-	border: 0;
-	padding: 0;
-}
-
 /* ----- Protocols Styling ----- */
 
-div.about {
+div.protocols-contents div.about {
 	padding: 20px 0;
 }
 
-h1 {
+div.protocols-contents h1 {
 	color: #333333;
 	font-family: Georgia;
 	font-size: 34px;
 	letter-spacing: -1px;
 	text-align: center;
-	padding: 0 0 15px;
+	padding: 20px 0 15px;
 	font-weight: normal;
 }
 
-h1 span {
+div.protocols-contents h1 span {
 	text-decoration: underline;
 }
 
-h2 {
+div.protocols-contents h2 {
 	border-bottom: 2px solid #666666;
 	color: #333333;
 	font-family: Georgia;
@@ -96,29 +30,74 @@ h2 {
 	text-transform: capitalize;
 }
 
-h3 {
+div.protocols-contents h3 {
+	color: #000000;
 	font-family: arial;
 	font-size: 16px;
 	font-weight: normal;
 	letter-spacing: 1px;
 	padding: 20px 0 5px;
+	text-decoration: underline;
 	text-transform: uppercase;
-	color: #000000;
 }
 
-h4 {
+div.protocols-contents h4 {
+	font-size: 16px;
+	font-weight: bold;
+	text-transform: capitalize;
+}
+
+div.protocols-contents div.about h4,
+div.protocols-contents div.participation h4 {
+	line-height: 150%;
+	padding: 20px 0 0;
 	font-size: 14px;
 	font-weight: bold;
-	padding: 5px 0 0 0;
 	text-align: center;
 	text-transform: uppercase;
+	border: none;
 }
 
-h4 span.participationList span {
+div.protocols-contents h5 {
+    border-bottom: 1px solid #CCCCCC;
+    color: #333333;
+    display: block;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin: 0 0 5px;
+    padding: 5px 0 10px;
+    text-transform: uppercase;
+}
+
+div.protocols-contents h6 {
+	border-right: 5px solid #CCCCCC;
+	color: #999999;
+	font-size: 16px;
+	font-weight: bold;
+	margin: 5px 0 15px;
+	padding: 2px 5px;
+	text-align: right;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    padding: 10px 0 0;
+    text-transform: capitalize;
+}
+
+div.protocols-contents h4 span.participationList span {
 	border-bottom: 2px solid #333333;
 }
 
-div.directory-link {
+div.employeeContacts {
+    border-left: 5px solid #CCCCCC;
+    margin: 20px 0 30px;
+    padding: 5px 0 10px 15px;
+}
+
+div.protocols-contents div.directory-link {
 	float: right;
 	height: 37px;
 	width: 37px;

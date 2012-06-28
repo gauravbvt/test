@@ -11,6 +11,7 @@
 @import url('reports/issues/issues-report.css');
 @import url('reports/responder/all-responders.css');
 @import url('reports/responder/responder-page.css');
+@import url('reports/protocols/protocols-report.css');
 
 /* Display - None */
 div.about {

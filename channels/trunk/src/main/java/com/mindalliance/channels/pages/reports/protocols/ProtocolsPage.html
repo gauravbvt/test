@@ -14,7 +14,7 @@
     <div class="directory-link">
         <a href="#directory">Your contacts directory</a>
     </div>
-    <div wicket:id="about">  <!--class="about"-->  <!-- class about hides this div -->
+    <div class="about" wicket:id="about">  <!--class="about"-->  <!-- class about hides this div -->
         <h1>
             Protocols
             of <span wicket:id="userOrAgentName">John Doe</span>
@@ -24,9 +24,9 @@
         <h4>Version: <span wicket:id="planVersion">12</span></h4>
         <h4><!-- Released on: --><span wicket:id="planDate">December 25, 2012</span></h4>
     </div>
-    <div id="participation">
+    <div class="participation">
         <h4>
-            Participating in this plan as
+            Participating in this plan as <br />
 					<span class="participationList" wicket:id="participationList"> <!-- repeated -->
 						<span wicket:id="employment">Employment</span>
 					</span>
@@ -54,7 +54,7 @@
         <div wicket:id="communications-toc">
             <h3>Who contacted you?</h3>
             <div wicket:id="commSections">  <!-- repeated -->
-                <div wicket:id="letter">A</div>
+                <h6 wicket:id="letter">A</h6>
                 <div wicket:id="interlocutors">  <!-- repeated -->
                     <span wicket:id="contact">[contact link panel]</span>
 
@@ -147,7 +147,7 @@
         <h2>Your contacts</h2>
         <div wicket:id="orgContacts"> <!-- repeated -->
             <div wicket:id="orgContact">[org contact panel]</div>
-            <div wicket:id="employeeContacts">  <!-- repeated -->
+            <div class="employeeContacts" wicket:id="employeeContacts">  <!-- repeated -->
                 <div wicket:id="employeeContact"> [employees contact panel with contact link anchors]</div>
             </div>
         </div>

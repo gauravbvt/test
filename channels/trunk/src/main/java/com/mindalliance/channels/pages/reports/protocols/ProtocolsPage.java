@@ -72,7 +72,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getContentsCssClass() {
-        return "guidelines-infoNeeds-contents";
+        return "protocols-contents";
     }
 
     @Override
