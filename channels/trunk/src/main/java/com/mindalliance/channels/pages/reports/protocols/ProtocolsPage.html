@@ -55,29 +55,33 @@
             <h3>Who contacted you?</h3>
             <div wicket:id="commSections">  <!-- repeated -->
                 <h6 wicket:id="letter">A</h6>
-                <div wicket:id="interlocutors">  <!-- repeated -->
+                <div class="interlocutors" wicket:id="interlocutors">  <!-- repeated -->
                     <span wicket:id="contact">[contact link panel]</span>
 
-                    <div wicket:id="askedYou">
-                         <div wicket:id="tocRequests"> <!-- repeated -->
+                    <ul class="askedYou" wicket:id="askedYou">
+                         <li class="tocRequests" wicket:id="tocRequests"> <!-- repeated -->
                              Asked you for
                             <span wicket:id="request">a request</span>
                             <span wicket:id="communicatedContext">context</span>
-                            <div wicket:id="procLinks"> <!-- repeated -->
-                                <span wicket:id="procLink">a task name</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div wicket:id="notifiedYou">
-                        <div wicket:id="tocNotifications">  <!-- repeated -->
+                            <ul>
+	                            <li class="procLinks" wicket:id="procLinks"> <!-- repeated -->
+	                                <span wicket:id="procLink">a task name</span>
+	                            </li>
+	                         </ul>
+                        </li>
+                    </ul>
+                    <ul class="notifiedYou" wicket:id="notifiedYou">
+                        <li class="tocNotifications" wicket:id="tocNotifications">  <!-- repeated -->
                             Notified you of
                             <span wicket:id="notification">a notification</span>
                             <span wicket:id="communicatedContext">context</span>
-                            <div wicket:id="procLinks"> <!-- repeated -->
-                                <span wicket:id="procLink">a task name</span>
-                            </div>
-                        </div>
-                    </div>
+                            <ul>
+	                            <li class="procLinks" wicket:id="procLinks"> <!-- repeated -->
+	                                <span wicket:id="procLink">a task name</span>
+	                            </li>
+	                         </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
