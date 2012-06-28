@@ -25,7 +25,7 @@ public class HP006_ChannelsAdminLink
 				GlobalVariables.sDescription = "Channel Administration Link is Present";
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("channelsAdministration")));
 				// Assertion: Verify that Channels Admin link is present
-				if(GlobalVariables.oElement.getText().equals("Channels administration")){
+				if(GlobalVariables.oElement.getText().equals("Channels Settings")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
 					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 

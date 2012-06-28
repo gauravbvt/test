@@ -96,7 +96,7 @@ public class CCE003_DoUndoRedoAddGoal
 							GlobalVariables.sBlank, GlobalVariables.sBlank);
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);
+					Thread.sleep(5000);
 					
 					// Enter the details
 					GlobalVariables.iStepNo++ ;
@@ -124,7 +124,7 @@ public class CCE003_DoUndoRedoAddGoal
 //					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:endsWithSegment")).click();
 					// WebElement Synchronization
 					Thread.currentThread();
-					Thread.sleep(3000);	
+					Thread.sleep(5000);	
 					// ASSERTION: When clicked on 'Achieved at end' checkbox, Goal 'Goal1' should be added 
 					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:goalsDiv:goal:0:organization:name"));
 					if (GlobalVariables.oElement.getValue().equals(GlobalVariables.testData.get("AddGoal"))) {
