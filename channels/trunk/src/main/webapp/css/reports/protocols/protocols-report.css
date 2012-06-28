@@ -88,7 +88,8 @@ div.protocols-contents h6 {
     text-align: right;
 }
 
-label {
+div.orgContact label,
+div.employeeContacts label {
     display: block;
     font-weight: bold;
     padding: 10px 0 5px 0;
@@ -172,6 +173,7 @@ ul.askedYou li ul,
 ul.notifiedYou li ul,
 div.observations-toc ul li ul {
 	list-style: circle outside none;
+	padding: 5px 0 0;
 }
 
 ul.askedYou li ul li,
@@ -193,14 +195,34 @@ div.communications-toc h3 {
 	padding: 30px 0 20px 0;
 }
 
-/*
 
 div.triggered {
-border-left: 5px solid #CCCCCC;
-    font-size: 12px;
-    margin: 10px 0 40px;
+border-left: 5px solid #E8E8E8;
+    margin: 20px 0;
     padding: 0 0 0 15px;
 }
+
+div.triggered h5.notify {
+border-top: 5px solid #E8E8E8;
+    font-size: 16px;
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+div.triggered h5 span.information,
+div.triggered h5 span.situation,
+div.triggered h5 span.scenario {
+	text-decoration: underline;
+}
+
+div.contact {
+background: none repeat scroll 0 0 #E8E8E8;
+    border-left: 5px solid #CCCCCC;
+    margin: 15px 0 0;
+    padding: 7px 10px 0;
+}
+
+/*
 
 div.triggered label {
 border-bottom: 1px solid #CCCCCC;

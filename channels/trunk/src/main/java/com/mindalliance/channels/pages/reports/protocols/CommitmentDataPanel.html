@@ -10,15 +10,15 @@
 </head>
 <body>
 <wicket:panel>
-    <div>
+    <h5 class="notify">
         <span wicket:id="mode">Notify of</span>
-        <span wicket:id="information">information</span>
-    </div>
+        <span class="information" wicket:id="information">information</span>
+    </h5>
     <div>
         <div wicket:id="contactsContainer">
             <label wicket:id="anyAll">Contact any of...</label>
             <div wicket:id="contacts">  <!-- repeated -->
-                <div wicket:id="contact">[contact link panel with channels]</div>
+                <div class="contact" wicket:id="contact">[contact link panel with channels]</div>
             </div>
         </div>
     </div>
@@ -29,20 +29,23 @@
     <div wicket:id="onFailure">BUT ONLY IF you failed to execute the task</div>
     <div wicket:id="eoisContainer">
         <label>Include elements...</label>
-        <div wicket:id="eois">[eoi panel]</div>
+        <ul>
+	        <li wicket:id="eois">[eoi panel]</li>
+	     </ul>
     </div>
     <div wicket:id="allInstructions">
         <label>Instructions</label>
-
-        <div wicket:id="communicatedContext">DO NOT mention the beginning of IED attack</div>
-        <div wicket:id="receiptConfirmation">Request confirmation of receipt</div>
-        <div wicket:id="instructions">instructions</div>
+		  <ul>
+            <li wicket:id="communicatedContext">DO NOT mention the beginning of IED attack</li>
+            <li wicket:id="receiptConfirmation">Request confirmation of receipt</li>
+            <li wicket:id="instructions">instructions</li>
+        </ul>
     </div>
     <div wicket:id="bypassContactsContainer">
         <label wicket:id="anyAll">If the above contacts are unreachable, try instead...</label>
 
         <div wicket:id="contacts">  <!-- repeated -->
-            <div wicket:id="contact">[contact link panel with channels]</div>
+            <div class="contact" wicket:id="contact">[contact link panel with channels]</div>
         </div>
     </div>
     <div wicket:id="failureImpact">Failing to share this information could have
