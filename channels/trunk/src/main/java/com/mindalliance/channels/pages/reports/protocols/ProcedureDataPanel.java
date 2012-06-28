@@ -126,7 +126,7 @@ public class ProcedureDataPanel extends AbstractDataPanel {
         receivesContainer.setVisible( procedureData.hasReceives() );
         add( receivesContainer );
         addInNotifications();
-        addInRequests();
+        addOutRequests();
     }
 
     private void addInNotifications() {
@@ -143,19 +143,21 @@ public class ProcedureDataPanel extends AbstractDataPanel {
         receivesContainer.add( flowListView );
     }
 
-   private void addInRequests() {
-       ListView<RequestData> flowListView = new ListView<RequestData>(
-               "inRequests",
-               getAssignment().getInRequests()
-       ) {
-           @Override
-           protected void populateItem( ListItem<RequestData> item ) {
-               RequestData requestData = item.getModelObject();
-               item.add( new CommitmentDataPanel( "inRequest", requestData, true, getFinder() ) );
-           }
-       };
-       receivesContainer.add( flowListView );
-   }
+    private void addOutRequests() {
+        ListView<RequestData> flowListView = new ListView<RequestData>(
+                "outRequests",
+                getAssignment().getOutRequests()
+        ) {
+            @Override
+            protected void populateItem( ListItem<RequestData> item ) {
+                RequestData requestData = item.getModelObject();
+                item.add( new CommitmentDataPanel( "outRequest", requestData, true, getFinder() ) );
+            }
+        };
+        receivesContainer.add( flowListView );
+    }
+
+
 
     // SENDS
 
@@ -164,7 +166,7 @@ public class ProcedureDataPanel extends AbstractDataPanel {
         sendsContainer.setVisible( procedureData.hasSends() );
         add( sendsContainer );
         addOutNotifications();
-        addOutRequests();
+        addInRequests();
     }
 
     private void addOutNotifications() {
@@ -181,19 +183,20 @@ public class ProcedureDataPanel extends AbstractDataPanel {
         sendsContainer.add( flowListView );
     }
 
-    private void addOutRequests() {
+     private void addInRequests() {
         ListView<RequestData> flowListView = new ListView<RequestData>(
-                "outRequests",
-                getAssignment().getOutRequests()
+                "inRequests",
+                getAssignment().getInRequests()
         ) {
             @Override
             protected void populateItem( ListItem<RequestData> item ) {
                 RequestData requestData = item.getModelObject();
-                item.add( new CommitmentDataPanel( "outRequest", requestData, false, getFinder() ) );
+                item.add( new CommitmentDataPanel( "inRequest", requestData, false, getFinder() ) );
             }
         };
-        sendsContainer.add( flowListView );
+         sendsContainer.add( flowListView );
     }
+
 
     private AssignmentData getAssignment() {
         return procedureData.getAssignment();

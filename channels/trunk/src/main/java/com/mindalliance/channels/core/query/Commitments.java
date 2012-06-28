@@ -278,6 +278,24 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         return result;
     }
 
+    public Commitments notTriggeringToTarget() {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( !commitment.getSharing().isTriggeringToTarget() )
+                result.add( commitment );
+        }
+        return result;
+    }
+
+    public Commitments notTriggeringToSource() {
+        Commitments result = new Commitments( planLocale );
+        for ( Commitment commitment : this ) {
+            if ( !commitment.getSharing().isTriggeringToSource() )
+                result.add( commitment );
+        }
+        return result;
+    }
+
 
     public void add( Commitment commitment ) {
         commitments.add( commitment );

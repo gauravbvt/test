@@ -281,6 +281,7 @@ public class AssignmentData extends AbstractProcedureElementData {
         for ( Commitment commitment : procedureData
                 .getBenefitingCommitments()
                 .notifications()
+                .notTriggeringToTarget()
                 .notFrom( getAssignment()
                         .getActor() )
                 ) {
@@ -318,6 +319,7 @@ public class AssignmentData extends AbstractProcedureElementData {
         for ( Commitment commitment : procedureData
                 .getCommittingCommitments()
                 .requests()
+                .notTriggeringToSource()
                 .notTo( getAssignment()
                         .getActor() ) ) {
             flows.add( commitment.getSharing() );

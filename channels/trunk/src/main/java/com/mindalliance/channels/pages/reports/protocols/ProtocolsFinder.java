@@ -84,7 +84,7 @@ public class ProtocolsFinder implements Serializable {
         onObservations = new HashMap<ObservationData, List<ProcedureData>>();
         onNotificationsByContact = new HashMap<ContactData, Map<TriggerData, List<ProcedureData>>>();
         onRequestsByContact = new HashMap<ContactData, Map<TriggerData, List<ProcedureData>>>();
-        onRequests = new HashMap<TriggerData, List<ProcedureData>>();    // using triggerData is wrong? Use NotificationData etc.
+        onRequests = new HashMap<TriggerData, List<ProcedureData>>();    // todo - using triggerData is wrong? Use NotificationData etc.
         onNotifications = new HashMap<TriggerData, List<ProcedureData>>();
         onDiscoveries = new HashMap<TriggerData, List<ProcedureData>>();
         onResearches = new HashMap<TriggerData, List<ProcedureData>>();
