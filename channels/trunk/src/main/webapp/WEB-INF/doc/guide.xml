@@ -922,18 +922,18 @@ Taxonomies are defined implictly by categorizing individual entities. Taxonomies
             <step>
                 <description>The ''flow map'', which is central to the plan editor, shows tasks connected by flows where each flow can imply a potentially large number of sharing commitments.
 
-The ''assignments and commitments map'' makes it easy to see if the sharing commitments generated from the plan are the intended ones.
+The ''protocols map'' makes it easy to see if the sharing commitments generated from the plan are the intended ones.
                 
 The map is focused on one agent or one organization (as an aggregate of agents). It shows the commitments that involved that egent or organizations.
 
 The other parties to the commitments can be aggregated by role, organization type or not at all.
                 </description>
                 <script>
-                    <action>See assignments and commitments map</action>
+                    <action>See protocols map</action>
                     <change>
                         <subjectPath>plan</subjectPath>
                         <type>Expanded</type>
-                        <property>Assignments and commitments</property>
+                        <property>Protocols map</property>
                     </change>
                 </script>
             </step>

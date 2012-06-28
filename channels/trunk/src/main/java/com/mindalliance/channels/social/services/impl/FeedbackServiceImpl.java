@@ -69,7 +69,6 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.isNull( "whenNotified" ) );
         criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
-        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
         criteria.add( Restrictions.eq( "urgent", false ) );
         criteria.addOrder( Order.desc( "created" ) );
         return (List<Feedback>) criteria.list();

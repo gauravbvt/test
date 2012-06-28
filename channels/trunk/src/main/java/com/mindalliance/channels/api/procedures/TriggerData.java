@@ -326,12 +326,13 @@ public class TriggerData extends AbstractProcedureElementData {
         StringBuilder sb = new StringBuilder();
         Phase phase = eventPhase.getPhase();
         sb.append( phase.isPreEvent()
-                ? "The possibility of "
+                ? "The possibility of event \""
                 : phase.isConcurrent()
-                ? "The beginning of "
-                : "The ending of "
+                ? "The beginning of event \""
+                : "The ending of event \""
         ) ;
         sb.append( eventPhase.getEvent().getLabel() );
+        sb.append( "\"" );
         if ( eventPhaseContext != null && !eventPhaseContext.isEmpty() ) {
             sb.append( ", " );
             Iterator<EventTiming> eventTimings = eventPhaseContext.iterator();

@@ -247,7 +247,7 @@ public class UserPage extends AbstractChannelsBasicPage {
 
     private String getGotoGuidelinesDescription( ChannelsUser user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
-                ? "Set how users participate in the plan and view their information sharing guidelines."
+                ? "Set how users participate in the plan and view their information sharing protocols."
                 : "View all tasks and related communications assigned to me according to my participation in this plan.";
     }
 

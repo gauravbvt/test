@@ -506,7 +506,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
             columns.add( makeColumn( "By", "author", EMPTY ) );
             columns.add( makeColumn( "Last modified on", "lastModifiedOn", EMPTY ) );
             columns.add( makeColumn( "# of surveys", "surveyCount", EMPTY ) );
-            columns.add( makeColumn( "# of RFIs", "rfiCount", EMPTY ) );
+            columns.add( makeColumn( "# surveyed", "rfiCount", EMPTY ) );
             columns.add( makeExpandLinkColumn( "", "", "@expandLabel" ) );
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "questionnaires",

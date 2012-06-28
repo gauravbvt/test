@@ -16,6 +16,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.commons.collections.CollectionUtils;
@@ -236,7 +237,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<TriggerData> item ) {
                 TriggerData triggerData = item.getModelObject();
-                Label observationLabel = new Label( "observation", triggerData.getLabel() );
+                Label observationLabel = new Label( "observation", ChannelsUtils.lcFirst( triggerData.getLabel() ) );
                 item.add( observationLabel );
                 item.add( makeProcedureLinks( "procLinks", onObservations.get( triggerData ) ) );
             }
@@ -312,7 +313,9 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 SituationData communicatedContext = triggerData.getSituation();
                 Label commContextLabel = new Label(
                         "communicatedContext",
-                        communicatedContext == null ? "" : communicatedContext.getTriggerLabel() );
+                        communicatedContext == null
+                                ? ""
+                                : ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() )  );
                 commContextLabel.setVisible( communicatedContext != null );
                 item.add( commContextLabel );
                 item.add( makeProcedureLinks( "procLinks", triggeringRequests.get( triggerData ) ) );
@@ -343,7 +346,9 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 SituationData communicatedContext = triggerData.getSituation();
                 Label commContextLabel = new Label(
                         "communicatedContext",
-                        communicatedContext == null ? "" : communicatedContext.getTriggerLabel() );
+                        communicatedContext == null
+                                ? ""
+                                : (", " + ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() ) ) );
                 commContextLabel.setVisible( communicatedContext != null );
                 item.add( commContextLabel );
                 item.add( makeProcedureLinks( "procLinks", triggeringNotifications.get( triggerData ) ) );

@@ -349,7 +349,12 @@ public class AssignmentData extends AbstractProcedureElementData {
 
 
     public String getLabel() {
-        return getAssignment().getPart().getTitle();
+        StringBuilder sb = new StringBuilder(  );
+        sb.append( "Do task \"" );
+        sb.append( getAssignment().getPart().getTask() );
+        sb.append( "\" as " );
+        sb.append( getAssignment().getEmployment().getLabel() );
+        return sb.toString();
     }
 
     public boolean hasReceives() {

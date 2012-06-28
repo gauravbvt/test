@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.procedures.TriggerData;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.wicket.markup.html.basic.Label;
 
 /**
@@ -19,6 +20,6 @@ public class ObservationTriggerDataPanel extends AbstractTriggerDataPanel {
     }
 
     private void init() {
-        add( new Label( "situation", getTriggerData().getLabel() ) );
+        add( new Label( "situation", ChannelsUtils.lcFirst( getTriggerData().getLabel() ) ) );
     }
 }

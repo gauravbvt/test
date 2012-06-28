@@ -150,11 +150,15 @@ public class Employment implements GeoLocatable, Specable {
 
     public String getLabel() {
         StringBuilder sb = new StringBuilder();
-        sb.append( getRole() );
+        sb.append( getTitleOrRole() );
         Organization org = getOrganization();
         if ( org != null && !org.isUnknown() ) {
             sb.append( " at " );
             sb.append( getOrganization().getName() );
+        }
+        if ( getJurisdiction() != null ) {
+            sb.append( " for " );
+            sb.append( getJurisdiction().getName() );
         }
         return sb.toString();
 

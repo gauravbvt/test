@@ -203,9 +203,9 @@ public class Channels extends WebApplication
         getMarkupSettings().setStripWicketTags( true );
 
         mountPage( "procedures", ProceduresReportPage.class );
-        mountPage( "allGuidelines", AllGuidelinesPage.class );
+        mountPage( "allProtocols", AllGuidelinesPage.class );
         mountPage( "allInfoNeeds", AllInfoNeedsPage.class );
-        mountPage( "guidelines", ProtocolsPage.class );
+        mountPage( "protocols", ProtocolsPage.class );
         mountPage( "infoNeeds", InfoNeedsPage.class );
         mountPage( "mapped", ProcedureMapPage.class );
         mountPage( "task", AssignmentReportPage.class );

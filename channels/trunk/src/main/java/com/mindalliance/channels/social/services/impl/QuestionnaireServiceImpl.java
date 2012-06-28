@@ -47,7 +47,6 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
-        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
         if ( about != null && !about.isEmpty() ) {
             criteria.add( Restrictions.eq( "about", about ) );
         }
@@ -68,7 +67,6 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
-        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
         criteria.add( Restrictions.eq( "about", modelObject.getClassLabel() ) );
         criteria.add( Restrictions.eq( "status", Questionnaire.Status.ACTIVE ) );
         criteria.add( Restrictions.isNull( "remediatedModelObjectRefString" ) );
@@ -83,7 +81,6 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
-        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
         criteria.add( Restrictions.eq( "about", Questionnaire.makeRemediationAbout( issue ) ) );
         criteria.add( Restrictions.eq( "issueKind", issue.getKind() ) );
         criteria.add( Restrictions.eq( "remediatedModelObjectRefString",

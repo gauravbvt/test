@@ -11,7 +11,6 @@ import com.mindalliance.channels.pages.HelpPage;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
-import com.mindalliance.channels.pages.reports.protocols.StaticProtocols;
 import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -79,20 +78,14 @@ public class PlanShowMenuPanel extends MenuPanel {
                             newLink( "All issues", plan, PlanEditPanel.ISSUES ),
                             newLink( "All types", plan, PlanEditPanel.TYPOLOGIES ),
                             newLink( "Index", plan, PlanEditPanel.INDEX ),
-                            newLink( "Assignments & Commitments", plan, PlanEditPanel.PROCEDURES ),
+                            newLink( "Protocols map", plan, PlanEditPanel.PROCEDURES ),
                             newLink( "Requirements", plan, PlanEditPanel.REQUIREMENTS ),
                             newLink( "Participations", plan, PlanEditPanel.PARTICIPATIONS ),
                             newLink(
                                     "Help", newTargetedLink(
                                     "help", HelpPage.class, new PopupSettings(
                                     PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS | PopupSettings.MENU_BAR
-                                            | PopupSettings.TOOL_BAR ) ) ),
-                            newLink(
-                                    "Protocols", newTargetedLink(
-                                    "protocols", StaticProtocols.class, new PopupSettings(
-                                    PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS | PopupSettings.MENU_BAR
-                                            | PopupSettings.TOOL_BAR ) ) ) ) )
-            ;
+                                            | PopupSettings.TOOL_BAR ) ) ) ) );
 
             return menuItems;
         }

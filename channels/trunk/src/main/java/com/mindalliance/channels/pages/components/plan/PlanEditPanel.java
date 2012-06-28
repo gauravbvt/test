@@ -87,7 +87,7 @@ public class PlanEditPanel extends AbstractMultiAspectPanel {
     /**
      * Procedures diagrammed.
      */
-    public static final String PROCEDURES = "Assignments and commitments";
+    public static final String PROCEDURES = "Protocols map";
     /**
      * All types
      */

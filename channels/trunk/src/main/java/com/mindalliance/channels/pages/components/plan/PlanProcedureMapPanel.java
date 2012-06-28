@@ -270,7 +270,6 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             procedureMapDiagramPanel = new Label( "procedure-map", "" );
             procedureMapDiagramPanel.add( new AttributeModifier(
                     "style",
-                    true,
                     new Model<String>( "background:url('images/map-background.png') 270px 0 no-repeat #ffffff;" ) ) );
         } else {
             Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? new Settings(

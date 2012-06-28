@@ -36,7 +36,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
 
     @Override
     protected String getPageName() {
-        return "All Info Sharing Guidelines";
+        return "All Info Sharing Protocols";
     }
 
     @Override
@@ -54,7 +54,7 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                         new Label( 
                                 "participationNote",
                                 isPlanner
-                                        ? "(Users who participate as agents in this plan and thus have guidelines)"
+                                        ? "(Users who participate as agents in this plan and thus have protocols)"
                                         : "(Your participation in this plan)"
                                 ),
                         new ListView<PlanParticipation>( "participatingUsers", getParticipations() ) {

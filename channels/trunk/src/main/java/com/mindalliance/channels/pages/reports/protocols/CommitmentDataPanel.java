@@ -98,21 +98,26 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         if ( received ) {
             return "Your sources are";
         } else {
-            return flowData.getContactAll()
-                    ? "Contact all of..."
-                    : "Contact any of...";
+            if ( flowData.isNotification() )
+                return flowData.getContactAll()
+                    ? "Contact all of"
+                    : "Contact any of";
+            else
+                return "To";
         }
     }
 
     private void addMaxDelay() {
         TimeDelayData timeDelay = flowData.getMaxDelay();
+        WebMarkupContainer maxDelayContainer = new WebMarkupContainer( "maxDelayContainer" );
+        add(  maxDelayContainer );
         Label delayLabel = new Label(
                 "maxDelay",
                 timeDelay == null
                         ? ""
                         : timeDelay.getLabel() );
         delayLabel.setVisible( timeDelay != null );
-        add( delayLabel );
+        maxDelayContainer.add( delayLabel );
     }
 
     private void addOnFailure() {
