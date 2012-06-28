@@ -72,7 +72,7 @@ div.protocols-contents h4.taskName {
 border-bottom: 1px dotted #000000;
     display: inline;
     font-family: Georgia;
-    font-size: 24px;
+    font-size: 22px;
     font-style: oblique;
     font-weight: normal;
     line-height: 150%;
@@ -184,12 +184,23 @@ div.employeeContacts div div:last-child {
 	border-right: none;
 }
 
+ul {
+	margin: 0 0 0 20px;
+}
 
+ul li {
+	padding: 0 0 5px;
+}
+
+ul li label {
+	padding: 5px 0px;
+}
 
 ul.askedYou,
 ul.notifiedYou,
 div.observations-toc ul {
 	list-style: square outside none;
+	margin: 0;
 }
 
 ul.askedYou li,
@@ -203,6 +214,7 @@ ul.notifiedYou li ul,
 div.observations-toc ul li ul {
 	list-style: circle outside none;
 	padding: 5px 0 0;
+	margin: 0;
 }
 
 ul.askedYou li ul li,
@@ -225,7 +237,8 @@ div.communications-toc h3 {
 }
 
 
-div.triggered div.procedures {
+div.triggered div.procedures,
+div.ongoingProcedures {
 border-left: 5px solid #E8E8E8;
     margin: 40px 0 40px 10px;
     padding: 0 0 10px 25px;
@@ -249,6 +262,10 @@ background: none repeat scroll 0 0 #E8E8E8;
     border-left: 5px solid #CCCCCC;
     margin: 5px 0 20px;
     padding: 7px 10px 10px;
+}
+
+div.contact label {
+	padding-top: 10px;
 }
 
 /*
