@@ -53,7 +53,6 @@ public class AssignmentData extends AbstractProcedureElementData {
     }
 
     private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
-        // todo
         taskData = new TaskData( getAssignment(), planService, planParticipationService, getUser() );
         initInNotifications( planService, planParticipationService );
         initOutNotifications( planService, planParticipationService );
@@ -282,8 +281,9 @@ public class AssignmentData extends AbstractProcedureElementData {
         for ( Commitment commitment : procedureData
                 .getBenefitingCommitments()
                 .notifications()
-                .notTo( getAssignment()
-                        .getActor() ) ) {
+                .notFrom( getAssignment()
+                        .getActor() )
+                ) {
             flows.add( commitment.getSharing() );
         }
         return new ArrayList<Flow>( flows );
@@ -301,7 +301,7 @@ public class AssignmentData extends AbstractProcedureElementData {
         return new ArrayList<Flow>( flows );
     }
 
-    private List<Flow> outRequests() {
+    private List<Flow> outRequests() {    // same as inReplies
         Set<Flow> flows = new HashSet<Flow>();
         for ( Commitment commitment : procedureData
                 .getBenefitingCommitments()
@@ -313,9 +313,10 @@ public class AssignmentData extends AbstractProcedureElementData {
         return new ArrayList<Flow>( flows );
     }
 
-    private List<Flow> inRequests() {
+    private List<Flow> inRequests() {   // same as out replies
         Set<Flow> flows = new HashSet<Flow>();
-        for ( Commitment commitment : procedureData.getCommittingCommitments()
+        for ( Commitment commitment : procedureData
+                .getCommittingCommitments()
                 .requests()
                 .notTo( getAssignment()
                         .getActor() ) ) {

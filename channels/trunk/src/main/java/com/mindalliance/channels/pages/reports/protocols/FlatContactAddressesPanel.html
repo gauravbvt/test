@@ -10,19 +10,13 @@
 </head>
 <body>
 <wicket:panel>
-    <a wicket:id="contactLink" href="#">
-        <h4 wicket:id="contactName">John Doe</h4>
-        <h5 wicket:id="contactJob">VP Sales ,Northeast, ACME Inc.</h5>
-    </a>
-    <div wicket:id="work">
-        <label>Work:</label>
-        <span wicket:id="addresses">contact addresses panel</span>
-    </div>
-    <div wicket:id="personal">
-        <label>Personal:</label>
-        <span wicket:id="addresses">contact addresses panel</span>
-    </div>
-
+    <span wicket:id="addressesContainer">
+        <span wicket:id="addresses">  <!-- repeated -->
+            <span wicket:id="namedAddress">an address</span>
+            <a wicket:id="linkedAddress" href="#"><span wicket:id="address">john.doe@email.com</span> </a>
+            &nbsp;/&nbsp;
+        </span>
+    </span>
 </wicket:panel>
 </body>
 </html>

@@ -60,7 +60,7 @@ public class ContactLinkPanel extends AbstractDataPanel {
         add( addressContainer );
         addressContainer.add(
                 hasWorkAddresses()
-                    ? new ContactAddressesPanel( "addresses", workAddresses, getFinder() )
+                    ? new FlatContactAddressesPanel( "addresses", workAddresses, getFinder() )
                     : new Label( "addresses", "" )
         );
     }
@@ -71,7 +71,7 @@ public class ContactLinkPanel extends AbstractDataPanel {
         add( addressContainer );
         addressContainer.add(
                 hasPersonalAddresses()
-                        ? new ContactAddressesPanel( "addresses", personalAddresses, getFinder() )
+                        ? new FlatContactAddressesPanel( "addresses", personalAddresses, getFinder() )
                         : new Label( "addresses", "" )
         );
     }

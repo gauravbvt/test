@@ -36,4 +36,8 @@ public class SecurityClassificationData implements Serializable {
     public String getLevel() {
         return classification.getName();
     }
+
+    public String getLabel() {
+        return classification.getLabel();
+    }
 }

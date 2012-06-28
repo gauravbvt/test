@@ -46,12 +46,11 @@ public class EoisPanel extends AbstractDataPanel {
                 WebMarkupContainer classificationsContainer = new WebMarkupContainer( "classificationContainer" );
                 item.add( classificationsContainer );
                 classificationsContainer.setVisible( !eoiData.getClassifications().isEmpty() );
-                SecurityClassificationsPanel securityClassificationsPanel = new SecurityClassificationsPanel(
+                Label securityClassificationsLabel = new Label(
                         "classifications",
-                        eoiData.getClassifications(),
-                        getFinder()
+                        eoiData.getClassificationsLabel()
                 );
-                classificationsContainer.add( securityClassificationsPanel );
+                classificationsContainer.add( securityClassificationsLabel );
                 // Description
                 Label descriptionLabel = new Label( "description", eoiData.getDescription() );
                 descriptionLabel.setVisible( eoiData.getDescription() != null

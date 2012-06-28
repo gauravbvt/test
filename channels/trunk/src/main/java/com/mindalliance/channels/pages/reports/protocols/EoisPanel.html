@@ -10,17 +10,17 @@
 </head>
 <body>
 <wicket:panel>
-    <div wicket:id="allEois">
-        <div wicket:id="eois"> <!-- repeated -->
+    <ul wicket:id="allEois">
+        <li wicket:id="eois"> <!-- repeated -->
             <div wicket:id="name">content</div>
-            <div wicket:id="classificationContainer">
-                <label>Classified as</label>
-                <div wicket:id="classifications">[classifications data panel]</div>   <!-- repeated -->
-            </div>
             <div wicket:id="description">description</div>
+            <div wicket:id="classificationContainer">
+                <label>Classified:</label>
+                <span wicket:id="classifications">[classifications]</span>
+            </div>
             <div wicket:id="handling">handling instructions</div>
-        </div>
-    </div>
+        </li>
+    </ul>
 </wicket:panel>
 </body>
 </html>

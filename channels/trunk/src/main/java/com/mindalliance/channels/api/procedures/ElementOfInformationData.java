@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -58,5 +59,15 @@ public class ElementOfInformationData  implements Serializable {
         return eoi.getDescription().isEmpty()
                 ? null
                 : StringEscapeUtils.escapeXml( eoi.getDescription() );
+    }
+
+    public String getClassificationsLabel() {
+        StringBuilder sb = new StringBuilder(  );
+        Iterator<SecurityClassificationData> iter = getClassifications().iterator();
+        while( iter.hasNext() ) {
+            sb.append( iter.next().getLabel() );
+            if ( iter.hasNext() ) sb.append( ", " );
+        }
+        return sb.toString();
     }
 }
