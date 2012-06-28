@@ -90,7 +90,7 @@ label {
 }
 
 div.employeeContacts label {
-	padding: 0 0 5px;
+	padding: 0;
 }
 
 div.protocols-contents h4 span.participationList span {
@@ -126,6 +126,8 @@ div.clearences,
 div.supervisors {
 border-right: 1px solid #CCCCCC;
     float: left;
+    font-size: 12px;
+    line-height: 175%;
     margin: 10px 20px 0 0;
     min-height: 70px;
     padding: 0 10px 0 0;
@@ -135,3 +137,25 @@ border-right: 1px solid #CCCCCC;
 div.employeeContacts div div:last-child {
 	border-right: none;
 }
+
+/*
+
+div.triggered {
+border-left: 5px solid #CCCCCC;
+    font-size: 12px;
+    margin: 10px 0 40px;
+    padding: 0 0 0 15px;
+}
+
+div.triggered label {
+border-bottom: 1px solid #CCCCCC;
+    color: #333333;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin: 0 0 10px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+*/
