@@ -5,6 +5,11 @@ div.protocols-contents div.about {
 	display: block;
 }
 
+div.protocols-contents div.participation {
+	padding: 0 0 20px 0;
+	display: block;
+}
+
 div.protocols-contents h1 {
 	color: #333333;
 	font-family: Georgia;
@@ -37,9 +42,13 @@ div.protocols-contents h3 {
 	font-size: 16px;
 	font-weight: bold;
 	letter-spacing: 1px;
-	padding: 40px 0 5px;
+	padding: 40px 0 10px;
 	text-decoration: underline;
 	text-transform: uppercase;
+}
+
+div.protocols-content div.communications-toc h3 {
+	padding: 30px 0;
 }
 
 div.protocols-contents h4 {
@@ -60,26 +69,23 @@ border: medium none;
 }
 
 div.protocols-contents h5 {
-    border-bottom: 1px solid #CCCCCC;
     color: #333333;
     display: block;
     font-size: 12px;
     font-weight: normal;
     letter-spacing: 1px;
-    margin: 0 0 5px;
     padding: 5px 0 10px;
     text-transform: uppercase;
 }
 
 div.protocols-contents h6 {
-	border-right: 5px solid #CCCCCC;
-	border-bottom: 1px solid #CCCCCC;
-	color: #999999;
-	font-size: 16px;
-	font-weight: bold;
-	margin: 5px 0 15px;
-	padding: 2px 5px;
-	text-align: right;
+	background: none repeat scroll 0 0 #E8E8E8;
+    color: #999999;
+    float: right;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: right;
 }
 
 label {
@@ -93,6 +99,12 @@ label {
 div.employeeContacts label {
 	padding: 0;
 }
+
+div.name-employment {
+    border-bottom: 1px solid #CCCCCC;
+    margin: 0 0 5px;
+}
+
 
 div.protocols-contents h4 span.participationList span {
 	border-bottom: 2px solid #333333;
@@ -120,7 +132,6 @@ div.protocols-contents div.directory-link {
 }
 
 div.work,
-div.personal,
 div.availability,
 div.languages,
 div.clearences,
@@ -135,6 +146,10 @@ border-right: 1px solid #CCCCCC;
     width: 141px;
 }
 
+div.availability {
+	width: 170px;
+}
+
 div.employeeContacts div div:last-child {
 	border-right: none;
 }
@@ -142,27 +157,41 @@ div.employeeContacts div div:last-child {
 
 
 ul.askedYou,
-ul.notifiedYou {
+ul.notifiedYou,
+div.observations-toc ul {
 	list-style: square outside none;
 }
 
 ul.askedYou li,
-ul.notifiedYou li {
+ul.notifiedYou li,
+div.observations-toc ul li {
 	margin: 5px 0 0 25px;
 }
 
 ul.askedYou li ul,
-ul.notifiedYou li ul {
+ul.notifiedYou li ul,
+div.observations-toc ul li ul {
 	list-style: circle outside none;
 }
 
 ul.askedYou li ul li,
-ul.notifiedYou li ul li {
+ul.notifiedYou li ul li,
+div.observations-toc ul li ul li {
 	margin: 5px 0 15px 25px;
 }
 
+div.interlocutors {
+padding: 0 0 10px;
+}
 
+div.interlocutors h4 {
+border-top: 1px solid #e8e8e8;
+    padding: 15px 0 0;
+}
 
+div.communications-toc h3 {
+	padding: 30px 0 20px 0;
+}
 
 /*
 
