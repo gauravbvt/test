@@ -1,13 +1,10 @@
 /* ----- Protocols Styling ----- */
 
-div.protocols-contents div.about {
-	padding: 20px 0;
-	display: block;
-}
-
-div.protocols-contents div.participation {
-	padding: 0 0 20px 0;
-	display: block;
+div.protocols-contents a {
+	border-bottom: 1px dotted #333333;
+	color: #333333;
+	font-weight: bold;
+	text-decoration: none;
 }
 
 div.protocols-contents h1 {
@@ -89,7 +86,7 @@ color: #333333;
     text-transform: uppercase;
 }
 
-div.contact h5 {
+div.protocols-contents div.contact h5 {
 	padding: 5px 0 0;
 }
 
@@ -103,25 +100,7 @@ div.protocols-contents h6 {
     text-align: right;
 }
 
-span.communicatedContext {
-	font-weight: bold;
-	font-style: italic;
-}
-
-div.orgContact label,
-div.employeeContacts label {
-    display: block;
-    font-weight: bold;
-    padding: 10px 0 5px 0;
-    text-transform: capitalize;
-    text-decoration: underline;
-}
-
-div.employeeContacts label {
-	padding: 0;
-}
-
-label {
+div.protocols-contents label {
 color: #000000;
     display: block;
     font-size: 12px;
@@ -130,17 +109,44 @@ color: #000000;
     text-transform: uppercase;
 }
 
-div.name-employment {
+div.protocols-contents div.about {
+	padding: 20px 0;
+	display: block;
+}
+
+div.protocols-contents div.participation {
+	padding: 0 0 20px 0;
+	display: block;
+}
+
+div.protocols-contents span.communicatedContext {
+	font-weight: bold;
+	font-style: italic;
+}
+
+div.protocols-contents div.orgContact label,
+div.protocols-contents div.employeeContacts label {
+    display: block;
+    font-weight: bold;
+    padding: 10px 0 5px 0;
+    text-transform: capitalize;
+    text-decoration: underline;
+}
+
+div.protocols-contents div.employeeContacts label {
+	padding: 0;
+}
+
+div.protocols-contents div.name-employment {
     border-bottom: 1px solid #CCCCCC;
     margin: 0 0 5px;
 }
-
 
 div.protocols-contents h4 span.participationList span {
 	border-bottom: 2px solid #333333;
 }
 
-div.employeeContacts {
+div.protocols-contents div.employeeContacts {
 background: none repeat scroll 0 0 #E8E8E8;
     border-left: 5px solid #CCCCCC;
     float: left;
@@ -149,7 +155,7 @@ background: none repeat scroll 0 0 #E8E8E8;
     width: 731px;
 }
 
-div.orgContact {
+div.protocols-contents div.orgContact {
 	float: left;
 	width: 731px;
 }
@@ -161,11 +167,10 @@ div.protocols-contents div.directory-link {
 	display: none;
 }
 
-div.work,
-div.availability,
-div.languages,
-div.clearances,
-div.supervisors {
+div.protocols-contents div.work,
+div.protocols-contents div.availability,
+div.protocols-contents div.languages,
+div.protocols-contents div.clearances {
 border-right: 1px solid #CCCCCC;
     float: left;
     font-size: 12px;
@@ -176,109 +181,93 @@ border-right: 1px solid #CCCCCC;
     width: 141px;
 }
 
-div.availability {
+div.protocols-contents div.availability {
 	width: 170px;
 }
 
-div.employeeContacts div div:last-child {
+div.protocols-contents div.employeeContacts div div:last-child {
 	border-right: none;
 }
 
-ul {
+div.protocols-contents ul {
 	margin: 0 0 0 20px;
 }
 
-ul li {
+div.protocols-contents ul li {
 	padding: 0 0 5px;
 }
 
-ul li label {
+div.protocols-contents ul li label {
 	padding: 5px 0px;
 }
 
-ul.askedYou,
-ul.notifiedYou,
-div.observations-toc ul {
+div.protocols-contents ul.askedYou,
+div.protocols-contents ul.notifiedYou,
+div.protocols-contents div.observations-toc ul {
 	list-style: square outside none;
 	margin: 0;
 }
 
-ul.askedYou li,
-ul.notifiedYou li,
-div.observations-toc ul li {
+div.protocols-contents ul.askedYou li,
+div.protocols-contents ul.notifiedYou li,
+div.protocols-contents div.observations-toc ul li {
 	margin: 5px 0 0 25px;
 }
 
-ul.askedYou li ul,
-ul.notifiedYou li ul,
-div.observations-toc ul li ul {
+div.protocols-contents ul.askedYou li ul,
+div.protocols-contents ul.notifiedYou li ul,
+div.protocols-contents div.observations-toc ul li ul {
 	list-style: circle outside none;
 	padding: 5px 0 0;
 	margin: 0;
 }
 
-ul.askedYou li ul li,
-ul.notifiedYou li ul li,
-div.observations-toc ul li ul li {
+div.protocols-contents ul.askedYou li ul li,
+div.protocols-contents ul.notifiedYou li ul li,
+div.protocols-contents div.observations-toc ul li ul li {
 	margin: 5px 0 15px 25px;
 }
 
-div.interlocutors {
+div.protocols-contents div.interlocutors {
 padding: 0 0 10px;
 }
 
-div.interlocutors h4 {
+div.protocols-contents div.interlocutors h4 {
 border-top: 1px solid #e8e8e8;
     padding: 15px 0 0;
 }
 
-div.communications-toc h3 {
+div.protocols-contents div.communications-toc h3 {
 	padding: 30px 0 20px 0;
 }
 
-
-div.triggered div.procedures,
-div.ongoingProcedures {
+div.protocols-contents div.triggered div.procedures,
+div.protocols-contents div.ongoingProcedures {
 border-left: 5px solid #E8E8E8;
     margin: 40px 0 40px 10px;
     padding: 0 0 10px 25px;
 }
 
-div.triggered h5.notify {
+div.protocols-contents div.triggered h5.notify {
 border-top: 5px solid #E8E8E8;
     font-size: 16px;
     margin-top: 30px;
     padding-top: 30px;
 }
 
-div.triggered h5 span.information,
-div.triggered h5 span.situation,
-div.triggered h5 span.scenario {
+div.protocols-contents div.triggered h5 span.information,
+div.protocols-contents div.triggered h5 span.situation,
+div.protocols-contents div.triggered h5 span.scenario {
 	text-decoration: underline;
 }
 
-div.contact {
+div.protocols-contents div.contact {
 background: none repeat scroll 0 0 #E8E8E8;
     border-left: 5px solid #CCCCCC;
     margin: 5px 0 20px;
     padding: 7px 10px 10px;
 }
 
-div.contact label {
+div.protocols-contents div.contact label {
 	padding-top: 10px;
 }
-
-/*
-
-div.triggered label {
-border-bottom: 1px solid #CCCCCC;
-    color: #333333;
-    font-size: 12px;
-    font-weight: normal;
-    letter-spacing: 1px;
-    margin: 0 0 10px;
-    text-decoration: none;
-    text-transform: uppercase;
-}
-
-*/
