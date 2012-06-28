@@ -367,4 +367,12 @@ public class AssignmentData extends AbstractProcedureElementData {
         return !outNotifications().isEmpty() || !outRequests().isEmpty();
     }
 
+
+    public String getTitleOrRole() {
+        return getAssignment().getEmployment().getTitleOrRole();
+    }
+
+    public String getOrganizationLabel() {
+        return getAssignment().getEmployment().getOrganization().getName();
+    }
 }

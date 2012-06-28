@@ -48,6 +48,13 @@ public abstract class AbstractDataPanel extends Panel {
         return anchorContainer;
     }
 
+    protected WebMarkupContainer makeAnchorLink( String id, String anchor ) {
+        WebMarkupContainer anchorContainer = new WebMarkupContainer( id );
+        anchorContainer.add( new AttributeModifier( "href", anchor ) );
+        return anchorContainer;
+    }
+
+
     protected WebMarkupContainer makeAttributeContainer( String id, String value ) {
         WebMarkupContainer attributeContainer = new WebMarkupContainer( id );
         attributeContainer.setVisible( value != null && !value.trim().isEmpty() );

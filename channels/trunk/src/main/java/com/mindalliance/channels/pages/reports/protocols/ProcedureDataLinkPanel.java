@@ -25,6 +25,8 @@ public class ProcedureDataLinkPanel extends AbstractDataPanel {
         WebMarkupContainer link = new WebMarkupContainer( "link" );
         link.add(  new AttributeModifier( "href", "#" + procedureData.getAnchor() ) );
         add( link );
-        link.add( new Label( "label", procedureData.getLabel() ) );
+        link.add( new Label( "taskName", procedureData.getTaskLabel() ) );
+        link.add( new Label( "title", procedureData.getTitleOrRole() )  );
+        link.add( new Label( "org", procedureData.getOrganizationLabel() )  );
     }
 }

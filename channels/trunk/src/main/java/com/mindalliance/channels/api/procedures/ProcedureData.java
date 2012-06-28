@@ -449,4 +449,27 @@ public class ProcedureData implements Serializable {
         return getAssignment().hasSends();
     }
 
+    public String getTaskLabel() {
+        StringBuilder sb = new StringBuilder();
+        if ( isOngoing() ) {
+            sb.append( "You constantly do task \"" );
+        } else if ( isTriggeredByDiscovery() ) {
+            sb.append( "Follow up with task \"" );
+        } else if ( isTriggeredByResearch() ) {
+            sb.append( "To find what you need, do task \"" );
+        } else {
+            sb.append( "Do task \"" );
+        }
+        sb.append( getAssignment().getTask().getName() );
+        sb.append( "\"" );
+        return sb.toString();
+    }
+
+    public String getTitleOrRole() {
+        return getAssignment().getTitleOrRole();
+    }
+
+    public String getOrganizationLabel() {
+        return getAssignment().getOrganizationLabel();
+    }
 }
