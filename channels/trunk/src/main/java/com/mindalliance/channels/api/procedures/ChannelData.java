@@ -74,4 +74,5 @@ public class ChannelData  implements Serializable {
     public String getLabel() {
         return "(" + getMedium() + ") " + getAddress();
     }
+
 }

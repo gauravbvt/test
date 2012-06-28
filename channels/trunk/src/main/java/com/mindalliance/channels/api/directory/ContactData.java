@@ -260,9 +260,15 @@ public class ContactData implements Serializable {
     }
 
     public String toLabel() {
+        return getContactName() + ", " + getContactJob();
+    }
+
+    public String getContactName() {
+        return userInfo != null ? userInfo.getFullName() : getActor().getName();
+    }
+
+    public String getContactJob() {
         StringBuilder sb = new StringBuilder();
-        sb.append( getContactName() );
-        sb.append( ", " );
         sb.append( employment.getTitleOrRole() );
         sb.append( ", " );
         if ( employment.getJurisdiction() != null ) {
@@ -273,18 +279,14 @@ public class ContactData implements Serializable {
         return sb.toString();
     }
 
-    public String getContactName() {
-        return userInfo != null ? userInfo.getFullName() : getActor().getName();
-    }
-
     public String firstLetterOfName() {
         return getNormalizedContactName().substring( 0, 1 );
     }
 
     @Override
     public boolean equals( Object other ) {
-        return other instanceof ChannelData
-                && employment.equals( other );
+        return other instanceof ContactData
+                && getEmployment().equals( ((ContactData)other).getEmployment() );
     }
 
     @Override

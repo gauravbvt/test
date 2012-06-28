@@ -151,16 +151,6 @@ public class ProtocolsFinder implements Serializable {
         addTo( procMap, triggerData, procedureData );
     }
 
-    private void addTo( Map<String, List<ContactData>> map, ContactData contactData ) {
-        String firstLetter = contactData.firstLetterOfName().toUpperCase();
-        List<ContactData> list = map.get( firstLetter );
-        if ( list == null ) {
-            list = new ArrayList<ContactData>();
-            map.put( firstLetter, list );
-        }
-        if ( !list.contains( contactData ) ) list.add( contactData );
-    }
-
     private void addTo(
             Map<TriggerData, List<ProcedureData>> map,
             TriggerData triggerData,
@@ -297,17 +287,15 @@ public class ProtocolsFinder implements Serializable {
 
     @SuppressWarnings( "unchecked" )
     public List<ContactData> getContactsInOrganization( final String orgName ) {
-        List<ContactData> contacts = (List<ContactData>) CollectionUtils.select(
-                rolodex,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (ContactData) object ).getEmployment().getOrganizationName().equals( orgName );
-                    }
-                }
-        );
-        sortContacts( contacts );
-        return contacts;
+        Set<ContactData> contacts = new HashSet<ContactData>();
+        for (ContactData contactData : rolodex ) {
+            if (contactData.getEmployment().getOrganizationName().equals( orgName ) ) {
+                contacts.add( contactData );
+            }
+        }
+        List<ContactData> sortedOrgContacts = new ArrayList<ContactData>( contacts  );
+        sortContacts( sortedOrgContacts );
+        return sortedOrgContacts;
     }
 
     public void sortContacts( List<ContactData> contacts ) {

@@ -49,7 +49,8 @@ public class ContactLinkPanel extends AbstractDataPanel {
 
      private void addContactLink() {
          WebMarkupContainer contactLink = makeAnchor( "contactLink", "#" + contactData.getAnchor() );
-         contactLink.add( new Label( "contact", contactData.toLabel() ) );
+         contactLink.add( new Label( "contactName", contactData.getContactName() ) );
+         contactLink.add( new Label("contactJob", contactData.getContactJob() ) );
          add( contactLink );
      }
 

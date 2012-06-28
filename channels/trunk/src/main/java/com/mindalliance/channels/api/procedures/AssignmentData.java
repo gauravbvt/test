@@ -350,7 +350,11 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     public String getLabel() {
         StringBuilder sb = new StringBuilder(  );
-        sb.append( "Do task \"" );
+        if ( getAssignment().isOngoing() ) {
+            sb.append( "You are constantly doing task \"" );
+        } else {
+            sb.append( "Do task \"" );
+        }
         sb.append( getAssignment().getPart().getTask() );
         sb.append( "\" as " );
         sb.append( getAssignment().getEmployment().getLabel() );

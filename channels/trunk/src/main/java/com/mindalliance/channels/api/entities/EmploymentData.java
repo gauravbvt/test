@@ -17,7 +17,7 @@ import java.util.Set;
  * Time: 10:27 AM
  */
 @XmlType( propOrder = {"actorId", "organizationId", "title", "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
-public class EmploymentData  implements Serializable {
+public class EmploymentData implements Serializable {
 
     private Employment employment;
     private ChannelsUserInfo userInfo;
@@ -77,7 +77,7 @@ public class EmploymentData  implements Serializable {
     }
 
     public Set<Long> allActorIds() {
-        Set<Long> ids = new HashSet<Long>(  );
+        Set<Long> ids = new HashSet<Long>();
         ids.add( employment.getActor().getId() );
         if ( getSupervisorId() != null )
             ids.add( getSupervisorId() );
@@ -94,5 +94,16 @@ public class EmploymentData  implements Serializable {
 
     public String getOrganizationName() {
         return getEmployment().getOrganization().getName();
+    }
+
+    @Override
+    public boolean equals( Object object ) {
+        return object instanceof EmploymentData
+                && employment.equals( ( (EmploymentData) object ).getEmployment() );
+    }
+
+    @Override
+    public int hashCode() {
+        return employment.hashCode();
     }
 }
