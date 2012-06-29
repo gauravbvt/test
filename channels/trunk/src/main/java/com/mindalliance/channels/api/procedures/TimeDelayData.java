@@ -48,4 +48,8 @@ public class TimeDelayData  implements Serializable {
                 ? delay.toString()
                 : ( "within " + delay.toString() );
     }
+
+    public boolean isImmediate() {
+        return delay.isImmediate();
+    }
 }

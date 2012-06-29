@@ -57,7 +57,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private ProtocolsFinder finder;
     private DirectoryData directoryData;
     private String username;
-    private long actorId;
+    private Long actorId;
     private Actor actor;
     private ChannelsUser protocolsUser;
 
@@ -92,8 +92,10 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     protected void addContent() {
         try {
             PageParameters parameters = getPageParameters();
-            actorId = parameters.get( "agent" ).toLong( -1 );
-            username = parameters.get( "user" ).toString( getUser().getUsername() );
+            if ( parameters.getNamedKeys().contains( "agent" ) )
+                actorId = parameters.get( "agent" ).toLong( -1 );
+            if ( parameters.getNamedKeys().contains( "user" ) )
+                username = parameters.get( "user" ).toString( );
             initData();
             doAddContent();
         } catch ( Exception e ) {
@@ -120,14 +122,14 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
 
     private void initData() throws Exception {
         Plan plan = getPlan();
-        if ( actorId >= 0 ) {
+        if ( actorId != null ) {
             actor = getQueryService().find( Actor.class, actorId );
             proceduresData = channelsService.getAgentProcedures(
                     plan.getUri(),
                     Integer.toString( plan.getVersion() ),
                     Long.toString( actorId ) );
         } else {
-            protocolsUser = getUserDao().getUserNamed( username );
+            protocolsUser = username == null ? null : getUserDao().getUserNamed( username );
             if ( protocolsUser == null )
                 throw new Exception( "Failed to retrieve protocols" );
             else {
@@ -181,7 +183,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         else if ( actor != null )
             return actor.getName();
         else
-            return "???";
+            return "users";
     }
 
     // PARTICIPATION

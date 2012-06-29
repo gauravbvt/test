@@ -61,7 +61,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                     : "You can ask for";
         } else {
             return flowData.isNotification()
-                    ? "Notify of"
+                    ? "If you notify of"
                     : "When asked, provide";
         }
     }
@@ -88,7 +88,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                         contactData,
                         getWorkChannels( contactData ),
                         getPersonalChannels( contactData ),
-                        getFinder() )  );
+                        getFinder() ) );
             }
         };
         contactsContainer.add( contactsListView );
@@ -100,8 +100,8 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         } else {
             if ( flowData.isNotification() )
                 return flowData.getContactAll()
-                    ? "Contact all of"
-                    : "Contact any of";
+                        ? "Contact all of"
+                        : "Contact any of";
             else
                 return "To";
         }
@@ -110,14 +110,29 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     private void addMaxDelay() {
         TimeDelayData timeDelay = flowData.getMaxDelay();
         WebMarkupContainer maxDelayContainer = new WebMarkupContainer( "maxDelayContainer" );
-        add(  maxDelayContainer );
+        add( maxDelayContainer );
+        Label whenLabel = new Label(
+                "when",
+                received
+                    ? flowData.isNotification()
+                         ? "Expect to receive notification"
+                         : "Expect an answer"
+                    : flowData.isNotification()
+                        ? "Notify"
+                        : "Answer");
+        maxDelayContainer.add( whenLabel);
         Label delayLabel = new Label(
-                "maxDelay",
-                timeDelay == null
-                        ? ""
-                        : timeDelay.getLabel() );
+                "maxDelay", makeDelayLabel( timeDelay ));
         delayLabel.setVisible( timeDelay != null );
         maxDelayContainer.add( delayLabel );
+    }
+
+    private String makeDelayLabel( TimeDelayData timeDelay ) {
+        if ( timeDelay == null ) return "";
+        else {
+            String prefix = timeDelay.isImmediate() ? "" : "within ";
+            return prefix + timeDelay.getLabel();
+        }
     }
 
     private void addOnFailure() {
@@ -127,7 +142,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                         ? "BUT ONLY IF you failed to execute the task"
                         : ""
         );
-        failureLabel.setVisible( flowData.getTaskFailed() );
+        failureLabel.setVisible( flowData.getTaskFailed() &&  !( received && flowData.isNotification() ) );
         add( failureLabel );
     }
 
@@ -137,7 +152,21 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         WebMarkupContainer eoisContainer = new WebMarkupContainer( "eoisContainer" );
         add( eoisContainer );
         eoisContainer.setVisible( !eois.isEmpty() );
+        Label eoisLabel = new Label( "eoisLabel" , getEoisLabel() );
+        eoisContainer.add( eoisLabel );
         eoisContainer.add( new EoisPanel( "eois", eois, getFinder() ) );
+    }
+
+    private String getEoisLabel() {
+        if ( received ) {
+            return flowData.isNotification()
+                    ? "Expect these elements"
+                    : "Request these elements";
+        } else {
+            return flowData.isNotification()
+                    ? "Include these elements"
+                    : "Answer with these elements";
+        }
     }
 
     private void addInstructions() {
@@ -164,11 +193,25 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         String instructionsText = flowData.getInstructions();
         Label instructionsLabel = new Label(
                 "instructions",
-                instructionsText == null || instructionsText.isEmpty()
+                instructionsText == null || instructionsText.trim().isEmpty()
                         ? ""
                         : instructionsText );
-        instructionsLabel.setVisible( instructionsText != null && !instructionsText.isEmpty() );
+        instructionsLabel.setVisible( instructionsText != null && !instructionsText.trim().isEmpty() );
+        instructionContainer.setVisible( isInstructed() );
         instructionContainer.add( instructionsLabel );
+    }
+
+    private boolean isInitiated() {
+        return !received && flowData.isNotification() || received && !flowData.isNotification();
+    }
+
+    private boolean isInstructed() {
+        String instructionsText = flowData.getInstructions();
+        boolean canBeInstructed = isInitiated();
+        return canBeInstructed && (
+                instructionsText != null && !instructionsText.trim().isEmpty()
+                        || flowData.getReceiptConfirmationRequested()
+                        || flowData.isContextCommunicated() );
     }
 
     private void addBypassContacts() {
@@ -204,7 +247,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         String severityText = flowData.getFailureImpact();
         WebMarkupContainer impactContainer = new WebMarkupContainer( "failureImpact" );
         add( impactContainer );
-        impactContainer.setVisible( severity.compareTo( Level.Low ) > 0 );
+        impactContainer.setVisible( severity.ordinal() > Level.Low.ordinal() );
         Label severityLabel = new Label( "severity", severityText );
         impactContainer.add( severityLabel );
     }

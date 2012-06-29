@@ -60,20 +60,17 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                         new ListView<PlanParticipation>( "participatingUsers", getParticipations() ) {
                             @Override
                             protected void populateItem( ListItem<PlanParticipation> item ) {
-                                PageParameters parameters = new PageParameters();
                                 PlanParticipation p = item.getModelObject();
-                                parameters.set( PLAN, getUri() );
-                                parameters.set( VERSION, getVersion() );
                                 Actor actor = p.getActor( getQueryService() );
-                                parameters.set( "agent", actor.getId() );
                                 String participatingUsername = p.getParticipant().getUsername();
-                                parameters.set( "user", participatingUsername );
                                 ChannelsUser participatingUser = getUserDao().getUserNamed( participatingUsername );
                                 item.add(
-                                        new Label( "participantName", participatingUser.getFullName() )
-                                                .setRenderBodyOnly( true ),
                                         new BookmarkablePageLink<GuidelinesPage>(
-                                                "participation", ProtocolsPage.class, parameters )
+                                                "participant", ProtocolsPage.class, makeUserParameters( participatingUsername ) )
+                                                .add( new Label( "participantName", participatingUser.getFullName() )
+                                                        .setRenderBodyOnly( true ) ),
+                                        new BookmarkablePageLink<GuidelinesPage>(
+                                                "participation", ProtocolsPage.class, makeActorParameters( participatingUsername, actor ) )
                                                 .add( new Label( "participationName", actor.toString() )
                                                         .setRenderBodyOnly( true ) )
                                 );
@@ -112,6 +109,23 @@ public class AllGuidelinesPage extends AbstractAllParticipantsPage {
                                 : new Label( "agents", "" )
         ).setVisible( !getActors().isEmpty() && isPlanner )
         );
+    }
+
+    private PageParameters makeUserParameters( String username ) {
+        PageParameters parameters = new PageParameters();
+        parameters.set( PLAN, getUri() );
+        parameters.set( VERSION, getVersion() );
+        parameters.set( "user", username );
+        return parameters;
+    }
+
+    private PageParameters makeActorParameters( String username, Actor actor ) {
+        PageParameters parameters = new PageParameters();
+        parameters.set( PLAN, getUri() );
+        parameters.set( VERSION, getVersion() );
+        parameters.set( "user", username );
+        parameters.set( "agent", actor.getId() );
+        return parameters;
     }
 
 }
