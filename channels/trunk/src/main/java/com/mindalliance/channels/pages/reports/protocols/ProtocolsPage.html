@@ -36,11 +36,13 @@
     <div wicket:id="finder">
         <h2>Protocol finder</h2>
         <!-- Table of content -->
-        <div wicket:id="ongoing-toc">
+        <div class="ongoing-toc" wicket:id="ongoing-toc">
             <h3>Your ongoing tasks</h3>
-            <div wicket:id="ongoingLinks"> <!-- repeated -->
-                <span wicket:id="procLink">[a data link panel]</span>
-            </div>
+            <ul>
+                <li wicket:id="ongoingLinks"> <!-- repeated -->
+                    <span wicket:id="procLink">[a data link panel]</span>
+                </li>
+            </ul>
         </div>
         <div class="observations-toc" wicket:id="observations-toc">
             <h3>What did you observe?</h3>

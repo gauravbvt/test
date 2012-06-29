@@ -14,24 +14,22 @@
         <span wicket:id="mode">Notify of</span>
         <span class="information" wicket:id="information">information</span>
     </h5>
-    <div>
-        <div wicket:id="contactsContainer">
-            <label wicket:id="anyAll">Contact any of...</label>
-            <div wicket:id="contacts">  <!-- repeated -->
-                <div class="contact" wicket:id="contact">[contact link panel with channels]</div>
-            </div>
+    <div class="contactsContainer" wicket:id="contactsContainer">
+        <label wicket:id="anyAll">Contact any of...</label>
+        <div wicket:id="contacts">  <!-- repeated -->
+            <div class="contact" wicket:id="contact">[contact link panel with channels]</div>
         </div>
     </div>
-    <div wicket:id="maxDelayContainer">
+    <div class="maxDelayContainer" wicket:id="maxDelayContainer">
         <label wicket:id="when">When</label>
         <div wicket:id="maxDelay">Within 10 minutes</div>
     </div>
-    <div wicket:id="onFailure">BUT ONLY IF you failed to execute the task</div>
-    <div wicket:id="eoisContainer">
+    <div class="onFailure" wicket:id="onFailure">BUT ONLY IF you failed to execute the task</div>
+    <div class="eoisContainer" wicket:id="eoisContainer">
         <label wicket:id="eoisLabel">Include elements</label>
 	     <span wicket:id="eois">[eoi panel]</span>
     </div>
-    <div wicket:id="allInstructions">
+    <div class="allInstructions" wicket:id="allInstructions">
         <label>Instructions</label>
 		  <ul>
             <li wicket:id="communicatedContext">DO NOT mention the beginning of IED attack</li>
@@ -39,14 +37,14 @@
             <li wicket:id="instructions">instructions</li>
         </ul>
     </div>
-    <div wicket:id="bypassContactsContainer">
+    <div class="bypassContactsContainer" wicket:id="bypassContactsContainer">
         <label wicket:id="anyAll">If the above contacts are unreachable, try instead...</label>
 
         <div wicket:id="contacts">  <!-- repeated -->
             <div class="contact" wicket:id="contact">[contact link panel with channels]</div>
         </div>
     </div>
-    <div wicket:id="failureImpact">Failing to share this information could have
+    <div class="failureImpact-small" wicket:id="failureImpact">Failing to share this information could have
         <span wicket:id="severity">extreme</span>
         consequences
     </div>

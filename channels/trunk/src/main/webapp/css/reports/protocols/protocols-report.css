@@ -56,34 +56,34 @@ div.protocols-contents h4 {
 
 div.protocols-contents div.about h4,
 div.protocols-contents div.participation h4 {
-border: medium none;
-    font-size: 14px;
-    font-weight: bold;
-    line-height: 150%;
-    padding: 5px 0 0;
-    text-align: center;
-    text-transform: uppercase;
+	border: medium none;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 150%;
+	padding: 5px 0 0;
+	text-align: center;
+	text-transform: uppercase;
 }
 
 div.protocols-contents h4.taskName {
-border-bottom: 1px dotted #000000;
-    display: inline;
-    font-family: Georgia;
-    font-size: 22px;
-    font-style: oblique;
-    font-weight: normal;
-    line-height: 150%;
-    text-transform: none;	
+	border-bottom: 1px dotted #000000;
+	display: inline;
+	font-family: Georgia;
+	font-size: 22px;
+	font-style: oblique;
+	font-weight: normal;
+	line-height: 150%;
+	text-transform: none;	
 }
 
 div.protocols-contents h5 {
-color: #333333;
-    display: block;
-    font-size: 12px;
-    font-weight: normal;
-    letter-spacing: 1px;
-    padding: 7px 0 5px;
-    text-transform: uppercase;
+	color: #333333;
+	display: block;
+	font-size: 12px;
+	font-weight: normal;
+	letter-spacing: 1px;
+	padding: 7px 0 5px;
+	text-transform: uppercase;
 }
 
 div.protocols-contents div.contact h5 {
@@ -92,21 +92,21 @@ div.protocols-contents div.contact h5 {
 
 div.protocols-contents h6 {
 	background: none repeat scroll 0 0 #E8E8E8;
-    color: #999999;
-    float: right;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 2px 5px;
-    text-align: right;
+	color: #999999;
+	float: right;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 2px 5px;
+	text-align: right;
 }
 
 div.protocols-contents label {
-color: #000000;
-    display: block;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 25px 0 5px;
-    text-transform: uppercase;
+	color: #000000;
+	display: block;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 0 0 5px 0;
+	text-transform: uppercase;
 }
 
 div.protocols-contents div.about {
@@ -121,16 +121,15 @@ div.protocols-contents div.participation {
 
 div.protocols-contents span.communicatedContext {
 	font-weight: bold;
-	font-style: italic;
 }
 
 div.protocols-contents div.orgContact label,
 div.protocols-contents div.employeeContacts label {
-    display: block;
-    font-weight: bold;
-    padding: 10px 0 5px 0;
-    text-transform: capitalize;
-    text-decoration: underline;
+	display: block;
+	font-weight: bold;
+	padding: 10px 0 5px 0;
+	text-transform: capitalize;
+	text-decoration: underline;
 }
 
 div.protocols-contents div.employeeContacts label {
@@ -138,8 +137,8 @@ div.protocols-contents div.employeeContacts label {
 }
 
 div.protocols-contents div.name-employment {
-    border-bottom: 1px solid #CCCCCC;
-    margin: 0 0 5px;
+	border-bottom: 1px solid #CCCCCC;
+	margin: 0 0 5px;
 }
 
 div.protocols-contents h4 span.participationList span {
@@ -147,12 +146,12 @@ div.protocols-contents h4 span.participationList span {
 }
 
 div.protocols-contents div.employeeContacts {
-background: none repeat scroll 0 0 #E8E8E8;
-    border-left: 5px solid #CCCCCC;
-    float: left;
-    margin: 20px 0 0;
-    padding: 12px 15px 15px;
-    width: 731px;
+	background: none repeat scroll 0 0 #E8E8E8;
+	border-left: 5px solid #CCCCCC;
+	float: left;
+	margin: 20px 0 0;
+	padding: 12px 15px 15px;
+	width: 731px;
 }
 
 div.protocols-contents div.orgContact {
@@ -171,14 +170,14 @@ div.protocols-contents div.work,
 div.protocols-contents div.availability,
 div.protocols-contents div.languages,
 div.protocols-contents div.clearances {
-border-right: 1px solid #CCCCCC;
-    float: left;
-    font-size: 12px;
-    line-height: 175%;
-    margin: 10px 20px 0 0;
-    min-height: 70px;
-    padding: 0 10px 0 0;
-    width: 141px;
+	border-right: 1px solid #CCCCCC;
+	float: left;
+	font-size: 12px;
+	line-height: 175%;
+	margin: 10px 20px 0 0;
+	min-height: 70px;
+	padding: 0 10px 0 0;
+	width: 141px;
 }
 
 div.protocols-contents div.availability {
@@ -190,11 +189,15 @@ div.protocols-contents div.employeeContacts div div:last-child {
 }
 
 div.protocols-contents ul {
-	margin: 0 0 0 20px;
+	margin: 5px 0 5px 20px;
 }
 
 div.protocols-contents ul li {
 	padding: 0 0 5px;
+}
+
+div.protocols-contents ul li ul li {
+	padding:0;  
 }
 
 div.protocols-contents ul li label {
@@ -203,14 +206,16 @@ div.protocols-contents ul li label {
 
 div.protocols-contents ul.askedYou,
 div.protocols-contents ul.notifiedYou,
-div.protocols-contents div.observations-toc ul {
+div.protocols-contents div.observations-toc ul,
+div.protocols-contents div.ongoing-toc ul {
 	list-style: square outside none;
 	margin: 0;
 }
 
 div.protocols-contents ul.askedYou li,
 div.protocols-contents ul.notifiedYou li,
-div.protocols-contents div.observations-toc ul li {
+div.protocols-contents div.observations-toc ul li,
+div.protocols-contents div.ongoing-toc ul li {
 	margin: 5px 0 0 25px;
 }
 
@@ -225,16 +230,16 @@ div.protocols-contents div.observations-toc ul li ul {
 div.protocols-contents ul.askedYou li ul li,
 div.protocols-contents ul.notifiedYou li ul li,
 div.protocols-contents div.observations-toc ul li ul li {
-	margin: 5px 0 15px 25px;
+	margin: 5px 0 10px 25px;
 }
 
 div.protocols-contents div.interlocutors {
-padding: 0 0 10px;
+	padding: 0 0 10px;
 }
 
 div.protocols-contents div.interlocutors h4 {
-border-top: 1px solid #e8e8e8;
-    padding: 15px 0 0;
+	border-top: 1px solid #e8e8e8;
+	padding: 15px 0 0;
 }
 
 div.protocols-contents div.communications-toc h3 {
@@ -243,16 +248,16 @@ div.protocols-contents div.communications-toc h3 {
 
 div.protocols-contents div.triggered div.procedures,
 div.protocols-contents div.ongoingProcedures {
-border-left: 5px solid #E8E8E8;
-    margin: 40px 0 40px 10px;
-    padding: 0 0 10px 25px;
+	border-left: 5px solid #E8E8E8;
+	margin: 40px 0 40px 10px;
+	padding: 10px 0 10px 25px;
 }
 
 div.protocols-contents div.triggered h5.notify {
-border-top: 5px solid #E8E8E8;
-    font-size: 16px;
-    margin-top: 30px;
-    padding-top: 30px;
+	border-top: 5px solid #E8E8E8;
+	font-size: 16px;
+	margin-top: 30px;
+	padding-top: 30px;
 }
 
 div.protocols-contents div.triggered h5 span.information,
@@ -262,17 +267,63 @@ div.protocols-contents div.triggered h5 span.scenario {
 }
 
 div.protocols-contents div.contact {
-background: none repeat scroll 0 0 #E8E8E8;
-    border-left: 5px solid #CCCCCC;
-    margin: 5px 0 20px;
-    padding: 7px 10px 10px;
+	background: none repeat scroll 0 0 #E8E8E8;
+	border-left: 5px solid #CCCCCC;
+	margin: 5px 0 20px;
+	padding: 10px 10px 13px;
 }
 
 div.protocols-contents div.contact label {
 	padding-top: 10px;
 }
 
-.info {
-    font-weight: bold;
-    text-decoration: underline;
+div.protocols-contents span.info {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+div.protocols-contents span.addressesContainer {
+	font-size: 12px;
+	text-transform: uppercase;
+}
+
+div.protocols-contents span.addresses {
+	border-right: 1px solid #999999;
+	margin: 0 13px 0 0;
+	padding: 0 10px 0 0;    
+}
+
+div.protocols-contents span.addresses:last-child {
+	border-right: none;
+}
+
+div.protocols-contents div.maxDelayContainer,
+div.protocols-contents div.onFailure,
+div.protocols-contents div.eoisContainer,
+div.protocols-contents div.allInstructions,
+div.protocols-contents div.bypassContactsContainer,
+div.protocols-contents div.instructions,
+div.protocols-contents div.category,
+div.protocols-contents div.location,
+div.protocols-contents div.goals,
+div.protocols-contents div.teammates,
+div.protocols-contents div.failureImpact {
+	padding: 15px 0 10px;
+}
+
+
+div.protocols-contents div.contactsContainer {
+	padding: 15px 0 0 0;
+}
+
+div.protocols-contents div.contactsContainer-direct {
+	padding: 15px 0 0 10px;
+}
+
+div.protocols-contents div.failureImpact-small {
+	background: none repeat scroll 0 0 #E8E8E8;
+	border-color: Gold;
+	border-left: 5px solid Gold;
+	margin: 0 0 10px;
+	padding: 15px;
 }
