@@ -61,7 +61,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                     : "You can ask for";
         } else {
             return flowData.isNotification()
-                    ? "If you notify of"
+                    ? "To notify of"
                     : "When asked, provide";
         }
     }
