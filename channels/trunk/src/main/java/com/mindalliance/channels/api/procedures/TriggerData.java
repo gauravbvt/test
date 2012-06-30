@@ -193,7 +193,7 @@ public class TriggerData extends AbstractProcedureElementData {
 
     @XmlElement
     public TaskData getRequestingTask() {
-        return researchData.getConsumingTask();
+        return researchData != null ? researchData.getConsumingTask() : null;
     }
 
     @XmlElement
