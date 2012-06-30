@@ -8,6 +8,7 @@ import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.procedures.ObservationData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
+import com.mindalliance.channels.api.procedures.TaskData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
@@ -45,13 +46,15 @@ public class ProtocolsFinder implements Serializable {
     //
     private List<ProcedureData> ongoingProcedures;
     private Map<ObservationData, List<ProcedureData>> onObservations;
-    Map<TriggerData, List<ProcedureData>> onRequests;
-    Map<TriggerData, List<ProcedureData>> onNotifications;
-    Map<TriggerData, List<ProcedureData>> onDiscoveries;
-    Map<TriggerData, List<ProcedureData>> onResearches;
+    private Map<TriggerData, List<ProcedureData>> onRequests;
+    private Map<TriggerData, List<ProcedureData>> onNotifications;
+    private Map<TriggerData, List<ProcedureData>> onDiscoveries;
+    private Map<TriggerData, List<ProcedureData>> onResearches;
+    private Map<TaskData, List<TriggerData>> researchSubTasks; // triggers set by research for procedure
+    private Map<TaskData, List<TriggerData>> discoveryFollowUpTasks; // triggers set by discovery from procedure
     private Map<ContactData, Map<TriggerData, List<ProcedureData>>> onNotificationsByContact;
     private Map<ContactData, Map<TriggerData, List<ProcedureData>>> onRequestsByContact;
-    Set<ContactData> rolodex;
+    private Set<ContactData> rolodex;
     private PlanScopeData planScopeData;
     private DirectoryData directoryData;
     private List<String> sortedTabs;
@@ -84,11 +87,13 @@ public class ProtocolsFinder implements Serializable {
         onObservations = new HashMap<ObservationData, List<ProcedureData>>();
         onNotificationsByContact = new HashMap<ContactData, Map<TriggerData, List<ProcedureData>>>();
         onRequestsByContact = new HashMap<ContactData, Map<TriggerData, List<ProcedureData>>>();
-        onRequests = new HashMap<TriggerData, List<ProcedureData>>();    // todo - using triggerData is wrong? Use NotificationData etc.
+        onRequests = new HashMap<TriggerData, List<ProcedureData>>();    // todo - using triggerData is wrong? Use NotificationData? etc.
         onNotifications = new HashMap<TriggerData, List<ProcedureData>>();
         onDiscoveries = new HashMap<TriggerData, List<ProcedureData>>();
         onResearches = new HashMap<TriggerData, List<ProcedureData>>();
         rolodex = new HashSet<ContactData>();
+        discoveryFollowUpTasks = new HashMap<TaskData, List<TriggerData>>();
+        researchSubTasks = new HashMap<TaskData, List<TriggerData>>();
         for ( ProcedureData procedureData : proceduresData.getProcedures() ) {
             processProcedureData( procedureData, queryService, planParticipationService, user );
         }
@@ -121,9 +126,17 @@ public class ProtocolsFinder implements Serializable {
             }
             for ( TriggerData triggerData : procedureData.getDiscoveryTriggers() ) {
                 addTo( onDiscoveries, triggerData, procedureData );
+                TaskData discoveringTask = new TaskData(
+                        triggerData.discoveringAssignment(),
+                        queryService,
+                        planParticipationService,
+                        user );
+                addTo( discoveryFollowUpTasks, discoveringTask, triggerData );  // discoveringTask creates the trigger(Data)
             }
             for ( TriggerData triggerData : procedureData.getResearchTriggers() ) {
                 addTo( onResearches, triggerData, procedureData );
+                TaskData requestingTask = triggerData.getRequestingTask();
+                addTo( researchSubTasks, requestingTask, triggerData );
             }
         }
         for ( Employment employment : procedureData.getNonTriggerContactEmployments() ) {
@@ -172,8 +185,22 @@ public class ProtocolsFinder implements Serializable {
             list = new ArrayList<ProcedureData>();
             map.put( triggerData, list );
         }
-        list.add( procedureData );
+        if ( !list.contains(  procedureData ) ) list.add( procedureData );
     }
+
+    private void addTo(
+            Map<TaskData, List<TriggerData>> map,
+            TaskData taskData,
+            TriggerData triggerData ) {
+        List<TriggerData> list = map.get( taskData );
+        if ( list == null ) {
+            list = new ArrayList<TriggerData>();
+            map.put( taskData, list );
+        }
+        if ( !list.contains(  triggerData ) )list.add( triggerData );
+    }
+
+
 
     public List<ProcedureData> getOngoingProcedures() {
         return ongoingProcedures;
@@ -347,5 +374,15 @@ public class ProtocolsFinder implements Serializable {
                 return od1.getLabel().compareTo( od2.getLabel() );
             }
         });
+    }
+
+    public List<TriggerData> getResearchSubTasksTriggerredBy( TaskData taskData ) {
+        List<TriggerData> triggers = researchSubTasks.get( taskData );
+        return triggers== null ? new ArrayList<TriggerData>() : triggers;
+    }
+
+    public List<TriggerData> getDiscoveryFollowUpTasksTriggeredBy( TaskData taskData ) {
+        List<TriggerData> triggers =  discoveryFollowUpTasks.get( taskData );
+        return triggers== null ? new ArrayList<TriggerData>() : triggers;
     }
 }

@@ -2,9 +2,8 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
-import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.query.QueryService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -20,7 +19,7 @@ import java.io.Serializable;
 @XmlType( propOrder = {"information", "doingTask", "followUpTask", "documentation"} )
 public class InfoDiscoveredData  implements Serializable {
 
-    private Flow notificationToSelf;
+    private Commitment commitmentToSelf;
     private ChannelsUser user;
     private TaskData doingTaskData;
     private TaskData followUpTaskData;
@@ -29,31 +28,31 @@ public class InfoDiscoveredData  implements Serializable {
         // required
     }
 
-    public InfoDiscoveredData( Flow notificationToSelf,
-                               PlanService planService,
+    public InfoDiscoveredData( Commitment commitmentToSelf,
+                               QueryService queryService,
                                PlanParticipationService planParticipationService,
                                ChannelsUser user ) {
-        this.notificationToSelf = notificationToSelf;
+        this.commitmentToSelf = commitmentToSelf;
         this.user = user;
-        initData( planService, planParticipationService );
+        initData( queryService, planParticipationService );
     }
 
-    private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initData( QueryService queryService, PlanParticipationService planParticipationService ) {
         doingTaskData = new TaskData(
-                (Part)notificationToSelf.getSource(),
-                planService,
+                commitmentToSelf.getCommitter(),
+                queryService,
                 planParticipationService,
                 user );
         followUpTaskData = new TaskData(
-                (Part)notificationToSelf.getTarget(),
-                planService,
+                commitmentToSelf.getBeneficiary(),
+                queryService,
                 planParticipationService,
                 user );
     }
 
     @XmlElement
     public InformationData getInformation() {
-        return new InformationData( notificationToSelf );
+        return new InformationData( commitmentToSelf.getSharing() );
     }
 
     @XmlElement
@@ -68,7 +67,7 @@ public class InfoDiscoveredData  implements Serializable {
 
     @XmlElement
     public DocumentationData getDocumentation() {
-        return new DocumentationData( notificationToSelf );
+        return new DocumentationData( commitmentToSelf.getSharing() );
     }
 
 }

@@ -7,7 +7,6 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
-import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
@@ -42,13 +41,13 @@ public class NotificationData extends AbstractFlowData {
     }
 
     public NotificationData(
-            Flow notification,
+            Commitment commitment,
             boolean consuming,
             Assignment assignment,
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        super( notification, assignment, planService, planParticipationService, user );
+        super( commitment, assignment, planService, planParticipationService, user );
         this.consuming = consuming;
         initData( planService, planParticipationService );
     }
@@ -64,7 +63,7 @@ public class NotificationData extends AbstractFlowData {
         Set<Employment> contacts = new HashSet<Employment>();
         if ( !consuming ) {
             List<Commitment> bypassCommitments = planService
-                    .findAllBypassCommitments( getNotification() );
+                    .findAllBypassCommitments( getNotification().getSharing() );
             if ( !bypassCommitments.isEmpty() ) {
                 Actor assignedActor = getAssignment().getActor();
                 List<Actor> directContacts = findDirectContacts();
@@ -84,7 +83,7 @@ public class NotificationData extends AbstractFlowData {
     private void initContactEmployments( PlanService planService ) {
             Set<Employment> contacts = new HashSet<Employment>();
             Actor assignedActor = getAssignment().getActor();
-            List<Commitment> commitments = planService.findAllCommitments( getNotification() );
+            List<Commitment> commitments = planService.findAllCommitments( getNotification().getSharing() );
             for ( Commitment commitment : commitments ) {
                 if ( consuming ) {
                     if ( commitment.getBeneficiary().getActor().equals( assignedActor )
@@ -105,7 +104,8 @@ public class NotificationData extends AbstractFlowData {
         if ( consuming )
             consumingTaskData = null;
         else
-            consumingTaskData=  new TaskData( getNotification().getContactedPart(),
+            consumingTaskData=  new TaskData(
+                    getNotification().getBeneficiary(),
                     planService,
                     planParticipationService,
                     getUser() );
@@ -115,7 +115,7 @@ public class NotificationData extends AbstractFlowData {
     @Override
     @XmlElement
     public InformationData getInformation() {
-        return new InformationData( getNotification() );
+        return new InformationData( getNotification().getSharing() );
     }
 
     @Override
@@ -234,8 +234,8 @@ public class NotificationData extends AbstractFlowData {
         );
     }
 
-    private Flow getNotification() {
-        return getSharing();
+    private Commitment getNotification() {
+        return getCommitment();
     }
 
 }

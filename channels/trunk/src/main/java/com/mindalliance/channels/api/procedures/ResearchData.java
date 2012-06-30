@@ -3,8 +3,8 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlType;
         "failureImpact", "documentation"} )
 public class ResearchData extends AbstractProcedureElementData {
 
-    private Flow requestToSelf;
+    private Commitment requestToSelf;
     private TaskData researchTaskData;
     private TaskData consumingTaskData;
     private String failureImpact;
@@ -33,7 +33,7 @@ public class ResearchData extends AbstractProcedureElementData {
     }
 
     public ResearchData(
-            Flow requestToSelf,
+            Commitment requestToSelf,
             Assignment assignment,
             PlanService planService,
             PlanParticipationService planParticipationService,
@@ -44,23 +44,22 @@ public class ResearchData extends AbstractProcedureElementData {
     }
 
     private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
-        // todo
-        initReasearchTask( planService, planParticipationService );
+        initResearchTask( planService, planParticipationService );
         initConsumingTaskData( planService, planParticipationService );
         failureImpact = planService.computeSharingPriority( getSharing() ).getNegativeLabel();
     }
 
     private void initConsumingTaskData( PlanService planService, PlanParticipationService planParticipationService ) {
         consumingTaskData = new TaskData(
-                (Part)requestToSelf.getTarget(),
+                requestToSelf.getBeneficiary(),
                 planService,
                 planParticipationService,
                 getUser() );
     }
 
-    private void initReasearchTask( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initResearchTask( PlanService planService, PlanParticipationService planParticipationService ) {
         researchTaskData = new TaskData(
-                (Part)requestToSelf.getSource(),
+                requestToSelf.getCommitter(),
                 planService,
                 planParticipationService,
                 getUser() );
@@ -102,11 +101,11 @@ public class ResearchData extends AbstractProcedureElementData {
 
     @XmlElement
     public DocumentationData getDocumentation() {
-        return new DocumentationData( requestToSelf );
+        return new DocumentationData( requestToSelf.getSharing() );
     }
 
     private Flow getSharing() {
-        return requestToSelf;
+        return requestToSelf.getSharing();
     }
 
 

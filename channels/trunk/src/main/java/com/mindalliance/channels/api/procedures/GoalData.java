@@ -63,6 +63,8 @@ public class GoalData  implements Serializable {
     }
 
     public String getLabel() {
-        return goal.getLabel();
+            String label = goal.isRiskMitigation() ? "Mitigate risk of " : "Achieve ";
+            label += goal.getLabel();
+            return label;
     }
 }

@@ -7,8 +7,6 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
-import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
@@ -47,7 +45,7 @@ public class RequestData extends AbstractFlowData {
     }
 
     public RequestData(
-            Flow request,
+            Commitment request,
             boolean replying,
             Assignment assignment,
             PlanService planService,
@@ -69,7 +67,7 @@ public class RequestData extends AbstractFlowData {
         Set<Employment> contacts = new HashSet<Employment>();
         if ( !replying ) {
             List<Commitment> bypassCommitments = planService
-                    .findAllBypassCommitments( getRequest() );
+                    .findAllBypassCommitments( getRequest().getSharing() );
             if ( !bypassCommitments.isEmpty() ) {
                 Actor assignedActor = getAssignment().getActor();
                 List<Actor> directContacts = findDirectContacts();
@@ -89,7 +87,7 @@ public class RequestData extends AbstractFlowData {
     private void initContactEmployments( PlanService planService ) {
         Set<Employment> contacts = new HashSet<Employment>();
         Actor assignedActor = getAssignment().getActor();
-        List<Commitment> commitments = planService.findAllCommitments( getRequest() );
+        List<Commitment> commitments = planService.findAllCommitments( getRequest().getSharing() );
         for ( Commitment commitment : commitments ) {
             if ( replying ) {
                 if ( commitment.getCommitter().getActor().equals( assignedActor )
@@ -110,7 +108,7 @@ public class RequestData extends AbstractFlowData {
     private void initConsumingTask( PlanService planService, PlanParticipationService planParticipationService ) {
         if ( replying )
             consumingTaskData = new TaskData(
-                    (Part) getRequest().getTarget(),
+                    getRequest().getBeneficiary(),
                     planService,
                     planParticipationService,
                     getUser() );
@@ -122,7 +120,7 @@ public class RequestData extends AbstractFlowData {
     @Override
     @XmlElement
     public InformationData getInformation() {
-        return new InformationData( getRequest() );
+        return new InformationData( getRequest().getSharing() );
     }
 
     @Override
@@ -241,8 +239,8 @@ public class RequestData extends AbstractFlowData {
         );
     }
 
-    private Flow getRequest() {
-        return getSharing();
+    private Commitment getRequest() {
+        return getCommitment();
     }
 
 }

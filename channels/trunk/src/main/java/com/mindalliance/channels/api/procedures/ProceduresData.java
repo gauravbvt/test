@@ -40,7 +40,6 @@ public class ProceduresData  implements Serializable {
     private Plan plan;
     private List<Actor> actors;
     private ChannelsUser user;
-    private Assignments assignments;
     private List<ProcedureData> procedures;
     private List<EmploymentData> employments;
     private List<Actor> participatingActors;

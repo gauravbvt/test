@@ -8,10 +8,11 @@ import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Goal;
+import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Subject;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.jws.WebMethod;
@@ -31,10 +32,10 @@ import java.util.List;
 @XmlType( propOrder = {"name", "category", "communicatedLocation", "location", "instructions", "teamMates", "goals", "failureImpact", "documentation"} )
 public class TaskData extends AbstractProcedureElementData {
 
-    private Part part;
     private String failureImpact;
     private List<Assignment> otherAssignments;
     private List<ContactData> teamContacts;
+    private Level failureLevel;
 
     public TaskData() {
         // required
@@ -42,46 +43,36 @@ public class TaskData extends AbstractProcedureElementData {
 
     public TaskData(
             Assignment assignment,
-            PlanService planService,
+            QueryService queryService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        super( assignment, planService, planParticipationService, user );
-        initData( planService );
-        initOtherAssignments( planService );
-        initTeamContacts( planService, planParticipationService );
+        super( assignment, queryService, planParticipationService, user );
+        initData( queryService );
+        initOtherAssignments( queryService );
+        initTeamContacts( queryService, planParticipationService );
     }
 
-    // For consuming tasks
-    public TaskData(
-            Part part,
-            PlanService planService,
-            PlanParticipationService planParticipationService,
-            ChannelsUser user ) {
-        super( planService, planParticipationService, user );
-        this.part = part;
-        initData( planService );
+    private void initData( QueryService queryService ) {
+        failureLevel = queryService.computePartPriority( getPart() );
+        failureImpact = StringEscapeUtils.escapeXml( failureLevel.getNegativeLabel() );
     }
 
-    private void initData( PlanService planService ) {
-        failureImpact = StringEscapeUtils.escapeXml( planService.computePartPriority( getPart() ).getNegativeLabel() );
-    }
-
-    private void initTeamContacts( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initTeamContacts( QueryService queryService, PlanParticipationService planParticipationService ) {
         teamContacts = new ArrayList<ContactData>();
         for ( Employment employment : getTeamEmployments() ) {
             teamContacts.addAll( ContactData.findContactsFromEmployment(
                     employment,
-                    planService,
+                    queryService,
                     planParticipationService,
                     ChannelsUser.current() ) );
         }
     }
 
-    private void initOtherAssignments( PlanService planService ) {
+    private void initOtherAssignments( QueryService queryService ) {
         otherAssignments = new ArrayList<Assignment>();
         Part part = getAssignment().getPart();
         if ( part.isAsTeam() ) {
-            for ( Assignment assign : planService.findAllAssignments( part, false ) ) {
+            for ( Assignment assign : queryService.findAllAssignments( part, false ) ) {
                 if ( !assign.equals( getAssignment() ) ) {
                     otherAssignments.add( assign );
                 }
@@ -169,9 +160,7 @@ public class TaskData extends AbstractProcedureElementData {
     }
 
     private Part getPart() {
-        return part == null
-                ? getAssignment().getPart()
-                : part;
+        return getAssignment().getPart();
     }
 
     @WebMethod( exclude = true )
@@ -195,5 +184,27 @@ public class TaskData extends AbstractProcedureElementData {
 
     public List<ContactData> getTeamContacts() {
         return teamContacts;
+    }
+
+    public String getAnchor() {
+        return "" + getPart().getId();
+    }
+
+    public String getLabel() {
+        return getPart().getTask();
+    }
+
+    public Level getFailureSeverity() {
+        return failureLevel;
+    }
+
+    @Override
+    public boolean equals( Object object ) {
+        return object instanceof TaskData
+                && ( (TaskData) object ).getAssignment().getPart().equals( getAssignment().getPart() );
+    }
+
+    public int hashCode() {
+        return getAssignment().getPart().hashCode();
     }
 }

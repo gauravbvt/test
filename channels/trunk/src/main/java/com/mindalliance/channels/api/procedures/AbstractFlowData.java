@@ -4,6 +4,7 @@ import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Level;
@@ -24,7 +25,7 @@ import java.util.Set;
  */
 public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
-    private Flow sharing;
+    private Commitment commitment;
     private List<ContactData> contacts;
     private List<ContactData> bypassContacts;
     private List<Employment> employments;
@@ -36,13 +37,13 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     public AbstractFlowData(
-            Flow sharing,
+            Commitment commitment,
             Assignment assignment,
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         super( assignment, planService, planParticipationService, user );
-        this.sharing = sharing;
+        this.commitment = commitment;
     }
 
     protected void initData( PlanService planService, PlanParticipationService planParticipationService ) {
@@ -52,7 +53,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     private void initFailureSeverity( PlanService planService ) {
-        failureSeverity = planService.computeSharingPriority( getSharing() );
+        failureSeverity = planService.computeSharingPriority( getCommitment().getSharing() );
     }
 
     private void initBypassContact( PlanService planService, PlanParticipationService planParticipationService ) {
@@ -69,8 +70,8 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         }
     }
 
-    protected Flow getSharing() {
-        return sharing;
+    protected Commitment getCommitment() {
+        return commitment;
     }
 
     public boolean getReceiptConfirmationRequested() {
@@ -88,16 +89,16 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     public boolean isContextCommunicated() {
-        return sharing.isReferencesEventPhase();
+        return getSharing().isReferencesEventPhase();
     }
 
     public String getCommunicableContext() {
-        return sharing.getSegment().getPhaseEventTitle();
+        return getSharing().getSegment().getPhaseEventTitle();
     }
 
     public String getCommunicatedContext() {
-        return sharing.isReferencesEventPhase()
-                ? sharing.getSegment().getPhaseEventTitle()
+        return getSharing().isReferencesEventPhase()
+                ? getSharing().getSegment().getPhaseEventTitle()
                 : null;
     }
 
@@ -133,7 +134,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     public boolean getTaskFailed() {
-        return sharing.isIfTaskFails();
+        return getSharing().isIfTaskFails();
     }
 
     public boolean getContactAll() {
@@ -233,6 +234,10 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         allEmployments.addAll( listContactEmployments() );
         allEmployments.addAll( ListBypassContactEmployments() );
         return allEmployments;
+    }
+
+    private Flow getSharing() {
+        return commitment.getSharing();
     }
 
     public abstract List<Employment> findContactEmployments();

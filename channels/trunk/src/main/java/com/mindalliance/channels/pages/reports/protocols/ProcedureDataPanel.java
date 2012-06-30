@@ -8,6 +8,9 @@ import com.mindalliance.channels.api.procedures.NotificationData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.RequestData;
 import com.mindalliance.channels.api.procedures.TaskData;
+import com.mindalliance.channels.api.procedures.TriggerData;
+import com.mindalliance.channels.core.model.Level;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -42,12 +45,14 @@ public class ProcedureDataPanel extends AbstractDataPanel {
     private void init() {
         add( makeAnchor( "anchor", procedureData.getAnchor() ) );
         addTaskName();
+        addFailureImpact();
         addTaskDetails();
         addReceives();
         addSends();
+        addSelfTriggeredTasks();
     }
 
-    private void addTaskName() {
+     private void addTaskName() {
         add( new Label( "taskName", procedureData.getTaskLabel() ) );
         add( new Label( "title", procedureData.getTitleOrRole() )  );
         add( new Label( "org", procedureData.getOrganizationLabel() )  );
@@ -64,7 +69,17 @@ public class ProcedureDataPanel extends AbstractDataPanel {
         addLocation();
         addGoals();
         addTeammates();
-        taskDetailsContainer.add( makeAttributeContainer( "failureImpact", getTask().getFailureImpact() ) );
+    }
+
+    private void addFailureImpact() {
+        Level severity = getTask().getFailureSeverity();
+        String severityText = getTask().getFailureImpact().toLowerCase();
+        WebMarkupContainer impactContainer = new WebMarkupContainer( "failureImpact" );
+        impactContainer.add( new AttributeModifier( "class", "failureImpact-small " + severityText) );
+        add( impactContainer );
+        impactContainer.setVisible( severity.ordinal() > Level.Low.ordinal() );
+        Label severityLabel = new Label( "severity", severityText );
+        impactContainer.add( severityLabel );
     }
 
     private void addLocation() {
@@ -199,6 +214,35 @@ public class ProcedureDataPanel extends AbstractDataPanel {
          sendsContainer.add( flowListView );
     }
 
+    private void addSelfTriggeredTasks() {
+        List<TriggerData> researchSubs = getFinder()
+                .getResearchSubTasksTriggerredBy( procedureData.getAssignment().getTask() );
+        List<TriggerData> discoveryFollowups = getFinder()
+                .getDiscoveryFollowUpTasksTriggeredBy( procedureData.getAssignment().getTask() );
+        WebMarkupContainer selfTriggeredTasksContainer = new WebMarkupContainer( "selfTriggeredTasks" );
+        selfTriggeredTasksContainer.setVisible( !(researchSubs.isEmpty() && discoveryFollowups.isEmpty()) );
+        add( selfTriggeredTasksContainer );
+        ListView<TriggerData> researchSubTaskListView = new ListView<TriggerData>(
+                "researchTasks",
+                researchSubs
+        ) {
+            @Override
+            protected void populateItem( ListItem<TriggerData> item ) {
+                item.add( new SubProcedureLinkPanel( "researchTask", item.getModelObject(), getFinder() ) );
+            }
+        };
+        ListView<TriggerData> discoveryFollowUpListView = new ListView<TriggerData>(
+                "followUpTasks",
+                discoveryFollowups
+        ) {
+            @Override
+            protected void populateItem( ListItem<TriggerData> item ) {
+                item.add( new SubProcedureLinkPanel( "followUpTask", item.getModelObject(), getFinder()) );
+            }
+        };
+        selfTriggeredTasksContainer.add( researchSubTaskListView );
+        selfTriggeredTasksContainer.add( discoveryFollowUpListView );
+    }
 
     private AssignmentData getAssignment() {
         return procedureData.getAssignment();

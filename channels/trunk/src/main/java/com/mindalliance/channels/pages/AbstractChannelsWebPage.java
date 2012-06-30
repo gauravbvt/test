@@ -496,7 +496,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
            LOG.warn( "PANIC: selecting first plan" );
            plan = plans.get( 0 );
        }
-       user.setPlan( plan );
+       setPlan( plan );
        getQueryService();
    }
 

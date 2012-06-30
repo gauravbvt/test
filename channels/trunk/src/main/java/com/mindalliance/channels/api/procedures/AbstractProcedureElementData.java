@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import java.io.Serializable;
@@ -27,25 +27,25 @@ abstract public class AbstractProcedureElementData  implements Serializable {
     }
 
     protected AbstractProcedureElementData(
-            PlanService planService,
+            QueryService queryService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         this.user = user;
-        initData( planService, planParticipationService );
+        initData( queryService, planParticipationService );
     }
 
     protected AbstractProcedureElementData(
             Assignment assignment,
-            PlanService planService,
+            QueryService queryService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         this.assignment = assignment;
         this.user = user;
-        initData( planService, planParticipationService );
+        initData( queryService, planParticipationService );
     }
 
-    private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
-        plan = planService.getPlan();
+    private void initData( QueryService queryService, PlanParticipationService planParticipationService ) {
+        plan = queryService.getPlan();
     }
 
     public Assignment getAssignment() {

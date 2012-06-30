@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Event;
-import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.query.PlanService;
 
@@ -64,7 +63,7 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private void initAllResearch( PlanService planService, PlanParticipationService planParticipationService ) {
         allResearch = new ArrayList<ResearchData>();
-        for ( Flow research : research() ) {
+        for ( Commitment research : research() ) {
             allResearch.add( new ResearchData(
                     research,
                     getAssignment(),
@@ -77,9 +76,9 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private void initDiscoveries( PlanService planService, PlanParticipationService planParticipationService ) {
         discoveries = new ArrayList<DiscoveryData>();
-        for ( Flow discovery : discoveries() ) {
+        for ( Commitment discoveringCommitment : discoveries() ) {
             discoveries.add( new DiscoveryData(
-                    discovery,
+                    discoveringCommitment,
                     planService,
                     planParticipationService,
                     getUser() ) );
@@ -89,10 +88,10 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private void initOutReplies( PlanService planService, PlanParticipationService planParticipationService ) {
             outReplies = new ArrayList<RequestData>();
-            for ( Flow flow : outRequests() ) {
+            for ( Commitment commitment : outRequests() ) {
                 boolean replying = false;
                 outReplies.add( new RequestData(
-                        flow,
+                        commitment,
                         replying,
                         getAssignment(),
                         planService,
@@ -103,10 +102,10 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private void initInReplies( PlanService planService, PlanParticipationService planParticipationService ) {
             inReplies = new ArrayList<RequestData>();
-            for ( Flow flow : inRequests() ) {
+            for ( Commitment commitment : inRequests() ) {
                 boolean replying = true;
                 inReplies.add( new RequestData(
-                        flow,
+                        commitment,
                         replying,
                         getAssignment(),
                         planService,
@@ -117,7 +116,7 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private void initOutNotifications( PlanService planService, PlanParticipationService planParticipationService ) {
             outNotifications = new ArrayList<NotificationData>();
-            for ( Flow outNotification : outNotifications() ) {
+            for ( Commitment outNotification : outNotifications() ) {
                 boolean benefiting = false;
                 outNotifications.add( new NotificationData(
                         outNotification,
@@ -131,7 +130,7 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private void initInNotifications( PlanService planService, PlanParticipationService planParticipationService ) {
         inNotifications = new ArrayList<NotificationData>();
-        for ( Flow inNotification : inNotifications() ) {
+        for ( Commitment inNotification : inNotifications() ) {
             boolean benefiting = true;
             inNotifications.add( new NotificationData(
                     inNotification,
@@ -276,8 +275,8 @@ public class AssignmentData extends AbstractProcedureElementData {
     }
 
 
-    private List<Flow> inNotifications() {
-        Set<Flow> flows = new HashSet<Flow>();
+    private List<Commitment> inNotifications() {
+        Set<Commitment> commitments = new HashSet<Commitment>();
         for ( Commitment commitment : procedureData
                 .getBenefitingCommitments()
                 .notifications()
@@ -285,69 +284,69 @@ public class AssignmentData extends AbstractProcedureElementData {
                 .notFrom( getAssignment()
                         .getActor() )
                 ) {
-            flows.add( commitment.getSharing() );
+            commitments.add( commitment );
         }
-        return new ArrayList<Flow>( flows );
+        return new ArrayList<Commitment>( commitments );
     }
 
-    private List<Flow> outNotifications() {
-        Set<Flow> flows = new HashSet<Flow>();
+    private List<Commitment> outNotifications() {
+        Set<Commitment> commitments = new HashSet<Commitment>();
         for ( Commitment commitment : procedureData
                 .getCommittingCommitments()
                 .notifications()
                 .notTo( getAssignment()
                         .getActor() ) ) {
-            flows.add( commitment.getSharing() );
+            commitments.add( commitment );
         }
-        return new ArrayList<Flow>( flows );
+        return new ArrayList<Commitment>( commitments );
     }
 
-    private List<Flow> outRequests() {    // same as inReplies
-        Set<Flow> flows = new HashSet<Flow>();
+    private List<Commitment> outRequests() {    // same as inReplies
+        Set<Commitment> commitments = new HashSet<Commitment>();
         for ( Commitment commitment : procedureData
                 .getBenefitingCommitments()
                 .requests()
                 .notFrom( getAssignment()
                         .getActor() ) ) {
-            flows.add( commitment.getSharing() );
+            commitments.add( commitment );
         }
-        return new ArrayList<Flow>( flows );
+        return new ArrayList<Commitment>( commitments );
     }
 
-    private List<Flow> inRequests() {   // same as out replies
-        Set<Flow> flows = new HashSet<Flow>();
+    private List<Commitment> inRequests() {   // same as out replies
+        Set<Commitment> commitments = new HashSet<Commitment>();
         for ( Commitment commitment : procedureData
                 .getCommittingCommitments()
                 .requests()
                 .notTriggeringToSource()
                 .notTo( getAssignment()
                         .getActor() ) ) {
-            flows.add( commitment.getSharing() );
+            commitments.add( commitment );
         }
-        return new ArrayList<Flow>( flows );
+        return new ArrayList<Commitment>( commitments );
     }
 
-    private List<Flow> discoveries() {
-        Set<Flow> flows = new HashSet<Flow>();
+    private List<Commitment> discoveries() {
+        Set<Commitment> discoveringCommitments = new HashSet<Commitment>();
         for ( Commitment commitment : procedureData
                 .getCommittingCommitments()
                 .notifications()
                 .to( getAssignment()
                         .getActor() ) ) {
-            flows.add( commitment.getSharing() );
+            discoveringCommitments.add( commitment );
         }
-        return new ArrayList<Flow>( flows );
+        return new ArrayList<Commitment>( discoveringCommitments );
     }
 
-    private List<Flow> research() {
-        Set<Flow> flows = new HashSet<Flow>();
+    private List<Commitment> research() {
+        Set<Commitment> commitments = new HashSet<Commitment>();
         for ( Commitment commitment : procedureData.getBenefitingCommitments()
                 .requests()
                 .to( getAssignment().getActor() )
                 .from( getAssignment().getActor() ) ) {
-            flows.add( commitment.getSharing() );
+            commitments.add( commitment );
         }
-        return new ArrayList<Flow>( flows );
+        return new ArrayList<Commitment>( commitments );
     }
 
     public String getLabel() {
@@ -375,4 +374,6 @@ public class AssignmentData extends AbstractProcedureElementData {
     public String getOrganizationLabel() {
         return getAssignment().getEmployment().getOrganization().getName();
     }
+
+
 }

@@ -3,11 +3,12 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.EventTiming;
-import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.query.PlanService;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
@@ -25,16 +26,16 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:16 AM
  */
-@XmlType( propOrder = {"situation", "anytime", "onObservation", "onDiscovery", "onResearch", "onNotification", "onRequest", "ongoing"} )
+@XmlType( propOrder = {"situation", "anytime", "onObservation", "onDiscovery", "onResearch", "onNotification", "onRequest", "requestingTask", "ongoing"} )
 public class TriggerData extends AbstractProcedureElementData {
 
-    private Flow notificationFromOther;
-    private Flow requestFromOther;
+    private Commitment notificationFromOther;
+    private Commitment requestFromOther;
     private EventPhase eventPhase;
-    private Flow notificationToSelf;
+    private Commitment commitmentToSelf;
     private NotificationData onNotification;
     private RequestData onRequest;
-    private Flow requestToSelf;
+    private Commitment requestToSelf;
     private boolean ongoing = false;
     private List<EventTiming> eventPhaseContext;
     private DiscoveryData discoveryData;
@@ -46,11 +47,33 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
     public TriggerData(
-            Assignment assignment,
+            Assignment assignment, // task assignment being triggered
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         super( assignment, planService, planParticipationService, user );
+    }
+
+
+    private boolean equalOrBothNull( List<EventTiming> eventPhaseContext, List<EventTiming> otherEventPhaseContext ) {
+        return eventPhaseContext == null && otherEventPhaseContext == null
+                ||
+                ( eventPhaseContext != null && otherEventPhaseContext != null
+                && CollectionUtils.isEqualCollection( eventPhaseContext, otherEventPhaseContext ) );
+    }
+
+    private boolean equalOrBothNull( EventPhase eventPhase, EventPhase other ) {
+        return eventPhase == null && other == null
+                ||
+                (eventPhase != null && other != null && eventPhase.equals(  other ) );
+    }
+
+    private boolean equalOrBothNull( Commitment commitment, Commitment otherCommitment ) {
+        return commitment == null && otherCommitment == null
+                ||
+                ( commitment != null
+                && otherCommitment != null
+                && commitment.getSharing().equals( otherCommitment.getSharing() ) );
     }
 
     // Initialization
@@ -59,12 +82,12 @@ public class TriggerData extends AbstractProcedureElementData {
         this.ongoing = ongoing;
     }
 
-    public void setNotificationFromOther( Flow notificationFromOther ) {
+    public void setNotificationFromOther( Commitment notificationFromOther ) {
         this.notificationFromOther = notificationFromOther;
         ongoing = false;
     }
 
-    public void setRequestFromOther( Flow requestFromOther ) {
+    public void setRequestFromOther( Commitment requestFromOther ) {
         this.requestFromOther = requestFromOther;
         ongoing = false;
     }
@@ -78,12 +101,12 @@ public class TriggerData extends AbstractProcedureElementData {
         this.eventPhaseContext = eventPhaseContext;
     }
 
-    public void setNotificationToSelf( Flow notificationToSelf ) {
-        this.notificationToSelf = notificationToSelf;
+    public void setCommitmentToSelf( Commitment commitmentToSelf ) {
+        this.commitmentToSelf = commitmentToSelf;
         ongoing = false;
     }
 
-    public void setRequestToSelf( Flow requestToSelf ) {
+    public void setRequestToSelf( Commitment requestToSelf ) {
         this.requestToSelf = requestToSelf;
         ongoing = false;
     }
@@ -106,31 +129,31 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
     private void initOnRequest( PlanService planService, PlanParticipationService planParticipationService ) {
-            if ( requestFromOther != null )
-                onRequest = new RequestData(
-                        requestFromOther,
-                        true,
-                        getAssignment(),
-                        planService,
-                        planParticipationService,
-                        getUser() );
-            else
-                onRequest = null;
+        if ( requestFromOther != null )
+            onRequest = new RequestData(
+                    requestFromOther,
+                    true,
+                    getAssignment(),
+                    planService,
+                    planParticipationService,
+                    getUser() );
+        else
+            onRequest = null;
 
     }
 
     private void initOnNotification( PlanService planService, PlanParticipationService planParticipationService ) {
 
-            if ( notificationFromOther != null && !notificationFromOther.isToSelf() )
-                onNotification = new NotificationData(
-                        notificationFromOther,
-                        true,
-                        getAssignment(),
-                        planService,
-                        planParticipationService,
-                        getUser() );
-            else
-                onNotification = null;
+        if ( notificationFromOther != null && !notificationFromOther.isToSelf() )
+            onNotification = new NotificationData(
+                    notificationFromOther,
+                    true,
+                    getAssignment(),
+                    planService,
+                    planParticipationService,
+                    getUser() );
+        else
+            onNotification = null;
     }
 
     private void initResearchData( PlanService planService, PlanParticipationService planParticipationService ) {
@@ -147,8 +170,8 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
     private void initDiscoveryData( PlanService planService, PlanParticipationService planParticipationService ) {
-        if ( notificationToSelf != null )
-            discoveryData = new DiscoveryData( notificationToSelf, planService, planParticipationService, getUser() );
+        if ( commitmentToSelf != null )
+            discoveryData = new DiscoveryData( commitmentToSelf, planService, planParticipationService, getUser() );
         else
             discoveryData = null;
 
@@ -156,6 +179,7 @@ public class TriggerData extends AbstractProcedureElementData {
 
     ///// END INITIALIZATION
 
+    @XmlElement
     public boolean getOngoing() {
         return ongoing;
     }
@@ -165,6 +189,11 @@ public class TriggerData extends AbstractProcedureElementData {
         return notificationFromOther == null && requestFromOther == null && eventPhase == null
                 ? "true"
                 : null;
+    }
+
+    @XmlElement
+    public TaskData getRequestingTask() {
+        return researchData.getConsumingTask();
     }
 
     @XmlElement
@@ -200,10 +229,12 @@ public class TriggerData extends AbstractProcedureElementData {
         return situationData;
     }
 
+    ////////////////////
+
     private boolean isSituationKnown() {
         return eventPhase != null
-                || notificationFromOther != null && notificationFromOther.isReferencesEventPhase()
-                || requestFromOther != null && requestFromOther.isReferencesEventPhase();
+                || notificationFromOther != null && notificationFromOther.getSharing().isReferencesEventPhase()
+                || requestFromOther != null && requestFromOther.getSharing().isReferencesEventPhase();
     }
 
     @WebMethod( exclude = true )
@@ -296,7 +327,7 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
     public boolean isOnDiscovering() {
-        return notificationToSelf != null;
+        return commitmentToSelf != null;
     }
 
     public boolean isOnResearching() {
@@ -304,14 +335,14 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
 
-
+    @WebMethod( exclude = true )
     public String getLabel() {
         if ( eventPhase != null ) {
             return evenPhaseAndContextLabel();
         } else if ( requestFromOther != null ) {
-            return requestFromOther.getName();
+            return requestFromOther.getSharing().getName();
         } else if ( notificationFromOther != null ) {
-            return notificationFromOther.getName();
+            return notificationFromOther.getSharing().getName();
         } else {
             return "???";
         }
@@ -330,7 +361,7 @@ public class TriggerData extends AbstractProcedureElementData {
                 : phase.isConcurrent()
                 ? "The beginning of event \""
                 : "The ending of event \""
-        ) ;
+        );
         sb.append( eventPhase.getEvent().getLabel() );
         sb.append( "\"" );
         if ( eventPhaseContext != null && !eventPhaseContext.isEmpty() ) {
@@ -346,6 +377,67 @@ public class TriggerData extends AbstractProcedureElementData {
         return sb.toString();
     }
 
+    public Commitment notificationFromOther() {
+        return notificationFromOther;
+    }
+
+    public Commitment requestFromOther() {
+        return requestFromOther;
+    }
+
+    public EventPhase eventPhase() {
+        return eventPhase;
+    }
+
+    public Commitment commitmentToSelf() {
+        return commitmentToSelf;
+    }
+
+    public Commitment requestToSelf() {
+        return requestToSelf;
+    }
+
+    public List<EventTiming> eventPhaseContext() {
+        return eventPhaseContext;
+    }
 
 
- }
+    @WebMethod( exclude = true )
+    public Assignment discoveringAssignment() {
+        return discoveryData.getDiscoveringAssignment();
+    }
+
+    public boolean equals( Object object ) {
+        if ( object instanceof TriggerData ) {
+            TriggerData other = (TriggerData) object;
+            return ongoing == other.getOngoing()
+                    && equalOrBothNull( notificationFromOther, other.notificationFromOther() )
+                    && equalOrBothNull( requestFromOther, other.requestFromOther() )
+                    && equalOrBothNull( requestToSelf, other.requestToSelf() )
+                    && equalOrBothNull( commitmentToSelf, other.commitmentToSelf() )
+                    && equalOrBothNull( eventPhase, other.eventPhase() )
+                    && equalOrBothNull( eventPhaseContext, other.eventPhaseContext() ) ;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        if ( ongoing ) result = 31 * result;
+        if ( notificationFromOther != null ) result = 31 * result +  notificationFromOther.getSharing().hashCode();
+        if ( requestFromOther != null ) result = 31 * result +  requestFromOther.getSharing().hashCode();
+        if ( requestToSelf != null ) result = 31 * result +  requestToSelf.getSharing().hashCode();
+        if ( commitmentToSelf != null ) result = 31 * result +  commitmentToSelf.getSharing().hashCode();
+        if ( eventPhase != null ) result = 31 * result +  eventPhase.hashCode();
+         if ( eventPhaseContext != null ) {
+            for ( EventTiming eventTiming : eventPhaseContext ) {
+                result = 31 * result + eventTiming.hashCode();
+            }
+        }
+        return result;
+    }
+
+
+}

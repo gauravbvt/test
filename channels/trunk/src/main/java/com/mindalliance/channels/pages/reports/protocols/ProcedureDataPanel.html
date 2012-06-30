@@ -17,7 +17,10 @@
         <span wicket:id="title">title or role</span><br/>at
         <span wicket:id="org">org</span>
     </h4>
-
+    <div class="failureImpact-small" wicket:id="failureImpact">Failure to carry out this task could have
+        <span wicket:id="severity">extreme</span>
+        consequences
+    </div>
     <div wicket:id="task">
         <div class="instructions" wicket:id="instructions">
             <label>Instructions:</label>
@@ -50,11 +53,7 @@
             </div>
             <!--repeated -->
         </div>
-        <div class="failureImpact" wicket:id="failureImpact">
-            <label>possible consequences of failure:</label>
 
-            <div wicket:id="value">a failure impact</div>
-        </div>
     </div>
 
     <div wicket:id="receives">
@@ -74,6 +73,16 @@
             <div wicket:id="inRequest"> [commitment panel]</div>
         </div>
     </div>
+
+    <div wicket:id="selfTriggeredTasks">
+        <div wicket:id="researchTasks"> <!-- repeated -->
+            <div wicket:id="researchTask">[sub procedure data panel]</div>
+        </div>
+        <div wicket:id="followUpTasks"> <!-- repeated -->
+            <div wicket:id="followUpTask">[sub procedure data panel]</div>
+        </div>
+    </div>
+
 </wicket:panel>
 </body>
 </html>

@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -38,13 +39,13 @@ public class CommitmentDataPanel extends AbstractDataPanel {
 
     private void init() {
         addHeader();
+        addFailureImpact();
         addContacts();
         addMaxDelay();
         addOnFailure();
         addEois();
         addInstructions();
         addBypassContacts();
-        addFailureImpact();
     }
 
     private void addHeader() {
@@ -244,8 +245,9 @@ public class CommitmentDataPanel extends AbstractDataPanel {
 
     private void addFailureImpact() {
         Level severity = flowData.getFailureSeverity();
-        String severityText = flowData.getFailureImpact();
+        String severityText = flowData.getFailureImpact().toLowerCase();
         WebMarkupContainer impactContainer = new WebMarkupContainer( "failureImpact" );
+        impactContainer.add( new AttributeModifier( "class", "failureImpact-small " + severityText) );
         add( impactContainer );
         impactContainer.setVisible( severity.ordinal() > Level.Low.ordinal() );
         Label severityLabel = new Label( "severity", severityText );
