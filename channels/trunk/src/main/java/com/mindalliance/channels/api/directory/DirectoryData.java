@@ -2,9 +2,9 @@ package com.mindalliance.channels.api.directory;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
+import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
-import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.query.QueryService;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -14,9 +14,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A directory of contacts extracted from procedures data.
@@ -39,22 +37,17 @@ public class DirectoryData implements Serializable {
 
     public DirectoryData( ProceduresData proceduresData, QueryService queryService, PlanParticipationService planParticipationService ) {
         this.proceduresData = proceduresData;
-        initData( queryService, planParticipationService );
+        initData( );
     }
 
-    private void initData( QueryService queryService, PlanParticipationService planParticipationService ) {
-        initDirectoryContacts( queryService,  planParticipationService);
+    private void initData(  ) {
+        initDirectoryContacts( );
     }
 
-    private void initDirectoryContacts( QueryService queryService, PlanParticipationService planParticipationService ) {
+    private void initDirectoryContacts(  ) {
         directoryContacts = new ArrayList<ContactData>();
-        for ( Employment employment : findDirectoryEmployments() ) {
-            directoryContacts.addAll( ContactData.findContactsFromEmployment(
-                    employment,
-                    queryService,
-                    planParticipationService,
-                    proceduresData.getUser()
-            ) );
+        for ( ProcedureData procedureData : proceduresData.getProcedures() ) {
+            directoryContacts.addAll( procedureData.allContacts() );
         }
 
     }
@@ -83,15 +76,6 @@ public class DirectoryData implements Serializable {
     @XmlElement( name = "contact" )
     public List<ContactData> getContacts() {
         return directoryContacts;
-    }
-
-    private Set<Employment> findDirectoryEmployments() {
-        Set<Employment> employments = new HashSet<Employment>();
-        for ( EmploymentData employmentData : proceduresData.getEmployments() ) {
-            employments.add( employmentData.getEmployment() );
-        }
-        employments.addAll( proceduresData.getContactEmployments() );
-        return employments;
     }
 
 

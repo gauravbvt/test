@@ -2,11 +2,14 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
@@ -27,85 +30,99 @@ import java.util.Set;
  * Time: 12:49 PM
  */
 @XmlType( propOrder = {"information", "intent", "communicatedContext", "taskFailed", "receiptConfirmationRequested",
-        "instructions", "contactAll", "maxDelay", "contacts", "bypassContacts", "mediumIds", "failureImpact",
+        "instructions", "contactAll", "maxDelay", "contacts", "mediumIds", "failureImpact",
         "consumingTask", "documentation"/*, "agreements"*/} )
 public class NotificationData extends AbstractFlowData {
 
-    private boolean consuming;
+    private List<Commitment> commitments;
     private List<Employment> contactEmployments;
-    private TaskData consumingTaskData  ;
-    private List<Employment> bypassContactEmployments;
+    private List<ContactData> contacts;
+    private TaskData consumingTaskData;
 
     public NotificationData() {
         // required
     }
 
     public NotificationData(
-            Commitment commitment,
-            boolean consuming,
+            Flow notification,
+            boolean initiating,
             Assignment assignment,
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        super( commitment, assignment, planService, planParticipationService, user );
-        this.consuming = consuming;
-        initData( planService, planParticipationService );
+        super( initiating, notification, assignment, planService, planParticipationService, user );
+        initData(
+                planService,
+                planParticipationService,
+                user == null ? null : user.getUserInfo() );
     }
 
-    protected void initData( PlanService planService, PlanParticipationService planParticipationService ) {
-        initContactEmployments( planService );
-        initBypassContactEmployments( planService );
+    @Override
+    public List<Employment> findContactEmployments() {
+        return contactEmployments;
+    }
+
+    protected void initData(
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUserInfo userInfo ) {
+        initCommitments( planService );
+        initContactEmployments( planService, planParticipationService, userInfo );
         initConsumingTask( planService, planParticipationService );
-        super.initData( planService, planParticipationService );
+        initOtherData( planService );
     }
 
-    private void initBypassContactEmployments( PlanService planService ) {
-        Set<Employment> contacts = new HashSet<Employment>();
-        if ( !consuming ) {
-            List<Commitment> bypassCommitments = planService
-                    .findAllBypassCommitments( getNotification().getSharing() );
-            if ( !bypassCommitments.isEmpty() ) {
-                Actor assignedActor = getAssignment().getActor();
-                List<Actor> directContacts = findDirectContacts();
-                for ( Commitment commitment : bypassCommitments ) {
-                    if ( directContacts.contains( commitment.getCommitter().getActor() )
-                            && !commitment.getBeneficiary().getActor().equals( assignedActor )
-                            && !directContacts.contains( commitment.getBeneficiary().getActor() ) ) {
-                        contacts.add( commitment.getBeneficiary().getEmployment() );
-                    }
+    private void initCommitments( PlanService planService ) {
+        commitments = new ArrayList<Commitment>(  ) ;
+        for ( Commitment commitment : planService.findAllCommitments( getSharing(), false, false ) ) {   // no unknown, not to self
+            if ( isInitiating() ) {
+                if ( commitment.getCommitter().equals(  getAssignment() )  ) {
+                   commitments.add( commitment );
+                }
+            } else {
+                if ( commitment.getBeneficiary().equals( getAssignment() )  ) {
+                    commitments.add( commitment );
                 }
             }
         }
-        bypassContactEmployments = new ArrayList<Employment>( contacts );
-
     }
 
-    private void initContactEmployments( PlanService planService ) {
-            Set<Employment> contacts = new HashSet<Employment>();
-            Actor assignedActor = getAssignment().getActor();
-            List<Commitment> commitments = planService.findAllCommitments( getNotification().getSharing() );
-            for ( Commitment commitment : commitments ) {
-                if ( consuming ) {
-                    if ( commitment.getBeneficiary().getActor().equals( assignedActor )
-                            && !commitment.getCommitter().getActor().equals( assignedActor ) ) {
-                        contacts.add( commitment.getCommitter().getEmployment() );
-                    }
-                } else { // producing
-                    if ( commitment.getCommitter().getActor().equals( assignedActor )
-                            && !commitment.getBeneficiary().getActor().equals( assignedActor ) ) {
-                        contacts.add( commitment.getBeneficiary().getEmployment() );
-                    }
-                }
+    private void initContactEmployments(
+            PlanService planService,
+            PlanParticipationService planParticipationService,
+            ChannelsUserInfo userInfo ) {
+        Set<Employment> employments = new HashSet<Employment>();
+        Set<ContactData> contactDataSet = new HashSet<ContactData>(  );
+        for ( Commitment commitment : commitments ) {
+            if ( isInitiating() ) {  // notifying
+                Employment employment = commitment.getBeneficiary().getEmployment();
+                employments.add( employment );
+                contactDataSet.addAll( ContactData.findContactsFromEmployment(
+                        employment,
+                        commitment,
+                        planService,
+                        planParticipationService, userInfo ) ) ;
+            } else { // being notified
+                Employment employment = commitment.getCommitter().getEmployment();
+                employments.add( employment );
+                contactDataSet.addAll( ContactData.findContactsFromEmployment(
+                        employment,
+                        commitment,
+                        planService,
+                        planParticipationService,
+                        userInfo ) ) ;
             }
-            contactEmployments = new ArrayList<Employment>( contacts );
+        }
+        contactEmployments = new ArrayList<Employment>( employments );
+        contacts = new ArrayList<ContactData>( contactDataSet );
     }
 
     private void initConsumingTask( PlanService planService, PlanParticipationService planParticipationService ) {
-        if ( consuming )
+        if ( !isInitiating() )
             consumingTaskData = null;
         else
-            consumingTaskData=  new TaskData(
-                    getNotification().getBeneficiary(),
+            consumingTaskData = new TaskData(
+                    (Part)getNotification().getTarget(),
                     planService,
                     planParticipationService,
                     getUser() );
@@ -115,7 +132,7 @@ public class NotificationData extends AbstractFlowData {
     @Override
     @XmlElement
     public InformationData getInformation() {
-        return new InformationData( getNotification().getSharing() );
+        return new InformationData( getNotification() );
     }
 
     @Override
@@ -153,13 +170,7 @@ public class NotificationData extends AbstractFlowData {
     @Override
     @XmlElement( name = "contact" )
     public List<ContactData> getContacts() {
-        return super.getContacts();
-    }
-
-    @Override
-    @XmlElement( name = "bypassContact" )
-    public List<ContactData> getBypassContacts() {
-        return super.getBypassContacts();
+        return contacts;
     }
 
     @Override
@@ -209,20 +220,8 @@ public class NotificationData extends AbstractFlowData {
         }
     */
 
-    @Override
-    public List<Employment> findContactEmployments() {
-        return contactEmployments;
-    }
-
-    @Override
     @SuppressWarnings( "unchecked" )
-    // Don't repeat any (direct) contact employment
-    public List<Employment> findBypassContactEmployments() {
-        return bypassContactEmployments;
-    }
-
-    @SuppressWarnings( "unchecked" )
-   private List<Actor> findDirectContacts() {
+    private List<Actor> findDirectContacts() {
         return (List<Actor>) CollectionUtils.collect(
                 findContactEmployments(),
                 new Transformer() {
@@ -234,8 +233,8 @@ public class NotificationData extends AbstractFlowData {
         );
     }
 
-    private Commitment getNotification() {
-        return getCommitment();
+    private Flow getNotification() {
+        return getSharing();
     }
 
 }

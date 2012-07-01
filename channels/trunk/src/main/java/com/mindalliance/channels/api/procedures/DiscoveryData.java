@@ -2,8 +2,8 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
-import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -20,7 +20,7 @@ import java.io.Serializable;
 public class DiscoveryData  implements Serializable {
 
     private ChannelsUser user;
-    private Commitment commitmentToSelf;
+    private Flow notificationToSelf;
     private InfoDiscoveredData infoDiscoveredData;
     private TaskData followUpTask;
 
@@ -29,20 +29,20 @@ public class DiscoveryData  implements Serializable {
     }
 
 
-    public DiscoveryData( Commitment commitmentToSelf,
+    public DiscoveryData( Flow notificationToSelf,
                           QueryService queryService,
                           PlanParticipationService planParticipationService,
                           ChannelsUser user ) {
-        this.commitmentToSelf = commitmentToSelf;
+        this.notificationToSelf = notificationToSelf;
         this.user = user;
         initData( queryService, planParticipationService );
     }
 
     private void initData( QueryService planService, PlanParticipationService planParticipationService ) {
-        if ( commitmentToSelf != null ) {
-            infoDiscoveredData = new InfoDiscoveredData( commitmentToSelf, planService, planParticipationService, user );
+        if ( notificationToSelf != null ) {
+            infoDiscoveredData = new InfoDiscoveredData( notificationToSelf, planService, planParticipationService, user );
             followUpTask = new TaskData(
-                    commitmentToSelf.getBeneficiary(),
+                    (Part)notificationToSelf.getTarget(),
                     planService,
                     planParticipationService,
                     user );
@@ -57,11 +57,11 @@ public class DiscoveryData  implements Serializable {
         return infoDiscoveredData;
     }
 
-    public Assignment getDiscoveringAssignment() {
-        return commitmentToSelf.getCommitter();
-    }
-
     public TaskData getFollowUpTask() {
           return followUpTask;
+    }
+
+    public Part getDiscoveringPart() {
+        return (Part)notificationToSelf.getSource();
     }
 }

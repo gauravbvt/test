@@ -128,7 +128,7 @@ public class ContactDataPanel extends AbstractDataPanel {
     }
 
     private void addSupervisors() {
-        List<ContactData> supervisors = contactData.getSupervisorContact();
+        List<ContactData> supervisors = contactData.getSupervisorContacts();
         WebMarkupContainer supervisorsContainer = new WebMarkupContainer( "supervisors" );
         supervisorsContainer.setVisible(  !supervisors.isEmpty() );
         add(  supervisorsContainer );
@@ -143,4 +143,5 @@ public class ContactDataPanel extends AbstractDataPanel {
         };
         supervisorsContainer.add(  supervisorsListView );
     }
+
 }

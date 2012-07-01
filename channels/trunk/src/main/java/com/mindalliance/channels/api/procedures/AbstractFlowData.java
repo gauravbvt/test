@@ -25,53 +25,37 @@ import java.util.Set;
  */
 public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
-    private Commitment commitment;
-    private List<ContactData> contacts;
-    private List<ContactData> bypassContacts;
-    private List<Employment> employments;
-    private List<Employment> bypassEmployments;
+    private boolean initiating;
+    private Flow flow;
     private Level failureSeverity;
+    private List<Employment> allEmployments;
 
     public AbstractFlowData() {
         // required
     }
 
     public AbstractFlowData(
-            Commitment commitment,
+            boolean initiating,
+            Flow flow,
             Assignment assignment,
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         super( assignment, planService, planParticipationService, user );
-        this.commitment = commitment;
+        this.initiating = initiating;
+        this.flow = flow;
     }
 
-    protected void initData( PlanService planService, PlanParticipationService planParticipationService ) {
-        initContacts( planService, planParticipationService );
-        initBypassContact( planService, planParticipationService );
+    protected void initOtherData( PlanService planService ) {
         initFailureSeverity( planService );
     }
 
     private void initFailureSeverity( PlanService planService ) {
-        failureSeverity = planService.computeSharingPriority( getCommitment().getSharing() );
+        failureSeverity = planService.computeSharingPriority( getSharing() );
     }
 
-    private void initBypassContact( PlanService planService, PlanParticipationService planParticipationService ) {
-        bypassContacts = new ArrayList<ContactData>();
-        for ( Employment employment : ListBypassContactEmployments() ) {
-            bypassContacts.addAll( findContactsFromEmployment( employment, planService, planParticipationService ) );
-        }
-    }
-
-    private void initContacts( PlanService planService, PlanParticipationService planParticipationService ) {
-        contacts = new ArrayList<ContactData>();
-        for ( Employment employment : listContactEmployments() ) {
-            contacts.addAll( findContactsFromEmployment( employment, planService, planParticipationService ) );
-        }
-    }
-
-    protected Commitment getCommitment() {
-        return commitment;
+    public boolean isInitiating() {
+        return initiating;
     }
 
     public boolean getReceiptConfirmationRequested() {
@@ -102,24 +86,17 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
                 : null;
     }
 
-    public List<ContactData> getContacts() {
-        return contacts;
-    }
-
-    public List<ContactData> getBypassContacts() {
-        return bypassContacts;
-
-    }
-
     private List<ContactData> findContactsFromEmployment(
             Employment employment,
+            Commitment commitment,
             PlanService planService,
             PlanParticipationService planParticipationService ) {
         return ContactData.findContactsFromEmployment(
                 employment,
+                commitment,
                 planService,
                 planParticipationService,
-                getUser()
+                getUser() == null ? null : getUser().getUserInfo()
         );
 
     }
@@ -162,7 +139,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allOrganizationIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( Employment employment : allEmployments() ) {
+        for ( Employment employment : findAllEmployments() ) {
             ids.add( employment.getOrganization().getId() );
         }
         return ids;
@@ -170,7 +147,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allActorIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( Employment employment : allEmployments() ) {
+        for ( Employment employment : findAllEmployments() ) {
             ids.add( employment.getActor().getId() );
             if ( employment.getSupervisor() != null )
                 ids.add( employment.getSupervisor().getId() );
@@ -184,7 +161,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allRoleIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( Employment employment : allEmployments() ) {
+        for ( Employment employment : findAllEmployments() ) {
             ids.add( employment.getRole().getId() );
         }
         return ids;
@@ -192,12 +169,26 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allPlaceIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( Employment employment : allEmployments() ) {
+        for ( Employment employment : findAllEmployments() ) {
             if ( employment.getJurisdiction() != null )
                 ids.add( employment.getJurisdiction().getId() );
         }
         return ids;
     }
+
+    private List<Employment> findAllEmployments() {
+        if ( allEmployments == null ) {
+            Set<Employment> employmentSet = new HashSet<Employment>();
+            for ( ContactData contactData : getContacts() ) {
+                employmentSet.add( contactData.employment() );
+                employmentSet.addAll( contactData.bypassEmployments() );
+            }
+            allEmployments = new ArrayList<Employment>( employmentSet );
+        }
+        return allEmployments;
+    }
+
+    public abstract List<ContactData> getContacts();
 
 
 /*    public List<AgreementData> getAgreements() {
@@ -213,36 +204,14 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return new DocumentationData( getSharing() );
     }
 
-    protected List<Employment> listContactEmployments() {
-        if ( employments == null ) {
-            employments = findContactEmployments();
-        }
-        return employments;
-    }
 
     public abstract boolean isNotification();
 
-    protected List<Employment> ListBypassContactEmployments() {
-        if ( bypassEmployments == null ) {
-            bypassEmployments = findBypassContactEmployments();
-        }
-        return bypassEmployments;
-    }
 
-    private List<Employment> allEmployments() {
-        List<Employment> allEmployments = new ArrayList<Employment>();
-        allEmployments.addAll( listContactEmployments() );
-        allEmployments.addAll( ListBypassContactEmployments() );
-        return allEmployments;
-    }
-
-    private Flow getSharing() {
-        return commitment.getSharing();
+    public Flow getSharing() {
+        return flow;
     }
 
     public abstract List<Employment> findContactEmployments();
-
-    public abstract List<Employment> findBypassContactEmployments();
-
 
 }

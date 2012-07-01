@@ -45,7 +45,6 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         addOnFailure();
         addEois();
         addInstructions();
-        addBypassContacts();
     }
 
     private void addHeader() {
@@ -99,12 +98,18 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         if ( received ) {
             return "Your sources are";
         } else {
-            if ( flowData.isNotification() )
-                return flowData.getContactAll()
-                        ? "Contact all of"
-                        : "Contact any of";
-            else
+            if ( flowData.isNotification() ) {
+                List<ContactData> contacts = flowData.getContacts();
+                if ( contacts.size() == 1 ) {
+                    return "Contact";
+                } else {
+                    return flowData.getContactAll()
+                            ? "Contact all of"
+                            : "Contact any of";
+                }
+            } else {
                 return "To";
+            }
         }
     }
 
@@ -115,24 +120,28 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         Label whenLabel = new Label(
                 "when",
                 received
-                    ? flowData.isNotification()
-                         ? "Expect to receive notification"
-                         : "Expect an answer"
-                    : flowData.isNotification()
-                        ? "Notify"
-                        : "Answer");
-        maxDelayContainer.add( whenLabel);
+                        ? flowData.isNotification()
+                            ? "Expect to receive a notification"
+                            : "Expect an answer"
+                        : flowData.isNotification()
+                            ? "Notify"
+                            : "Answer" );
+        maxDelayContainer.add( whenLabel );
         Label delayLabel = new Label(
-                "maxDelay", makeDelayLabel( timeDelay ));
+                "maxDelay", makeDelayLabel( timeDelay ) );
         delayLabel.setVisible( timeDelay != null );
         maxDelayContainer.add( delayLabel );
     }
 
     private String makeDelayLabel( TimeDelayData timeDelay ) {
         if ( timeDelay == null ) return "";
-        else {
-            String prefix = timeDelay.isImmediate() ? "" : "within ";
-            return prefix + timeDelay.getLabel();
+        if ( timeDelay.isImmediate() ) {
+            return flowData.isNotification()
+                    ? "as soon as the information becomes available"
+                    : "immediately";
+        } else {
+            return timeDelay.getLabel()
+                    + ( flowData.isNotification() ? " of the information becoming available" : "" );
         }
     }
 
@@ -143,7 +152,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                         ? "BUT ONLY IF you failed to execute the task"
                         : ""
         );
-        failureLabel.setVisible( flowData.getTaskFailed() &&  !( received && flowData.isNotification() ) );
+        failureLabel.setVisible( flowData.getTaskFailed() && !( received && flowData.isNotification() ) );
         add( failureLabel );
     }
 
@@ -153,7 +162,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         WebMarkupContainer eoisContainer = new WebMarkupContainer( "eoisContainer" );
         add( eoisContainer );
         eoisContainer.setVisible( !eois.isEmpty() );
-        Label eoisLabel = new Label( "eoisLabel" , getEoisLabel() );
+        Label eoisLabel = new Label( "eoisLabel", getEoisLabel() );
         eoisContainer.add( eoisLabel );
         eoisContainer.add( new EoisPanel( "eois", eois, getFinder() ) );
     }
@@ -215,39 +224,12 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                         || flowData.isContextCommunicated() );
     }
 
-    private void addBypassContacts() {
-        List<ContactData> contacts = flowData.getBypassContacts();
-        WebMarkupContainer contactsContainer = new WebMarkupContainer( "bypassContactsContainer" );
-        contactsContainer.setVisible( !contacts.isEmpty() );
-        add( contactsContainer );
-        Label anyAllLabel = new Label(
-                "anyAll",
-                "If the above contacts are unreachable, try instead..."
-        );
-        contactsContainer.add( anyAllLabel );
-        ListView<ContactData> contactsListView = new ListView<ContactData>(
-                "contacts",
-                contacts
-        ) {
-            @Override
-            protected void populateItem( ListItem<ContactData> item ) {
-                ContactData contactData = item.getModelObject();
-                item.add( new ContactLinkPanel(
-                        "contact",
-                        contactData,
-                        getWorkChannels( contactData ),
-                        getPersonalChannels( contactData ),
-                        getFinder() ) );
-            }
-        };
-        contactsContainer.add( contactsListView );
-    }
 
     private void addFailureImpact() {
         Level severity = flowData.getFailureSeverity();
         String severityText = flowData.getFailureImpact().toLowerCase();
         WebMarkupContainer impactContainer = new WebMarkupContainer( "failureImpact" );
-        impactContainer.add( new AttributeModifier( "class", "failureImpact-small " + severityText) );
+        impactContainer.add( new AttributeModifier( "class", "failureImpact-small " + severityText ) );
         add( impactContainer );
         impactContainer.setVisible( severity.ordinal() > Level.Low.ordinal() );
         Label severityLabel = new Label( "severity", severityText );

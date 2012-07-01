@@ -12,7 +12,6 @@ import com.mindalliance.channels.api.procedures.TaskData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
-import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
@@ -127,7 +126,7 @@ public class ProtocolsFinder implements Serializable {
             for ( TriggerData triggerData : procedureData.getDiscoveryTriggers() ) {
                 addTo( onDiscoveries, triggerData, procedureData );
                 TaskData discoveringTask = new TaskData(
-                        triggerData.discoveringAssignment(),
+                        triggerData.discoveringPart(),
                         queryService,
                         planParticipationService,
                         user );
@@ -139,17 +138,8 @@ public class ProtocolsFinder implements Serializable {
                 addTo( researchSubTasks, requestingTask, triggerData );
             }
         }
-        for ( Employment employment : procedureData.getNonTriggerContactEmployments() ) {
-            List<ContactData> contacts = ContactData.findContactsFromEmployment(
-                    employment,
-                    queryService,
-                    planParticipationService,
-                    user
-            );
-            for ( ContactData contactData : contacts ) {
-                rolodex.add( contactData );
-            }
-        }
+        // add contacts not yet added as direct, trigger contacts
+        rolodex.addAll( procedureData.allContacts() );
     }
 
     private void addTo( Map<ObservationData, List<ProcedureData>> map,
@@ -224,12 +214,6 @@ public class ProtocolsFinder implements Serializable {
 
     public Map<TriggerData, List<ProcedureData>> getOnResearchProcedures() {
         return onResearches;
-    }
-
-    public List<ContactData> getSortedRolodex() {
-        List<ContactData> sortedRolodex = new ArrayList<ContactData>( rolodex );
-        sortContacts( sortedRolodex );
-        return sortedRolodex;
     }
 
     @SuppressWarnings( "unchecked" )

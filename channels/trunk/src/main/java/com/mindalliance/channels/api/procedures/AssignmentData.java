@@ -1,10 +1,12 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.query.PlanService;
 
@@ -12,6 +14,8 @@ import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -63,9 +67,9 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private void initAllResearch( PlanService planService, PlanParticipationService planParticipationService ) {
         allResearch = new ArrayList<ResearchData>();
-        for ( Commitment research : research() ) {
+        for ( Flow researchFlow : research() ) {
             allResearch.add( new ResearchData(
-                    research,
+                    researchFlow,
                     getAssignment(),
                     planService,
                     planParticipationService,
@@ -76,9 +80,9 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private void initDiscoveries( PlanService planService, PlanParticipationService planParticipationService ) {
         discoveries = new ArrayList<DiscoveryData>();
-        for ( Commitment discoveringCommitment : discoveries() ) {
+        for ( Flow discoveringFlow : discoveries() ) {
             discoveries.add( new DiscoveryData(
-                    discoveringCommitment,
+                    discoveringFlow,
                     planService,
                     planParticipationService,
                     getUser() ) );
@@ -88,11 +92,11 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private void initOutReplies( PlanService planService, PlanParticipationService planParticipationService ) {
             outReplies = new ArrayList<RequestData>();
-            for ( Commitment commitment : outRequests() ) {
-                boolean replying = false;
+            for ( Flow outRequestFlow : outRequests() ) {
+                boolean initiating = false;
                 outReplies.add( new RequestData(
-                        commitment,
-                        replying,
+                        outRequestFlow,
+                        initiating,
                         getAssignment(),
                         planService,
                         planParticipationService,
@@ -102,11 +106,11 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private void initInReplies( PlanService planService, PlanParticipationService planParticipationService ) {
             inReplies = new ArrayList<RequestData>();
-            for ( Commitment commitment : inRequests() ) {
-                boolean replying = true;
+            for ( Flow inRequestFlow : inRequests() ) {
+                boolean initiating = true;
                 inReplies.add( new RequestData(
-                        commitment,
-                        replying,
+                        inRequestFlow,
+                        initiating,
                         getAssignment(),
                         planService,
                         planParticipationService,
@@ -116,11 +120,11 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private void initOutNotifications( PlanService planService, PlanParticipationService planParticipationService ) {
             outNotifications = new ArrayList<NotificationData>();
-            for ( Commitment outNotification : outNotifications() ) {
-                boolean benefiting = false;
+            for ( Flow outNotificationFlow : outNotifications() ) {
+                boolean initiating = true;
                 outNotifications.add( new NotificationData(
-                        outNotification,
-                        benefiting,
+                        outNotificationFlow,
+                        initiating,
                         getAssignment(),
                         planService,
                         planParticipationService,
@@ -130,11 +134,11 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private void initInNotifications( PlanService planService, PlanParticipationService planParticipationService ) {
         inNotifications = new ArrayList<NotificationData>();
-        for ( Commitment inNotification : inNotifications() ) {
-            boolean benefiting = true;
+        for ( Flow inNotificationFlow : inNotifications() ) {
+            boolean initiating = false;
             inNotifications.add( new NotificationData(
-                    inNotification,
-                    benefiting,
+                    inNotificationFlow,
+                    initiating,
                     getAssignment(),
                     planService,
                     planParticipationService,
@@ -186,7 +190,8 @@ public class AssignmentData extends AbstractProcedureElementData {
             ids.add( notificationData.getConsumingTask().getEventId() );
         }
         for ( RequestData requestData : getInRequests() ) {
-            ids.add( requestData.getConsumingTask().getEventId() );
+            if ( requestData.getConsumingTask() != null )
+                ids.add(  requestData.getConsumingTask().getEventId() );
         }
         Event initiatedEvent = getAssignment().getPart().getInitiatedEvent();
         if ( initiatedEvent != null )
@@ -201,7 +206,8 @@ public class AssignmentData extends AbstractProcedureElementData {
             ids.add( notificationData.getConsumingTask().getPhaseId() );
         }
         for ( RequestData requestData : getInRequests() ) {
-            ids.add( requestData.getConsumingTask().getPhaseId() );
+            if (requestData.getConsumingTask() != null )
+                ids.add( requestData.getConsumingTask().getPhaseId() );
         }
         return ids;
     }
@@ -275,8 +281,8 @@ public class AssignmentData extends AbstractProcedureElementData {
     }
 
 
-    private List<Commitment> inNotifications() {
-        Set<Commitment> commitments = new HashSet<Commitment>();
+    private List<Flow> inNotifications() {
+        Set<Flow> inNotificationFlows = new HashSet<Flow>();
         for ( Commitment commitment : procedureData
                 .getBenefitingCommitments()
                 .notifications()
@@ -284,69 +290,80 @@ public class AssignmentData extends AbstractProcedureElementData {
                 .notFrom( getAssignment()
                         .getActor() )
                 ) {
-            commitments.add( commitment );
+            inNotificationFlows.add( commitment.getSharing() );
         }
-        return new ArrayList<Commitment>( commitments );
+        return asSortedFlows( inNotificationFlows );
     }
 
-    private List<Commitment> outNotifications() {
-        Set<Commitment> commitments = new HashSet<Commitment>();
+    private List<Flow> outNotifications() {
+        Set<Flow> outNotificationFlows = new HashSet<Flow>();
         for ( Commitment commitment : procedureData
                 .getCommittingCommitments()
                 .notifications()
                 .notTo( getAssignment()
                         .getActor() ) ) {
-            commitments.add( commitment );
+            outNotificationFlows.add( commitment.getSharing() );
         }
-        return new ArrayList<Commitment>( commitments );
+        return asSortedFlows( outNotificationFlows );
     }
 
-    private List<Commitment> outRequests() {    // same as inReplies
-        Set<Commitment> commitments = new HashSet<Commitment>();
+    private List<Flow> outRequests() {    // same as inReplies
+        Set<Flow> outRequestFlows = new HashSet<Flow>();
         for ( Commitment commitment : procedureData
                 .getBenefitingCommitments()
                 .requests()
                 .notFrom( getAssignment()
                         .getActor() ) ) {
-            commitments.add( commitment );
+            outRequestFlows.add( commitment.getSharing() );
         }
-        return new ArrayList<Commitment>( commitments );
+        return asSortedFlows( outRequestFlows );
     }
 
-    private List<Commitment> inRequests() {   // same as out replies
-        Set<Commitment> commitments = new HashSet<Commitment>();
+    private List<Flow> inRequests() {   // same meaning as out replies
+        Set<Flow> inRequestFlows = new HashSet<Flow>();
         for ( Commitment commitment : procedureData
                 .getCommittingCommitments()
                 .requests()
                 .notTriggeringToSource()
                 .notTo( getAssignment()
                         .getActor() ) ) {
-            commitments.add( commitment );
+            inRequestFlows.add( commitment.getSharing() );
         }
-        return new ArrayList<Commitment>( commitments );
+        return asSortedFlows( inRequestFlows );
     }
 
-    private List<Commitment> discoveries() {
-        Set<Commitment> discoveringCommitments = new HashSet<Commitment>();
+    private List<Flow> discoveries() {
+        Set<Flow> discoveringFlows = new HashSet<Flow>();
         for ( Commitment commitment : procedureData
                 .getCommittingCommitments()
                 .notifications()
                 .to( getAssignment()
                         .getActor() ) ) {
-            discoveringCommitments.add( commitment );
+            discoveringFlows.add( commitment.getSharing() );
         }
-        return new ArrayList<Commitment>( discoveringCommitments );
+        return asSortedFlows( discoveringFlows );
     }
 
-    private List<Commitment> research() {
-        Set<Commitment> commitments = new HashSet<Commitment>();
+    private List<Flow> research() {
+        Set<Flow> researchFlows = new HashSet<Flow>();
         for ( Commitment commitment : procedureData.getBenefitingCommitments()
                 .requests()
                 .to( getAssignment().getActor() )
                 .from( getAssignment().getActor() ) ) {
-            commitments.add( commitment );
+            researchFlows.add( commitment.getSharing() );
         }
-        return new ArrayList<Commitment>( commitments );
+        return asSortedFlows( researchFlows );
+    }
+
+    private List<Flow> asSortedFlows( Set<Flow> flows ) {
+        List<Flow> sortedFlows = new ArrayList<Flow>( flows );
+        Collections.sort( sortedFlows, new Comparator<Flow>() {
+            @Override
+            public int compare( Flow f1, Flow f2 ) {
+                return f1.getName().compareTo( f2.getName() );
+            }
+        });
+        return sortedFlows;
     }
 
     public String getLabel() {
@@ -376,4 +393,31 @@ public class AssignmentData extends AbstractProcedureElementData {
     }
 
 
+    public Set<ContactData> allContacts() {
+        Set<ContactData> allContacts = new HashSet<ContactData>(  );
+        for ( NotificationData notificationData : getOutNotifications() ) {
+            for (ContactData contact : notificationData.getContacts() ) {
+                allContacts.add( contact );
+                allContacts.addAll(  contact.getSupervisorContacts() );
+            }
+        }
+        for ( RequestData requestData : getOutRequests() ) {
+            for (ContactData contact : requestData.getContacts() ) {
+                allContacts.add( contact );
+                allContacts.addAll(  contact.getSupervisorContacts() );
+            }
+        }
+        // Add bypass contacts not yet added as direct contacts
+        for ( NotificationData notificationData : getOutNotifications() ) {
+            for (ContactData contact : notificationData.getContacts() ) {
+                allContacts.addAll( contact.getBypassContacts() );
+            }
+        }
+        for ( RequestData requestData : getOutRequests() ) {
+            for (ContactData contact : requestData.getContacts() ) {
+                allContacts.addAll( contact.getBypassContacts() );
+            }
+        }
+        return allContacts;
+    }
 }

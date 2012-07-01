@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.dao.user.UserContactInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.query.QueryService;
@@ -17,8 +18,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -27,16 +30,20 @@ import java.util.List;
  * Date: 3/20/12
  * Time: 9:13 PM
  */
-@XmlType( propOrder = {"employment", "workChannels", "personalChannels", "supervisorContact", "organizationChannels"} )
+@XmlType( propOrder = {"anchor", "employment", "workChannels", "personalChannels", "supervisorContacts", "organizationChannels", "bypassToAll", "bypassContacts"} )
 public class ContactData implements Serializable {
 
     private Employment employment;
+    private Commitment commitment; // can be null if not in the context of a notification or request
     private ChannelsUserInfo userInfo;
     private boolean includeSupervisor;
     private List<ChannelData> workChannels;
     private List<ContactData> supervisorContacts;
     private List<ChannelData> organizationChannels;
     private List<ChannelData> personalChannels;
+    private List<ContactData> bypassContacts;
+    private List<Employment> bypassEmployments;
+    private Boolean bypassToAll = null;
 
     public ContactData() {
         // required
@@ -54,11 +61,79 @@ public class ContactData implements Serializable {
         init( queryService, planParticipationservice );
     }
 
+    public ContactData( // create contact data of employment contacted in commitment
+                        Employment employment,
+                        Commitment commitment,
+                        ChannelsUserInfo userInfo,
+                        boolean includeSupervisor,
+                        QueryService queryService,
+                        PlanParticipationService planParticipationservice ) {
+        this.employment = employment;
+        this.commitment = commitment;
+        this.userInfo = userInfo;
+        this.includeSupervisor = includeSupervisor;
+        init( queryService, planParticipationservice );
+    }
+
+    /**
+     * Find a user's contacts from san employment.
+     *
+     * @param employment               an employment
+     * @param queryService             a plan service
+     * @param planParticipationService a plan participation service
+     * @param userInfo                 a user info
+     * @return a list of contact data
+     */
+    static public List<ContactData> findContactsFromEmployment(
+            Employment employment,
+            Commitment commitment,
+            QueryService queryService,
+            PlanParticipationService planParticipationService,
+            ChannelsUserInfo userInfo ) {
+        List<ContactData> contactList = new ArrayList<ContactData>();
+        Actor actor = employment.getActor();
+        if ( actor.isAnonymousParticipation() ) {
+            contactList.add( new ContactData(
+                    employment,
+                    commitment,
+                    null,
+                    true,
+                    queryService,
+                    planParticipationService ) );
+        } else {
+            List<PlanParticipation> otherParticipations = getOtherParticipations(
+                    actor,
+                    queryService,
+                    planParticipationService,
+                    userInfo );
+            if ( otherParticipations.isEmpty() || !actor.isSingularParticipation() ) {
+                contactList.add( new ContactData(
+                        employment,
+                        commitment,
+                        null,
+                        true,
+                        queryService,
+                        planParticipationService ) );
+            }
+            for ( PlanParticipation otherParticipation : otherParticipations ) {
+                contactList.add( new ContactData(
+                        employment,
+                        commitment,
+                        otherParticipation.getParticipant(),
+                        true,
+                        queryService,
+                        planParticipationService ) );
+            }
+        }
+        return contactList;
+    }
+
     private void init( QueryService queryService, PlanParticipationService planParticipationservice ) {
         initWorkChannels( queryService );
         initPersonalChannels( queryService );
         initSupervisorContacts( queryService, planParticipationservice );
         initOrganizationChannels( queryService );
+        initBypassContacts( queryService, planParticipationservice );
     }
 
     private void initPersonalChannels( QueryService queryService ) {
@@ -134,65 +209,60 @@ public class ContactData implements Serializable {
                 }
             }
         }
-
     }
 
-    /**
-     * Find a user's contacts from san employment.
-     *
-     * @param employment               an employment
-     * @param queryService             a plan service
-     * @param planParticipationService a plan participation service
-     * @param user                     a user
-     * @return a list of contact data
-     */
-    static public List<ContactData> findContactsFromEmployment(
-            Employment employment,
+    private void initBypassContacts(
             QueryService queryService,
-            PlanParticipationService planParticipationService,
-            ChannelsUser user ) {
-        List<ContactData> contactList = new ArrayList<ContactData>();
-        Actor actor = employment.getActor();
-        if ( actor.isAnonymousParticipation() ) {
-            contactList.add( new ContactData(
-                    employment,
-                    null,
-                    true,
-                    queryService,
-                    planParticipationService ) );
-        } else {
-            List<PlanParticipation> otherParticipations = getOtherParticipations(
-                    actor,
-                    queryService,
-                    planParticipationService,
-                    user );
-            if ( otherParticipations.isEmpty() || !actor.isSingularParticipation() ) {
-                contactList.add( new ContactData(
-                        employment,
-                        null,
-                        true,
+            PlanParticipationService planParticipationservice ) {
+        Set<Employment> bypassEmploymentSet = new HashSet<Employment>(  );
+        if ( commitment() != null ) {
+            Set<ContactData> bypassContactSet = new HashSet<ContactData>();
+            for ( Employment bypassEmployment : findBypassContactEmployments( queryService ) ) {
+                bypassEmploymentSet.add( bypassEmployment );
+                bypassContactSet.addAll( findContactsFromEmployment(
+                        bypassEmployment,
+                        null,   // todo -- bypassing is not transitive, right?
                         queryService,
-                        planParticipationService ) );
+                        planParticipationservice,
+                        userInfo ) );
             }
-            for ( PlanParticipation otherParticipation : otherParticipations ) {
-                contactList.add( new ContactData(
-                        employment,
-                        otherParticipation.getParticipant(),
-                        true,
-                        queryService,
-                        planParticipationService ) );
+            bypassContacts = new ArrayList<ContactData>( bypassContactSet );
+        } else {
+            bypassContacts = new ArrayList<ContactData>(  );
+        }
+        bypassEmployments = new ArrayList<Employment>( bypassEmploymentSet );
+    }
+
+    private List<Employment> findBypassContactEmployments( QueryService queryService ) {
+        assert commitment != null;
+        Set<Employment> bypassEmployments = new HashSet<Employment>();
+        bypassToAll = commitment().getSharing().isAll();
+        List<Commitment> bypassCommitments = queryService
+                .findAllBypassCommitments( commitment.getSharing() );
+        for ( Commitment bypassCommitment : bypassCommitments ) {
+            if ( commitment().getSharing().isNotification() ) {
+                if ( bypassCommitment.getCommitter().getEmployment().equals( contactedEmployment() ) ) {
+                    bypassEmployments.add( bypassCommitment.getBeneficiary().getEmployment() );
+                    bypassToAll = bypassToAll || bypassCommitment.getSharing().isAll();
+                }
+            } else { // a request
+                if ( bypassCommitment.getBeneficiary().getEmployment().equals( contactedEmployment() ) ) {
+                    bypassEmployments.add( bypassCommitment.getCommitter().getEmployment() );
+                    bypassToAll = bypassToAll || bypassCommitment.getSharing().isAll();
+                }
             }
         }
-        return contactList;
+        return new ArrayList<Employment>( bypassEmployments );
     }
+
 
     // Find list of participation as actor other than by the user.
     static private List<PlanParticipation> getOtherParticipations(
             Actor actor,
             QueryService queryService,
             PlanParticipationService planParticipationService,
-            ChannelsUser user ) {
-        String username = user == null ? null : user.getUsername();
+            ChannelsUserInfo userInfo ) {
+        String username = userInfo == null ? null : userInfo.getUsername();
         List<PlanParticipation> otherParticipations = new ArrayList<PlanParticipation>();
         List<PlanParticipation> participations = planParticipationService.getParticipations(
                 queryService.getPlan(),
@@ -206,23 +276,28 @@ public class ContactData implements Serializable {
         return otherParticipations;
     }
 
+    @XmlElement( name = "id" )
     public String getAnchor() {
         StringBuilder sb = new StringBuilder();
         sb.append( userInfo == null ? "" : userInfo.getId() );
         sb.append( "_" );
-        sb.append( employment.getActor().getId() );
+        sb.append( contactedEmployment().getActor().getId() );
         sb.append( "_" );
-        sb.append( employment.getRole().getId() );
+        sb.append( contactedEmployment().getRole().getId() );
         sb.append( "_" );
-        sb.append( employment.getOrganization().getId() );
+        sb.append( contactedEmployment().getOrganization().getId() );
         return sb.toString();
+    }
+
+    private Employment contactedEmployment() {
+        return employment;
     }
 
     @XmlElement( name = "identity" )
     public EmploymentData getEmployment() {
         return userInfo == null
-                ? new EmploymentData( employment )
-                : new EmploymentData( employment, userInfo );
+                ? new EmploymentData( contactedEmployment() )
+                : new EmploymentData( contactedEmployment(), userInfo );
     }
 
     @XmlElement( name = "workChannel" )
@@ -231,7 +306,7 @@ public class ContactData implements Serializable {
     }
 
     @XmlElement( name = "supervisor" )
-    public List<ContactData> getSupervisorContact() {
+    public List<ContactData> getSupervisorContacts() {
         return supervisorContacts;
     }
 
@@ -247,16 +322,31 @@ public class ContactData implements Serializable {
 
     }
 
+    @XmlElement
+    public Boolean getBypassToAll() {
+        return bypassToAll;
+    }
+
+
+    @XmlElement( name = "bypassContact" )
+    public List<ContactData> getBypassContacts() {
+        return bypassContacts;
+    }
+
+    public boolean bypassToAll() {
+        return bypassToAll;
+    }
+
     private Actor getActor() {
-        return employment.getActor();
+        return contactedEmployment().getActor();
     }
 
     private Organization getOrganization() {
-        return employment.getOrganization();
+        return contactedEmployment().getOrganization();
     }
 
     private Actor getSupervisor() {
-        return employment.getSupervisor();
+        return contactedEmployment().getSupervisor();
     }
 
     public String toLabel() {
@@ -268,25 +358,26 @@ public class ContactData implements Serializable {
     }
 
     public String getContactJob() {
+        Employment contacted = contactedEmployment();
         StringBuilder sb = new StringBuilder();
-        sb.append( employment.getTitleOrRole() );
+        sb.append( contacted.getTitleOrRole() );
         sb.append( ", " );
-        if ( employment.getJurisdiction() != null ) {
-            sb.append( employment.getJurisdiction().getName() );
+        if ( contacted.getJurisdiction() != null ) {
+            sb.append( contacted.getJurisdiction().getName() );
             sb.append( ", " );
         }
-        sb.append( employment.getOrganization().getName() );
+        sb.append( contacted.getOrganization().getName() );
         return sb.toString();
     }
 
-    public String firstLetterOfName() {
-        return getNormalizedContactName().substring( 0, 1 );
-    }
-
     @Override
-    public boolean equals( Object other ) {
-        return other instanceof ContactData
-                && getEmployment().equals( ((ContactData)other).getEmployment() );
+    public boolean equals( Object object ) {
+        if ( object instanceof ContactData ) {
+            ContactData other = (ContactData) object;
+            return employment() .equals( other.employment() );
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -299,5 +390,31 @@ public class ContactData implements Serializable {
             return getActor().getName();
         else
             return ChannelsUser.normalizeFullName( userInfo.getFullName() );
+    }
+
+    public Employment employment() {
+        return employment;
+    }
+
+    public Commitment commitment() {
+        return commitment;
+    }
+
+    public List<Employment> bypassEmployments() {
+        return bypassEmployments;
+    }
+
+    public List<Long> getBypassMediumIds() {
+        Set<Long> mediumIds = new HashSet<Long>(  );
+        if ( commitment != null ) {
+            for ( Channel channel : commitment.getSharing().getEffectiveChannels() ) {
+                mediumIds.add( channel.getMedium().getId() );
+            }
+        }
+        return new ArrayList<Long>( mediumIds );
+    }
+
+    public boolean forNotification() {
+        return commitment != null && commitment().getSharing().isNotification();
     }
 }

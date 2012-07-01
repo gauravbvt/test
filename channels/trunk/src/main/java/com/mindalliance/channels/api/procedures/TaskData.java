@@ -36,6 +36,7 @@ public class TaskData extends AbstractProcedureElementData {
     private List<Assignment> otherAssignments;
     private List<ContactData> teamContacts;
     private Level failureLevel;
+    private Part part;
 
     public TaskData() {
         // required
@@ -52,6 +53,12 @@ public class TaskData extends AbstractProcedureElementData {
         initTeamContacts( queryService, planParticipationService );
     }
 
+    public TaskData( Part part, QueryService queryService, PlanParticipationService planParticipationService, ChannelsUser user ) {
+        super( null, queryService, planParticipationService, user );
+        this.part = part;
+        initData( queryService );
+    }
+
     private void initData( QueryService queryService ) {
         failureLevel = queryService.computePartPriority( getPart() );
         failureImpact = StringEscapeUtils.escapeXml( failureLevel.getNegativeLabel() );
@@ -59,12 +66,14 @@ public class TaskData extends AbstractProcedureElementData {
 
     private void initTeamContacts( QueryService queryService, PlanParticipationService planParticipationService ) {
         teamContacts = new ArrayList<ContactData>();
+        if ( getAssignment() != null )
         for ( Employment employment : getTeamEmployments() ) {
             teamContacts.addAll( ContactData.findContactsFromEmployment(
                     employment,
+                    null,
                     queryService,
                     planParticipationService,
-                    ChannelsUser.current() ) );
+                    ChannelsUser.current().getUserInfo() ) );
         }
     }
 
@@ -160,7 +169,7 @@ public class TaskData extends AbstractProcedureElementData {
     }
 
     private Part getPart() {
-        return getAssignment().getPart();
+        return part != null ? part : getAssignment().getPart();
     }
 
     @WebMethod( exclude = true )
@@ -201,10 +210,10 @@ public class TaskData extends AbstractProcedureElementData {
     @Override
     public boolean equals( Object object ) {
         return object instanceof TaskData
-                && ( (TaskData) object ).getAssignment().getPart().equals( getAssignment().getPart() );
+                && ( (TaskData) object ).getPart().equals( getPart() );
     }
 
     public int hashCode() {
-        return getAssignment().getPart().hashCode();
+        return getPart().hashCode();
     }
 }

@@ -2,7 +2,8 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
-import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -19,7 +20,7 @@ import java.io.Serializable;
 @XmlType( propOrder = {"information", "doingTask", "followUpTask", "documentation"} )
 public class InfoDiscoveredData  implements Serializable {
 
-    private Commitment commitmentToSelf;
+    private Flow notificationToSelf;
     private ChannelsUser user;
     private TaskData doingTaskData;
     private TaskData followUpTaskData;
@@ -28,23 +29,23 @@ public class InfoDiscoveredData  implements Serializable {
         // required
     }
 
-    public InfoDiscoveredData( Commitment commitmentToSelf,
+    public InfoDiscoveredData( Flow notificationToSelf,
                                QueryService queryService,
                                PlanParticipationService planParticipationService,
                                ChannelsUser user ) {
-        this.commitmentToSelf = commitmentToSelf;
+        this.notificationToSelf = notificationToSelf;
         this.user = user;
         initData( queryService, planParticipationService );
     }
 
     private void initData( QueryService queryService, PlanParticipationService planParticipationService ) {
         doingTaskData = new TaskData(
-                commitmentToSelf.getCommitter(),
+                (Part)notificationToSelf.getSource(),
                 queryService,
                 planParticipationService,
                 user );
         followUpTaskData = new TaskData(
-                commitmentToSelf.getBeneficiary(),
+                (Part)notificationToSelf.getTarget(),
                 queryService,
                 planParticipationService,
                 user );
@@ -52,7 +53,7 @@ public class InfoDiscoveredData  implements Serializable {
 
     @XmlElement
     public InformationData getInformation() {
-        return new InformationData( commitmentToSelf.getSharing() );
+        return new InformationData( notificationToSelf );
     }
 
     @XmlElement
@@ -67,7 +68,7 @@ public class InfoDiscoveredData  implements Serializable {
 
     @XmlElement
     public DocumentationData getDocumentation() {
-        return new DocumentationData( commitmentToSelf.getSharing() );
+        return new DocumentationData( notificationToSelf );
     }
 
 }

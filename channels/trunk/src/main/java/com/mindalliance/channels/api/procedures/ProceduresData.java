@@ -176,14 +176,6 @@ public class ProceduresData  implements Serializable {
         return planService.getAssignments().with( new ResourceSpec( actor ) );
     }
 
-    public List<Employment> getContactEmployments() {
-        List<Employment> contactEmployments = new ArrayList<Employment>();
-        for ( ProcedureData procedureData : procedures ) {
-            contactEmployments.addAll( procedureData.getContactEmployments() );
-        }
-        return contactEmployments;
-    }
-
     public Plan getPlan() {
         return plan;
     }

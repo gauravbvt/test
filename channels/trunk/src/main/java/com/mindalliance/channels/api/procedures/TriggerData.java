@@ -3,9 +3,10 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.EventTiming;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
@@ -29,13 +30,13 @@ import java.util.Set;
 @XmlType( propOrder = {"situation", "anytime", "onObservation", "onDiscovery", "onResearch", "onNotification", "onRequest", "requestingTask", "ongoing"} )
 public class TriggerData extends AbstractProcedureElementData {
 
-    private Commitment notificationFromOther;
-    private Commitment requestFromOther;
+    private Flow notificationFromOther;
+    private Flow requestFromOther;
     private EventPhase eventPhase;
-    private Commitment commitmentToSelf;
+    private Flow notificationToSelf;
     private NotificationData onNotification;
     private RequestData onRequest;
-    private Commitment requestToSelf;
+    private Flow requestToSelf;
     private boolean ongoing = false;
     private List<EventTiming> eventPhaseContext;
     private DiscoveryData discoveryData;
@@ -68,12 +69,12 @@ public class TriggerData extends AbstractProcedureElementData {
                 (eventPhase != null && other != null && eventPhase.equals(  other ) );
     }
 
-    private boolean equalOrBothNull( Commitment commitment, Commitment otherCommitment ) {
-        return commitment == null && otherCommitment == null
+    private boolean equalOrBothNull( Flow flow, Flow otherFlow ) {
+        return flow == null && otherFlow == null
                 ||
-                ( commitment != null
-                && otherCommitment != null
-                && commitment.getSharing().equals( otherCommitment.getSharing() ) );
+                ( flow != null
+                && otherFlow != null
+                && flow.equals( otherFlow ) );
     }
 
     // Initialization
@@ -82,12 +83,12 @@ public class TriggerData extends AbstractProcedureElementData {
         this.ongoing = ongoing;
     }
 
-    public void setNotificationFromOther( Commitment notificationFromOther ) {
+    public void setNotificationFromOther( Flow notificationFromOther ) {
         this.notificationFromOther = notificationFromOther;
         ongoing = false;
     }
 
-    public void setRequestFromOther( Commitment requestFromOther ) {
+    public void setRequestFromOther( Flow requestFromOther ) {
         this.requestFromOther = requestFromOther;
         ongoing = false;
     }
@@ -101,12 +102,12 @@ public class TriggerData extends AbstractProcedureElementData {
         this.eventPhaseContext = eventPhaseContext;
     }
 
-    public void setCommitmentToSelf( Commitment commitmentToSelf ) {
-        this.commitmentToSelf = commitmentToSelf;
+    public void setNotificationToSelf( Flow notificationToSelf ) {
+        this.notificationToSelf = notificationToSelf;
         ongoing = false;
     }
 
-    public void setRequestToSelf( Commitment requestToSelf ) {
+    public void setRequestToSelf( Flow requestToSelf ) {
         this.requestToSelf = requestToSelf;
         ongoing = false;
     }
@@ -132,7 +133,7 @@ public class TriggerData extends AbstractProcedureElementData {
         if ( requestFromOther != null )
             onRequest = new RequestData(
                     requestFromOther,
-                    true,
+                    false,
                     getAssignment(),
                     planService,
                     planParticipationService,
@@ -147,7 +148,7 @@ public class TriggerData extends AbstractProcedureElementData {
         if ( notificationFromOther != null && !notificationFromOther.isToSelf() )
             onNotification = new NotificationData(
                     notificationFromOther,
-                    true,
+                    false,
                     getAssignment(),
                     planService,
                     planParticipationService,
@@ -170,8 +171,12 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
     private void initDiscoveryData( PlanService planService, PlanParticipationService planParticipationService ) {
-        if ( commitmentToSelf != null )
-            discoveryData = new DiscoveryData( commitmentToSelf, planService, planParticipationService, getUser() );
+        if ( notificationToSelf != null )
+            discoveryData = new DiscoveryData(
+                    notificationToSelf,
+                    planService,
+                    planParticipationService,
+                    getUser() );
         else
             discoveryData = null;
 
@@ -233,8 +238,8 @@ public class TriggerData extends AbstractProcedureElementData {
 
     private boolean isSituationKnown() {
         return eventPhase != null
-                || notificationFromOther != null && notificationFromOther.getSharing().isReferencesEventPhase()
-                || requestFromOther != null && requestFromOther.getSharing().isReferencesEventPhase();
+                || notificationFromOther != null && notificationFromOther.isReferencesEventPhase()
+                || requestFromOther != null && requestFromOther.isReferencesEventPhase();
     }
 
     @WebMethod( exclude = true )
@@ -327,7 +332,7 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
     public boolean isOnDiscovering() {
-        return commitmentToSelf != null;
+        return notificationToSelf != null;
     }
 
     public boolean isOnResearching() {
@@ -340,9 +345,9 @@ public class TriggerData extends AbstractProcedureElementData {
         if ( eventPhase != null ) {
             return evenPhaseAndContextLabel();
         } else if ( requestFromOther != null ) {
-            return requestFromOther.getSharing().getName();
+            return requestFromOther.getName();
         } else if ( notificationFromOther != null ) {
-            return notificationFromOther.getSharing().getName();
+            return notificationFromOther.getName();
         } else {
             return "???";
         }
@@ -377,11 +382,11 @@ public class TriggerData extends AbstractProcedureElementData {
         return sb.toString();
     }
 
-    public Commitment notificationFromOther() {
+    public Flow notificationFromOther() {
         return notificationFromOther;
     }
 
-    public Commitment requestFromOther() {
+    public Flow requestFromOther() {
         return requestFromOther;
     }
 
@@ -389,11 +394,11 @@ public class TriggerData extends AbstractProcedureElementData {
         return eventPhase;
     }
 
-    public Commitment commitmentToSelf() {
-        return commitmentToSelf;
+    public Flow commitmentToSelf() {
+        return notificationToSelf;
     }
 
-    public Commitment requestToSelf() {
+    public Flow requestToSelf() {
         return requestToSelf;
     }
 
@@ -402,11 +407,6 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
 
-    @WebMethod( exclude = true )
-    public Assignment discoveringAssignment() {
-        return discoveryData.getDiscoveringAssignment();
-    }
-
     public boolean equals( Object object ) {
         if ( object instanceof TriggerData ) {
             TriggerData other = (TriggerData) object;
@@ -414,7 +414,7 @@ public class TriggerData extends AbstractProcedureElementData {
                     && equalOrBothNull( notificationFromOther, other.notificationFromOther() )
                     && equalOrBothNull( requestFromOther, other.requestFromOther() )
                     && equalOrBothNull( requestToSelf, other.requestToSelf() )
-                    && equalOrBothNull( commitmentToSelf, other.commitmentToSelf() )
+                    && equalOrBothNull( notificationToSelf, other.commitmentToSelf() )
                     && equalOrBothNull( eventPhase, other.eventPhase() )
                     && equalOrBothNull( eventPhaseContext, other.eventPhaseContext() ) ;
         } else {
@@ -426,10 +426,10 @@ public class TriggerData extends AbstractProcedureElementData {
     public int hashCode() {
         int result = 1;
         if ( ongoing ) result = 31 * result;
-        if ( notificationFromOther != null ) result = 31 * result +  notificationFromOther.getSharing().hashCode();
-        if ( requestFromOther != null ) result = 31 * result +  requestFromOther.getSharing().hashCode();
-        if ( requestToSelf != null ) result = 31 * result +  requestToSelf.getSharing().hashCode();
-        if ( commitmentToSelf != null ) result = 31 * result +  commitmentToSelf.getSharing().hashCode();
+        if ( notificationFromOther != null ) result = 31 * result +  notificationFromOther.hashCode();
+        if ( requestFromOther != null ) result = 31 * result +  requestFromOther.hashCode();
+        if ( requestToSelf != null ) result = 31 * result +  requestToSelf.hashCode();
+        if ( notificationToSelf != null ) result = 31 * result +  notificationToSelf.hashCode();
         if ( eventPhase != null ) result = 31 * result +  eventPhase.hashCode();
          if ( eventPhaseContext != null ) {
             for ( EventTiming eventTiming : eventPhaseContext ) {
@@ -440,4 +440,7 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
 
+    public Part discoveringPart() {
+        return discoveryData.getDiscoveringPart();
+    }
 }

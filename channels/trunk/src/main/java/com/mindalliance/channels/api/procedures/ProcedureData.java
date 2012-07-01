@@ -1,10 +1,10 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
-import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.PlanService;
@@ -28,7 +28,7 @@ import java.util.Set;
  * Date: 12/5/11
  * Time: 3:05 PM
  */
-@XmlType( propOrder = {"actorId", "triggers", "assignment"} )
+@XmlType( propOrder = {"anchor", "actorId", "triggers", "assignment"} )
 public class ProcedureData implements Serializable {
 
     private ChannelsUser user;
@@ -93,28 +93,28 @@ public class ProcedureData implements Serializable {
                 triggers.add( triggerData );
             }
             // information discovery (notifications to self)
-            for ( Commitment triggerSelfNotification : triggeringNotificationsToSelf() ) {
+            for ( Flow triggerSelfNotification : triggeringNotificationsToSelf() ) {
                 TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
-                triggerData.setCommitmentToSelf( triggerSelfNotification );
+                triggerData.setNotificationToSelf( triggerSelfNotification );
                 triggerData.initTrigger( planService, planParticipationService );
                 triggers.add( triggerData );
             }
             // triggering notifications (from others)
-            for ( Commitment triggerNotification : triggeringNotificationsFromOthers() ) {
+            for ( Flow triggerNotification : triggeringNotificationsFromOthers() ) {
                 TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
                 triggerData.setNotificationFromOther( triggerNotification );
                 triggerData.initTrigger( planService, planParticipationService );
                 triggers.add( triggerData );
             }
             // triggering requests
-            for ( Commitment triggerRequest : triggeringRequestsFromOthers() ) {
+            for ( Flow triggerRequest : triggeringRequestsFromOthers() ) {
                 TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
                 triggerData.setRequestFromOther( triggerRequest );
                 triggerData.initTrigger( planService, planParticipationService );
                 triggers.add( triggerData );
             }
             // triggering requests to self
-            for ( Commitment triggerRequest : triggeringRequestsToSelf() ) {
+            for ( Flow triggerRequest : triggeringRequestsToSelf() ) {
                 TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
                 triggerData.setRequestToSelf( triggerRequest );
                 triggerData.initTrigger( planService, planParticipationService );
@@ -134,56 +134,62 @@ public class ProcedureData implements Serializable {
         return triggers;
     }
 
-    private List<Commitment> triggeringNotificationsFromOthers() {
-        Set<Commitment> triggerNotifications = new HashSet<Commitment>();
-        for ( Commitment commitment : benefitingCommitments ) {
-            Flow flow = commitment.getSharing();
-            if ( flow.isNotification() && flow.isTriggeringToTarget() && !commitment.isToSelf() ) {
-                triggerNotifications.add( commitment );
-            }
-        }
-        return new ArrayList<Commitment>( triggerNotifications );
-    }
-
-    private List<Commitment> triggeringRequestsFromOthers() {
-        Set<Commitment> triggerRequests = new HashSet<Commitment>();
-        for ( Commitment commitment : committingCommitments ) {
-            Flow flow = commitment.getSharing();
-            if ( flow.isAskedFor() && flow.isTriggeringToSource() && !commitment.isToSelf() ) {
-                triggerRequests.add( commitment );
-            }
-        }
-        return new ArrayList<Commitment>( triggerRequests );
-    }
-
-
-    private List<Commitment> triggeringNotificationsToSelf() {
-        Set<Commitment> triggerNotificationsToSelf = new HashSet<Commitment>();
-        for ( Commitment commitment : benefitingCommitments.toSelf() ) {
-            Flow flow = commitment.getSharing();
-            if ( flow.isNotification() && flow.isTriggeringToTarget() && commitment.isToSelf() ) {
-                triggerNotificationsToSelf.add( commitment );
-            }
-        }
-        return new ArrayList<Commitment>( triggerNotificationsToSelf );
-    }
-
-    private List<Commitment> triggeringRequestsToSelf() {
-        Set<Commitment> triggerRequestsToSelf = new HashSet<Commitment>();
-        for ( Commitment commitment : committingCommitments ) {
-            Flow flow = commitment.getSharing();
-            if ( flow.isAskedFor() && flow.isTriggeringToSource() && commitment.isToSelf() ) {
-                triggerRequestsToSelf.add( commitment );
-            }
-        }
-        return new ArrayList<Commitment>( triggerRequestsToSelf );
-    }
-
-
     @XmlElement( name = "assignment" )
     public AssignmentData getAssignment() {
         return assignmentData;
     }
+
+    @XmlElement( name = "id")
+    public String getAnchor() {
+        return getAssignment().getTask().getAnchor();
+    }
+
+
+    private List<Flow> triggeringNotificationsFromOthers() {
+        Set<Flow> triggerNotifications = new HashSet<Flow>();
+        for ( Commitment commitment : benefitingCommitments ) {
+            Flow flow = commitment.getSharing();
+            if ( flow.isNotification() && flow.isTriggeringToTarget() && !commitment.isToSelf() ) {
+                triggerNotifications.add( commitment.getSharing() );
+            }
+        }
+        return new ArrayList<Flow>( triggerNotifications );
+    }
+
+    private List<Flow> triggeringRequestsFromOthers() {
+        Set<Flow> triggerRequests = new HashSet<Flow>();
+        for ( Commitment commitment : committingCommitments ) {
+            Flow flow = commitment.getSharing();
+            if ( flow.isAskedFor() && flow.isTriggeringToSource() && !commitment.isToSelf() ) {
+                triggerRequests.add( commitment.getSharing() );
+            }
+        }
+        return new ArrayList<Flow>( triggerRequests );
+    }
+
+
+    private List<Flow> triggeringNotificationsToSelf() {
+        Set<Flow> triggerNotificationsToSelf = new HashSet<Flow>();
+        for ( Commitment commitment : benefitingCommitments.toSelf() ) {
+            Flow flow = commitment.getSharing();
+            if ( flow.isNotification() && flow.isTriggeringToTarget() && commitment.isToSelf() ) {
+                triggerNotificationsToSelf.add( commitment.getSharing() );
+            }
+        }
+        return new ArrayList<Flow>( triggerNotificationsToSelf );
+    }
+
+    private List<Flow> triggeringRequestsToSelf() {
+        Set<Flow> triggerRequestsToSelf = new HashSet<Flow>();
+        for ( Commitment commitment : committingCommitments ) {
+            Flow flow = commitment.getSharing();
+            if ( flow.isAskedFor() && flow.isTriggeringToSource() && commitment.isToSelf() ) {
+                triggerRequestsToSelf.add( commitment.getSharing() );
+            }
+        }
+        return new ArrayList<Flow>( triggerRequestsToSelf );
+    }
+
 
     @WebMethod( exclude = true )
     public Commitments getBenefitingCommitments() {
@@ -195,7 +201,6 @@ public class ProcedureData implements Serializable {
         return committingCommitments;
     }
 
-    @WebMethod( exclude = true )
     public Set<Long> allEventIds() {
         Set<Long> ids = new HashSet<Long>();
         for ( TriggerData trigger : getTriggers() ) {
@@ -263,27 +268,6 @@ public class ProcedureData implements Serializable {
         return ids;
     }
 
-
-    public List<Employment> getContactEmployments() {
-        List<Employment> contactEmployments = new ArrayList<Employment>();
-        // from trigger(s)
-        for ( TriggerData triggerData : triggers ) {
-            if ( triggerData.isOnNotificationFromOther() ) {
-                NotificationData notificationData = triggerData.getOnNotification();
-                contactEmployments.addAll( notificationData.findContactEmployments() );
-                contactEmployments.addAll( notificationData.findBypassContactEmployments() );
-            } else if ( triggerData.isOnRequestFromOther() ) {
-                RequestData requestData = triggerData.getOnRequest();
-                contactEmployments.addAll( requestData.findContactEmployments() );
-                contactEmployments.addAll( requestData.findBypassContactEmployments() );
-            }
-        }
-        // from assignment requests and notifications
-        contactEmployments.addAll( getNonTriggerContactEmployments() );
-        // from teammates
-        contactEmployments.addAll( getAssignment().getTask().getTeamEmployments() );
-        return contactEmployments;
-    }
 
     public boolean isOngoing() {
         return CollectionUtils.exists(
@@ -408,11 +392,6 @@ public class ProcedureData implements Serializable {
         );
     }
 
-
-    public String getAnchor() {
-        return getAssignment().getTask().getAnchor();
-    }
-
     public String getLabel() {
         StringBuilder sb = new StringBuilder();
         if ( isOngoing() ) {
@@ -428,17 +407,7 @@ public class ProcedureData implements Serializable {
         return sb.toString();
     }
 
-    public List<Employment> getNonTriggerContactEmployments() {
-        AssignmentData assignmentData = getAssignment();
-        Set<Employment> contactEmployments = new HashSet<Employment>();
-        for ( AbstractFlowData flowWithOther : assignmentData.getCommunications() ) {
-            contactEmployments.addAll( flowWithOther.findContactEmployments() );
-            contactEmployments.addAll( flowWithOther.findBypassContactEmployments() );
-        }
-        return new ArrayList<Employment>( contactEmployments );
-    }
-
-    public boolean hasReceives() {
+     public boolean hasReceives() {
         return getAssignment().hasReceives();
     }
 
@@ -479,5 +448,9 @@ public class ProcedureData implements Serializable {
     @Override
     public int hashCode() {
         return getAssignment().hashCode();
+    }
+
+    public Set<ContactData> allContacts() {
+        return assignmentData.allContacts();
     }
 }

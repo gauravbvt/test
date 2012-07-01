@@ -3,8 +3,8 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlType;
         "failureImpact", "documentation"} )
 public class ResearchData extends AbstractProcedureElementData {
 
-    private Commitment requestToSelf;
+    private Flow requestToSelf;
     private TaskData researchTaskData;
     private TaskData consumingTaskData;
     private String failureImpact;
@@ -33,7 +33,7 @@ public class ResearchData extends AbstractProcedureElementData {
     }
 
     public ResearchData(
-            Commitment requestToSelf,
+            Flow requestToSelf,
             Assignment assignment,
             PlanService planService,
             PlanParticipationService planParticipationService,
@@ -51,7 +51,7 @@ public class ResearchData extends AbstractProcedureElementData {
 
     private void initConsumingTaskData( PlanService planService, PlanParticipationService planParticipationService ) {
         consumingTaskData = new TaskData(
-                requestToSelf.getBeneficiary(),
+                (Part)requestToSelf.getTarget(),
                 planService,
                 planParticipationService,
                 getUser() );
@@ -59,7 +59,7 @@ public class ResearchData extends AbstractProcedureElementData {
 
     private void initResearchTask( PlanService planService, PlanParticipationService planParticipationService ) {
         researchTaskData = new TaskData(
-                requestToSelf.getCommitter(),
+                (Part)requestToSelf.getSource(),
                 planService,
                 planParticipationService,
                 getUser() );
@@ -101,11 +101,11 @@ public class ResearchData extends AbstractProcedureElementData {
 
     @XmlElement
     public DocumentationData getDocumentation() {
-        return new DocumentationData( requestToSelf.getSharing() );
+        return new DocumentationData( requestToSelf );
     }
 
     private Flow getSharing() {
-        return requestToSelf.getSharing();
+        return requestToSelf;
     }
 
 

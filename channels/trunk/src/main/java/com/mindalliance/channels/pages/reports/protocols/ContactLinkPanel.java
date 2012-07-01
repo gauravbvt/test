@@ -2,8 +2,12 @@ package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.procedures.ChannelData;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 
 import java.util.List;
 
@@ -15,17 +19,12 @@ import java.util.List;
  * Date: 6/24/12
  * Time: 10:48 AM
  */
-public class ContactLinkPanel extends AbstractDataPanel {
+public class ContactLinkPanel extends AbstractContactLinkPanel {
 
-    private ContactData contactData;
-    private List<ChannelData> workAddresses;
-    private List<ChannelData> personalAddresses;
 
 
     public ContactLinkPanel( String id, ContactData contactData, ProtocolsFinder finder ) {
-        super( id, finder );
-        this.contactData = contactData;
-        init();
+        super( id, contactData, finder );
     }
 
     public ContactLinkPanel(
@@ -34,56 +33,87 @@ public class ContactLinkPanel extends AbstractDataPanel {
             List<ChannelData> workAddresses,
             List<ChannelData> personalAddresses,
             ProtocolsFinder finder ) {
-        super( id, finder );
-        this.contactData = contactData;
-        this.workAddresses = workAddresses;
-        this.personalAddresses = personalAddresses;
-        init();
+        super( id, contactData, workAddresses, personalAddresses, finder );
     }
 
-    private void init() {
-        addContactLink();
-        addWorkAddresses();
-        addPersonalAddresses();
+    protected void init() {
+        super.init();
+        addBypassContacts();
     }
 
-     private void addContactLink() {
-         WebMarkupContainer contactLink = makeAnchorLink( "contactLink", "#" + contactData.getAnchor() );
-         contactLink.add( new Label( "contactName", contactData.getContactName() ) );
-         contactLink.add( new Label("contactJob", contactData.getContactJob() ) );
-         add( contactLink );
-     }
+    private void addBypassContacts() {
+        List<ContactData> bypassContacts = getContactData().getBypassContacts();
+        WebMarkupContainer bypassContactsContainer = new WebMarkupContainer( "bypassContactsContainer" );
+        bypassContactsContainer.setVisible( !bypassContacts.isEmpty() );
+        add( bypassContactsContainer );
+        Label bypassLabel = new Label(
+                "bypassLabel",
+                bypassContacts.isEmpty()
+                    ? ""
+                    : getBypassLabel( bypassContacts) );
+        bypassContactsContainer.add( bypassLabel );
+        ListView<ContactData> bypassContactsListView = new ListView<ContactData>(
+                "bypassContacts",
+                bypassContacts
+        ) {
+            @Override
+            protected void populateItem( ListItem<ContactData> item ) {
+                ContactData bypassContactData = item.getModelObject();
+                item.add( new NoBypassContactLinkPanel(
+                        "bypassContact",
+                        bypassContactData,
+                        getWorkChannels( bypassContactData ),
+                        getPersonalChannels( bypassContactData ),
+                        getFinder() ) );
+            }
+        };
+        bypassContactsContainer.add( bypassContactsListView );
+        add(  bypassContactsContainer );
+    }
 
-    private void addWorkAddresses() {
-        WebMarkupContainer addressContainer = new WebMarkupContainer( "work" );
-        addressContainer.setVisible( hasWorkAddresses() );
-        add( addressContainer );
-        addressContainer.add(
-                hasWorkAddresses()
-                    ? new FlatContactAddressesPanel( "addresses", workAddresses, getFinder() )
-                    : new Label( "addresses", "" )
+    private String getBypassLabel( List<ContactData> bypassContacts ) {
+        StringBuilder sb = new StringBuilder(  );
+        sb.append( "If unreachable, " );
+        sb.append( getContactData().forNotification()
+                ? "notify "
+                : "ask "
+        );
+        if ( bypassContacts.size() > 1) {
+           sb.append( getContactData().bypassToAll()
+                   ? "all of"
+                   : "any of"
+           );
+        }
+        return sb.toString();
+    }
+
+
+    @SuppressWarnings( "unchecked" )
+    private List<ChannelData> getWorkChannels( ContactData contactData ) {
+        final List<Long> mediumIds = getContactData().getBypassMediumIds();
+        return (List<ChannelData>) CollectionUtils.select(
+                contactData.getWorkChannels(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return mediumIds.contains( ( (ChannelData) object ).getMediumId() );
+                    }
+                }
         );
     }
 
-    private void addPersonalAddresses() {
-        WebMarkupContainer addressContainer = new WebMarkupContainer( "personal" );
-        addressContainer.setVisible( hasPersonalAddresses() );
-        add( addressContainer );
-        addressContainer.add(
-                hasPersonalAddresses()
-                        ? new FlatContactAddressesPanel( "addresses", personalAddresses, getFinder() )
-                        : new Label( "addresses", "" )
+    @SuppressWarnings( "unchecked" )
+    private List<ChannelData> getPersonalChannels( ContactData contactData ) {
+        final List<Long> mediumIds = getContactData().getBypassMediumIds();
+        return (List<ChannelData>) CollectionUtils.select(
+                contactData.getPersonalChannels(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return mediumIds.contains( ( (ChannelData) object ).getMediumId() );
+                    }
+                }
         );
     }
-
-
-    private boolean hasWorkAddresses() {
-        return workAddresses != null && !workAddresses.isEmpty();
-    }
-
-    private boolean hasPersonalAddresses() {
-        return personalAddresses != null && !personalAddresses.isEmpty();
-    }
-
 
 }

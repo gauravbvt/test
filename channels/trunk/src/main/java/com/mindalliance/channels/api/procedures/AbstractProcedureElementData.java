@@ -31,7 +31,7 @@ abstract public class AbstractProcedureElementData  implements Serializable {
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         this.user = user;
-        initData( queryService, planParticipationService );
+        initData( queryService, planParticipationService, user );
     }
 
     protected AbstractProcedureElementData(
@@ -41,10 +41,10 @@ abstract public class AbstractProcedureElementData  implements Serializable {
             ChannelsUser user ) {
         this.assignment = assignment;
         this.user = user;
-        initData( queryService, planParticipationService );
+        initData( queryService, planParticipationService, user );
     }
 
-    private void initData( QueryService queryService, PlanParticipationService planParticipationService ) {
+    private void initData( QueryService queryService, PlanParticipationService planParticipationService, ChannelsUser user ) {
         plan = queryService.getPlan();
     }
 

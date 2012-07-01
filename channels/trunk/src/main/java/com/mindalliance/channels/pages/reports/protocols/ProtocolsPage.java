@@ -1,9 +1,7 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.ChannelsService;
-import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
 import com.mindalliance.channels.api.procedures.ObservationData;
@@ -21,9 +19,6 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.reports.guidelines.AllGuidelinesPage;
 import com.mindalliance.channels.social.model.Feedback;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -55,13 +50,12 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private static final Logger LOG = LoggerFactory.getLogger( ProtocolsPage.class );
     private ProceduresData proceduresData;
     private ProtocolsFinder finder;
-    private DirectoryData directoryData;
     private String username;
     private Long actorId;
     private Actor actor;
     private ChannelsUser protocolsUser;
 
-    @SpringBean( name="channelsService" )
+    @SpringBean( name = "channelsService" )
     private ChannelsService channelsService;
 
     private WebMarkupContainer aboutContainer;
@@ -95,7 +89,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             if ( parameters.getNamedKeys().contains( "agent" ) )
                 actorId = parameters.get( "agent" ).toLong( -1 );
             if ( parameters.getNamedKeys().contains( "user" ) )
-                username = parameters.get( "user" ).toString( );
+                username = parameters.get( "user" ).toString();
             initData();
             doAddContent();
         } catch ( Exception e ) {
@@ -115,7 +109,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         intermediates.add( new PagePathItem(
                 AllGuidelinesPage.class,
                 getParameters(),
-                "All info sharing protocols") );
+                "All info sharing protocols" ) );
         return intermediates;
     }
 
@@ -153,7 +147,6 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 channelsService,
                 username,
                 actorId );
-        directoryData = new DirectoryData( proceduresData, getQueryService(), getPlanParticipationService() );
     }
 
     private void doAddContent() {
@@ -246,7 +239,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         observationsToc.setVisible( !onObservations.isEmpty() );
         List<ObservationData> sortedObservations = new ArrayList<ObservationData>( onObservations.keySet() );
         finder.sortObservations( sortedObservations );
-         ListView<ObservationData> observationList = new ListView<ObservationData>(
+        ListView<ObservationData> observationList = new ListView<ObservationData>(
                 "observations",
                 sortedObservations
         ) {
@@ -331,7 +324,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                         "communicatedContext",
                         communicatedContext == null
                                 ? ""
-                                : ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() )  );
+                                : ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() ) );
                 commContextLabel.setVisible( communicatedContext != null );
                 item.add( commContextLabel );
                 item.add( makeProcedureLinks( "procLinks", triggeringRequests.get( triggerData ) ) );
@@ -452,7 +445,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         procsContainer.setVisible( !procedureDataMap.isEmpty() );
         protocolsContainer.add( procsContainer );
         List<TriggerData> triggers = finder.sortTriggerData( procedureDataMap.keySet() );
-        procsContainer.add(  new ListView<TriggerData>(
+        procsContainer.add( new ListView<TriggerData>(
                 "triggered",
                 triggers
         ) {
@@ -491,7 +484,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         protocolsContainer.add( procsContainer );
         List<ObservationData> triggers = new ArrayList<ObservationData>( procedureDataMap.keySet() );
         finder.sortObservations( triggers );
-        procsContainer.add(  new ListView<ObservationData>(
+        procsContainer.add( new ListView<ObservationData>(
                 "triggered",
                 triggers
         ) {
@@ -536,21 +529,20 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 Organization org = getQueryService().findActualEntity( Organization.class, orgName );
                 if ( org == null ) {
                     item.add( new Label( "orgContact", "" ) );
-                    item.add( new Label( "employeeContacts", "" ) );
                 } else {
                     item.add( new OrganizationContactPanel( "orgContact", org, finder ) );
-                    ListView<ContactData> employeeContactsListView = new ListView<ContactData>(
-                            "employeeContacts",
-                            finder.getContactsInOrganization( orgName )
-                    ) {
-                        @Override
-                        protected void populateItem( ListItem<ContactData> subItem ) {
-                            ContactData contact = subItem.getModelObject();
-                            subItem.add( new ContactDataPanel( "employeeContact", contact, finder ) );
-                        }
-                    };
-                    item.add( employeeContactsListView );
                 }
+                ListView<ContactData> employeeContactsListView = new ListView<ContactData>(
+                        "employeeContacts",
+                        finder.getContactsInOrganization( orgName )
+                ) {
+                    @Override
+                    protected void populateItem( ListItem<ContactData> subItem ) {
+                        ContactData contact = subItem.getModelObject();
+                        subItem.add( new ContactDataPanel( "employeeContact", contact, finder ) );
+                    }
+                };
+                item.add( employeeContactsListView );
             }
         };
         directoryContainer.add( orgContactsListView );
@@ -559,9 +551,6 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     //////////////
 
 
-    public <T extends ModelObjectData> T findInScope( Class<T> moDataClass, long moId ) {
-        return finder.findInScope( moDataClass, moId );
-    }
 
     public <T extends ModelObject> T find( Class<T> moClass, long moId ) {
         try {
@@ -570,26 +559,6 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             return null;
         }
     }
-
-    @SuppressWarnings( "unchecked" )
-    public List<ContactData> findContacts( final long actorId ) {
-        return (List<ContactData>) CollectionUtils.select(
-                directoryData.getContacts(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (ContactData) object ).getEmployment().getActorId() == actorId;
-                    }
-                }
-        );
-    }
-
-    private WebMarkupContainer makeAnchor( String id, String anchor ) {
-        WebMarkupContainer anchorContainer = new WebMarkupContainer( id );
-        anchorContainer.add( new AttributeModifier( "name", anchor ) );
-        return anchorContainer;
-    }
-
 
 
 }
