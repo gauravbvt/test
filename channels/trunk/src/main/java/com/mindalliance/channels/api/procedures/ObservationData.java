@@ -104,6 +104,10 @@ public class ObservationData  implements Serializable {
         return sb.toString();
     }
 
+    public EventPhase eventPhase() {
+        return eventPhase;
+    }
+
     @Override
     public boolean equals( Object object ) {
         return object instanceof ObservationData

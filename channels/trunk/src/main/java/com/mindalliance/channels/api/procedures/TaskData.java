@@ -216,4 +216,8 @@ public class TaskData extends AbstractProcedureElementData {
     public int hashCode() {
         return getPart().hashCode();
     }
+
+    public Part part() {
+        return getPart();
+    }
 }

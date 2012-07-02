@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.api.procedures.ChannelData;
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.model.Organization;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -43,6 +44,7 @@ public class OrganizationContactPanel extends AbstractDataPanel {
         addStreetAddress();
         addContactInfo();
         addMission();
+        addDocumentation();
     }
 
     private void addName() {
@@ -78,4 +80,12 @@ public class OrganizationContactPanel extends AbstractDataPanel {
                 "mission",
                 organizationData == null ? "???" : organizationData.getMission() ) );
     }
+
+    private void addDocumentation() {
+        DocumentationData documentationData = organizationData.getDocumentation();
+        DocumentationPanel docPanel = new DocumentationPanel( "documentation", documentationData, getFinder() );
+        docPanel.setVisible( documentationData.hasReportableDocuments() );
+        add( docPanel );
+    }
+
 }

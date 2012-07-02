@@ -5,6 +5,7 @@ import com.mindalliance.channels.api.procedures.AbstractFlowData;
 import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.api.procedures.ElementOfInformationData;
 import com.mindalliance.channels.api.procedures.TimeDelayData;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -45,6 +46,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         addOnFailure();
         addEois();
         addInstructions();
+        addDocumentation();
     }
 
     private void addHeader() {
@@ -95,11 +97,11 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     }
 
     private String getContactsText() {
+        List<ContactData> contacts = flowData.getContacts();
         if ( received ) {
-            return "Your sources are";
+            return contacts.size() == 1 ? "Your source is" : "Your sources are";
         } else {
             if ( flowData.isNotification() ) {
-                List<ContactData> contacts = flowData.getContacts();
                 if ( contacts.size() == 1 ) {
                     return "Contact";
                 } else {
@@ -210,6 +212,14 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         instructionContainer.setVisible( isInstructed() );
         instructionContainer.add( instructionsLabel );
     }
+
+    private void addDocumentation() {
+        Flow flow = flowData.flow();
+        DocumentationPanel docPanel = new DocumentationPanel( "documentation", flowData.getDocumentation(), getFinder() );
+        docPanel.setVisible( flowData.getDocumentation().hasReportableDocuments() );
+        add( docPanel );
+    }
+
 
     private boolean isInitiated() {
         return !received && flowData.isNotification() || received && !flowData.isNotification();

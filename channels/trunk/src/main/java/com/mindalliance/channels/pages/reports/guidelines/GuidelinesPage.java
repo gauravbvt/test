@@ -33,6 +33,7 @@ import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.ReportSegment;
 import com.mindalliance.channels.pages.reports.ReportTask;
+import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
@@ -109,7 +110,7 @@ public class GuidelinesPage extends AbstractParticipantPage {
     protected List<PagePathItem> getIntermediatePagesPathItems() {
         List<PagePathItem> intermediates = new ArrayList<PagePathItem>();
         intermediates.add( new PagePathItem(
-                AllGuidelinesPage.class,
+                AllProtocolsPage.class,
                 getParameters(),
                 "All info sharing guidelines") );
         return intermediates;

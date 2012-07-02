@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
@@ -452,5 +453,9 @@ public class ProcedureData implements Serializable {
 
     public Set<ContactData> allContacts() {
         return assignmentData.allContacts();
+    }
+
+    public Part part() {
+        return assignmentData.getTask().part();
     }
 }

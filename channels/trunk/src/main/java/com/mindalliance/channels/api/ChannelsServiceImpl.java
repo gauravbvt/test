@@ -77,6 +77,24 @@ public class ChannelsServiceImpl implements ChannelsService {
     }
 
     @Override
+    public PlanSummaryData getPlan( String uri, String version ) {
+        LOG.info( "Getting summary for plan " + uri + " version " + version );
+        ChannelsUser user = ChannelsUser.current( userDao );
+        for ( Plan plan : planManager.getPlansWithUri( uri ) ) {
+            if ( !user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED )
+                    && ( user.isPlanner( uri ) || plan.isProduction() ) ) {
+                user.setPlan( plan );
+                return new PlanSummaryData( getPlanService( plan ), userDao, planParticipationService );
+            }
+        }
+        throw new WebApplicationException(
+                Response
+                        .status( Response.Status.BAD_REQUEST )
+                        .entity( "No such plan available" )
+                        .build() );
+    }
+
+    @Override
     /**
      * Get summaries of all versions of all plans visible to the user.
      * @return plan summaries
@@ -171,7 +189,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             List<PlanParticipation> participations = planParticipationService.getParticipations(
                     plan,
                     user.getUserInfo(),
-                    planService);
+                    planService );
             if ( participations.isEmpty() ) {
                 throw new Exception( user.getUsername() + " does not participate in production plan " + uri );
             }
@@ -285,17 +303,47 @@ public class ChannelsServiceImpl implements ChannelsService {
         Plan plan = planManager.getPlan( uri, Integer.parseInt( version ) );
         try {
             if ( plan == null
-                    || !user.isPlanner( uri )  )
+                    || !user.isPlanner( uri ) )
                 throw new Exception( "Unauthorized" );
             PlanService planService = getPlanService( plan );
             ProceduresData proceduresData = getAgentProcedures( uri, version, agentId );
-        return new DirectoryData( proceduresData, planService, planParticipationService  );
+            return new DirectoryData( proceduresData, planService, planParticipationService );
         } catch ( Exception e ) {
             LOG.warn( "Failed to retrieve directory", e );
             throw new WebApplicationException(
                     Response
                             .status( Response.Status.BAD_REQUEST )
                             .entity( "No procedures available for plan " + uri )
+                            .build() );
+        }
+    }
+
+    @Override
+    public DirectoryData getMyDirectory( String uri ) {
+        LOG.info( "Getting user directory for production version of plan " + uri );
+        try {
+            ChannelsUser user = ChannelsUser.current( userDao );
+            Plan plan = planManager.findProductionPlan( uri );
+            if ( plan == null || user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED ) ) {
+                throw new Exception( user.getUsername() + " is not authorized to access production plan " + uri );
+            }
+            user.setPlan( plan );
+            PlanService planService = getPlanService( plan );
+            List<PlanParticipation> participations = planParticipationService.getParticipations(
+                    plan,
+                    user.getUserInfo(),
+                    planService );
+            if ( participations.isEmpty() ) {
+                throw new Exception( user.getUsername() + " does not participate in production plan " + uri );
+            }
+            ProceduresData proceduresData = getMyProcedures( uri );
+            return new DirectoryData( proceduresData, planService, planParticipationService );
+        } catch ( Exception e ) {
+            LOG.warn( e.getMessage(), e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No directory available for production plan " + uri )
                             .build() );
         }
     }

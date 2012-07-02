@@ -26,4 +26,6 @@ public class ObservationTriggerDataPanel extends AbstractDataPanel {
         add( new Label( "prefix", ChannelsUtils.lcFirst( observationData.getPrefix() ) ) );
         add( new Label( "scenario", ChannelsUtils.lcFirst( observationData.getScenarioLabel() ) ) );
     }
+
+
 }

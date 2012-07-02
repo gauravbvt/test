@@ -35,7 +35,7 @@ public class DocumentData  implements Serializable {
 
     @XmlElement
     public String getName() {
-        return StringEscapeUtils.escapeXml( attachment.getName() );
+        return StringEscapeUtils.escapeXml( attachment.getLabel() );
     }
 
     @XmlElement

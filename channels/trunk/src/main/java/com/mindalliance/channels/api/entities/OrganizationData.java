@@ -103,4 +103,8 @@ public class OrganizationData extends ModelEntityData {
     public List<ChannelData> getChannels() {
         return channelsDataList;
     }
+
+    public Organization organization() {
+        return getOrganization();
+    }
 }

@@ -79,9 +79,7 @@ public class ProtocolsFinder implements Serializable {
             ChannelsService channelsService ) {
         Plan plan = queryService.getPlan();
         planScopeData = channelsService.getPlanScope( plan.getUri(), Integer.toString( plan.getVersion() ) );
-        directoryData = actorId != null
-                ? channelsService.getAgentDirectory( plan.getUri(), Integer.toString( plan.getVersion() ), Long.toString( actorId ) )
-                : channelsService.getUserDirectory( plan.getUri(), Integer.toString( plan.getVersion() ), username );
+        directoryData = new DirectoryData( proceduresData, queryService, planParticipationService);
         ongoingProcedures = new ArrayList<ProcedureData>();
         onObservations = new HashMap<ObservationData, List<ProcedureData>>();
         onNotificationsByContact = new HashMap<ContactData, Map<TriggerData, List<ProcedureData>>>();
@@ -369,4 +367,5 @@ public class ProtocolsFinder implements Serializable {
         List<TriggerData> triggers =  discoveryFollowUpTasks.get( taskData );
         return triggers== null ? new ArrayList<TriggerData>() : triggers;
     }
+
 }

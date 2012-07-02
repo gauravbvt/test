@@ -1,7 +1,7 @@
 // Copyright (C) 2010 Mind-Alliance Systems LLC.
 // All rights reserved.
 
-package com.mindalliance.channels.pages.reports.guidelines;
+package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
@@ -9,7 +9,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
-import com.mindalliance.channels.pages.reports.protocols.ProtocolsPage;
+import com.mindalliance.channels.pages.reports.guidelines.GuidelinesPage;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -24,13 +24,13 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * A planner's table of contents to responders pages.
  */
 
-public class AllGuidelinesPage extends AbstractAllParticipantsPage {
+public class AllProtocolsPage extends AbstractAllParticipantsPage {
 
-    public AllGuidelinesPage() {
+    public AllProtocolsPage() {
         super( new PageParameters() );
     }
 
-    public AllGuidelinesPage( PageParameters parameters ) {
+    public AllProtocolsPage( PageParameters parameters ) {
         super( parameters );
     }
 

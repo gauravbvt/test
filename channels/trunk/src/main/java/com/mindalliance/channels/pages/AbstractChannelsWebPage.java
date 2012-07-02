@@ -28,9 +28,9 @@ import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
-import com.mindalliance.channels.pages.reports.guidelines.AllGuidelinesPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
+import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
 import com.mindalliance.channels.pages.reports.protocols.ProtocolsPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.wicket.AttributeModifier;
@@ -190,7 +190,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
            guidelinesLink = newTargetedLink(
                    id,
                    "",
-                   AllGuidelinesPage.class,
+                   AllProtocolsPage.class,
                    AbstractParticipantPage.createParameters(
                            new ResourceSpec(),
                            uri,

@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.reports.protocols;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.api.procedures.AssignmentData;
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.api.procedures.GoalData;
 import com.mindalliance.channels.api.procedures.NotificationData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
@@ -47,6 +48,7 @@ public class ProcedureDataPanel extends AbstractDataPanel {
         addTaskName();
         addFailureImpact();
         addTaskDetails();
+        addDocumentation();
         addReceives();
         addSends();
         addSelfTriggeredTasks();
@@ -135,6 +137,14 @@ public class ProcedureDataPanel extends AbstractDataPanel {
         return procedureData.getAssignment().getTask();
     }
 
+    // DOCUMENTATION
+
+    private void addDocumentation() {
+        DocumentationData documentationData = procedureData.getAssignment().getTask().getDocumentation();
+        DocumentationPanel docPanel = new DocumentationPanel( "documentation", documentationData, getFinder() );
+        docPanel.setVisible( documentationData.hasReportableDocuments() );
+        taskDetailsContainer.add( docPanel );
+    }
 
     // RECEIVES
 

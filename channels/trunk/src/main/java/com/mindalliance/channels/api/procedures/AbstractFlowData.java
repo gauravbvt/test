@@ -214,4 +214,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public abstract List<Employment> findContactEmployments();
 
+    public Flow flow() {
+        return flow;
+    }
 }

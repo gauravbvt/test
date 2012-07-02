@@ -4,6 +4,7 @@ import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.issues.IssuesData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.plan.PlanSummariesData;
+import com.mindalliance.channels.api.plan.PlanSummaryData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 
 import javax.jws.WebService;
@@ -34,6 +35,18 @@ public interface ChannelsService {
     PlanSummariesData getPlans();
 
     @GET
+    @Path( "plan/{uri}/version/{version}" )
+    @Produces( MediaType.APPLICATION_XML )
+    /**
+     * Get a plan's summary.
+     * @param uri a plan uri
+     * @param version a plan version
+     * @return plan summary data
+     */
+    PlanSummaryData getPlan( @PathParam( "uri" ) String uri, @PathParam( "version" ) String version );
+
+
+    @GET
     @Path( "myplans" )
     @Produces( MediaType.APPLICATION_XML )
     /**
@@ -54,7 +67,7 @@ public interface ChannelsService {
 
 
     @GET
-    @Path( "plan/{uri}/procedures/agent/{agentId}" )
+    @Path( "plan/{uri}/agent/{agentId}/procedures" )
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get the procedures of an agent in a plan (for authorized planners or user participating in plan as the agent).
@@ -126,4 +139,10 @@ public interface ChannelsService {
     DirectoryData getAgentDirectory( @PathParam("uri") String uri,
                                     @PathParam( "version" ) String version,
                                     @PathParam("agentId") String agentId );
+
+    @GET
+    @Path( "plan/{uri}/directory" )
+    @Produces( MediaType.APPLICATION_XML )
+    DirectoryData getMyDirectory( @PathParam("uri") String uri );
+
 }

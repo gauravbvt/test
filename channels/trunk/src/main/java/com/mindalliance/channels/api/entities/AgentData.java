@@ -104,4 +104,7 @@ public class AgentData extends ModelEntityData {
         return StringUtils.join( getLanguages(), ", ");
     }
 
+    public Actor actor() {
+        return getActor();
+    }
 }

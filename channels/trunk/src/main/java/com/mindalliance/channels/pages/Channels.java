@@ -32,9 +32,9 @@ import com.mindalliance.channels.pages.procedures.AssignmentReportPage;
 import com.mindalliance.channels.pages.procedures.CommitmentReportPage;
 import com.mindalliance.channels.pages.procedures.ProcedureMapPage;
 import com.mindalliance.channels.pages.procedures.ProceduresReportPage;
-import com.mindalliance.channels.pages.reports.guidelines.AllGuidelinesPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
+import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
 import com.mindalliance.channels.pages.reports.protocols.ProtocolsPage;
 import com.mindalliance.channels.pages.reports.protocols.StaticProtocols;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
@@ -203,7 +203,7 @@ public class Channels extends WebApplication
         getMarkupSettings().setStripWicketTags( true );
 
         mountPage( "procedures", ProceduresReportPage.class );
-        mountPage( "allProtocols", AllGuidelinesPage.class );
+        mountPage( "allProtocols", AllProtocolsPage.class );
         mountPage( "allInfoNeeds", AllInfoNeedsPage.class );
         mountPage( "protocols", ProtocolsPage.class );
         mountPage( "infoNeeds", InfoNeedsPage.class );

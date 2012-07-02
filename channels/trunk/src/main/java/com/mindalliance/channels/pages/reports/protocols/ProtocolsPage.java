@@ -4,6 +4,8 @@ import com.mindalliance.channels.api.ChannelsService;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
+import com.mindalliance.channels.api.plan.PlanSummaryData;
+import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.api.procedures.ObservationData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
@@ -17,7 +19,6 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
-import com.mindalliance.channels.pages.reports.guidelines.AllGuidelinesPage;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -48,6 +49,7 @@ import java.util.Map;
 public class ProtocolsPage extends AbstractChannelsBasicPage {
 
     private static final Logger LOG = LoggerFactory.getLogger( ProtocolsPage.class );
+    private PlanSummaryData planSummaryData;
     private ProceduresData proceduresData;
     private ProtocolsFinder finder;
     private String username;
@@ -107,7 +109,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     protected List<PagePathItem> getIntermediatePagesPathItems() {
         List<PagePathItem> intermediates = new ArrayList<PagePathItem>();
         intermediates.add( new PagePathItem(
-                AllGuidelinesPage.class,
+                AllProtocolsPage.class,
                 getParameters(),
                 "All info sharing protocols" ) );
         return intermediates;
@@ -116,6 +118,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
 
     private void initData() throws Exception {
         Plan plan = getPlan();
+        planSummaryData = channelsService.getPlan( plan.getUri(), Integer.toString( plan.getVersion() ) );
         if ( actorId != null ) {
             actor = getQueryService().find( Actor.class, actorId );
             proceduresData = channelsService.getAgentProcedures(
@@ -152,6 +155,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private void doAddContent() {
         addAboutProtocols();
         addParticipation();
+        addDocumentation();
         addProtocolsFinder();
         addProtocols();
         addDirectory();
@@ -193,6 +197,15 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             }
         };
         getContainer().add( employmentsList );
+    }
+
+    // DOCUMENTATION
+
+    private void addDocumentation() {
+        DocumentationData documentationData = planSummaryData.getDocumentation();
+        DocumentationPanel docPanel = new DocumentationPanel( "documentation", documentationData, finder );
+        docPanel.setVisible( documentationData.hasReportableDocuments() );
+        getContainer().add( docPanel );
     }
 
     // FINDER
