@@ -596,7 +596,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 new Model<String>( "Show tasks in map" ) );
         geomapLinkPanel.setOutputMarkupId( true );
         partsMapLink = geomapLinkPanel;
-        makeVisible( geomapLinkPanel, !geoLocatables.isEmpty() );
+        makeVisible( geomapLinkPanel,geomapLinkPanel.hasMappableContent() );
         form.addOrReplace( geomapLinkPanel );
     }
 

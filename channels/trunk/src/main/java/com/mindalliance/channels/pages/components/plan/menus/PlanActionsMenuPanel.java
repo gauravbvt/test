@@ -9,7 +9,6 @@ import com.mindalliance.channels.core.command.commands.DisconnectAndRemoveSegmen
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.command.commands.PastePart;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
@@ -18,7 +17,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,20 +59,6 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
                                                         SegmentEditPanel.MOVER ) );
                                     }
                                 } ) );
-
-            // Logout
-            menuItems.add(
-                    new LinkMenuItem(
-                            "menuItem",
-                            new Model<String>( "Sign out " + getUser().getUsername() ),
-                            new ConfirmedAjaxFallbackLink( "link", "Sign out?" ) {
-                                @Override
-                                public void onClick( AjaxRequestTarget target ) {
-                                    getCommander().userLeftPlan( getUser().getUsername() );
-                                    getRequestCycle().
-                                            scheduleRequestHandlerAfterCurrent( new RedirectRequestHandler( "logout" ) );
-                                }
-                            } ) );
 
             return menuItems;
         }
