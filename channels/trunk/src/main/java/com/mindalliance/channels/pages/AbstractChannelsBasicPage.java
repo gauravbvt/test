@@ -31,6 +31,8 @@ import org.springframework.mail.MailSender;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -306,6 +308,12 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     private List<Plan> getOtherPlans() {
         List<Plan> otherPlans = new ArrayList<Plan>( getPlans() );
         otherPlans.remove( getPlan() );
+        Collections.sort( otherPlans, new Comparator<Plan>() {
+            @Override
+            public int compare( Plan p1, Plan p2 ) {
+                return p1.getName().compareTo( p2.getName() );
+            }
+        });
         return otherPlans;
     }
 

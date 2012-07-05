@@ -164,7 +164,7 @@ public class UserPage extends AbstractChannelsBasicPage {
         getContainer().addOrReplace( gotoIconsContainer );
         // guidelines link
         BookmarkablePageLink<? extends WebPage> gotoGuidelinesLink =
-                getGuidelinesLink( "gotoGuidelines", getQueryService(), getPlan(), user, true );
+                getProtocolsLink( "gotoGuidelines", getQueryService(), getPlan(), user, true );
         gotoGuidelinesLink.add( new AttributeModifier(
                 "title",
                 new Model<String>( getGotoGuidelinesDescription( user, plan ) ) ) );

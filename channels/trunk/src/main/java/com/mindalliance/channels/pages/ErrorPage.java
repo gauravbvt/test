@@ -2,7 +2,10 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
@@ -30,6 +33,7 @@ public class ErrorPage extends AbstractChannelsWebPage {
 
     @SpringBean
     private MailSender mailSender;
+    private WebMarkupContainer header;
 
 
     public ErrorPage() {
@@ -43,6 +47,14 @@ public class ErrorPage extends AbstractChannelsWebPage {
     }
 
     private void init() {
+        header = new WebMarkupContainer( "error-header" );
+        add( header );
+        header.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                setResponsePage( UserPage.class );
+            }
+        } );
         //todo - unhack
         if ( exception == null ) {
             exception = ( (Channels) Channels.get() ).getExceptionOnce();
@@ -53,7 +65,8 @@ public class ErrorPage extends AbstractChannelsWebPage {
     private static String stackTraceToString( Exception exc ) {
         StringWriter writer = new StringWriter();
         exc.printStackTrace( new PrintWriter( writer ) );
-        return writer.toString();
+        String trace = writer.toString();
+        return WordUtils.wrap( trace, 80, "\n", true );
     }
 
     private void addStacktrace() {

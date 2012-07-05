@@ -11,20 +11,27 @@
 </head>
 <body class="message">
 <div id="top-error">
+    <span wicket:id="error-header" class="pointer" title="Click to go back to the Home page">
     <div id="header">
         <div>
             <h1>Server Error</h1>
+
             <h2>Channels encountered a server error</h2>
         </div>
     </div>
+    </span>
+
     <div id="contents">
         <p>Oops. Something went very wrong. We apologize.</p>
+
         <p>We've already been alerted of the problem and will do our best to fix it ASAP.</p>
+
         <p>You may want to try <a href=" javascript:history.go(-1)">going back to Channels</a></p>
+
         <div id="stackTrace" wicket:id="stackTraceContainer" style="padding-top: 20px">
             <h2> Error report </h2>
             <code>
-                  <span wicket:id="stackTrace"> stacktrace here</span>
+                <span wicket:id="stackTrace"> stacktrace here</span>
             </code>
         </div>
     </div>

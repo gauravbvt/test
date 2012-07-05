@@ -296,58 +296,6 @@ public class AdminPage extends AbstractChannelsWebPage {
     }
 
 
-/*
-    public String getSurveyApiKey() {
-        String s = getPlan().getSurveyApiKey();
-        return s.isEmpty() ? surveyService.getApiKey( getPlan() ) : s;
-    }
-
-    public void setSurveyApiKey( String val ) {
-        String defaultVal = surveyService.getApiKey( getPlan() );
-        if ( val != null && !val.isEmpty() && !val.equals( defaultVal ) )
-            getPlan().setSurveyApiKey( val );
-    }
-
-    public String getSurveyUserKey() {
-        String s = getPlan().getSurveyUserKey();
-        return s.isEmpty() ? surveyService.getUserKey( getPlan() ) : s;
-    }
-
-    public void setSurveyUserKey( String val ) {
-        String defaultVal = surveyService.getUserKey( getPlan() );
-        if ( val != null && !val.isEmpty() && !val.equals( defaultVal ) )
-            getPlan().setSurveyUserKey( val );
-    }
-
-
-    public String getSurveyTemplate() {
-        String s = getPlan().getSurveyTemplate();
-        return s.isEmpty() ? surveyService.getTemplate( getPlan() ) : s;
-    }
-
-    public void setSurveyTemplate( String val ) {
-        String defaultVal = surveyService.getTemplate( getPlan() );
-        if ( val != null && !val.isEmpty() && !val.equals( defaultVal ) ) {
-            getPlan().setSurveyTemplate( val );
-        }
-    }
-
-*/
-
- /*   public String getSurveyDefaultEmailAddress() {
-        String s = getPlan().getSurveyDefaultEmailAddress();
-        return s.isEmpty() ? surveyService.getDefaultEmailAddress( getPlan() ) : s;
-    }
-
-    public void setSurveyDefaultEmailAddress( String val ) {
-        String defaultVal = surveyService.getDefaultEmailAddress( getPlan() );
-        if ( val != null && !val.isEmpty() && !val.equals( defaultVal ) ) {
-            getPlan().setSurveyDefaultEmailAddress( val );
-        }
-    }
-
-*/
-
     private void submit() {
         for ( ChannelsUser u : toDelete ) {
             getPlanManager().setAuthorities( u, null, null );
@@ -360,7 +308,11 @@ public class AdminPage extends AbstractChannelsWebPage {
 
         if ( newPlanUri != null ) {
             try {
-                definitionManager.getOrCreate( newPlanUri, "New Plan", newPlanClient );
+                String newPlanName =
+                        newPlanClient != null && !newPlanClient.isEmpty()
+                            ? (newPlanClient + (newPlanClient.endsWith("s") ? "'" :"'s") + " New Plan")
+                            : "New Plan";
+                definitionManager.getOrCreate( newPlanUri, newPlanName, newPlanClient );
                 getPlanManager().assignPlans();
             } catch ( IOException e ) {
                 LOG.error( "Unable to create plan", e );

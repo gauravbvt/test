@@ -57,6 +57,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -180,8 +182,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                getQueryService() );
    }
 
-   protected BookmarkablePageLink<? extends WebPage> getGuidelinesLink(
-           String id, QueryService queryService, Plan plan, ChannelsUser user, boolean samePage ) {
+   protected BookmarkablePageLink<? extends WebPage> getProtocolsLink(
+           String id,
+           QueryService queryService,
+           Plan plan,
+           ChannelsUser user,
+           boolean samePage ) {
        List<PlanParticipation> planParticipations = getPlanParticipations( plan, user );
        String uri = plan.getUri();
        boolean planner = user.isPlanner( uri );
@@ -215,7 +221,10 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
    }
 
    public BookmarkablePageLink<? extends WebPage> getInfoNeedsLink(
-           String id, QueryService queryService, Plan plan, ChannelsUser user, boolean samePage ) {
+           String id,
+           QueryService queryService,
+           Plan plan, ChannelsUser user,
+           boolean samePage ) {
        List<PlanParticipation> planParticipations = getPlanParticipations( plan, user );
        String uri = plan.getUri();
        boolean planner = user.isPlanner( uri );
@@ -317,6 +326,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                    result.add( p );
            }
        }
+       Collections.sort( result, new Comparator<Plan>() {
+           @Override
+           public int compare( Plan p1, Plan p2 ) {
+               return p1.getName().compareTo( p2.getName() );
+           }
+       });
        return result;
    }
 

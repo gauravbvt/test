@@ -30,6 +30,10 @@ div#top-error {
     margin: 0 auto;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 div#header {
     background: #c3d9ff url('../images/back.png') repeat-y;
 	margin-bottom:0;
