@@ -77,7 +77,7 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
     /**
      * DOM identifier for resizeable element.
      */
-    private static final String DOM_IDENTIFIER = ".plan .typology";
+    private static final String DOM_IDENTIFIER = ".all-types .typology";
 
     private static final String ORG = "Organization";
     private static final String AGENT = "Agent";

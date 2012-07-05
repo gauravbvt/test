@@ -135,24 +135,24 @@ public class PartShowMenuPanel extends MenuPanel {
         Part part = getPart();
         QueryService queryService = getQueryService();
         if ( getKnownActor( part, queryService ) != null )
-            modelObjects.add( new ModelObjectWrapper( "About agent", getKnownActor( part, queryService ) ) );
+            modelObjects.add( new ModelObjectWrapper( "Agent", getKnownActor( part, queryService ) ) );
         if ( part.getRole() != null )
-            modelObjects.add( new ModelObjectWrapper( "About role", part.getRole() ) );
+            modelObjects.add( new ModelObjectWrapper( "Role", part.getRole() ) );
         if ( part.getOrganization() != null )
             modelObjects.add( new ModelObjectWrapper(
-                    "About organization",
+                    "Organization",
                     part.getOrganization() ) );
         if ( part.getJurisdiction() != null )
             modelObjects.add( new ModelObjectWrapper(
-                    "About jurisdiction",
+                    "Jurisdiction",
                     part.getJurisdiction() ) );
         if ( part.getKnownLocation() != null )
             modelObjects.add( new ModelObjectWrapper(
-                    "About location",
+                    "Location",
                     part.getKnownLocation() ) );
         if ( part.getInitiatedEvent() != null )
             modelObjects.add( new ModelObjectWrapper(
-                    "About event",
+                    "Event",
                     part.getInitiatedEvent() ) );
         return modelObjects;
     }

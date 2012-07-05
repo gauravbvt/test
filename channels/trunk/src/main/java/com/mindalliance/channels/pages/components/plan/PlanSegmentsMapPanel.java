@@ -59,7 +59,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
     /**
      * DOM identifier for resizeable element.
      */
-    private static final String DOM_IDENTIFIER = ".plan .picture";
+    private static final String DOM_IDENTIFIER = ".all-segments .picture";
 
     /**
      * Whether to group segments by phase.
@@ -217,8 +217,8 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
 
     private void addPlanMapDiagramPanel() {
         Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ?
-                            new Settings( ".plan .picture", null, null, true, true ) :
-                            new Settings( ".plan .picture", null, diagramSize, true, true );
+                            new Settings( DOM_IDENTIFIER, null, null, true, true ) :
+                            new Settings( DOM_IDENTIFIER, null, diagramSize, true, true );
         planMapDiagramPanel = new PlanMapDiagramPanel( "plan-map",
                                                        new PropertyModel<List<Segment>>( this, "allSegments" ),
                                                        groupByPhase,
@@ -490,12 +490,13 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
                 selectedGroup = null;
                 selectedSegment = (Segment) changed;
                 selectedSgRel = null;
+                super.changed( change );
             } else if ( changed instanceof SegmentRelationship ) {
                 selectedGroup = null;
                 selectedSegment = null;
                 selectedSgRel = (SegmentRelationship) changed;
             }
-            // Don't percolate chane on selection of app, segment or segment relationship.
+            // Don't percolate chane on selection of app or segment relationship.
             else {
                 super.changed( change );
             }
@@ -510,7 +511,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
-            // Don't percolate update on selection unless a part was selected.
+            // Don't percolate update on selection unless a part or segment was selected.
             if ( change.isForInstanceOf( Part.class ) ) {
                 super.updateWith( target, change, updated );
             } else {
@@ -518,6 +519,9 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
                 if ( change.getScript() != null ) {
                     target.appendJavaScript( change.getScript() );
                 }
+            }
+            if ( change.isForInstanceOf( Segment.class ) ) {  // propagate up segment selection
+                super.updateWith( target, change, updated );
             }
         } else {
             super.updateWith( target, change, updated );

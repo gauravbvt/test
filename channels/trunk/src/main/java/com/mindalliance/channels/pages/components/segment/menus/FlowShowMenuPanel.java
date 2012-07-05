@@ -109,7 +109,7 @@ public class FlowShowMenuPanel extends MenuPanel {
                 menuItems.add(
                         new LinkMenuItem(
                                 "menuItem",
-                                new Model<String>( "Failure impacts" ),
+                                new Model<String>( "Failure" ),
                                 new AjaxFallbackLink( "link" ) {
                                     @Override
                                     public void onClick( AjaxRequestTarget target ) {

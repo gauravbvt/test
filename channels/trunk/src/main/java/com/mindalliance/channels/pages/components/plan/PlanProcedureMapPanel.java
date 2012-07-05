@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
@@ -56,7 +55,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     private static final String BY_ROLE = "organization and role";
     private static final String BY_NONE = "Don't summarize";
     private static final String BY_ORG_TYPE_AND_ROLE = "type of organization and role";
-    private static final String[] SUMMARY_CHOICES = {BY_ORG_TYPE, BY_ORG_TYPE_AND_ROLE, BY_ORG, BY_ROLE, BY_NONE };
+    private static final String[] SUMMARY_CHOICES = {BY_ORG_TYPE, BY_ORG_TYPE_AND_ROLE, BY_ORG, BY_ROLE, BY_NONE};
     private static Collator collator = Collator.getInstance();
     /**
      * DOM identifier for resizeable element.
@@ -143,14 +142,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         segmentChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                addProcedureMapDiagramPanel();
-                target.add( procedureMapDiagramPanel );
-                Change change = isPlanSelected()
-                        ? new Change( Change.Type.Selected, getPlan() )
-                        : new Change( Change.Type.Selected, segment );
-                change.addQualifier( "focus", getFocusEntity() );
-                update( target, change );
-            }
+                // do nothing
+             }
         } );
         addOrReplace( segmentChoice );
     }
@@ -180,7 +173,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addFocusEntityField();
                 target.add( focusField );
-                displayButton.setEnabled( isFocusSelected() );
+                makeVisible( displayButton, isFocusSelected() );
                 target.add( displayButton );
             }
         } );
@@ -211,22 +204,15 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         focusField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                displayButton.setEnabled( isFocusSelected() );
+                makeVisible( displayButton, isFocusSelected() );
                 target.add( displayButton );
-                makeVisible( sizingLabel, isFocusSelected() );
-                target.add( sizingLabel );
-                Change change = isPlanSelected()
-                        ? new Change( Change.Type.Selected, getPlan() )
-                        : new Change( Change.Type.Selected, segment );
-                change.addQualifier( "focus", getFocusEntity() );
-                update( target, change );
             }
         } );
         addOrReplace( focusField );
     }
 
     private boolean isFocusSelected() {
-        return focus != null && !focus.isEmpty() && getFocusEntity()!= null;
+        return focus != null && !focus.isEmpty() && getFocusEntity() != null;
     }
 
     private List<String> getFocusKindChoices() {
@@ -234,19 +220,18 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     }
 
     private void addSummarizeChoice() {
-      summarizeChoice = new DropDownChoice<String>(
-              "summarizeChoice",
-              new PropertyModel<String>( this, "summarizeChoice"),
-              Arrays.asList( SUMMARY_CHOICES )
-      );
+        summarizeChoice = new DropDownChoice<String>(
+                "summarizeChoice",
+                new PropertyModel<String>( this, "summarizeChoice" ),
+                Arrays.asList( SUMMARY_CHOICES )
+        );
         summarizeChoice.setOutputMarkupId( true );
-        summarizeChoice.add(new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        summarizeChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                addProcedureMapDiagramPanel();
-                target.add( procedureMapDiagramPanel );
+                // do nothing
             }
-        });
+        } );
         addOrReplace( summarizeChoice );
     }
 
@@ -257,10 +242,12 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             protected void onEvent( AjaxRequestTarget target ) {
                 addProcedureMapDiagramPanel();
                 target.add( procedureMapDiagramPanel );
+                addMapSizing();
+                target.add( sizingLabel );
             }
-        });
+        } );
         displayButton.setOutputMarkupId( true );
-        displayButton.setEnabled( isFocusSelected() );
+        makeVisible( displayButton, isFocusSelected() );
         addOrReplace( displayButton );
 
     }
@@ -293,12 +280,11 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
             graphBuilder.setQueryService( getQueryService() );
             boolean noProcedures = !graphBuilder.hasCommitments();
             procedureMapDiagramPanel.add( new AttributeModifier(
-                        "style",
-                        true,
-                        new Model<String>(
-                                noProcedures
-                                ? "background:url('images/no-procedures.png') 270px 0 no-repeat #ffffff;"
-                                : "background:url('images/map-background.png') 270px 0 no-repeat #ffffff;") ) );
+                    "style",
+                    new Model<String>(
+                            noProcedures
+                                    ? "background:url('images/no-procedures.png') 270px 0 no-repeat #ffffff;"
+                                    : "background:url('images/map-background.png') 270px 0 no-repeat #ffffff;" ) ) );
         }
         procedureMapDiagramPanel.setOutputMarkupId( true );
         addOrReplace( procedureMapDiagramPanel );
@@ -321,12 +307,12 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                 if ( !reducedToFit ) {
                     String domIdentifier = DOM_IDENTIFIER;
                     script = "wicketAjaxGet('"
-                            + getCallbackUrl( )
+                            + getCallbackUrl()
                             + "&width='+$('" + domIdentifier + "').width()+'"
                             + "&height='+$('" + domIdentifier + "').height()";
                 } else {
                     script = "wicketAjaxGet('"
-                            + getCallbackUrl( )
+                            + getCallbackUrl()
                             + "'";
                 }
                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
@@ -352,8 +338,12 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                 target.add( sizingLabel );
             }
         } );
-        makeVisible( sizingLabel, isFocusSelected() );
+        makeVisible( sizingLabel, isProcedureMapDisplayed() );
         addOrReplace( sizingLabel );
+    }
+
+    private boolean isProcedureMapDisplayed() {
+        return procedureMapDiagramPanel instanceof ProcedureMapDiagramPanel;
     }
 
     public Segment getSegment() {
@@ -378,7 +368,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         return focus;
     }
 
-    public void setFocus ( String s ) {
+    public void setFocus( String s ) {
         if ( s != null && !s.isEmpty() )
             focus = s;
     }
@@ -388,7 +378,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     }
 
     public void setFocusName( String s ) {
-            focus = (s == null || s.equals(  PROMPT )) ? "" : s;
+        focus = ( s == null || s.equals( PROMPT ) ) ? "" : s;
     }
 
     public String getSummarizeChoice() {
@@ -436,7 +426,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     public void setSummarizeByOrg( boolean summarizeByOrg ) {
         this.summarizeByOrg = summarizeByOrg;
-        if ( summarizeByOrg )  {
+        if ( summarizeByOrg ) {
             summarizeByOrgType = false;
             summarizeByRole = false;
         }
@@ -448,7 +438,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     public void setSummarizeByOrgType( boolean summarizeByOrgType ) {
         this.summarizeByOrgType = summarizeByOrgType;
-        if ( summarizeByOrgType )  {
+        if ( summarizeByOrgType ) {
             summarizeByOrg = false;
             summarizeByRole = false;
         }

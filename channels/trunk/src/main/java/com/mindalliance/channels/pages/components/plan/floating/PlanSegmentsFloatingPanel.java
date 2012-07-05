@@ -43,7 +43,7 @@ public class PlanSegmentsFloatingPanel extends FloatingCommandablePanel {
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "Map of " + getPlan().getName() ) );
+                "All segments of " + getPlan().getName() ) );
     }
 
     private void addPlanName() {
