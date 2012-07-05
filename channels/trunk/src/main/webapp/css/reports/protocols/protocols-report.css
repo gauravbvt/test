@@ -1,7 +1,10 @@
 /* ----- Protocols Styling ----- */
 
+div.protocols-contents {
+	padding: 10px;
+}
+
 div.protocols-contents a {
-	border-bottom: 1px dotted #333333;
 	color: #333333;
 	font-weight: bold;
 	text-decoration: none;
@@ -146,7 +149,6 @@ div.protocols-contents h4 span.participationList span {
 }
 
 div.protocols-contents div.employeeContacts {
-	background: none repeat scroll 0 0 #E8E8E8;
 	border-left: 5px solid #CCCCCC;
 	float: left;
 	margin: 20px 0 0;
@@ -155,8 +157,16 @@ div.protocols-contents div.employeeContacts {
 }
 
 div.protocols-contents div.orgContact {
-	float: left;
-	width: 731px;
+background: none repeat scroll 0 0 #E8E8E8;
+    border-left: 5px solid #CCCCCC;
+    float: left;
+    margin: 70px 0 0;
+    padding: 12px 15px 15px;
+    width: 731px;
+}
+
+div.protocols-contents div.orgContact h3 {
+	padding: 5px 0 10px;
 }
 
 div.protocols-contents div.directory-link {
@@ -249,8 +259,19 @@ div.protocols-contents div.communications-toc h3 {
 div.protocols-contents div.triggered div.procedures,
 div.protocols-contents div.ongoingProcedures {
 	border-left: 5px solid #E8E8E8;
-	margin: 40px 0 40px 10px;
-	padding: 10px 0 10px 25px;
+	margin: 40px 0;
+	padding: 10px 0 15px 25px;
+}
+
+div.protocols-contents div.triggered div.trigger {
+	border-left: 5px solid #999999;
+	margin: 40px 0;
+	padding: 5px 0 15px 25px;
+}
+
+div.protocols-contents div.triggered div.trigger h3 {
+line-height: 150%;
+    padding: 20px 0;
 }
 
 div.protocols-contents div.triggered h5.notify {
@@ -312,18 +333,52 @@ div.protocols-contents div.failureImpact {
 }
 
 
+div.protocols-contents div.bypassContactsContainer {
+	padding: 5px 0 0 5px;
+}
+
+div.protocols-contents div.bypassContactsContainer div.contact {
+	background: #FFFFFF;
+	margin: 20px 0 10px;
+}
+
+
 div.protocols-contents div.contactsContainer {
 	padding: 15px 0 0 0;
 }
 
 div.protocols-contents div.contactsContainer-direct {
-	padding: 15px 0 0 10px;
+	padding: 15px 0 0 0;
 }
 
 div.protocols-contents div.failureImpact-small {
 	background: none repeat scroll 0 0 #E8E8E8;
-	border-color: Gold;
-	border-left: 5px solid Gold;
-	margin: 0 0 10px;
-	padding: 15px;
+	border-left: 5px solid #929498;
+	font-style: italic;
+	margin: 15px 0 10px;
+	padding: 10px;
+}
+
+div.protocols-contents div.failureImpact-small.extreme {
+    border-left: 5px solid #ff8c73;
+}
+
+div.protocols-contents div.failureImpact-small.major {
+    border-left: 5px solid #ffe27b;
+}
+
+div.protocols-contents div.failureImpact-small.minor {
+    border-left: 5px solid #7ac4f1;
+}
+
+div.protocols-contents div.failureImpact-small.severe {
+    border-left: 5px solid #ffb658;
+}
+
+div.protocols-contents div.failureImpact-small.none {
+    border-left: 5px solid #929498;
+}
+
+div.protocols-contents div.failureImpact-small span {
+	font-weight: bold;
 }
