@@ -42,7 +42,7 @@ public class ContactDataPanel extends AbstractDataPanel {
     }
 
     private void init() {
-        add( makeAnchor( "anchor", contactData.getAnchor() ) );
+        add( makeAnchor( "anchor", contactData.anchor() ) );
         addName();
         addEmployment();
         addWorkAddresses();

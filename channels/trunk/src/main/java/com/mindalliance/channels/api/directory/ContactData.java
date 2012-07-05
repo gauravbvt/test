@@ -30,7 +30,7 @@ import java.util.Set;
  * Date: 3/20/12
  * Time: 9:13 PM
  */
-@XmlType( propOrder = {"anchor", "employment", "workChannels", "personalChannels", "supervisorContacts", "organizationChannels", "bypassToAll", "bypassContacts"} )
+@XmlType( propOrder = {"id", "ref", "employment", "workChannels", "personalChannels", "supervisorContacts", "organizationChannels", "bypassToAll", "bypassContacts"} )
 public class ContactData implements Serializable {
 
     private Employment employment;
@@ -276,8 +276,7 @@ public class ContactData implements Serializable {
         return otherParticipations;
     }
 
-    @XmlElement( name = "id" )
-    public String getAnchor() {
+    public String anchor() {
         StringBuilder sb = new StringBuilder();
         sb.append( userInfo == null ? "" : userInfo.getId() );
         sb.append( "_" );
@@ -291,6 +290,16 @@ public class ContactData implements Serializable {
 
     private Employment contactedEmployment() {
         return employment;
+    }
+
+    @XmlElement
+    public String getId() {
+        return commitment == null ? anchor() : null;
+    }
+
+    @XmlElement
+    public String getRef() {
+        return commitment == null ? null : anchor();
     }
 
     @XmlElement( name = "identity" )
