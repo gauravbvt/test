@@ -101,7 +101,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailSender;
 
-import java.io.Serializable;
 import java.text.Collator;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -176,7 +175,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * Page history.
      */
-    private List<PageState> pageHistory = new ArrayList<PageState>();
+ //   private List<PageState> pageHistory = new ArrayList<PageState>();
 
     /**
      * Page history cursor.
@@ -329,11 +328,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * Go back link.
      */
-    private AjaxLink<String> goBackLink;
+//    private AjaxLink<String> goBackLink;
     /**
      * Go forward link.
      */
-    private AjaxLink<String> goForwardLink;
+//    private AjaxLink<String> goForwardLink;
     /**
      * Geomap link panel.
      */
@@ -464,7 +463,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addBody();
         commander.resynced( getUser().getUsername() );
         LOG.debug( "Segment page generated" );
-        rememberState();
+//        rememberState();
     }
 
     private void addBody() {
@@ -494,7 +493,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void addHeader() {
         addRefreshNow();
-        addGoBackAndForward();
+      //  addGoBackAndForward();
         addActivitiesMenubar();
         addPlanMenubar();
         addFeedback();
@@ -579,7 +578,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         updateRefreshNowNotice();
     }
 
-    private void addGoBackAndForward() {
+ /*   private void addGoBackAndForward() {
         goBackLink = new AjaxLink<String>( "goBack" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -596,14 +595,15 @@ public final class PlanPage extends AbstractChannelsWebPage {
         };
         form.add( goForwardLink );
     }
-
+*/
     private void updateNavigation() {
-        goBackLink.add( new AttributeModifier(
+ /*       goBackLink.add( new AttributeModifier(
                 "class",
                 isCanGoBack() ? "back" : "back disabled" ) );
         goForwardLink.add( new AttributeModifier(
                 "class",
                 isCanGoForward() ? "forward" : "forward disabled" ) );
+*/
         String issuesSummary = getSegmentIssuesSummary();
         makeVisible( segmentIssuesLink, !issuesSummary.isEmpty() );
         segmentIssuesLink.add( new AttributeModifier( "title", issuesSummary ) );
@@ -618,8 +618,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void updateNavigation( AjaxRequestTarget target ) {
         updateNavigation();
-        target.add( goBackLink );
-        target.add( goForwardLink );
+        // target.add( goBackLink );
+        // target.add( goForwardLink );
         target.add( segmentIssuesLink );
         target.add( geomapLinkPanel );
         addPlanPath();
@@ -2109,7 +2109,7 @@ PopupSettings.RESIZABLE |
                 expand( userIssue );
             }
         }
-        rememberState();
+        // rememberState();
     }
 
     private void translateChange( Change change ) {
@@ -2929,11 +2929,14 @@ PopupSettings.RESIZABLE |
     }
 
 /*
+/// PAGE HISTORY
+
     public void importSegment( AjaxRequestTarget target ) {
         segmentImportPanel.open( target );
     }
 */
 
+/*
     public boolean isCanGoBack() {
         return historyCursor > 0;
     }
@@ -2968,14 +2971,16 @@ PopupSettings.RESIZABLE |
         }
     }
 
-    /**
+    */
+/**
      * Collapse what's no longer expanded, expand what's not yet expanded,
      * change aspects viewed if needed for expanded,
      * set segment if different and exists, set part if different and exists
      *
      * @param pageState a page state
      * @param target    an ajax request target
-     */
+     *//*
+
     @SuppressWarnings( "unchecked" )
     private void reinstate( PageState pageState, AjaxRequestTarget target ) {
         // Expand what's expanded in page state but not in current expansions
@@ -3027,6 +3032,7 @@ PopupSettings.RESIZABLE |
         }
         refreshAll( target );
     }
+*/
 
     /**
      * Dialog panel.
@@ -3054,26 +3060,35 @@ PopupSettings.RESIZABLE |
     /**
      * Page state.
      */
+/*
     private class PageState implements Serializable {
 
-        /**
+        */
+/**
          * Segment id.
-         */
+         *//*
+
         private long segmentId;
 
-        /**
+        */
+/**
          * Part id.
-         */
+         *//*
+
         private long partId;
 
-        /**
+        */
+/**
          * Expansions
-         */
+         *//*
+
         private Set<Long> expanded;
 
-        /**
+        */
+/**
          * Aspects viewed.
-         */
+         *//*
+
         private Map<Long, List<String>> aspects;
 
         private PageState() {
@@ -3138,6 +3153,7 @@ PopupSettings.RESIZABLE |
             return true;
         }
     }
+*/
 }
 
 
