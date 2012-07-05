@@ -1,56 +1,60 @@
-package com.mindalliance.channels.pages.components.plan;
+package com.mindalliance.channels.pages.components.plan.floating;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.plan.PlanOrganizationsPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
+ * Plan organizations floating panel.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 7/4/12
- * Time: 4:46 PM
+ * Time: 4:06 PM
  */
-public class PlanSegmentsFloatingPanel extends FloatingCommandablePanel {
+public class PlanOrganizationsFloatingPanel extends FloatingCommandablePanel {
+    private PlanOrganizationsPanel planOrgsPanel;
 
-    private PlanSegmentsMapPanel planSegmentsPanel;
-
-    public PlanSegmentsFloatingPanel( String id, Model<Plan> planModel ) {
-        super( id, planModel );
+    public PlanOrganizationsFloatingPanel( String id, IModel<Organization> orgModel ) {
+        super( id, orgModel );
         init();
     }
+
     private void init() {
         addHeading();
-        addPlanSegmentsPanel();
+        addPlanOrgsPanel();
     }
 
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "All segments" ) );
+                "Organizations in scope" ) );
     }
 
-    private void addPlanSegmentsPanel() {
-        planSegmentsPanel = new PlanSegmentsMapPanel(
-                "segments",
+    private void addPlanOrgsPanel() {
+        planOrgsPanel = new PlanOrganizationsPanel(
+                "organizations",
                 new Model<Plan>(getPlan() ),
                 null );
-        getContentContainer().add( planSegmentsPanel );
+        getContentContainer().add( planOrgsPanel );
     }
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, Channels.ALL_SEGMENTS );
+        Change change = new Change( Change.Type.Collapsed, Channels.ALL_ORGANIZATIONS );
         update( target, change );
     }
 
     @Override
     protected String getTitle() {
-        return "All segments";
+        return "Organizations in scope";
     }
 
 }

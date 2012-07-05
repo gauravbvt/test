@@ -4,6 +4,7 @@ import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.procedures.AbstractFlowData;
 import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.api.procedures.ElementOfInformationData;
+import com.mindalliance.channels.api.procedures.NotificationData;
 import com.mindalliance.channels.api.procedures.TimeDelayData;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Level;
@@ -63,9 +64,26 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                     : "You can ask for";
         } else {
             return flowData.isNotification()
-                    ? "To notify of"
+                    ? getToNotifyLabel()
                     : "When asked, provide";
         }
+    }
+
+    private String getToNotifyLabel() {
+        NotificationData notificationData = (NotificationData)flowData;
+        StringBuilder sb = new StringBuilder( );
+        String impactOnConsuming = notificationData.getImpactOnConsumingTask();
+        if ( impactOnConsuming.equalsIgnoreCase( "triggers" ))
+            sb.append( "To trigger" );
+        else if ( impactOnConsuming.equalsIgnoreCase( "terminates" ))
+            sb.append( "To terminate" );
+        else if ( impactOnConsuming.equalsIgnoreCase( "critical" ))
+            sb.append( "To make possible the" );
+        else sb.append( "To help the" );
+        sb.append( " execution of task \"" );
+        sb.append( notificationData.getConsumingTask().getLabel() );
+        sb.append( "\", notify of" );
+        return sb.toString();
     }
 
     private void addContacts() {

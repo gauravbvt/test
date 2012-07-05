@@ -1,56 +1,60 @@
-package com.mindalliance.channels.pages.components.plan;
+package com.mindalliance.channels.pages.components.plan.floating;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.plan.PlanIndexPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 /**
- * All Tags Floating Panel.
+ * Plan Index Floating Panel.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 7/4/12
- * Time: 7:21 PM
+ * Time: 7:17 PM
  */
-public class AllTagsFloatingPanel extends FloatingCommandablePanel {
+public class PlanIndexFloatingPanel extends FloatingCommandablePanel {
 
-    private PlanTagsPanel planTagsPanel;
+    private PlanIndexPanel planIndexPanel;
 
-    public AllTagsFloatingPanel( String id, IModel<Plan> planModel ) {
+    public PlanIndexFloatingPanel( String id, IModel<Plan> planModel ) {
         super( id, planModel );
         init();
     }
 
     private void init() {
         addHeading();
-        addPlanEventsPanel();
+        addPlanIndexPanel();
     }
 
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "All tags" ) );
+                "Index" ) );
     }
 
-    private void addPlanEventsPanel() {
-        planTagsPanel = new PlanTagsPanel( "tags" );
-        getContentContainer().add( planTagsPanel );
+    private void addPlanIndexPanel() {
+        planIndexPanel = new PlanIndexPanel(
+                "index",
+                new Model<Plan>(getPlan() ),
+                null );
+        getContentContainer().add( planIndexPanel );
     }
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, Channels.ALL_TAGS);
+        Change change = new Change( Change.Type.Collapsed, Channels.PLAN_INDEX);
         update( target, change );
     }
 
     @Override
     protected String getTitle() {
-        return "All tags";
+        return "Index";
     }
 
 }
-

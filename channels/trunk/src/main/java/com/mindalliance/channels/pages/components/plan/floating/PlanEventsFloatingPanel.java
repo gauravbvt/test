@@ -1,29 +1,30 @@
-package com.mindalliance.channels.pages.components.plan;
+package com.mindalliance.channels.pages.components.plan.floating;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
-import com.mindalliance.channels.pages.components.segment.SegmentPartMoverPanel;
+import com.mindalliance.channels.pages.components.plan.PlanEventsPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
- * Task mover floating panel.
+ * Plan event floating panel.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 7/4/12
- * Time: 5:29 PM
+ * Time: 3:47 PM
  */
-public class TaskMoverFloatingPanel  extends FloatingCommandablePanel {
+public class PlanEventsFloatingPanel extends FloatingCommandablePanel {
 
-    private SegmentPartMoverPanel segmentPartMoverPanel;
+    private PlanEventsPanel planEventsPanel;
 
-    public TaskMoverFloatingPanel( String id, IModel<Segment> segmentModel ) {
-        super( id, segmentModel );
+    public PlanEventsFloatingPanel( String id, IModel<Event> eventModel ) {
+        super( id, eventModel );
         init();
     }
 
@@ -35,29 +36,26 @@ public class TaskMoverFloatingPanel  extends FloatingCommandablePanel {
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "Task mover" ) );
+                "Events in scope" ) );
     }
 
     private void addPlanEventsPanel() {
-        segmentPartMoverPanel = new SegmentPartMoverPanel(
-                "mover",
-                new Model<Segment>( getSegment() ),
+        planEventsPanel = new PlanEventsPanel(
+                "events",
+                new Model<Plan>(getPlan() ),
                 null );
-        getContentContainer().add( segmentPartMoverPanel );
+        getContentContainer().add( planEventsPanel );
     }
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, Channels.TASK_MOVER);
+        Change change = new Change( Change.Type.Collapsed, Channels.ALL_EVENTS);
         update( target, change );
     }
 
     @Override
     protected String getTitle() {
-        return "Task mover";
+        return "Events in scope";
     }
 
-    private Segment getSegment() {
-        return (Segment)getModel().getObject();
-    }
 }

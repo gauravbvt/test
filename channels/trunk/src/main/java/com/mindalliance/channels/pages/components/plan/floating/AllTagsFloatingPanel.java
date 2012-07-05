@@ -1,59 +1,57 @@
-package com.mindalliance.channels.pages.components.plan;
+package com.mindalliance.channels.pages.components.plan.floating;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.plan.PlanTagsPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 
 /**
- * All Issues Floating Panel.
+ * All Tags Floating Panel.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 7/4/12
- * Time: 5:46 PM
+ * Time: 7:21 PM
  */
-public class AllIssuesFloatingPanel extends FloatingCommandablePanel {
+public class AllTagsFloatingPanel extends FloatingCommandablePanel {
 
-    private PlanIssuesPanel allIssuesPanel;
+    private PlanTagsPanel planTagsPanel;
 
-    public AllIssuesFloatingPanel( String id, IModel<Plan> planModel ) {
+    public AllTagsFloatingPanel( String id, IModel<Plan> planModel ) {
         super( id, planModel );
         init();
     }
 
     private void init() {
         addHeading();
-        addPlanIssuesPanel();
+        addPlanEventsPanel();
     }
 
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "All issues" ) );
+                "All tags" ) );
     }
 
-    private void addPlanIssuesPanel() {
-        allIssuesPanel = new PlanIssuesPanel( "issues" );
-        getContentContainer().add( allIssuesPanel );
+    private void addPlanEventsPanel() {
+        planTagsPanel = new PlanTagsPanel( "tags" );
+        getContentContainer().add( planTagsPanel );
     }
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, Channels.ALL_ISSUES);
+        Change change = new Change( Change.Type.Collapsed, Channels.ALL_TAGS);
         update( target, change );
     }
 
     @Override
     protected String getTitle() {
-        return "All issues";
+        return "All tags";
     }
 
-    @Override
-    protected int getWidth() {
-        return 1000;
-    }
 }
+

@@ -197,9 +197,8 @@ An element of information also has a name and can be accompanied by handling ins
                 <script>
                     <action>Open all events</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-3</subjectId>
                         <type>Expanded</type>
-                        <property>All events</property>
                     </change>
                 </script>
             </step>
@@ -243,7 +242,7 @@ The list is part of the plan's ''details''.]]></description>
                 <script>
                     <action>Edit the list of participating organizations</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-4</subjectId>
                         <type>Expanded</type>
                         <property>All organizations</property>
                     </change>
@@ -262,9 +261,8 @@ The list is part of the plan's ''details''.]]></description>
                 <script>
                     <action>Access requirement definitions</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectPath>guide.unknownRequirement</subjectPath>
                         <type>Expanded</type>
-                        <property>Information sharing requirements</property>
                     </change>
                 </script>
             </step>
@@ -324,36 +322,13 @@ Naming the goal is optional.]]></description>
                 <script>
                     <action>Define classifications</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-6</subjectId>
                         <type>Expanded</type>
-                        <property>Secrecy classifications</property>
                     </change>
                 </script>
             </step>
             <step>
                 <description>For more information, see [${helpUrl}/ch02s06s11s05.html this]</description>
-            </step>
-        </activity>
-        <activity id="participation">
-            <name>Set user participation</name>
-            <step>
-                <description><![CDATA[Associate a user with one or more agents and add contact information specific to the user's participation as that agent.
-
-Note that users that self-associate with agents that have been defined as "open participation".]]></description>
-                <script>
-                    <action>Set participation</action>
-                    <change>
-                        <subjectPath>plan</subjectPath>
-                        <type>Expanded</type>
-                        <property>Participations</property>
-                    </change>
-                </script>
-            </step>
-            <step>
-                <description>For more information, see [${helpUrl}/ch02s06s11s16.html this]</description>
-            </step>
-            <step>
-                <description>See also [${helpUrl}/ch02s04s04s02.html this]</description>
             </step>
         </activity>
     </group>
@@ -498,9 +473,8 @@ Note that all profile attributes are optional.]]>
                 <script>
                     <action>Open all events</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-3</subjectId>
                         <type>Expanded</type>
-                        <property>All events</property>
                     </change>
                 </script>
             </step>
@@ -509,9 +483,8 @@ Note that all profile attributes are optional.]]>
                 <script>
                     <action>Open the index</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-13</subjectId>
                         <type>Expanded</type>
-                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -559,9 +532,8 @@ Note that all profile attributes are optional.]]>
                 <script>
                     <action>Open the index</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-13</subjectId>
                         <type>Expanded</type>
-                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -628,9 +600,8 @@ Note that all profile attributes are optional.]]>
                 <script>
                     <action>Open the index</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-13</subjectId>
                         <type>Expanded</type>
-                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -668,9 +639,8 @@ Note that all profile attributes are optional.]]>
                 <script>
                     <action>Open plan's who's who</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-16</subjectId>
                         <type>Expanded</type>
-                        <property>Who's who</property>
                     </change>
                 </script>
             </step>
@@ -679,9 +649,8 @@ Note that all profile attributes are optional.]]>
                 <script>
                     <action>Open the index</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-13</subjectId>
                         <type>Expanded</type>
-                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -692,7 +661,7 @@ Note that all profile attributes are optional.]]>
                 <description>See also [${helpUrl}/ch02s06s13s03.html this]</description>
             </step>
             <next group="profiling" activity="profiling-organization"/>
-            <next group="scoping" activity="participation"/>
+            <next group="user-participation" activity="participation"/>
         </activity>
         <activity id="profiling-place">
             <name>Profile a place</name>
@@ -724,9 +693,8 @@ Note that all profile attributes are optional.]]>
                 <script>
                     <action>Open the index</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-13</subjectId>
                         <type>Expanded</type>
-                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -764,9 +732,8 @@ Note that all profile attributes are optional.]]>
                 <script>
                     <action>Open the index</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-13</subjectId>
                         <type>Expanded</type>
-                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -787,9 +754,8 @@ Note that all profile attributes are optional.]]>
                 <script>
                     <action>Open the All Issues table</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-10</subjectId>
                         <type>Expanded</type>
-                        <property>All issues</property>
                     </change>
                 </script>
             </step>
@@ -798,9 +764,8 @@ Note that all profile attributes are optional.]]>
                 <script>
                     <action>See plan evaluation</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-9</subjectId>
                         <type>Expanded</type>
-                        <property>Evaluation</property>
                     </change>
                 </script>
             </step>
@@ -819,7 +784,7 @@ Note that all profile attributes are optional.]]>
             <step>
                 <description>See also [${helpUrl}/ch03s03s03s05.html this]</description>
             </step>
-            <next group="data-collection" activity="launch-remediation-survey"/>
+            <next group="user-participation" activity="launch-remediation-survey"/>
         </activity>
         <activity id="moving-tasks">
             <name>Move tasks across segments</name>
@@ -828,9 +793,8 @@ Note that all profile attributes are optional.]]>
                 <script>
                     <action>Transfer tasks</action>
                     <change>
-                        <subjectPath>planPage.segment</subjectPath>
+                        <subjectId>-7</subjectId>
                         <type>Expanded</type>
-                        <property>task mover</property>
                     </change>
                 </script>
             </step>
@@ -842,7 +806,7 @@ Note that all profile attributes are optional.]]>
         <activity id="tune-task-flow-definition">
             <name>Adjust assignments and commitments</name>
             <step>
-                <description>Information sharing protocols (aka procedures or guidelines) are computed by assigning agents to tasks and by deriving information sharing commitments from the flows connecting assigned tasks.
+                <description>Information sharing protocols are computed by assigning agents to tasks and by deriving information sharing commitments from the flows connecting assigned tasks.
                     
 A key concern is making sure that the right agents get assigned to the right tasks, and that only the right agents that are assigned to the tasks on each side of a flow become parties to sharing commitments.
                 
@@ -900,9 +864,8 @@ Taxonomies are defined implictly by categorizing individual entities. Taxonomies
                 <script>
                     <action>View taxonomies</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-15</subjectId>
                         <type>Expanded</type>
-                        <property>All types</property>
                     </change>
                 </script>
             </step>
@@ -931,9 +894,8 @@ The other parties to the commitments can be aggregated by role, organization typ
                 <script>
                     <action>See protocols map</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-8</subjectId>
                         <type>Expanded</type>
-                        <property>Protocols map</property>
                     </change>
                 </script>
             </step>
@@ -944,8 +906,8 @@ The other parties to the commitments can be aggregated by role, organization typ
             <next group="improving" activity="verify-taxonomy"/>
         </activity>
     </group>
-    <group id="data-collection">
-        <name>Surveying and feedback</name>
+    <group id="user-participation">
+        <name>User participation</name>
         <activity id="compose-questionnaire">
             <name>Compose a questionnaire</name>
             <step>
@@ -972,7 +934,7 @@ Questionnaires can be activated and deactivated. They can be extended while they
             <step>
                 <description>For more information, see [${helpUrl}/ch02s06s19s02.html this]</description>
             </step>
-            <next group="data-collection" activity="launch-survey"/>
+            <next group="user-participation" activity="launch-survey"/>
         </activity>
         <activity id="launch-survey">
             <name>Launch a survey</name>
@@ -1013,8 +975,8 @@ Questionnaires can be activated and deactivated. They can be extended while they
             <step>
                 <description>See also [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </step>
-            <next group="data-collection" activity="add-survey-participants"/>
-            <next group="data-collection" activity="compose-questionnaire"/>
+            <next group="user-participation" activity="add-survey-participants"/>
+            <next group="user-participation" activity="compose-questionnaire"/>
         </activity>
         <activity id="launch-remediation-survey">
             <name>Launch an issue remediation survey</name>
@@ -1045,8 +1007,8 @@ Note that the issue remediation questionnaires are  by default not shown in the 
             <step>
                 <description>See also [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </step>
-            <next group="data-collection" activity="add-survey-participants"/>
-            <next group="data-collection" activity="compose-questionnaire"/>
+            <next group="user-participation" activity="add-survey-participants"/>
+            <next group="user-participation" activity="compose-questionnaire"/>
         </activity>
         <activity id="add-survey-participants">
             <name>Invite participation to a survey</name>
@@ -1076,7 +1038,7 @@ Note that anyone who is forwarded a survey and who is not yet a user of Channels
             <step>
                 <description>For more information, see [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </step>
-            <next group="data-collection" activity="survey-results"/>
+            <next group="user-participation" activity="survey-results"/>
         </activity>
         <activity id="survey-results">
             <name>Lookup the results of a survey</name>
@@ -1099,7 +1061,7 @@ Results can be viewed by opening the survey and selecting the ''results'' tabs.<
             <step>
                 <description>For more information, see [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </step>
-            <next group="data-collection" activity="add-survey-participants"/>
+            <next group="user-participation" activity="add-survey-participants"/>
         </activity>
         <activity id="feedback">
             <name>Manage user feedback</name>
@@ -1120,6 +1082,27 @@ Planners can see this feedback and reply to it. The user can then reply back etc
                 <description>For more information, see [${helpUrl}/ch02s06s20.html this]</description>
             </step>
         </activity>
+        <activity id="participation">
+            <name>Set user participation</name>
+            <step>
+                <description><![CDATA[Associate a user with one or more agents and add contact information specific to the user's participation as that agent.
+
+Note that users that self-associate with agents that have been defined as "open participation".]]></description>
+                <script>
+                    <action>Set user participation as agents</action>
+                    <change>
+                        <subjectId>-12</subjectId>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s16.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s04s04s02.html this]</description>
+            </step>
+        </activity>
     </group>
     <group id="searching">
         <name>Searching in the plan</name>
@@ -1132,9 +1115,8 @@ The index can be filtered by kind of element (role, agent, event etc.), by tags,
                 <script>
                     <action>Open the index</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-13</subjectId>
                         <type>Expanded</type>
-                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -1151,9 +1133,8 @@ The table can be indexed by the name of the agent or by attributes of employment
                 <script>
                     <action>Open the plan's who's who</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-16</subjectId>
                         <type>Expanded</type>
-                        <property>Who's who</property>
                     </change>
                 </script>
             </step>
@@ -1170,9 +1151,8 @@ A table with all documents attached in the plan can be found in the plan's ''bib
                 <script>
                     <action>Open the plan's bibliography</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-17</subjectId>
                         <type>Expanded</type>
-                        <property>Bibliography</property>
                     </change>
                 </script>
             </step>
@@ -1189,15 +1169,42 @@ The list of all tags used in the plan can be looked up to see what has been mark
                 <script>
                     <action>Open the tag index</action>
                     <change>
-                        <subjectPath>plan</subjectPath>
+                        <subjectId>-14</subjectId>
                         <type>Expanded</type>
-                        <property>All tags</property>
                     </change>
                 </script>
             </step>
             <step>
                 <description>For more information, see [${helpUrl}/ch02s06s11s14.html this]</description>
             </step>
+        </activity>
+        <activity id="taxonomies">
+            <name>Looking up a taxonomy</name>
+            <step>
+                <description> The entity types used to categorize roles, agents, organizations, places, events etc. (entities) can themselves be categorized to create taxonomies.
+                    
+Changes to a taxonomy can have profound impacts on the protocols that are generated by the plan. 
+                   
+Taxonomies can be visualized to verify that they are correct.
+                </description>
+                <script>
+                    <action>View taxonomies</action>
+                    <change>
+                        <subjectId>-15</subjectId>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s13.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s08s04.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s08s03.html this]</description>
+            </step>
+            <next group="improving" activity="verify-procedures"/>
         </activity>
         <activity id="references">
             <name>Cross-reference plan elements</name>

@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.plan;
+package com.mindalliance.channels.pages.components.plan.floating;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Requirement;

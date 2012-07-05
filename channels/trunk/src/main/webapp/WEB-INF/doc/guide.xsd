@@ -56,7 +56,7 @@
                 <xs:element name="updateTargetPath" type="xs:string" maxOccurs="1" minOccurs="0"/>
                     <xs:choice>
                     <xs:element name="subjectId" type="xs:long"/>
-                    <xs:element name="subjectPath" type="xs:string"/>
+                        <xs:element name="subjectPath" type="xs:string" maxOccurs="1" minOccurs="0"/>
                 </xs:choice>
                 <xs:element ref="type"/> 
                 <xs:element name="property" type="xs:string" maxOccurs="1" minOccurs="0"/>

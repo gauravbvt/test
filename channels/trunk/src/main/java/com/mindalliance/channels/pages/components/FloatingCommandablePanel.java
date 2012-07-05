@@ -159,7 +159,7 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
                 getWidth(),
                 getZIndex()
         );
-        add( new AttributeModifier( "style", true, new Model<String>( style ) ) );
+        add( new AttributeModifier( "style", new Model<String>( style ) ) );
        /* add( new AbstractBehavior() {
             public void renderHead( Component component, IHeaderResponse response ) {
                 String script = "Floater.onOpen('" + getMarkupId() + "');";
@@ -180,7 +180,6 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         WebMarkupContainer icon = new WebMarkupContainer( "minimizeIcon" );
         icon.add( new AttributeModifier(
                 "src",
-                true,
                 new Model<String>( minimized
                         ? "images/float-bar-maximize.png"
                         : "images/float-bar-minimize.png" ) ) );

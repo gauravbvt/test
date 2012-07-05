@@ -1,56 +1,55 @@
-package com.mindalliance.channels.pages.components.plan;
+package com.mindalliance.channels.pages.components.plan.floating;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.plan.PlanClassificationSystemsPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 
 /**
- * Bibliography Floating Panel.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 7/4/12
- * Time: 7:31 PM
+ * Time: 5:12 PM
  */
-public class BibliographyFloatingPanel extends FloatingCommandablePanel {
+public class PlanClassificationsFloatingPanel extends FloatingCommandablePanel {
 
-    private PlanBibliographyPanel planBibliographyPanel;
+    private PlanClassificationSystemsPanel planClassificationSystemsPanel;
 
-    public BibliographyFloatingPanel( String id, IModel<Plan> planModel ) {
+    public PlanClassificationsFloatingPanel( String id, IModel<Plan> planModel ) {
         super( id, planModel );
         init();
     }
 
     private void init() {
         addHeading();
-        addPlanBibliographyPanel();
+        addPlanEventsPanel();
     }
 
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "All documents" ) );
+                "Classification systems" ) );
     }
 
-    private void addPlanBibliographyPanel() {
-        planBibliographyPanel = new PlanBibliographyPanel( "bibliography" );
-        getContentContainer().add( planBibliographyPanel );
+    private void addPlanEventsPanel() {
+        planClassificationSystemsPanel = new PlanClassificationSystemsPanel(
+                "classifications" );
+        getContentContainer().add( planClassificationSystemsPanel );
     }
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, Channels.BIBLIOGRAPHY);
+        Change change = new Change( Change.Type.Collapsed, Channels.ALL_CLASSIFICATIONS);
         update( target, change );
     }
 
     @Override
     protected String getTitle() {
-        return "All documents";
+        return "Classification systems";
     }
-
 }
-

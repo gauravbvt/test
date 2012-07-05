@@ -31,13 +31,14 @@ import java.util.Set;
  */
 @XmlType( propOrder = {"information", "intent", "communicatedContext", "taskFailed", "receiptConfirmationRequested",
         "instructions", "contactAll", "maxDelay", "contacts", "mediumIds", "failureImpact",
-        "consumingTask", "documentation"/*, "agreements"*/} )
+        "consumingTask", "impactOnConsumingTask", "documentation"/*, "agreements"*/} )
 public class NotificationData extends AbstractFlowData {
 
     private List<Commitment> commitments;
     private List<Employment> contactEmployments;
     private List<ContactData> contacts;
     private TaskData consumingTaskData;
+    private String impactOnConsumingTask;
 
     public NotificationData() {
         // required
@@ -73,14 +74,14 @@ public class NotificationData extends AbstractFlowData {
     }
 
     private void initCommitments( PlanService planService ) {
-        commitments = new ArrayList<Commitment>(  ) ;
+        commitments = new ArrayList<Commitment>();
         for ( Commitment commitment : planService.findAllCommitments( getSharing(), false, false ) ) {   // no unknown, not to self
             if ( isInitiating() ) {
-                if ( commitment.getCommitter().equals(  getAssignment() )  ) {
-                   commitments.add( commitment );
+                if ( commitment.getCommitter().equals( getAssignment() ) ) {
+                    commitments.add( commitment );
                 }
             } else {
-                if ( commitment.getBeneficiary().equals( getAssignment() )  ) {
+                if ( commitment.getBeneficiary().equals( getAssignment() ) ) {
                     commitments.add( commitment );
                 }
             }
@@ -92,7 +93,7 @@ public class NotificationData extends AbstractFlowData {
             PlanParticipationService planParticipationService,
             ChannelsUserInfo userInfo ) {
         Set<Employment> employments = new HashSet<Employment>();
-        Set<ContactData> contactDataSet = new HashSet<ContactData>(  );
+        Set<ContactData> contactDataSet = new HashSet<ContactData>();
         for ( Commitment commitment : commitments ) {
             if ( isInitiating() ) {  // notifying
                 Employment employment = commitment.getBeneficiary().getEmployment();
@@ -101,7 +102,7 @@ public class NotificationData extends AbstractFlowData {
                         employment,
                         commitment,
                         planService,
-                        planParticipationService, userInfo ) ) ;
+                        planParticipationService, userInfo ) );
             } else { // being notified
                 Employment employment = commitment.getCommitter().getEmployment();
                 employments.add( employment );
@@ -110,7 +111,7 @@ public class NotificationData extends AbstractFlowData {
                         commitment,
                         planService,
                         planParticipationService,
-                        userInfo ) ) ;
+                        userInfo ) );
             }
         }
         contactEmployments = new ArrayList<Employment>( employments );
@@ -120,13 +121,28 @@ public class NotificationData extends AbstractFlowData {
     private void initConsumingTask( PlanService planService, PlanParticipationService planParticipationService ) {
         if ( !isInitiating() )
             consumingTaskData = null;
-        else
+        else {
+            Part consumingPart = (Part) getNotification().getTarget();
             consumingTaskData = new TaskData(
-                    (Part)getNotification().getTarget(),
+                    consumingPart,
                     planService,
                     planParticipationService,
                     getUser() );
+            if ( flow().isTriggeringToTarget() )
+                impactOnConsumingTask = "triggers";
+            else if ( flow().isTerminatingToTarget() )
+                impactOnConsumingTask = "terminates";
+            else if ( flow().isCritical() )
+                impactOnConsumingTask = "critical";
+            else
+                impactOnConsumingTask = "useful";
+        }
 
+    }
+
+    @XmlElement
+    public String getImpactOnConsumingTask() {
+        return impactOnConsumingTask;
     }
 
     @Override

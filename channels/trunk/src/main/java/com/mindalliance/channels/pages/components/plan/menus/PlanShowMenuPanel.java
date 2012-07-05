@@ -57,6 +57,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                     Arrays.asList(
                             collapsible( Channels.SOCIAL_ID, "Hide planners", "Planners" ),
                             collapsible( Channels.GUIDE_ID, "Hide guide", "Guide" ),
+                            collapsible( Channels.ALL_SEGMENTS, "Hide plan map", "Plan map" ),
                             collapsible( plan, "Hide about plan", "About plan" ),
                             collapsible(
                                     getSegment(), "Hide about plan segment", "About plan segment" ) ) );

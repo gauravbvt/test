@@ -1,58 +1,59 @@
-package com.mindalliance.channels.pages.components.plan;
+package com.mindalliance.channels.pages.components.plan.floating;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.plan.PlanWhosWhoPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
+ * Who's Who Floating Panel.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 7/4/12
- * Time: 5:40 PM
+ * Time: 7:28 PM
  */
-public class PlanEvaluationFloatingPanel extends FloatingCommandablePanel {
+public class WhosWhoFloatingPanel extends FloatingCommandablePanel {
 
-    private PlanEvaluationPanel planEvaluationPanel;
+    private PlanWhosWhoPanel planWhosWhoPanel;
 
-    public PlanEvaluationFloatingPanel( String id, IModel<Plan> planModel ) {
+    public WhosWhoFloatingPanel( String id, IModel<Plan> planModel ) {
         super( id, planModel );
         init();
     }
 
     private void init() {
         addHeading();
-        addPlanEvaluationPanel();
+        addPlanWhosWhoPanel();
     }
 
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "Plan evaluation" ) );
+                "Who's who" ) );
     }
 
-    private void addPlanEvaluationPanel() {
-        planEvaluationPanel = new PlanEvaluationPanel(
-                "evaluation",
-                new Model<Plan>(getPlan() ),
-                null );
-        getContentContainer().add( planEvaluationPanel );
+    private void addPlanWhosWhoPanel() {
+        planWhosWhoPanel = new PlanWhosWhoPanel( "whosWho", new Model<Plan>( getPlan()  ), null );
+        getContentContainer().add( planWhosWhoPanel );
     }
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, Channels.PLAN_EVALUATION);
+        Change change = new Change( Change.Type.Collapsed, Channels.WHOS_WHO);
         update( target, change );
     }
 
     @Override
     protected String getTitle() {
-        return "Plan evaluation";
+        return "Who's who";
     }
 
 }
+
+

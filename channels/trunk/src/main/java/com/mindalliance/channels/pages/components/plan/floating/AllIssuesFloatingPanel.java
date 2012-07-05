@@ -1,56 +1,60 @@
-package com.mindalliance.channels.pages.components.plan;
+package com.mindalliance.channels.pages.components.plan.floating;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.plan.PlanIssuesPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 
 /**
- * All Types Floating Panel.
+ * All Issues Floating Panel.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 7/4/12
- * Time: 7:24 PM
+ * Time: 5:46 PM
  */
-public class AllTypesFloatingPanel extends FloatingCommandablePanel {
+public class AllIssuesFloatingPanel extends FloatingCommandablePanel {
 
-    private PlanTypologiesPanel planTypologiesPanel;
+    private PlanIssuesPanel allIssuesPanel;
 
-    public AllTypesFloatingPanel( String id, IModel<Plan> planModel ) {
+    public AllIssuesFloatingPanel( String id, IModel<Plan> planModel ) {
         super( id, planModel );
         init();
     }
 
     private void init() {
         addHeading();
-        addPlanTypesPanel();
+        addPlanIssuesPanel();
     }
 
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "Taxonomies" ) );
+                "All issues" ) );
     }
 
-    private void addPlanTypesPanel() {
-        planTypologiesPanel = new PlanTypologiesPanel( "typologies" );
-        getContentContainer().add( planTypologiesPanel );
+    private void addPlanIssuesPanel() {
+        allIssuesPanel = new PlanIssuesPanel( "issues" );
+        getContentContainer().add( allIssuesPanel );
     }
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, Channels.ALL_TYPES );
+        Change change = new Change( Change.Type.Collapsed, Channels.ALL_ISSUES);
         update( target, change );
     }
 
     @Override
     protected String getTitle() {
-        return "Taxonomies";
+        return "All issues";
     }
 
+    @Override
+    protected int getWidth() {
+        return 1000;
+    }
 }
-
