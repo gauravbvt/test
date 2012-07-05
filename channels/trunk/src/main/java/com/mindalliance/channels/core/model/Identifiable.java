@@ -41,4 +41,5 @@ public interface Identifiable extends Nameable {
      * @return a string
      */
     String getClassLabel();
+
 }

@@ -6,8 +6,6 @@ import com.mindalliance.channels.core.command.commands.RemoveRequirement;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
@@ -34,7 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Plan requirements management panel.
@@ -66,22 +63,14 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
 
     public PlanRequirementDefinitionsPanel(
             String id,
-            Model<Plan> planModel,
-            Set<Long> expansions,
-            Change change ) {
-        super( id, planModel, expansions );
-        init( change );
+            Model<Requirement> requirementModel) {
+        super( id, requirementModel );
+        init(  );
     }
 
-    private void init( Change change ) {
-        if ( change != null && change.hasQualifier( "requirement" ) ) {
-            try {
-                selectedRequirement = (Requirement)getQueryService().find(
-                        Requirement.class, (Long)change.getQualifier( "requirement" ) );
-            } catch ( NotFoundException e ) {
-                LOG.warn( "Requirement to initially open not found in " + change );
-            }
-        }
+    private void init(  ) {
+        selectedRequirement = (Requirement)getModel().getObject();
+        if ( selectedRequirement.isUnknown() ) selectedRequirement = null;
         addRequirementsTable();
         addRequirementEditPanel( );
         addButtons();
@@ -223,6 +212,10 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
             target.add( requirementsTable );
         }
         super.updateWith( target, change, updated );
+    }
+
+    public void select( Requirement requirement ) {
+        selectedRequirement = requirement.isUnknown() ? null : requirement;
     }
 
     /**

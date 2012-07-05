@@ -48,6 +48,15 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
       */
      static protected final int PAD_RIGHT = 7;
 
+    /**
+     * Min width on resize.
+     */
+    private static final int MIN_WIDTH = 300;
+
+    /**
+     * Min height on resize.
+     */
+    private static final int MIN_HEIGHT = 300;
 
     /**
      * Background color.
@@ -91,8 +100,13 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
     public FloatingCommandablePanel( String id ) {
         this( id, null, null );
     }
-    
-     public FloatingCommandablePanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
+
+    public FloatingCommandablePanel( String id, IModel<? extends Identifiable> iModel ) {
+        this( id, iModel, null );
+    }
+
+
+    public FloatingCommandablePanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
         setOutputMarkupId( true );
         // move
@@ -250,49 +264,34 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
         target.add( titleLabel );
     }
 
+    // DEFAULT
 
-    /**
-     * Get top padding in px.
-     *
-     * @return an int
-     */
-    abstract protected int getPadTop();
+    protected int getPadTop() {
+        return PAD_TOP;
+    }
 
-    /**
-     * Get left padding in px.
-     *
-     * @return an int
-     */
-    abstract protected int getPadLeft();
+     protected int getPadLeft() {
+        return PAD_LEFT;
+    }
 
-    /**
-     * Get bottom padding in px.
-     *
-     * @return an int
-     */
-    abstract protected int getPadBottom();
+    protected int getPadBottom() {
+        return PAD_BOTTOM;
+    }
 
-    /**
-     * Get right padding in px.
-     *
-     * @return an int
-     */
-    abstract protected int getPadRight();
+    protected int getPadRight() {
+        return PAD_RIGHT;
+    }
+
+    protected int getMinWidth() {
+        return MIN_WIDTH;
+    }
+
+    protected int getMinHeight() {
+        return MIN_HEIGHT;
+    }
 
 
-    /**
-     * Get min width  in px on resize.
-     *
-     * @return an int
-     */
-    abstract protected int getMinWidth();
 
-    /**
-     * Get min width  in px on resize.
-     *
-     * @return an int
-     */
-    abstract protected int getMinHeight();
 
     /**
      * Close panel.

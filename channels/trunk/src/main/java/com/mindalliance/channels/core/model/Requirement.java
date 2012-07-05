@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -28,8 +29,10 @@ import java.util.Map;
 public class Requirement extends ModelObject implements Countable {
 
     private static String UNNAMED = "UNNAMED";
+    //     public static final RFISurvey UNKNOWN = new RFISurvey( Channels.UNKNOWN_RFI_SURVEY_ID );
 
-    
+    public static final Requirement UNKNOWN = new Requirement( Channels.UNKNOWN_REQUIREMENT_ID );
+
 
     /**
      * Degree of satisfaction.
@@ -82,6 +85,11 @@ public class Requirement extends ModelObject implements Countable {
 
     public Requirement() {
         super( UNNAMED );
+    }
+
+    public Requirement( long id ) {
+        super( UNNAMED );
+        setId( id );
     }
 
     protected Requirement( String name ) {

@@ -16,9 +16,9 @@ import java.util.Set;
  * Date: Mar 22, 2010
  * Time: 9:50:48 AM
  */
-public class PlanPartipationsPanel extends AbstractCommandablePanel {
+public class PlanParticipationPanel extends AbstractCommandablePanel {
 
-    public PlanPartipationsPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
+    public PlanParticipationPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
     }

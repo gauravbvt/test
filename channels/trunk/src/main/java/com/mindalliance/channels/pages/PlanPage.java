@@ -9,6 +9,7 @@ package com.mindalliance.channels.pages;
 import com.google.code.jqwicket.ui.notifier.NotifierWebMarkupContainer;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -16,6 +17,7 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
@@ -34,8 +36,28 @@ import com.mindalliance.channels.pages.components.ModelObjectSurveysPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.AllFeedbackFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.AllIssuesFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.AllTagsFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.AllTypesFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.BibliographyFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.PlanClassificationsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
+import com.mindalliance.channels.pages.components.plan.PlanEvaluationFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.PlanEventsFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.PlanIndexFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.PlanOrganizationsFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.PlanParticipationFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.PlanRequirementsFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.PlanSegmentsFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.PlanVersionsFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.ProtocolsMapFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.TaskMoverFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.WhosWhoFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanActionsMenuPanel;
+import com.mindalliance.channels.pages.components.plan.menus.PlanImprovingMenuPanel;
+import com.mindalliance.channels.pages.components.plan.menus.PlanParticipationMenuPanel;
+import com.mindalliance.channels.pages.components.plan.menus.PlanScopingMenuPanel;
+import com.mindalliance.channels.pages.components.plan.menus.PlanSearchingMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanShowMenuPanel;
 import com.mindalliance.channels.pages.components.segment.ExpandedFlowPanel;
 import com.mindalliance.channels.pages.components.segment.FailureImpactsPanel;
@@ -137,6 +159,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
     public static String IE7CompatibilityScript;
 
     /**
+     * The mail sender.
+     */
+    @SpringBean
+    private MailSender mailSender;
+    /**
      * Id of components that are expanded.
      */
     private Set<Long> expansions = new HashSet<Long>();
@@ -160,6 +187,13 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * Link to mapping of parts.
      */
     private GeomapLinkPanel partsMapLink;
+
+    private Map<Long, Boolean> showSimpleForm = new HashMap<Long, Boolean>();
+
+    private PlanScopingMenuPanel scopingMenu;
+    private PlanSearchingMenuPanel searchingMenu;
+    private PlanParticipationMenuPanel participationMenu;
+    private PlanImprovingMenuPanel improvingMenu;
 
     /**
      * Segments action menu.
@@ -191,14 +225,16 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private WebMarkupContainer spinner;
 
     /**
-     * Segment edit panel.
-     */
-    private Component segmentEditPanel;
-
-    /**
      * The segment panel.
      */
     private SegmentPanel segmentPanel;
+
+    /// FLOATING PANELS
+
+    /**
+     * Segment edit panel.
+     */
+    private Component segmentEditPanel;
 
     /**
      * The entity panel.
@@ -213,6 +249,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * The commitments panel.
      */
+
     private Component commitmentsPanel;
 
     /**
@@ -250,6 +287,40 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * Overrides panel.
      */
     private Component overridesPanel;
+
+    /**
+     * Flow legend panel.
+     */
+    private Component flowLegendPanel;
+
+    /**
+     * Feedbacks panel.
+     */
+    private Component allFeedbackPanel;
+
+    /**
+     * All surveys panel
+     */
+    private Component allSurveyPanel;
+    /**
+     * All requirements panel.
+     */
+    private Component planRequirementsPanel;
+    private Component allEventsPanel;
+    private Component allOrganizationsPanel;
+    private Component allSegmentsPanel;
+    private Component allClassificationsPanel;
+    private Component protocolsMapPanel;
+    private Component planEvaluationPanel;
+    private Component taskMoverPanel;
+    private Component allIssuesPanel;
+    private Component planVersionsPanel;
+    private Component planParticipationPanel;
+    private Component planIndexPanel;
+    private Component allTagsPanel;
+    private Component allTypesPanel;
+    private Component whosWhoPanel;
+    private Component bibliographyPanel;
 
     /**
      * Refresh button.
@@ -298,20 +369,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
      */
     private boolean flowsExplained;
     /**
-     * Flow legend panel.
-     */
-    private Component flowLegendPanel;
-
-    /**
-     * Feedbacks panel.
-     */
-    private Component allFeedbackPanel;
-
-    /**
-     * All RFIs panel
-     */
-    private Component dataCollectionPanel;
-    /**
      * Cumulated change to an expanded identifiable.
      */
     private Map<Long, Change> changes = new HashMap<Long, Change>();
@@ -320,21 +377,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
      */
     private String message;
 
-    private Map<Long, Boolean> showSimpleForm = new HashMap<Long, Boolean>();
-
-    /**
-     * Survey service.
-     */
-/*
-    @SpringBean
-    private SurveyService surveyService;
-*/
-
-    /**
-     * The mail sender.
-     */
-    @SpringBean
-    private MailSender mailSender;
 
     static {
         IE7CompatibilityScript =
@@ -452,6 +494,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void addHeader() {
         addRefreshNow();
         addGoBackAndForward();
+        addActivitiesMenubar();
         addPlanMenubar();
         addFeedback();
         addHelp();
@@ -474,8 +517,28 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addSegmentEditPanel();
         addPlanEditPanel( null );
         addFlowLegendPanel();
+        // scoping
+        addRequirementsPanel();
+        addAllEventsPanel();
+        addAllOrganizationsPanel();
+        addAllSegmentsPanel();
+        addAllClassificationsPanel();
+        // improving
+        addTaskMoverPanel();
+        addProtocolsMapPanel();
+        addPlanEvaluationPanel();
+        addAllIssuesPanel();
+        addPlanVersionsPanel();
+        // participating
+        addPlanParticipationPanel();
         addAllFeedbackPanel();
         addDataCollectionPanel();
+        // searching
+        addPlanIndexPanel();
+        addAllTagsPanel();
+        addAllTypesPanel();
+        addWhosWhoPanel();
+        addBibliographyPanel();
     }
 
     private void addRefreshNow() {
@@ -562,6 +625,45 @@ public final class PlanPage extends AbstractChannelsWebPage {
         target.add( planPath );
     }
 
+    private void addActivitiesMenubar() {
+        addScopingMenu();
+        addImprovingMenu();
+        addParticipationMenu();
+        addSearchingMenu();
+    }
+
+    private void addScopingMenu() {
+        scopingMenu = new PlanScopingMenuPanel(
+                "scopingMenu",
+                new PropertyModel<Segment>( this, "segment" ),
+                getReadOnlyExpansions() );
+        form.addOrReplace( scopingMenu );
+    }
+
+    private void addImprovingMenu() {
+        improvingMenu = new PlanImprovingMenuPanel(
+                "improvingMenu",
+                new PropertyModel<Segment>( this, "segment" ),
+                getReadOnlyExpansions() );
+        form.addOrReplace( improvingMenu );
+    }
+
+    private void addParticipationMenu() {
+        participationMenu = new PlanParticipationMenuPanel(
+                "participationMenu",
+                new PropertyModel<Segment>( this, "segment" ),
+                getReadOnlyExpansions() );
+        form.addOrReplace( participationMenu );
+    }
+
+    private void addSearchingMenu() {
+        searchingMenu = new PlanSearchingMenuPanel(
+                "searchingMenu",
+                new PropertyModel<Segment>( this, "segment" ),
+                getReadOnlyExpansions() );
+        form.addOrReplace( searchingMenu );
+    }
+
     private void addPlanMenubar() {
         addPlanActionsMenu();
         addPlanShowMenu();
@@ -572,7 +674,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 "planShowMenu",
                 new PropertyModel<Segment>( this, "segment" ),
                 getReadOnlyExpansions() );
-        planShowMenu.setOutputMarkupId( true );
         form.addOrReplace( planShowMenu );
     }
 
@@ -580,7 +681,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
         planActionsMenu = new PlanActionsMenuPanel( "planActionsMenu",
                 new PropertyModel<Segment>( this, "segment" ),
                 getReadOnlyExpansions() );
-        planActionsMenu.setOutputMarkupId( true );
         form.addOrReplace( planActionsMenu );
     }
 
@@ -596,7 +696,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 new Model<String>( "Show tasks in map" ) );
         geomapLinkPanel.setOutputMarkupId( true );
         partsMapLink = geomapLinkPanel;
-        makeVisible( geomapLinkPanel,geomapLinkPanel.hasMappableContent() );
+        makeVisible( geomapLinkPanel, geomapLinkPanel.hasMappableContent() );
         form.addOrReplace( geomapLinkPanel );
     }
 
@@ -775,21 +875,233 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void addDataCollectionPanel( RFISurvey rfiSurvey, Change change ) {
         if ( !expansions.contains( RFISurvey.UNKNOWN.getId() ) ) {
-            dataCollectionPanel = new Label( "dataCollection", "" );
-            dataCollectionPanel.setOutputMarkupId( true );
-            makeVisible( dataCollectionPanel, false );
+            allSurveyPanel = new Label( "dataCollection", "" );
+            allSurveyPanel.setOutputMarkupId( true );
+            makeVisible( allSurveyPanel, false );
         } else {
             if ( change == null || !change.hasQualifier( "tab" ) )
-                dataCollectionPanel = new DataCollectionPanel(
+                allSurveyPanel = new DataCollectionPanel(
                         "dataCollection",
                         new Model<RFISurvey>( rfiSurvey ) );
             else
-                dataCollectionPanel = new DataCollectionPanel(
+                allSurveyPanel = new DataCollectionPanel(
                         "dataCollection",
                         new Model<RFISurvey>( rfiSurvey ),
                         (String) change.getQualifier( "tab" ) );
         }
-        form.addOrReplace( dataCollectionPanel );
+        form.addOrReplace( allSurveyPanel );
+    }
+
+    private void addRequirementsPanel() {
+        addRequirementsPanel( null );
+    }
+
+    private void addRequirementsPanel( Requirement requirement ) {
+        if ( !expansions.contains( Requirement.UNKNOWN.getId() ) ) {
+            planRequirementsPanel = new Label( "requirements", "" );
+            planRequirementsPanel.setOutputMarkupId( true );
+            makeVisible( planRequirementsPanel, false );
+        } else {
+            planRequirementsPanel = new PlanRequirementsFloatingPanel(
+                    "requirements",
+                    new Model<Requirement>( requirement ) );
+        }
+        form.addOrReplace( planRequirementsPanel );
+    }
+
+    private void addAllEventsPanel() {
+        if ( !expansions.contains( Channels.ALL_EVENTS ) ) {
+            allEventsPanel = new Label( "allEvents", "" );
+            allEventsPanel.setOutputMarkupId( true );
+            makeVisible( allEventsPanel, false );
+        } else {
+            allEventsPanel = new PlanEventsFloatingPanel(
+                    "allEvents",
+                    new Model<Event>( Event.UNKNOWN ) );
+        }
+        form.addOrReplace( allEventsPanel );
+    }
+
+    private void addAllOrganizationsPanel() {
+        if ( !expansions.contains( Channels.ALL_ORGANIZATIONS ) ) {
+            allOrganizationsPanel = new Label( "allOrganizations", "" );
+            allOrganizationsPanel.setOutputMarkupId( true );
+            makeVisible( allOrganizationsPanel, false );
+        } else {
+            allOrganizationsPanel = new PlanOrganizationsFloatingPanel(
+                    "allOrganizations",
+                    new Model<Organization>( Organization.UNKNOWN ) );
+        }
+        form.addOrReplace( allOrganizationsPanel );
+    }
+
+    private void addAllSegmentsPanel() {
+        if ( !expansions.contains( Channels.ALL_SEGMENTS ) ) {
+            allSegmentsPanel = new Label( "allSegments", "" );
+            allSegmentsPanel.setOutputMarkupId( true );
+            makeVisible( allSegmentsPanel, false );
+        } else {
+            allSegmentsPanel = new PlanSegmentsFloatingPanel(
+                    "allSegments",
+                    new Model<Plan>( getPlan() ) );
+        }
+        form.addOrReplace( allSegmentsPanel );
+    }
+
+    private void addAllClassificationsPanel() {
+        if ( !expansions.contains( Channels.ALL_CLASSIFICATIONS ) ) {
+            allClassificationsPanel = new Label( "classifications", "" );
+            allClassificationsPanel.setOutputMarkupId( true );
+            makeVisible( allClassificationsPanel, false );
+        } else {
+            allClassificationsPanel = new PlanClassificationsFloatingPanel(
+                    "classifications",
+                    new Model<Plan>( getPlan() ) );
+        }
+        form.addOrReplace( allClassificationsPanel );
+    }
+
+    private void addTaskMoverPanel() {
+        if ( !expansions.contains( Channels.TASK_MOVER ) ) {
+            taskMoverPanel = new Label( "taskMover", "" );
+            taskMoverPanel.setOutputMarkupId( true );
+            makeVisible( taskMoverPanel, false );
+        } else {
+            taskMoverPanel = new TaskMoverFloatingPanel(
+                    "taskMover",
+                    new Model<Segment>( getSegment() ) );
+        }
+        form.addOrReplace( taskMoverPanel );
+    }
+
+    private void addProtocolsMapPanel() {
+        if ( !expansions.contains( Channels.PROTOCOLS_MAP ) ) {
+            protocolsMapPanel = new Label( "protocolsMap", "" );
+            protocolsMapPanel.setOutputMarkupId( true );
+            makeVisible( protocolsMapPanel, false );
+        } else {
+            protocolsMapPanel = new ProtocolsMapFloatingPanel(
+                    "protocolsMap",
+                    new Model<Plan>( getPlan() ) );
+        }
+        form.addOrReplace( protocolsMapPanel );
+    }
+
+    private void addPlanEvaluationPanel() {
+        if ( !expansions.contains( Channels.PLAN_EVALUATION ) ) {
+            planEvaluationPanel = new Label( "planEvaluation", "" );
+            planEvaluationPanel.setOutputMarkupId( true );
+            makeVisible( planEvaluationPanel, false );
+        } else {
+            planEvaluationPanel = new PlanEvaluationFloatingPanel(
+                    "planEvaluation",
+                    new Model<Plan>( getPlan() ) );
+        }
+        form.addOrReplace( planEvaluationPanel );
+    }
+
+    private void addAllIssuesPanel() {
+        if ( !expansions.contains( Channels.ALL_ISSUES ) ) {
+            allIssuesPanel = new Label( "allIssues", "" );
+            allIssuesPanel.setOutputMarkupId( true );
+            makeVisible( allIssuesPanel, false );
+        } else {
+            allIssuesPanel = new AllIssuesFloatingPanel(
+                    "allIssues",
+                    new Model<Plan>( getPlan() ) );
+        }
+        form.addOrReplace( allIssuesPanel );
+    }
+
+    private void addPlanVersionsPanel() {
+        if ( !expansions.contains( Channels.PLAN_VERSIONS ) ) {
+            planVersionsPanel = new Label( "planVersions", "" );
+            planVersionsPanel.setOutputMarkupId( true );
+            makeVisible( planVersionsPanel, false );
+        } else {
+            planVersionsPanel = new PlanVersionsFloatingPanel(
+                    "planVersions",
+                    new Model<Plan>( getPlan() ) );
+        }
+        form.addOrReplace( planVersionsPanel );
+    }
+
+    private void addPlanParticipationPanel() {
+        if ( !expansions.contains( Channels.PLAN_VERSIONS ) ) {
+            planParticipationPanel = new Label( "planParticipation", "" );
+            planParticipationPanel.setOutputMarkupId( true );
+            makeVisible( planParticipationPanel, false );
+            form.addOrReplace( planParticipationPanel );
+        } else {
+            planParticipationPanel = new PlanParticipationFloatingPanel(
+                    "planParticipation",
+                    new Model<Plan>( getPlan() ) );
+        }
+    }
+
+    private void addPlanIndexPanel() {
+        if ( !expansions.contains( Channels.PLAN_INDEX ) ) {
+            planIndexPanel = new Label( "planIndex", "" );
+            planIndexPanel.setOutputMarkupId( true );
+            makeVisible( planIndexPanel, false );
+        } else {
+            planIndexPanel = new PlanIndexFloatingPanel(
+                    "planIndex",
+                    new Model<Plan>( getPlan() ) );
+        }
+        form.addOrReplace( planIndexPanel );
+    }
+
+    private void addAllTagsPanel() {
+        if ( !expansions.contains( Channels.ALL_TAGS ) ) {
+            allTagsPanel = new Label( "allTags", "" );
+            allTagsPanel.setOutputMarkupId( true );
+            makeVisible( allTagsPanel, false );
+        } else {
+            allTagsPanel = new AllTagsFloatingPanel(
+                    "allTags",
+                    new Model<Plan>( getPlan() ) );
+        }
+        form.addOrReplace( allTagsPanel );
+    }
+
+    private void addAllTypesPanel() {
+        if ( !expansions.contains( Channels.TYPOLOGIES ) ) {
+            allTypesPanel = new Label( "allTypes", "" );
+            allTypesPanel.setOutputMarkupId( true );
+            makeVisible( allTypesPanel, false );
+        } else {
+            allTypesPanel = new AllTypesFloatingPanel(
+                    "allTypes",
+                    new Model<Plan>( getPlan() ) );
+        }
+        form.addOrReplace( allTypesPanel );
+    }
+
+    private void addWhosWhoPanel() {
+        if ( !expansions.contains( Channels.WHOS_WHO ) ) {
+            whosWhoPanel = new Label( "whoswho", "" );
+            whosWhoPanel.setOutputMarkupId( true );
+            makeVisible( whosWhoPanel, false );
+        } else {
+            whosWhoPanel = new WhosWhoFloatingPanel(
+                    "whoswho",
+                    new Model<Plan>( getPlan() ) );
+        }
+        form.addOrReplace( whosWhoPanel );
+    }
+
+    private void addBibliographyPanel() {
+        if ( !expansions.contains( Channels.BIBLIOGRAPHY ) ) {
+            bibliographyPanel = new Label( "bibliography", "" );
+            bibliographyPanel.setOutputMarkupId( true );
+            makeVisible( bibliographyPanel, false );
+        } else {
+            bibliographyPanel = new BibliographyFloatingPanel(
+                    "bibliography",
+                    new Model<Plan>( getPlan() ) );
+        }
+        form.addOrReplace( bibliographyPanel );
     }
 
 
@@ -919,7 +1231,7 @@ PopupSettings.RESIZABLE |
                     getUser().getUsername() ) )
                 reasons = " -- Plan was modified by " + lastModifier;
 
-            // Find expansions that were locked and are not unlocked
+            // Find expansions that were locked and are now unlocked
             for ( ModelObject mo : getEditableModelObjects( expansions ) ) {
                 if ( !getCommander().isLockedByUser( getUser().getUsername(), mo ) ) {
                     String aspect = getAspectShown( mo );
@@ -1461,7 +1773,8 @@ PopupSettings.RESIZABLE |
     private void tryAcquiringLock( Change change ) {
         if ( change.isForInstanceOf( Identifiable.class ) ) {
             Identifiable identifiable = change.getSubject( getQueryService() );
-            if ( ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
+            if ( !ModelObject.isUnknownModelObject( identifiable )
+                    && ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
                     && getCommander().isLockable( change.getClassName() ) ) {
                 getCommander().requestLockOn( getUser().getUsername(), change.getId() );
             }
@@ -1542,18 +1855,12 @@ PopupSettings.RESIZABLE |
         return aspectRequiresLock( change.getSubject( getQueryService() ), aspect );
     }
 
-    // TODO - consolidate test in the *EditPanels
+    // TODO - deal with Channels.ALL_EVENTS etc., consolidate test in the *EditPanels
     private boolean aspectRequiresLock( Identifiable identifiable, String aspect ) {
         if ( aspect == null ) {
             return false;
         } else if ( aspect.equals( AbstractMultiAspectPanel.DETAILS ) ) {
             return true;
-        } else if ( identifiable instanceof Plan ) {
-            return aspect.equals( PlanEditPanel.EVENTS )
-                    || aspect.equals( PlanEditPanel.ORGANIZATIONS )
-                    || aspect.equals( PlanEditPanel.CLASSIFICATIONS )
-                    || aspect.equals( PlanEditPanel.PARTICIPATIONS )
-                    || aspect.equals( PlanEditPanel.VERSIONS );
         } else if ( identifiable instanceof Segment ) {
             return aspect.equals( SegmentEditPanel.GOALS )
                     || aspect.equals( SegmentEditPanel.MOVER );
@@ -1801,11 +2108,11 @@ PopupSettings.RESIZABLE |
     }
 
     private void translateChange( Change change ) {
-        if ( change.isForInstanceOf( Requirement.class ) && change.isSelected() ) {
+        if ( change.isForInstanceOf( Requirement.class ) && ( change.isSelected() || change.isExpanded() ) ) {
             change.setType( Change.Type.Expanded );
             change.addQualifier( "requirement", change.getId() );
-            change.setSubject( getPlan() );
-            change.setProperty( PlanEditPanel.REQUIREMENTS );
+            change.setSubject( Requirement.UNKNOWN );
+            change.setId( Requirement.UNKNOWN.getId() );
         }
     }
 
@@ -1905,6 +2212,36 @@ PopupSettings.RESIZABLE |
             */
         } else if ( change.isForInstanceOf( Feedback.class ) ) {
             refreshAllFeedbackPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( Requirement.class ) ) {
+            refreshRequirementsPanel( target, change, updated );
+        } else if ( change.getId() == Channels.ALL_EVENTS ) {
+            refreshAllEventsPanel( target, change, updated );
+        } else if ( change.getId() == Channels.ALL_ORGANIZATIONS ) {
+            refreshAllOrganizationsPanel( target, change, updated );
+        } else if ( change.getId() == Channels.ALL_SEGMENTS ) {
+            refreshAllSegmentsPanel( target, change, updated );
+        } else if ( change.getId() == Channels.ALL_CLASSIFICATIONS ) {
+            refreshAllClassificationsPanel( target, change, updated );
+        } else if ( change.getId() == Channels.TASK_MOVER ) {
+            refreshTaskMoverPanel( target, change, updated );
+        } else if ( change.getId() == Channels.PROTOCOLS_MAP ) {
+            refreshProtocolsMapPanel( target, change, updated );
+        } else if ( change.getId() == Channels.PLAN_EVALUATION ) {
+            refreshPlanEvaluationPanel( target, change, updated );
+        } else if ( change.getId() == Channels.ALL_ISSUES ) {
+            refreshAllIssuesPanel( target, change, updated );
+        } else if ( change.getId() == Channels.PLAN_VERSIONS ) {
+            refreshPlanVersionsPanel( target, change, updated );
+        } else if ( change.getId() == Channels.PLAN_INDEX ) {
+            refreshPlanIndexPanel( target, change, updated );
+        } else if ( change.getId() == Channels.ALL_TAGS ) {
+            refreshAllTagsPanel( target, change, updated );
+        } else if ( change.getId() == Channels.TYPOLOGIES ) {
+            refreshAllTypesPanel( target, change, updated );
+        } else if ( change.getId() == Channels.WHOS_WHO ) {
+            refreshWhosWhoPanel( target, change, updated );
+        } else if ( change.getId() == Channels.BIBLIOGRAPHY ) {
+            refreshBibliographyPanel( target, change, updated );
         } else if ( change.isForInstanceOf( RFISurvey.class ) ) {
             refreshDataCollectionPanel( target, change, updated );
         }
@@ -2000,7 +2337,7 @@ PopupSettings.RESIZABLE |
 
     private void updateDataCollectionPanel( AjaxRequestTarget target ) {
         addDataCollectionPanel();
-        target.add( dataCollectionPanel );
+        target.add( allSurveyPanel );
     }
 
     private void updateRefresh( AjaxRequestTarget target ) {
@@ -2017,10 +2354,15 @@ PopupSettings.RESIZABLE |
     }
 
     private void refreshPlanMenus( AjaxRequestTarget target ) {
+        addActivitiesMenubar();
         addPlanActionsMenu();
         addPlanShowMenu();
         target.add( planActionsMenu );
         target.add( planShowMenu );
+        target.add( scopingMenu );
+        target.add( improvingMenu );
+        target.add( participationMenu );
+        target.add( searchingMenu );
     }
 
 
@@ -2034,12 +2376,27 @@ PopupSettings.RESIZABLE |
         refreshAssignmentsPanel( target, change, updated );
         refreshCommitmentsPanel( target, change, updated );
         refreshEOIsPanel( target, change, updated );
-        // refreshSurveysPanel( target, change, updated );
         refreshSegmentPanel( target, change, updated );
         refreshFailureImpactsPanel( target, change, updated );
         refreshDisseminationPanel( target, change, updated );
         refreshModelObjectSurveysPanel( target, change, updated );
         refreshOverridesPanel( target, change, updated );
+        refreshRequirementsPanel( target, change, updated );
+        refreshAllEventsPanel( target, change, updated );
+        refreshAllOrganizationsPanel( target, change, updated );
+        refreshAllSegmentsPanel( target, change, updated );
+        refreshAllClassificationsPanel( target, change, updated );
+        refreshTaskMoverPanel( target, change, updated );
+        refreshProtocolsMapPanel( target, change, updated );
+        refreshPlanEvaluationPanel( target, change, updated );
+        refreshAllIssuesPanel( target, change, updated );
+        refreshPlanVersionsPanel( target, change, updated );
+        refreshPlanParticipationPanel( target, change, updated );
+        refreshPlanIndexPanel( target, change, updated );
+        refreshAllTagsPanel( target, change, updated );
+        refreshAllTypesPanel( target, change, updated );
+        refreshWhosWhoPanel( target, change, updated );
+        refreshBibliographyPanel( target, change, updated );
     }
 
 
@@ -2243,6 +2600,176 @@ PopupSettings.RESIZABLE |
     }
 */
 
+    private void refreshRequirementsPanel(
+            AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        Identifiable identifiable = change.getSubject( getQueryService() );
+        if ( change.isRefresh() ||
+                identifiable != null
+                        && change.isDisplay()
+                        && identifiable instanceof Requirement ) {
+            Requirement viewedRequirement = null;
+            if ( change.hasQualifier( "requirement" ) ) {
+                long id = (Long) change.getQualifier( "requirement" );
+                try {
+                    viewedRequirement = getQueryService().find( Requirement.class, id );
+                } catch ( NotFoundException e ) {
+                    LOG.warn( "Requirement not found: " + id );
+                }
+            }
+            if ( viewedRequirement == null )
+                viewedRequirement = Requirement.UNKNOWN;
+            addRequirementsPanel( viewedRequirement );
+            target.add( planRequirementsPanel );
+        } else if ( planRequirementsPanel instanceof PlanRequirementsFloatingPanel ) {
+            ( (PlanRequirementsFloatingPanel) planRequirementsPanel ).refresh( target,
+                    change,
+                    updated,
+                    getAspectShown( Requirement.UNKNOWN ) );
+        }
+    }
+
+    private void refreshAllEventsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                ( id == Channels.ALL_EVENTS
+                        && change.isDisplay() ) ) {
+            addAllEventsPanel();
+            target.add( allEventsPanel );
+        } else if ( allEventsPanel instanceof PlanEventsFloatingPanel ) {
+            ( (PlanEventsFloatingPanel) allEventsPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshAllOrganizationsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.ALL_ORGANIZATIONS
+                        && change.isDisplay() ) {
+            addAllOrganizationsPanel();
+            target.add( allOrganizationsPanel );
+        } else if ( allOrganizationsPanel instanceof PlanOrganizationsFloatingPanel ) {
+            ( (PlanOrganizationsFloatingPanel) allOrganizationsPanel ).refresh( target,
+                    change,
+                    updated,
+                    getAspectShown( Organization.UNKNOWN ) );
+        }
+    }
+
+    private void refreshAllSegmentsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.ALL_SEGMENTS
+                        && change.isDisplay() ) {
+            addAllSegmentsPanel();
+            target.add( allSegmentsPanel );
+        } else if ( allSegmentsPanel instanceof PlanSegmentsFloatingPanel ) {
+            ( (PlanSegmentsFloatingPanel) allSegmentsPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshAllClassificationsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.ALL_CLASSIFICATIONS
+                        && change.isDisplay() ) {
+            addAllClassificationsPanel();
+            target.add( allClassificationsPanel );
+        } else if ( allClassificationsPanel instanceof PlanClassificationsFloatingPanel ) {
+            ( (PlanClassificationsFloatingPanel) allClassificationsPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshTaskMoverPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.TASK_MOVER
+                        && change.isDisplay() ) {
+            addTaskMoverPanel();
+            target.add( taskMoverPanel );
+        } else if ( taskMoverPanel instanceof TaskMoverFloatingPanel ) {
+            ( (TaskMoverFloatingPanel) taskMoverPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshProtocolsMapPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.PROTOCOLS_MAP
+                        && change.isDisplay() ) {
+            addProtocolsMapPanel();
+            target.add( protocolsMapPanel );
+        } else if ( protocolsMapPanel instanceof ProtocolsMapFloatingPanel ) {
+            ( (ProtocolsMapFloatingPanel) protocolsMapPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshPlanEvaluationPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.PLAN_EVALUATION
+                        && change.isDisplay() ) {
+            addPlanEvaluationPanel();
+            target.add( planEvaluationPanel );
+        } else if ( planEvaluationPanel instanceof PlanEvaluationFloatingPanel ) {
+            ( (PlanEvaluationFloatingPanel) planEvaluationPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshAllIssuesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.ALL_ISSUES
+                        && change.isDisplay() ) {
+            addAllIssuesPanel();
+            target.add( allIssuesPanel );
+        } else if ( allIssuesPanel instanceof AllIssuesFloatingPanel ) {
+            ( (AllIssuesFloatingPanel) allIssuesPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshPlanVersionsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.PLAN_VERSIONS
+                        && change.isDisplay() ) {
+            addPlanVersionsPanel();
+            target.add( planVersionsPanel );
+        } else if ( planVersionsPanel instanceof PlanVersionsFloatingPanel ) {
+            ( (PlanVersionsFloatingPanel) planVersionsPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshPlanParticipationPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.PLAN_PARTICIPATION
+                        && change.isDisplay() ) {
+            addPlanParticipationPanel();
+            target.add( planParticipationPanel );
+        } else if ( planParticipationPanel instanceof PlanParticipationFloatingPanel ) {
+            ( (PlanParticipationFloatingPanel) planParticipationPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+
     private void refreshAllFeedbackPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
@@ -2276,12 +2803,82 @@ PopupSettings.RESIZABLE |
                     ? RFISurvey.UNKNOWN
                     : rfiSurvey;
             addDataCollectionPanel( viewedRFISurvey, change );
-            target.add( dataCollectionPanel );
-        } else if ( dataCollectionPanel instanceof DataCollectionPanel ) {
-            ( (DataCollectionPanel) dataCollectionPanel ).refresh( target,
+            target.add( allSurveyPanel );
+        } else if ( allSurveyPanel instanceof DataCollectionPanel ) {
+            ( (DataCollectionPanel) allSurveyPanel ).refresh( target,
                     change,
                     updated,
                     getAspectShown( RFISurvey.UNKNOWN ) );
+        }
+    }
+
+    private void refreshPlanIndexPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.PLAN_INDEX
+                        && change.isDisplay() ) {
+            addPlanIndexPanel();
+            target.add( planIndexPanel );
+        } else if ( planIndexPanel instanceof PlanIndexFloatingPanel ) {
+            ( (PlanIndexFloatingPanel) planIndexPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshAllTagsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.ALL_TAGS
+                        && change.isDisplay() ) {
+            addAllTagsPanel();
+            target.add( allTagsPanel );
+        } else if ( planIndexPanel instanceof AllTagsFloatingPanel ) {
+            ( (AllTagsFloatingPanel) allTagsPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshAllTypesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.TYPOLOGIES
+                        && change.isDisplay() ) {
+            addAllTypesPanel();
+            target.add( allTypesPanel );
+        } else if ( allTypesPanel instanceof AllTypesFloatingPanel ) {
+            ( (AllTypesFloatingPanel) allTypesPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshWhosWhoPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.WHOS_WHO
+                        && change.isDisplay() ) {
+            addWhosWhoPanel();
+            target.add( whosWhoPanel );
+        } else if ( whosWhoPanel instanceof WhosWhoFloatingPanel ) {
+            ( (WhosWhoFloatingPanel) whosWhoPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshBibliographyPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( change.isRefresh() ||
+                id == Channels.BIBLIOGRAPHY
+                        && change.isDisplay() ) {
+            addBibliographyPanel();
+            target.add( bibliographyPanel );
+        } else if ( bibliographyPanel instanceof BibliographyFloatingPanel ) {
+            ( (BibliographyFloatingPanel) bibliographyPanel ).refresh( target,
+                    change,
+                    updated );
         }
     }
 

@@ -292,7 +292,8 @@ public abstract class ModelObject
                 || equals( Place.UNKNOWN )
                 || equals( Role.UNKNOWN )
                 || equals( Phase.UNKNOWN )
-                || equals( TransmissionMedium.UNKNOWN );
+                || equals( TransmissionMedium.UNKNOWN )
+                || equals( Requirement.UNKNOWN );
     }
 
     /**
@@ -485,4 +486,8 @@ public abstract class ModelObject
     }
 
     public abstract boolean isSegmentObject();
+
+    public static boolean isUnknownModelObject( Identifiable identifiable ) {
+        return identifiable instanceof ModelObject && ((ModelObject)identifiable).isUnknown();
+    }
 }

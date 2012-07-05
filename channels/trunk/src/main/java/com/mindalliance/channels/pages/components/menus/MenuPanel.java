@@ -266,20 +266,20 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                         enabled
                                 ?
                                 new ConfirmedAjaxFallbackLink(
-                                "link", commandWrapper.isConfirm() ? "Are you sure?" : null ) {
-                            @Override
-                            public void onClick( AjaxRequestTarget target ) {
-                                commandWrapper.onExecuted(
-                                        target, getCommander().doCommand( command ) );
-                            }
-                        }
+                                        "link", commandWrapper.isConfirm() ? "Are you sure?" : null ) {
+                                    @Override
+                                    public void onClick( AjaxRequestTarget target ) {
+                                        commandWrapper.onExecuted(
+                                                target, getCommander().doCommand( command ) );
+                                    }
+                                }
                                 :
                                 new AjaxFallbackLink( "link" ) {
-                            @Override
-                            public void onClick( AjaxRequestTarget target ) {
-                                // do nothing
-                            }
-                        }
+                                    @Override
+                                    public void onClick( AjaxRequestTarget target ) {
+                                        // do nothing
+                                    }
+                                }
                 );
                 if ( !enabled ) {
                     linkMenuItem.add( new AttributeModifier( "class", new Model<String>( "disabled" ) ) );
@@ -300,6 +300,44 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
             }
         };
     }
+
+    protected LinkMenuItem collapsible( final Identifiable object,
+                                        String expandedTitle,
+                                        String collapsedTitle ) {
+
+        final boolean expanded = getExpansions().contains( object.getId() );
+        return new LinkMenuItem(
+                "menuItem",
+                new Model<String>( expanded ? expandedTitle : collapsedTitle ),
+                new AjaxFallbackLink( "link" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        Change change = new Change(
+                                expanded
+                                        ? Change.Type.Collapsed
+                                        : Change.Type.Expanded,
+                                object );
+                        update( target, change );
+                    }
+                } );
+    }
+
+    protected LinkMenuItem collapsible( final long id,
+                                        String expandedTitle, String collapsedTitle ) {
+
+        return new LinkMenuItem( "menuItem",
+                new Model<String>( isExpanded( id ) ? expandedTitle : collapsedTitle ),
+                new AjaxFallbackLink( "link" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        final boolean expanded = isExpanded( id );
+                        Change change = new Change( expanded ? Change.Type.Collapsed : Change.Type.Expanded,
+                                id );
+                        update( target, change );
+                    }
+                } );
+    }
+
 
 
     /**

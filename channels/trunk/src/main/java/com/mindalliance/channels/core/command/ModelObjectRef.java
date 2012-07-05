@@ -71,23 +71,26 @@ public class ModelObjectRef implements Serializable {
         className = identifiable.getClass().getName();
         typeName = identifiable.getTypeName();
         if ( identifiable instanceof ModelObject ) {
-            if ( identifiable instanceof ModelEntity ) {
-                ModelEntity mo = (ModelEntity) identifiable;
-                name = identifiable.getName();
-                ModelEntity.Kind kind = ( (ModelEntity) identifiable ).getKind();
-                // TODO - hack: remove this patch once all Phases are correctly initialized
-                if ( kind == null )
-                    kind = ModelEntity.defaultKindFor( (Class<? extends ModelEntity>) identifiable.getClass() );
-                entityKind = kind.name();
-                // Store identifiable if not a model object.
-                // TODO - hack: a referenced identifiable should always be, ugh, referenced to be later resolved from id if still exists.
+            if ( ( (ModelObject) identifiable ).isUnknown() ) {
+                this.identifiable = identifiable;
             } else {
-                ModelObject mo = (ModelObject) identifiable;
-                name = mo instanceof Part ? ( (Part) mo ).getTask() : mo.getName();
-                if ( identifiable instanceof SegmentObject ) {
-                    Segment segment = ( (SegmentObject) identifiable ).getSegment();
-                    // Segment can be null if the identifiable was deleted (detached from segment).
-                    segmentName = segment == null ? null : segment.getName();
+                if ( identifiable instanceof ModelEntity ) {
+                    name = identifiable.getName();
+                    ModelEntity.Kind kind = ( (ModelEntity) identifiable ).getKind();
+                    // TODO - hack: remove this patch once all Phases are correctly initialized
+                    if ( kind == null )
+                        kind = ModelEntity.defaultKindFor( (Class<? extends ModelEntity>) identifiable.getClass() );
+                    entityKind = kind.name();
+                    // Store identifiable if not a model object.
+                    // TODO - hack: a referenced identifiable should always be, ugh, referenced to be later resolved from id if still exists.
+                } else {
+                    ModelObject mo = (ModelObject) identifiable;
+                    name = mo instanceof Part ? ( (Part) mo ).getTask() : mo.getName();
+                    if ( identifiable instanceof SegmentObject ) {
+                        Segment segment = ( (SegmentObject) identifiable ).getSegment();
+                        // Segment can be null if the identifiable was deleted (detached from segment).
+                        segmentName = segment == null ? null : segment.getName();
+                    }
                 }
             }
         } else {
@@ -240,7 +243,7 @@ public class ModelObjectRef implements Serializable {
             String segmentName = getSegmentName();
             sb.append( getSegmentName().isEmpty() ? "--" : segmentName );
             sb.append( SEPARATOR );
-       }
+        }
         return sb.toString();
     }
 
@@ -258,8 +261,8 @@ public class ModelObjectRef implements Serializable {
         moref.setId( Long.parseLong( items[1] ) );
         moref.setName( items[2] );
         moref.setTypeName( items[3] );
-        moref.setEntityKind( items[4].equals("--") ? null : items[4] );
-        moref.setSegmentName( items[5].equals("--") ? null : items[5] );
+        moref.setEntityKind( items[4].equals( "--" ) ? null : items[4] );
+        moref.setSegmentName( items[5].equals( "--" ) ? null : items[5] );
         return moref;
     }
 
@@ -267,7 +270,7 @@ public class ModelObjectRef implements Serializable {
     public static ModelObject resolveFromString( String moRefString, QueryService queryService ) {
         ModelObjectRef moRef = fromString( moRefString );
         if ( moRef != null ) {
-            return (ModelObject)moRef.resolve( queryService );
+            return (ModelObject) moRef.resolve( queryService );
         } else {
             return null;
         }

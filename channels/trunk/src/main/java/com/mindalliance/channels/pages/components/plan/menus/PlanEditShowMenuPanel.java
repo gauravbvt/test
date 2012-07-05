@@ -32,22 +32,7 @@ public class PlanEditShowMenuPanel extends MenuPanel {
     public List<LinkMenuItem> getMenuItems() {
         synchronized ( getCommander() ) {
             List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>( Arrays.asList(
-                    newItem( "Details", PlanEditPanel.DETAILS ),
-                    newItem( "Requirements", PlanEditPanel.REQUIREMENTS ),
-                    newItem( "All events", PlanEditPanel.EVENTS ),
-                    newItem( "All organizations", PlanEditPanel.ORGANIZATIONS ),
-                    newItem( "Participations", PlanEditPanel.PARTICIPATIONS ),
-                    newItem( "Secrecy classifications", PlanEditPanel.CLASSIFICATIONS ),
-                    newItem( "Evaluation", PlanEditPanel.EVAL ),
-                    newItem( "All issues", PlanEditPanel.ISSUES ),
-                    newItem( "All segments", PlanEditPanel.MAP ),
-                    newItem( "Index", PlanEditPanel.INDEX ),
-                    newItem( "All types", PlanEditPanel.TYPOLOGIES ),
-                    newItem( "All tags", PlanEditPanel.TAGS ),
-                    newItem( "Assignments & commitments", PlanEditPanel.PROCEDURES ),
-                    newItem( "Who's who", PlanEditPanel.WHOSWHO ),
-                    newItem( "Bibliography", PlanEditPanel.BIBLIOGRAPHY ),
-                    newItem( "Versions", PlanEditPanel.VERSIONS ) ) );
+                    newItem( "Details", PlanEditPanel.DETAILS ) ) );
             // Surveys
             AjaxFallbackLink surveysLink = new AjaxFallbackLink( "link" ) {
                 @Override

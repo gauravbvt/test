@@ -22,6 +22,7 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
@@ -29,7 +30,6 @@ import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
-import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -316,7 +316,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TAGS ) );
+                update( target, new Change( Change.Type.Expanded, Channels.ALL_TAGS ) );
             }
         };
         tagsLink.add( new AttributeModifier( "class", true, new Model<String>( "model-object-link" ) ) );

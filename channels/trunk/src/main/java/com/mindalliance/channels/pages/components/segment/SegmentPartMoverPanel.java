@@ -89,7 +89,10 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
     private List<Part> selectedParts;
 
     //-------------------------------
-    public SegmentPartMoverPanel( String id, PropertyModel<Segment> segmentModel, Set<Long> expansions ) {
+    public SegmentPartMoverPanel(
+            String id,
+            IModel<Segment> segmentModel,
+            Set<Long> expansions ) {
         super( id, segmentModel, expansions );
         this.segmentModel = segmentModel;
         selectedParts = new ArrayList<Part>();

@@ -20,6 +20,7 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Taggable;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
@@ -29,7 +30,6 @@ import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
-import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import org.apache.commons.lang.WordUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -310,7 +310,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TAGS ) );
+                update( target, new Change( Change.Type.Expanded, Channels.ALL_TAGS ) );
             }
         };
         tagsLink.add( new AttributeModifier( "class", true, new Model<String>( "model-object-link" ) ) );

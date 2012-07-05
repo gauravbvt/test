@@ -5,9 +5,9 @@ import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Taggable;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
-import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -73,7 +73,7 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TAGS ) );
+                update( target, new Change( Change.Type.Expanded, Channels.ALL_TAGS ) );
             }
         };
         tagsLink.add( new AttributeModifier( "class", true, new Model<String>( "model-object-link" ) ) );

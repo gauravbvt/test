@@ -66,36 +66,6 @@ public class AllFeedbackFloatingPanel extends FloatingCommandablePanel {
     }
 
     @Override
-    protected int getPadTop() {
-        return PAD_TOP;
-    }
-
-    @Override
-    protected int getPadLeft() {
-        return PAD_LEFT;
-    }
-
-    @Override
-    protected int getPadBottom() {
-        return PAD_BOTTOM;
-    }
-
-    @Override
-    protected int getPadRight() {
-        return PAD_RIGHT;
-    }
-
-    @Override
-    protected int getMinWidth() {
-        return MIN_WIDTH;
-    }
-
-    @Override
-    protected int getMinHeight() {
-        return MIN_HEIGHT;
-    }
-
-    @Override
     protected void doClose( AjaxRequestTarget target ) {
         Change change = new Change( Change.Type.Collapsed, Feedback.UNKNOWN );
         update( target, change );

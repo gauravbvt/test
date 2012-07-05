@@ -5,9 +5,9 @@ import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
-import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -73,10 +73,10 @@ public class TypesPanel extends AbstractCommandablePanel {
     private void addTypologiesLink( WebMarkupContainer typesDiv ) {
         AjaxFallbackLink classificationsLink = new AjaxFallbackLink( "typologies" ) {
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.TYPOLOGIES ) );
+                update( target, new Change( Change.Type.Expanded, Channels.TYPOLOGIES ) );
             }
         };
-        classificationsLink.add( new AttributeModifier( "class", true, new Model<String>( "window" ) ) );
+        classificationsLink.add( new AttributeModifier( "class", new Model<String>( "window" ) ) );
         typesDiv.add( classificationsLink );
     }
 

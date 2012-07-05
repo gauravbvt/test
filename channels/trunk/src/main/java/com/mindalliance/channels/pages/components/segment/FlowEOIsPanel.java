@@ -12,9 +12,9 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Transformation;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
-import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
@@ -101,10 +101,10 @@ public class FlowEOIsPanel extends FloatingCommandablePanel {
     private void addLinkToClassifications() {
         AjaxFallbackLink classificationsLink = new AjaxFallbackLink( "classifications" ) {
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getPlan(), PlanEditPanel.CLASSIFICATIONS ) );
+                update( target, new Change( Change.Type.Expanded, Channels.ALL_CLASSIFICATIONS ) );
             }
         };
-        classificationsLink.add( new AttributeModifier( "class", true, new Model<String>( "window" ) ) );
+        classificationsLink.add( new AttributeModifier( "class", new Model<String>( "window" ) ) );
         getContentContainer().add( classificationsLink );
     }
 

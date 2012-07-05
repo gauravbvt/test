@@ -52,6 +52,7 @@
 
 <form wicket:id="big-form" class="stretch" action="#">
     <div class="maximized" wicket:id="maximized-flow">[fullflow panel]</div>
+    <!--FLOATING-->
     <div wicket:id="entity">[entity panel]</div>
     <div wicket:id="plan">[plan edit panel]</div>
     <div wicket:id="sg-editor">[segment edit panel]</div>
@@ -63,9 +64,29 @@
     <div wicket:id="moSurveys">[mo surveys panel]</div>
     <div wicket:id="overrides">[overrides panel]</div>
     <div wicket:id="flow-legend">[flow legend panel]</div>
+    <!--scoping-->
+    <div wicket:id="requirements">[requirements panel]</div>
+    <div wicket:id="allEvents">[all events panel]</div>
+    <div wicket:id="allOrganizations">[all organizations panel]</div>
+    <div wicket:id="allSegments">[all segments panel]</div>
+    <div wicket:id="classifications">[secrecy classifications panel]</div>
+    <!--improving-->
+    <div wicket:id="taskMover">[task mover panel]</div>
+    <div wicket:id="protocolsMap">[protocols map panel]</div>
+    <div wicket:id="planEvaluation">[plan evaluation panel]</div>
+    <div wicket:id="allIssues">[all issues panel]</div>
+    <div wicket:id="planVersions">[plan versions panel]</div>
+    <!--participating-->
+    <div wicket:id="planParticipation">[plan participations panel]</div>
+    <div wicket:id="dataCollection">[all surveys panel]</div>
     <div wicket:id="feedbacks">[all feedback panel]</div>
-    <div wicket:id="dataCollection">[data collection panel]</div>
-
+    <!--searching-->
+    <div wicket:id="planIndex">[index panel]</div>
+    <div wicket:id="allTags">[all tags panel]</div>
+    <div wicket:id="allTypes">[all types panel]</div>
+    <div wicket:id="whoswho">[who's who panel]</div>
+    <div wicket:id="bibliography">[bibliography panel]</div>
+    <!-- END FLOATING-->
     <div class="header">
         <a href="home">
             <img class="logo" src="images/global-logo.png" width="140" height="51" alt="Channels"/>
@@ -83,6 +104,18 @@
             </div>
             <div class="group">
                 <span class="menubar">
+                    <span class="menuitem" wicket:id="scopingMenu">[scoping menu]</span>
+                </span>
+                <span class="menubar">
+                    <span class="menuitem" wicket:id="improvingMenu">[improving menu]</span>
+                </span>
+               <span class="menubar">
+                    <span class="menuitem" wicket:id="participationMenu">[participating menu]</span>
+                </span>
+               <span class="menubar">
+                    <span class="menuitem" wicket:id="searchingMenu">[searching menu]</span>
+                </span>
+                 <span class="menubar">
                     <span class="menuitem" wicket:id="planShowMenu">[show menu]</span>
                 </span>
                 <span class="menubar">

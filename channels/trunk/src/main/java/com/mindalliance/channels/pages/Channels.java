@@ -60,7 +60,7 @@ import org.springframework.security.core.session.SessionIdentifierAware;
  * Application object for Channels.
  * Initialized in /WEB-INF/applicationContext.xml.
  *
- * TODO split into a bonified service-level object
+ * TODO split into a bone fide service-level object
  */
 public class Channels extends WebApplication
         implements ApplicationListener, ApplicationContextAware {
@@ -78,11 +78,27 @@ public class Channels extends WebApplication
      * Expansion id for guide panel.
      */
     public static final long GUIDE_ID = -2;
+    public static final long ALL_EVENTS = -3;
+    public static final long ALL_ORGANIZATIONS = -4;
+    public static final long ALL_SEGMENTS = -5;
+    public static final long ALL_CLASSIFICATIONS = -6;
+    public static final long TASK_MOVER = -7;
+    public static final long PROTOCOLS_MAP = -8;
+    public static final long PLAN_EVALUATION = -9;
+    public static final long ALL_ISSUES = -10;
+    public static final long PLAN_VERSIONS = -11;
+    public static final long PLAN_PARTICIPATION = -12;
+    public static final long PLAN_INDEX = -13;
+    public static final long ALL_TAGS = -14;
+    public static final long TYPOLOGIES = -15;
+    public static final long WHOS_WHO = -16;
+    public static final long BIBLIOGRAPHY = -17;
 
     public static final long UNKNOWN_FEEDBACK_ID = Long.MIN_VALUE;
     public static final long UNKNOWN_QUESTIONNAIRE_ID = Long.MIN_VALUE + 1;
     public static final Long UNKNOWN_RFI_SURVEY_ID = Long.MIN_VALUE + 2;
     public static final long UNKNOWN_RFI_ID = Long.MIN_VALUE + 3;
+    public static final long UNKNOWN_REQUIREMENT_ID =  Long.MIN_VALUE + 4;
 
     /**
      * Analyst.

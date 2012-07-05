@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.plan.requirements;
 
-import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
@@ -14,7 +14,6 @@ import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Plan requirements panel.
@@ -26,15 +25,15 @@ import java.util.Set;
  */
 public class PlanRequirementsPanel extends AbstractCommandablePanel {
 
+    private AjaxTabbedPanel tabbedPanel;
+
     public PlanRequirementsPanel(
             String id,
-            IModel<? extends Identifiable> model,
-            Set<Long> expansions,
-            Change change ) {
-        super( id, model, expansions );
-        setChange( change );
+            IModel<? extends Identifiable> model ) {
+        super( id, model );
         init();
     }
+
 
     @Override
     public void redisplay( AjaxRequestTarget target ) {
@@ -47,7 +46,7 @@ public class PlanRequirementsPanel extends AbstractCommandablePanel {
     }
 
     private void addTabsPanel() {
-        AjaxTabbedPanel tabbedPanel = new AjaxTabbedPanel( "tabs", getTabs() );
+        tabbedPanel = new AjaxTabbedPanel( "tabs", getTabs() );
         tabbedPanel.setOutputMarkupId( true );
         addOrReplace( tabbedPanel );
     }
@@ -58,9 +57,7 @@ public class PlanRequirementsPanel extends AbstractCommandablePanel {
             public Panel getPanel( String id ) {
                 return new PlanRequirementDefinitionsPanel(
                         id,
-                        new Model<Plan>( getPlan() ),
-                        getExpansions(),
-                        getChangeOnce() );
+                        new Model<Requirement>( getRequirement()) );
             }
         } );
         tabs.add( new AbstractTab( new Model<String>( "Required network" ) ) {
@@ -72,4 +69,12 @@ public class PlanRequirementsPanel extends AbstractCommandablePanel {
     }
 
 
+    public void select( Requirement requirement ) {
+        ( (PlanRequirementDefinitionsPanel) tabbedPanel.getTabs( ).get( 0 ) ).select( requirement );
+        tabbedPanel.setSelectedTab( 0 );
+    }
+
+    private Requirement getRequirement() {
+        return (Requirement) getModel().getObject();
+    }
 }
