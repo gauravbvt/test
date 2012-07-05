@@ -87,6 +87,7 @@ div.protocols-contents h5 {
 	letter-spacing: 1px;
 	padding: 7px 0 5px;
 	text-transform: uppercase;
+	line-height: 150%;
 }
 
 div.protocols-contents div.contact h5 {
@@ -153,7 +154,7 @@ div.protocols-contents div.employeeContacts {
 	float: left;
 	margin: 20px 0 0;
 	padding: 12px 15px 15px;
-	width: 731px;
+	width: 711px;
 }
 
 div.protocols-contents div.orgContact {
@@ -162,7 +163,7 @@ background: none repeat scroll 0 0 #E8E8E8;
     float: left;
     margin: 70px 0 0;
     padding: 12px 15px 15px;
-    width: 731px;
+    width: 711px;
 }
 
 div.protocols-contents div.orgContact h3 {
@@ -187,15 +188,25 @@ div.protocols-contents div.clearances {
 	margin: 10px 20px 0 0;
 	min-height: 70px;
 	padding: 0 10px 0 0;
-	width: 141px;
+	width: 139px;
 }
 
 div.protocols-contents div.availability {
 	width: 170px;
 }
 
-div.protocols-contents div.employeeContacts div div:last-child {
+div.protocols-contents div.clearances {
 	border-right: none;
+}
+
+div.protocols-contents div.documentation {
+	border-top: 1px solid #CCCCCC;
+	float: left;
+	font-size: 12px;
+	line-height: 175%;
+	margin: 15px 0 0;
+	padding: 10px 0 0;
+	width: 711px;
 }
 
 div.protocols-contents ul {
@@ -338,7 +349,7 @@ div.protocols-contents div.bypassContactsContainer {
 }
 
 div.protocols-contents div.bypassContactsContainer div.contact {
-	background: #FFFFFF;
+	background: #dcdcdc;
 	margin: 20px 0 10px;
 }
 

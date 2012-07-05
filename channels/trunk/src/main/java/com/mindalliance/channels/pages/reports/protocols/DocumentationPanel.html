@@ -10,15 +10,15 @@
 </head>
 <body>
 <wicket:panel>
-    <div>
-        <ul>
-            <li wicket:id="documents">  <!-- repeated -->
-                <a wicket:id="documentLink" href="#" target="_blank">
-                    <span wicket:id="documentType">type</span> &mdash;
-                    <span wicket:id="documentName">document name</span></a>
-            </li>
-        </ul>
-    </div>
+    <label>Documents</label>
+    <ul>
+        <li wicket:id="documents">  <!-- repeated -->
+            <span wicket:id="documentType">type</span> &mdash;
+            <a wicket:id="documentLink" href="#" target="_blank">
+                <span wicket:id="documentName">document name</span>
+            </a>
+        </li>
+    </ul>
 </wicket:panel>
 </body>
 </html>
