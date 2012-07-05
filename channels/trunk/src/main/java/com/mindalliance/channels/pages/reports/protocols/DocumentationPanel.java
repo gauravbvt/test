@@ -36,7 +36,7 @@ public class DocumentationPanel extends AbstractDataPanel {
                 WebMarkupContainer a = new WebMarkupContainer( "documentLink" );
                 a.add( new AttributeModifier( "href", documentData.getUrl() ) );
                 a.add( new AttributeModifier( "class", documentData.getType() ) );
-                a.add( new Label( "documentType", documentData.getType() ) );
+                item.add( new Label( "documentType", documentData.getType() ) );
                 a.add( new Label( "documentName", documentData.getName() ) );
                 item.add( a );
             }
