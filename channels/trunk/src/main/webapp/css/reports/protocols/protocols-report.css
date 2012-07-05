@@ -393,3 +393,17 @@ div.protocols-contents div.failureImpact-small.none {
 div.protocols-contents div.failureImpact-small span {
 	font-weight: bold;
 }
+
+div.documentation-top {
+	text-align: center;
+}
+
+div.documentation-top label {
+border: medium none;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 150%;
+    padding: 5px 0 0;
+    text-align: center;
+    text-transform: uppercase;
+}
