@@ -10,6 +10,6 @@
 <xPathDisableUser>/html/body/div/div[2]/div/form/table/tbody/tr/td[8]/input</xPathDisableUser>
 <xPathAccessPrivilegePlanner>/html/body/div/div[2]/div/form/table/tbody/tr/td[6]/input</xPathAccessPrivilegePlanner>
 <xPathThisPlanAccessPrivilegePlanner>/html/body/div/div[2]/div/form/table/tbody/tr/td[9]/input</xPathThisPlanAccessPrivilegePlanner>
-<xPathProductize>/html/body/div/div[2]/div/form/table[3]/tbody/tr[2]/td[2]/a[1]</xPathProductize>
-<xPathDeletePlan>/html/body/div/div[2]/div/form/table[3]/tbody/tr[2]/td[2]/a[2]</xPathDeletePlan>	
+<xPathProductize>/html/body/div/div[2]/div/form/table[2]/tbody/tr[2]/td[2]/a</xPathProductize>
+<xPathDeletePlan>/html/body/div/div[2]/div/form/table[2]/tbody/tr[2]/td[2]/a[2]</xPathDeletePlan>	
 </elements>
