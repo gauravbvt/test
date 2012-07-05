@@ -11,12 +11,8 @@ import com.mindalliance.channels.core.command.commands.PastePart;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
-import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
-import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,32 +33,6 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         super( s, model, expansions );
     }
 
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<LinkMenuItem> getMenuItems() {
-        synchronized ( getCommander() ) {
-            List<LinkMenuItem> menuItems = super.getMenuItems();
-
-            // Move parts across segments
-            if ( getPlan().isDevelopment()
-                    && getPlan().getSegmentCount() > 1
-                    && getLockManager().isLockableByUser( getUser().getUsername(), getSegment() ) )
-                menuItems.add(
-                        new LinkMenuItem(
-                                "menuItem",
-                                new Model<String>( "Move tasks to segment..." ),
-                                new AjaxFallbackLink( "link" ) {
-                                    @Override
-                                    public void onClick( AjaxRequestTarget target ) {
-                                        update( target,
-                                                new Change( Change.Type.Expanded, getSegment(),
-                                                        SegmentEditPanel.MOVER ) );
-                                    }
-                                } ) );
-
-            return menuItems;
-        }
-    }
 
     @Override
     protected List<CommandWrapper> getCommandWrappers() {

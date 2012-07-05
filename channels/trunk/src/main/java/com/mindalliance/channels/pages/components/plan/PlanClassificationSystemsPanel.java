@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Classification;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
@@ -83,7 +84,6 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
                 int count = getClassificationSystems().size();
                 item.add( new AttributeModifier(
                         "class",
-                        true,
                         new Model<String>( itemCssClasses( item.getIndex(), count ) ) ) );
             }
         };
@@ -115,7 +115,6 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
         String cssClasses = "last " + ( ( getClassificationSystems().size() ) % 2 == 0 ? "even" : "odd" );
         newSystemContainer.add( new AttributeModifier(
                 "class",
-                true,
                 new Model<String>( cssClasses ) ) );
         classificationSystemsContainer.add( newSystemContainer );
         classificationSystemField = new TextField<String>(
@@ -132,7 +131,7 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
             }
         } );
         newSystemContainer.add( classificationSystemField );
-        newSystemContainer.setVisible( isLockedByUser( getPlan() ) );
+        newSystemContainer.setVisible( isLockedByUser( Channels.ALL_CLASSIFICATIONS ) );
     }
 
     private void addClassificationSystemPanel( String classificationSystemName ) {

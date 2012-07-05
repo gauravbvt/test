@@ -13,6 +13,7 @@ import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -256,7 +257,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                         participation );
                 participationWrappers.add( wrapper );
             }
-            if ( isLockedByUser( getPlan() ) && participations.isEmpty() ) {
+            if ( isLockedByUser( Channels.PLAN_PARTICIPATION ) && participations.isEmpty() ) {
                 participationWrappers.add( new ParticipationWrapper( channelsUser.getUsername() ) );
                 if ( addedParticipationWrapper != null ) {
                     participationWrappers.add( addedParticipationWrapper );
@@ -566,7 +567,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                     null,
                     "userNormalizedFullName"
             ) );
-            if ( isLockedByUser( getPlan() ) ) {
+            if ( isLockedByUser( Channels.PLAN_PARTICIPATION ) ) {
                 columns.add( makeEntityReferenceColumn(
                         "Is agent",
                         "actor",
@@ -587,7 +588,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                     "more",
                     ParticipationsPanel.this
             ) );
-            if ( isLockedByUser( getPlan() ) ) {
+            if ( isLockedByUser( Channels.PLAN_PARTICIPATION ) ) {
                 columns.add( makeActionLinkColumn(
                         "",
                         "add",

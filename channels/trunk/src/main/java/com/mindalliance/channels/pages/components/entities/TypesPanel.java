@@ -73,7 +73,7 @@ public class TypesPanel extends AbstractCommandablePanel {
     private void addTypologiesLink( WebMarkupContainer typesDiv ) {
         AjaxFallbackLink classificationsLink = new AjaxFallbackLink( "typologies" ) {
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, Channels.TYPOLOGIES ) );
+                update( target, new Change( Change.Type.Expanded, Channels.ALL_TYPES ) );
             }
         };
         classificationsLink.add( new AttributeModifier( "class", new Model<String>( "window" ) ) );

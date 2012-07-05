@@ -28,7 +28,7 @@ public class PlanParticipationMenuPanel extends MenuPanel {
     @Override
     public List<LinkMenuItem> getMenuItems() throws CommandException {
         List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
-        menuItems.add( collapsible( Channels.PLAN_PARTICIPATION, "Hide user participation as agents", "User participation as agents" ) );
+        menuItems.add( collapsible( Channels.PLAN_PARTICIPATION, "Hide users as agents", "Users as agents" ) );
         menuItems.add( collapsible( Feedback.UNKNOWN, "Hide all feedback", "All feedback" ) );
         menuItems.add( collapsible( RFISurvey.UNKNOWN, "Hide all surveys", "All surveys" ) );
         return menuItems;

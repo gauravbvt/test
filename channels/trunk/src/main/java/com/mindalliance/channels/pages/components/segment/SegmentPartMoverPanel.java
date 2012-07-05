@@ -100,6 +100,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
+        getCommander().getLockManager().requestLock( getUsername(), getSegment().getId() );
         addDestinationSegmentSelector();
         addSelectAllOrNone();
         addMovablePartsTable();
@@ -265,7 +266,8 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
             Part part = parts.next();
             MovablePart movablePart = new MovablePart( part );
             movablePart.setMovable(
-                    commander.isLockedByUser( getUser().getUsername(), part ) || commander.isUnlocked( part ) );
+                    commander.isLockedByUser( getUsername(), getSegment() )
+                            && commander.isLockedByUser( getUsername(), part ) || commander.isUnlocked( part ) );
             movablePart.setSelected( selectedParts.contains( part ) );
             movableParts.add( movablePart );
         }
@@ -347,7 +349,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
-            if ( isLockedByUserIfNeeded( getSegment() ) )
+            if ( isLockedByUserIfNeeded( getSegment().getId() ) )
                 columns.add( makeCheckBoxColumn( "", "selected", "movable", SegmentPartMoverPanel.this ) );
             columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
             columns.add( makeColumn( "Category", "part.category.label", EMPTY ) );

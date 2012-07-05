@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -42,7 +43,7 @@ import java.util.Set;
  * Date: Oct 26, 2009
  * Time: 1:29:03 PM
  */
-public class PlanScopePanel extends AbstractCommandablePanel {
+public class PlanOrganizationScopePanel extends AbstractCommandablePanel {
 
     private boolean involvedOnly = false;
     private boolean uninvolvedOnly = false;
@@ -57,7 +58,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
     private TextField addInvolvedField;
 
 
-    public PlanScopePanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
+    public PlanOrganizationScopePanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
     }
@@ -97,6 +98,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
             }
         } );
         uninvolvedCheckBox.setOutputMarkupId( true );
+        uninvolvedCheckBox.setEnabled( isLockedByUser( Channels.ALL_ORGANIZATIONS ) );
         add( uninvolvedCheckBox );
     }
 
@@ -113,6 +115,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
             }
         } );
         expectedCheckBox.setOutputMarkupId( true );
+        expectedCheckBox.setEnabled( isLockedByUser( Channels.ALL_ORGANIZATIONS ) );
         add( expectedCheckBox );
     }
 
@@ -152,7 +155,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
             }
         } );
         newInvolvedContainer.add( addInvolvedField );
-        newInvolvedContainer.setVisible( isLockedByUser( getPlan() ) );
+        newInvolvedContainer.setVisible( isLockedByUser( Channels.ALL_ORGANIZATIONS ) );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -193,7 +196,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         organizationContainer.add( nameLabel );
         Label involvementLabel = new Label(
                 "involvement",
-                new Model<String>( getInvovementTitle() )
+                new Model<String>( getInvolvementTitle() )
         );
         organizationContainer.add( involvementLabel );
         ModelObjectLink detailsLink = new ModelObjectLink(
@@ -220,7 +223,6 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         );
         expectationLabel.add( new AttributeModifier(
                 "title",
-                true,
                 new Model<String>( getExpectationActionHint() ) ) );
         expectationActionLink.add( expectationLabel );
         WebMarkupContainer tasksContainer = new WebMarkupContainer( "tasksContainer" );
@@ -294,7 +296,7 @@ public class PlanScopePanel extends AbstractCommandablePanel {
         }
     }
 
-    private String getInvovementTitle() {
+    private String getInvolvementTitle() {
         String s = "";
         if ( selectedOrganization != null ) {
             boolean involved = getQueryService().isInvolved( selectedOrganization );

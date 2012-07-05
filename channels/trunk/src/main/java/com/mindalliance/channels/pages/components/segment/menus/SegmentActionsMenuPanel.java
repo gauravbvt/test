@@ -5,8 +5,10 @@ import com.mindalliance.channels.core.command.commands.AddUserIssue;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
+import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 
@@ -26,6 +28,14 @@ public class SegmentActionsMenuPanel extends ActionMenuPanel {
 
     public SegmentActionsMenuPanel( String s, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( s, model, expansions );
+    }
+
+    @Override
+    public List<LinkMenuItem> getMenuItems() {
+        List<LinkMenuItem> menuItems = super.getMenuItems();
+        // Task mover
+        menuItems.add( collapsible( Channels.TASK_MOVER, "Hide task mover", "Move tasks..." ) );
+        return menuItems;
     }
 
     /**

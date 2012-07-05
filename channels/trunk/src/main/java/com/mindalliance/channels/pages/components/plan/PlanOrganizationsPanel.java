@@ -6,10 +6,10 @@
 
 package com.mindalliance.channels.pages.components.plan;
 
-import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.entities.EntitiesPanel;
@@ -70,7 +70,7 @@ public class PlanOrganizationsPanel extends AbstractCommandablePanel {
         List<ITab> tabs = new ArrayList<ITab>();
         tabs.add( new AbstractTab( new Model<String>( "Scope" ) ) {
             public Panel getPanel( String id ) {
-                return new PlanScopePanel( id, new Model<Plan>( getPlan() ), getExpansions() );
+                return new PlanOrganizationScopePanel( id, new Model<Plan>( getPlan() ), getExpansions() );
             }
         } );
         tabs.add( new AbstractTab( new Model<String>( "Network" ) ) {

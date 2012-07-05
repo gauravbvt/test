@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
 import org.apache.wicket.AttributeModifier;
@@ -106,7 +107,7 @@ public class EventListPanel extends AbstractCommandablePanel {
 
             }
         };
-        nameField.setVisible( isLockedByUser( getPlan() ) && wrapper.isMarkedForCreation() );
+        nameField.setVisible( isLockedByUser( Channels.ALL_EVENTS ) && wrapper.isMarkedForCreation() );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addConfirmedCell( item );
@@ -119,7 +120,6 @@ public class EventListPanel extends AbstractCommandablePanel {
         nameContainer.add( eventLink );
         item.add( new AttributeModifier(
                 "class",
-                true,
                 new Model<String>( itemCssClasses( item.getIndex(), count ) ) ) );
     }
 
@@ -148,7 +148,7 @@ public class EventListPanel extends AbstractCommandablePanel {
             }
         } );
         confirmedCheckBox.setEnabled(
-                isLockedByUser( getPlan() ) && ( wrapper.isMarkedForCreation()
+                isLockedByUser( Channels.ALL_EVENTS ) && ( wrapper.isMarkedForCreation()
                         || !(wrapper.isConfirmed() && getPlan().getIncidents().size() == 1 ) ) );
     }
 

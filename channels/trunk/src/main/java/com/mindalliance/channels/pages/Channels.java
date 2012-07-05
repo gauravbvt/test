@@ -90,7 +90,7 @@ public class Channels extends WebApplication
     public static final long PLAN_PARTICIPATION = -12;
     public static final long PLAN_INDEX = -13;
     public static final long ALL_TAGS = -14;
-    public static final long TYPOLOGIES = -15;
+    public static final long ALL_TYPES = -15;
     public static final long WHOS_WHO = -16;
     public static final long BIBLIOGRAPHY = -17;
 

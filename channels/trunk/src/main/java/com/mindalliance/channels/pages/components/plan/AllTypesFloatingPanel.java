@@ -33,7 +33,7 @@ public class AllTypesFloatingPanel extends FloatingCommandablePanel {
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "typologies" ) );
+                "Taxonomies" ) );
     }
 
     private void addPlanTypesPanel() {
@@ -43,13 +43,13 @@ public class AllTypesFloatingPanel extends FloatingCommandablePanel {
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, Channels.TYPOLOGIES );
+        Change change = new Change( Change.Type.Collapsed, Channels.ALL_TYPES );
         update( target, change );
     }
 
     @Override
     protected String getTitle() {
-        return "Typologies";
+        return "Taxonomies";
     }
 
 }

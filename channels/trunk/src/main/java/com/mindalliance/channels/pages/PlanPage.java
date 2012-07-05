@@ -1027,16 +1027,16 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addPlanParticipationPanel() {
-        if ( !expansions.contains( Channels.PLAN_VERSIONS ) ) {
+        if ( !expansions.contains( Channels.PLAN_PARTICIPATION ) ) {
             planParticipationPanel = new Label( "planParticipation", "" );
             planParticipationPanel.setOutputMarkupId( true );
             makeVisible( planParticipationPanel, false );
-            form.addOrReplace( planParticipationPanel );
         } else {
             planParticipationPanel = new PlanParticipationFloatingPanel(
                     "planParticipation",
                     new Model<Plan>( getPlan() ) );
         }
+        form.addOrReplace( planParticipationPanel );
     }
 
     private void addPlanIndexPanel() {
@@ -1066,7 +1066,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addAllTypesPanel() {
-        if ( !expansions.contains( Channels.TYPOLOGIES ) ) {
+        if ( !expansions.contains( Channels.ALL_TYPES ) ) {
             allTypesPanel = new Label( "allTypes", "" );
             allTypesPanel.setOutputMarkupId( true );
             makeVisible( allTypesPanel, false );
@@ -1734,16 +1734,20 @@ PopupSettings.RESIZABLE |
         // Part is always "expanded"
         getCommander().requestLockOn( getUser().getUsername(), getPart() );
         for ( Long id : expansions ) {
-            try {
-                ModelObject expanded = getQueryService().find( ModelObject.class, id );
-                String aspect = getAspectShown( expanded );
-                if ( aspect != null )
-                    tryAcquiringLockForAspect( new Change( Change.Type.NeedsRefresh, expanded ), aspect );
-                else
-                    tryAcquiringLock( new Change( Change.Type.NeedsRefresh, expanded ) );
-                // getCommander().requestLockOn( expanded );
-            } catch ( NotFoundException e ) {
-                LOG.info( "Expanded model object not found at: " + id );
+            if ( id >= 0 ) {
+                try {
+                    ModelObject expanded = getQueryService().find( ModelObject.class, id );
+                    String aspect = getAspectShown( expanded );
+                    if ( aspect != null )
+                        tryAcquiringLockForAspect( new Change( Change.Type.NeedsRefresh, expanded ), aspect );
+                    else
+                        tryAcquiringLock( new Change( Change.Type.NeedsRefresh, expanded ) );
+                    // getCommander().requestLockOn( expanded );
+                }catch( NotFoundException e){
+                    LOG.info( "Expanded model object not found at: " + id );
+                }
+            } else {
+                tryAcquiringLock( new Change( Change.Type.NeedsRefresh, id ) );
             }
         }
     }
@@ -1766,12 +1770,13 @@ PopupSettings.RESIZABLE |
     }
 
     private boolean isSingleExpansion( Change change ) {
-        return change.isForInstanceOf( ModelEntity.class )
-                || change.isForInstanceOf( Requirement.class );
+        return change.isForInstanceOf( ModelEntity.class );
     }
 
     private void tryAcquiringLock( Change change ) {
-        if ( change.isForInstanceOf( Identifiable.class ) ) {
+        if ( change.isByIdOnly() && getPlan().isDevelopment() ) {
+            getCommander().requestLockOn( getUser().getUsername(), change.getId() );
+        } else if ( change.isForInstanceOf( Identifiable.class ) ) {
             Identifiable identifiable = change.getSubject( getQueryService() );
             if ( !ModelObject.isUnknownModelObject( identifiable )
                     && ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
@@ -1862,8 +1867,7 @@ PopupSettings.RESIZABLE |
         } else if ( aspect.equals( AbstractMultiAspectPanel.DETAILS ) ) {
             return true;
         } else if ( identifiable instanceof Segment ) {
-            return aspect.equals( SegmentEditPanel.GOALS )
-                    || aspect.equals( SegmentEditPanel.MOVER );
+            return aspect.equals( SegmentEditPanel.GOALS );
         } else if ( identifiable instanceof Flow )
             return aspect.equals( ExpandedFlowPanel.EOIS );
         else return false;
@@ -2236,12 +2240,14 @@ PopupSettings.RESIZABLE |
             refreshPlanIndexPanel( target, change, updated );
         } else if ( change.getId() == Channels.ALL_TAGS ) {
             refreshAllTagsPanel( target, change, updated );
-        } else if ( change.getId() == Channels.TYPOLOGIES ) {
+        } else if ( change.getId() == Channels.ALL_TYPES ) {
             refreshAllTypesPanel( target, change, updated );
         } else if ( change.getId() == Channels.WHOS_WHO ) {
             refreshWhosWhoPanel( target, change, updated );
         } else if ( change.getId() == Channels.BIBLIOGRAPHY ) {
             refreshBibliographyPanel( target, change, updated );
+        } else if ( change.getId() == Channels.PLAN_PARTICIPATION ) {
+            refreshPlanParticipationPanel( target, change, updated );
         } else if ( change.isForInstanceOf( RFISurvey.class ) ) {
             refreshDataCollectionPanel( target, change, updated );
         }
@@ -2843,7 +2849,7 @@ PopupSettings.RESIZABLE |
     private void refreshAllTypesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( change.isRefresh() ||
-                id == Channels.TYPOLOGIES
+                id == Channels.ALL_TYPES
                         && change.isDisplay() ) {
             addAllTypesPanel();
             target.add( allTypesPanel );

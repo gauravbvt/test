@@ -28,7 +28,7 @@ public class PlanSearchingMenuPanel extends MenuPanel {
         List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
         menuItems.add( collapsible( Channels.PLAN_INDEX, "Hide index", "Index" ) );
         menuItems.add( collapsible( Channels.ALL_TAGS, "Hide all tags", "All tags" ) );
-        menuItems.add( collapsible( Channels.TYPOLOGIES, "Hide all types", "All types" ) );
+        menuItems.add( collapsible( Channels.ALL_TYPES, "Hide taxonomies", "Taxonomies" ) );
         menuItems.add( collapsible( Channels.WHOS_WHO, "Hide who's who", "Who's who" ) );
         menuItems.add( collapsible( Channels.BIBLIOGRAPHY, "Hide all documents", "All documents" ) );
         return menuItems;

@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -505,6 +506,10 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
 
         public Feedback getUnknownFeedback() {
             return Feedback.UNKNOWN;
+        }
+
+        public Requirement getUnknownRequirement() {
+            return Requirement.UNKNOWN;
         }
 
     }

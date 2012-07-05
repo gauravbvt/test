@@ -31,7 +31,7 @@ public class PlanScopingMenuPanel extends MenuPanel {
             menuItems.add( collapsible( Requirement.UNKNOWN, "Hide plan requirements", "Plan requirements" ) );
             menuItems.add( collapsible( Channels.ALL_EVENTS, "Hide events in scope", "Events in scope" ) );
             menuItems.add( collapsible( Channels.ALL_ORGANIZATIONS, "Hide organizations in scope", "Organizations in scope" ) );
-            menuItems.add( collapsible( Channels.ALL_SEGMENTS, "Hide segments map", "Segments map" ) );
+            menuItems.add( collapsible( Channels.ALL_SEGMENTS, "Hide segments map", "Map of all segments" ) );
             menuItems.add( collapsible( Channels.ALL_CLASSIFICATIONS, "Hide classification systems", "Classification systems" ) );
             return menuItems;
         }

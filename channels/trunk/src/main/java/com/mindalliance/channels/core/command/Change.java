@@ -204,6 +204,10 @@ public class Change implements Serializable {
         this.id = id;
     }
 
+    public boolean isByIdOnly() {
+        return id != null && identifiableRef == null;
+    }
+
     public Identifiable getSubject( QueryService queryService ) {
         return identifiableRef == null ? null : identifiableRef.resolve( queryService );
     }

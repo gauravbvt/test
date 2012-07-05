@@ -91,18 +91,6 @@ public class SegmentShowMenuPanel extends MenuPanel {
                 new Model<String>( "Map" ),
                 geomapLink ) );
 
-        // Task mover
-        if ( this.isLockedByUserIfNeeded( getSegment() ) ) {
-            Link moverLink = new AjaxFallbackLink( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    changeAspectTo( target, SegmentEditPanel.MOVER );
-                }
-            };
-            menuItems.add( new LinkMenuItem(
-                    "menuItem",
-                    new Model<String>( "Task mover" ),
-                    moverLink ) );
-        }
         // Surveys
         AjaxFallbackLink surveysLink = new AjaxFallbackLink( "link" ) {
             @Override

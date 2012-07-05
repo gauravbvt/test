@@ -71,12 +71,24 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
                                                                                       identifiable.getId() );
     }
 
+    /**
+     * Whether an identifiable object is locked by current user.
+     *
+     * @param id an identifiable object's id
+     * @return a boolean
+     */
+    protected boolean isLockedByUser( long id ) {
+        return  getPlan().isDevelopment() &&
+                 getLockManager().isLockedByUser( getUser().getUsername(), id );
+    }
+
+
     private boolean noLockRequired( Identifiable identifiable ) {
         return false;
     }
 
     /**
-     * Model object is locked by user if necessary.
+     * Identifiable object is locked by user if necessary.
      *
      * @param identifiable a model object
      * @return a boolean
@@ -84,6 +96,16 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     protected boolean isLockedByUserIfNeeded( Identifiable identifiable ) {
         return ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
                 && ( isImmutable( identifiable ) || isLockedByUser( identifiable ) );
+    }
+
+    /**
+     * Identifiable object is locked by user if necessary.
+     *
+     * @param id an identifiable object's id
+     * @return a boolean
+     */
+    protected boolean isLockedByUserIfNeeded( long id ) {
+        return getPlan().isDevelopment() && isLockedByUser( id );
     }
 
     private boolean isImmutable( Identifiable identifiable ) {

@@ -35,13 +35,9 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
      */
     public static final String ORGANIZATIONS = "organizations";
     /**
-     * Task mover aspect.
-     */
-    public static final String MOVER = "task mover";
-    /**
      * Actionable aspects.
      */
-    private static final String[] ACTIONABLE_ASPECTS = {DETAILS, GOALS, MOVER};
+    private static final String[] ACTIONABLE_ASPECTS = {DETAILS, GOALS};
 
     public SegmentEditPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -96,8 +92,6 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
             return getSegmentGoalsPanel();
         } else if ( aspect.equals( ORGANIZATIONS ) ) {
             return getSegmentOrganizationsPanel();
-        } else if ( aspect.equals( MOVER ) ) {
-            return getSegmentTaskMoverPanel();
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
@@ -122,12 +116,6 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
                 getExpansions() );
     }
 
-    private Component getSegmentTaskMoverPanel() {
-        return new SegmentPartMoverPanel(
-                "aspect",
-                new PropertyModel<Segment>( this, "segment" ),
-                getExpansions() );
-    }
 
     /**
      * Get segment from model.
