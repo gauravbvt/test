@@ -81,7 +81,7 @@ public class ContactLinkPanel extends AbstractContactLinkPanel {
         if ( bypassContacts.size() > 1) {
            sb.append( getContactData().bypassToAll()
                    ? "all of"
-                   : "any of"
+                   : "one of"
            );
         }
         return sb.toString();

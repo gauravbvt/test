@@ -407,3 +407,8 @@ border: medium none;
     text-align: center;
     text-transform: uppercase;
 }
+
+/* added by JF */
+div.documentation li, div.documentation-top li {
+    list-style: none;
+}

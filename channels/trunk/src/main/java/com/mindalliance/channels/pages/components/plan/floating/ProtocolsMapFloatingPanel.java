@@ -55,6 +55,6 @@ public class ProtocolsMapFloatingPanel extends FloatingCommandablePanel {
 
     @Override
     protected int getWidth() {
-        return 1200;
+        return 1000;
     }
 }

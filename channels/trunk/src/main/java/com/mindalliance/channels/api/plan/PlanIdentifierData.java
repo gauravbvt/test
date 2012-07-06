@@ -19,6 +19,11 @@ import java.text.SimpleDateFormat;
 @XmlType( propOrder = {"uri", "name", "version", "release", "dateVersioned"} )
 public class PlanIdentifierData  implements Serializable {
 
+    /**
+     * Simple date format.
+     */
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "MMM d yyyy HH:mm z" );
+
     private Plan plan;
 
     public PlanIdentifierData() {
@@ -55,7 +60,7 @@ public class PlanIdentifierData  implements Serializable {
 
     @XmlElement
     public String getDateVersioned() {
-        return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( plan.getWhenVersioned() );
+        return DATE_FORMAT.format( plan.getWhenVersioned() );
     }
 
 }

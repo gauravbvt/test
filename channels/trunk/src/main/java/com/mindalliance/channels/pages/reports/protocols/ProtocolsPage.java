@@ -49,6 +49,7 @@ import java.util.Map;
 public class ProtocolsPage extends AbstractChannelsBasicPage {
 
     private static final Logger LOG = LoggerFactory.getLogger( ProtocolsPage.class );
+
     private PlanSummaryData planSummaryData;
     private ProceduresData proceduresData;
     private ProtocolsFinder finder;
@@ -171,7 +172,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 .add( new Label( "planName", planIdentifierData.getName() ) )
                 .add( new Label( "userOrAgentName", getParticipantName() ) )
                 .add( new Label( "planVersion", Integer.toString( planIdentifierData.getVersion() ) ) )
-                .add( new Label( "planDate", planIdentifierData.getDateVersioned() ) );
+                .add( new Label( "planDate",  planIdentifierData.getDateVersioned() ) );
     }
 
     private String getParticipantName() {

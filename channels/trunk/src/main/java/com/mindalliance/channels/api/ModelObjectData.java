@@ -19,6 +19,7 @@ abstract public class ModelObjectData  implements Serializable {
 
     private ModelObject modelObject;
     private Plan plan;
+    private DocumentationData documentation;
 
     protected ModelObjectData(  ) {
         // required
@@ -28,6 +29,7 @@ abstract public class ModelObjectData  implements Serializable {
         assert modelObject != null;
          this.modelObject = modelObject;
         this.plan = plan;
+        documentation = new DocumentationData(  modelObject );
     }
 
     public long getId() {
@@ -43,7 +45,7 @@ abstract public class ModelObjectData  implements Serializable {
     }
 
     public DocumentationData getDocumentation() {
-        return new DocumentationData( modelObject );
+        return documentation;
     }
 
     protected ModelObject getModelObject() {

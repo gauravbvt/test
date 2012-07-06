@@ -125,7 +125,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                 } else {
                     return flowData.getContactAll()
                             ? "Contact all of"
-                            : "Contact any of";
+                            : "Contact one of";
                 }
             } else {
                 return "To";

@@ -79,19 +79,23 @@ public class ChannelsServiceImpl implements ChannelsService {
     @Override
     public PlanSummaryData getPlan( String uri, String version ) {
         LOG.info( "Getting summary for plan " + uri + " version " + version );
-        ChannelsUser user = ChannelsUser.current( userDao );
-        for ( Plan plan : planManager.getPlansWithUri( uri ) ) {
-            if ( !user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED )
-                    && ( user.isPlanner( uri ) || plan.isProduction() ) ) {
+        try {
+            ChannelsUser user = ChannelsUser.current( userDao );
+            Plan plan = planManager.getPlan( uri, Integer.parseInt( version ) );
+            if ( plan == null || !user.isPlanner( uri ) ) {
+                throw new Exception( "Plan " + uri + " is not available" );
+            } else {
                 user.setPlan( plan );
                 return new PlanSummaryData( getPlanService( plan ), userDao, planParticipationService );
             }
+        } catch ( Exception e ) {
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( e.getMessage() )
+                            .build() );
         }
-        throw new WebApplicationException(
-                Response
-                        .status( Response.Status.BAD_REQUEST )
-                        .entity( "No such plan available" )
-                        .build() );
+
     }
 
     @Override
@@ -133,7 +137,7 @@ public class ChannelsServiceImpl implements ChannelsService {
                 throw new Exception( "Plan " + uri + " is not available" );
             } else {
                 user.setPlan( plan );
-                return ( new PlanScopeData( plan, getPlanService( plan ) ) );
+                return new PlanScopeData( plan, getPlanService( plan ) );
             }
         } catch ( Exception e ) {
             throw new WebApplicationException(
