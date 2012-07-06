@@ -175,7 +175,6 @@ public class Plan extends ModelObject {
 
     //-----------------------------
     public Plan() {
-        whenVersioned = new Date();
     }
 
     @Override
@@ -403,7 +402,7 @@ public class Plan extends ModelObject {
     }
 
     public Date getWhenVersioned() {
-        return whenVersioned;
+        return whenVersioned == null ? new Date() : whenVersioned;
     }
 
     public void setWhenVersioned( Date whenVersioned ) {

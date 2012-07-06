@@ -387,13 +387,13 @@ public class PlanManagerImpl implements PlanManager {
         listeners.fireAboutToProductize( oldDevPlan );
 
         // Make sure journal is flushed
+        oldDevPlan.setWhenVersioned( new Date() );
         save( oldDevPlan );
 
         // Mark loaded production version of plan retired
         Plan oldProductionPlan = findProductionPlan( oldDevPlan.getUri() );
         if ( oldProductionPlan != null ) {
             oldProductionPlan.setRetired();
-            oldProductionPlan.setWhenVersioned( new Date() );
             //daoIndex.remove( oldProductionPlan.getUri() );
         }
 
@@ -402,7 +402,6 @@ public class PlanManagerImpl implements PlanManager {
 
         // Mark loaded development version of plan as production
         oldDevPlan.setProduction();
-        oldDevPlan.setWhenVersioned( new Date() );
 
         assignPlans();
 
