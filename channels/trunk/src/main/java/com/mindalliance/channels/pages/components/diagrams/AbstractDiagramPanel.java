@@ -203,8 +203,8 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
             int y2 = Integer.parseInt( matcher.group( 4 ) );
             int centerX = x2 - ( ( x2 - x1 ) / 2 );
             int centerY = y2 - ( ( y2 - y1 ) / 2 );
-            int width = Integer.parseInt( swidth, 0 );
-            int height = Integer.parseInt( sheight, 0 );
+            int width = Integer.parseInt( swidth );
+            int height = Integer.parseInt( sheight );
             scroll[1] = Math.max( 0, centerX - ( width / 2 ) );
             scroll[0] = Math.max( 0, centerY - ( height / 2 ) );
         }
