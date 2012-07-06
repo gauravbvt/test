@@ -490,6 +490,7 @@ CONFIGURATION NOTES:
         <property name="userDao" ref="userDao"/>
         <property name="analyst" ref="analyst"/>
         <property name="planParticipationService" ref="planParticipationService"/>
+        <property name="serverUrl" value="${server.url}"/>
     </bean>
 
     <!-- Guide -->
