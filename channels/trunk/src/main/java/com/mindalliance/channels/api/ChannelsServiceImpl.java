@@ -2,6 +2,7 @@ package com.mindalliance.channels.api;
 
 import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.issues.IssuesData;
+import com.mindalliance.channels.api.plan.PlanReleaseData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.plan.PlanSummariesData;
 import com.mindalliance.channels.api.plan.PlanSummaryData;
@@ -98,6 +99,27 @@ public class ChannelsServiceImpl implements ChannelsService {
                             .build() );
         }
 
+    }
+
+    @Override
+    public PlanReleaseData getPlanRelease( String uri ) {
+        LOG.info( "Getting release info for production version of plan " + uri );
+        try {
+            ChannelsUser user = ChannelsUser.current( userDao );
+            Plan plan = planManager.findProductionPlan( uri );
+            if ( plan == null || user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED ) ) {
+                throw new Exception( user.getUsername() + " is not authorized to access production plan " + uri );
+            }
+            user.setPlan( plan );
+            return new PlanReleaseData( plan );
+        } catch ( Exception e ) {
+            LOG.warn( e.getMessage(), e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No procedures available for production plan " + uri )
+                            .build() );
+        }
     }
 
     @Override

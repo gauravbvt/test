@@ -13,6 +13,7 @@ import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.query.QueryService;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -30,7 +31,7 @@ import java.util.Set;
  * Date: 3/20/12
  * Time: 9:13 PM
  */
-@XmlType( propOrder = {"id", "ref", "employment", "workChannels", "personalChannels", "supervisorContacts", "organizationChannels", "bypassToAll", "bypassContacts"} )
+@XmlType( propOrder = {"id", "ref", "normalizedContactName", "picture", "employment", "workChannels", "personalChannels", "supervisorContacts", "organizationChannels", "bypassToAll", "bypassContacts"} )
 public class ContactData implements Serializable {
 
     private Employment employment;
@@ -44,6 +45,7 @@ public class ContactData implements Serializable {
     private List<ContactData> bypassContacts;
     private List<Employment> bypassEmployments;
     private Boolean bypassToAll = null;
+    private String pictureUrl;
 
     public ContactData() {
         // required
@@ -140,6 +142,18 @@ public class ContactData implements Serializable {
         initSupervisorContacts( serverUrl, queryService, planParticipationservice );
         initOrganizationChannels( queryService );
         initBypassContacts( serverUrl, queryService, planParticipationservice );
+        initPictureUrl( serverUrl );
+    }
+
+     private void initPictureUrl( String serverUrl ) {
+        // todo use user picture instead of actor's if available
+        String url = getActor().getImageUrl();
+        if ( url != null ) {
+            String prefix = serverUrl.endsWith( "/" ) ? serverUrl : ( serverUrl + "/" );
+            pictureUrl = StringEscapeUtils.escapeXml( url.toLowerCase().startsWith( "http" )
+                    ? prefix + url
+                    : url );
+        }
     }
 
     private void initPersonalChannels( QueryService queryService ) {
@@ -223,7 +237,7 @@ public class ContactData implements Serializable {
             String serverUrl,
             QueryService queryService,
             PlanParticipationService planParticipationservice ) {
-        Set<Employment> bypassEmploymentSet = new HashSet<Employment>(  );
+        Set<Employment> bypassEmploymentSet = new HashSet<Employment>();
         if ( commitment() != null ) {
             Set<ContactData> bypassContactSet = new HashSet<ContactData>();
             for ( Employment bypassEmployment : findBypassContactEmployments( queryService ) ) {
@@ -238,7 +252,7 @@ public class ContactData implements Serializable {
             }
             bypassContacts = new ArrayList<ContactData>( bypassContactSet );
         } else {
-            bypassContacts = new ArrayList<ContactData>(  );
+            bypassContacts = new ArrayList<ContactData>();
         }
         bypassEmployments = new ArrayList<Employment>( bypassEmploymentSet );
     }
@@ -302,6 +316,14 @@ public class ContactData implements Serializable {
         return employment;
     }
 
+    @XmlElement( name = "name" )
+    public String getNormalizedContactName() {
+        if ( userInfo == null )
+            return getActor().getName();
+        else
+            return ChannelsUser.normalizeFullName( userInfo.getFullName() );
+    }
+
     @XmlElement
     public String getId() {
         return commitment == null ? anchor() : null;
@@ -352,6 +374,12 @@ public class ContactData implements Serializable {
         return bypassContacts;
     }
 
+    @XmlElement
+    public String getPicture() {
+        return pictureUrl;
+    }
+
+
     public boolean bypassToAll() {
         return bypassToAll;
     }
@@ -393,7 +421,7 @@ public class ContactData implements Serializable {
     public boolean equals( Object object ) {
         if ( object instanceof ContactData ) {
             ContactData other = (ContactData) object;
-            return employment() .equals( other.employment() );
+            return employment().equals( other.employment() );
         } else {
             return false;
         }
@@ -402,13 +430,6 @@ public class ContactData implements Serializable {
     @Override
     public int hashCode() {
         return employment.hashCode();
-    }
-
-    public String getNormalizedContactName() {
-        if ( userInfo == null )
-            return getActor().getName();
-        else
-            return ChannelsUser.normalizeFullName( userInfo.getFullName() );
     }
 
     public Employment employment() {
@@ -424,7 +445,7 @@ public class ContactData implements Serializable {
     }
 
     public List<Long> getBypassMediumIds() {
-        Set<Long> mediumIds = new HashSet<Long>(  );
+        Set<Long> mediumIds = new HashSet<Long>();
         if ( commitment != null ) {
             for ( Channel channel : commitment.getSharing().getEffectiveChannels() ) {
                 mediumIds.add( channel.getMedium().getId() );

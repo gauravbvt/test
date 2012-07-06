@@ -2,6 +2,7 @@ package com.mindalliance.channels.api;
 
 import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.issues.IssuesData;
+import com.mindalliance.channels.api.plan.PlanReleaseData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.plan.PlanSummariesData;
 import com.mindalliance.channels.api.plan.PlanSummaryData;
@@ -45,6 +46,15 @@ public interface ChannelsService {
      */
     PlanSummaryData getPlan( @PathParam( "uri" ) String uri, @PathParam( "version" ) String version );
 
+    @GET
+    @Path( "plan/{uri}/release" )
+    @Produces( MediaType.APPLICATION_XML )
+    /**
+     * Get a plan's production release data.
+     * @param uri a plan uri
+     * @return plan release data
+     */
+    PlanReleaseData getPlanRelease( @PathParam( "uri" ) String uri );
 
     @GET
     @Path( "myplans" )

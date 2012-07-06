@@ -4,7 +4,6 @@ import com.mindalliance.channels.api.SecurityClassificationData;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.procedures.ChannelData;
-import com.mindalliance.channels.api.procedures.DocumentationData;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -51,7 +50,6 @@ public class ContactDataPanel extends AbstractDataPanel {
         addLanguages();
         addClearances();
         addSupervisors();
-        addDocumentation();
     }
 
     private void addName() {
@@ -145,13 +143,5 @@ public class ContactDataPanel extends AbstractDataPanel {
         };
         supervisorsContainer.add(  supervisorsListView );
     }
-
-    private void addDocumentation() {
-        DocumentationData documentationData = agentData.getDocumentation();
-        DocumentationPanel docPanel = new DocumentationPanel( "documentation", documentationData, getFinder() );
-        docPanel.setVisible( documentationData.hasReportableDocuments() );
-        add( docPanel );
-    }
-
 
 }
