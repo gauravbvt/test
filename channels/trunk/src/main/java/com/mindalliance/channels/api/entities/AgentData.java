@@ -28,8 +28,8 @@ public class AgentData extends ModelEntityData {
     public AgentData() {
     }
 
-    public AgentData( ModelObject modelObject, Plan plan ) {
-        super( modelObject, plan );
+    public AgentData( String serverUrl, ModelObject modelObject, Plan plan ) {
+        super( serverUrl, modelObject, plan );
     }
 
     @Override

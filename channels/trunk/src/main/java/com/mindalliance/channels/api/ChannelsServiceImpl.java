@@ -54,6 +54,8 @@ public class ChannelsServiceImpl implements ChannelsService {
     private ChannelsUserDao userDao;
     private Analyst analyst;
     private PlanParticipationService planParticipationService;
+    private String serverUrl;
+
 
     @Override
     /**
@@ -70,7 +72,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             if ( !user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED )
                     && ( user.isPlanner( uri ) || plan.isProduction() ) ) {
                 user.setPlan( plan );
-                result.add( new PlanSummaryData( getPlanService( plan ), userDao, planParticipationService ) );
+                result.add( new PlanSummaryData( serverUrl, getPlanService( plan ), userDao, planParticipationService ) );
             }
         }
         return new PlanSummariesData( result );
@@ -86,7 +88,7 @@ public class ChannelsServiceImpl implements ChannelsService {
                 throw new Exception( "Plan " + uri + " is not available" );
             } else {
                 user.setPlan( plan );
-                return new PlanSummaryData( getPlanService( plan ), userDao, planParticipationService );
+                return new PlanSummaryData( serverUrl, getPlanService( plan ), userDao, planParticipationService );
             }
         } catch ( Exception e ) {
             throw new WebApplicationException(
@@ -113,7 +115,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             if ( !user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED )
                     && plan.isProduction() ) {
                 user.setPlan( plan );
-                result.add( new PlanSummaryData( getPlanService( plan ), userDao, planParticipationService ) );
+                result.add( new PlanSummaryData( serverUrl, getPlanService( plan ), userDao, planParticipationService ) );
             }
         }
         return new PlanSummariesData( result );
@@ -137,7 +139,7 @@ public class ChannelsServiceImpl implements ChannelsService {
                 throw new Exception( "Plan " + uri + " is not available" );
             } else {
                 user.setPlan( plan );
-                return new PlanScopeData( plan, getPlanService( plan ) );
+                return new PlanScopeData( serverUrl, plan, getPlanService( plan ) );
             }
         } catch ( Exception e ) {
             throw new WebApplicationException(
@@ -165,6 +167,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             }
             user.setPlan( plan );
             return new ProceduresData(
+                    serverUrl,
                     plan,
                     actor,
                     planService,
@@ -198,6 +201,7 @@ public class ChannelsServiceImpl implements ChannelsService {
                 throw new Exception( user.getUsername() + " does not participate in production plan " + uri );
             }
             return new ProceduresData(
+                    serverUrl,
                     plan,
                     participations,
                     planService,
@@ -235,6 +239,7 @@ public class ChannelsServiceImpl implements ChannelsService {
                 throw new Exception( username + " does not participate in plan " + uri + " version " + version );
             }
             return new ProceduresData(
+                    serverUrl,
                     plan,
                     participationList,
                     planService,
@@ -260,6 +265,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             PlanService planService = getPlanService( plan );
             Actor actor = planService.find( Actor.class, Long.parseLong( actorId ) );
             return new ProceduresData(
+                    serverUrl,
                     plan,
                     actor,
                     planService,
@@ -373,7 +379,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         } else {
             user.setPlan( plan );
             PlanService planService = getPlanService( plan );
-            return new IssuesData( planService, analyst, userDao, planParticipationService );
+            return new IssuesData( serverUrl, planService, analyst, userDao, planParticipationService );
         }
     }
 
@@ -418,6 +424,14 @@ public class ChannelsServiceImpl implements ChannelsService {
         this.planParticipationService = planParticipationService;
     }
 
+    @WebMethod( exclude = true )
+    public void setServerUrl( String serverUrl ) {
+        this.serverUrl = serverUrl;
+    }
+
+    public String getServerUrl() {
+        return serverUrl;
+    }
 
     private PlanService getPlanService( Plan plan ) {
         return planServiceFactory.getService( plan );

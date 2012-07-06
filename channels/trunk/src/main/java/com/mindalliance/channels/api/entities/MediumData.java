@@ -26,8 +26,8 @@ public class MediumData extends ModelEntityData {
         // required
     }
 
-    public MediumData( TransmissionMedium medium, Plan plan ) {
-        super( medium, plan );
+    public MediumData( String serverUrl, TransmissionMedium medium, Plan plan ) {
+        super( serverUrl, medium, plan );
     }
 
     @Override
@@ -73,21 +73,21 @@ public class MediumData extends ModelEntityData {
     public PlaceData getReach() {
         return getMedium().getReach() == null
                 ? null
-                : new PlaceData( getMedium().getReach(), getPlan() );
+                : new PlaceData( getServerUrl(), getMedium().getReach(), getPlan() );
     }
 
     @XmlElement
     public AgentData getQualification() {
         return getMedium().getQualification() == null
                 ? null
-                : new AgentData( getMedium().getQualification(), getPlan() );
+                : new AgentData( getServerUrl(), getMedium().getQualification(), getPlan() );
     }
 
     @XmlElement
     public List<MediumData> getDelegatesTo() {
         List<MediumData> delegates = new ArrayList<MediumData>(  );
         for ( TransmissionMedium delegate : getMedium().getEffectiveDelegatedToMedia() ) {
-            delegates.add(  new MediumData( delegate, getPlan() ) );
+            delegates.add(  new MediumData( getServerUrl(), delegate, getPlan() ) );
         }
         return delegates;
     }

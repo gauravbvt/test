@@ -38,6 +38,7 @@ import java.util.Set;
  */
 public class ProtocolsFinder implements Serializable {
 
+    private String serverUrl;
     private ProceduresData proceduresData;
     private final ChannelsUser user;
     private final String username;
@@ -59,13 +60,16 @@ public class ProtocolsFinder implements Serializable {
     private List<String> sortedTabs;
     private Map<String, List<ContactData>> alphabetizedTriggerRolodex;
 
-    public ProtocolsFinder( ProceduresData proceduresData,
+    public ProtocolsFinder(
+            String serverUrl,
+            ProceduresData proceduresData,
                             QueryService queryService,
                             PlanParticipationService planParticipationService,
                             ChannelsUser user,
                             ChannelsService channelsService,
                             String username,
                             Long actorId ) {
+        this.serverUrl = serverUrl;
         this.proceduresData = proceduresData;
         this.user = user;
         this.username = username;
@@ -124,6 +128,7 @@ public class ProtocolsFinder implements Serializable {
             for ( TriggerData triggerData : procedureData.getDiscoveryTriggers() ) {
                 addTo( onDiscoveries, triggerData, procedureData );
                 TaskData discoveringTask = new TaskData(
+                        serverUrl,
                         triggerData.discoveringPart(),
                         queryService,
                         planParticipationService,

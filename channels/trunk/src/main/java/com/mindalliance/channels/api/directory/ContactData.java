@@ -50,6 +50,7 @@ public class ContactData implements Serializable {
     }
 
     public ContactData(
+            String serverUrl,
             Employment employment,
             ChannelsUserInfo userInfo,
             boolean includeSupervisor,
@@ -58,10 +59,11 @@ public class ContactData implements Serializable {
         this.employment = employment;
         this.userInfo = userInfo;
         this.includeSupervisor = includeSupervisor;
-        init( queryService, planParticipationservice );
+        init( serverUrl, queryService, planParticipationservice );
     }
 
     public ContactData( // create contact data of employment contacted in commitment
+                        String serverUrl,
                         Employment employment,
                         Commitment commitment,
                         ChannelsUserInfo userInfo,
@@ -72,7 +74,7 @@ public class ContactData implements Serializable {
         this.commitment = commitment;
         this.userInfo = userInfo;
         this.includeSupervisor = includeSupervisor;
-        init( queryService, planParticipationservice );
+        init( serverUrl, queryService, planParticipationservice );
     }
 
     /**
@@ -85,6 +87,7 @@ public class ContactData implements Serializable {
      * @return a list of contact data
      */
     static public List<ContactData> findContactsFromEmployment(
+            String serverUrl,
             Employment employment,
             Commitment commitment,
             QueryService queryService,
@@ -94,6 +97,7 @@ public class ContactData implements Serializable {
         Actor actor = employment.getActor();
         if ( actor.isAnonymousParticipation() ) {
             contactList.add( new ContactData(
+                    serverUrl,
                     employment,
                     commitment,
                     null,
@@ -108,6 +112,7 @@ public class ContactData implements Serializable {
                     userInfo );
             if ( otherParticipations.isEmpty() || !actor.isSingularParticipation() ) {
                 contactList.add( new ContactData(
+                        serverUrl,
                         employment,
                         commitment,
                         null,
@@ -117,6 +122,7 @@ public class ContactData implements Serializable {
             }
             for ( PlanParticipation otherParticipation : otherParticipations ) {
                 contactList.add( new ContactData(
+                        serverUrl,
                         employment,
                         commitment,
                         otherParticipation.getParticipant(),
@@ -128,12 +134,12 @@ public class ContactData implements Serializable {
         return contactList;
     }
 
-    private void init( QueryService queryService, PlanParticipationService planParticipationservice ) {
+    private void init( String serverUrl, QueryService queryService, PlanParticipationService planParticipationservice ) {
         initWorkChannels( queryService );
         initPersonalChannels( queryService );
-        initSupervisorContacts( queryService, planParticipationservice );
+        initSupervisorContacts( serverUrl, queryService, planParticipationservice );
         initOrganizationChannels( queryService );
-        initBypassContacts( queryService, planParticipationservice );
+        initBypassContacts( serverUrl, queryService, planParticipationservice );
     }
 
     private void initPersonalChannels( QueryService queryService ) {
@@ -165,7 +171,7 @@ public class ContactData implements Serializable {
 
     }
 
-    private void initSupervisorContacts( QueryService queryService, PlanParticipationService planParticipationservice ) {
+    private void initSupervisorContacts( String serverUrl, QueryService queryService, PlanParticipationService planParticipationservice ) {
         supervisorContacts = new ArrayList<ContactData>();
         if ( includeSupervisor && getSupervisor() != null ) {
             Actor supervisor = getSupervisor();
@@ -188,6 +194,7 @@ public class ContactData implements Serializable {
             if ( supervisorEmployment != null ) {
                 if ( supervisor.isAnonymousParticipation() ) {
                     supervisorContacts.add( new ContactData(
+                            serverUrl,
                             supervisorEmployment,
                             null,
                             false,
@@ -200,6 +207,7 @@ public class ContactData implements Serializable {
                             queryService );
                     for ( PlanParticipation participation : participations ) {
                         supervisorContacts.add( new ContactData(
+                                serverUrl,
                                 supervisorEmployment,
                                 participation.getParticipant(),
                                 false,
@@ -212,6 +220,7 @@ public class ContactData implements Serializable {
     }
 
     private void initBypassContacts(
+            String serverUrl,
             QueryService queryService,
             PlanParticipationService planParticipationservice ) {
         Set<Employment> bypassEmploymentSet = new HashSet<Employment>(  );
@@ -220,6 +229,7 @@ public class ContactData implements Serializable {
             for ( Employment bypassEmployment : findBypassContactEmployments( queryService ) ) {
                 bypassEmploymentSet.add( bypassEmployment );
                 bypassContactSet.addAll( findContactsFromEmployment(
+                        serverUrl,
                         bypassEmployment,
                         null,   // todo -- bypassing is not transitive, right?
                         queryService,

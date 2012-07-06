@@ -25,8 +25,8 @@ public class PlaceData extends ModelEntityData {
         // required
     }
 
-    public PlaceData( ModelObject modelObject, Plan plan ) {
-        super( modelObject, plan );
+    public PlaceData( String serverUrl, ModelObject modelObject, Plan plan ) {
+        super( serverUrl, modelObject, plan );
     }
 
     //-------------------------------

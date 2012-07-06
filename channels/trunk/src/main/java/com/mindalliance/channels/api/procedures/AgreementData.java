@@ -22,13 +22,15 @@ import java.util.List;
 public class AgreementData  implements Serializable {
 
     private Agreement agreement;
+    private DocumentationData documentation;
 
     public AgreementData() {
         // required
     }
 
-    public AgreementData( Agreement agreement ) {
+    public AgreementData( String serverUrl, Agreement agreement ) {
         this.agreement = agreement;
+        documentation = new DocumentationData( serverUrl, agreement );
     }
 
     @XmlElement
@@ -57,6 +59,6 @@ public class AgreementData  implements Serializable {
 
     @XmlElement
     public DocumentationData getDocumentation() {
-        return new DocumentationData( agreement );
+        return documentation;
     }
 }

@@ -45,6 +45,7 @@ public class AssignmentData extends AbstractProcedureElementData {
     }
 
     public AssignmentData(
+            String serverUrl,
             Assignment assignment,
             PlanService planService,
             PlanParticipationService planParticipationService,
@@ -52,23 +53,24 @@ public class AssignmentData extends AbstractProcedureElementData {
             ProcedureData procedureData ) {
         super( assignment, planService, planParticipationService, user );
         this.procedureData = procedureData;
-        initData( planService, planParticipationService );
+        initData( serverUrl, planService, planParticipationService );
     }
 
-    private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
-        taskData = new TaskData( getAssignment(), planService, planParticipationService, getUser() );
-        initInNotifications( planService, planParticipationService );
-        initOutNotifications( planService, planParticipationService );
-        initInReplies( planService, planParticipationService );
-        initOutReplies( planService, planParticipationService );
-        initDiscoveries( planService, planParticipationService );
-        initAllResearch( planService, planParticipationService );
+    private void initData( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+        taskData = new TaskData( serverUrl, getAssignment(), planService, planParticipationService, getUser() );
+        initInNotifications(  serverUrl, planService, planParticipationService );
+        initOutNotifications(  serverUrl, planService, planParticipationService );
+        initInReplies(  serverUrl, planService, planParticipationService );
+        initOutReplies(  serverUrl, planService, planParticipationService );
+        initDiscoveries(  serverUrl, planService, planParticipationService );
+        initAllResearch(  serverUrl, planService, planParticipationService );
     }
 
-    private void initAllResearch( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initAllResearch( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
         allResearch = new ArrayList<ResearchData>();
         for ( Flow researchFlow : research() ) {
             allResearch.add( new ResearchData(
+                    serverUrl,
                     researchFlow,
                     getAssignment(),
                     planService,
@@ -78,10 +80,11 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     }
 
-    private void initDiscoveries( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initDiscoveries( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
         discoveries = new ArrayList<DiscoveryData>();
         for ( Flow discoveringFlow : discoveries() ) {
             discoveries.add( new DiscoveryData(
+                    serverUrl,
                     discoveringFlow,
                     planService,
                     planParticipationService,
@@ -90,11 +93,12 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     }
 
-    private void initOutReplies( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initOutReplies( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
             outReplies = new ArrayList<RequestData>();
             for ( Flow outRequestFlow : outRequests() ) {
                 boolean initiating = false;
                 outReplies.add( new RequestData(
+                        serverUrl,
                         outRequestFlow,
                         initiating,
                         getAssignment(),
@@ -104,11 +108,12 @@ public class AssignmentData extends AbstractProcedureElementData {
             }
     }
 
-    private void initInReplies( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initInReplies( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
             inReplies = new ArrayList<RequestData>();
             for ( Flow inRequestFlow : inRequests() ) {
                 boolean initiating = true;
                 inReplies.add( new RequestData(
+                        serverUrl,
                         inRequestFlow,
                         initiating,
                         getAssignment(),
@@ -118,11 +123,12 @@ public class AssignmentData extends AbstractProcedureElementData {
             }
     }
 
-    private void initOutNotifications( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initOutNotifications( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
             outNotifications = new ArrayList<NotificationData>();
             for ( Flow outNotificationFlow : outNotifications() ) {
                 boolean initiating = true;
                 outNotifications.add( new NotificationData(
+                        serverUrl,
                         outNotificationFlow,
                         initiating,
                         getAssignment(),
@@ -132,11 +138,12 @@ public class AssignmentData extends AbstractProcedureElementData {
             }
     }
 
-    private void initInNotifications( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initInNotifications( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
         inNotifications = new ArrayList<NotificationData>();
         for ( Flow inNotificationFlow : inNotifications() ) {
             boolean initiating = false;
             inNotifications.add( new NotificationData(
+                    serverUrl,
                     inNotificationFlow,
                     initiating,
                     getAssignment(),

@@ -144,6 +144,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             }
         }
         finder = new ProtocolsFinder(
+                channelsService.getServerUrl(),
                 proceduresData,
                 getQueryService(),
                 getPlanParticipationService(),

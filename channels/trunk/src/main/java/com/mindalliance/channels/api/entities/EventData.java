@@ -26,8 +26,8 @@ public class EventData extends ModelEntityData {
     public EventData() {
     }
 
-    public EventData( Event event, Plan plan ) {
-        super( event, plan );
+    public EventData( String serverUrl, Event event, Plan plan ) {
+        super( serverUrl, event, plan );
     }
 
     @Override

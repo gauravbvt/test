@@ -45,14 +45,16 @@ public class RequestData extends AbstractFlowData {
     }
 
     public RequestData(
+            String serverUrl,
             Flow request,
             boolean initiating,
             Assignment assignment,
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        super( initiating, request, assignment, planService, planParticipationService, user );
+        super( serverUrl, initiating, request, assignment, planService, planParticipationService, user );
         initData(
+                serverUrl,
                 planService,
                 planParticipationService,
                 user == null ? null : user.getUserInfo() );
@@ -64,12 +66,13 @@ public class RequestData extends AbstractFlowData {
     }
 
     protected void initData(
+            String serverUrl,
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUserInfo userInfo  ) {
         initCommitments( planService );
-        initContactEmployments(planService, planParticipationService, userInfo );
-        initConsumingTask( planService, planParticipationService );
+        initContactEmployments( serverUrl, planService, planParticipationService, userInfo );
+        initConsumingTask( serverUrl, planService, planParticipationService );
         initOtherData( planService );
     }
 
@@ -89,6 +92,7 @@ public class RequestData extends AbstractFlowData {
     }
 
     private void initContactEmployments(
+            String serverUrl,
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUserInfo userInfo ) {
@@ -99,6 +103,7 @@ public class RequestData extends AbstractFlowData {
                 Employment employment = commitment.getCommitter().getEmployment();
                 contactedEmployments.add( employment );
                 contactDataSet.addAll( ContactData.findContactsFromEmployment(
+                        serverUrl,
                         employment,
                         commitment,
                         planService,
@@ -108,6 +113,7 @@ public class RequestData extends AbstractFlowData {
                 Employment employment = commitment.getBeneficiary().getEmployment();
                 contactedEmployments.add( employment );
                 contactDataSet.addAll( ContactData.findContactsFromEmployment(
+                        serverUrl,
                         employment,
                         commitment,
                         planService,
@@ -119,9 +125,10 @@ public class RequestData extends AbstractFlowData {
         contacts = new ArrayList<ContactData>( contactDataSet );
     }
 
-    private void initConsumingTask( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initConsumingTask( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
         if ( !isInitiating() )
             consumingTaskData = new TaskData(
+                    serverUrl,
                     (Part)getSharing().getTarget(),
                     planService,
                     planParticipationService,

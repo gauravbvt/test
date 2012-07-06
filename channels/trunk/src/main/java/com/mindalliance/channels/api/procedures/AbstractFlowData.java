@@ -25,16 +25,19 @@ import java.util.Set;
  */
 public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
+    private String serverUrl;
     private boolean initiating;
     private Flow flow;
     private Level failureSeverity;
     private List<Employment> allEmployments;
+    private DocumentationData documentation;
 
     public AbstractFlowData() {
         // required
     }
 
     public AbstractFlowData(
+            String serverUrl,
             boolean initiating,
             Flow flow,
             Assignment assignment,
@@ -42,12 +45,14 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         super( assignment, planService, planParticipationService, user );
+        this.serverUrl = serverUrl;
         this.initiating = initiating;
         this.flow = flow;
     }
 
     protected void initOtherData( PlanService planService ) {
         initFailureSeverity( planService );
+        documentation = new DocumentationData( serverUrl, getSharing() );
     }
 
     private void initFailureSeverity( PlanService planService ) {
@@ -92,6 +97,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
             PlanService planService,
             PlanParticipationService planParticipationService ) {
         return ContactData.findContactsFromEmployment(
+                serverUrl,
                 employment,
                 commitment,
                 planService,
@@ -201,7 +207,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
 
     public DocumentationData getDocumentation() {
-        return new DocumentationData( getSharing() );
+        return documentation;
     }
 
 

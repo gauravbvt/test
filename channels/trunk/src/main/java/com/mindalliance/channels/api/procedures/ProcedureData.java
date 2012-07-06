@@ -57,6 +57,7 @@ public class ProcedureData implements Serializable {
     }
 
     public ProcedureData(
+            String serverUrl,
             Assignment assignment,
             Commitments benefitingCommitments,
             Commitments committingCommitments,
@@ -67,27 +68,27 @@ public class ProcedureData implements Serializable {
         this.benefitingCommitments = benefitingCommitments;
         this.committingCommitments = committingCommitments;
         this.user = user;
-        initData( planService, planParticipationService );
+        initData( serverUrl, planService, planParticipationService );
     }
 
-    private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
-        assignmentData = new AssignmentData( assignment, planService, planParticipationService, user, this );
-        initTriggers( planService, planParticipationService );
+    private void initData( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+        assignmentData = new AssignmentData( serverUrl, assignment, planService, planParticipationService, user, this );
+        initTriggers( serverUrl, planService, planParticipationService );
     }
 
 
-    private void initTriggers( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initTriggers( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
         triggers = new ArrayList<TriggerData>();
         // anytime
         if ( assignment.isOngoing() ) {
-            TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
+            TriggerData triggerData = new TriggerData( serverUrl,assignment, planService, planParticipationService, user );
             triggerData.setOngoing( true );
             triggerData.initTrigger( planService, planParticipationService );
             triggers.add( triggerData );
         } else {
             // event phase is trigger
             if ( assignment.isInitiatedByEventPhase() ) {
-                TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
+                TriggerData triggerData = new TriggerData( serverUrl,assignment, planService, planParticipationService, user );
                 triggerData.setEventPhase( assignment.getEventPhase() );
                 triggerData.setEventPhaseContext( assignment.getEventPhaseContext() );
                 triggerData.initTrigger( planService, planParticipationService );
@@ -95,28 +96,28 @@ public class ProcedureData implements Serializable {
             }
             // information discovery (notifications to self)
             for ( Flow triggerSelfNotification : triggeringNotificationsToSelf() ) {
-                TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
+                TriggerData triggerData = new TriggerData( serverUrl,assignment, planService, planParticipationService, user );
                 triggerData.setNotificationToSelf( triggerSelfNotification );
                 triggerData.initTrigger( planService, planParticipationService );
                 triggers.add( triggerData );
             }
             // triggering notifications (from others)
             for ( Flow triggerNotification : triggeringNotificationsFromOthers() ) {
-                TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
+                TriggerData triggerData = new TriggerData( serverUrl,assignment, planService, planParticipationService, user );
                 triggerData.setNotificationFromOther( triggerNotification );
                 triggerData.initTrigger( planService, planParticipationService );
                 triggers.add( triggerData );
             }
             // triggering requests
             for ( Flow triggerRequest : triggeringRequestsFromOthers() ) {
-                TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
+                TriggerData triggerData = new TriggerData( serverUrl,assignment, planService, planParticipationService, user );
                 triggerData.setRequestFromOther( triggerRequest );
                 triggerData.initTrigger( planService, planParticipationService );
                 triggers.add( triggerData );
             }
             // triggering requests to self
             for ( Flow triggerRequest : triggeringRequestsToSelf() ) {
-                TriggerData triggerData = new TriggerData( assignment, planService, planParticipationService, user );
+                TriggerData triggerData = new TriggerData( serverUrl,assignment, planService, planParticipationService, user );
                 triggerData.setRequestToSelf( triggerRequest );
                 triggerData.initTrigger( planService, planParticipationService );
                 triggers.add( triggerData );

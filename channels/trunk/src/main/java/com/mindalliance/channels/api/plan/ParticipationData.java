@@ -29,14 +29,14 @@ public class ParticipationData  implements Serializable {
         // required
     }
 
-    public ParticipationData( PlanParticipation participation, ChannelsUser user, PlanService planService ) {
+    public ParticipationData( String serverUrl, PlanParticipation participation, ChannelsUser user, PlanService planService ) {
         this.participation = participation;
         this.user = user;
-        init( planService );
+        init( serverUrl, planService );
     }
 
-    private void init( PlanService planService ) {
-        agentData = new AgentData( participation.getActor( planService), planService.getPlan() );
+    private void init( String serverUrl, PlanService planService ) {
+        agentData = new AgentData( serverUrl, participation.getActor( planService), planService.getPlan() );
         actor = participation.getActor( planService );
     }
 

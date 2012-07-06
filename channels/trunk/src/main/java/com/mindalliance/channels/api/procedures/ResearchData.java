@@ -27,12 +27,14 @@ public class ResearchData extends AbstractProcedureElementData {
     private TaskData researchTaskData;
     private TaskData consumingTaskData;
     private String failureImpact;
+    private DocumentationData documentation;
 
     public ResearchData() {
         super();
     }
 
     public ResearchData(
+            String serverUrl,
             Flow requestToSelf,
             Assignment assignment,
             PlanService planService,
@@ -40,25 +42,28 @@ public class ResearchData extends AbstractProcedureElementData {
             ChannelsUser user ) {
         super( assignment, planService, planParticipationService, user );
         this.requestToSelf = requestToSelf;
-        initData( planService, planParticipationService );
+        initData( serverUrl, planService, planParticipationService );
     }
 
-    private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
-        initResearchTask( planService, planParticipationService );
-        initConsumingTaskData( planService, planParticipationService );
+    private void initData( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+        initResearchTask( serverUrl, planService, planParticipationService );
+        initConsumingTaskData( serverUrl, planService, planParticipationService );
         failureImpact = planService.computeSharingPriority( getSharing() ).getNegativeLabel();
+        documentation =  new DocumentationData( serverUrl, requestToSelf );
     }
 
-    private void initConsumingTaskData( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initConsumingTaskData( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
         consumingTaskData = new TaskData(
+                serverUrl,
                 (Part)requestToSelf.getTarget(),
                 planService,
                 planParticipationService,
                 getUser() );
     }
 
-    private void initResearchTask( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initResearchTask( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
         researchTaskData = new TaskData(
+                serverUrl,
                 (Part)requestToSelf.getSource(),
                 planService,
                 planParticipationService,
@@ -101,7 +106,7 @@ public class ResearchData extends AbstractProcedureElementData {
 
     @XmlElement
     public DocumentationData getDocumentation() {
-        return new DocumentationData( requestToSelf );
+        return documentation;
     }
 
     private Flow getSharing() {

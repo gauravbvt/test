@@ -145,4 +145,5 @@ public interface ChannelsService {
     @Produces( MediaType.APPLICATION_XML )
     DirectoryData getMyDirectory( @PathParam("uri") String uri );
 
+    String getServerUrl();
 }

@@ -23,8 +23,8 @@ public class PhaseData extends ModelObjectData {
         // required
     }
 
-    public PhaseData( Phase phase, Plan plan ) {
-        super( phase, plan );
+    public PhaseData( String serverUrl, Phase phase, Plan plan ) {
+        super( serverUrl, phase, plan );
     }
 
     @Override

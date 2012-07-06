@@ -42,17 +42,20 @@ public class TriggerData extends AbstractProcedureElementData {
     private DiscoveryData discoveryData;
     private ResearchData researchData;
     private SituationData situationData;
+    private String serverUrl;
 
     public TriggerData() {
         // required
     }
 
     public TriggerData(
+            String serverUrl,
             Assignment assignment, // task assignment being triggered
             PlanService planService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         super( assignment, planService, planParticipationService, user );
+        this.serverUrl = serverUrl;
     }
 
 
@@ -132,6 +135,7 @@ public class TriggerData extends AbstractProcedureElementData {
     private void initOnRequest( PlanService planService, PlanParticipationService planParticipationService ) {
         if ( requestFromOther != null )
             onRequest = new RequestData(
+                    serverUrl,
                     requestFromOther,
                     false,
                     getAssignment(),
@@ -147,6 +151,7 @@ public class TriggerData extends AbstractProcedureElementData {
 
         if ( notificationFromOther != null && !notificationFromOther.isToSelf() )
             onNotification = new NotificationData(
+                    serverUrl,
                     notificationFromOther,
                     false,
                     getAssignment(),
@@ -160,6 +165,7 @@ public class TriggerData extends AbstractProcedureElementData {
     private void initResearchData( PlanService planService, PlanParticipationService planParticipationService ) {
         if ( requestToSelf != null )
             researchData = new ResearchData(
+                    serverUrl,
                     requestToSelf,
                     getAssignment(),
                     planService,
@@ -173,6 +179,7 @@ public class TriggerData extends AbstractProcedureElementData {
     private void initDiscoveryData( PlanService planService, PlanParticipationService planParticipationService ) {
         if ( notificationToSelf != null )
             discoveryData = new DiscoveryData(
+                    serverUrl,
                     notificationToSelf,
                     planService,
                     planParticipationService,

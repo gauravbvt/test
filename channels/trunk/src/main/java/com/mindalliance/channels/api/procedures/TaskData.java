@@ -37,23 +37,34 @@ public class TaskData extends AbstractProcedureElementData {
     private List<ContactData> teamContacts;
     private Level failureLevel;
     private Part part;
+    private PlaceData placeData;
+    private DocumentationData documentation;
 
     public TaskData() {
         // required
     }
 
     public TaskData(
+            String serverUrl,
             Assignment assignment,
             QueryService queryService,
             PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         super( assignment, queryService, planParticipationService, user );
         initData( queryService );
+        initLocation( serverUrl );
+        initDocumentation( serverUrl );
         initOtherAssignments( queryService );
-        initTeamContacts( queryService, planParticipationService );
+        initTeamContacts( serverUrl, queryService, planParticipationService );
     }
 
-    public TaskData( Part part, QueryService queryService, PlanParticipationService planParticipationService, ChannelsUser user ) {
+
+    public TaskData(
+            String serverUrl,
+            Part part,
+            QueryService queryService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
         super( null, queryService, planParticipationService, user );
         this.part = part;
         initData( queryService );
@@ -64,11 +75,12 @@ public class TaskData extends AbstractProcedureElementData {
         failureImpact = StringEscapeUtils.escapeXml( failureLevel.getNegativeLabel() );
     }
 
-    private void initTeamContacts( QueryService queryService, PlanParticipationService planParticipationService ) {
+    private void initTeamContacts( String serverUrl, QueryService queryService, PlanParticipationService planParticipationService ) {
         teamContacts = new ArrayList<ContactData>();
         if ( getAssignment() != null )
         for ( Employment employment : getTeamEmployments() ) {
             teamContacts.addAll( ContactData.findContactsFromEmployment(
+                    serverUrl,
                     employment,
                     null,
                     queryService,
@@ -87,8 +99,21 @@ public class TaskData extends AbstractProcedureElementData {
                 }
             }
         }
-
     }
+
+    private void initLocation( String serverUrl ) {
+        if ( getAssignment() != null ){
+            Place location = getAssignment().getLocation();
+            placeData = location != null
+                    ? new PlaceData( serverUrl, location, getPlan() )
+                    : null;
+        }
+    }
+
+    private void initDocumentation( String serverUrl ) {
+        documentation = new DocumentationData( serverUrl, getPart() );
+    }
+
 
     @XmlElement
     public String getName() {
@@ -113,15 +138,11 @@ public class TaskData extends AbstractProcedureElementData {
         }
     }
 
+
+
     @XmlElement
     public PlaceData getLocation() {
-        if ( getAssignment() == null ) return null;
-        else {
-            Place location = getAssignment().getLocation();
-            return location != null
-                    ? new PlaceData( location, getPlan() )
-                    : null;
-        }
+       return placeData;
     }
 
     @XmlElement
@@ -161,7 +182,7 @@ public class TaskData extends AbstractProcedureElementData {
 
     @XmlElement
     public DocumentationData getDocumentation() {
-        return new DocumentationData( getPart() );
+        return documentation;
     }
 
     private List<Assignment> otherTeamAssignments() {

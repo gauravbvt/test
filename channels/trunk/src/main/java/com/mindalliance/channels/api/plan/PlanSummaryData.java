@@ -30,13 +30,14 @@ import java.util.Set;
  */
 @XmlType( propOrder = {"planIdentifier", "dateVersioned", "description", "planners", "participations", "openActors", "supervised", "documentation"} )
 
-public class PlanSummaryData  implements Serializable {
+public class PlanSummaryData implements Serializable {
 
     private List<UserData> planners;
     private List<ParticipationData> participationDataList;
     private List<AgentData> openActorList;
+    private List<AgentData> underlings;
+    private DocumentationData documentation;
     private List<Actor> actors;
-    private List<Actor> supervisedActors;
     private Plan plan;
 
     public PlanSummaryData() {
@@ -44,30 +45,39 @@ public class PlanSummaryData  implements Serializable {
     }
 
     public PlanSummaryData(
+            String serverUrl,
             PlanService planService,
             ChannelsUserDao userDao,
             PlanParticipationService planParticipationService ) {
-        init( planService, userDao, planParticipationService );
+        init( serverUrl, planService, userDao, planParticipationService );
+
     }
 
     private void init(
+            String serverUrl,
             PlanService planService,
             ChannelsUserDao userDao,
             PlanParticipationService planParticipationService ) {
         plan = planService.getPlan();
         initPlanners( planService );
-        initParticipations( planService, userDao, planParticipationService );
-        initOpenActors( planService, userDao );
+        initParticipations( serverUrl,planService, userDao, planParticipationService );
+        initOpenActors( serverUrl, planService, userDao );
         initParticipantActors( planService, userDao, planParticipationService );
-        initSupervised( planService, userDao );
+        initSupervised( serverUrl, planService, userDao );
+        documentation = new DocumentationData( serverUrl, getPlan() );
     }
 
-    private void initSupervised( PlanService planService, ChannelsUserDao userDao ) {
+    private void initSupervised( String serverUrl, PlanService planService, ChannelsUserDao userDao ) {
         Set<Actor> supervisedSet = new HashSet<Actor>();
         for ( Actor actor : getParticipantActors() ) {
-            supervisedSet.addAll( planService.findSupervised( actor ) );
+            supervisedSet.addAll( planService.findSupervised(  actor ) );
         }
-        supervisedActors = new ArrayList<Actor>( supervisedSet );
+        List<Actor> supervisedActors = new ArrayList<Actor>( supervisedSet );
+        underlings = new ArrayList<AgentData>();
+        for ( Actor underling : supervisedActors ) {
+            underlings.add( new AgentData( serverUrl, underling, getPlan() ) );
+        }
+
     }
 
     private void initParticipantActors(
@@ -86,17 +96,18 @@ public class PlanSummaryData  implements Serializable {
 
     }
 
-    private void initOpenActors( PlanService planService, ChannelsUserDao userDao ) {
-        openActorList = new ArrayList<AgentData>(  );
+    private void initOpenActors( String serverUrl, PlanService planService, ChannelsUserDao userDao ) {
+        openActorList = new ArrayList<AgentData>();
         ChannelsUser user = ChannelsUser.current( userDao );
         List<Actor> openActors = planService.findOpenActors( user, getPlan() );
         for ( Actor openActor : openActors ) {
-            openActorList.add( new AgentData( openActor, getPlan() ) );
+            openActorList.add( new AgentData( serverUrl, openActor, getPlan() ) );
         }
 
     }
 
     private void initParticipations(
+            String serverUrl,
             PlanService planService,
             ChannelsUserDao userDao,
             PlanParticipationService planParticipationService ) {
@@ -106,13 +117,13 @@ public class PlanSummaryData  implements Serializable {
                 getPlan(),
                 user.getUserInfo(), planService );
         for ( PlanParticipation participation : participations ) {
-            participationDataList.add( new ParticipationData( participation, user, planService ) );
+            participationDataList.add( new ParticipationData( serverUrl, participation, user, planService ) );
         }
 
     }
 
     private void initPlanners( PlanService planService ) {
-         planners = new ArrayList<UserData>();
+        planners = new ArrayList<UserData>();
         for ( ChannelsUser planner : planService.getUserDao().getPlanners( getPlan().getUri() ) ) {
             planners.add( new UserData( planner ) );
         }
@@ -128,6 +139,7 @@ public class PlanSummaryData  implements Serializable {
     public String getDateVersioned() {
         return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( getPlan().getWhenVersioned() );
     }
+
     @XmlElement
     public String getDescription() {
         return StringEscapeUtils.escapeXml( getPlan().getDescription() );
@@ -140,7 +152,7 @@ public class PlanSummaryData  implements Serializable {
 
     @XmlElement( name = "participatingAs" )
     public List<ParticipationData> getParticipations() {
-                return participationDataList;
+        return participationDataList;
     }
 
     @XmlElement( name = "openAgent" )
@@ -150,24 +162,16 @@ public class PlanSummaryData  implements Serializable {
 
     @XmlElement( name = "supervised" )
     public List<AgentData> getSupervised() {
-        List<AgentData> underlings = new ArrayList<AgentData>();
-        for ( Actor underling : findSupervised() ) {
-            underlings.add( new AgentData( underling, getPlan() ) );
-        }
         return underlings;
     }
 
     @XmlElement
     public DocumentationData getDocumentation() {
-        return new DocumentationData( getPlan() );
+        return documentation;
     }
 
     private List<Actor> getParticipantActors() {
         return actors;
-    }
-
-    private List<Actor> findSupervised() {
-        return supervisedActors;
     }
 
     private Plan getPlan() {

@@ -18,13 +18,15 @@ import java.io.Serializable;
 @XmlType( propOrder = {"type", "name", "url"} )
 public class DocumentData  implements Serializable {
 
+    private String serverUrl;
     private Attachment attachment;
 
     public DocumentData() {
         // required
     }
 
-    public DocumentData( Attachment attachment ) {
+    public DocumentData( String serverUrl, Attachment attachment ) {
+        this.serverUrl = serverUrl;
         this.attachment = attachment;
     }
 
@@ -40,6 +42,12 @@ public class DocumentData  implements Serializable {
 
     @XmlElement
     public String getUrl() {
-        return StringEscapeUtils.escapeXml( attachment.getUrl() );
+        return StringEscapeUtils.escapeXml( attachment.isUploaded()
+                ? correctServerUrl() + attachment.getUrl()
+                : attachment.getUrl() );
+    }
+
+    private String correctServerUrl() {
+        return serverUrl.endsWith( "/") ? serverUrl : (serverUrl + "/" );
     }
 }

@@ -21,8 +21,8 @@ abstract public class ModelEntityData extends ModelObjectData {
     public ModelEntityData()  {
     }
 
-    public ModelEntityData( ModelObject modelObject, Plan plan ) {
-        super( modelObject, plan );
+    public ModelEntityData( String serverUrl, ModelObject modelObject, Plan plan ) {
+        super( serverUrl, modelObject, plan );
     }
 
     public List<Long> getCategories() {
@@ -43,5 +43,6 @@ abstract public class ModelEntityData extends ModelObjectData {
     private ModelEntity getModelEntity() {
          return (ModelEntity)getModelObject();
     }
+
 
 }

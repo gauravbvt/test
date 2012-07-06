@@ -45,12 +45,12 @@ public class ProceduresData  implements Serializable {
     private List<Actor> participatingActors;
     private EnvironmentData environmentData;
 
-
     public ProceduresData() {
         // required
     }
 
     public ProceduresData(
+            String serverUrl,
             Plan plan,
             List<PlanParticipation> participations,
             PlanService planService,
@@ -58,19 +58,21 @@ public class ProceduresData  implements Serializable {
             ChannelsUser user ) {
         this.plan = plan;
         this.user = user;
-        initData( participations, planService, planParticipationService );
+        initData( serverUrl, participations, planService, planParticipationService );
     }
 
     private void initData(
+            String serverUrl,
             List<PlanParticipation> participations,
             PlanService planService,
             PlanParticipationService planParticipationService ) {
-        initParticipatingActors( participations, planService, planParticipationService );
+        initParticipatingActors( serverUrl, participations, planService, planParticipationService );
         this.actors = getActors( participations );
-        initData( planService, planParticipationService );
+        initData( serverUrl, planService, planParticipationService );
     }
 
     public ProceduresData(
+            String serverUrl,
             Plan plan,
             Actor actor,
             PlanService planService,
@@ -78,13 +80,13 @@ public class ProceduresData  implements Serializable {
         this.plan = plan;
         this.actors = new ArrayList<Actor>();
         actors.add( actor );
-        initData( planService, planParticipationService );
+        initData( serverUrl, planService, planParticipationService );
     }
 
-    private void initData( PlanService planService, PlanParticipationService planParticipationService ) {
-        initProcedures( planService, planParticipationService );
+    private void initData( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+        initProcedures( serverUrl, planService, planParticipationService );
         initEmployments( planService, planParticipationService );
-        environmentData =  new EnvironmentData( this, planService );
+        environmentData =  new EnvironmentData( serverUrl, this, planService );
     }
 
     private void initEmployments( PlanService planService, PlanParticipationService planParticipationService ) {
@@ -95,7 +97,7 @@ public class ProceduresData  implements Serializable {
             }
     }
 
-    private void initProcedures( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initProcedures( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
         procedures = new ArrayList<ProcedureData>();
         Commitments allCommitments = planService.getAllCommitments( true, false );
         Set<Assignment> assignments = new HashSet<Assignment>();
@@ -106,6 +108,7 @@ public class ProceduresData  implements Serializable {
         }
         for ( Assignment assignment : assignments ) {
             procedures.add( new ProcedureData(
+                    serverUrl,
                     assignment,
                     allCommitments.benefiting( assignment ),
                     allCommitments.committing( assignment ),
@@ -116,6 +119,7 @@ public class ProceduresData  implements Serializable {
     }
 
     private void initParticipatingActors(
+            String serverUrl,
             List<PlanParticipation> participations,
             PlanService planService,
             PlanParticipationService planParticipationService ) {
@@ -183,4 +187,5 @@ public class ProceduresData  implements Serializable {
     public ChannelsUser getUser() {
         return user;
     }
+
 }

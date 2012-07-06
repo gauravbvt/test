@@ -30,8 +30,8 @@ public class OrganizationData extends ModelEntityData {
     public OrganizationData() {
     }
 
-    public OrganizationData( ModelObject modelObject, PlanService planService ) {
-        super( modelObject, planService.getPlan() );
+    public OrganizationData( String serverUrl, ModelObject modelObject, PlanService planService ) {
+        super( serverUrl, modelObject, planService.getPlan() );
         init( planService );
     }
 

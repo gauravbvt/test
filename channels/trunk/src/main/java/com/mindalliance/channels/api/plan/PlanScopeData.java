@@ -56,19 +56,19 @@ public class PlanScopeData  implements Serializable {
         // required for JAXB
     }
 
-    public PlanScopeData( Plan plan, PlanService planService ) {
+    public PlanScopeData( String serverUrl, Plan plan, PlanService planService ) {
         this.plan = plan;
         cache = new HashMap<Long, ModelObjectData>();
-        init( planService );
+        init( serverUrl, planService );
     }
 
-    private void init( PlanService planService ) {
-        initPhases( planService );
-        initPlaces( planService );
-        initEvents( planService );
-        initRoles( planService );
-        initOrgs( planService );
-        initActors( planService );
+    private void init( String serverUrl, PlanService planService ) {
+        initPhases( serverUrl, planService );
+        initPlaces( serverUrl, planService );
+        initEvents( serverUrl, planService );
+        initRoles( serverUrl,planService );
+        initOrgs( serverUrl,planService );
+        initActors( serverUrl,planService );
         initEmployments( planService );
     }
 
@@ -83,55 +83,55 @@ public class PlanScopeData  implements Serializable {
 
     }
 
-    private void initActors( PlanService planService ) {
+    private void initActors( String serverUrl, PlanService planService ) {
         actors = new ArrayList<AgentData>();
         for ( Actor actor : planService.list( Actor.class ) ) {
             if ( !actor.isUnknown() && !actor.isUniversal() )
-                actors.add( cache( actor, new AgentData( actor, plan ) ) );
+                actors.add( cache( actor, new AgentData( serverUrl,actor, plan ) ) );
         }
 
     }
 
-    private void initOrgs( PlanService planService ) {
+    private void initOrgs( String serverUrl, PlanService planService ) {
         orgs = new ArrayList<OrganizationData>();
         for ( Organization org : planService.list( Organization.class ) ) {
             if ( !org.isUnknown() && !org.isUniversal() )
-                orgs.add( cache( org, new OrganizationData( org, planService ) ) );
+                orgs.add( cache( org, new OrganizationData( serverUrl,org, planService ) ) );
         }
 
     }
 
-    private void initRoles( PlanService planService ) {
+    private void initRoles( String serverUrl, PlanService planService ) {
         roles = new ArrayList<RoleData>();
         for ( Role role : planService.list( Role.class ) ) {
             if ( !role.isUnknown() && !role.isUniversal() )
-                roles.add( cache( role, new RoleData( role, plan ) ) );
+                roles.add( cache( role, new RoleData( serverUrl,role, plan ) ) );
         }
 
     }
 
-    private void initEvents( PlanService planService ) {
+    private void initEvents( String serverUrl, PlanService planService ) {
         events = new ArrayList<EventData>();
         for ( Event event : planService.list( Event.class ) ) {
             if ( !event.isUnknown() && !event.isUniversal() )
-                events.add( cache( event, new EventData( event, plan ) ) );
+                events.add( cache( event, new EventData( serverUrl,event, plan ) ) );
         }
 
     }
 
-    private void initPlaces( PlanService planService ) {
+    private void initPlaces( String serverUrl, PlanService planService ) {
         places = new ArrayList<PlaceData>();
         for ( Place place : planService.list( Place.class ) ) {
             if ( !place.isUnknown() && !place.isUniversal() )
-                places.add( cache( place, new PlaceData( place, plan ) ) );
+                places.add( cache( place, new PlaceData( serverUrl,place, plan ) ) );
         }
     }
 
-    private void initPhases( PlanService planService ) {
+    private void initPhases( String serverUrl, PlanService planService ) {
         phases = new ArrayList<PhaseData>();
         for ( Phase phase : planService.list( Phase.class ) ) {
             if ( !phase.isUnknown() && !phase.isUniversal() )
-                phases.add( cache( phase, new PhaseData( phase, plan ) ) );
+                phases.add( cache( phase, new PhaseData( serverUrl,phase, plan ) ) );
         }
     }
 

@@ -23,8 +23,8 @@ public class RoleData extends ModelEntityData {
         // required
     }
 
-    public RoleData( ModelObject modelObject, Plan plan ) {
-        super( modelObject, plan );
+    public RoleData( String serverUrl, ModelObject modelObject, Plan plan ) {
+        super( serverUrl, modelObject, plan );
     }
 
     @Override

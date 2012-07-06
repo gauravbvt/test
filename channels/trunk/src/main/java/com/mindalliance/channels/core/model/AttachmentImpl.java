@@ -96,6 +96,11 @@ public class AttachmentImpl implements Attachment {
     }
 
     @Override
+    public boolean isUploaded() {
+        return !url.toLowerCase().startsWith( "http" );
+    }
+
+    @Override
     public boolean isInfoStandards() {
         return type == Type.InfoStandards;
     }

@@ -24,31 +24,37 @@ public class InfoDiscoveredData  implements Serializable {
     private ChannelsUser user;
     private TaskData doingTaskData;
     private TaskData followUpTaskData;
+    private DocumentationData documentation;
 
     public InfoDiscoveredData() {
         // required
     }
 
-    public InfoDiscoveredData( Flow notificationToSelf,
+    public InfoDiscoveredData(
+            String serverUrl,
+            Flow notificationToSelf,
                                QueryService queryService,
                                PlanParticipationService planParticipationService,
                                ChannelsUser user ) {
         this.notificationToSelf = notificationToSelf;
         this.user = user;
-        initData( queryService, planParticipationService );
+        initData( serverUrl, queryService, planParticipationService );
     }
 
-    private void initData( QueryService queryService, PlanParticipationService planParticipationService ) {
+    private void initData( String serverUrl, QueryService queryService, PlanParticipationService planParticipationService ) {
         doingTaskData = new TaskData(
+                serverUrl,
                 (Part)notificationToSelf.getSource(),
                 queryService,
                 planParticipationService,
                 user );
         followUpTaskData = new TaskData(
+                serverUrl,
                 (Part)notificationToSelf.getTarget(),
                 queryService,
                 planParticipationService,
                 user );
+        documentation = new DocumentationData( serverUrl, notificationToSelf );
     }
 
     @XmlElement
@@ -68,7 +74,7 @@ public class InfoDiscoveredData  implements Serializable {
 
     @XmlElement
     public DocumentationData getDocumentation() {
-        return new DocumentationData( notificationToSelf );
+        return documentation;
     }
 
 }

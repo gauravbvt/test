@@ -36,19 +36,21 @@ public class IssuesData  implements Serializable {
     }
 
     public IssuesData(
+            String serverUrl,
             PlanService planService,
             Analyst analyst,
             ChannelsUserDao userDao,
             PlanParticipationService planParticipationService ) {
-        init( planService, analyst, userDao, planParticipationService );
+        init( serverUrl, planService, analyst, userDao, planParticipationService );
     }
 
     private void init(
+            String serverUrl,
             PlanService planService,
             Analyst analyst,
             ChannelsUserDao userDao,
             PlanParticipationService planParticipationService ) {
-        planSummaryData = new PlanSummaryData( planService, userDao, planParticipationService );
+        planSummaryData = new PlanSummaryData( serverUrl, planService, userDao, planParticipationService );
         planMetricsData = new PlanMetricsData( planService );
         initIssues( planService, analyst );
     }

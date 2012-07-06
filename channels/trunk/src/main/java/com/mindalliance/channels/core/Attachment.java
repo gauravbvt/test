@@ -133,4 +133,7 @@ public interface Attachment extends Serializable, Comparable<Attachment> {
      * @return a boolean
      */
     boolean isTags();
+
+    boolean isUploaded();
+
 }

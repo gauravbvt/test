@@ -20,24 +20,27 @@ import java.util.List;
  */
 public class DocumentationData  implements Serializable {
 
-    private Attachable attachable;
+    private List<DocumentData> documents;
 
     public DocumentationData() {
         // required
     }
 
-    public DocumentationData( Attachable attachable ) {
-        this.attachable = attachable;
+    public DocumentationData( String serverUrl, Attachable attachable ) {
+        initDocuments( serverUrl, attachable );
+    }
+
+    private void initDocuments( String serverUrl, Attachable attachable ) {
+        documents = new ArrayList<DocumentData>(  );
+        for ( Attachment attachment : attachable.getAttachments() ) {
+            documents.add( new DocumentData( serverUrl, attachment ) );
+        }
     }
 
     @XmlElement
     public List<DocumentData> getDocuments() {
-        List<DocumentData> documents = new ArrayList<DocumentData>(  );
-        for ( Attachment attachment : attachable.getAttachments() ) {
-            documents.add( new DocumentData( attachment ) );
-        }
         return documents;
-    }
+     }
 
     @SuppressWarnings( "unchecked" )
     public List<DocumentData> reportableDocuments() {

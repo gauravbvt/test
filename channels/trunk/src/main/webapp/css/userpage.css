@@ -532,7 +532,7 @@ div.aboutplan-quickicons {
 }
 
 div.about-plan {
-    border-bottom: 1px solid #CCCCCC;
+    /* border-bottom: 1px solid #CCCCCC; */ /* interferes with .plan-references top border */
     float: left;
     margin: 0 53px 0 35px;
     padding: 14px 0 26px;

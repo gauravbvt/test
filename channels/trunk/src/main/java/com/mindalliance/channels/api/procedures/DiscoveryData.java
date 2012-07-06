@@ -17,7 +17,7 @@ import java.io.Serializable;
  * Date: 12/6/11
  * Time: 12:49 PM
  */
-public class DiscoveryData  implements Serializable {
+public class DiscoveryData implements Serializable {
 
     private ChannelsUser user;
     private Flow notificationToSelf;
@@ -29,25 +29,27 @@ public class DiscoveryData  implements Serializable {
     }
 
 
-    public DiscoveryData( Flow notificationToSelf,
-                          QueryService queryService,
-                          PlanParticipationService planParticipationService,
-                          ChannelsUser user ) {
+    public DiscoveryData(
+            String serverUrl,
+            Flow notificationToSelf,
+            QueryService queryService,
+            PlanParticipationService planParticipationService,
+            ChannelsUser user ) {
         this.notificationToSelf = notificationToSelf;
         this.user = user;
-        initData( queryService, planParticipationService );
+        initData( serverUrl, queryService, planParticipationService );
     }
 
-    private void initData( QueryService planService, PlanParticipationService planParticipationService ) {
+    private void initData( String serverUrl, QueryService planService, PlanParticipationService planParticipationService ) {
         if ( notificationToSelf != null ) {
-            infoDiscoveredData = new InfoDiscoveredData( notificationToSelf, planService, planParticipationService, user );
+            infoDiscoveredData = new InfoDiscoveredData( serverUrl, notificationToSelf, planService, planParticipationService, user );
             followUpTask = new TaskData(
-                    (Part)notificationToSelf.getTarget(),
+                    serverUrl,
+                    (Part) notificationToSelf.getTarget(),
                     planService,
                     planParticipationService,
                     user );
-        }
-        else
+        } else
             infoDiscoveredData = null;
     }
 
@@ -58,10 +60,10 @@ public class DiscoveryData  implements Serializable {
     }
 
     public TaskData getFollowUpTask() {
-          return followUpTask;
+        return followUpTask;
     }
 
     public Part getDiscoveringPart() {
-        return (Part)notificationToSelf.getSource();
+        return (Part) notificationToSelf.getSource();
     }
 }

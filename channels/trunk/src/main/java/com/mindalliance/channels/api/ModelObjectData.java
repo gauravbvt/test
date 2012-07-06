@@ -20,16 +20,18 @@ abstract public class ModelObjectData  implements Serializable {
     private ModelObject modelObject;
     private Plan plan;
     private DocumentationData documentation;
+    private String serverUrl;
 
     protected ModelObjectData(  ) {
         // required
     }
 
-    public ModelObjectData( ModelObject modelObject, Plan plan ) {
+    public ModelObjectData( String serverUrl, ModelObject modelObject, Plan plan ) {
+        this.serverUrl = serverUrl;
         assert modelObject != null;
          this.modelObject = modelObject;
         this.plan = plan;
-        documentation = new DocumentationData(  modelObject );
+        documentation = new DocumentationData(  serverUrl, modelObject );
     }
 
     public long getId() {
@@ -54,6 +56,10 @@ abstract public class ModelObjectData  implements Serializable {
 
     protected Plan getPlan() {
         return plan;
+    }
+
+    protected String getServerUrl() {
+        return serverUrl;
     }
 
 }
