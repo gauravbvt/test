@@ -151,8 +151,8 @@ public class ContactData implements Serializable {
         if ( url != null ) {
             String prefix = serverUrl.endsWith( "/" ) ? serverUrl : ( serverUrl + "/" );
             pictureUrl = StringEscapeUtils.escapeXml( url.toLowerCase().startsWith( "http" )
-                    ? prefix + url
-                    : url );
+                    ? url
+                    : prefix + url );
         }
     }
 
