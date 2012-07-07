@@ -4,7 +4,7 @@
         <include pattern="com.mindalliance.channels.api.ChannelsService"/>
         <include pattern="com.mindalliance.channels.api.ChannelsServiceImpl"/>
     </api-classes>
-    <webapp mergeWebXML="src/main/webapp/WEB-INF/web.xml">
+    <webapp mergeWebXML="src/main/web.xml">
         <globalServletFilter name="securityFilter" classname="org.springframework.web.filter.DelegatingFilterProxy"/>
     </webapp>
     <namespaces>

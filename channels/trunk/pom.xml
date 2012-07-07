@@ -276,6 +276,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
 
         <!-- HIBERNATE DEPENDENCIES -->
         <dependency>
@@ -477,7 +483,7 @@
         <dependency>
             <groupId>org.codehaus.enunciate</groupId>
             <artifactId>enunciate-spring-app-rt</artifactId>
-            <version>1.24</version>
+            <version>1.25</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -495,6 +501,22 @@
                 <exclusion>
                     <groupId>org.codehaus.jackson</groupId>
                     <artifactId>jackson-mapper-asl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -518,6 +540,12 @@
             <groupId>info.bliki.wiki</groupId>
             <artifactId>bliki-addons</artifactId>
             <version>3.0.17</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -560,12 +588,13 @@
             <plugin>
                 <groupId>org.codehaus.enunciate</groupId>
                 <artifactId>maven-enunciate-spring-plugin</artifactId>
-                <version>1.24</version>
+                <version>1.25</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>assemble</goal>
                         </goals>
+                        <phase>prepare-package</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -612,24 +641,6 @@
                     <contextPath>${contextPath}</contextPath>
                     <webAppSourceDirectory>${project.build.directory}/${project.build.finalName}</webAppSourceDirectory>
                     <scanIntervalSeconds>0</scanIntervalSeconds>
-
-                    <!--
-                                        <scanIntervalSeconds>10</scanIntervalSeconds>
-                    -->
-                    <!--<scanTargets>-->
-                    <!--<scanTarget>src/main/resources</scanTarget>-->
-                    <!--</scanTargets>-->
-                    <!--<scanTargetPatterns>-->
-                    <!--<scanTargetPattern>-->
-                    <!--<directory>src/main/java</directory>-->
-                    <!--<includes>-->
-                    <!--<include>**/*.html</include>-->
-                    <!--</includes>-->
-                    <!--<excludes>-->
-                    <!--<exclude>**/package.html</exclude>-->
-                    <!--</excludes>-->
-                    <!--</scanTargetPattern>-->
-                    <!--</scanTargetPatterns>-->
                     <connectors>
                         <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
                             <port>8081</port>
@@ -638,14 +649,6 @@
                     </connectors>
                     <stopPort>8082</stopPort>
                     <stopKey>CloseSesame</stopKey>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>tomcat-maven-plugin</artifactId>
-                <configuration>
-                    <server>tomcat</server>
-                    <path>${contextPath}</path>
                 </configuration>
             </plugin>
             <plugin>
@@ -787,16 +790,77 @@
             </build>
         </profile>
         <profile>
-            <!-- Deploy to tomcat running on localhost:80 -->
-            <id>tomcat-80</id>
+            <!-- Magically deploy to a new local tomcat6 instance on port 8080 -->
+            <id>tomcat-standalone</id>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>tomcat-maven-plugin</artifactId>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven2-plugin</artifactId>
                         <configuration>
-                            <server>tomcat</server>
-                            <url>http://localhost:80/manager</url>
+                            <wait>true</wait>
+                            <container>
+                                <containerId>tomcat6x</containerId>
+                                <zipUrlInstaller>
+                                    <url>http://mirror.nexcess.net/apache/tomcat/tomcat-6/v6.0.35/bin/apache-tomcat-6.0.35.zip</url>
+                                    <downloadDir>${project.build.directory}/downloads</downloadDir>
+                                    <extractDir>${project.build.directory}/extracts</extractDir>
+                                </zipUrlInstaller>
+                            </container>
+                            
+                            <configuration>
+                                <properties>
+                                    <cargo.jvmargs>
+                                        -Djava.awt.headless=true -Xmx512m -XX:MaxPermSize=256M
+                                    </cargo.jvmargs>
+                                    <!--<cargo.protocol>https</cargo.protocol>-->
+                                    <!--<cargo.servlet.port>8443</cargo.servlet.port>-->
+                                </properties>
+
+                                <deployables>
+                                    <deployable>
+                                        <type>war</type>
+                                        <properties>
+                                            <context>${contextPath}</context>
+                                        </properties>
+                                    </deployable>
+                                </deployables>
+                            </configuration>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>tomcat</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven2-plugin</artifactId>
+                        <configuration>
+                            <wait>true</wait>
+                            <container>
+                                <containerId>tomcat6x</containerId>
+                                <type>remote</type>
+                            </container>
+
+                            <configuration>
+                                <type>runtime</type>
+                                <properties>
+                                    <cargo.server.settings>localhost</cargo.server.settings>
+                                </properties>
+                            </configuration>
+                            <deployer>
+                                <type>remote</type>
+                                <deployables>
+                                    <deployable>
+                                        <properties>
+                                            <context>${contextPath}</context>
+                                        </properties>
+                                    </deployable>
+                                </deployables>
+                            </deployer>
                         </configuration>
                     </plugin>
                 </plugins>
