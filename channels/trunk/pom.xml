@@ -623,6 +623,7 @@
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
+                    <webXml>${project.build.directory}/${build.finalName}/WEB-INF/web.xml</webXml>
                     <webResources>
                         <resource>
                             <directory>src/docbkx</directory>
@@ -643,7 +644,7 @@
                     <scanIntervalSeconds>0</scanIntervalSeconds>
                     <connectors>
                         <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                            <port>8081</port>
+                            <port>8080</port>
                             <maxIdleTime>60000</maxIdleTime>
                         </connector>
                     </connectors>
