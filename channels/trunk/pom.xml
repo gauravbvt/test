@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -60,8 +61,8 @@
         <url>https://wush.net/trac/mindalliance/report/1</url>
     </issueManagement>
     <ciManagement>
-        <system>Hudson</system>
-        <url>/hudson/job/channels/</url>
+        <system>Jenkins</system>
+        <url>/jenkins/job/channels/</url>
     </ciManagement>
     <scm>
         <developerConnection>scm:svn:https://wush.net/svn/mindalliance/channels/trunk
@@ -72,18 +73,29 @@
 
     <repositories>
         <repository>
-            <id>googlecode</id>
-            <url>http://jqwicket.googlecode.com/svn/m2-repo/releases/</url>
+            <id>MAS</id>
+            <url>https://dev.mind-alliance.com/maven/repository</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
         </repository>
         <repository>
-            <id>spring-milestone</id>
-            <name>Spring Maven MILESTONE Repository</name>
-            <url>http://maven.springframework.org/milestone</url>
+            <id>googlecode</id>
+            <url>http://jqwicket.googlecode.com/svn/m2-repo/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>maven-central</id>
             <name>Maven Central</name>
             <url>https://repository.jboss.org/nexus/content/repositories/central/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>info-bliki-repository</id>
