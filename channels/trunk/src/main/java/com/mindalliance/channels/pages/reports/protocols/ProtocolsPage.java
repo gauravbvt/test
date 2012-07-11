@@ -112,7 +112,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         intermediates.add( new PagePathItem(
                 AllProtocolsPage.class,
                 getParameters(),
-                "All info sharing protocols" ) );
+                "All collaboration protocols" ) );
         return intermediates;
     }
 

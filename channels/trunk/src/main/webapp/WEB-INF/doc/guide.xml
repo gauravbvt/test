@@ -7,33 +7,89 @@
 * shortcuts into Channels,
 * follow-up topics.
     </description>
-    <group id="concepts">
-        <name>Key concepts</name>
+    <group id="about-channels">
+        <name>About Channels</name>
         <activity id="channels">
-            <name>About Channels</name>
+            <name>Designing collaboration plans</name>
             <step>
-                <description>Planners use Channels to capture how organizations share or ought to share information to jointly and successfully prevent, respond to, or recover from events that test their missions.
-
-Channels continuously examines these ''information sharing plans'' for gaps and brittleness, and suggests options for remediation.
-
-Channels produces visualizations, analytics and reports that help planners and stakeholders understand and improve complex plans. 
-
-Channels computes personalized information sharing protocols and serves them to plan participants.
-
-Channels is a ''planning'' tool. It is used to understand and improve the information sharing ''practices'' of organizations, not for managing the ''actual'' sharing of information.
+                <description>Planners use Channels to design generally applicable collaboration plans from which robust collaboration protocols are generated.
+                    
+A collaboration plan models how various types of organizations share or ought to share information to collaboratively prevent, respond to, or recover from a number of anticipated events that test their missions.
+                    
+Channels continuously examines these ''collaboration models'' for gaps and brittleness, and suggests options for remediation.
+                    
+Channels produces visualizations, analytics and reports that help planners and stakeholders understand and improve complex collaboration plans.               
+                
+Channels is a ''planning'' tool.  It does not manage the ''actual'' sharing of information. It is used to capture and improve the collaboration ''practices'' of organizations and to adaptively produce collaboration protocols.
+                </description>           
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02.html this]</description>
+            </step>
+        </activity>
+        <activity id="protocols">
+            <name>Generating collaboration protocols</name>
+            <step>
+                <description>Channels computes personalized collaboration protocols and serves them to plan participants on demand.
+                    
+As a user's participation in a plan changes, often as events unfold, Channels automatically adapts and updates the user's protocols.
                 </description>
             </step>
             <step>
                 <description>For more information, see [${helpUrl}/ch02.html this]</description>
             </step>
         </activity>
-        <activity id="plan">
-            <name>Information sharing plan</name>
+        <activity>
+            <name>Development team</name>
             <step>
-                <description>A plan is the combination of
+                <description>
+* Jean-François Cloutier
+* Denis Ranger
+* Romit Chatterjee
+* Priyanka Gurav (AFourTech)
+* Mahesh Kulkarni (AFourTech)
+                </description>
+            </step>
+        </activity>
+        <activity id="attributions">
+            <name>Attributions</name>
+            <step>
+                <description>Channels is built using these open source code libraries:
+* Apache Commons [http://commons.apache.org/]
+* Apache Lucene [http://lucene.apache.org/core/]
+* Apache Velocity [http://velocity.apache.org/]
+* Apache Wicket [http://wicket.apache.org/]
+* AOPAlliance [http://aopalliance.sourceforge.net/]
+* AspectJ [http://www.eclipse.org/aspectj/]
+* Bliki wiki [http://code.google.com/p/gwtwiki/]
+* EhCache [http://ehcache.org/]
+* Enunciate [http://enunciate.codehaus.org/]
+* Geonames [http://www.geonames.org/]
+* GraphViz [http://www.graphviz.org/]
+* Hibernate [http://www.hibernate.org/]
+* H2 [http://www.h2database.com/html/main.html]
+* Jamon [http://jamonapi.sourceforge.net/]
+* JWNL [http://sourceforge.net/projects/jwordnet/]
+* SLF4J [http://www.slf4j.org/]
+* JQWicket [http://code.google.com/p/jqwicket/]
+* Spring Framework [http://www.springsource.org/spring-framework/]
+* WordNet [http://wordnet.princeton.edu/]
+* XStream [http://xstream.codehaus.org/]
+
+Our thanks and admiration to all who contributed to these libraires.
+                </description>
+            </step>
+        </activity>
+    </group>
+    <group id="concepts">
+        <name>Key concepts</name>
+        <activity id="plan">
+            <name>Collaboration plan</name>
+            <step>
+                <description>A collaboration plan is the combination of
 # a model of how information is to be acquired and shared so that tasks that achieve organizational goals can be successfully carried out
 # an environment that identifies the plan's participants, namely, people and systems in roles of responsibility within organizations
-Applying an environment to a model produces visualizations, analytics, diagnostics, reports and information sharing protocols.
+Applying an environment to a collaboration model produces visualizations, analytics, diagnostics, reports and collaboration protocols.
                 </description>
             </step>
             <step>
@@ -58,7 +114,7 @@ From the point of view of the plan, an event is considered an ''incident'' if it
             <step>
                 <description>A phase is a named time period relative to the occurrence of events. A phase is either the time before, during or after events.
 
-A plan can elect to address what happens before, during or after of events, or a combination thereof.
+A collaboration plan can elect to address what happens before, during or after of events, or a combination thereof.
                 </description>
             </step>
             <step>
@@ -68,7 +124,7 @@ A plan can elect to address what happens before, during or after of events, or a
         <activity id="scenario">
             <name>Scenario</name>
             <step>
-                <description>The term ''scenario'' is used in information sharing planning to mean one phase of one event, possibly in the context of other past or current events.                
+                <description>The term ''scenario'' is used in collaboration planning to mean one phase of one event, possibly in the context of other past or current events.                
                 </description>
             </step>
             <step>
@@ -96,7 +152,7 @@ Goals are achieved by carrying out tasks, or when an event terminates.
         <activity id="segment">
             <name>Segment</name>
             <step>
-                <description>Plans are composed of one or more or more segments. Each segment addresses a list of organizational goals for one scenario.
+                <description>Collaboration plans are composed of one or more or more segments. Each segment addresses a list of organizational goals for one scenario.
 
 No two segments should address identical goals in identical scenarios.
                 </description>
@@ -108,7 +164,7 @@ No two segments should address identical goals in identical scenarios.
         <activity id="information">
             <name>Information</name>
             <step>
-                <description>Information is what is shared by agents (people or systems) via communication channels.
+                <description>Information is what is shared by collaborating agents (people or systems) via communication channels.
                     
 Information is named and can be described by a list of essential elements.
 
@@ -217,7 +273,7 @@ An element of information also has a name and can be accompanied by handling ins
         <activity id="phases">
             <name>Name all phases</name>
             <step>
-                <description><![CDATA[Name the '''phases''' within the scope of the plan. Channels will now expect to see at least one segment for each combination of phase and event in scope.
+                <description><![CDATA[Name the '''phases''' within the scope of the collaboration plan. Channels will now expect to see at least one segment for each combination of phase and event in scope.
 The list is part of the plan's ''details''.]]></description>
                 <script>
                     <action>Edit list of phases in scope</action>
@@ -257,7 +313,7 @@ The list is part of the plan's ''details''.]]></description>
         <activity id="requirements">
             <name>Define requirements</name>
             <step>
-                <description><![CDATA[Specify the information sharing commitments between organizations that the plan is required to generate.]]></description>
+                <description><![CDATA[Specify the information sharing commitments between organizations that the collaboration plan is required to generate.]]></description>
                 <script>
                     <action>Access requirement definitions</action>
                     <change>
@@ -750,7 +806,7 @@ Note that all profile attributes are optional.]]>
         <activity id="all-issues">
             <name>Resolve issues</name>
             <step>
-                <description>An obvious way of improving a plan is to resolve issues detected by Channels or by planners. The 'All issues" table aggregates all individual issues found in a plan.</description>
+                <description>An obvious way of improving a collaboration plan is to resolve issues detected by Channels or by planners. The 'All issues" table aggregates all individual issues found in a plan.</description>
                 <script>
                     <action>Open the All Issues table</action>
                     <change>
@@ -760,7 +816,7 @@ Note that all profile attributes are optional.]]>
                 </script>
             </step>
             <step>
-                <description>Metrics on all issues found in a plan provides a sense of the current quality of the plan.</description>
+                <description>Metrics on all issues found in a plan provides a sense of the current quality of the collaboration plan.</description>
                 <script>
                     <action>See plan evaluation</action>
                     <change>
@@ -806,7 +862,7 @@ Note that all profile attributes are optional.]]>
         <activity id="tune-task-flow-definition">
             <name>Adjust assignments and commitments</name>
             <step>
-                <description>Information sharing protocols are computed by assigning agents to tasks and by deriving information sharing commitments from the flows connecting assigned tasks.
+                <description>Collaboration protocols are computed by assigning agents to tasks and by deriving information sharing commitments from the flows connecting assigned tasks.
                     
 A key concern is making sure that the right agents get assigned to the right tasks, and that only the right agents that are assigned to the tasks on each side of a flow become parties to sharing commitments.
                 
@@ -856,7 +912,7 @@ Agents are categorized by agent types, organization by organization types, event
 
 How entities are categorized largely determine the meaning of the tasks, flows, employments etc. that are defined in terms of these entities.
 
-The meaning of a plan boils down to the task assignments and consequent sharing commitments (protocols) that are implied by the plan. 
+The meaning of a plan boils down to the task assignments and consequent sharing commitments (protocols) that are implied by the collaboration plan. 
 Even a small change to the taxonomy (a.k.a. typology) or roles, for example, can cause widespread changes to the protocols computed from a plan and thus its meaning.
                 
 Taxonomies are defined implictly by categorizing individual entities. Taxonomies can be visualized to verify that they are correct.
@@ -987,7 +1043,7 @@ The questionnaire can be modified and extended while the survey is ongoing.
 
 An issue remediation survey is automatically deactivated when the issue disappears.
 
-Note that the issue remediation questionnaires are  by default not shown in the list of all questionnaires; a checkbox must be checked to see them.
+Note that the issue remediation questionnaires are by default not shown in the list of all questionnaires; a checkbox must be checked to see them.
                 </description>
                 <script>
                     <action>See all remediation questionnaires</action>

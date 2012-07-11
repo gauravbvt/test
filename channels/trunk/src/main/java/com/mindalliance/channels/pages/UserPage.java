@@ -247,7 +247,7 @@ public class UserPage extends AbstractChannelsBasicPage {
 
     private String getGotoGuidelinesDescription( ChannelsUser user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
-                ? "Set how users participate in the plan and view their information sharing protocols."
+                ? "Set how users participate in the plan and view their collaboration protocols."
                 : "View all tasks and related communications assigned to me according to my participation in this plan.";
     }
 
@@ -343,10 +343,10 @@ public class UserPage extends AbstractChannelsBasicPage {
 
     private String getGotoModelDescription( ChannelsUser user, Plan plan ) {
         return user.isPlanner( plan.getUri() ) && getPlan().isDevelopment()
-                ? "Build or modify the information sharing plan.\n" +
-                " (Requires a standards-compliant browser such as Internet Explorer 8+ and Firefox 3+.)"
-                : "View the information sharing plan.\n" +
-                "  (Requires a standards-compliant browser such as Internet Explorer 8+ and Firefox 3+.)";
+                ? "Build or modify the collaboration plan.\n" +
+                " (Requires a modern, standards-compliant browser (Internet Explorer 7 is not supported)"
+                : "View the collaboration plan.\n" +
+                "  (Requires a modern, standards-compliant browser (Internet Explorer 7 is not supported)";
     }
 
     private void addSocial() {

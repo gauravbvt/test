@@ -471,7 +471,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         sb.append( plan.getClient() );
         sb.append( " invites you to participate in a survey about the \"" )
                 .append( plan.getName() )
-                .append( "\" information sharing plan.\n\n" );
+                .append( "\" collaboration plan.\n\n" );
         if ( !plan.getDescription().isEmpty() ) {
             sb.append( "About the plan: " )
                     .append( plan.getDescription() )

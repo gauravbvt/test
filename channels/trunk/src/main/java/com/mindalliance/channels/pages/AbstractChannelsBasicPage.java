@@ -135,7 +135,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
 
     private void addPageTitle() {
         add( new Label( "sg-title",
-                new Model<String>( "Channels - Information Sharing Planning" ) ) );
+                new Model<String>( "Channels - Collaboration Planning" ) ) );
 
     }
 
