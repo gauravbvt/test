@@ -12,7 +12,7 @@
         <activity id="channels">
             <name>Designing collaboration plans</name>
             <step>
-                <description>Planners use Channels to design generally applicable collaboration plans from which robust collaboration protocols are generated.
+                <description>Planners use Channels to design collaboration plans from which robust collaboration protocols are generated.
                     
 A collaboration plan models how various types of organizations share or ought to share information to collaboratively prevent, respond to, or recover from a number of anticipated events that test their missions.
                     
@@ -30,9 +30,9 @@ Channels is a ''planning'' tool.  It does not manage the ''actual'' sharing of i
         <activity id="protocols">
             <name>Generating collaboration protocols</name>
             <step>
-                <description>Channels computes personalized collaboration protocols and serves them to plan participants on demand.
+                <description>Channels computes personalized collaboration protocols from a collaboration plan and serves them to plan participants on demand.
                     
-As a user's participation in a plan changes, often as events unfold, Channels automatically adapts and updates the user's protocols.
+As a user's participation in a plan changes, even as events unfold, Channels automatically adapts and updates the user's protocols.
                 </description>
             </step>
             <step>
