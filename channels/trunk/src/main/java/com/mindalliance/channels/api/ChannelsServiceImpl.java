@@ -493,7 +493,7 @@ public class ChannelsServiceImpl implements ChannelsService {
 
     @Override
     public boolean invite(  String uri, String email, String message ) {
-        LOG.info( "Removing user participation in production plan " + uri );
+        LOG.info( "Inviting user to participate in plan " + uri );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
             PlanService planService = authorizeParticipant( user, uri );

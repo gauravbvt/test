@@ -34,7 +34,7 @@ import java.util.Set;
  * Time: 12:25 PM
  */
 @XmlRootElement( name = "procedures", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"date", "planIdentifier", "dateVersioned", "actorIds", "employments", "procedures", "environment"} )
+@XmlType( propOrder = {"date", "planIdentifier", "userEmail", "dateVersioned", "actorIds", "employments", "procedures", "environment"} )
 public class ProceduresData  implements Serializable {
 
     private Plan plan;
@@ -174,6 +174,11 @@ public class ProceduresData  implements Serializable {
     @XmlElement
     public EnvironmentData getEnvironment() {
         return environmentData;
+    }
+
+    @XmlElement
+    public String getUserEmail() {
+        return user.getEmail();
     }
 
     private Assignments getActorAssignments( Actor actor, PlanService planService ) {
