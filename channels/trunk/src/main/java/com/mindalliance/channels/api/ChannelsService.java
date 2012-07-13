@@ -182,7 +182,7 @@ public interface ChannelsService {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path( "plan/{uri}/invite")
-    boolean invite( @PathParam("uri") String uri,
+    void invite( @PathParam("uri") String uri,
                       @FormParam("email") String email,
                       @FormParam( "message") String message );
 

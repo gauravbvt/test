@@ -492,7 +492,7 @@ public class ChannelsServiceImpl implements ChannelsService {
     }
 
     @Override
-    public boolean invite(  String uri, String email, String message ) {
+    public void invite(  String uri, String email, String message ) {
         LOG.info( "Inviting user to participate in plan " + uri );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
@@ -500,7 +500,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             Plan plan = planService.getPlan();
             ChannelsUserInfo invitedUser = userDao.getOrMakeUserFromEmail( email, planService );
             message = message + makeInvitation( invitedUser, plan );
-            return emailMessagingService.sendInvitation( user, invitedUser.getEmail(), message );
+            emailMessagingService.sendInvitation( user, invitedUser.getEmail(), message );
 
         } catch ( Exception e ) {
             throw new WebApplicationException(
