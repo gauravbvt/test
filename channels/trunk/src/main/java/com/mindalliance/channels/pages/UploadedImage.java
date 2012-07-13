@@ -1,8 +1,5 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.core.AttachmentManager;
-import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.png.ChannelsDynamicImageResource;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -23,8 +20,8 @@ public class UploadedImage extends ChannelsDynamicImageResource {
 
     static final List<String> IMAGE_EXTENSIONS = Arrays.asList( "png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "svg" );
 
-    public UploadedImage(  ) {
-        super(  );
+    public UploadedImage() {
+        super();
     }
 
     @Override
@@ -34,7 +31,7 @@ public class UploadedImage extends ChannelsDynamicImageResource {
         String extension = FilenameUtils.getExtension( fileName ).toLowerCase();
         try {
             if ( extension.isEmpty() || !IMAGE_EXTENSIONS.contains( extension ) ) {
-               throw new Exception( fileName + " is not an image file" );
+                throw new Exception( fileName + " is not an image file" );
             }
             setFormat( extension );
             File imageFile = getFile( fileName, parameters );
@@ -46,24 +43,9 @@ public class UploadedImage extends ChannelsDynamicImageResource {
     }
 
     @Override
-    public boolean equals(Object that) {
+    public boolean equals( Object that ) {
         return that instanceof UploadedImage;
     }
 
-    protected File getFile( String fileName, PageParameters parameters ) {
-        AttachmentManager attachmentManager = ((Channels)Channels.get()).getAttachmentManager();
-        return new File( attachmentManager.getUploadDirectory( getPlan( parameters ) ), fileName );
-    }
-
-    private Plan getPlan( PageParameters parameters ) {
-        Plan plan;
-        if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.PLAN_PARM ) ) {
-            ChannelsUser  user = ChannelsUser.current( getUserDao() );
-            plan = AbstractChannelsWebPage.getPlanFromParameters( getPlanManager(), user, parameters );
-        } else {
-            plan = ChannelsUser.plan();
-        }
-        return plan;
-    }
 
 }

@@ -492,18 +492,14 @@ public class ChannelsServiceImpl implements ChannelsService {
     }
 
     @Override
-    public boolean invite(  String uri, String email,  String message ) {
+    public boolean invite(  String uri, String email, String message ) {
         LOG.info( "Removing user participation in production plan " + uri );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
             PlanService planService = authorizeParticipant( user, uri );
             Plan plan = planService.getPlan();
             ChannelsUserInfo invitedUser = userDao.getOrMakeUserFromEmail( email, planService );
-            String homePageUrl = serverUrl
-                    + "home?"
-                    + AbstractChannelsWebPage.PLAN_PARM
-                    + "="
-                    + plan.getUri();
+            message = message + makeInvitation( invitedUser, plan );
             return emailMessagingService.sendInvitation( user, invitedUser.getEmail(), message );
 
         } catch ( Exception e ) {
@@ -513,6 +509,34 @@ public class ChannelsServiceImpl implements ChannelsService {
                             .entity( e.getMessage() + " for plan " + uri )
                             .build() );
         }
+    }
+
+    private String makeInvitation( ChannelsUserInfo invitedUser, Plan plan ) {
+        StringBuilder sb = new StringBuilder(  );
+        String homePageUrl = serverUrl
+                + "home?"
+                + AbstractChannelsWebPage.PLAN_PARM
+                + "="
+                + plan.getUri();
+        sb.append( "\n\n ------------------- \n\n")
+                .append( "To participate in the plan " )
+                .append( plan.getName() )
+                .append(  " of " )
+                .append( plan.getClient() )
+                .append( ", go to " )
+                .append( homePageUrl )
+                .append( " and login with your email address " )
+                .append( invitedUser.getEmail() )
+                .append( " as user name" );
+        String newPassword = invitedUser.getGeneratedPassword();
+        if ( newPassword != null ) {
+            sb.append( " and enter password " )
+                    .append( newPassword )
+                    .append( " (You can change your password once logged in.)" );
+        } else {
+            sb.append( "." );
+        }
+       return sb.toString();
     }
 
     @WebMethod( exclude = true )

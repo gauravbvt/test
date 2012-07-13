@@ -1,8 +1,16 @@
 package com.mindalliance.channels.pages.png;
 
+import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
+import com.mindalliance.channels.pages.Channels;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.DynamicImageResource;
+
+import java.io.File;
 
 /**
  * Channels Dynamic Image Resource.
@@ -39,4 +47,23 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
     public void setUserDao( ChannelsUserDao userDao ) {
         this.userDao = userDao;
     }
+
+    protected File getFile( String fileName, PageParameters parameters ) {
+        AttachmentManager attachmentManager = ( (Channels) Channels.get() ).getAttachmentManager();
+        return new File( attachmentManager.getUploadDirectory( getPlan( parameters ) ), fileName );
+    }
+
+    private Plan getPlan( PageParameters parameters ) {
+        Plan plan;
+        if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.PLAN_PARM ) ) {
+            ChannelsUser user = ChannelsUser.current( getUserDao() );
+            plan = AbstractChannelsWebPage.getPlanFromParameters( getPlanManager(), user, parameters );
+            if ( !user.isParticipant( plan.getUri() ) )
+                return null;
+        } else {
+            plan = ChannelsUser.plan();
+        }
+        return plan;
+    }
+
 }

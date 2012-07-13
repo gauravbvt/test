@@ -63,6 +63,7 @@ public class ObservationData  implements Serializable {
     }
 
 
+
     public Set<Long> allPlaceIds() {
         Set<Long> ids = new HashSet<Long>();
         if ( eventPhase != null ) {
@@ -74,6 +75,7 @@ public class ObservationData  implements Serializable {
         return ids;
     }
 
+    @XmlElement
     public String getLabel() {
         return getPrefix() + " " + getScenarioLabel();
     }
