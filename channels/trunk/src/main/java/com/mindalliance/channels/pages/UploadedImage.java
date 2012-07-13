@@ -56,10 +56,12 @@ public class UploadedImage extends ChannelsDynamicImageResource {
     }
 
     private Plan getPlan( PageParameters parameters ) {
-        Plan plan = ChannelsUser.plan();
-        if ( plan == null ) {
+        Plan plan;
+        if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.PLAN_PARM ) ) {
             ChannelsUser  user = ChannelsUser.current( getUserDao() );
             plan = AbstractChannelsWebPage.getPlanFromParameters( getPlanManager(), user, parameters );
+        } else {
+            plan = ChannelsUser.plan();
         }
         return plan;
     }
