@@ -98,7 +98,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Getting summary for plan " + uri + " version " + version );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorizePlanner( user, uri, version );
+            PlanService planService = authorize( user, uri, version );
             return new PlanSummaryData( serverUrl, planService, userDao, planParticipationService );
         } catch ( Exception e ) {
             throw new WebApplicationException(
@@ -161,7 +161,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Getting scope for plan " + uri + " version " + version );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorizePlanner( user, uri, version );
+            PlanService planService = authorize( user, uri, version );
             Plan plan = planService.getPlan();
             return new PlanScopeData( serverUrl, plan, planService );
         } catch ( Exception e ) {
@@ -237,7 +237,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Getting " + username + "'s procedures for plan " + uri + " version " + version );
         try {
             ChannelsUser protocolsUser = userDao.getUserNamed( username );
-            PlanService planService = authorizePlanner( user, uri, version );
+            PlanService planService = authorize( user, uri, version );
             Plan plan = planService.getPlan();
             List<PlanParticipation> participationList = planParticipationService.getParticipations(
                     plan,
@@ -269,7 +269,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         ChannelsUser user = ChannelsUser.current( userDao );
         LOG.info( "Getting procedures of agent " + actorId + " for plan " + uri + " version " + version );
         try {
-            PlanService planService = authorizePlanner( user, uri, version );
+            PlanService planService = authorize( user, uri, version );
             Plan plan = planService.getPlan();
             Actor actor = planService.find( Actor.class, Long.parseLong( actorId ) );
             return new ProceduresData(
@@ -295,7 +295,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             String username ) {
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorizePlanner( user, uri, version );
+            PlanService planService = authorize( user, uri, version );
             ProceduresData proceduresData = getUserProcedures( uri, version, username );
             return new DirectoryData( proceduresData, planService, planParticipationService );
         } catch ( Exception e ) {
@@ -315,7 +315,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             String agentId ) {
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorizePlanner( user, uri, version );
+            PlanService planService = authorize( user, uri, version );
             ProceduresData proceduresData = getAgentProcedures( uri, version, agentId );
             return new DirectoryData( proceduresData, planService, planParticipationService );
         } catch ( Exception e ) {
@@ -364,9 +364,12 @@ public class ChannelsServiceImpl implements ChannelsService {
     }
 
     // Only planners can request access to a specific version of a plan.
-    private PlanService authorizePlanner( ChannelsUser user, String uri, String version ) throws Exception {
+    private PlanService authorize( ChannelsUser user, String uri, String version ) throws Exception {
         Plan plan = planManager.getPlan( uri, Integer.parseInt( version ) );
-        if ( user == null || plan == null || !user.isPlanner( uri ) )
+        if ( user == null
+                || plan == null
+                || ( plan.isDevelopment() && !user.isPlanner( uri ) )
+                || ( plan.isProduction() && !user.isParticipant( uri ) ) )
             throw new Exception( "Unauthorized access to plan " + uri + " version " + version );
         return getPlanService( plan );
     }
@@ -376,7 +379,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Getting issues in plan " + uri + " version " + version );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorizePlanner( user, uri, version );
+            PlanService planService = authorize( user, uri, version );
             return new IssuesData( serverUrl, planService, analyst, userDao, planParticipationService );
         } catch ( Exception e ) {
             throw new WebApplicationException(
@@ -475,10 +478,10 @@ public class ChannelsServiceImpl implements ChannelsService {
                     planService
             );
             if ( planParticipation != null ) {
-            planParticipationService.removeParticipation(
+                planParticipationService.removeParticipation(
                         user.getUsername(),
                         plan,
-                        planParticipation);
+                        planParticipation );
             } else {
                 throw new Exception( "Participation can not be removed" );
             }
@@ -492,7 +495,7 @@ public class ChannelsServiceImpl implements ChannelsService {
     }
 
     @Override
-    public void invite(  String uri, String email, String message ) {
+    public void invite( String uri, String email, String message ) {
         LOG.info( "Inviting user to participate in plan " + uri );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
@@ -512,31 +515,31 @@ public class ChannelsServiceImpl implements ChannelsService {
     }
 
     private String makeInvitation( ChannelsUserInfo invitedUser, Plan plan ) {
-        StringBuilder sb = new StringBuilder(  );
-        String homePageUrl = serverUrl
+        StringBuilder sb = new StringBuilder();
+        String homePageUrl = getServerUrl()
                 + "home?"
                 + AbstractChannelsWebPage.PLAN_PARM
                 + "="
                 + plan.getUri();
-        sb.append( "\n\n ------------------- \n\n")
-                .append( "To participate in the plan " )
+        sb.append( "\n\n------------------- \n\n" )
+                .append( "To participate in the collaboration plan " )
                 .append( plan.getName() )
-                .append(  " of " )
+                .append( " of " )
                 .append( plan.getClient() )
-                .append( ", go to " )
+                .append( ",\ngo to " )
                 .append( homePageUrl )
-                .append( " and login with your email address " )
+                .append( "\nand login with your email address " )
                 .append( invitedUser.getEmail() )
                 .append( " as user name" );
         String newPassword = invitedUser.getGeneratedPassword();
         if ( newPassword != null ) {
-            sb.append( " and enter password " )
+            sb.append( "\nand use this password " )
                     .append( newPassword )
-                    .append( " (You can change your password once logged in.)" );
+                    .append( " (You can change password once logged in.)" );
         } else {
             sb.append( "." );
         }
-       return sb.toString();
+        return sb.toString();
     }
 
     @WebMethod( exclude = true )

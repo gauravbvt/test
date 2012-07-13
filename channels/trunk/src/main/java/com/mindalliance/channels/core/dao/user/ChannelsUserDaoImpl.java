@@ -161,6 +161,7 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
     }
 
     @Override
+    @Transactional
     public ChannelsUserInfo getOrMakeUserFromEmail( String email, QueryService queryService ) {
         ChannelsUserInfo userInfo = null;
         ChannelsUser userFromEmail = getUserNamed( email );
@@ -188,6 +189,7 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
                     planUri,
                     queryService.getPlanManager().getPlans() );
         }
+        save( userInfo );
         return userInfo;
     }
 

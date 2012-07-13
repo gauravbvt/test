@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.services.impl.notification;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
@@ -61,7 +62,8 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
             boolean success = sendEmail( toUser.getEmail(),
                     fromUser == null ? getDefaultFromAddress( getPlan( messageable ) ) : fromUser.getEmail(),
                     subject,
-                    content
+                    content,
+                    false
             );
             notificationSent = notificationSent || success;
         }
@@ -85,7 +87,8 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
                         recipient.getEmail(),
                         plan.getPlannerSupportCommunity( getDefaultSupportCommunity() ),
                         subject,
-                        content );
+                        content,
+                        false);
                 reported = reported || success;
             }
         }
@@ -96,7 +99,8 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
             String toAddress,
             String fromAddress,
             String subject,
-            String content ) {
+            String content,
+            boolean ccSelf ) {
         boolean success = false;
         if ( !fromAddress.equals( toAddress ) && ChannelsUtils.isValidEmailAddress( toAddress ) ) {
             try {
@@ -105,6 +109,9 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
                 if ( ChannelsUtils.isValidEmailAddress( fromAddress ) ) {
                     email.setFrom( fromAddress );
                     email.setReplyTo( fromAddress );
+                }
+                if ( ccSelf ) {
+                    email.setBcc( fromAddress );
                 }
                 email.setSubject( subject );
                 email.setText( content );
@@ -127,4 +134,13 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
     }
 
 
+    @Override
+    public boolean sendInvitation( ChannelsUser fromUser, String emailAddress, String message ) {
+        return sendEmail(
+                emailAddress,
+                fromUser.getEmail(),
+                "Invitation to participate in a collaboration plan",
+                message,
+                true );
+    }
 }

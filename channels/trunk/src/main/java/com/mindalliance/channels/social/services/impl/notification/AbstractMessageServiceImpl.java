@@ -102,6 +102,6 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
 
     @Override
     public boolean sendInvitation( ChannelsUser fromUser, String emailAddress, String message ) {
-        return false;  //todo
+        return false;
     }
 }
