@@ -137,6 +137,7 @@ CONFIGURATION NOTES:
                 <ref bean="paSystem"/>
             </list>
         </property>
+        <property name="serverUrl" value="${server.url}"/>
     </bean>
 
     <bean id="planParticipationService" class="com.mindalliance.channels.core.dao.user.PlanParticipationServiceImpl"/>
@@ -486,10 +487,6 @@ CONFIGURATION NOTES:
 
     <!-- REST API -->
     <bean id="channelsService" class="com.mindalliance.channels.api.ChannelsServiceImpl">
-        <property name="planManager" ref="planManager"/>
-        <property name="userDao" ref="userDao"/>
-        <property name="analyst" ref="analyst"/>
-        <property name="planParticipationService" ref="planParticipationService"/>
         <property name="serverUrl" value="${server.url}"/>
     </bean>
 

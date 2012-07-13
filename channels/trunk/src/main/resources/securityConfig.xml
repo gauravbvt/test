@@ -42,8 +42,12 @@
     <sec:http pattern="/resources/**" security="none"/>
     <sec:http pattern="/doc/**" security="none"/>
     <sec:http pattern="/api/**" security="none"/>
-    
+
     <sec:http pattern="/rest/**">
+        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
+        <sec:http-basic/>
+    </sec:http>
+    <sec:http pattern="/uploads/**">
         <sec:intercept-url pattern="/**" access="ROLE_USER"/>
         <sec:http-basic/>
     </sec:http>

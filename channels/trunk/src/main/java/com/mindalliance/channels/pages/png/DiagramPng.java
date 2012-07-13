@@ -15,7 +15,6 @@ import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.diagrams.AbstractDiagramPanel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.DynamicImageResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +28,7 @@ import java.io.OutputStream;
 /**
  * Abstract superclass for all PNG-generating pages.
  */
-public abstract class DiagramPng extends DynamicImageResource {
+public abstract class DiagramPng extends ChannelsDynamicImageResource {
 
 
     /**

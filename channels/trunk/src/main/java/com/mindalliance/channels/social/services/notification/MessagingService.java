@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.services.notification;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.social.services.SurveysDAO;
@@ -53,4 +54,17 @@ public interface MessagingService {
      * @return a boolean
      */
     boolean isInternal();
+
+    /**
+     * Send an in
+     * @param fromUser a user
+     * @param emailAddress  an email address
+     * @param message a message
+     * @return a boolean indicating success
+     */
+    boolean sendInvitation(
+            ChannelsUser fromUser,
+            String emailAddress,
+            String message);
+
 }

@@ -241,7 +241,7 @@ public class Channels extends WebApplication
         mountPage( "help", HelpPage.class );
         mountPage( "staticProtocols", StaticProtocols.class );
 
-        mountResource( "uploads/${name}", new PngReference( UploadedImage.class ) );
+        mountResource( "uploads/${name}", new PngReference( UploadedImage.class, userDao, planManager ) );
         mountResource( "icons/${name}", new PngReference( IconPng.class ) );
         mountResource( "segment.png", new PngReference( FlowMapPng.class ) );
         mountResource( "plan.png", new PngReference( PlanMapPng.class ) );

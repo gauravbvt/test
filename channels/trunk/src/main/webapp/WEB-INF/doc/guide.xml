@@ -55,11 +55,12 @@ As a user's participation in a plan changes, even as events unfold, Channels aut
             <name>Attributions</name>
             <step>
                 <description>Channels is built using these open source code libraries:
+                    
+* AOPAlliance [http://aopalliance.sourceforge.net/]
 * Apache Commons [http://commons.apache.org/]
 * Apache Lucene [http://lucene.apache.org/core/]
 * Apache Velocity [http://velocity.apache.org/]
 * Apache Wicket [http://wicket.apache.org/]
-* AOPAlliance [http://aopalliance.sourceforge.net/]
 * AspectJ [http://www.eclipse.org/aspectj/]
 * Bliki wiki [http://code.google.com/p/gwtwiki/]
 * EhCache [http://ehcache.org/]

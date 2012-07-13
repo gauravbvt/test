@@ -7,7 +7,6 @@ import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.io.IOUtils;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.DynamicImageResource;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -20,7 +19,7 @@ import java.io.FileInputStream;
  * Date: 1/25/12
  * Time: 1:44 PM
  */
-public class IconPng extends DynamicImageResource {
+public class IconPng extends ChannelsDynamicImageResource {
 
     protected IconPng() {
         super( "png" );

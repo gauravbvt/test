@@ -492,6 +492,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addHeader() {
+        addHomeLink();
         addRefreshNow();
       //  addGoBackAndForward();
         addActivitiesMenubar();
@@ -504,6 +505,16 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addSegmentIssuesLink();
         updateNavigation();
     }
+
+    private void addHomeLink() {
+        WebMarkupContainer homeLink = new WebMarkupContainer( "homeLink" );
+        homeLink.add( new AttributeModifier(
+                "href",
+                makeHomeUrl() ) );
+        form.add( homeLink );
+    }
+
+
 
     private void addFloatingPanels() {
         addEntityPanel();

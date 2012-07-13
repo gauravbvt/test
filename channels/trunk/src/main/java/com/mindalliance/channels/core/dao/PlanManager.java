@@ -250,4 +250,10 @@ public interface PlanManager extends CommandListener {
      */
     void clearCache();
 
+    /**
+     * Get server url.
+     * @return a string
+     */
+    String getServerUrl();
+
 }

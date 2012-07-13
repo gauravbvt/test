@@ -9,7 +9,12 @@ import com.mindalliance.channels.api.plan.PlanSummaryData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 
 import javax.jws.WebService;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -154,6 +159,34 @@ public interface ChannelsService {
     @Path( "plan/{uri}/directory" )
     @Produces( MediaType.APPLICATION_XML )
     DirectoryData getMyDirectory( @PathParam("uri") String uri );
+
+    @PUT
+    @Path( "plan/{uri}/agent/{agentId}/participation")
+    void addParticipation( @PathParam("uri") String uri,
+                                      @PathParam("agentId") String agentId);
+
+    @DELETE
+    @Path( "plan/{uri}/agent/{agentId}/participation")
+    void removeParticipation( @PathParam("uri") String uri,
+                                      @PathParam("agentId") String agentId);
+
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path( "plan/{uri}/feedback")
+    void addFeedback(
+            @PathParam( "uri" ) String uri,
+            @FormParam( "type" ) String type, // one of "QUESTION", "PROBLEM", "SUGGESTION"
+            @FormParam( "feedback" ) String feedback,
+            @FormParam( "urgent") String urgent );  // "true" or "false"
+
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path( "plan/{uri}/invite")
+    boolean invite( @PathParam("uri") String uri,
+                      @FormParam("email") String email,
+                      @FormParam( "message") String message );
+
+    /////////
 
     String getServerUrl();
 }

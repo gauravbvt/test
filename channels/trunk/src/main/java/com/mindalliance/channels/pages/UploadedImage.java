@@ -2,31 +2,42 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.pages.png.ChannelsDynamicImageResource;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.DynamicImageResource;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Simple file uploader.
  */
-public class UploadedImage extends DynamicImageResource {
+public class UploadedImage extends ChannelsDynamicImageResource {
 
+
+    static final List<String> IMAGE_EXTENSIONS = Arrays.asList( "png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "svg" );
 
     public UploadedImage(  ) {
-        super( "png" );
+        super(  );
     }
 
     @Override
     protected byte[] getImageData( Attributes attributes ) {
         PageParameters parameters = attributes.getParameters();
         String fileName = parameters.get( "name" ).toString();
+        String extension = FilenameUtils.getExtension( fileName ).toLowerCase();
         try {
-            File imageFile = getFile( fileName );
+            if ( extension.isEmpty() || !IMAGE_EXTENSIONS.contains( extension ) ) {
+               throw new Exception( fileName + " is not an image file" );
+            }
+            setFormat( extension );
+            File imageFile = getFile( fileName, parameters );
             FileInputStream in = new FileInputStream( imageFile );
             return IOUtils.toByteArray( in );
         } catch ( Exception e ) {
@@ -39,9 +50,18 @@ public class UploadedImage extends DynamicImageResource {
         return that instanceof UploadedImage;
     }
 
-    protected File getFile( String fileName ) {
+    protected File getFile( String fileName, PageParameters parameters ) {
         AttachmentManager attachmentManager = ((Channels)Channels.get()).getAttachmentManager();
-        return new File( attachmentManager.getUploadDirectory( ChannelsUser.plan() ), fileName );
+        return new File( attachmentManager.getUploadDirectory( getPlan( parameters ) ), fileName );
+    }
+
+    private Plan getPlan( PageParameters parameters ) {
+        Plan plan = ChannelsUser.plan();
+        if ( plan == null ) {
+            ChannelsUser  user = ChannelsUser.current( getUserDao() );
+            plan = AbstractChannelsWebPage.getPlanFromParameters( getPlanManager(), user, parameters );
+        }
+        return plan;
     }
 
 }

@@ -88,6 +88,8 @@ public class PlanManagerImpl implements PlanManager {
      */
     private String defaultCommunityCalendarPrivateTicket;
 
+    private String serverUrl;
+
     /**
      * Required for AOP decorations.
      */
@@ -547,6 +549,15 @@ public class PlanManagerImpl implements PlanManager {
             uris.add(  plan.getUri() );
         }
         return uris;
+    }
+
+    public String getServerUrl() {
+        return serverUrl
+                + ( serverUrl.endsWith( "/" ) ? "" : "/" );
+    }
+
+    public void setServerUrl( String serverUrl ) {
+        this.serverUrl = serverUrl;
     }
 
     @Override

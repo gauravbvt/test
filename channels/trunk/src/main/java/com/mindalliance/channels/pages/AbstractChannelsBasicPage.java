@@ -106,6 +106,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         getCommander().keepAlive( getUser().getUsername(), REFRESH_DELAY );
         addPageTitle();
         addForm();
+        addHomeLink();
         addSpinner();
         addNotifier();
         addLoggedIn();
@@ -113,6 +114,14 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         addFeedback();
         addPagePath();
         addContentsContainer();
+    }
+
+    private void addHomeLink() {
+        WebMarkupContainer homeLink = new WebMarkupContainer( "homeLink" );
+        homeLink.add( new AttributeModifier(
+                "href",
+                makeHomeUrl() ) );
+        form.add( homeLink );
     }
 
     private void addContentsContainer() {
@@ -252,7 +261,8 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         selectedPlanName.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                setResponsePage( UserPage.class );
+                PageParameters params = makePlanParameters();
+                setResponsePage( UserPage.class, params );
             }
         } );
     }
@@ -268,7 +278,8 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         setPlan( item.getModelObject() );
-                        setResponsePage( UserPage.class );
+                        PageParameters params = makePlanParameters();
+                        setResponsePage( UserPage.class, params );
                     }
                 };
                 otherPlanLink.add( new Label( "otherPlanName", item.getModelObject().toString() ) );
@@ -318,9 +329,9 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     }
 
 
-    public void setPlan( Plan plan ) {
-        getCommander().userLeftPlan( getUser().getUsername() );
-        super.setPlan( plan );
+    public void setPlan( Plan newPlan ) {
+        userLeftPlan( );
+        super.setPlan( newPlan );
     }
 
     private Attachment getHelp() {
