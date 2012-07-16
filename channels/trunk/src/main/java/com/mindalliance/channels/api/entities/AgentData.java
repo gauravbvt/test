@@ -22,7 +22,7 @@ import java.util.List;
  * Time: 10:02 AM
  */
 @XmlType( propOrder = {"id", "name", "hasUniqueIdentity", "isAnonymous", "categories", "kind",
-        "availability", "languages", "classifications", "documentation"} )
+        "availability", "languages", "classifications", "documentation", "openParticipationToAll", "openParticipationToEmployed"} )
 public class AgentData extends ModelEntityData {
 
     public AgentData() {
@@ -87,6 +87,16 @@ public class AgentData extends ModelEntityData {
             classifications.add( new SecurityClassificationData( classification ) );
         }
         return classifications;
+    }
+
+    @XmlElement
+    public boolean getOpenParticipationToAll() {
+        return getActor().isOpenParticipation();
+    }
+
+    @XmlElement
+    public boolean getOpenParticipationToEmployed() {
+        return getActor().isParticipationRestrictedToEmployed();
     }
 
 
