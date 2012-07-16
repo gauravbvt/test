@@ -1587,28 +1587,18 @@ public interface QueryService {
             Analyst analyst );
 
     /**
-     * Get the actors a user could participate and is not already.
-     *
-     * @param user a user
-     * @param plan a plan
-     * @return a list of actors
-     */
-    List<Actor> findOpenActors( ChannelsUser user, Plan plan );
-
-    /**
-     * Whether a user can participate as an actor.
-     *
-     * @param actor an actor
-     * @param user  a user
-     * @param plan  a plan
-     * @return
-     */
-    Boolean isParticipationAvailable( Actor actor, ChannelsUser user, Plan plan );
-
-    /**
      * Get a plan participation service.
      *
      * @return a plan participation service
      */
     PlanParticipationService getPlanParticipationService();
+
+    /**
+     * Whether participation as actor possible given current participation.
+     * @param actor an actor
+     * @param currentParticipations  a list of participations
+     * @return  a boolean -- not cached
+     */
+    boolean meetsPreEmploymentConstraint( Actor actor,
+                                          List<PlanParticipation> currentParticipations );
 }

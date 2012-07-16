@@ -444,7 +444,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             PlanService planService = authorizeParticipant( user, uri );
             Plan plan = planService.getPlan();
             Actor actor = planService.find( Actor.class, Long.parseLong( agentId ) );
-            if ( planService.isParticipationAvailable( actor, user, plan ) ) {
+            if ( planParticipationService.isParticipationAvailable( actor, user, planService ) ) {
                 planParticipationService.addParticipation(
                         user.getUsername(),
                         plan,

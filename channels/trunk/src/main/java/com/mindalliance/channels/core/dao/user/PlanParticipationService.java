@@ -38,4 +38,14 @@ public interface PlanParticipationService extends GenericSqlService<PlanParticip
 
     boolean references( Plan plan, ModelObject mo, QueryService queryService );
 
+    /**
+     * Get the actors a user could participate and is not already.
+     *
+     * @param user a user
+     * @param queryService a query service
+     * @return a list of actors
+     */
+    List<Actor> findOpenActors( final ChannelsUser user, final QueryService queryService );
+
+    boolean isParticipationAvailable( Actor actor, ChannelsUser user, QueryService queryService );
 }

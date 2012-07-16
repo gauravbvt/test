@@ -6,6 +6,8 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.core.query.QueryService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -182,5 +184,59 @@ public class PlanParticipationServiceImpl
         }
         return results;
     }
+
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<Actor> findOpenActors( final ChannelsUser user, final QueryService queryService ) {
+        return (List<Actor>) CollectionUtils.select(
+                queryService.listActualEntities( Actor.class ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final Actor actor = (Actor) object;
+                        return queryService.getPlanParticipationService().isParticipationAvailable(
+                                actor,
+                                user,
+                                queryService );
+                    }
+                }
+        );
+    }
+
+
+    @Override
+    @Transactional( readOnly = true )
+    public boolean isParticipationAvailable( Actor actor, ChannelsUser user, QueryService queryService ) {
+        Plan plan = queryService.getPlan();
+        List<PlanParticipation> currentParticipations = getParticipations(
+                plan,
+                user.getUserInfo(),
+                queryService );
+        return actor != null
+                && !actor.isUnknown()
+                && actor.isOpenParticipation()
+                && !alreadyParticipatingAs( actor, currentParticipations )
+                && !isSingularAndTaken( actor, plan, queryService )
+                && queryService.meetsPreEmploymentConstraint( actor, currentParticipations );
+    }
+
+    private boolean alreadyParticipatingAs( final Actor actor, List<PlanParticipation> currentParticipations ) {
+        return CollectionUtils.exists(
+                currentParticipations,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (PlanParticipation) object ).getActorId() == actor.getId();
+                    }
+                } );
+    }
+
+    private boolean isSingularAndTaken( Actor actor, Plan plan, QueryService queryService ) {
+        return actor.isSingularParticipation()
+                && !getParticipations( plan, actor, queryService ).isEmpty();
+    }
+
+
 
 }

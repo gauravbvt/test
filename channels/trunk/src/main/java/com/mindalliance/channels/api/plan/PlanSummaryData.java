@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -28,6 +29,7 @@ import java.util.Set;
  * Date: 12/12/11
  * Time: 1:36 PM
  */
+@XmlRootElement( name = "planSummary", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"planIdentifier", "dateVersioned", "description", "planners", "participations", "openActors", "supervised", "documentation"} )
 
 public class PlanSummaryData implements Serializable {
@@ -61,13 +63,13 @@ public class PlanSummaryData implements Serializable {
         plan = planService.getPlan();
         initPlanners( planService );
         initParticipations( serverUrl,planService, userDao, planParticipationService );
-        initOpenActors( serverUrl, planService, userDao );
+        initOpenActors( serverUrl, planService, userDao, planParticipationService );
         initParticipantActors( planService, userDao, planParticipationService );
-        initSupervised( serverUrl, planService, userDao );
+        initSupervised( serverUrl, planService );
         documentation = new DocumentationData( serverUrl, getPlan() );
     }
 
-    private void initSupervised( String serverUrl, PlanService planService, ChannelsUserDao userDao ) {
+    private void initSupervised( String serverUrl, PlanService planService ) {
         Set<Actor> supervisedSet = new HashSet<Actor>();
         for ( Actor actor : getParticipantActors() ) {
             supervisedSet.addAll( planService.findSupervised(  actor ) );
@@ -96,10 +98,14 @@ public class PlanSummaryData implements Serializable {
 
     }
 
-    private void initOpenActors( String serverUrl, PlanService planService, ChannelsUserDao userDao ) {
+    private void initOpenActors(
+            String serverUrl,
+            PlanService planService,
+            ChannelsUserDao userDao,
+            PlanParticipationService planParticipationService ) {
         openActorList = new ArrayList<AgentData>();
         ChannelsUser user = ChannelsUser.current( userDao );
-        List<Actor> openActors = planService.findOpenActors( user, getPlan() );
+        List<Actor> openActors = planParticipationService.findOpenActors( user, planService );
         for ( Actor openActor : openActors ) {
             openActorList.add( new AgentData( serverUrl, openActor, getPlan() ) );
         }

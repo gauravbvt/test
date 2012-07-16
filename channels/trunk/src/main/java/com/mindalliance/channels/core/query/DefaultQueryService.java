@@ -2898,7 +2898,7 @@ public abstract class DefaultQueryService implements QueryService {
      * Get extended title for the part.
      *
      * @param sep  separator string
-     * @param part
+     * @param part a part
      * @return a string
      */
     public String getFullTitle( String sep, Part part ) {
@@ -3154,17 +3154,7 @@ public abstract class DefaultQueryService implements QueryService {
         }
     }
 
-    private Boolean isImplicitlyProhibited( Flow sharing, List<Flow> allFlows ) {
-        boolean prohibited = false;
-        Iterator<Flow> flows = allFlows.iterator();
-        while ( !prohibited && flows.hasNext() ) {
-            Flow other = flows.next();
-            prohibited = other.isProhibited() && other.overrides( sharing, getPlan().getLocale() );
-        }
-        return prohibited;
-    }
-
-    @Override
+     @Override
     public Boolean isInitiated( Segment segment ) {
         return !findInitiators( segment ).isEmpty();
     }
@@ -3543,40 +3533,12 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Actor> findOpenActors( final ChannelsUser user, final Plan plan ) {
-        return (List<Actor>) CollectionUtils.select(
-                listActualEntities( Actor.class ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        final Actor actor = (Actor) object;
-                        return isParticipationAvailable( actor, user, plan );
-                    }
-                }
-        );
-    }
-
-    @Override
-    public Boolean isParticipationAvailable( Actor actor, ChannelsUser user, Plan plan ) {
-        List<PlanParticipation> currentParticipations = planParticipationService.getParticipations(
-                plan,
-                user.getUserInfo(),
-                this );
-        return actor != null
-                && !actor.isUnknown()
-                && actor.isOpenParticipation()
-                && !alreadyParticipatingAs( actor, currentParticipations )
-                && !isSingularAndTaken( actor, plan )
-                && meetsPreEmploymentConstraint( actor, currentParticipations );
-    }
-
-    @Override
     public PlanParticipationService getPlanParticipationService() {
         return planParticipationService;
     }
 
-    private boolean meetsPreEmploymentConstraint( Actor actor,
+    @Override
+    public boolean meetsPreEmploymentConstraint( Actor actor,
                                                   List<PlanParticipation> currentParticipations ) {
         if ( !actor.isParticipationRestrictedToEmployed() ) return true;
         List<Organization> actorEmployers = findDirectAndIndirectEmployers(
@@ -3608,23 +3570,6 @@ public abstract class DefaultQueryService implements QueryService {
         }
         return new ArrayList<Organization>( allEmployers );
     }
-
-    private boolean alreadyParticipatingAs( final Actor actor, List<PlanParticipation> currentParticipations ) {
-        return CollectionUtils.exists(
-                currentParticipations,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (PlanParticipation) object ).getActorId() == actor.getId();
-                    }
-                } );
-    }
-
-    private boolean isSingularAndTaken( Actor actor, Plan plan ) {
-        return actor.isSingularParticipation()
-                && !planParticipationService.getParticipations( plan, actor, this ).isEmpty();
-    }
-
 
     @Override
     public void update( ModelObject object ) {

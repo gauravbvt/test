@@ -114,7 +114,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         for ( PlanParticipation participation : currentParticipations ) {
             wrappers.add( new ParticipationWrapper( participation, true ) );
         }
-        for ( Actor actor : getQueryService().findOpenActors( getUser(), getPlan() ) ) {
+        for ( Actor actor : planParticipationService.findOpenActors( getUser(), getQueryService() ) ) {
             PlanParticipation openParticipation = new PlanParticipation(
                     getUsername(),
                     getPlan(),
@@ -195,10 +195,10 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         public void setConfirmed( boolean confirmed ) {
             this.confirmed = confirmed;
             if ( confirmed ) {
-                if ( getQueryService().isParticipationAvailable(
+                if ( getQueryService().getPlanParticipationService().isParticipationAvailable(
                         participation.getActor( getQueryService() ),
                         getUser(),
-                        getPlan() ) ) {
+                        getQueryService() ) ) {
                     planParticipationService.save( participation );
                 }
             } else {
