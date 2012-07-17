@@ -186,6 +186,18 @@ public interface ChannelsService {
                       @FormParam("email") String email,
                       @FormParam( "message") String message );
 
+    @PUT
+    @Path( "plan/{uri}/contact/medium/{mediumId}/address/{address}")
+    void addContactInfo( @PathParam("uri") String uri,
+            @PathParam( "mediumId") String mediumId,
+            @PathParam("address") String address );
+
+    @DELETE
+    @Path( "plan/{uri}/contact/medium/{mediumId}/address/{address}")
+    void removeContactInfo( @PathParam("uri") String uri,
+            @PathParam( "mediumId") String mediumId,
+            @PathParam("address") String address );
+
     /////////
 
     String getServerUrl();

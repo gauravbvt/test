@@ -13,8 +13,11 @@ import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
+import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -68,6 +71,8 @@ public class ChannelsServiceImpl implements ChannelsService {
     private PlanParticipationService planParticipationService;
     @Autowired
     private EmailMessagingService emailMessagingService;
+    @Autowired
+    private UserContactInfoService userContactInfoService;
 
     private String serverUrl;
 
@@ -510,6 +515,44 @@ public class ChannelsServiceImpl implements ChannelsService {
                     Response
                             .status( Response.Status.BAD_REQUEST )
                             .entity( e.getMessage() + " for plan " + uri )
+                            .build() );
+        }
+    }
+
+    @Override
+    public void addContactInfo( String uri, String mediumId, String address ) {
+        LOG.info( "Adding user contact info " );
+        ChannelsUser user = ChannelsUser.current( userDao );
+        try {
+            PlanService planService = authorizeParticipant( user, uri );
+            TransmissionMedium medium = planService.find( TransmissionMedium.class, Long.parseLong( mediumId ) );
+            if ( !medium.isAddressValid( address ) ) throw new Exception( "Invalid address" );
+            userContactInfoService.addChannel(
+                    user.getUsername(),
+                    user.getUserInfo(),
+                    new Channel( medium, address ) );
+        } catch ( Exception e ) {
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( e.getMessage() )
+                            .build() );
+        }
+    }
+
+    @Override
+    public void removeContactInfo( String uri, String mediumId, String address ) {
+        LOG.info( "Removing user contact info " );
+        ChannelsUser user = ChannelsUser.current( userDao );
+        try {
+            PlanService planService = authorizeParticipant( user, uri );
+            TransmissionMedium medium = planService.find( TransmissionMedium.class, Long.parseLong( mediumId ) );
+            userContactInfoService.removeChannel( user.getUserInfo(), new Channel( medium, address ) );
+        } catch ( Exception e ) {
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( e.getMessage() )
                             .build() );
         }
     }
