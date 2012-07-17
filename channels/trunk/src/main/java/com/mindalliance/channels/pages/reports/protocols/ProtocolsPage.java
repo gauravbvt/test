@@ -261,6 +261,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<ObservationData> item ) {
                 ObservationData observationData = item.getModelObject();
+                item.add( new Label( "witness", ChannelsUtils.lcFirst( observationData.getObservationActiveVerb() ) ) );
                 Label observationLabel = new Label( "observation", ChannelsUtils.lcFirst( observationData.getLabel() ) );
                 item.add( observationLabel );
                 item.add( makeProcedureLinks( "procLinks", onObservations.get( observationData ) ) );

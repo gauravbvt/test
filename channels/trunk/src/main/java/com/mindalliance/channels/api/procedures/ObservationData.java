@@ -121,4 +121,11 @@ public class ObservationData  implements Serializable {
         return getLabel().hashCode();
     }
 
+    public String getObservationGerond() {
+        return eventPhase().getPhase().isPreEvent() ? "seeing" : "witnessing";
+    }
+
+    public String getObservationActiveVerb() {
+        return eventPhase().getPhase().isPreEvent() ? "see" : "witness";
+    }
 }
