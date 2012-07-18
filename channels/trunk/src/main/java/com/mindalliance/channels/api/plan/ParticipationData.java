@@ -24,6 +24,7 @@ public class ParticipationData  implements Serializable {
     private ChannelsUser user;
     private AgentData agentData;
     private Actor actor;
+    private UserData userData;
 
     public ParticipationData() {
         // required
@@ -38,11 +39,12 @@ public class ParticipationData  implements Serializable {
     private void init( String serverUrl, PlanService planService ) {
         agentData = new AgentData( serverUrl, participation.getActor( planService), planService.getPlan() );
         actor = participation.getActor( planService );
+        userData = new UserData( user, planService );
     }
 
     @XmlElement
     public UserData getUser() {
-        return new UserData( user );
+        return userData;
     }
 
     @XmlElement

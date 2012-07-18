@@ -131,7 +131,7 @@ public class PlanSummaryData implements Serializable {
     private void initPlanners( PlanService planService ) {
         planners = new ArrayList<UserData>();
         for ( ChannelsUser planner : planService.getUserDao().getPlanners( getPlan().getUri() ) ) {
-            planners.add( new UserData( planner ) );
+            planners.add( new UserData( planner, planService ) );
         }
 
     }

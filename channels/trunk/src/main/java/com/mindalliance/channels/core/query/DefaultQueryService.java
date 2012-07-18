@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
+import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
@@ -3551,6 +3552,11 @@ public abstract class DefaultQueryService implements QueryService {
                         findAllEmploymentsForActor( participationActor ) ) );
         }
         return !Collections.disjoint( myPlannedEmployers, actorEmployers );
+    }
+
+    @Override
+    public UserContactInfoService getUserContactInfoService() {
+        return userDao.getUserContactInfoService();
     }
 
     @SuppressWarnings( "unchecked" )

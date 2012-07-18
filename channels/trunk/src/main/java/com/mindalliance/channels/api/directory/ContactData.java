@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
-import com.mindalliance.channels.core.dao.user.UserContactInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Commitment;
@@ -136,7 +135,10 @@ public class ContactData implements Serializable {
         return contactList;
     }
 
-    private void init( String serverUrl, QueryService queryService, PlanParticipationService planParticipationservice ) {
+    private void init(
+            String serverUrl,
+            QueryService queryService,
+            PlanParticipationService planParticipationservice ) {
         initWorkChannels( queryService );
         initPersonalChannels( queryService );
         initSupervisorContacts( serverUrl, queryService, planParticipationservice );
@@ -156,13 +158,13 @@ public class ContactData implements Serializable {
         }
     }
 
-    private void initPersonalChannels( QueryService queryService ) {
+    private void initPersonalChannels( QueryService queryService  ) {
         personalChannels = new ArrayList<ChannelData>();
         if ( userInfo != null ) {
-            for ( UserContactInfo userContactInfo : userInfo.getContactInfoList() ) {  // todo - will this work?
+            for ( Channel channel : queryService.getUserContactInfoService().findChannels( userInfo, queryService ) ) {
                 personalChannels.add( new ChannelData(
-                        userContactInfo.getTransmissionMediumId(),
-                        userContactInfo.getAddress(),
+                        channel.getMedium().getId(),
+                        channel.getAddress(),
                         queryService ) );
             }
         }

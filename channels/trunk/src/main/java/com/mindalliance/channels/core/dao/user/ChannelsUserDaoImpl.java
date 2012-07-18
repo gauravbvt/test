@@ -10,6 +10,7 @@ import org.apache.commons.collections.Predicate;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -37,6 +38,9 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
      * The logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( ChannelsUserDaoImpl.class );
+
+    @Autowired
+    private UserContactInfoService userContactInfoService;
 
 
     @Override
@@ -191,6 +195,11 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
         }
         save( userInfo );
         return userInfo;
+    }
+
+    @Override
+    public UserContactInfoService getUserContactInfoService() {
+        return userContactInfoService;
     }
 
     private String makeNewUsernameFromEmail( String email ) {
