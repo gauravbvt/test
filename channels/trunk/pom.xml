@@ -684,7 +684,7 @@
                         <configuration>
                             <ignoreImageScaling>true</ignoreImageScaling>
                         </configuration>
-                        <phase>prepare-package</phase>
+                        <phase>generate-resources</phase>
                     </execution>
                     <execution>
                         <id>pdf</id>
