@@ -19,7 +19,7 @@ public class UpdatePlannerInPerformance
 {
 	
     public UpdatePlannerInPerformance() {
-    		String sChannelURL = "http://192.168.4.126:8081/channels";
+    		String sChannelURL = "http://192.168.4.126:8080/channels";
     		String sUserName = "admin";
     		String sPassword = "admin";
 		try {
@@ -37,7 +37,7 @@ public class UpdatePlannerInPerformance
 				
 				// Click on 'Channel Administration' link
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Navigated to Channel Administration";
+				GlobalVariables.sDescription = "Navigated to Channel Settings";
 				GlobalVariables.oDriver.findElement(By.linkText("Channels Settings")).click();
 				// WebElement Synchronization
 				Thread.currentThread();
