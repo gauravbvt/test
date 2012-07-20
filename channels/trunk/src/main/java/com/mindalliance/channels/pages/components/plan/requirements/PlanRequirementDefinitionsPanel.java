@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Plan requirements management panel.
@@ -63,8 +64,10 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
 
     public PlanRequirementDefinitionsPanel(
             String id,
-            Model<Requirement> requirementModel) {
-        super( id, requirementModel );
+            Model<Requirement> requirementModel,
+            Set<Long> expansions
+    ) {
+        super( id, requirementModel, expansions );
         init(  );
     }
 

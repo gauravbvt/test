@@ -61,6 +61,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         addUserParticipationContainer();
         addUserRole();
         addParticipation();
+        addNoParticipation();
     }
 
     private void addUserRole() {
@@ -105,6 +106,12 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             }
         };
         userParticipationContainer.add( participationList );
+    }
+
+    private void addNoParticipation() {
+        Label noParticipation = new Label( "noParticipation", "I do not yet participate" );
+        noParticipation.setVisible( currentParticipations().isEmpty() );
+        userParticipationContainer.add(  noParticipation );
     }
 
     private List<ParticipationWrapper> participations() {

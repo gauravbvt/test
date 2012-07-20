@@ -211,6 +211,10 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         add( notifier );
     }
 
+    protected NotifierWebMarkupContainer getNotifier() {
+        return notifier;
+    }
+
     private String getMessage() {
         return message == null ? "" : message;
     }

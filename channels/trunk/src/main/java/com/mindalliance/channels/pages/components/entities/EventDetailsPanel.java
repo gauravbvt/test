@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.ModelObjectLink;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import org.apache.commons.collections.CollectionUtils;
@@ -65,6 +66,10 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
      * Maximum number of rows in event references table.
      */
     private static final int MAX_ROWS = 20;
+    /**
+     * Location link.
+     */
+    private ModelObjectLink locationLink;
 
     public EventDetailsPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -77,6 +82,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {
         this.moDetailsDiv = moDetailsDiv;
         addSelfTerminatingField();
+        addLocationLink();
         addScopePanel();
         filters = new ArrayList<Identifiable>();
         adjustFields();
@@ -98,11 +104,15 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
         moDetailsDiv.add( selfTerminatingCheckBox );
     }
 
+    private void addLocationLink() {
+        locationLink = new ModelObjectLink( "scope-link",
+                new PropertyModel<Organization>( getPlanEvent(), "scope" ),
+                new Model<String>( "Location" ) );
+        moDetailsDiv.addOrReplace( locationLink );
+
+    }
+
     private void addScopePanel() {
-        moDetailsDiv.add(
-                new ModelObjectLink( "scope-link",
-                        new PropertyModel<Organization>( getPlanEvent(), "scope" ),
-                        new Model<String>( "Location" ) ) );
         final List<String> choices = getQueryService().findAllEntityNames( Place.class );
         scopePanel = new EntityReferencePanel<Place>(
                 "scopePanel",
@@ -215,6 +225,18 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
     private Event getEvent() {
         return (Event) getEntity();
     }
+
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        if ( change.isUpdated() ) {
+            String property = change.getProperty();
+            if ( property.equals( "scope" ) ) {
+                addLocationLink();
+                target.add( locationLink );
+            }
+        }
+        super.updateWith( target, change, updated );
+    }
+
 
     /**
      * Event reference table.

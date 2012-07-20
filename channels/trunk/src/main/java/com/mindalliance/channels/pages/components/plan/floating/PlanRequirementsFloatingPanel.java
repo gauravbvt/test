@@ -8,6 +8,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 
+import java.util.Set;
+
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -19,8 +21,8 @@ public class PlanRequirementsFloatingPanel extends FloatingCommandablePanel {
 
     private PlanRequirementsPanel requirementsPanel;
 
-    public PlanRequirementsFloatingPanel( String id, Model<Requirement> requirementModel ) {
-        super( id, requirementModel);
+    public PlanRequirementsFloatingPanel( String id, Model<Requirement> requirementModel, Set<Long> expansions ) {
+        super( id, requirementModel, expansions );
         init();
     }
 
@@ -38,7 +40,8 @@ public class PlanRequirementsFloatingPanel extends FloatingCommandablePanel {
     private void addRequirementsPanel() {
        requirementsPanel = new PlanRequirementsPanel(
                "requirements",
-               new Model<Requirement>( (Requirement)getModel().getObject()  ) );
+               new Model<Requirement>( (Requirement)getModel().getObject()  ),
+               getExpansions() );
        getContentContainer().add( requirementsPanel );
     }
 

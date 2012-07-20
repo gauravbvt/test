@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.surveys;
 
-import com.google.code.jqwicket.ui.notifier.NotifierWebMarkupContainer;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.Modalable;
@@ -31,10 +30,6 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
 
     private RFI selectedRFI;
     private Component rfiPanel;
-    /**
-     * Notifier.
-     */
-    private NotifierWebMarkupContainer notifier;
     /**
      * Modal dialog window.
      */
@@ -130,7 +125,7 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updatables ) {
         String message = change.getMessage();
         if ( message != null ) {
-            notifier.create( target,
+            getNotifier().create( target,
                     "Notification",
                     message );
         }

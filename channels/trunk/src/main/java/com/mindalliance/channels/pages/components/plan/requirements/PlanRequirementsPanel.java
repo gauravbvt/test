@@ -14,6 +14,7 @@ import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Plan requirements panel.
@@ -29,8 +30,9 @@ public class PlanRequirementsPanel extends AbstractCommandablePanel {
 
     public PlanRequirementsPanel(
             String id,
-            IModel<? extends Identifiable> model ) {
-        super( id, model );
+            IModel<? extends Identifiable> model,
+            Set<Long> expansions ) {
+        super( id, model, expansions );
         init();
     }
 
@@ -57,7 +59,8 @@ public class PlanRequirementsPanel extends AbstractCommandablePanel {
             public Panel getPanel( String id ) {
                 return new PlanRequirementDefinitionsPanel(
                         id,
-                        new Model<Requirement>( getRequirement()) );
+                        new Model<Requirement>( getRequirement()),
+                        getExpansions() );
             }
         } );
         tabs.add( new AbstractTab( new Model<String>( "Required network" ) ) {

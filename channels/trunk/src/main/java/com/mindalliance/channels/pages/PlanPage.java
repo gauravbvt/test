@@ -916,7 +916,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
         } else {
             planRequirementsPanel = new PlanRequirementsFloatingPanel(
                     "requirements",
-                    new Model<Requirement>( requirement ) );
+                    new Model<Requirement>( requirement ),
+                    getReadOnlyExpansions() );
         }
         form.addOrReplace( planRequirementsPanel );
     }

@@ -37,6 +37,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -273,6 +274,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addEventInitiation();
         addExecution();
         addTimingFields();
+        addGoalsLink();
         addGoals();
         addIssuesPanel();
         addAttachments();
@@ -718,6 +720,17 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         } );
     }
 
+    private void addGoalsLink() {
+        AjaxLink segmentGoalsLink = new AjaxLink( "segment-goals-link" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getPart().getSegment(), SegmentEditPanel.GOALS ) );
+            }
+        };
+        segmentGoalsLink.add( new AttributeModifier( "class", new Model<String>( "segment-link" ) ) );
+        add( segmentGoalsLink );
+    }
+
     private void addGoals() {
         if ( getPart().getSegment().getGoals().isEmpty() ) {
             taskGoalsPanel = new Label( "goals", new Model<String>( "(No goals)" ) );
@@ -726,15 +739,6 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         }
         taskGoalsPanel.setOutputMarkupId( true );
         addOrReplace( taskGoalsPanel );
-        AjaxFallbackLink segmentGoalsLink = new AjaxFallbackLink( "segment-goals-link" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getPart().getSegment(), SegmentEditPanel.GOALS ) );
-            }
-        };
-        segmentGoalsLink.add( new AttributeModifier( "class", true, new Model<String>( "segment-link" ) ) );
-        segmentGoalsLink.setOutputMarkupId( true );
-        addOrReplace( segmentGoalsLink );
     }
 
     //====================================
