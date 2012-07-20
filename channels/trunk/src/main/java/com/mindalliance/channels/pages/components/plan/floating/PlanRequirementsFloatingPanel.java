@@ -1,7 +1,9 @@
 package com.mindalliance.channels.pages.components.plan.floating;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Requirement;
+import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.plan.requirements.PlanRequirementsPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -17,7 +19,7 @@ import java.util.Set;
  * Date: 7/3/12
  * Time: 3:03 PM
  */
-public class PlanRequirementsFloatingPanel extends FloatingCommandablePanel {
+public class PlanRequirementsFloatingPanel extends FloatingCommandablePanel implements Releaseable {
 
     private PlanRequirementsPanel requirementsPanel;
 
@@ -60,4 +62,15 @@ public class PlanRequirementsFloatingPanel extends FloatingCommandablePanel {
     protected String getTitle() {
         return "Requirements";
     }
+
+    /**
+     * Release any lock on an identifiable.
+     *
+     * @param identifiable an identifiable
+     */
+    @Override
+    public void requestLockOn( Identifiable identifiable ) {
+        getCommander().requestLockOn( getUser().getUsername(), identifiable );
+    }
+
 }

@@ -130,11 +130,12 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
             }
         };
         // newButton.setEnabled( this.isLockedByUser( getPlan() ) );
-        makeVisible( removeButton, false );
+        makeVisible( removeButton, selectedRequirement != null && isLockedByUser( selectedRequirement ) );
         add( removeButton );
     }
 
     private void updateComponents( AjaxRequestTarget target ) {
+        addRequirementsTable();
         addRequirementEditPanel();
         target.add( requirementEditPanel );
         makeVisible( removeButton, selectedRequirement != null && isLockedByUser( selectedRequirement ) );
@@ -191,8 +192,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
         if ( change.isForInstanceOf( Requirement.class ) ) {
             Requirement requirement = (Requirement) change.getSubject( getQueryService() );
             if ( change.isAdded() || change.isExpanded() ) {
-                selectedRequirement = requirement;
-                requestLockOn( selectedRequirement );
+                select(  requirement );
             } else if ( change.isRemoved() ) {
                 releaseAnyLockOn( selectedRequirement );
                 selectedRequirement = null;
@@ -204,7 +204,6 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( Requirement.class ) ) {
-            Requirement requirement = (Requirement) change.getSubject( getQueryService() );
             if ( change.isAdded() || change.isExpanded() || change.isRemoved() ) {
                 updateComponents( target );
             } else if ( change.isUpdated() ) {
@@ -219,6 +218,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
 
     public void select( Requirement requirement ) {
         selectedRequirement = requirement.isUnknown() ? null : requirement;
+        if ( selectedRequirement != null ) requestLockOn( selectedRequirement );
     }
 
     /**
