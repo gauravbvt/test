@@ -1,6 +1,5 @@
 package com.mindalliance.testscripts;
 
-
 import org.openqa.selenium.By;
 import com.mindalliance.globallibrary.ApplicationFunctionLibrary;
 import com.mindalliance.globallibrary.GenericFunctionLibrary;
@@ -14,7 +13,6 @@ import com.mindalliance.globallibrary.ReportFunctions;
  * @author: AFour
  *
  */
-
 public class MAV0006_redirectToPlanPage
 {
 	public MAV0006_redirectToPlanPage(){
@@ -30,16 +28,8 @@ public class MAV0006_redirectToPlanPage
 				  
 				  // Click on 'Information Sharing Model' link
 				  GlobalVariables.iStepNo++ ;
-				  GlobalVariables.sDescription = "Navigated to Information Sharing Model";
+				  GlobalVariables.sDescription = "Navigated to Collaboration Plan";
 				  GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
-				  // Write Results
-				  LogFunctions.writeLogs(GlobalVariables.sDescription);
-				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						  GlobalVariables.sBlank, GlobalVariables.sBlank);
-				  // WebElement Synchronization
-				  Thread.currentThread();
-				  Thread.sleep(1000);  
-				  
 			      // Assertion Verify Plan page displays	 
 				  GlobalVariables.iStepNo++;
 			      GlobalVariables.sDescription="'Plan' page gets redirected from admin page";
@@ -50,10 +40,11 @@ public class MAV0006_redirectToPlanPage
 								GlobalVariables.sBlank, GlobalVariables.sBlank);
 			      }
 			      else{
+			    	  GlobalVariables.sVerifyError="Verification failed. Expected "+GlobalVariables.viewElements.get("planPageSubTitle")+"Actual Result "+ GlobalVariables.oDriver.getTitle();
 			    	  //Write Results
 			    	  LogFunctions.writeLogs(GlobalVariables.sDescription);
 			    	  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-			    			  GlobalVariables.sBlank, GlobalVariables.sBlank);
+			    			  GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 			      }
 			      // WebElement Synchronization
 				  Thread.currentThread();

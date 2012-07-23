@@ -41,16 +41,9 @@ public class MAV0005_logoutOnAdminPage
 				  GlobalVariables.iStepNo++ ;
 				  GlobalVariables.sDescription = "Logout is successful";
 				  GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.channelsAdmin.get("sXpathLogoutAdminPage"))).click();
-				  // Write Results
-				  LogFunctions.writeLogs(GlobalVariables.sDescription);
-				  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-						  GlobalVariables.sBlank, GlobalVariables.sBlank);
-				  // WebElement Synchronization
-				  Thread.currentThread();
-				  Thread.sleep(1000);
-				  // Assertion: Verify that 'Channels Information Sharing Planning' renders
+				  // Assertion: Verify that 'Channels Login Page' renders
 				  GlobalVariables.iStepNo++ ;
-				  GlobalVariables.sDescription = "'Channels Information Sharing Planning' renders";
+				  GlobalVariables.sDescription = "'Channels Login Page' renders";
 				  //Assertion: Verify that the page with title 'Channels Information Sharing Planning' renders 		         
 				  if (GlobalVariables.oDriver.getTitle().contains(GlobalVariables.viewElements.get("loginPageTitle"))) {
 					  // Write Results
@@ -58,13 +51,17 @@ public class MAV0005_logoutOnAdminPage
 					  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
 							  GlobalVariables.sBlank, GlobalVariables.sBlank);
 				  }
-				  else
-				  {
+				  else{
 					  // Write Results
 					  LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
 					  LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
 							  GlobalVariables.sBlank, GlobalVariables.sVerifyError);
 				  }
+				  // WebElement Synchronization
+				  Thread.currentThread();
+				  Thread.sleep(1000);
+				  
+				  // Quits Browser 
 			      GlobalVariables.oDriver.quit();
 			      
 				  LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

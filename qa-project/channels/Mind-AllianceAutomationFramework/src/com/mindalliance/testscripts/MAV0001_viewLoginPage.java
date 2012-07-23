@@ -26,7 +26,7 @@ public class MAV0001_viewLoginPage{
 		  System.out.println(GlobalVariables.sDescription);
 		  // WebElement Synchronization
 	      Thread.currentThread();
-	      Thread.sleep(3000);
+	      Thread.sleep(31000);
 			
     	  // Login Page
     	  GlobalVariables.iStepNo++;
@@ -60,12 +60,12 @@ public class MAV0001_viewLoginPage{
 	      Thread.currentThread();
 	      Thread.sleep(3000);
 	      
+	      // Quits the Browser
 	      GlobalVariables.oDriver.quit();
 	      
 	      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 	      System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
 			
-		
 		} 
 		catch (Exception e) {
 			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {

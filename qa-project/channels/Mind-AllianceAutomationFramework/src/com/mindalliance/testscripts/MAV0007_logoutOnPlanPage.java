@@ -73,7 +73,9 @@ public class MAV0007_logoutOnPlanPage
 				  }
 				  // WebElement Synchronization
 				  Thread.currentThread();
-				  Thread.sleep(2000);  
+				  Thread.sleep(2000);
+				  
+				  //Quits the browser
 				  GlobalVariables.oDriver.quit();
 				  
 			      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");

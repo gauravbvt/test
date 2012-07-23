@@ -58,6 +58,7 @@ public class MAV0002_viewHomePage
 		      Thread.currentThread();
 		      Thread.sleep(3000);
 		      
+		      // Quits the Browser
 		      GlobalVariables.oDriver.quit();
 		      
 		      LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
