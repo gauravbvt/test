@@ -1,5 +1,7 @@
 <?xml version="1.0"?>	
 <elements>
+<xPathLogoutPlanPage>/html/body/form/div[32]/div/div/a</xPathLogoutPlanPage>
+<xPathGuidePanelIcon>/html/body/form/span/span[2]/div/div/a/img</xPathGuidePanelIcon>
 <xPathDeleteQuestionButton>//div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/span/span/table[@class='question-cont']/tbody/tr[4]/td[2]/input[3]</xPathDeleteQuestionButton>
 <xPathActivateQuestionButton>//div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/span/span/table[@class='question-cont']/tbody/tr[4]/td[2]/input</xPathActivateQuestionButton>
 <xPathDeactivateQuestionButton>//div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/span/span/table[@class='question-cont']/tbody/tr[4]/td[2]/input[2]</xPathDeactivateQuestionButton>
@@ -17,7 +19,7 @@
 <xPathAddInfoReceiveAttachment>//span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[12]/td/ul/span/li/a</xPathAddInfoReceiveAttachment>
 <xPathAddInfoSendCreateSurvey>//span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoSendCreateSurvey>
 <xPathAddInfoReceiveCreateSurvey>//span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li/span/table/tbody/tr/td[2]/span/a/span</xPathAddInfoReceiveCreateSurvey>
-<xPathShowPopUpMenu>/html/body/form/div[16]/div/div[3]/span/span/ul/li/a/span</xPathShowPopUpMenu>
+<xPathShowPopUpMenu>/html/body/form/div[32]/div/div[3]/span/span/ul/li/a/span</xPathShowPopUpMenu>
 <xPathSendInfoAddNewIssue>//div[@class='sends']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/div[@class='section-title']/ul[@class='menu']/li</xPathSendInfoAddNewIssue>
 <xPathReceiveInfoAddNewIssue>//div[@class='receives']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/div[@class='section-title']/ul[@class='menu']/li</xPathReceiveInfoAddNewIssue>
 <xPathReceiveInfoIssueMenu>//div[@class='receives']/div[@class='section-content']/div[@class='flow']/div[@class='even none  selected']/div[@class='flow-details']/span/div[@class='issues']/span/ol/li/span/span[@class='menubar']/span/span[@class='dropmenu']/span</xPathReceiveInfoIssueMenu>
