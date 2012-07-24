@@ -138,6 +138,9 @@ public class GenericFunctionLibrary {
 			GlobalVariables.home.put("sXpathFeedbackSend",oXmlEleHomePage.getElementsByTagName("xPathFeedbackSend").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.home.put("sXpathHideShowAllSurvey",oXmlEleHomePage.getElementsByTagName("xPathHideShowAllSurvey").item(0).getChildNodes().item(0).getNodeValue());
 			//Channels Plan Page
+			GlobalVariables.plan.put("sXpathLogoutPlanPage",oXmlElePlanPage.getElementsByTagName("xPathLogoutPlanPage").item(0).getChildNodes().item(0).getNodeValue());
+			GlobalVariables.plan.put("sXpathGuidePanelIcon",oXmlElePlanPage.getElementsByTagName("xPathGuidePanelIcon").item(0).getChildNodes().item(0).getNodeValue());
+			
 			GlobalVariables.plan.put("sXpathDeleteQuestionButton",oXmlElePlanPage.getElementsByTagName("xPathDeleteQuestionButton").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathActivateQuestionnaireButton",oXmlElePlanPage.getElementsByTagName("xPathActivateQuestionnaireButton").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.plan.put("sXpathDeleteQuestionnaire",oXmlElePlanPage.getElementsByTagName("xPathDeleteQuestionnaire").item(0).getChildNodes().item(0).getNodeValue());
@@ -405,6 +408,7 @@ public class GenericFunctionLibrary {
 			GlobalVariables.assertion.put("sXpathAssertionInfoNameRequirement",oXmlElePlanPage.getElementsByTagName("xPathAssertionInfoNameRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.assertion.put("sXpathAssertionInfoTagsRequirement",oXmlElePlanPage.getElementsByTagName("xPathAssertionInfoTagsRequirement").item(0).getChildNodes().item(0).getNodeValue());
 			// View Elements
+			GlobalVariables.viewElements.put("guide",oXmlEleViewElements.getElementsByTagName("guide").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("myInformationNeeds",oXmlEleViewElements.getElementsByTagName("myInformationNeeds").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("newPlan",oXmlEleViewElements.getElementsByTagName("newPlan").item(0).getChildNodes().item(0).getNodeValue());
 			GlobalVariables.viewElements.put("versionAssertion",oXmlEleViewElements.getElementsByTagName("versionAssertion").item(0).getChildNodes().item(0).getNodeValue());
