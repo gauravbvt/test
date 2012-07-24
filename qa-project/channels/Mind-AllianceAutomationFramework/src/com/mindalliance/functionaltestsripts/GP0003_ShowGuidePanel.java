@@ -11,7 +11,7 @@ import com.mindalliance.globallibrary.ReportFunctions;
 public class GP0003_ShowGuidePanel {
 	public GP0003_ShowGuidePanel(){
 		try{
-			GlobalVariables.sTestCaseId = "GP0002_HideGuidePanel";
+			GlobalVariables.sTestCaseId = "GP0003_ShowGuidePanel";
 			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
 			LogFunctions.writeLogs(GlobalVariables.sDescription);
 			System.out.println(GlobalVariables.sDescription);
@@ -58,7 +58,6 @@ public class GP0003_ShowGuidePanel {
 				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu")));
 				// Assertion: Verify that Guide link is present in show popup menu
-				
 				if(GlobalVariables.oElement.getText().equals("Guide")){
 					// Write Results
 					LogFunctions.writeLogs(GlobalVariables.sDescription);
