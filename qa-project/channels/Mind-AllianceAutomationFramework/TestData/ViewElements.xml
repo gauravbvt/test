@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <elements>
+<guide>Guide</guide>
 <elements>Elements</elements>
 <allEventsInThePlan>All events in the plan</allEventsInThePlan>
 <undoRemoveRequirement>Undo remove requirement</undoRemoveRequirement>
@@ -33,7 +34,7 @@
 <aboutPlan>About plan</aboutPlan>
 <allEvents>All events</allEvents>
 <conceptual>. Conceptual.</conceptual>
-<informationSharingModel>Info Sharing Plan</informationSharingModel>
+<informationSharingModel>Collaboration Plan</informationSharingModel>
 <secrecyClassification>Secrecy classifications</secrecyClassification>
 <allOrganizations>All organizations</allOrganizations>
 <allTypes>All types</allTypes>
