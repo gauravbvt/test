@@ -50,8 +50,6 @@ public class ProtocolsFinder implements Serializable {
     private Map<TriggerData, List<ProcedureData>> onNotifications;
     private Map<TriggerData, List<ProcedureData>> onDiscoveries;
     private Map<TriggerData, List<ProcedureData>> onResearches;
-    private Map<TaskData, List<TriggerData>> researchSubTasks; // triggers set by research for procedure
-    private Map<TaskData, List<TriggerData>> discoveryFollowUpTasks; // triggers set by discovery from procedure
     private Map<ContactData, Map<TriggerData, List<ProcedureData>>> onNotificationsByContact;
     private Map<ContactData, Map<TriggerData, List<ProcedureData>>> onRequestsByContact;
     private Set<ContactData> rolodex;
@@ -93,8 +91,6 @@ public class ProtocolsFinder implements Serializable {
         onDiscoveries = new HashMap<TriggerData, List<ProcedureData>>();
         onResearches = new HashMap<TriggerData, List<ProcedureData>>();
         rolodex = new HashSet<ContactData>();
-        discoveryFollowUpTasks = new HashMap<TaskData, List<TriggerData>>();
-        researchSubTasks = new HashMap<TaskData, List<TriggerData>>();
         for ( ProcedureData procedureData : proceduresData.getProcedures() ) {
             processProcedureData( procedureData, queryService, planParticipationService, user );
         }
@@ -133,12 +129,10 @@ public class ProtocolsFinder implements Serializable {
                         queryService,
                         planParticipationService,
                         user );
-                addTo( discoveryFollowUpTasks, discoveringTask, triggerData );  // discoveringTask creates the trigger(Data)
             }
             for ( TriggerData triggerData : procedureData.getResearchTriggers() ) {
                 addTo( onResearches, triggerData, procedureData );
                 TaskData requestingTask = triggerData.getRequestingTask();
-                addTo( researchSubTasks, requestingTask, triggerData );
             }
         }
         // add contacts not yet added as direct, trigger contacts
@@ -361,16 +355,6 @@ public class ProtocolsFinder implements Serializable {
                 return od1.getLabel().compareTo( od2.getLabel() );
             }
         });
-    }
-
-    public List<TriggerData> getResearchSubTasksTriggerredBy( TaskData taskData ) {
-        List<TriggerData> triggers = researchSubTasks.get( taskData );
-        return triggers== null ? new ArrayList<TriggerData>() : triggers;
-    }
-
-    public List<TriggerData> getDiscoveryFollowUpTasksTriggeredBy( TaskData taskData ) {
-        List<TriggerData> triggers =  discoveryFollowUpTasks.get( taskData );
-        return triggers== null ? new ArrayList<TriggerData>() : triggers;
     }
 
 }

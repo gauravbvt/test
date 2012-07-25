@@ -33,9 +33,9 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private ProcedureData procedureData;
     private List<NotificationData> outNotifications;
-    private List<RequestData> outReplies;
+    private List<RequestData> outRequests;
     private List<NotificationData> inNotifications;
-    private List<RequestData> inReplies;
+    private List<RequestData> inRequests;
     private TaskData taskData;
     private List<DiscoveryData> discoveries;
     private List<ResearchData> allResearch;
@@ -60,8 +60,8 @@ public class AssignmentData extends AbstractProcedureElementData {
         taskData = new TaskData( serverUrl, getAssignment(), planService, planParticipationService, getUser() );
         initInNotifications(  serverUrl, planService, planParticipationService );
         initOutNotifications(  serverUrl, planService, planParticipationService );
-        initInReplies(  serverUrl, planService, planParticipationService );
-        initOutReplies(  serverUrl, planService, planParticipationService );
+        initInRequests( serverUrl, planService, planParticipationService );
+        initOutRequests( serverUrl, planService, planParticipationService );
         initDiscoveries(  serverUrl, planService, planParticipationService );
         initAllResearch(  serverUrl, planService, planParticipationService );
     }
@@ -93,11 +93,11 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     }
 
-    private void initOutReplies( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
-            outReplies = new ArrayList<RequestData>();
+    private void initOutRequests( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+            outRequests = new ArrayList<RequestData>();
             for ( Flow outRequestFlow : outRequests() ) {
-                boolean initiating = false;
-                outReplies.add( new RequestData(
+                boolean initiating = true;
+                outRequests.add( new RequestData(
                         serverUrl,
                         outRequestFlow,
                         initiating,
@@ -108,11 +108,11 @@ public class AssignmentData extends AbstractProcedureElementData {
             }
     }
 
-    private void initInReplies( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
-            inReplies = new ArrayList<RequestData>();
+    private void initInRequests( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+            inRequests = new ArrayList<RequestData>();
             for ( Flow inRequestFlow : inRequests() ) {
-                boolean initiating = true;
-                inReplies.add( new RequestData(
+                boolean initiating = false;
+                inRequests.add( new RequestData(
                         serverUrl,
                         inRequestFlow,
                         initiating,
@@ -170,12 +170,12 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     @XmlElement( name = "inRequest" )
     public List<RequestData> getInRequests() {
-        return inReplies;
+        return inRequests;
     }
 
     @XmlElement( name = "outRequest" )
     public List<RequestData> getOutRequests() {
-        return outReplies;
+        return outRequests;
     }
 
 

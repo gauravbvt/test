@@ -39,7 +39,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     public static final String MESSAGES = "Messages";
     public static final String CALENDAR = "Calendar";
     public static final String PARTICIPATION = "Participation";
-   // public static final String SURVEYS = "Surveys";
+    // public static final String SURVEYS = "Surveys";
     public static final String USER = "User";
     public static final String SEND_MESSAGE = "sendMessage";
     public static final String DELETE_MESSAGE = "deleteMessage";
@@ -54,7 +54,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     private UserInfoPanel userProfilePanel;
     private UserParticipationPanel userParticipationPanel;
 
-   /**
+    /**
      * When last refreshed.
      */
     private Date whenLastRefreshed = new Date();
@@ -103,7 +103,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
         if ( showTabs.contains( USER ) ) {
-            AbstractTab tab = new AbstractTab( new Model<String>( "About Me") ) {
+            AbstractTab tab = new AbstractTab( new Model<String>( "About Me" ) ) {
                 public Panel getPanel( String id ) {
                     userProfilePanel = new UserInfoPanel( id, SocialPanel.this, collapsible );
                     return userProfilePanel;
@@ -148,7 +148,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
                     return calendarPanel;
                 }
             } );
-      /*  if ( showTabs.contains( SURVEYS ) ) {
+        /*  if ( showTabs.contains( SURVEYS ) ) {
             AbstractTab tab = new AbstractTab( new Model<String>( "Surveys" ) ) {
                 public Panel getPanel( String id ) {
                     surveyListPanel = new SurveyListPanel( id, SocialPanel.this, collapsible );
@@ -157,25 +157,25 @@ public class SocialPanel extends AbstractUpdatablePanel {
             };
             tabs.add( tab );
         }*/
-      return tabs;
+        return tabs;
     }
 
     private String getMessagesTabTitle() {
-       return getUser().isPlanner() ? "Messages" : "News";
+        return getUser().isPlanner() ? "Messages" : "News";
     }
 
     private String getSelectedTabTitle() {
-        return tabbedPanel.getTabs().get( tabbedPanel.getSelectedTab() ).getTitle().getObject();
+        return ( (ITab) tabbedPanel.getTabs().get( tabbedPanel.getSelectedTab() ) ).getTitle().getObject();
     }
 
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
         if ( plannerPresenceListPanel != null && getSelectedTabTitle().equals( "Presence" ) ) {
             plannerPresenceListPanel.refresh( target, change );
         }
-        if ( commandEventListPanel != null && getSelectedTabTitle().equals( "Activities" )  ) {
+        if ( commandEventListPanel != null && getSelectedTabTitle().equals( "Activities" ) ) {
             commandEventListPanel.refresh( target, change );
         }
-        if ( userMessageListPanel != null && getSelectedTabTitle().equals( getMessagesTabTitle() )  ) {
+        if ( userMessageListPanel != null && getSelectedTabTitle().equals( getMessagesTabTitle() ) ) {
             userMessageListPanel.refresh( target, change );
         }
         Plan plan = getPlan();
@@ -211,13 +211,13 @@ public class SocialPanel extends AbstractUpdatablePanel {
 
     private void selectTabTitled( String title ) {
         List<? extends ITab> tabs = tabbedPanel.getTabs();
-        for ( int i = 0; i < tabs.size(); i++) {
-            if ( tabs.get(i).getTitle().getObject().equals( title )) {
+        for ( int i = 0; i < tabs.size(); i++ ) {
+            if ( tabs.get( i ).getTitle().getObject().equals( title ) ) {
                 tabbedPanel.setSelectedTab( i );
                 break;
             }
         }
-     }
+    }
 
     public void newMessage( AjaxRequestTarget target, Change change ) {
         ModelObject about = (ModelObject) change.getSubject( getQueryService() );

@@ -1,10 +1,17 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
+import com.mindalliance.channels.api.procedures.DiscoveryData;
+import com.mindalliance.channels.api.procedures.ElementOfInformationData;
+import com.mindalliance.channels.api.procedures.InformationData;
+import com.mindalliance.channels.api.procedures.ResearchData;
 import com.mindalliance.channels.api.procedures.TaskData;
-import com.mindalliance.channels.api.procedures.TriggerData;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+
+import java.util.List;
 
 /**
  * Subprocedure link panel.
@@ -16,22 +23,64 @@ import org.apache.wicket.markup.html.basic.Label;
  */
 public class SubProcedureLinkPanel extends AbstractDataPanel {
 
-    private TriggerData triggerData;
+    private DiscoveryData discoveryData;
+    private ResearchData researchData;
 
-    public SubProcedureLinkPanel( String id, TriggerData triggerData, ProtocolsFinder finder ) {
+    public SubProcedureLinkPanel( String id, DiscoveryData discoveryData, ProtocolsFinder finder ) {
         super( id, finder );
-        this.triggerData = triggerData;
+        this.discoveryData = discoveryData;
+        init();
+    }
+
+    public SubProcedureLinkPanel( String id, ResearchData researchData, ProtocolsFinder finder ) {
+        super( id, finder );
+        this.researchData = researchData;
         init();
     }
 
     private void init() {
-        addSubProcedureTrigger();
+        addInformation();
+        addEois();
         addTaskLink();
     }
 
-    private void addSubProcedureTrigger() {
-        add(  new SubProcedureTriggerDataPanel( "trigger", triggerData, getFinder() ) );
+    protected void addInformation() {
+        add( new Label(
+                "header",
+                discoveryData != null
+                        ? "Upon discovering"
+                        : "When researching"
+        ) );
+        add( new Label( "information", getInformationData().getName() ) );
     }
+
+    protected void addEois() {
+        WebMarkupContainer eoisContainer = new WebMarkupContainer( "eoisContainer" );
+        eoisContainer.setVisible( !getEois().isEmpty() );
+        add( eoisContainer );
+        ListView<ElementOfInformationData> eoisListView = new ListView<ElementOfInformationData>(
+                "eois",
+                getEois()
+        ) {
+            @Override
+            protected void populateItem( ListItem<ElementOfInformationData> item ) {
+                ElementOfInformationData eoiData = item.getModelObject();
+                item.add( new Label( "content", eoiData.getName() ) );
+            }
+        };
+        eoisContainer.add( eoisListView );
+    }
+
+    protected InformationData getInformationData() {
+        return discoveryData != null
+                ? discoveryData.getInformationDiscovered().getInformation()
+                : researchData.getInformation();
+    }
+
+    protected List<ElementOfInformationData> getEois() {
+        return getInformationData().getEOIs();
+    }
+
 
     private void addTaskLink() {
         WebMarkupContainer link = new WebMarkupContainer( "link" );
@@ -43,9 +92,9 @@ public class SubProcedureLinkPanel extends AbstractDataPanel {
     }
 
     private TaskData getSubOrFollowUpTask() {
-        return triggerData.isOnResearching()
-                ? triggerData.getOnResearch().getResearchTask()
-                : triggerData.getOnDiscovery().getFollowUpTask();
+        return discoveryData == null
+                ? researchData.getResearchTask()
+                : discoveryData.getFollowUpTask();
     }
 
 }

@@ -686,17 +686,18 @@
                         </configuration>
                         <phase>generate-resources</phase>
                     </execution>
-                    <execution>
+ <!--                   <execution>
                         <id>pdf</id>
                         <goals>
                             <goal>generate-pdf</goal>
                         </goals>
                         <configuration>
                             <ignoreImageScaling>false</ignoreImageScaling>
+                            <pageOrientation>landscape</pageOrientation>
                         </configuration>
                         <phase>pre-site</phase>
                     </execution>
-                </executions>
+-->                </executions>
                 <dependencies>
                     <dependency>
                         <groupId>org.docbook</groupId>
@@ -716,8 +717,7 @@
                 </configuration>
             </plugin>
 
-<!--
-            <plugin>
+            <!--<plugin>
                 <groupId>org.zeroturnaround</groupId>
                 <artifactId>jrebel-maven-plugin</artifactId>
                 <version>1.1.1</version>
@@ -732,7 +732,6 @@
                 </executions>
             </plugin>
 -->
-
         </plugins>
     </build>
 
@@ -947,8 +946,8 @@
 
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>
-        <wicket.version>1.5.4</wicket.version>
-        <jetty.version>6.1.4</jetty.version>
+        <wicket.version>1.5.7</wicket.version>
+        <!--<jetty.version>6.1.4</jetty.version>-->
         <!--<slf4j.version>1.5.11</slf4j.version>-->
 
         <slf4j.version>1.5.6</slf4j.version>

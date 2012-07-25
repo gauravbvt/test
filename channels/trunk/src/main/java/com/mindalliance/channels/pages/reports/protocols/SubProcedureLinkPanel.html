@@ -10,7 +10,18 @@
 </head>
 <body>
 <wicket:panel>
-    <span wicket:id="trigger">[sub procedure trigger panel]</span>
+    <div>
+        <h5>
+            <span wicket:id="header">When  discovering</span>
+            <span wicket:id="information">some information</span>
+        </h5>
+        <div wicket:id="eoisContainer">
+            <label>with elements...</label>
+            <div wicket:id="eois"> <!-- repeated -->
+                <div wicket:id="content">content</div>
+            </div>
+        </div>
+    </div>
     <a wicket:id="link" href="#">
         <span wicket:id="taskName">Do task "something"</span>
     </a>

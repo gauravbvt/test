@@ -54,7 +54,12 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         add( new Label(
                 "mode",
                 getModeText() ) );
-        add( new Label( "information", flowData.getInformation().getName() ) );
+        String intent = flowData.getIntentText();
+        add( new Label(
+                "intent", intent ) );
+        add( new Label(
+                "information",
+                flowData.getInformation().getName() ) );
     }
 
     private String getModeText() {
@@ -69,15 +74,16 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         }
     }
 
+
     private String getToNotifyLabel() {
-        NotificationData notificationData = (NotificationData)flowData;
-        StringBuilder sb = new StringBuilder( );
+        NotificationData notificationData = (NotificationData) flowData;
+        StringBuilder sb = new StringBuilder();
         String impactOnConsuming = notificationData.getImpactOnConsumingTask();
-        if ( impactOnConsuming.equalsIgnoreCase( "triggers" ))
+        if ( impactOnConsuming.equalsIgnoreCase( "triggers" ) )
             sb.append( "To trigger" );
-        else if ( impactOnConsuming.equalsIgnoreCase( "terminates" ))
+        else if ( impactOnConsuming.equalsIgnoreCase( "terminates" ) )
             sb.append( "To terminate" );
-        else if ( impactOnConsuming.equalsIgnoreCase( "critical" ))
+        else if ( impactOnConsuming.equalsIgnoreCase( "critical" ) )
             sb.append( "To make possible the" );
         else sb.append( "To help the" );
         sb.append( " execution of task \"" );
@@ -141,11 +147,11 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                 "when",
                 received
                         ? flowData.isNotification()
-                            ? "Expect to receive a notification"
-                            : "Expect an answer"
+                        ? "Expect to receive a notification"
+                        : "Expect an answer"
                         : flowData.isNotification()
-                            ? "Notify"
-                            : "Answer" );
+                        ? "Notify"
+                        : "Answer" );
         maxDelayContainer.add( whenLabel );
         Label delayLabel = new Label(
                 "maxDelay", makeDelayLabel( timeDelay ) );
@@ -259,7 +265,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         WebMarkupContainer impactContainer = new WebMarkupContainer( "failureImpact" );
         impactContainer.add( new AttributeModifier( "class", "failureImpact-small " + severityText ) );
         add( impactContainer );
-        impactContainer.setVisible( severity.ordinal() > Level.Low.ordinal() );
+        impactContainer.setVisible( !received && ( severity.ordinal() > Level.Low.ordinal() ) );
         Label severityLabel = new Label( "severity", severityText );
         impactContainer.add( severityLabel );
     }

@@ -3,13 +3,14 @@ package com.mindalliance.channels.pages.reports.protocols;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.api.procedures.AssignmentData;
+import com.mindalliance.channels.api.procedures.DiscoveryData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.api.procedures.GoalData;
 import com.mindalliance.channels.api.procedures.NotificationData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.RequestData;
+import com.mindalliance.channels.api.procedures.ResearchData;
 import com.mindalliance.channels.api.procedures.TaskData;
-import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.core.model.Level;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -225,28 +226,26 @@ public class ProcedureDataPanel extends AbstractDataPanel {
     }
 
     private void addSelfTriggeredTasks() {
-        List<TriggerData> researchSubs = getFinder()
-                .getResearchSubTasksTriggerredBy( procedureData.getAssignment().getTask() );
-        List<TriggerData> discoveryFollowups = getFinder()
-                .getDiscoveryFollowUpTasksTriggeredBy( procedureData.getAssignment().getTask() );
+        List<ResearchData> researchSubs = procedureData.getAssignment().getResearch();
+        List<DiscoveryData> discoveryFollowups = procedureData.getAssignment().getDiscoveries( );
         WebMarkupContainer selfTriggeredTasksContainer = new WebMarkupContainer( "selfTriggeredTasks" );
         selfTriggeredTasksContainer.setVisible( !(researchSubs.isEmpty() && discoveryFollowups.isEmpty()) );
         add( selfTriggeredTasksContainer );
-        ListView<TriggerData> researchSubTaskListView = new ListView<TriggerData>(
+        ListView<ResearchData> researchSubTaskListView = new ListView<ResearchData>(
                 "researchTasks",
                 researchSubs
         ) {
             @Override
-            protected void populateItem( ListItem<TriggerData> item ) {
+            protected void populateItem( ListItem<ResearchData> item ) {
                 item.add( new SubProcedureLinkPanel( "researchTask", item.getModelObject(), getFinder() ) );
             }
         };
-        ListView<TriggerData> discoveryFollowUpListView = new ListView<TriggerData>(
+        ListView<DiscoveryData> discoveryFollowUpListView = new ListView<DiscoveryData>(
                 "followUpTasks",
                 discoveryFollowups
         ) {
             @Override
-            protected void populateItem( ListItem<TriggerData> item ) {
+            protected void populateItem( ListItem<DiscoveryData> item ) {
                 item.add( new SubProcedureLinkPanel( "followUpTask", item.getModelObject(), getFinder()) );
             }
         };

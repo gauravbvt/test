@@ -34,13 +34,14 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
                         ? "When notified of"
                         : "When asked for"
         ) );
+        addIntent();
         addInformation();
         addCommunicatedContext();
         addEois();
         addContacts();
     }
 
-    private void addCommunicatedContext() {
+     private void addCommunicatedContext() {
         SituationData communicatedContext = getTriggerData().getSituation();
         Label commContextLabel = new Label(
                 "communicatedContext",
@@ -51,8 +52,17 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
         add( commContextLabel );
     }
 
+    private void addIntent() {
+        String intent = getInformationIntent();
+        add( new Label(
+                "intent",
+                intent) );
+    }
+
     private void addInformation() {
-        add( new Label( "information", getInformationData().getName() ) );
+        add( new Label(
+                "information",
+                getInformationData().getName() ) );
     }
 
     private void addEois() {
@@ -93,6 +103,12 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
         return getTriggerData().isOnRequestFromOther()
                 ? getTriggerData().getOnRequest().getContacts()
                 : getTriggerData().getOnNotification().getContacts();
+    }
+
+    private String getInformationIntent() {
+        return getTriggerData().isOnRequestFromOther()
+                ? getTriggerData().getOnRequest().getIntentText()
+                : getTriggerData().getOnNotification().getIntentText();
     }
 
     private InformationData getInformationData() {

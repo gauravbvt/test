@@ -223,4 +223,15 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     public Flow flow() {
         return flow;
     }
+
+    public String getIntentText() {
+        String intent = getIntent();
+        if ( intent == null ) {
+            return "";
+        } else {
+            return intent.equalsIgnoreCase( "command" )
+                    ? intent
+                    : intent + " about";
+        }
+    }
 }
