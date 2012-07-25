@@ -50,13 +50,15 @@ public class GP0003_ShowGuidePanel {
 				Thread.currentThread();
 				Thread.sleep(10000);
 				
-//				GlobalVariables.oDriver.navigate().refresh();
-				
-				//Click on 'Guide' link under 'Show' pop up menu
+     			//Click on 'Guide' link under 'Show' pop up menu
 				GlobalVariables.iStepNo++ ;
-				GlobalVariables.sDescription = "Click on 'Guide' under 'Show' popup menu";
-				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu"))).click();
+				GlobalVariables.sDescription = "'Guide' is present under 'Show' popup menu";
+//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu"))).click();
 				GlobalVariables.oElement=GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathShowPopUpMenu")));
+				
+				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("guide"));
+				
+//				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),"Guide");
 				// Assertion: Verify that Guide link is present in show popup menu
 				if(GlobalVariables.oElement.getText().equals("Guide")){
 					// Write Results
@@ -66,8 +68,8 @@ public class GP0003_ShowGuidePanel {
 				}
 				// WebElement Synchronization
 				Thread.currentThread();
-				Thread.sleep(1000);  					
-				
+				Thread.sleep(1000); 
+						
 				//Quit Browser
 				GlobalVariables.oDriver.quit();
 				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
