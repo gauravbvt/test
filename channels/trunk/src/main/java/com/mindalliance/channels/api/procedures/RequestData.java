@@ -32,13 +32,14 @@ import java.util.Set;
  */
 @XmlType( propOrder = {"information", "intent", "intentText", "communicatedContext", "taskFailed", "receiptConfirmationRequested",
         "instructions", "contactAll", "maxDelay", "contacts", "mediumIds", "failureImpact",
-        "consumingTask", /*"agreements",*/ "documentation"} )
+        "consumingTask", "impactOnConsumingTask", /*"agreements",*/ "documentation"} )
 public class RequestData extends AbstractFlowData {
 
     private List<Commitment> commitments;
     private TaskData consumingTaskData;
     private List<ContactData> contacts;
     private List<Employment> contactEmployments;
+    private String impactOnConsumingTask;
 
     public RequestData() {
         // required
@@ -126,13 +127,20 @@ public class RequestData extends AbstractFlowData {
     }
 
     private void initConsumingTask( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
-        if ( !isInitiating() )
+        if ( !isInitiating() )  {
             consumingTaskData = new TaskData(
                     serverUrl,
                     (Part)getSharing().getTarget(),
                     planService,
                     planParticipationService,
                     getUser() );
+            if ( flow().isTerminatingToTarget() )
+                impactOnConsumingTask = "terminates";
+            else if ( flow().isCritical() )
+                impactOnConsumingTask = "critical";
+            else
+                impactOnConsumingTask = "useful";
+        }
         else
             consumingTaskData = null;
 
@@ -215,6 +223,11 @@ public class RequestData extends AbstractFlowData {
     @XmlElement
     public TaskData getConsumingTask() {
         return consumingTaskData;
+    }
+
+    @XmlElement
+    public String getImpactOnConsumingTask() {
+        return impactOnConsumingTask;
     }
 
 /*
