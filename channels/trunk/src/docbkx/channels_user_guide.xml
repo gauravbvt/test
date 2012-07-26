@@ -1094,7 +1094,7 @@
           inter-connect the tasks they are assigned to.</db:para>
         <para>A task in an IS plan is a specification of some action to be done or some decision to
           be made either all the time, upon witnessing the start or end of an event, upon receiving
-          a notification or a request for information, or upon discovering some new information. In
+          a notification or a request for information, or upon discovering or obtaining some new information. In
           defining a task, planners normally will not identify by name the actual agents to be
           assigned to it. Planners will most often characterize the agents to be assigned to the
           task in terms of their qualifications (as agent types), roles, jurisdictions (as named

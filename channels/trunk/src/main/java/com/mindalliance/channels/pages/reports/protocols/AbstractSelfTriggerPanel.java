@@ -27,7 +27,7 @@ public class AbstractSelfTriggerPanel extends AbstractTriggerDataPanel {
         add( new Label(
                 "header",
                 getTriggerData().isOnDiscovering()
-                        ? "Upon discovering"
+                        ? "Upon acquiring"
                         : "When researching"
         ) );
         add( new Label( "information", getInformationData().getName() ) );

@@ -48,7 +48,7 @@ public class SubProcedureLinkPanel extends AbstractDataPanel {
         add( new Label(
                 "header",
                 discoveryData != null
-                        ? "Upon discovering"
+                        ? "Upon acquiring"
                         : "When researching"
         ) );
         add( new Label( "information", getInformationData().getName() ) );
