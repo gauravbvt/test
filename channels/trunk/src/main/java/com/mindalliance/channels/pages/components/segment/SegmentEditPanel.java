@@ -1,19 +1,22 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
+import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.segment.menus.SegmentActionsMenuPanel;
-import com.mindalliance.channels.pages.components.segment.menus.SegmentShowMenuPanel;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,7 +27,7 @@ import java.util.Set;
  * Date: May 8, 2009
  * Time: 11:14:14 AM
  */
-public class SegmentEditPanel extends AbstractMultiAspectPanel {
+public class SegmentEditPanel extends AbstractFloatingMultiAspectPanel {
 
     /**
      * Goals aspect.
@@ -39,6 +42,8 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
      */
     private static final String[] ACTIONABLE_ASPECTS = {DETAILS, GOALS};
 
+    private static final String[] ASPECTS = {DETAILS, GOALS, ORGANIZATIONS };
+
     public SegmentEditPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
     }
@@ -47,34 +52,34 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
         super( id, model, expansions, aspect );
     }
 
-    protected String getDefaultAspect() {
-        return DETAILS;
-    }
-
-    protected int getMaxTitleNameLength() {
-        return 20;
-    }
-
-    protected String getObjectClassName() {
-        return null;
-    }
-
-    protected String getCssClass() {
-        return "segment";
-    }
-
-    protected MenuPanel makeShowMenu( String menuId ) {
-        SegmentShowMenuPanel showMenu = new SegmentShowMenuPanel(
-                menuId,
-                new PropertyModel<Segment>( this, "segment" ),
-                getExpansions() );
-        showMenu.setSegmentEditPanel( this );
-        return showMenu;
+    @Override
+    protected List<String> getAllAspects() {
+        return Arrays.asList( ASPECTS );
     }
 
     @Override
-    protected boolean isAspectShownEditable() {
-        return Arrays.asList( ACTIONABLE_ASPECTS ).contains( getAspectShown() );
+    protected List<String> getActionableAspects() {
+        return Arrays.asList( ACTIONABLE_ASPECTS );
+    }
+
+    @Override
+    protected String getMapTitle() {
+        return "Tasks with known locations in plan segment " + getSegment().getName();
+    }
+
+    @Override
+    protected List<GeoLocatable> getGeoLocatables() {
+        List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
+        Iterator<Part> parts = getSegment().parts();
+        while ( parts.hasNext() ) {
+            geoLocatables.add( parts.next() );
+        }
+        return geoLocatables;
+    }
+
+
+    protected String getCssClass() {
+        return "segment";
     }
 
     protected MenuPanel makeActionMenu( String menuId ) {
@@ -124,16 +129,6 @@ public class SegmentEditPanel extends AbstractMultiAspectPanel {
      */
     public Segment getSegment() {
         return (Segment) getModel().getObject();
-    }
-
-    /**
-     * Change visibility.
-     *
-     * @param target  an ajax request target
-     * @param visible a boolean
-     */
-    public void setVisibility( AjaxRequestTarget target, boolean visible ) {
-        makeVisible( target, this, visible );
     }
 
 }

@@ -3627,3 +3627,105 @@ div.feedback-new-message input:hover {
     padding-right: 10px;
     padding-left: 2px;
 }
+
+/* NEW FLOATING PANEL */
+div.floating-panel {
+    /* width:600px; */
+    margin:0px auto;
+    text-align:left;
+    padding:0;
+    background-color:#eee;
+}
+
+div.fp-header {
+    /* width:600px; */
+    float:left;
+    background: url(../images/fpanel-headerpathway-bg.png) repeat-x;
+    border:2px solid #999999;
+    border-bottom:none;
+}
+
+div.fp-tabs {
+    float:left;
+    height:80px;
+    padding:0 0 0 5px;
+}
+
+div.fp-tabs a {
+    font-size:12px;
+    text-transform:uppercase;
+    height:53px;
+    display:block;
+    float:left;
+    padding:10px 0 0 0;
+    color:#666666;
+    text-decoration:none;
+    letter-spacing:0.1em;
+}
+
+div.fp-tabs a.active,
+div.fp-tabs a:hover {
+    background:url(../images/hover.png) no-repeat bottom;
+    color:#000000;
+}
+
+div.fp-tabs a span {
+    border-right:1px solid #bac9e5;
+    padding:8px 15px 0 15px;
+    height:22px;
+    display:block;
+}
+
+div.fp-tabs a span.last {
+    border-right:none;
+}
+
+div.fp-right-cont {
+    float:right;
+    width:250px;
+}
+
+div.fp-menu {
+    float:right;
+    width:250px;
+    height:38px;
+    text-align:right;
+    padding:15px 15px 0 0;
+}
+
+div.fp-menu a {
+    text-decoration:none;
+    padding:0 0 0 5px;
+}
+
+div.fp-pathway-icon-cont {
+    float:right;
+    /* width:250px; */
+    height:27px;
+}
+
+div.fp-pathway {
+    float:left;
+    text-align:right;
+    height:21px;
+    /* width:167px; */
+    font-size:11px;
+    font-weight:bold;
+    color:#999999;
+    padding:6px 10px 0 0;
+}
+
+div.fp-icon-menu {
+    float:right;
+    height:27px;
+    /* width:73px; */
+}
+
+div.fp-content {
+    float:left;
+    width:570px;
+    border:2px solid #999999;
+    border-top:none;
+    background:#f6f6f6;
+    padding:15px;
+}
