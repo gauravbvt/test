@@ -1,7 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
@@ -29,7 +28,7 @@ import java.util.List;
  * Date: 12/6/11
  * Time: 10:27 AM
  */
-@XmlType( propOrder = {"name", "category", "communicatedLocation", "location", "instructions", "teamMates", "goals", "failureImpact", "documentation"} )
+@XmlType( propOrder = {"name", "category", "communicatedLocation", "location", "instructions", "teamContacts", "goals", "failureImpact", "documentation"} )
 public class TaskData extends AbstractProcedureElementData {
 
     private String failureImpact;
@@ -154,17 +153,10 @@ public class TaskData extends AbstractProcedureElementData {
     }
 
     @XmlElement( name = "teamMate" )
-    public List<EmploymentData> getTeamMates() {
-        if ( getAssignment() == null ) {
-            return null;
-        } else {
-            List<EmploymentData> teamMates = new ArrayList<EmploymentData>();
-            for ( Assignment assign : otherTeamAssignments() ) {
-                teamMates.add( new EmploymentData( assign.getEmployment() ) );
-            }
-            return teamMates;
-        }
+    public List<ContactData> getTeamContacts() {
+        return teamContacts;
     }
+
 
     @XmlElement( name = "goal" )
     public List<GoalData> getGoals() {
@@ -210,10 +202,6 @@ public class TaskData extends AbstractProcedureElementData {
     @WebMethod( exclude = true )
     public Long getPhaseId() {
         return getPart().getSegment().getPhase().getId();
-    }
-
-    public List<ContactData> getTeamContacts() {
-        return teamContacts;
     }
 
     public String getAnchor() {
