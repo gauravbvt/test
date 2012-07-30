@@ -99,9 +99,9 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
 
     private WebMarkupContainer content;
     /**
-     * Title label.
+     * Explanation label.
      */
-    private Label titleLabel;
+    private Label explanationLabel;
 
     private Random random = new Random();
     private WebMarkupContainer resizer;
@@ -109,6 +109,8 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
     private AjaxFallbackLink minimizeLink;
     private static final int MINIMIZED_TITLE_SIZE = 27;
     private static final int MINIMIZED_HEIGHT = 38;
+    private WebMarkupContainer moveBar;
+    private Label titleLabel;
 
     public AbstractFloatingCommandablePanel( String id ) {
         this( id, null, null );
@@ -132,16 +134,15 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
 
 
     private void init() {
+        addMoveBar();
         addHeader();
         addContent();
         addResizer();
         setLayout();
     }
 
-    private void addHeader() {
-        // move
-        header = new WebMarkupContainer( "header" );
-        header.setOutputMarkupId( true );
+    private void addMoveBar() {
+        moveBar = new WebMarkupContainer( "moveBar" );
         String moveScript = MessageFormat.format(
                 "Floater.beginMove(this.parentNode.parentNode,event,{0,number,####},{1,number,####},{2,number,####},{3,number,####});",
                 getPadTop(),
@@ -149,14 +150,27 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
                 getPadBottom(),
                 getPadRight()
         );
-        header.add( new AttributeModifier( "onMouseDown", new Model<String>( moveScript ) ) );
-        addOrReplace( header );
+        moveBar.add( new AttributeModifier( "onMouseDown", new Model<String>( moveScript ) ) );
+        add( moveBar );
         addTitle();
         addMinimize();
         addClose();
-        addActionsMenu();
-        addTabs();
-        addPathIcons();
+     }
+
+    /**
+     * Add title to floating panel.
+     */
+    protected void addTitle() {
+        titleLabel = new Label( "title", new Model<String>( getAdjustedTitle() ) );
+        titleLabel.setOutputMarkupId( true );
+        moveBar.addOrReplace( titleLabel );
+    }
+
+    private String getAdjustedTitle() {
+        String explanation = getTitle();
+        return minimized
+                ? StringUtils.abbreviate( explanation, MINIMIZED_TITLE_SIZE )
+                : explanation;
     }
 
     private void addClose() {
@@ -167,10 +181,56 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
             }
         };
         closeLink.add( new AttributeModifier( "onMouseOver", new Model<String>( "this.focus();" ) ) );
-        header.add( closeLink );
+        moveBar.add( closeLink );
     }
 
-    protected void addActionsMenu() {
+    private void addMinimize() {
+        minimizeLink = new AjaxFallbackLink( "minimize" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                minimizeNormalize( target );
+            }
+        };
+        minimizeLink.setOutputMarkupId( true );
+        WebMarkupContainer icon = new WebMarkupContainer( "minimizeIcon" );
+        icon.add( new AttributeModifier(
+                "src",
+                new Model<String>( minimized
+                        ? "images/float-bar-maximize.png"
+                        : "images/minimize.png" ) ) );
+        minimizeLink.add( icon );
+        moveBar.addOrReplace( minimizeLink );
+    }
+
+    private void minimizeNormalize( AjaxRequestTarget target ) {
+        minimized = !minimized;
+        makeVisible( header, !minimized );
+        makeVisible( content, !minimized );
+        makeVisible( resizer, !minimized );
+        addMinimize();
+        addTitle();
+        target.add( this );
+        String minimizeNormalizeScript = "Floater.minimizeNormalize('"
+                + minimizeLink.getMarkupId() + "', "
+                + getPadBottom() + ", "
+                + MINIMIZED_HEIGHT + ", "
+                + minimized + ");";
+        target.appendJavaScript( minimizeNormalizeScript );
+
+    }
+
+    private void addHeader() {
+        // move
+        header = new WebMarkupContainer( "header" );
+        header.setOutputMarkupId( true );
+        addOrReplace( header );
+        addExplanation();
+        addActionsMenu();
+        addTabs();
+        addPathIcons();
+    }
+
+     protected void addActionsMenu() {
         actionsMenu = makeActionMenuOrLabel( "actionMenu" );
         actionsMenu.setOutputMarkupId( true );
         header.addOrReplace( actionsMenu );
@@ -199,41 +259,7 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
     }
 
 
-    private void addMinimize() {
-        minimizeLink = new AjaxFallbackLink( "minimize" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                minimizeNormalize( target );
-            }
-        };
-        minimizeLink.setOutputMarkupId( true );
-        WebMarkupContainer icon = new WebMarkupContainer( "minimizeIcon" );
-        icon.add( new AttributeModifier(
-                "src",
-                new Model<String>( minimized
-                        ? "images/float-bar-maximize.png"
-                        : "images/minimize.png" ) ) );
-        minimizeLink.add( icon );
-        header.addOrReplace( minimizeLink );
-    }
-
-    private void minimizeNormalize( AjaxRequestTarget target ) {
-        minimized = !minimized;
-        makeVisible( content, !minimized );
-        makeVisible( resizer, !minimized );
-        addMinimize();
-        addTitle();
-        target.add( this );
-        String minimizeNormalizeScript = "Floater.minimizeNormalize('"
-                + minimizeLink.getMarkupId() + "', "
-                + getPadBottom() + ", "
-                + MINIMIZED_HEIGHT + ", "
-                + minimized + ");";
-        target.appendJavaScript( minimizeNormalizeScript );
-
-    }
-
-    private void addTabs() {
+     private void addTabs() {
         ListView<Tab> tabListView = new ListView<Tab>(
                 "tabs",
                 getTabs()
@@ -275,13 +301,16 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
                 final PathIcon pathIcon = item.getModelObject();
                 final AbstractLink pathIconLink = pathIcon.getLink( );
                 pathIconLink.setOutputMarkupId( true );
+                Label pathIconNameLabel = new Label( "pathIconName", pathIcon.getName() );
+                pathIconNameLabel.setOutputMarkupId( true );
+                pathIconLink.addOrReplace( pathIconNameLabel );
                 WebMarkupContainer img = new WebMarkupContainer( "pathIconImage" );
                 img.setOutputMarkupId( true );
                 img.add( new AttributeModifier( "src", pathIcon.getSrc() ) );
                 img.add( new AttributeModifier( "alt", pathIcon.getAlt() ) );
                 pathIconLink.addOrReplace( img );
-                item.addOrReplace( pathIconLink );
                 pathIconLink.setVisible( pathIcon.isVisible() );
+                item.add( pathIconLink );
             }
         };
         header.add( pathIconListView );
@@ -316,19 +345,23 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
     /**
      * Add title to floating panel.
      */
-    protected void addTitle() {
-        titleLabel = new Label( "title", new Model<String>( getAdjustedTitle() ) );
-        titleLabel.setOutputMarkupId( true );
-        header.addOrReplace( titleLabel );
+    protected void addExplanation() {
+        explanationLabel = new Label( "explanation", new Model<String>( getAdjustedExplanation() ) );
+        explanationLabel.setOutputMarkupId( true );
+        header.addOrReplace( explanationLabel );
     }
 
-    private String getAdjustedTitle() {
-        String title = getTitle();
+    private String getAdjustedExplanation() {
+        String explanation = getExplanation();
         return minimized
-                ? StringUtils.abbreviate( title, MINIMIZED_TITLE_SIZE )
-                : title;
+                ? StringUtils.abbreviate( explanation, MINIMIZED_TITLE_SIZE )
+                : explanation;
     }
 
+    // DEFAULT
+    protected String getExplanation() {
+        return getTitle();
+    }
 
     /**
      * Get title of floating panel.
@@ -343,8 +376,8 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
      * @param target an ajax request target
      */
     protected void refreshTitle( AjaxRequestTarget target ) {
-        addTitle();
-        target.add( titleLabel );
+        addExplanation();
+        target.add( explanationLabel );
     }
 
     // DEFAULT
@@ -471,12 +504,18 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
     public class PathIcon implements Serializable {
         private String src;
         private String alt;
+        private String name;
         private AbstractLink link;
         private boolean visible = true;
 
-        public PathIcon( String src, AbstractLink link ) {
+        public PathIcon( String name, String src, AbstractLink link ) {
+            this.name = name;
             this.link = link;
             this.src = src;
+        }
+
+        public String getName() {
+            return name;
         }
 
         public AbstractLink getLink() {

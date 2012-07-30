@@ -118,7 +118,7 @@ abstract public class FloatingCommandablePanel extends AbstractCommandablePanel 
                 getPadBottom(),
                 getPadRight()
         );
-        moveBar.add( new AttributeModifier( "onMouseDown", true, new Model<String>( moveScript ) ) );
+        moveBar.add( new AttributeModifier( "onMouseDown", new Model<String>( moveScript ) ) );
         add( moveBar );
         addTitle();
         // minimize
