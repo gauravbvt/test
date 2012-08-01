@@ -532,7 +532,7 @@ div.aboutplan-quickicons {
 }
 
 div.about-plan {
-    /* border-bottom: 1px solid #CCCCCC; */ /* interferes with .plan-references top border */
+    border-bottom: 1px solid #CCCCCC;
     float: left;
     margin: 0 53px 0 35px;
     padding: 14px 0 26px;
@@ -567,15 +567,14 @@ span.plan-client {
 }
 
 div.plan-references {
-	float:left;
-	width:415px;
-	margin:0 15px;
+	float: left;
+	margin: 0 35px;
+	width: 377px;
 }
 
 div.plan-references h2,
 h3.resolved, h3.not-resolved {
     border-bottom: 1px solid #CCCCCC;
-    border-top: 1px solid #CCCCCC;
     font-size: 12px;
     margin: 0 0 10px;
     padding: 5px 9px;
@@ -615,7 +614,7 @@ div.goto a {
     border: 1px solid #CCCCCC;
     color: #333333;
     float: left;
-    height: 79px;
+    height: 71px;
     margin: 0 34px 31px 0;
     padding: 15px 7px 10px;
     text-align: center;
@@ -781,10 +780,10 @@ div.title-desc {
 }
 
 #social div.social-list.messages {
-	width:100%;
-	float:right;
-	height:273px;
-	overflow:auto;
+float: right;
+    height: 314px;
+    overflow: auto;
+    width: 100%;
 }
 
 #social div.social-list > span > div {
@@ -797,8 +796,11 @@ div.title-desc {
 }
 
 #social div.social-list > span > div > div {
-	border-bottom:1px solid #999999;
-	padding:0 5px 0 0;
+background: none repeat scroll 0 0 #F6F6F6;
+    border-bottom: 10px solid #E8E8E8;
+    border-left: 10px solid #E8E8E8;
+    border-right: 10px solid #E8E8E8;
+    padding: 0 5px 0 0;
 }
 
 #social table {
@@ -916,12 +918,14 @@ div.title-desc {
 
 #social div.no-commands,
 #social div.no-messages {
-	float:right;
-	width:100%;
-	text-align:center;
-	border-bottom:1px solid #999999;
-	border-top:1px solid #999999;
-	background:#e8e8e8;
+background: none repeat scroll 0 0 papayaWhip;
+border: 1px solid gold;
+color: #666666;
+float: right;
+margin: 5px 10px 10px;
+padding: 3px 5px;
+text-align: center;
+text-transform: uppercase;
 }
 
 #social div.no-commands span,
@@ -1011,7 +1015,7 @@ div.title-desc {
 
 #social div.new-message {
     background: none repeat scroll 0 0 #E8E8E8;
-    border-top: 1px solid #999999;
+    border-top: 1px solid #CCCCCC;
     float: left;
     font-size: 11px;
     height: 109px;
@@ -1044,20 +1048,20 @@ div.title-desc {
 }
 
 #social div.new-message input {
-    background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
-    border: 1px solid #999999;
-    color: #727272;
-    font-size: 10px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    margin:0 3px 0 0;
-    outline: none;
-    padding: 2px;
-    text-transform: capitalize;
+	background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
+	border: 1px solid #A7A9AC;
+	color: #727272;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	margin: 0 3px 0 0;
+	outline: medium none;
+	padding: 1px 4px;
+	text-transform: capitalize;
 }
 
 #social div.new-message input:hover {
-    color: #000000;
+	color: #000000;
 	border:1px solid #000000;
 }
 
@@ -1071,7 +1075,11 @@ div.title-desc {
     background: #f6f6f6;
     border: 1px solid #CCCCCC;
     margin: 0 0 10px;
-    padding: 0 0 1px 0;
+    padding: 0;
+}
+
+#social div.tabcontent-content {
+	padding: 7px;	
 }
 
 #social div.userInfo h3 {
@@ -1079,7 +1087,7 @@ div.title-desc {
     border-bottom: 1px solid #CCCCCC;
     color: #333333;
     font-size: 11px;
-    margin: 0 0 5px;
+    margin: 0;
     padding: 5px 7px;
     text-transform: uppercase;
 }
@@ -1098,7 +1106,7 @@ div.title-desc {
 }
 
 #social div.userInfo table tr td {
-	padding:2px 0 5px 5px;
+	padding:2px 0 5px;
 }
 
 #social div.userInfo table tr td span {
@@ -1119,7 +1127,7 @@ div.title-desc {
 }
 
 #social div.userInfo ol {
-	margin:15px 0 5px 30px;
+	margin:6px 0 0 20px;
 	padding: 0;
 }
 
@@ -1143,12 +1151,12 @@ div.title-desc {
     font-size: 11px;
     margin: 0;
     padding: 3px;
-    width: 90%;
+    width: 95%;
     margin: 2px 0;
 }
 
 #social div.userInfo select {
-	width: 93%;
+	width: 97%;
 }
 
 #social div.userInfo ol li input.address {
@@ -1161,7 +1169,7 @@ div.title-desc {
 }
 
 #social div.userInfo div.buttons {
-    padding: 5px 6px 10px 5px;
+    padding: 5px 0;
     text-align: right;
 }
 
@@ -1280,6 +1288,9 @@ td.name-title-icon-menu .menubar .dropmenu ul li:hover {
 td.name-title-icon-menu .menubar .dropmenu ul li a:hover {
 	border:none;
 }
+
+
+
 
 /* ----- Floating Panels - Data Tables ----- */
 
@@ -1565,10 +1576,7 @@ td.resolved input[type="button"]:hover {
 }
 
 td.photo-cont {
-    background: none repeat scroll 0 0 #E8E8E8;
-    border: 1px solid #CCCCCC;
-    float: left;
-    padding: 10px;
+	float: left;
     margin: 0 10px 0 0;
 }
 

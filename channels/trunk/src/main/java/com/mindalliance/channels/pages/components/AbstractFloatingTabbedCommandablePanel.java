@@ -63,7 +63,7 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
     /**
      * Background color.
      */
-    private static final String BG_COLOR = "#e8e8e8";
+    private static final String BG_COLOR = "#f6f6f6";
     /**
      * Border width.
      */
@@ -191,7 +191,7 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
                 "src",
                 new Model<String>( minimized
                         ? "images/float-bar-maximize.png"
-                        : "images/minimize.png" ) ) );
+                        : "images/float-bar-minimize.png" ) ) );
         minimizeLink.add( icon );
         moveBar.addOrReplace( minimizeLink );
     }

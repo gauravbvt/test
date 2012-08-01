@@ -324,7 +324,7 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
             if ( !titleString.isEmpty() ) {
                 issuesLink.add( new AttributeModifier( "title", titleString ) );
             }
-            String src = waived ? "images/waived2.png" : "images/warning2.png";
+            String src = waived ? "images/waived2.png" : "images/warning.png";
             PathIcon issuesPathIcon = new PathIcon( "Issues", src, issuesLink );
             issuesPathIcon.setVisible( !titleString.isEmpty() || waived );
             issuesPathIcon.setAlt( titleString );
@@ -345,7 +345,7 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
                 }
             };
             surveysLink.add( new AttributeModifier( "title", "Surveys launched or that could be launched" ) );
-            return new PathIcon( "Surveys", "images/survey_small2.png", surveysLink );
+            return new PathIcon( "Surveys", "images/surveys.png", surveysLink );
         } else {
             return null;
         }
@@ -359,7 +359,7 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
                     new Model<String>( getMapTitle() ),
                     geoLocatables,
                     getQueryService() );
-            PathIcon mapPathIcon = new PathIcon( "Map", "images/map2.png", geomapLink );
+            PathIcon mapPathIcon = new PathIcon( "Map", "images/location.png", geomapLink );
             geomapLink
                     .add( new AttributeModifier( "title", getMapTitle() ) );
             mapPathIcon.setVisible( !geoLocatables.isEmpty() );

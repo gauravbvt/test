@@ -10,16 +10,20 @@
 	<div class="userInfo" wicket:id="userParticipation">
   		<div class="tabcontent-group">
 	    	<h3>My user privileges</h3>
-			<div>I am<span wicket:id="userRole">a planner</span></div>
+			<div class="tabcontent-content">
+				I am <span wicket:id="userRole">a planner</span>
+			</div>
 		</div>
 		<div class="tabcontent-group">
 			<h3>My participation</h3>
-	      <ul>
-				<li wicket:id="participations">
-					<input wicket:id="confirmed" type="checkbox"/>
-					<span wicket:id="participation">I participate as the NJ Transit Chief of police</span>
-				</li>
-			</ul>
+			<div class="tabcontent-content">
+		      <ul>
+					<li wicket:id="participations">
+						<input wicket:id="confirmed" type="checkbox"/>
+						<span wicket:id="participation">I participate as the NJ Transit Chief of police</span>
+					</li>
+				</ul>
+			</div>
             <span wicket:id="noParticipation">I do not yet participate</span>
 		</div>
 	</div>

@@ -1765,37 +1765,37 @@ div.import-dialog {
 /* ----- Floating Panels ----- */
 
 div.float-bar {
-    height: 30px;
+    height: 36px;
     width: 100%;
     background: url('../images/float-bar-bg.png') repeat-x #c3d9ff;
-    border-bottom: 1px solid #999999;
+    border-bottom: 2px solid #999999;
     cursor: move;
 }
 
 div.float-bar-title {
-    font-weight: bold;
+    background: url("../images/float-bar-logo.png") no-repeat scroll 9px 9px transparent;
     color: #333333;
-    font-size: 12px;
     float: left;
-    height: 24px;
+    font-size: 12px;
+    font-weight: bold;
+    height: 27px;
+    padding: 9px 0 0 32px;
     position: absolute;
-    padding: 6px 0 0 30px;
-    background: url('../images/float-bar-logo.png') no-repeat 8px 7px;
     text-transform: capitalize;
 }
 
 div.float-bar-close {
     position: absolute;
     float: right;
-    right: 4px;
-    top: 4px;
+    right: 7px;
+    top: 7px;
 }
 
 div.float-bar-minimize {
     position: absolute;
     float: right;
-    right: 30px;
-    top: 4px;
+    right: 36px;
+    top: 7px;
 }
 
 div.float-header {
@@ -1873,14 +1873,14 @@ div.float-resize {
 }
 
 div.aspect {
-    right: 8px;
-    top: 6.8em;
-    bottom: 8px;
-    left: 8px;
+    border: medium none;
+    bottom: 10px;
+    left: 10px;
     overflow: auto;
-    position: absolute;
-    border: 1px solid #c7c8ca;
     padding: 10px;
+    position: absolute;
+    right: 10px;
+    top: 92px;
 }
 
 div.aspect table {
@@ -3630,95 +3630,88 @@ div.feedback-new-message input:hover {
 
 /* NEW FLOATING PANEL */
 div.floating-panel {
-    /* width:600px; */
-    margin:0px auto;
-    text-align:left;
-    padding:0;
-    background-color:#eee;
+
 }
 
 div.fp-header {
-    /* width:600px; */
-    float:left;
-    background: url(../images/fpanel-headerpathway-bg.png) repeat-x;
-    border:2px solid #999999;
-    border-bottom:none;
+    background:url(../images/fpanel-tab-bg.png) repeat-x;
+    height: 54px;
+    width: 100%;
 }
 
 div.fp-tabs {
     float:left;
-    height:80px;
+    height:54px;
     padding:0 0 0 5px;
 }
 
 div.fp-tabs a {
     font-size:12px;
     text-transform:uppercase;
-    height:53px;
+    height:54px;
     display:block;
     float:left;
-    padding:10px 0 0 0;
-    color:#666666;
+    padding:0;
+    color:#999999;
     text-decoration:none;
     letter-spacing:0.1em;
+    font-weight: bold;
 }
 
-div.fp-tabs a.active,
-div.fp-tabs a:hover {
+div.fp-tabs a.active {
     background:url(../images/hover.png) no-repeat bottom;
     color:#000000;
 }
 
+div.fp-tabs a:hover {
+    color:#000000;
+}
+
+
 div.fp-tabs a span {
-    border-right:1px solid #bac9e5;
-    padding:8px 15px 0 15px;
-    height:22px;
-    display:block;
+    border-right: 1px solid #D6D6D6;
+    display: block;
+    height: 29px;
+    padding: 13px 15px 0;
 }
 
 div.fp-tabs a span.last {
     border-right:none;
 }
 
-div.fp-right-cont {
-    float:right;
-    width:250px;
-}
-
 div.fp-menu {
     float:right;
-    width:250px;
-    height:38px;
-    text-align:right;
-    padding:15px 15px 0 0;
+    padding: 12px 0 0;
 }
 
 div.fp-menu a {
     text-decoration:none;
-    padding:0 0 0 5px;
-}
-
-div.fp-pathway-icon-cont {
-    float:right;
-    /* width:250px; */
-    height:27px;
-}
-
-div.fp-pathway {
-    float:left;
-    text-align:right;
-    height:21px;
-    /* width:167px; */
-    font-size:11px;
-    font-weight:bold;
-    color:#999999;
-    padding:6px 10px 0 0;
 }
 
 div.fp-icon-menu {
-    float:right;
-    height:27px;
-    /* width:73px; */
+    float: right;
+    height: 42px;
+    padding: 0 10px 0 0;
+}
+
+div.fp-icon-menu a {
+    border-left: 1px solid #D6D6D6;
+    color: #666666;
+    display: block;
+    float: left;
+    font-size: 10px;
+    height: 30px;
+    margin: 0 5px;
+    padding: 12px 0 0 10px;
+    text-transform: uppercase;
+}
+
+div.fp-icon-menu a:hover {
+	color: #333333;
+}
+
+div.fp-icon-menu a img {
+	vertical-align: middle;
 }
 
 /*div.fp-content {
@@ -3729,7 +3722,3 @@ div.fp-icon-menu {
     background:#f6f6f6;
     padding:15px;
 }*/
-
-.fp-content .aspect {
-    top: 10em;
-}
